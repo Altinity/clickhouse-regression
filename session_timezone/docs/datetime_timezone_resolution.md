@@ -136,9 +136,9 @@ SETTINGS session_timezone = 'Asia/Tokyo';
 
 For `dt_plain`, the Tokyo string matches and the UTC-looking string does not, because under Tokyo session the plain column treats every bare literal as Tokyo time. For `dt_utc`, the bare literal still matches `12:00` because the column's own UTC timezone wins over the session — but `toDateTime('2024-01-15 12:00:00')` no longer matches the same row, because that call is now parsed as `12:00 Tokyo`, which is `03:00 UTC`. Two expressions that look semantically identical return different results.
 
-## INSERT Plays by the Same Rules
+## INSERT Has Its Own Rules
 
-The parsing rules above are not specific to `WHERE`. They apply just as much when a value enters the table. Inserting bare literals into the demo table:
+Most of the parsing rules above carry over from `WHERE` to `INSERT`, but not all of them. The one place they diverge is the very place that matters most — the plain `DateTime` column under a non-default `session_timezone`. We will get to that asymmetry in a moment. The straightforward cases first:
 
 ```sql
 INSERT INTO datetime_tz_demo VALUES
@@ -149,7 +149,7 @@ INSERT INTO datetime_tz_demo VALUES
  '2024-01-15 07:00:00');
 ```
 
-stores the same instant in all four columns, but only because the server timezone happens to be UTC. The plain `DateTime` column relies on that. A version that does not depend on the server timezone at all looks like this:
+Every column stores the same instant, `2024-01-15 12:00:00 UTC`, but only because the server timezone happens to be UTC and the bare literal on `dt_plain` is read in the server timezone. Each of the three explicit-TZ columns parses its own literal in its own timezone, which is why the input strings have to be different to land on the same instant. A version that does not depend on the server timezone at all looks like this:
 
 ```sql
 INSERT INTO datetime_tz_demo
@@ -162,7 +162,17 @@ SELECT
     toDateTime('2024-01-15 12:00:00', 'UTC');
 ```
 
-The same trap also reappears inside `INSERT`. Under `session_timezone = 'Asia/Tokyo'`, the following mixed insert stores three different instants from one repeated literal:
+Reading either of those two rows back confirms that all four columns hold the same Unix timestamp:
+
+```
+┌─id─┬─event_name─────┬────────────dt_plain─┬──────────────dt_utc─┬───────────dt_berlin─┬───────────────dt_ny─┐
+│  1 │ Product launch │ 2024-01-15 12:00:00 │ 2024-01-15 12:00:00 │ 2024-01-15 13:00:00 │ 2024-01-15 07:00:00 │
+│  2 │ Morning sync   │ 2024-01-15 12:00:00 │ 2024-01-15 12:00:00 │ 2024-01-15 13:00:00 │ 2024-01-15 07:00:00 │
+│  3 │ Stable insert  │ 2024-01-15 12:00:00 │ 2024-01-15 12:00:00 │ 2024-01-15 13:00:00 │ 2024-01-15 07:00:00 │
+└────┴────────────────┴─────────────────────┴─────────────────────┴─────────────────────┴─────────────────────┘
+```
+
+Now the interesting case. Repeat the mixed insert under `session_timezone = 'Asia/Tokyo'`, where the four columns are fed the same `'2024-01-15 12:00:00'` string through four different syntactic forms:
 
 ```sql
 TRUNCATE TABLE datetime_tz_demo;
@@ -171,10 +181,10 @@ INSERT INTO datetime_tz_demo
 SELECT
     10,
     'Bare literal into plain',
-    '2024-01-15 12:00:00',                          -- dt_plain  → parsed as Tokyo time
-    '2024-01-15 12:00:00',                          -- dt_utc    → parsed as UTC (column TZ wins)
-    toDateTime('2024-01-15 12:00:00'),              -- dt_berlin → parsed as Tokyo, NOT Berlin
-    toDateTime('2024-01-15 12:00:00', 'UTC')        -- dt_ny     → explicit UTC
+    '2024-01-15 12:00:00',                       -- dt_plain  (bare literal)
+    '2024-01-15 12:00:00',                       -- dt_utc    (bare literal)
+    toDateTime('2024-01-15 12:00:00'),           -- dt_berlin (one-arg toDateTime)
+    toDateTime('2024-01-15 12:00:00', 'UTC')     -- dt_ny     (explicit UTC)
 SETTINGS session_timezone = 'Asia/Tokyo';
 
 SELECT id, dt_plain, dt_utc, dt_berlin, dt_ny
@@ -183,15 +193,31 @@ WHERE id = 10
 SETTINGS session_timezone = 'UTC';
 ```
 
-Displayed in UTC for clarity:
-
 ```
 ┌─id─┬────────────dt_plain─┬──────────────dt_utc─┬───────────dt_berlin─┬───────────────dt_ny─┐
-│ 10 │ 2024-01-15 03:00:00 │ 2024-01-15 12:00:00 │ 2024-01-15 03:00:00 │ 2024-01-15 12:00:00 │
+│ 10 │ 2024-01-15 12:00:00 │ 2024-01-15 12:00:00 │ 2024-01-15 04:00:00 │ 2024-01-15 07:00:00 │
 └────┴─────────────────────┴─────────────────────┴─────────────────────┴─────────────────────┘
 ```
 
-`dt_plain` came in through the session timezone, so the literal was read as Tokyo time and landed at `03:00 UTC`. `dt_utc` was protected by the column's own timezone, so the bare literal was still read as UTC. `dt_berlin` got the most surprising result: the one-argument `toDateTime` ignored the column's Berlin timezone entirely and used the session, dropping the value at `03:00 UTC` instead of the intended `11:00 UTC`. Only `dt_ny`, which passed the timezone explicitly, stored what the author obviously meant. In production data this is the shape of a long, quiet bug.
+The trailing `SETTINGS session_timezone = 'UTC'` only changes the display of `dt_plain` — explicit-TZ columns ignore the session and always print in their own timezone — so the four values shown are not directly comparable until you translate each back through its column's timezone. Doing that gives the actually stored Unix instants: `dt_plain → 12:00 UTC`, `dt_utc → 12:00 UTC`, `dt_berlin → 04:00 Berlin == 03:00 UTC`, `dt_ny → 07:00 New York == 12:00 UTC`.
+
+Three behaviors fall out of that. `dt_utc` and `dt_ny` are unsurprising: the bare literal hits the column's own timezone, and the explicit `'UTC'` argument hits exactly what it says. `dt_berlin` is the trap from the `WHERE` section showing up again — the one-argument `toDateTime('...')` ignored the column's Berlin timezone and parsed the string in the session timezone (`12:00 Tokyo == 03:00 UTC`), so the column now holds an instant nobody asked for. The new wrinkle is `dt_plain`: its bare literal `'2024-01-15 12:00:00'` did **not** follow `session_timezone = 'Asia/Tokyo'`. It was parsed in the **server** timezone (UTC) and stored as `12:00 UTC`. If the session had won, the value would have been `03:00 UTC`, and it is not.
+
+That makes `INSERT` quietly asymmetric with `WHERE` for plain `DateTime`. On the read side, a bare literal compared against `dt_plain` does honor `session_timezone` — the `plain_tokyo_literal = 1, plain_utc_literal = 0` result earlier in this article confirms it. On the write side, the same syntactic construct ignores `session_timezone` and falls back to the server timezone instead. A one-argument `toDateTime('...')`, by contrast, follows `session_timezone` consistently in both contexts, which is exactly what makes the `dt_berlin` row in this experiment go wrong.
+
+The conclusion is the same in both directions: the safest pattern for `INSERT` is the same as for filters. Pass the timezone explicitly and the result no longer depends on the server, the session, or which side of an `=` you are standing on.
+
+```sql
+INSERT INTO datetime_tz_demo
+SELECT
+    11,
+    'Always safe',
+    toDateTime('2024-01-15 12:00:00', 'UTC'),
+    toDateTime('2024-01-15 12:00:00', 'UTC'),
+    toDateTime('2024-01-15 12:00:00', 'UTC'),
+    toDateTime('2024-01-15 12:00:00', 'UTC')
+SETTINGS session_timezone = 'Asia/Tokyo';
+```
 
 ## DST Is Not Hypothetical
 
@@ -213,7 +239,7 @@ SELECT
 └─────────────────────┴─────────────────────┴─────────────────┘
 ```
 
-Two wall-clock readings an hour and a half apart in appearance, but only one hour apart on the timeline. The missing hour is the DST jump.
+Two wall-clock readings two hours apart in appearance, but only one hour apart on the timeline. The missing hour is the DST jump.
 
 The autumn transition is the opposite problem. On `2024-10-27`, `Europe/Berlin` falls back from `03:00 CEST` to `02:00 CET`, and the wall-clock time `02:30` happens twice — first at `00:30 UTC` and again at `01:30 UTC`. Two distinct instants share one local string:
 
@@ -235,17 +261,19 @@ Both instants print as `2024-10-27 02:30:00` in Berlin, yet they are an hour apa
 
 ## Which Timezone Parses the String
 
-Boiling everything down to one table, this is which timezone ClickHouse actually uses to turn a string into a Unix timestamp, broken out by expression form and column type:
+Boiling everything down to one table, this is which timezone ClickHouse actually uses to turn a string into a Unix timestamp. Rows are the expression and the situation it appears in; columns are the target column type the expression is being matched against or written into. Each cell tells you which timezone is used to parse the string in that combination.
 
-| Expression                                      | `DateTime`        | `DateTime('UTC')`  | `DateTime('Europe/Berlin')` |
-| ----------------------------------------------- | ----------------- | ------------------ | --------------------------- |
-| Bare string in `WHERE`, no `session_timezone`   | Server timezone   | `UTC`              | `Europe/Berlin`             |
-| Bare string in `WHERE`, with `session_timezone` | Session timezone  | `UTC`              | `Europe/Berlin`             |
-| `toDateTime('...')`, no `session_timezone`      | Server timezone   | Server timezone    | Server timezone             |
-| `toDateTime('...')`, with `session_timezone`    | Session timezone  | Session timezone   | Session timezone            |
-| `toDateTime('...', 'TZ')`                       | Explicit TZ       | Explicit TZ        | Explicit TZ                 |
+| Expression \ Column type                          | `DateTime`                | `DateTime('UTC')`  | `DateTime('Europe/Berlin')` |
+| ------------------------------------------------- | ------------------------- | ------------------ | --------------------------- |
+| Bare string in `WHERE`, no `session_timezone`     | Server timezone           | `UTC`              | `Europe/Berlin`             |
+| Bare string in `WHERE`, with `session_timezone`   | **Session** timezone      | `UTC`              | `Europe/Berlin`             |
+| Bare string in `INSERT`, no `session_timezone`    | Server timezone           | `UTC`              | `Europe/Berlin`             |
+| Bare string in `INSERT`, with `session_timezone`  | **Server** timezone       | `UTC`              | `Europe/Berlin`             |
+| `toDateTime('...')`, no `session_timezone`        | Server timezone           | Server timezone    | Server timezone             |
+| `toDateTime('...')`, with `session_timezone`      | Session timezone          | Session timezone   | Session timezone            |
+| `toDateTime('...', 'TZ')`                         | Explicit TZ               | Explicit TZ        | Explicit TZ                 |
 
-The only row that does not depend on context is the last one. Everything above it can shift under your feet when the server is reconfigured, the session changes, or a shard with a different timezone enters the picture. If the string represents a known timezone, pass that timezone explicitly:
+Two rows are worth staring at. The plain `DateTime` column under `session_timezone` resolves bare literals differently in `WHERE` (session) and in `INSERT` (server) — that asymmetry is the one this article keeps coming back to. And the only row in the entire table that does not depend on context is the last one. Everything above it can shift under your feet when the server is reconfigured, the session changes, or a shard with a different timezone enters the picture. If the string represents a known timezone, pass that timezone explicitly:
 
 ```sql
 WHERE dt_utc    = toDateTime('2024-01-15 12:00:00', 'UTC')
@@ -254,7 +282,7 @@ WHERE dt_berlin = toDateTime('2024-01-15 13:00:00', 'Europe/Berlin')
 
 ## A Mental Model That Survives Edge Cases
 
-Pulling all of that together, the question that solves almost every timezone bug in ClickHouse is the same one, asked early: *which timezone parses this string?* For a bare literal compared against or inserted into a column, the answer is the column's timezone if it has one, otherwise the session or server timezone. For a one-argument `toDateTime` (or `toDateTime64`), the answer is always the session or server timezone, regardless of the column. For an explicit two-argument call, the answer is the timezone you passed. The first two depend on context, the third does not.
+Pulling all of that together, the question that solves almost every timezone bug in ClickHouse is the same one, asked early: *which timezone parses this string?* For a bare literal against a column with an explicit timezone, the answer is the column's timezone, in both `WHERE` and `INSERT`. For a bare literal against a plain `DateTime`, the answer depends on which side of the query you are on — `WHERE` follows the session timezone (and falls back to the server's), while `INSERT` follows the server timezone and ignores `session_timezone` entirely. For a one-argument `toDateTime` (or `toDateTime64`), the answer is always the session or server timezone, regardless of the column and regardless of context. For an explicit two-argument call, the answer is the timezone you passed. Only the last form has no hidden dependency.
 
 The practical guidance follows from that directly. Use explicit-timezone columns for anything that matters — `DateTime('UTC')` and `DateTime64(3, 'UTC')` are the conservative defaults for event timestamps, audit logs, `created_at`, and `updated_at`. Avoid one-argument `toDateTime` in filters and inserts; pass the timezone every time. Do not assume a bare string literal and a `toDateTime` call behave the same — they often do not. In tests, set `session_timezone` explicitly, or, better, write the timezone into every `toDateTime` so the test stops depending on the host machine's clock at all. In distributed queries, that discipline matters even more, because different shards can be configured with different server timezones, and a one-argument `toDateTime` is the easiest way to silently get inconsistent results across nodes.
 
