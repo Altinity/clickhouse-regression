@@ -77,6 +77,9 @@ def feature(self, minio_root_user, minio_root_password):
                 "iceberg.tests.iceberg_engine.show_data_lake_catalogs_repro", "feature"
             ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        # Feature(
+        #     test=load("iceberg.tests.iceberg_engine.alter_support", "feature"),
+        # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     with Feature("glue catalog"):
         self.context.catalog = "glue"

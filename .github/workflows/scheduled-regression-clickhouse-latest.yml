@@ -27,7 +27,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
     with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      package: "docker://clickhouse/clickhouse-server:latest-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
       arch: x86
@@ -38,7 +38,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-zookeeper"
     with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      package: "docker://clickhouse/clickhouse-server:latest-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
       arch: arm64
@@ -49,7 +49,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
     with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      package: "docker://clickhouse/clickhouse-server:latest-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer --use-keeper'
       arch: x86
@@ -61,7 +61,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-alpine-keeper"
     with:
-      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      package: "docker://clickhouse/clickhouse-server:latest-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer --use-keeper'
       arch: arm64

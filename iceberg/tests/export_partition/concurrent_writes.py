@@ -23,9 +23,9 @@ from iceberg.tests.export_partition.steps.common import (
     insert_data,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
-    EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
     export_partition,
     prepare_export_partition_settings,
+    query_expecting_duplicate_export_rejection,
 )
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
@@ -169,16 +169,15 @@ def duplicate_export_inside_one_alter(
     dest_name = as_destination_name(destination)
 
     with When("issue an ALTER that references partition 2020 twice"):
-        node.query(
+        query_expecting_duplicate_export_rejection(
+            node,
             f"ALTER TABLE {source_table}\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name},\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name}",
             settings=prepare_export_partition_settings(
                 self.context.catalog, None
             ),
-            exitcode=EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
             message="Export with key",
-            ignore_exception=True,
         )
 
     with And("drain any background export tasks the ALTER left running"):
