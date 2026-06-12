@@ -1,5 +1,6 @@
 import uuid
 from testflows.core import *
+from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
@@ -222,6 +223,176 @@ def optimize_parts(self):
             "4": 2,
             "5": 2,
         }, error()
+
+
+@TestStep(When)
+def get_active_export_part_names(self, source_table, node=None):
+    """Return part names with an in-flight row in ``system.exports``."""
+    if node is None:
+        node = self.context.node
+
+    output = node.query(
+        f"SELECT part_name FROM system.exports "
+        f"WHERE source_table = '{source_table}' "
+        f"ORDER BY part_name",
+        exitcode=0,
+        steps=True,
+    ).output
+    return [line.strip() for line in output.splitlines() if line.strip()]
+
+
+@TestStep(Then)
+def assert_parts_active_on_disk(self, table_name, part_names, node=None):
+    """Each named part must still be an active row in ``system.parts``."""
+    if node is None:
+        node = self.context.node
+
+    for part_name in part_names:
+        active_count = node.query(
+            f"SELECT count() FROM system.parts "
+            f"WHERE table = '{table_name}' "
+            f"AND active = 1 AND name = '{part_name}'",
+            exitcode=0,
+            steps=True,
+        ).output.strip()
+        assert int(active_count) == 1, error(
+            f"part '{part_name}' is not active on disk during export"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
+def merge_during_export_retains_parts_on_disk(self):
+    """Merges may run during export without blocking, while exporting parts
+    stay active on disk until the background read finishes.
+    """
+    node = self.context.node
+    export_partition = "4"
+    merge_partition = "5"
+
+    with Given("I create a populated source table with merges enabled"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=2,
+            columns=default_columns(simple=False),
+            stop_merges=False,
+            number_of_values=10000,
+        )
+        s3_table_name = create_s3_table(
+            table_name="s3",
+            create_new_bucket=True,
+            columns=default_columns(simple=False),
+        )
+
+    with And("partition 5 starts with two parts eligible to merge"):
+        parts_before_merge = get_parts_per_partition(table_name=source_table, node=node)
+        assert parts_before_merge.get(merge_partition) == 2, error(
+            f"expected two parts in partition {merge_partition}, "
+            f"got {parts_before_merge!r}"
+        )
+
+    with And(
+        f"I pick one part from partition {export_partition} to export "
+        f"while partition {merge_partition} will merge"
+    ):
+        part_to_export = node.query(
+            f"SELECT name FROM system.parts "
+            f"WHERE table = '{source_table}' AND active = 1 "
+            f"AND partition = '{export_partition}' "
+            f"ORDER BY name LIMIT 1",
+            exitcode=0,
+            steps=True,
+        ).output.strip()
+        assert part_to_export, error(
+            f"no active part found in partition {export_partition}"
+        )
+
+    with And("I slow the network so the export stays in flight longer"):
+        network_packet_rate_limit(node=node, rate_mbit=0.05)
+
+    with When(f"I queue export for part '{part_to_export}' only"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=node,
+            parts=[part_to_export],
+        )
+
+    with And("wait until the export is active in system.exports"):
+        for attempt in retries(timeout=30, delay=0.2):
+            with attempt:
+                assert (
+                    get_num_active_exports(node=node, table_name=source_table) > 0
+                ), error()
+
+    with And("the exporting part remains active on disk before the merge"):
+        exporting_parts = get_active_export_part_names(
+            source_table=source_table, node=node
+        )
+        assert exporting_parts == [part_to_export], error(
+            f"expected only {part_to_export!r} in system.exports, got {exporting_parts!r}"
+        )
+        assert_parts_active_on_disk(
+            table_name=source_table,
+            part_names=[part_to_export],
+            node=node,
+        )
+
+    with And(f"I merge partition {merge_partition} while the export is still active"):
+        alter_wrappers.optimize_partition(
+            table_name=source_table,
+            partition=merge_partition,
+            node=node,
+        )
+
+    with Then("the merge completed without waiting for the export to finish"):
+        parts_after_merge = get_parts_per_partition(table_name=source_table, node=node)
+        assert parts_after_merge.get(merge_partition) == 1, error(
+            f"partition {merge_partition} should have merged to one part, "
+            f"got {parts_after_merge!r}"
+        )
+        assert (
+            get_num_active_exports(node=node, table_name=source_table) > 0
+        ), error("export finished before merge-during-export could be observed")
+
+    with And("the exporting part is still active on disk after the merge"):
+        exporting_parts = get_active_export_part_names(
+            source_table=source_table, node=node
+        )
+        assert exporting_parts == [part_to_export], error(
+            f"export of {part_to_export!r} disappeared before part retention check"
+        )
+        assert_parts_active_on_disk(
+            table_name=source_table,
+            part_names=[part_to_export],
+            node=node,
+        )
+
+    with And("I restore network speed and wait for the export to complete"):
+        network_packet_rate_limit_replace(node=node, rate_mbit=20)
+        wait_for_all_exports_to_complete(node=node, table_name=source_table)
+
+    with And("I export the remaining parts"):
+        remaining_parts = [
+            part
+            for part in get_parts(table_name=source_table, node=node)
+            if part != part_to_export
+        ]
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=node,
+            parts=remaining_parts,
+        )
+
+    with And("source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=node,
+        )
 
 
 @TestStep(When)
@@ -461,6 +632,7 @@ def feature(self):
     Scenario(run=insert_parts)
     Scenario(run=select_parts)
     Scenario(run=optimize_parts)
+    Scenario(run=merge_during_export_retains_parts_on_disk)
     Scenario(run=stress_select)
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=after_delete_rows)
