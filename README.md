@@ -14,7 +14,6 @@ Results for **the latest** scheduled workflow runs.
 | ClickHouse Version                  | Status                                                                                                                                                                                                                                                                                |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **`head`**                          | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml)                  |
-| **`latest`**                        | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
 | **`26.3`**                          | [![🗓 Scheduled ClickHouse 26.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml) |
 | **`25.8`**                          | [![🗓 Scheduled ClickHouse 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml) |
 | **`25.3`**                          | [![Scheduled ClickHouse 25.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-3.yml) |
@@ -33,7 +32,7 @@ Results for **the latest** scheduled workflow runs.
 | **`23.3.19.33.altinitystable`**     | [![🗓 Scheduled Altinity 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml)                        |
 ## 📅 Timetable of Scheduled Regression Runs
 
-| Day           | latest & head | Every Other Version |
+| Day           | head          | Every Other Version |
 | ------------- | ------------- | ------------------- |
 | **Sunday**    | ❌ No          | ❌ No                |
 | **Monday**    | ❌ No          | ❌ No                |
