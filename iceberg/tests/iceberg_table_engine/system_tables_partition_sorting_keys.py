@@ -9,6 +9,24 @@ import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
 import iceberg.tests.steps.common as common
 
+EXPECTED_PARTITION_KEY = "name"
+EXPECTED_SORTING_KEY = "name asc"
+
+# PR 1874 ships after antalya 26.3.10.20001.altinityantalya
+_PR_1874_MIN_ANTALYA_VERSION = ">26.3.10.20001"
+
+
+def _assert_on_antalya_26_1_plus(test):
+    return check_if_antalya_build(test) and check_clickhouse_version(">=26.1")(test)
+
+
+def _keys_from_metadata_without_snapshot(test):
+    """PR 1874: keys readable from table metadata before any data snapshot."""
+    return (
+        check_if_antalya_build(test)
+        and check_clickhouse_version(_PR_1874_MIN_ANTALYA_VERSION)(test)
+    )
+
 
 def assert_system_table_keys(node, table_name, partition_key, sorting_key):
     actual_partition_key = node.query(
@@ -26,12 +44,12 @@ def assert_system_table_keys(node, table_name, partition_key, sorting_key):
 def system_tables_partition_sorting_keys(self, minio_root_user, minio_root_password):
     """Check that system.tables exposes partition_key and sorting_key for Iceberg table engine.
     Verifies PR: https://github.com/Altinity/ClickHouse/pull/1432.
-    Verifies PR: https://github.com/Altinity/ClickHouse/pull/1874 (staged until antalya
-    builds include the snapshot-gate removal in IcebergMetadata::partitionKey/sortingKey).
+    Verifies PR: https://github.com/Altinity/ClickHouse/pull/1874.
     """
     node = self.context.node
     namespace = f"iceberg_{getuid()}"
     table_name = f"name_{getuid()}"
+    keys_from_metadata = _keys_from_metadata_without_snapshot(self)
 
     with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
@@ -57,16 +75,32 @@ def system_tables_partition_sorting_keys(self, minio_root_user, minio_root_passw
             secret_access_key=minio_root_password,
         )
 
-    with Then("check partition_key and sorting_key are not set in system.tables before first insert"):
-        if check_if_antalya_build(self) and check_clickhouse_version(">=26.1")(self):
-            assert_system_table_keys(node, table_name, "", "")
+    with Then("check partition_key and sorting_key in system.tables before first insert"):
+        if _assert_on_antalya_26_1_plus(self):
+            if keys_from_metadata:
+                assert_system_table_keys(
+                    node,
+                    table_name,
+                    EXPECTED_PARTITION_KEY,
+                    EXPECTED_SORTING_KEY,
+                )
+            else:
+                assert_system_table_keys(node, table_name, "", "")
 
     with And("read from the empty table"):
         common.get_select_query_result(table_name=table_name)
 
-    with And("check that only sorting_key appears in the system.tables"):
-        if check_if_antalya_build(self) and check_clickhouse_version(">=26.1")(self):
-            assert_system_table_keys(node, table_name, "", "name")
+    with And("check partition_key and sorting_key after reading empty table"):
+        if _assert_on_antalya_26_1_plus(self):
+            if keys_from_metadata:
+                assert_system_table_keys(
+                    node,
+                    table_name,
+                    EXPECTED_PARTITION_KEY,
+                    EXPECTED_SORTING_KEY,
+                )
+            else:
+                assert_system_table_keys(node, table_name, "", "name")
 
     with And("insert data into Iceberg table and check system.tables"):
         df = pa.Table.from_pylist(
@@ -80,6 +114,11 @@ def system_tables_partition_sorting_keys(self, minio_root_user, minio_root_passw
         )
         iceberg_table.append(df)
 
-    with And("check partition_key and sorting_key are set in system.tables after data is inserted"):
-        if check_if_antalya_build(self) and check_clickhouse_version(">=26.1")(self):
-            assert_system_table_keys(node, table_name, "name", "name asc")
+    with And("check partition_key and sorting_key after data is inserted"):
+        if _assert_on_antalya_26_1_plus(self):
+            assert_system_table_keys(
+                node,
+                table_name,
+                EXPECTED_PARTITION_KEY,
+                EXPECTED_SORTING_KEY,
+            )
