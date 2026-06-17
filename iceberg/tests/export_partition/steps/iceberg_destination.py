@@ -201,7 +201,7 @@ def create_pyiceberg_catalog_destination(
             s3_endpoint=pyiceberg_s3_endpoint,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            clean_up_minio_bucket=False,
+            clean_up_minio_bucket=True,
         )
 
     with And(f"ensure namespace {namespace!r} exists"):
