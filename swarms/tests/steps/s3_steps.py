@@ -1,5 +1,7 @@
 from testflows.core import *
 
+from helpers.common import getuid
+
 
 @TestStep(Then)
 def read_data_with_s3_table_function(
@@ -131,3 +133,44 @@ def read_data_with_s3Cluster_table_function(
 
     result = node.query(query, exitcode=exitcode, message=message)
     return result
+
+
+@TestStep(Given)
+def create_parquet_with_many_row_groups(
+    self,
+    node,
+    s3_access_key_id,
+    s3_secret_access_key,
+    rows=200000,
+    row_group_size=1000,
+):
+    """Create one Parquet file with many row groups in MinIO."""
+    file_name = f"task_reschedule_{getuid()}.parquet"
+    file_url = f"http://minio:9000/warehouse/data/{file_name}"
+
+    try:
+        node.query(
+            f"""
+                INSERT INTO FUNCTION s3(
+                    '{file_url}',
+                    '{s3_access_key_id}',
+                    '{s3_secret_access_key}',
+                    'Parquet',
+                    'id UInt64'
+                )
+                SELECT number
+                FROM numbers({rows})
+                SETTINGS
+                    output_format_parquet_row_group_size={row_group_size},
+                    output_format_parquet_row_group_size_bytes=1048576
+            """
+        )
+        yield file_url
+    finally:
+        with Finally(f"delete parquet file {file_name} from MinIO"):
+            self.context.cluster.command(
+                "mc",
+                f"mc rm minio/warehouse/data/{file_name}",
+                exitcode=None,
+            )
+
