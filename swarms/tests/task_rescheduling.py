@@ -1,5 +1,6 @@
 import swarms.tests.steps.swarm_node_actions as actions
 import swarms.tests.steps.s3_steps as s3_steps
+import time
 
 from testflows.core import *
 from testflows.asserts import error
@@ -26,8 +27,6 @@ def run_long_query(
 ):
     """Run a long select from an iceberg table and optionally verify row count."""
     if delay_before_execution:
-        import time
-
         time.sleep(delay_before_execution)
 
     extra_settings = ""
