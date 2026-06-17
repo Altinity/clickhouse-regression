@@ -33,14 +33,3 @@ jobs:
       run_s3_suites: false
       arch: x86
     secrets: inherit
-
-  clickhouse-26-3-arm-with-analyzer_zookeeper:
-   needs: get_clickhouse_version
-   uses: ./.github/workflows/run-regression.yml
-   name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
-   with:
-     package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-     version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-     extra_args: '--with-analyzer'
-     arch: arm64
-   secrets: inherit
