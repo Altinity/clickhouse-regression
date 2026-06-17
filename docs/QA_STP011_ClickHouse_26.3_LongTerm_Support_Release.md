@@ -1,4 +1,4 @@
-# QA-STP009 ClickHouse 26.3 Long-Term Support Release  
+# QA-STP011 ClickHouse 26.3 Long-Term Support Release  
 # Software Test Plan
 
 (c) 2026 Altinity Inc. All Rights Reserved.
