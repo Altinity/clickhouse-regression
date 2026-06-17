@@ -128,6 +128,11 @@ def error_window_function_in_alter_delete_where(self):
     if self.context.distributed:
         exitcode = 48
         message = "Exception: Table engine Distributed doesn't support mutations"
+    elif check_clickhouse_version(">=26.5")(self):
+        exitcode = 184
+        message = (
+            "DB::Exception: Window function (rank() OVER (ORDER BY rand() ASC)) is found in WHERE in query"
+        )
     elif check_clickhouse_version(">=23.1")(self):
         exitcode = 47
         message = "Exception: Unknown identifier: rank() OVER (ORDER BY rand() ASC)"

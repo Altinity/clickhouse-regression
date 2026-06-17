@@ -1,9 +1,12 @@
+from helpers.common import check_is_boringssl_build
 from ssl_server.tests.common import *
 
 
 @TestStep(Given)
 def get_error_certificate_verify_failed(self):
     if check_clickhouse_version(">=24.4")(self):
+        if check_is_boringssl_build(self):
+            return "SSL Exception: error:1000007d:SSL routines:OPENSSL_internal:CERTIFICATE_VERIFY_FAILED"
         return "SSL Exception: error:0A000086:SSL routines::certificate verify failed"
     else:
         return "Exception: error:1000007d:SSL routines:OPENSSL_internal:CERTIFICATE_VERIFY_FAILED"
@@ -12,6 +15,8 @@ def get_error_certificate_verify_failed(self):
 @TestStep(Given)
 def get_error_tlsv1_alert_unknown_ca(self):
     if check_clickhouse_version(">=24.4")(self):
+        if check_is_boringssl_build(self):
+            return "SSL Exception: error:10000418:SSL routines:OPENSSL_internal:TLSV1_ALERT_UNKNOWN_CA"
         return "SSL Exception: error:0A000418:SSL routines::tlsv1 alert unknown ca"
     else:
         return "Exception: error:10000418:SSL routines:OPENSSL_internal:TLSV1_ALERT_UNKNOWN_CA"

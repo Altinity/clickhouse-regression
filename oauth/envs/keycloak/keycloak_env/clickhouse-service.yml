@@ -1,3 +1,10 @@
+# NOTE: This file MUST stay in sync with
+#   ../keycloak_env_arm64/clickhouse-service.yml
+# The _arm64 directory is selected automatically by the cluster helper
+# on aarch64 hosts (see helpers/cluster.py:1504-1506); both copies
+# must otherwise stay byte-identical (apart from this sibling
+# reference) so any config / mount change applies on every host
+# architecture. Verify with envs/keycloak/check_envs_in_sync.sh.
 version: "2.3"
 
 services:

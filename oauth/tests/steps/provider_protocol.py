@@ -1,0 +1,258 @@
+import hashlib
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, Optional
+
+
+def mask_secret(value):
+    """Register ``value`` with the testflows secrets registry so it is
+    redacted from every subsequent log message.
+
+    Used to keep OAuth tokens (access / refresh / id tokens, admin
+    tokens) out of the logs. Idempotent: registering the same value
+    twice is a no-op. Safe to call with ``None``/empty values and safe
+    to call when no secrets registry is active (returns ``value``
+    unchanged so callers can use it inline).
+    """
+    if not value:
+        return value
+
+    try:
+        from testflows.core import Secret
+    except Exception:
+        return value
+
+    value = str(value)
+    name = "oauth_secret_" + hashlib.sha1(value.encode("utf-8")).hexdigest()[:24]
+    try:
+        Secret(name=name)(value)
+    except Exception:
+        pass
+
+    return value
+
+
+def mask_token_response(response):
+    """Mask the standard token fields in a raw token-endpoint response.
+
+    Accepts the parsed JSON ``dict`` of an OAuth/OIDC token response and
+    registers ``access_token``/``refresh_token``/``id_token`` as secrets.
+    Returns the same ``dict`` for convenient inline use.
+    """
+    if isinstance(response, dict):
+        for key in ("access_token", "refresh_token", "id_token"):
+            mask_secret(response.get(key))
+    return response
+
+
+class UnsupportedByProvider(Exception):
+    """Raised when a method is not (yet) implemented for a provider.
+
+    Test code should catch this and ``Skip`` the affected scenario rather
+    than treat it as a failure.
+    """
+
+
+@dataclass
+class OAuthToken:
+    """Uniform token container returned by every provider.
+
+    ``access_token`` is always set. Other fields may be ``None``
+    depending on the provider and grant type. Also supports dict-style
+    access (``token["access_token"]``) for backwards compatibility.
+    """
+
+    access_token: str
+    refresh_token: Optional[str] = None
+    id_token: Optional[str] = None
+    token_type: Optional[str] = None
+    expires_in: Optional[int] = None
+    raw: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        """Mask every token this container carries so it never leaks into
+        the test log (e.g. via ``Authorization: Bearer …`` headers in
+        logged curl commands). Provider-agnostic: applies regardless of
+        which IdP produced the token."""
+
+        mask_secret(self.access_token)
+        mask_secret(self.refresh_token)
+        mask_secret(self.id_token)
+
+    def __getitem__(self, key):
+        if key in {
+            "access_token",
+            "refresh_token",
+            "id_token",
+            "token_type",
+            "expires_in",
+        }:
+            return getattr(self, key)
+        return self.raw[key]
+
+    def __contains__(self, key):
+        if key in {
+            "access_token",
+            "refresh_token",
+            "id_token",
+            "token_type",
+            "expires_in",
+        }:
+            return getattr(self, key) is not None
+        return key in self.raw
+
+    def get(self, key, default=None):
+        try:
+            value = self[key]
+        except KeyError:
+            return default
+        return value if value is not None else default
+
+
+@dataclass
+class OpenIDEndpoints:
+    """OpenID-Connect endpoint bundle for a provider/realm/tenant.
+
+    Tests use this instead of hardcoding Keycloak URLs so the same
+    scenarios work against Azure (``login.microsoftonline.com``) or
+    Google (``accounts.google.com``).
+    """
+
+    issuer: str
+    jwks_uri: str
+    userinfo_endpoint: str
+    token_introspection_endpoint: Optional[str] = None
+    configuration_endpoint: Optional[str] = None
+    expected_audience: Optional[str] = None
+
+
+def unsupported(method_name: str):
+    """Return a callable that raises ``UnsupportedByProvider``.
+
+    Usage::
+
+        delete_user = unsupported("delete_user")
+    """
+
+    def _stub(*args, **kwargs):
+        raise UnsupportedByProvider(
+            f"{method_name!r} is not implemented for this OAuth provider"
+        )
+
+    _stub.__name__ = method_name
+    _stub.unsupported = True  # marker for introspection
+    return _stub
+
+
+REQUIRED_METHODS = (
+    # Core token + endpoint access.
+    "get_oauth_token",
+    "openid_endpoints",
+    "default_idp",
+    # JWT mutation helper.
+    "modify_jwt_token",
+)
+
+OPTIONAL_METHODS = (
+    "create_user",
+    "delete_user",
+    "disable_user",
+    "enable_user",
+    "get_user_by_username",
+    "create_group",
+    "delete_group",
+    "get_group_by_name",
+    "assign_user_to_group",
+    "remove_user_from_group",
+    "disable_client",
+    "enable_client",
+    "invalidate_user_sessions",
+    # Cross-realm / cross-tenant authorization-negative testing.
+    "create_realm",
+    "delete_realm",
+    "create_client_in_realm",
+    "get_oauth_token_for_client",
+)
+
+
+def assert_provider_contract(provider_module):
+    """Assert that ``provider_module.OAuthProvider`` exposes the contract.
+
+    Required methods must be present and callable. Missing optional
+    methods are automatically backfilled with ``unsupported()`` stubs.
+    """
+    provider = getattr(provider_module, "OAuthProvider", None)
+    assert (
+        provider is not None
+    ), f"{provider_module.__name__!r} does not expose OAuthProvider"
+
+    missing_required = [m for m in REQUIRED_METHODS if not hasattr(provider, m)]
+    assert not missing_required, (
+        f"{provider_module.__name__!r}.OAuthProvider is missing required "
+        f"methods: {missing_required}"
+    )
+
+    for m in OPTIONAL_METHODS:
+        if not hasattr(provider, m):
+            setattr(provider, m, unsupported(m))
+
+
+def _decode_jwt_token(token: str):
+    """Decode a JWT into ``(header_dict, payload_dict, signature_str)``.
+
+    Provider-agnostic helper used by ``modify_jwt_token`` below.
+    """
+    import base64
+    import json
+
+    parts = token.split(".")
+    if len(parts) != 3:
+        raise ValueError("Invalid JWT token format")
+
+    def _b64(s):
+        return base64.urlsafe_b64decode(s + "==")
+
+    header = json.loads(_b64(parts[0]))
+    payload = json.loads(_b64(parts[1]))
+    return header, payload, parts[2]
+
+
+def _encode_jwt_token(header: dict, payload: dict, signature: str):
+    """Re-encode JWT components into a compact string.
+
+    The signature is NOT recomputed.
+    """
+    import base64
+    import json
+
+    def _b64(d):
+        return (
+            base64.urlsafe_b64encode(json.dumps(d, separators=(",", ":")).encode())
+            .decode()
+            .rstrip("=")
+        )
+
+    return f"{_b64(header)}.{_b64(payload)}.{signature}"
+
+
+def modify_jwt_token(
+    token: str,
+    header_changes: dict = None,
+    payload_changes: dict = None,
+    signature_change: str = None,
+):
+    """Return a new token with the given header/payload/signature changes applied.
+
+    The signature is NOT recomputed, so the server should reject the
+    resulting token unless only non-verified fields were changed.
+    """
+    header, payload, signature = _decode_jwt_token(token)
+
+    if header_changes:
+        header.update(header_changes)
+    if payload_changes:
+        payload.update(payload_changes)
+    if signature_change is not None:
+        signature = signature_change
+
+    return _encode_jwt_token(header, payload, signature)

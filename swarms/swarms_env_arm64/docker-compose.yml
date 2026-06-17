@@ -2,7 +2,7 @@ services:
 
   # spark-iceberg:
   #   image: tabulario/spark-iceberg
-  #   container_name: spark-iceberg
+  #   container_name: swarms_spark
   #   build: spark/
   #   depends_on:
   #     - rest
@@ -50,7 +50,7 @@ services:
   
   localstack:
     image: localstack/localstack-pro
-    container_name: localstack
+    container_name: swarms_localstack
     ports:
       - "4566:4566"  
     environment:

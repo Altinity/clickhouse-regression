@@ -1,20 +1,117 @@
 import json
 import base64
-import requests
 from testflows.core import *
 from oauth.requirements.requirements import *
 from helpers.common import getuid
 from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
+    without_command_logging,
+)
+from oauth.tests.steps.provider_protocol import (
+    OAuthToken,
+    OpenIDEndpoints,
+    mask_secret,
+    modify_jwt_token as _shared_modify_jwt_token,
 )
 
 
-@TestStep(Given)
-def get_oauth_token(self, node=None, username=None, password=None):
-    """Get an OAuth token from Keycloak for a user via bash_tools curl.
+def _keycloak_realm_base_url(self):
+    """Return the realm base URL for the active Keycloak realm."""
+    realm = getattr(self.context, "realm_name", "grafana")
+    base = self.context.keycloak_url
+    return f"{base}/realms/{realm}"
 
-    Yields the full JSON response dict (caller should extract ``["access_token"]``).
+
+def _keycloak_token_endpoint(self):
+    return f"{_keycloak_realm_base_url(self)}/protocol/openid-connect/token"
+
+
+def _keycloak_issuer_for_token_validation(self):
+    """Return the issuer string Keycloak puts into the ``iss`` claim.
+
+    Tokens carry ``iss=http://localhost:8080/realms/<realm>`` (from
+    ``--hostname=localhost``), not the in-network ``keycloak:8080``.
+    """
+    realm = getattr(self.context, "realm_name", "grafana")
+    return f"http://localhost:8080/realms/{realm}"
+
+
+def keycloak_openid_processor_args(
+    realm_name=None,
+    keycloak_url=None,
+    expected_audience=None,
+    expected_issuer=None,
+):
+    """Return ``change_token_processors``-compatible kwargs for the
+    standard Keycloak OpenID processor.
+
+    Plain function (not a ``@TestStep``) — returns a dict directly.
+    """
+    ctx = current().context
+    if realm_name is None:
+        realm_name = ctx.realm_name
+    if keycloak_url is None:
+        keycloak_url = ctx.keycloak_url
+
+    base = f"{keycloak_url}/realms/{realm_name}/protocol/openid-connect"
+
+    args = {
+        "processor_type": "OpenID",
+        "userinfo_endpoint": f"{base}/userinfo",
+        "token_introspection_endpoint": f"{base}/token/introspect",
+        "introspection_client_id": ctx.introspection_client_id,
+        "introspection_client_secret": ctx.introspection_client_secret,
+    }
+    if expected_audience is not None:
+        args["expected_audience"] = expected_audience
+    if expected_issuer is not None:
+        args["expected_issuer"] = expected_issuer
+    return args
+
+
+def openid_endpoints(realm_name=None):
+    """Return an ``OpenIDEndpoints`` bundle for the active Keycloak realm.
+
+    Plain function (not a ``@TestStep``) — returns the dataclass directly.
+    """
+    ctx = current().context
+    if realm_name is None:
+        realm_name = ctx.realm_name
+
+    base = f"{ctx.keycloak_url}/realms/{realm_name}/protocol/openid-connect"
+    return OpenIDEndpoints(
+        issuer=f"http://localhost:8080/realms/{realm_name}",
+        jwks_uri=f"{base}/certs",
+        userinfo_endpoint=f"{base}/userinfo",
+        token_introspection_endpoint=f"{base}/token/introspect",
+        configuration_endpoint=(
+            f"{ctx.keycloak_url}/realms/{realm_name}"
+            f"/.well-known/openid-configuration"
+        ),
+        expected_audience="account",
+    )
+
+
+@TestStep(Given)
+def default_idp(self, node=None, common_roles=None, roles_filter=None):
+    """Configure ClickHouse with the default Keycloak token processor."""
+    args = keycloak_openid_processor_args()
+    change_token_processors(processor_name="keycloak", node=node, **args)
+    change_user_directories_config(
+        processor="keycloak",
+        node=node,
+        common_roles=common_roles,
+        roles_filter=roles_filter,
+    )
+
+
+@TestStep(Given)
+def get_oauth_token(self, node=None, username=None, password=None, scope="openid"):
+    """Acquire an access token from Keycloak via ROPC grant.
+
+    Returns an ``OAuthToken``. ``scope`` defaults to ``"openid"``; pass
+    ``scope=None`` to omit it.
     """
     if node is None:
         node = self.context.bash_tools
@@ -24,9 +121,7 @@ def get_oauth_token(self, node=None, username=None, password=None):
         password = self.context.password
 
     curl_command = (
-        f"curl -s --location "
-        f"'{self.context.keycloak_url}/realms/{self.context.realm_name}"
-        f"/protocol/openid-connect/token' "
+        f"curl -s --location '{_keycloak_token_endpoint(self)}' "
         f"--header 'Content-Type: application/x-www-form-urlencoded' "
         f"--data-urlencode 'client_id={self.context.client_id}' "
         f"--data-urlencode 'grant_type=password' "
@@ -35,10 +130,109 @@ def get_oauth_token(self, node=None, username=None, password=None):
         f"--data-urlencode 'client_secret={self.context.client_secret}'"
     )
 
-    result = node.command(command=curl_command)
-    response = json.loads(result.output)
+    if scope is not None:
+        curl_command += f" --data-urlencode 'scope={scope}'"
 
-    yield response
+    # Suppress log forwarding: the response body is the token itself and
+    # would otherwise be printed verbatim before we can mask it.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
+
+    try:
+        response = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak token response for user '{username}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
+    if "error" in response:
+        raise Exception(
+            f"Keycloak token request failed for user '{username}': "
+            f"{response.get('error')} — {response.get('error_description', '')}"
+        )
+
+    if "access_token" not in response:
+        raise Exception(
+            f"Keycloak token response for '{username}' is missing access_token: "
+            f"{response!r}"
+        )
+
+    yield OAuthToken(
+        access_token=response["access_token"],
+        refresh_token=response.get("refresh_token"),
+        id_token=response.get("id_token"),
+        token_type=response.get("token_type"),
+        expires_in=response.get("expires_in"),
+        raw=response,
+    )
+
+
+@TestStep(Given)
+def get_oauth_token_for_client(
+    self,
+    client_id,
+    client_secret,
+    realm_name=None,
+    username=None,
+    password=None,
+    node=None,
+):
+    """Acquire a token from Keycloak for an arbitrary client/realm.
+
+    Returns an ``OAuthToken``.
+    """
+    if node is None:
+        node = self.context.bash_tools
+    if realm_name is None:
+        realm_name = self.context.realm_name
+    if username is None:
+        username = self.context.username
+    if password is None:
+        password = self.context.password
+
+    token_url = (
+        f"{self.context.keycloak_url}/realms/{realm_name}"
+        f"/protocol/openid-connect/token"
+    )
+
+    curl_command = (
+        f"curl -s --location '{token_url}' "
+        f"--header 'Content-Type: application/x-www-form-urlencoded' "
+        f"--data-urlencode 'client_id={client_id}' "
+        f"--data-urlencode 'grant_type=password' "
+        f"--data-urlencode 'username={username}' "
+        f"--data-urlencode 'password={password}' "
+        f"--data-urlencode 'client_secret={client_secret}'"
+    )
+
+    # Suppress log forwarding: the response body carries the token.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
+
+    try:
+        response = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak token response from "
+            f"realm={realm_name!r} client_id={client_id!r}: {e}. "
+            f"Raw output: {result.output[:500]}"
+        )
+
+    if "error" in response or "access_token" not in response:
+        raise Exception(
+            f"Keycloak token request failed for client_id={client_id!r} "
+            f"realm={realm_name!r}: {response!r}"
+        )
+
+    return OAuthToken(
+        access_token=response["access_token"],
+        refresh_token=response.get("refresh_token"),
+        id_token=response.get("id_token"),
+        token_type=response.get("token_type"),
+        expires_in=response.get("expires_in"),
+        raw=response,
+    )
 
 
 @TestStep(Given)
@@ -59,9 +253,29 @@ def get_admin_token(self):
         f"--data-urlencode 'password=admin'"
     )
 
-    result = node.command(command=curl_command)
-    token_data = json.loads(result.output)
-    return token_data["access_token"]
+    # Suppress log forwarding: the response body carries the admin token.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
+
+    try:
+        token_data = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak admin token response: {e}. "
+            f"Raw output: {result.output[:500]}"
+        )
+
+    if "access_token" not in token_data:
+        raise Exception(
+            f"Keycloak admin token request failed: "
+            f"{token_data.get('error', 'unknown')} — "
+            f"{token_data.get('error_description', result.output[:200])}"
+        )
+
+    # Mask the admin token so its reuse in ``Authorization: Bearer …``
+    # headers (logged as command descriptions across the admin helpers)
+    # is redacted.
+    return mask_secret(token_data["access_token"])
 
 
 @TestStep(Given)
@@ -75,9 +289,11 @@ def keycloak_admin_request(self, method, path, json_data=None, expected_statuses
     admin_token = get_admin_token()
 
     url = f"{self.context.keycloak_url}{path}"
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/kc_resp_{uid}.txt"
 
     curl_cmd = (
-        f"curl -s -o /tmp/kc_resp.txt -w '%{{http_code}}' "
+        f"curl -s -o {tmp_file} -w '%{{http_code}}' "
         f"-X {method.upper()} "
         f"'{url}' "
         f"-H 'Authorization: Bearer {admin_token}' "
@@ -89,9 +305,17 @@ def keycloak_admin_request(self, method, path, json_data=None, expected_statuses
         curl_cmd += f" -d '{payload}'"
 
     result = node.command(command=curl_cmd)
-    status = int(result.output.strip()[-3:])
 
-    body_result = node.command(command="cat /tmp/kc_resp.txt")
+    output = result.output.strip()
+    try:
+        status = int(output[-3:])
+    except (ValueError, IndexError):
+        raise Exception(
+            f"Keycloak API {method} {path}: could not parse HTTP status "
+            f"from curl output: {output[:200]}"
+        )
+
+    body_result = node.command(command=f"cat {tmp_file}")
     body = body_result.output.strip()
 
     if expected_statuses is not None:
@@ -141,11 +365,15 @@ def create_user(
     node = self.context.bash_tools
     admin_token = get_admin_token()
 
+    uid = getuid()[:8]
+    headers_file = f"/tmp/kc_headers_{uid}.txt"
+    resp_file = f"/tmp/kc_resp_{uid}.txt"
+
     url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users"
     payload = json.dumps(user_data).replace("'", "'\\''")
 
     curl_cmd = (
-        f"curl -s -D /tmp/kc_headers.txt -o /tmp/kc_resp.txt -w '%{{http_code}}' "
+        f"curl -s -D {headers_file} -o {resp_file} -w '%{{http_code}}' "
         f"-X POST '{url}' "
         f"-H 'Authorization: Bearer {admin_token}' "
         f"-H 'Content-Type: application/json' "
@@ -153,16 +381,29 @@ def create_user(
     )
 
     result = node.command(command=curl_cmd)
-    status = int(result.output.strip()[-3:])
-    assert status == 201, f"Failed to create user {username}: HTTP {status}"
 
-    headers_result = node.command(command="cat /tmp/kc_headers.txt")
+    output = result.output.strip()
+    try:
+        status = int(output[-3:])
+    except (ValueError, IndexError):
+        raise Exception(
+            f"Failed to parse HTTP status creating user '{username}': {output[:200]}"
+        )
+
+    if status != 201:
+        body_result = node.command(command=f"cat {resp_file}")
+        raise Exception(
+            f"Failed to create user '{username}': HTTP {status}. "
+            f"Body: {body_result.output.strip()[:500]}"
+        )
+
+    headers_result = node.command(command=f"cat {headers_file}")
     for line in headers_result.output.split("\n"):
         if line.lower().startswith("location:"):
             user_id = line.strip().split("/")[-1]
             return user_id
 
-    raise Exception(f"No Location header in create-user response for {username}")
+    raise Exception(f"No Location header in create-user response for '{username}'")
 
 
 @TestStep(Given)
@@ -219,6 +460,73 @@ def enable_user(self, username, realm_name=None):
 
 
 @TestStep(Given)
+def create_realm(self, realm_name, enabled=True):
+    """Create a Keycloak realm via the Admin API. Idempotent."""
+    keycloak_admin_request(
+        method="POST",
+        path="/admin/realms",
+        json_data={"realm": realm_name, "enabled": enabled},
+        expected_statuses=[201, 409],
+    )
+
+
+@TestStep(Given)
+def delete_realm(self, realm_name):
+    """Delete a Keycloak realm via the Admin API. Idempotent."""
+    keycloak_admin_request(
+        method="DELETE",
+        path=f"/admin/realms/{realm_name}",
+        expected_statuses=[204, 404],
+    )
+
+
+@TestStep(Given)
+def create_client_in_realm(
+    self,
+    realm_name,
+    client_id,
+    client_secret,
+    direct_access_grants_enabled=True,
+    public_client=False,
+):
+    """Create an OIDC client in the given realm via the Admin API.
+
+    Returns the Keycloak-internal client ``id`` (not ``clientId``)
+    because subsequent role / scope updates need it.
+    """
+    keycloak_admin_request(
+        method="POST",
+        path=f"/admin/realms/{realm_name}/clients",
+        json_data={
+            "clientId": client_id,
+            "secret": client_secret,
+            "enabled": True,
+            "publicClient": public_client,
+            "protocol": "openid-connect",
+            "directAccessGrantsEnabled": direct_access_grants_enabled,
+            "standardFlowEnabled": True,
+        },
+        expected_statuses=[201, 409],
+    )
+
+    node = self.context.bash_tools
+    admin_token = get_admin_token()
+    url = (
+        f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
+        f"?clientId={client_id}"
+    )
+    result = node.command(
+        command=f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
+    )
+    clients = json.loads(result.output)
+    if not clients:
+        raise Exception(
+            f"Failed to look up newly-created client {client_id!r} in realm {realm_name!r}"
+        )
+    return clients[0]["id"]
+
+
+@TestStep(Given)
 def get_user_by_username(self, username, realm_name=None):
     """Look up a Keycloak user by exact username. Returns dict or None."""
     if realm_name is None:
@@ -232,10 +540,18 @@ def get_user_by_username(self, username, realm_name=None):
         f"?username={username}&exact=true"
     )
 
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
 
     result = node.command(command=curl_cmd)
-    users = json.loads(result.output)
+
+    try:
+        users = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak user lookup response for '{username}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
     if users:
         return users[0]
     return None
@@ -280,7 +596,7 @@ def delete_group(self, group_name, realm_name=None):
 
 @TestStep(Given)
 def get_group_by_name(self, group_name, realm_name=None):
-    """Look up a Keycloak group by name. Returns dict or None."""
+    """Look up a Keycloak group by exact name. Returns dict or None."""
     if realm_name is None:
         realm_name = self.context.realm_name
 
@@ -289,13 +605,21 @@ def get_group_by_name(self, group_name, realm_name=None):
 
     url = (
         f"{self.context.keycloak_url}/admin/realms/{realm_name}/groups"
-        f"?search={group_name}"
+        f"?search={group_name}&exact=true"
     )
 
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
 
     result = node.command(command=curl_cmd)
-    groups = json.loads(result.output)
+
+    try:
+        groups = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak group lookup response for '{group_name}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
     for g in groups:
         if g["name"] == group_name:
             return g
@@ -341,10 +665,19 @@ def disable_client(self, client_id_name, realm_name=None):
         f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
         f"?clientId={client_id_name}"
     )
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
     result = node.command(command=curl_cmd)
-    clients = json.loads(result.output)
-    assert clients, f"Client '{client_id_name}' not found"
+
+    try:
+        clients = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak client lookup for '{client_id_name}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
+    if not clients:
+        raise Exception(f"Client '{client_id_name}' not found in realm '{realm_name}'")
 
     internal_id = clients[0]["id"]
     keycloak_admin_request(
@@ -368,10 +701,19 @@ def enable_client(self, client_id_name, realm_name=None):
         f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
         f"?clientId={client_id_name}"
     )
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
     result = node.command(command=curl_cmd)
-    clients = json.loads(result.output)
-    assert clients, f"Client '{client_id_name}' not found"
+
+    try:
+        clients = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak client lookup for '{client_id_name}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
+    if not clients:
+        raise Exception(f"Client '{client_id_name}' not found in realm '{realm_name}'")
 
     internal_id = clients[0]["id"]
     keycloak_admin_request(
@@ -399,69 +741,20 @@ def invalidate_user_sessions(self, username, realm_name=None):
     )
 
 
-def _decode_jwt_token(token: str):
-    """Decode a JWT token into (header_dict, payload_dict, signature_str)."""
-    parts = token.split(".")
-    if len(parts) != 3:
-        raise ValueError("Invalid JWT token format")
-
-    header_data = json.loads(base64.urlsafe_b64decode(parts[0] + "=="))
-    payload_data = json.loads(base64.urlsafe_b64decode(parts[1] + "=="))
-    signature = parts[2]
-
-    return header_data, payload_data, signature
-
-
-def _encode_jwt_token(header: dict, payload: dict, signature: str):
-    """Re-encode JWT components into a token string (signature is NOT recomputed)."""
-    header_b64 = (
-        base64.urlsafe_b64encode(json.dumps(header, separators=(",", ":")).encode())
-        .decode()
-        .rstrip("=")
-    )
-    payload_b64 = (
-        base64.urlsafe_b64encode(json.dumps(payload, separators=(",", ":")).encode())
-        .decode()
-        .rstrip("=")
-    )
-    return f"{header_b64}.{payload_b64}.{signature}"
-
-
-@TestStep(Given)
-def modify_jwt_token(
-    self,
-    token: str,
-    header_changes: dict = None,
-    payload_changes: dict = None,
-    signature_change: str = None,
-):
-    """Modify a JWT token by changing header, payload, or signature components.
-
-    Returns the modified token string. Signature is NOT recomputed so the token
-    will fail verification unless only non-verified fields were changed.
-    """
-    header, payload, signature = _decode_jwt_token(token)
-
-    if header_changes:
-        header.update(header_changes)
-
-    if payload_changes:
-        payload.update(payload_changes)
-
-    if signature_change is not None:
-        signature = signature_change
-
-    return _encode_jwt_token(header, payload, signature)
-
-
 class OAuthProvider:
-    """Modular provider interface for Keycloak.
+    """Keycloak provider contract implementation.
 
-    Tests access methods through ``self.context.provider_client.OAuthProvider``.
+    Exposes the interface defined in ``provider_protocol``.
     """
 
     get_oauth_token = get_oauth_token
+    get_oauth_token_for_client = get_oauth_token_for_client
     get_admin_token = get_admin_token
+
+    openid_endpoints = staticmethod(openid_endpoints)
+    default_idp = default_idp
+
+    modify_jwt_token = staticmethod(_shared_modify_jwt_token)
 
     create_user = create_user
     delete_user = delete_user
@@ -480,4 +773,6 @@ class OAuthProvider:
     enable_client = enable_client
     invalidate_user_sessions = invalidate_user_sessions
 
-    modify_jwt_token = modify_jwt_token
+    create_realm = create_realm
+    delete_realm = delete_realm
+    create_client_in_realm = create_client_in_realm

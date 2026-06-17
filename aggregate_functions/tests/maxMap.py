@@ -14,7 +14,7 @@ from aggregate_functions.tests.sumMap import scenario as checks
 def scenario(self, func="maxMap({params})", table=None, snapshot_id=None):
     """Check maxMap aggregate function by using the same tests as for sumMap."""
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, add_analyzer=True
+        snapshot_id=snapshot_id, add_analyzer=True, clickhouse_version=">=26.4"
     )
 
     if "Merge" in self.name:

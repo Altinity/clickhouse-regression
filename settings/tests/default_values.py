@@ -45,6 +45,7 @@ def check_default_value(self, setting):
 def feature(self):
     """Check default values in `system.settings` table."""
     versions = [
+        ">=26.3",
         ">=26.1",
         ">=25.11",
         ">=25.10",
@@ -73,8 +74,12 @@ def feature(self):
 
     if check_if_antalya_build(self):
         self.context.snapshot_id += "_antalya"
-    
-    if check_clickhouse_version(">=25.8")(self) and check_if_altinity_build(self) and check_if_not_antalya_build(self):
+
+    if (
+        check_clickhouse_version(">=25.8")(self)
+        and check_if_altinity_build(self)
+        and check_if_not_antalya_build(self)
+    ):
         self.context.snapshot_id += "_altinity"
 
     with Given("get all settings from system.settings table"):

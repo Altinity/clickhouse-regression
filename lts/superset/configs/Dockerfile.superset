@@ -1,0 +1,14 @@
+ARG SUPERSET_VERSION=4.1.1
+FROM apache/superset:${SUPERSET_VERSION}
+
+ARG CLICKHOUSE_PYTHON_DRIVER=clickhouse-connect
+
+USER root
+
+RUN if [ "${CLICKHOUSE_PYTHON_DRIVER}" = "clickhouse-sqlalchemy" ]; then \
+        pip3 install --no-cache-dir 'clickhouse-sqlalchemy<0.3.0'; \
+    else \
+        pip3 install --no-cache-dir clickhouse-connect; \
+    fi
+
+USER superset

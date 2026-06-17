@@ -475,6 +475,95 @@ def clickhouse_interruption(self, strategy, signal, safe):
             assert set(source_data) >= set(destination_data), error()
 
 
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_QueryCancellation("1.0"),
+    RQ_ClickHouse_ExportPartition_ResumeAfterFailure("1.0"),
+)
+def export_resumes_after_stop_start_moves(self):
+    """Altinity/ClickHouse#1593: export resumes after SYSTEM STOP MOVES / START MOVES.
+
+    When moves are stopped the scheduler must not run, so the export stays
+    PENDING and zero rows reach the destination. After ``SYSTEM START MOVES``
+    the scheduler resumes and the export completes, releasing any part locks
+    so that other replicas are not blocked.
+    """
+
+    node = self.context.node
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I get the partitions to export"):
+        partitions = get_partitions(table_name=source_table, node=node)
+
+    with When("I stop moves on the source table"):
+        node.query(f"SYSTEM STOP MOVES {source_table}", exitcode=0)
+
+    with And("I issue EXPORT PARTITION for every partition"):
+        for partition in partitions:
+            node.query(
+                f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition}' "
+                f"TO TABLE {s3_table_name}",
+                settings=self.context.default_settings
+                + [("export_merge_tree_partition_max_retries", "50")],
+                exitcode=0,
+            )
+
+    with And("I wait for the export entries to appear as PENDING"):
+        for partition in partitions:
+            wait_for_export_to_start(
+                source_table=source_table,
+                partition_id=partition,
+                node=node,
+            )
+
+    with And("I wait several scheduler cycles to confirm nothing is exported"):
+        sleep(10)
+
+    with Then("all exports should still be PENDING"):
+        for partition in partitions:
+            exports = check_export_status(
+                status="PENDING",
+                source_table=source_table,
+                partition_id=partition,
+                node=node,
+            )
+            assert int(exports.output.strip()) > 0, error()
+
+    with And("S3 destination should have zero rows"):
+        destination_data = select_all_ordered(table_name=s3_table_name, node=node)
+        assert len(destination_data) == 0, error()
+
+    with When("I resume moves on the source table"):
+        node.query(f"SYSTEM START MOVES {source_table}", exitcode=0)
+
+    with Then("each partition export completes"):
+        for partition in partitions:
+            wait_for_export_to_complete(
+                source_table=source_table,
+                partition_id=partition,
+                node=node,
+            )
+
+    with And("source matches destination"):
+        for retry in retries(timeout=30, delay=1):
+            with retry:
+                source_matches_destination(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                )
+
+
 @TestFeature
 @Name("network")
 def feature(self):
@@ -491,3 +580,4 @@ def feature(self):
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
     Scenario(run=minio_interruption)
     Scenario(run=clickhouse_interruption)
+    Scenario(run=export_resumes_after_stop_start_moves)

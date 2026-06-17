@@ -37,7 +37,10 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
 def get_used_disks_for_table(node, name, step=When, steps=True):
     def get_used_disks():
         sql = f"SELECT disk_name FROM system.parts WHERE table == '{name}' AND active=1 ORDER BY modification_time FORMAT TabSeparated"
-        return node.query(sql).output.strip().split("\n")
+        disks = node.query(sql).output.strip().split("\n")
+        if check_clickhouse_version(">=26.3")(current()):
+            disks = ["external" if d == "external_cache" else d for d in disks]
+        return disks
 
     if not steps:
         return get_used_disks()

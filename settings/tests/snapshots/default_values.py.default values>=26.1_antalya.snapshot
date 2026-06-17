@@ -210,6 +210,8 @@ allow_not_comparable_types_in_comparison_functions = r"""'{"default":"0"}'"""
 
 allow_not_comparable_types_in_order_by = r"""'{"default":"0"}'"""
 
+allow_nullable_tuple_in_extracted_subcolumns = r"""'{"default":"0"}'"""
+
 allow_prefetched_read_pool_for_local_filesystem = r"""'{"default":"0"}'"""
 
 allow_prefetched_read_pool_for_remote_filesystem = r"""'{"default":"1"}'"""
@@ -890,6 +892,8 @@ execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
 
+export_merge_tree_part_filename_pattern = r"""'{"default":"{part_name}_{checksum}"}'"""
+
 export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
@@ -904,11 +908,13 @@ export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
 
 export_merge_tree_partition_lock_inside_the_task = r"""'{"default":"0"}'"""
 
-export_merge_tree_partition_manifest_ttl = r"""'{"default":"180"}'"""
+export_merge_tree_partition_manifest_ttl = r"""'{"default":"86400"}'"""
 
 export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
 
-export_merge_tree_partition_system_table_prefer_remote_information = r"""'{"default":"1"}'"""
+export_merge_tree_partition_system_table_prefer_remote_information = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"3600"}'"""
 
 external_storage_connect_timeout_sec = r"""'{"default":"10"}'"""
 
@@ -1182,11 +1188,15 @@ iceberg_metadata_compression_method = r"""'{"default":""}'"""
 
 iceberg_metadata_log_level = r"""'{"default":"none"}'"""
 
+iceberg_metadata_staleness_ms = r"""'{"default":"0"}'"""
+
 iceberg_partition_timezone = r"""'{"default":""}'"""
 
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
+
+iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
 idle_connection_timeout = r"""'{"default":"3600"}'"""
 
@@ -1408,7 +1418,7 @@ input_format_parquet_preserve_order = r"""'{"default":"0"}'"""
 
 input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference = r"""'{"default":"0"}'"""
 
-input_format_parquet_use_metadata_cache = r"""'{"default":"1"}'"""
+input_format_parquet_use_metadata_cache = r"""'{"default":"0"}'"""
 
 input_format_parquet_use_native_reader = r"""'{"default":"0"}'"""
 
@@ -2006,7 +2016,15 @@ number_of_mutations_to_delay = r"""'{"default":"0"}'"""
 
 number_of_mutations_to_throw = r"""'{"default":"0"}'"""
 
+object_storage_cluster = r"""'{"default":""}'"""
+
 object_storage_cluster_join_mode = r"""'{"default":"allow"}'"""
+
+object_storage_max_nodes = r"""'{"default":"0"}'"""
+
+object_storage_remote_initiator = r"""'{"default":"0"}'"""
+
+object_storage_remote_initiator_cluster = r"""'{"default":""}'"""
 
 odbc_bridge_connection_pool_size = r"""'{"default":"16"}'"""
 
@@ -2953,6 +2971,8 @@ use_page_cache_for_disks_without_file_cache = r"""'{"default":"0"}'"""
 use_page_cache_with_distributed_cache = r"""'{"default":"0"}'"""
 
 use_paimon_partition_pruning = r"""'{"default":"0"}'"""
+
+use_parquet_metadata_cache = r"""'{"default":"1"}'"""
 
 use_primary_key = r"""'{"default":"1"}'"""
 

@@ -13,9 +13,15 @@ def scenario(
     self, func="retention({params})", table=None, decimal=False, snapshot_id=None
 ):
     """Check retention aggregate function"""
+    if check_clickhouse_version(">=26.3")(self):
+        clickhouse_version = ">=26.3"
+    else:
+        clickhouse_version = ">=22.9"
 
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=22.9"
+        snapshot_id=snapshot_id,
+        clickhouse_version=clickhouse_version,
+        add_analyzer=True,
     )
 
     if "Merge" in self.name:
@@ -79,8 +85,15 @@ def scenario(
             continue
 
         with Check(f"{column_type}"):
-            params = f"{column_name} = 0, {column_name} = 1"
-            # self.context.node.query(f"select {column_name} from {table.name}")
-            execute_query(
-                f"SELECT {func.format(params=params)}, any(toTypeName(1)), any(toTypeName(1)) FROM {table.name}"
-            )
+            if check_clickhouse_version(">=26.3")(self):
+                conds = [f"{column_name} = 0", f"{column_name} = 1"]
+                params = ", ".join(conds)
+                type_names = ", ".join(f"any(toTypeName({c}))" for c in conds)
+                execute_query(
+                    f"SELECT {func.format(params=params)}, {type_names} FROM {table.name}"
+                )
+            else:
+                params = f"{column_name} = 0, {column_name} = 1"
+                execute_query(
+                    f"SELECT {func.format(params=params)}, any(toTypeName(1)), any(toTypeName(1)) FROM {table.name}"
+                )

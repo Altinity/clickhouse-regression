@@ -4,6 +4,7 @@ from testflows.core import *
 
 from ldap.authentication.tests.common import *
 from ldap.authentication.requirements import *
+from helpers.common import check_clickhouse_version
 
 
 @TestScenario
@@ -204,7 +205,10 @@ def ldap_and_password(self):
             content, config.path, config.name, config.uid, config.preprocessed_name
         )
 
-    error_message = "DB::Exception: More than one field of 'password'"
+    if check_clickhouse_version(">=26.4")(self):
+        error_message = "Cannot specify multiple authentication methods for user"
+    else:
+        error_message = "DB::Exception: More than one field of 'password'"
 
     with Then(
         "I expect an error when I try to load the configuration file",

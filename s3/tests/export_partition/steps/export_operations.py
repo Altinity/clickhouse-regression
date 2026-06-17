@@ -65,6 +65,43 @@ def export_partitions(
 
 
 @TestStep(When)
+def export_partition_all(
+    self,
+    source_table,
+    destination_table,
+    node,
+    exitcode=0,
+    settings=None,
+    inline_settings=True,
+    wait=True,
+    check_export=True,
+):
+    """Export all active partitions from a source table to a destination table in one ALTER."""
+
+    if inline_settings:
+        inline_settings = self.context.default_settings
+
+    no_checks = exitcode != 0
+
+    with By(f"running EXPORT PARTITION ALL for {source_table}"):
+        node.query(
+            f"ALTER TABLE {source_table} EXPORT PARTITION ALL TO TABLE {destination_table}",
+            exitcode=exitcode,
+            no_checks=no_checks,
+            steps=True,
+            settings=settings,
+            inline_settings=inline_settings,
+        )
+
+    if wait and check_export and exitcode == 0:
+        partitions = get_partitions(table_name=source_table, node=node)
+        for partition in partitions:
+            wait_for_export_to_complete(
+                partition_id=partition, source_table=source_table, node=node
+            )
+
+
+@TestStep(When)
 def kill_export_partition(
     self,
     partition_id,

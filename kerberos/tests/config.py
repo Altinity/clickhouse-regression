@@ -6,6 +6,7 @@ import itertools
 from testflows.core import *
 from kerberos.tests.common import *
 from kerberos.requirements.requirements import *
+from helpers.common import check_clickhouse_version
 
 
 @TestScenario
@@ -97,12 +98,17 @@ def multiple_auth_methods(self):
         xml_append(krb, "password", "qwerty")
         return root
 
+    if check_clickhouse_version(">=26.4")(self):
+        log_error = "Cannot specify multiple authentication methods for user"
+    else:
+        log_error = "More than one field of"
+
     check_wrong_config(
         node=ch_nodes[0],
         client=self.context.bash_tools,
         config_path=config_path,
         modify_file=modify_file,
-        log_error="More than one field of",
+        log_error=log_error,
         healthy_on_restart=False,
     )
 

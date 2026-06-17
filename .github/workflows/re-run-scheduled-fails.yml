@@ -45,7 +45,7 @@ jobs:
                 | select(
                     . != null and
                     .status == "completed" and
-                    .conclusion == "failure" and
+                    (.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out") and
                     .created_at >= $cutoff
                   )
               )

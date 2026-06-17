@@ -1036,7 +1036,7 @@ def add_ssl_clickhouse_client_configuration_file(
     entries,
     config=None,
     config_d_dir="/etc/clickhouse-client/config.d/",
-    config_file="fips.xml",
+    config_file="fips_test_override.xml",
     timeout=300,
     restart=False,
     node=None,

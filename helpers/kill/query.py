@@ -11,11 +11,11 @@ def kill_query(
     async_mode=False,
     test=False,
     output_format=None,
-    **query_kwargs
+    **query_kwargs,
 ):
     """
     Kill queries using KILL QUERY command.
-    
+
     Args:
         where_clause: WHERE expression to filter queries from system.processes
         node: ClickHouse node to execute the query on (defaults to context.node)
@@ -25,7 +25,7 @@ def kill_query(
         test: Use TEST mode (only checks rights and displays queries)
         output_format: Output format (optional)
         **query_kwargs: Additional arguments to pass to node.query()
-    
+
     Examples:
         kill_query(where_clause="query_id='2-857d-4a57-9ee0-327da5d60a90'")
         kill_query(where_clause="user='username'", sync=True)
@@ -36,37 +36,32 @@ def kill_query(
 
     with By("killing queries"):
         query = "KILL QUERY"
-        
+
         if cluster:
             query += f" ON CLUSTER {cluster}"
-        
+
         query += f" WHERE {where_clause}"
-        
+
         if test:
             query += " TEST"
         elif sync:
             query += " SYNC"
         elif async_mode:
             query += " ASYNC"
-        
+
         if output_format:
             query += f" FORMAT {output_format}"
-        
+
         return node.query(query, **query_kwargs)
 
 
 @TestStep(When)
 def kill_query_by_id(
-    self,
-    query_id,
-    node=None,
-    cluster=None,
-    sync=False,
-    **query_kwargs
+    self, query_id, node=None, cluster=None, sync=False, **query_kwargs
 ):
     """
     Kill a query by its query_id.
-    
+
     Args:
         query_id: The query_id to kill
         node: ClickHouse node to execute the query on (defaults to context.node)
@@ -79,22 +74,15 @@ def kill_query_by_id(
         node=node,
         cluster=cluster,
         sync=sync,
-        **query_kwargs
+        **query_kwargs,
     )
 
 
 @TestStep(When)
-def kill_query_by_user(
-    self,
-    user,
-    node=None,
-    cluster=None,
-    sync=False,
-    **query_kwargs
-):
+def kill_query_by_user(self, user, node=None, cluster=None, sync=False, **query_kwargs):
     """
     Kill all queries run by a specific user.
-    
+
     Args:
         user: Username whose queries should be killed
         node: ClickHouse node to execute the query on (defaults to context.node)
@@ -107,22 +95,17 @@ def kill_query_by_user(
         node=node,
         cluster=cluster,
         sync=sync,
-        **query_kwargs
+        **query_kwargs,
     )
 
 
 @TestStep(When)
 def kill_query_by_initial_query_id(
-    self,
-    initial_query_id,
-    node=None,
-    cluster=None,
-    sync=False,
-    **query_kwargs
+    self, initial_query_id, node=None, cluster=None, sync=False, **query_kwargs
 ):
     """
     Kill queries by their initial_query_id.
-    
+
     Args:
         initial_query_id: The initial_query_id to kill
         node: ClickHouse node to execute the query on (defaults to context.node)
@@ -135,22 +118,17 @@ def kill_query_by_initial_query_id(
         node=node,
         cluster=cluster,
         sync=sync,
-        **query_kwargs
+        **query_kwargs,
     )
 
 
 @TestStep(When)
 def test_kill_query(
-    self,
-    where_clause,
-    node=None,
-    cluster=None,
-    output_format=None,
-    **query_kwargs
+    self, where_clause, node=None, cluster=None, output_format=None, **query_kwargs
 ):
     """
     Test KILL QUERY command (only checks user rights and displays queries to stop).
-    
+
     Args:
         where_clause: WHERE expression to filter queries from system.processes
         node: ClickHouse node to execute the query on (defaults to context.node)
@@ -164,6 +142,5 @@ def test_kill_query(
         cluster=cluster,
         test=True,
         output_format=output_format,
-        **query_kwargs
+        **query_kwargs,
     )
-

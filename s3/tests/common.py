@@ -157,12 +157,36 @@ def add_config(
                             wait_for_config_to_be_loaded()
 
 
+def _export_partition_setting_name():
+    """Return the right ``EXPORT PARTITION`` server-config flag name for the
+    running ClickHouse build.
+
+    The flag was renamed in https://github.com/Altinity/ClickHouse/pull/1618
+    commit ``be182397``. Antalya 25.8 ships the legacy
+    ``enable_experimental_export_merge_tree_partition_feature``; 26.1+ uses
+    the renamed ``allow_experimental_export_merge_tree_partition``. Anything
+    that does not advertise a clickhouse_version (or is otherwise ``<26.1``)
+    falls back to the legacy name so a 25.8-line run still wires up correctly.
+    """
+    if check_clickhouse_version("<26.1")(current()):
+        return "enable_experimental_export_merge_tree_partition_feature"
+    return "allow_experimental_export_merge_tree_partition"
+
+
 def create_export_partition_config(
     config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="enable_experimental_export_merge_tree_partition.xml",
+    config_file=None,
 ):
-    """Create export partition config content.."""
-    entries = {"enable_experimental_export_merge_tree_partition_feature": "1"}
+    """Create export partition config content.
+
+    Picks the right experimental setting name based on the running ClickHouse
+    version (see :func:`_export_partition_setting_name`). Pass ``config_file``
+    explicitly to override the default ``<setting_name>.xml`` filename.
+    """
+    setting_name = _export_partition_setting_name()
+    if config_file is None:
+        config_file = f"{setting_name}.xml"
+    entries = {setting_name: "1"}
 
     return create_xml_config_content(
         entries, config_file=config_file, config_d_dir=config_d_dir
@@ -173,13 +197,19 @@ def create_export_partition_config(
 def enable_export_partition(
     self,
     config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="enable_experimental_export_merge_tree_partition.xml",
+    config_file=None,
     timeout=300,
     restart=True,
     config=None,
     nodes=None,
 ):
-    """Add configuration which enables export partition."""
+    """Add configuration which enables export partition.
+
+    The XML setting key (and default filename) is selected from the running
+    ClickHouse version: 25.8 builds use the legacy
+    ``enable_experimental_export_merge_tree_partition_feature`` name; 26.1+
+    uses the renamed ``allow_experimental_export_merge_tree_partition``.
+    """
     if config is None:
         config = create_export_partition_config(config_d_dir, config_file)
 

@@ -5,6 +5,7 @@ Helpers.queries contains functions that wrap SQL queries.
 import json
 
 from testflows.core import *
+from testflows.asserts import error
 from testflows.uexpect.uexpect import ExpectTimeoutError
 from testflows.connect.shell import Command
 
@@ -29,9 +30,7 @@ def select_hash(self, table_name, node=None):
 
 
 @TestStep(Then)
-def table_hashes_match(
-    self, table_name1, table_name2, node=None
-):
+def table_hashes_match(self, table_name1, table_name2, node=None):
     """Check that two table hashes match, returning mismatched rows."""
     if node is None:
         node = self.context.node
@@ -43,7 +42,7 @@ def table_hashes_match(
 
     if hash1 != hash2:
         msg = "Table hashes do not match."
-        
+
         table_data1 = select_all_ordered(table_name=table_name1, node=node)
         table_data2 = select_all_ordered(table_name=table_name2, node=node)
         table_set1 = set(table_data1)
@@ -54,7 +53,9 @@ def table_hashes_match(
         if missing:
             msg += f"\nMissing in {table_name2} ({len(missing)} rows): {sorted(list(missing))}"
         if extra:
-            msg += f"\nExtra in {table_name2} ({len(extra)} rows): {sorted(list(extra))}"
+            msg += (
+                f"\nExtra in {table_name2} ({len(extra)} rows): {sorted(list(extra))}"
+            )
 
         return False, msg
 
@@ -108,14 +109,18 @@ def optimize(
     self, node: ClickHouseNode, table_name: str, final=False, no_checks=False
 ) -> Command:
     """Apply OPTIMIZE on the given table and node."""
-    q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
+    q = f"OPTIMIZE TABLE {table_name}" + (" FINAL" if final else "")
     return node.query(q, no_checks=no_checks, exitcode=0)
 
 
 @TestStep(When)
-def kill_query(self, node: ClickHouseNode, query_id: str, settings=None, exitcode=0) -> Command:
+def kill_query(
+    self, node: ClickHouseNode, query_id: str, settings=None, exitcode=0
+) -> Command:
     """Kill a query by its ID synchronously."""
-    return node.query(f"KILL QUERY WHERE query_id='{query_id}'", exitcode=exitcode, settings=settings)
+    return node.query(
+        f"KILL QUERY WHERE query_id='{query_id}'", exitcode=exitcode, settings=settings
+    )
 
 
 @TestStep(Given)
@@ -167,6 +172,18 @@ def get_row_count(
         timeout=timeout,
     )
     return int(json.loads(r.output)[0])
+
+
+@TestStep(Then)
+def assert_row_count(
+    self, table_name: str, rows: int, node: ClickHouseNode = None, timeout: int = 30
+) -> None:
+    """Assert that the number of rows in a table matches the expected value."""
+    if node is None:
+        node = self.context.node
+
+    actual_count = get_row_count(node=node, table_name=table_name, timeout=timeout)
+    assert actual_count == rows, error()
 
 
 @TestStep
@@ -221,11 +238,9 @@ def drop_part(self, table_name, part_name, node=None):
     """Drop a specific part from a table."""
     if node is None:
         node = self.context.node
-    
+
     node.query(
-        f"ALTER TABLE {table_name} DROP PART '{part_name}'", 
-        exitcode=0, 
-        steps=True
+        f"ALTER TABLE {table_name} DROP PART '{part_name}'", exitcode=0, steps=True
     )
 
 
@@ -234,22 +249,21 @@ def detach_part(self, table_name, part_name, node=None):
     """Detach a specific part from a table."""
     if node is None:
         node = self.context.node
-    
+
     node.query(
-        f"ALTER TABLE {table_name} DETACH PART '{part_name}'", 
-        exitcode=0, 
-        steps=True
+        f"ALTER TABLE {table_name} DETACH PART '{part_name}'", exitcode=0, steps=True
     )
+
 
 @TestStep(When)
 def delete_from(self, table_name, condition, node=None, **query_kwargs):
     """Delete rows from a table using lightweight DELETE FROM statement."""
     if node is None:
         node = self.context.node
-    
+
     node.query(
         f"DELETE FROM {table_name} WHERE {condition}",
         exitcode=0,
         steps=True,
-        **query_kwargs
+        **query_kwargs,
     )

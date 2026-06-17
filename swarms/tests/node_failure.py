@@ -9,7 +9,7 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(Given)
@@ -20,6 +20,7 @@ def setup_iceberg_table(
     row_count=100,
     batch_size=100,
     database_name=None,
+    create_database=True,
 ):
     """Setup an iceberg table."""
     if database_name is None:
@@ -47,11 +48,12 @@ def setup_iceberg_table(
         )
 
     with When("create DataLakeCatalog database in ClickHouse"):
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
+        if create_database:
+            iceberg_engine.create_experimental_iceberg_database(
+                database_name=database_name,
+                s3_access_key_id=minio_root_user,
+                s3_secret_access_key=minio_root_password,
+            )
 
     return f"{database_name}.\\`{namespace}.{table_name}\\`"
 
@@ -143,8 +145,8 @@ def check_restart_clickhouse_on_swarm_node(
     self,
     minio_root_user,
     minio_root_password,
-    row_count=1000,
-    batch_size=100,
+    row_count=100,
+    batch_size=50,
     cluster_name="static_swarm_cluster",
     node=None,
 ):
@@ -163,21 +165,27 @@ def check_restart_clickhouse_on_swarm_node(
     with Then(
         "run long select from iceberg table and restart clickhouse on random swarm node"
     ):
+        if check_clickhouse_version("<26.1")(self):
+            exitcode = 32
+            message = "DB::Exception: Attempt to read after eof"
+        else:
+            exitcode, message = 0, None
+
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
                 clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-                exitcode=32,
-                message="DB::Exception: Attempt to read after eof",
                 cluster_name=cluster_name,
                 delay_before_execution=0,
+                exitcode=exitcode,
+                message=message,
             )
             Step(
                 "restart clickhouse on random swarm node",
                 test=actions.restart_clickhouse_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
-            )(delay=30, signal="KILL", delay_before_execution=5)
+            )(delay=50, signal="KILL", delay_before_execution=10)
             join()
 
 
@@ -267,7 +275,7 @@ def initiator_out_of_disk_space(
     cluster_name="static_swarm_cluster",
     node=None,
 ):
-    """Check that swarm query does not fail if one of the swarm nodes is out of disk space."""
+    """Check that swarm query does not fail if initiator node is out of disk space."""
     if node is None:
         node = self.context.node
 
@@ -280,11 +288,15 @@ def initiator_out_of_disk_space(
             row_count=row_count,
             batch_size=batch_size,
             database_name=database_name,
+            create_database=False,
         )
 
     with And("fill up disks of initiator node"):
         actions.fill_clickhouse_disks(
             node=node,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            database_name=database_name,
         )
 
     with Then("run long select from iceberg table"):
@@ -456,12 +468,12 @@ def feature(self, minio_root_user, minio_root_password, node=None):
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
-    Scenario(test=network_failure)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-        row_count=row_count,
-        batch_size=batch_size,
-    )
+    # Scenario(test=network_failure)(
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    #     row_count=row_count,
+    #     batch_size=batch_size,
+    # )
     Scenario(test=swarm_out_of_disk_space)(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,

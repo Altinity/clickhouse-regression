@@ -8,10 +8,71 @@
       "protocol": "openid-connect",
       "publicClient": true,
       "secret": "grafana-secret",
-      "redirectUris": ["http://localhost:3000/login/generic_oauth"],
+      "redirectUris": [
+        "http://localhost:3000/login/generic_oauth",
+        "http://localhost:*",
+        "http://127.0.0.1:*"
+      ],
       "baseUrl": "http://localhost:3000",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": true,
+      "attributes": {
+        "oauth2.device.authorization.grant.enabled": "true"
+      },
+      "defaultClientScopes": [
+        "basic",
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": ["offline_access"],
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "groups",
+            "jsonType.label": "String",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "grafana-client-confidential",
+      "name": "Grafana (confidential)",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "grafana-confidential-secret",
+      "redirectUris": [
+        "http://localhost:3000/login/generic_oauth",
+        "http://localhost:*",
+        "http://127.0.0.1:*"
+      ],
+      "baseUrl": "http://localhost:3000",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "attributes": {
+        "oauth2.device.authorization.grant.enabled": "true"
+      },
+      "defaultClientScopes": [
+        "basic",
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": ["offline_access"],
       "protocolMappers": [
         {
           "name": "groups",
@@ -39,6 +100,7 @@
       "lastName": "User",
       "emailVerified": true,
       "groups": ["/grafana-admins", "/can-read"],
+      "realmRoles": ["offline_access"],
       "credentials": [
         {
           "type": "password",

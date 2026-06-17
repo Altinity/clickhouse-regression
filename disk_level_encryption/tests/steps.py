@@ -61,6 +61,7 @@ def add_invalid_encrypted_disk_configuration(
     timeout=300,
     restart=True,
     format=None,
+    validate_during_invalid=None,
 ):
     """Create invalid encrypted disk configuration file and add it to the server."""
     with By("converting config file content to xml"):
@@ -97,7 +98,23 @@ def add_invalid_encrypted_disk_configuration(
             tail=tail,
             timeout=timeout,
             restart=restart,
+            validate_during_invalid=validate_during_invalid,
         )
+
+
+@TestStep(Then)
+def verify_data_unreadable_with_new_key(self, table_name, node=None):
+    """Verify that data previously encrypted with another key/algorithm
+    cannot be read under the current encryption configuration.
+    """
+    if node is None:
+        node = self.context.node
+    r = node.query(f"SELECT * FROM {table_name}", no_checks=True)
+    assert r.exitcode != 0, error()
+    assert (
+        "DATA_ENCRYPTION_ERROR" in r.output
+        or "Not found an encryption key" in r.output
+    ), error()
 
 
 @TestStep(Given)

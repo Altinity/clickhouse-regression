@@ -1,6 +1,7 @@
 from testflows.core import *
 import datetime
 
+from helpers.common import check_clickhouse_version
 from datetime64_extended_range.requirements.requirements import *
 from datetime64_extended_range.tests.common import *
 
@@ -23,7 +24,14 @@ def invalid_date(self):
                 expected = f"{year}-{str(month + 1).zfill(2)}-01 12:23:34"
 
                 with Then(f"{datetime}", description=f"expected {expected}", flags=TE):
-                    select_check_datetime(datetime=datetime, expected=expected)
+                    if check_clickhouse_version(">=26.5")(self):
+                        self.context.node.query(
+                            f"SELECT toDateTime64('{datetime}', 0, 'UTC') FORMAT TabSeparated",
+                            exitcode=41,
+                            message="DB::Exception: Cannot read DateTime: unexpected date",
+                        )
+                    else:
+                        select_check_datetime(datetime=datetime, expected=expected)
 
 
 @TestOutline(Suite)

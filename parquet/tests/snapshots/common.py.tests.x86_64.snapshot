@@ -670,3 +670,51 @@ _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_f
 {"uint8":255,"toTypeName(uint8)":"UInt8"}
 """
 
+_parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_date__26_3 = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date32"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_datetime__26_3 = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime64(0)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_date___26_3 = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date32)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_datetime___26_3 = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime64(0))"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_date__26_3 = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date32"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_datetime__26_3 = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime64(0)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_date___26_3 = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date32)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_datetime___26_3 = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime64(0))"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_date__26_3 = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date32"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_datetime__26_3 = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime64(0)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_date___26_3 = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date32)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_nullable_datetime___26_3 = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime64(0))"}
+"""
+

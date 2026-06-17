@@ -11,6 +11,12 @@ from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
 )
+from oauth.tests.steps.provider_protocol import (
+    OAuthToken,
+    OpenIDEndpoints,
+    modify_jwt_token as _shared_modify_jwt_token,
+    unsupported,
+)
 from testflows.core import *
 from oauth.requirements.requirements import *
 
@@ -46,17 +52,19 @@ def get_oauth_token(
     client_id=None,
     client_secret=None,
     scope="https://graph.microsoft.com/.default",
+    username=None,
+    password=None,
 ):
-    """
-    Acquire an OAuth token from Azure AD using client credentials.
+    """Acquire an Azure AD access token via client-credentials grant.
+
+    Returns an ``OAuthToken``. ``username``/``password`` are accepted for
+    signature compatibility but ignored.
     """
 
     if tenant_id is None:
         tenant_id = self.context.tenant_id
-
     if client_id is None:
         client_id = self.context.client_id
-
     if client_secret is None:
         client_secret = self.context.client_secret
 
@@ -64,7 +72,30 @@ def get_oauth_token(
         tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
     )
     token = credential.get_token(scope)
-    return token.token
+    return OAuthToken(
+        access_token=token.token,
+        expires_in=int(token.expires_on) if hasattr(token, "expires_on") else None,
+        raw={"access_token": token.token},
+    )
+
+
+def openid_endpoints(tenant_id=None):
+    """Return Azure AD v2.0 OpenID endpoints for the active tenant.
+
+    Plain function (not a ``@TestStep``) — returns the dataclass directly.
+    """
+    ctx = current().context
+    if tenant_id is None:
+        tenant_id = ctx.tenant_id
+    base = f"https://login.microsoftonline.com/{tenant_id}"
+    return OpenIDEndpoints(
+        issuer=f"{base}/v2.0",
+        jwks_uri=f"{base}/discovery/v2.0/keys",
+        userinfo_endpoint="https://graph.microsoft.com/oidc/userinfo",
+        token_introspection_endpoint=None,
+        configuration_endpoint=f"{base}/v2.0/.well-known/openid-configuration",
+        expected_audience=getattr(ctx, "client_id", None),
+    )
 
 
 @TestStep(Given)
@@ -445,7 +476,6 @@ async def delete_application(self, application_id: str):
 
 @TestStep(Given)
 def setup_azure_application(self):
-    # try:
     with Given("I create an Azure AD application with a secret"):
         application, secret, app_id = create_azure_application_with_secret()
         self.context.application = application
@@ -453,12 +483,6 @@ def setup_azure_application(self):
         self.context.app_id = app_id
 
     yield application
-    # finally:
-    #     with Finally("I delete the Azure AD application"):
-    #         delete_application(application_id=app_id)
-
-
-# Negative Test Steps for Azure OAuth Configuration
 
 
 @TestStep(Given)
@@ -932,9 +956,6 @@ def path_traversal_attempt_configuration(self, node=None):
     )
 
 
-# Combined negative configurations for comprehensive testing
-
-
 @TestStep(Given)
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
@@ -994,7 +1015,17 @@ def mixed_valid_invalid_configuration(self, node=None):
 
 
 class OAuthProvider:
+    """Azure AD provider contract implementation.
+
+    Exposes the interface defined in ``provider_protocol``.
+    Unsupported operations are marked so dependent scenarios ``Skip``.
+    """
+
     get_oauth_token = get_oauth_token
+    openid_endpoints = staticmethod(openid_endpoints)
+    default_idp = default_idp
+    modify_jwt_token = staticmethod(_shared_modify_jwt_token)
+
     create_application = create_azure_application
     create_application_with_secret = create_azure_application_with_secret
     create_user = create_user
@@ -1015,6 +1046,18 @@ class OAuthProvider:
     create_group_with_matching_role_name = create_group_with_matching_role_name
     create_group_with_non_matching_role_name = create_group_with_non_matching_role_name
     setup_azure_application = setup_azure_application
+
+    delete_user = unsupported("delete_user")
+    disable_user = unsupported("disable_user")
+    enable_user = unsupported("enable_user")
+    invalidate_user_sessions = unsupported("invalidate_user_sessions")
+    disable_client = unsupported("disable_client")
+    enable_client = unsupported("enable_client")
+    delete_group = unsupported("delete_group")
+    remove_user_from_group = unsupported("remove_user_from_group")
+    get_user_by_username = unsupported("get_user_by_username")
+    get_group_by_name = unsupported("get_group_by_name")
+    get_oauth_token_for_client = unsupported("get_oauth_token_for_client")
 
     # Negative configuration test steps
     invalid_processor_type_configuration = invalid_processor_type_configuration

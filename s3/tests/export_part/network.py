@@ -2,6 +2,7 @@ from time import sleep
 import random
 from testflows.core import *
 from testflows.combinatorics import product
+from testflows.uexpect import ExpectTimeoutError
 from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.create import *
@@ -503,6 +504,64 @@ def clickhouse_interruption(self, strategy, signal, safe):
             )
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
+def drop_table_during_stuck_exports(self):
+    """Reproduce DROP TABLE hang when background export tasks are stuck
+    retrying S3 requests against an unreachable MinIO.
+
+    With high s3_retry_attempts (default 500), export tasks hold background
+    executor slots for a very long time. DROP TABLE must wait for these tasks
+    to finish, causing the DROP to hang.
+    """
+    node = self.context.node
+    drop_timeout = 60
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I stop MinIO to make S3 unreachable"):
+        kill_minio()
+
+    with When("I export parts so background tasks get stuck retrying S3"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=node,
+        )
+
+    with And("I verify exports are actively running"):
+        active = get_num_active_exports(node=node, table_name=source_table)
+        note(f"Active exports while MinIO is down: {active}")
+
+    with Then(f"DROP TABLE should complete within {drop_timeout}s"):
+        try:
+            r = node.query(
+                f"DROP TABLE IF EXISTS {source_table} SYNC",
+                timeout=drop_timeout,
+                no_checks=True,
+                steps=True,
+            )
+            if r.exitcode != 0:
+                note(f"DROP TABLE returned exitcode={r.exitcode}: {r.output}")
+        except ExpectTimeoutError:
+            fail(
+                f"DROP TABLE hung for more than {drop_timeout}s "
+                "due to stuck background export tasks"
+            )
+
+    with Finally("I restore MinIO"):
+        start_minio()
+
+
 @TestFeature
 @Name("network")
 def feature(self):
@@ -519,3 +578,4 @@ def feature(self):
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
     Scenario(run=minio_interruption)
     Scenario(run=clickhouse_interruption)
+    # Scenario(run=drop_table_during_stuck_exports)

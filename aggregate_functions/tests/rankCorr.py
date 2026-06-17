@@ -2,7 +2,7 @@ from testflows.core import *
 
 from helpers.datatypes import Float64
 from helpers.tables import is_numeric, common_columns, unwrap
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_current_cpu
 from aggregate_functions.tests.steps import (
     execute_query,
     permutations_with_replacement,
@@ -27,7 +27,9 @@ def datatype(self, func, table, col1_name, col2_name):
 def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
     """Check rankCorr aggregate function by using the same checks as for corr."""
     clickhouse_version = None
-    if check_clickhouse_version(">=26.1")(self) and "State" in self.name:
+    if check_clickhouse_version(">=26.6")(self) and check_current_cpu("aarch64")(self):
+        clickhouse_version = ">=26.6"
+    elif check_clickhouse_version(">=26.1")(self) and "State" in self.name:
         clickhouse_version = ">=26.1"
     elif check_clickhouse_version(">=25.10")(self):
         clickhouse_version = ">=25.10"
@@ -65,8 +67,16 @@ def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
                 )
 
     with Check("with group by"):
+        snapshot_name_override = None
+        if "State" in self.name and "_binary" in getattr(
+            self.context, "clickhouse_path", ""
+        ):
+            snapshot_name_override = (
+                current().name.replace("/part 3", "") + "_binary"
+            )
         execute_query(
-            f"SELECT {func.format(params='sin(number),exp(number)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(10) GROUP BY number % 2"
+            f"SELECT {func.format(params='sin(number),exp(number)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(10) GROUP BY number % 2",
+            snapshot_name=snapshot_name_override,
         )
 
     with Check("some negative values"):

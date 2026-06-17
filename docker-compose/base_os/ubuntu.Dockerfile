@@ -9,7 +9,7 @@ RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 # Fix for 22.x keeper
 RUN mkdir -p /var/lib/clickhouse/coordination
 
-RUN apt-get update && apt-get install -y ca-certificates curl openssl
+RUN apt-get update && apt-get install -y ca-certificates curl openssl iproute2
 
 ARG CLICKHOUSE_PACKAGE
 COPY $CLICKHOUSE_PACKAGE /tmp/

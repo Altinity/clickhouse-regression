@@ -7,12 +7,13 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.common import check_if_not_antalya_build
+from helpers.common import check_if_not_antalya_build, check_clickhouse_version
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
 from oauth.tests.steps import keycloak_realm as keycloak
+from oauth.tests.steps.provider_protocol import assert_provider_contract
 
 
 def argparser(parser):
@@ -55,8 +56,62 @@ def argparser(parser):
         default="Keycloak",
     )
 
+    parser.add_argument(
+        "--refresh-token",
+        type=str,
+        dest="refresh_token",
+        help="Refresh token for Google OAuth (obtained out of band)",
+        metavar="string",
+        default=None,
+    )
 
-xfails = {}
+
+xfails = {
+    "/oauth/configuration/multiple token entries in user directories": [
+        (
+            Fail,
+            "DEFECT_M33 (alias CFG-04) — duplicate <token> entries "
+            "inside <user_directories> are silently merged and auth "
+            "proceeds with whichever entry won the merge. SRS "
+            "6.2.1.1.4 says auth SHALL NOT be allowed when "
+            "user_directories contains multiple duplicate entries. "
+            "Same fail-open family as H-06 / H-07 (silent toleration "
+            "of an invalid config). New finding from runtime audit-"
+            "review pass — next available Series-A medium ID per "
+            "all-issues.md §4. Will go green when the parser starts "
+            "rejecting duplicate <token> children.",
+        )
+    ],
+    "/oauth/cache semantics/cache entry capped at token exp when token expires first": [
+        (
+            Fail,
+            "DEFECT_H_NEW_30 — JWT exp never propagated to cache TTL. "
+            "resolveAndValidate never calls "
+            "credentials.setExpiresAt(decoded_jwt.get_expires_at()), "
+            "so a token past its IdP-issued exp keeps authenticating "
+            "for up to token_cache_lifetime. Violates SRS 13.1.5 "
+            "'Common.Cache.Behavior' which mandates "
+            "cache_entry_expires_at = min(token.exp, now + "
+            "token_cache_lifetime). Will go green once the exp is "
+            "propagated to the cache write.",
+        )
+    ],
+    "/oauth/client login/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
+        (
+            Fail,
+            "PR #1606 follow-up audit: loopback /start must not redirect with "
+            "a Location header bearing oauth state= (see "
+            "issue-pr-1606-oauth-audit-round2.md).",
+        )
+    ],
+    "/oauth/client login/client oauth login/browser flow security/oversized OIDC discovery document fails without hanging": [
+        (
+            Fail,
+            "PR #1606 follow-up audit: OIDC discovery should bound download "
+            "size (issue-pr-1606-oauth-audit-round2.md).",
+        )
+    ],
+}
 
 ffails = {
     "/oauth/*": (
@@ -64,18 +119,38 @@ ffails = {
         "OAuth not implemented in non Antalya build",
         check_if_not_antalya_build,
     ),
+    "/oauth/client login/client oauth login/connection block segfault/*": (
+        Skip,
+        "Waiting for upstream fix: Altinity/ClickHouse#1696 / "
+        "ClickHouse/ClickHouse#103603 (Client::login segfault on empty "
+        "hosts_and_ports when --login is combined with --connection and "
+        "no explicit --host).",
+    ),
 }
 
+
 def _load_provider_module(identity_provider):
-    """Lazily import provider modules so Azure deps are not required for Keycloak."""
+    """Lazily import provider modules so Azure/Google deps are not required for Keycloak.
+
+    Each loaded module is checked against the contract in
+    ``provider_protocol`` so a missing/renamed method fails fast at
+    suite startup rather than mid-scenario.
+    """
     if identity_provider == "keycloak":
-        return keycloak
+        module = keycloak
     elif identity_provider == "azure":
         from oauth.tests.steps import azure_application as azure
 
-        return azure
+        module = azure
+    elif identity_provider == "google":
+        from oauth.tests.steps import google_application as google
+
+        module = google
     else:
         raise ValueError(f"Unknown identity provider: {identity_provider}")
+
+    assert_provider_contract(module)
+    return module
 
 
 @TestFeature
@@ -95,6 +170,8 @@ def regression(
     tenant_id=None,
     client_id=None,
     client_secret=None,
+    refresh_token=None,
+    run_security=False,
 ):
     """Run tests for OAuth in ClickHouse."""
 
@@ -143,7 +220,13 @@ def regression(
             self.context.password = "demo"
             self.context.client_secret = "grafana-secret"
             self.context.client_id = "grafana-client"
+            self.context.introspection_client_id = "grafana-client-confidential"
+            self.context.introspection_client_secret = "grafana-confidential-secret"
             self.context.realm_name = "grafana"
+        elif identity_provider_lower == "google":
+            self.context.client_id = client_id
+            self.context.client_secret = client_secret
+            self.context.refresh_token = refresh_token
 
         cluster = create_cluster(
             **cluster_args,
@@ -156,13 +239,11 @@ def regression(
         self.context.provider_client = provider_module
         self.context.provider_name = identity_provider
 
-    self.context.bash_tools = self.context.cluster.node("bash-tools")
-    self.context.node = self.context.cluster.node("clickhouse1")
-    self.context.node2 = self.context.cluster.node("clickhouse2")
-    self.context.node3 = self.context.cluster.node("clickhouse3")
-    self.context.nodes = [
-        self.context.cluster.node(node) for node in nodes["clickhouse"]
-    ]
+        self.context.bash_tools = cluster.node("bash-tools")
+        self.context.node = cluster.node("clickhouse1")
+        self.context.node2 = cluster.node("clickhouse2")
+        self.context.node3 = cluster.node("clickhouse3")
+        self.context.nodes = [cluster.node(node) for node in nodes["clickhouse"]]
 
     with Given(f"{identity_provider} is up and running"):
         if identity_provider_lower == "keycloak":
@@ -170,13 +251,25 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+    if check_clickhouse_version(">=26.3")(self):
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+        Scenario(run=load("oauth.tests.configuration", "feature"))
+        Scenario(run=load("oauth.tests.authentication", "feature"))
+        Scenario(run=load("oauth.tests.tokens", "feature"))
+        Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+        Scenario(run=load("oauth.tests.access_control", "feature"))
+        Scenario(run=load("oauth.tests.groups", "feature"))
+        Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+        Scenario(run=load("oauth.tests.tls", "feature"))
+        Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
+    else:
+        pass
+
+    # with Feature("client login"):
+    #     Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+
+    if run_security:
+        Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
 
 
 if main():

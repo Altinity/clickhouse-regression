@@ -100,19 +100,19 @@ def check_restart_clickhouse_server(
                 f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
             ).output
             node.query(f"ALTER TABLE {destination_table} DETACH PARTITION {partition}")
-            data_after = node.query(
-                f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
+                    data_after = node.query(
+                        f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
+                    )
                     assert data_after.output != data_before, error()
 
             node.query(f"ALTER TABLE {destination_table} ATTACH PARTITION {partition}")
-            data_after = node.query(
-                f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
+                    data_after = node.query(
+                        f"SELECT * FROM {destination_table} ORDER BY tuple(*) FORMAT TabSeparated"
+                    )
                     assert data_after.output == data_before, error()
 
 
