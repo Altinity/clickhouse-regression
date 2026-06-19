@@ -135,3 +135,7 @@ CISCO_INSERT_SELECT = textwrap.dedent(
 CISCO_WHERE = (
     f"eventDate = toDate('{CISCO_EVENT_DATE}') AND retention = {CISCO_RETENTION}"
 )
+
+# LowCardinality/Enum unwrap and narrow integer promotion are lossy under
+# PR 1779's export cast gate; match INSERT SELECT parity with explicit opt-in.
+CISCO_EXPORT_SETTINGS = [("export_merge_tree_part_allow_lossy_cast", 1)]

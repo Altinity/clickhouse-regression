@@ -102,6 +102,28 @@ def insert_data(self, table_name, values, node=None):
     node.query(f"INSERT INTO {table_name} VALUES {values}")
 
 
+def resolve_partition_ids(table_name, node, active_only=True):
+    """Return sorted distinct ``partition_id`` values from ``system.parts``.
+
+    Plain helper for use outside a TestFlows ``with`` block.  Calling a
+    ``@TestStep``-decorated step directly returns an ``OK`` wrapper, not the
+    step's return value.
+    """
+    active_filter = "AND active" if active_only else ""
+    output = node.query(
+        f"SELECT DISTINCT partition_id FROM system.parts "
+        f"WHERE table = '{table_name}' AND database = currentDatabase() {active_filter}"
+    ).output
+    return sorted({row.strip() for row in output.splitlines() if row.strip()})
+
+
+def resolve_first_partition_id(table_name, node, active_only=True):
+    """Return one ``partition_id`` for ``table_name`` (see :func:`resolve_partition_ids`)."""
+    ids = resolve_partition_ids(table_name, node, active_only)
+    assert ids, error(f"No active partitions found for table {table_name}")
+    return ids[0]
+
+
 @TestStep(When)
 def get_partition_ids(self, table_name, node=None, active_only=True):
     """Return the sorted list of distinct ``partition_id`` values for the given
@@ -112,13 +134,7 @@ def get_partition_ids(self, table_name, node=None, active_only=True):
     """
     if node is None:
         node = self.context.node
-
-    active_filter = "AND active" if active_only else ""
-    output = node.query(
-        f"SELECT DISTINCT partition_id FROM system.parts "
-        f"WHERE table = '{table_name}' AND database = currentDatabase() {active_filter}"
-    ).output
-    return sorted({row.strip() for row in output.splitlines() if row.strip()})
+    return resolve_partition_ids(table_name, node, active_only)
 
 
 @TestStep(When)
@@ -156,9 +172,9 @@ def first_partition_id(self, table_name, node=None):
 
     Fails the scenario if the source table has no active parts.
     """
-    ids = get_partition_ids(table_name=table_name, node=node)
-    assert ids, error(f"No active partitions found for table {table_name}")
-    return ids[0]
+    if node is None:
+        node = self.context.node
+    return resolve_first_partition_id(table_name, node)
 
 
 @TestStep(When)

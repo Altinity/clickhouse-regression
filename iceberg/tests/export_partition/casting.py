@@ -48,6 +48,7 @@ from iceberg.tests.export_partition.steps.casting import (
 )
 from iceberg.tests.export_partition.steps.cisco_schema import (
     CISCO_DEST_COLUMNS,
+    CISCO_EXPORT_SETTINGS,
     CISCO_INSERT_SELECT,
     CISCO_PARTITION_BY,
     CISCO_SOURCE_COLUMNS,
@@ -55,7 +56,7 @@ from iceberg.tests.export_partition.steps.cisco_schema import (
 )
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
-    first_partition_id,
+    resolve_first_partition_id,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition as export_partition_step,
@@ -118,8 +119,9 @@ def cisco_schema(self, minio_root_user, minio_root_password):
 
     Source columns match ``schema_sample.sql`` MergeTree types; destination
     columns use Iceberg-legal equivalents (``LowCardinality``/``Enum8``/``UInt8``
-    -> ``String``/``Int32``, etc.). Parity is checked against
-    ``INSERT INTO dest SELECT * FROM source``, not Hybrid/S3 cold storage.
+    -> ``String``/``Int32``, etc.). Several mappings are lossy, so export runs
+    with ``export_merge_tree_part_allow_lossy_cast = 1``. Parity is checked
+    against ``INSERT INTO dest SELECT * FROM source``, not Hybrid/S3 cold storage.
     """
     node = self.context.node
     source_table = f"cisco_src_{getuid()}"
@@ -162,13 +164,14 @@ def cisco_schema(self, minio_root_user, minio_root_password):
             node=node,
         )
 
-    partition_id = first_partition_id(table_name=source_table, node=node)
+    partition_id = resolve_first_partition_id(table_name=source_table, node=node)
 
     with And("EXPORT PARTITION into the twin destination"):
         export_partition_step(
             source_table=source_table,
             destination=dest_export,
             partition_id=partition_id,
+            settings=CISCO_EXPORT_SETTINGS,
             node=node,
         )
 

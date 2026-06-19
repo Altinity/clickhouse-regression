@@ -15,13 +15,15 @@ from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
-    first_partition_id,
     insert_data,
+    resolve_first_partition_id,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
-    prepare_export_partition_settings,
 )
+
+BAD_ARGUMENTS = 36
+LOSSY_CAST_REJECTION_MESSAGE = "lossy cast"
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
     create_iceberg_destination,
@@ -276,6 +278,26 @@ def run_cast_parity_case(
 
     export_settings = _export_settings(case.allow_lossy_cast)
 
+    partition_id = (
+        case.partition_id
+        if case.partition_id != "2020"
+        else resolve_first_partition_id(table_name=source_table, node=node)
+    )
+
+    if case.expect_export_rejection:
+        with When("EXPORT PARTITION is rejected for lossy cast without setting"):
+            export_partition(
+                source_table=source_table,
+                destination=dest_export,
+                partition_id=partition_id,
+                settings=export_settings,
+                exitcode=BAD_ARGUMENTS,
+                message=LOSSY_CAST_REJECTION_MESSAGE,
+                wait_for_completion=False,
+                node=node,
+            )
+        return
+
     with When("INSERT INTO benchmark destination SELECT * FROM source"):
         insert_select_into_iceberg_destination(
             destination=dest_insert,
@@ -283,29 +305,7 @@ def run_cast_parity_case(
             node=node,
         )
 
-    partition_id = (
-        case.partition_id
-        if case.partition_id != "2020"
-        else first_partition_id(table_name=source_table, node=node)
-    )
-
     with And("EXPORT PARTITION into the twin destination"):
-        if case.expect_export_rejection:
-            result = node.query(
-                f"ALTER TABLE {source_table} "
-                f"EXPORT PARTITION ID '{partition_id}' "
-                f"TO TABLE {as_destination_name(dest_export)}",
-                settings=prepare_export_partition_settings(
-                    self.context.catalog, export_settings
-                ),
-                exitcode="*",
-            )
-            assert result.exitcode != 0, error(
-                "expected lossy cast export to be rejected without "
-                f"export_merge_tree_part_allow_lossy_cast=1, got: {result.output}"
-            )
-            return
-
         export_partition(
             source_table=source_table,
             destination=dest_export,
