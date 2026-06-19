@@ -890,11 +890,11 @@ Compatibility with [Grafana].
 #### Tableau
 
 Results:
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/tableau/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/tableau/
 
 Compatibility with [Tableau].
 
-**TDVT results:** 849 passed, 24 failed (97% pass rate). All failures are expected and attributable to ClickHouse or connector limitations, not data loading issues.
+**TDVT results:** 849/873 passed, 24 failed (97% pass rate). All failures are expected and attributable to ClickHouse or connector limitations, not data loading issues.
 
 **Failure breakdown:**
 
@@ -911,9 +911,9 @@ Compatibility with [Tableau].
 
 | Version                          | Failures |
 |----------------------------------|----------|
-| Latest LTS (Altinity 25.8)       | 24       |
-| Previous LTS (Altinity 25.3)     | 24       |
-| Upstream (ClickHouse 25.8.16.34) | 24       |
+| Latest LTS (Altinity 26.3)       | 24       |
+| Previous LTS (Altinity 25.8)     | 24       |
+| Upstream (ClickHouse 26.3.12.3)  | 24       |
 
 All 24 failures are the exact same set across all three builds. They are pre-existing ClickHouse/JDBC connector limitations, not version-specific regressions.
 
