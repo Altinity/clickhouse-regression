@@ -98,7 +98,7 @@ def _parse_s3_file_path(file_path, expected_bucket):
     what ``write_full_path_in_iceberg_metadata`` writes for data files).
     """
     if file_path.startswith("s3://"):
-        without_scheme = file_path[len("s3://"):]
+        without_scheme = file_path[len("s3://") :]
         bucket, _, key = without_scheme.partition("/")
         assert bucket == expected_bucket, error(
             f"Expected bucket {expected_bucket!r}, got {bucket!r} in {file_path!r}"
@@ -146,14 +146,14 @@ def parquet_compression_method_flows_to_data_files(
                 source_table=source_table,
                 destination=destination,
                 partition_id="2020",
-                extra_settings=FULL_PATHS_SETTING + [
+                extra_settings=FULL_PATHS_SETTING
+                + [
                     ("output_format_parquet_compression_method", ch_codec),
                 ],
             )
 
         with Then(
-            f"every column chunk of every {ch_codec} data file uses "
-            f"{parquet_codec}"
+            f"every column chunk of every {ch_codec} data file uses " f"{parquet_codec}"
         ):
             data_files = get_data_files(
                 destination=destination,

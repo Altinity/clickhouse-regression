@@ -9,7 +9,9 @@ only — this is a ReplicatedMergeTree concern, not a destination concern.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_ZooKeeperCompat
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_ZooKeeperCompat,
+)
 
 from helpers.common import getuid
 
@@ -84,9 +86,7 @@ def export_after_restart_recreates_exports_znode(
         # the replica enters the restart step without /exports.
         ensure_zk_path_absent(path=exports_path)
 
-    with When(
-        "SYSTEM RESTART REPLICA — attach thread should re-create /exports"
-    ):
+    with When("SYSTEM RESTART REPLICA — attach thread should re-create /exports"):
         restart_replica(table_name=source_table)
 
     with Then("/exports is back after the replica attach"):
@@ -132,9 +132,7 @@ def export_after_restart_recreates_exports_znode(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_ZooKeeperCompat("1.0"))
 @Name("restart heals operator-deleted exports znode mid-session")
-def restart_heals_operator_deletion(
-    self, minio_root_user, minio_root_password
-):
+def restart_heals_operator_deletion(self, minio_root_user, minio_root_password):
     """Deleting ``/exports`` mid-session (operator foot-gun) is healed
     by ``SYSTEM RESTART REPLICA`` and a fresh EXPORT against a new
     partition still works.

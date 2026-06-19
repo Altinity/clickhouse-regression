@@ -47,6 +47,7 @@ from iceberg.tests.export_partition.steps.verification import (
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 
+
 def _seed_source(values, partition_by=SIMPLE_PARTITION_BY, columns=SIMPLE_COLUMNS):
     """Create a ReplicatedMergeTree and insert a single batch of values."""
     source_table = f"mt_{getuid()}"
@@ -74,9 +75,7 @@ def multi_statement_alter_commits_each_partition(
     node = self.context.node
     partitions = ["2020", "2021", "2022"]
     values = ", ".join(
-        f"({i * 10 + k}, {year})"
-        for i, year in enumerate(partitions)
-        for k in range(3)
+        f"({i * 10 + k}, {year})" for i, year in enumerate(partitions) for k in range(3)
     )
     source_table = _seed_source(values=values)
 
@@ -91,14 +90,11 @@ def multi_statement_alter_commits_each_partition(
 
     with When("fire a single ALTER with one EXPORT PARTITION per partition"):
         export_clauses = ",\n  ".join(
-            f"EXPORT PARTITION ID '{pid}' TO TABLE {dest_name}"
-            for pid in partitions
+            f"EXPORT PARTITION ID '{pid}' TO TABLE {dest_name}" for pid in partitions
         )
         node.query(
             f"ALTER TABLE {source_table}\n  {export_clauses}",
-            settings=prepare_export_partition_settings(
-                self.context.catalog, None
-            ),
+            settings=prepare_export_partition_settings(self.context.catalog, None),
         )
 
     with And("wait for every export row to report COMPLETED"):
@@ -149,9 +145,7 @@ def multi_statement_alter_commits_each_partition(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_ConcurrentWrites_MultiStatement("1.0"))
 @Name("duplicate EXPORT inside one ALTER commits at most once")
-def duplicate_export_inside_one_alter(
-    self, minio_root_user, minio_root_password
-):
+def duplicate_export_inside_one_alter(self, minio_root_user, minio_root_password):
     """An ALTER that lists the same partition twice is rejected with
     ``EXPORT_PARTITION_ALREADY_EXPORTED`` / "Export with key ..."; the
     destination ends with at most one append snapshot.
@@ -174,9 +168,7 @@ def duplicate_export_inside_one_alter(
             f"ALTER TABLE {source_table}\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name},\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name}",
-            settings=prepare_export_partition_settings(
-                self.context.catalog, None
-            ),
+            settings=prepare_export_partition_settings(self.context.catalog, None),
             message="Export with key",
         )
 
@@ -230,9 +222,7 @@ def insert_after_scheduled_export_is_isolated(
     commits does not leak into the running export's snapshot; the new
     rows only appear after a follow-up export.
     """
-    source_table = _seed_source(
-        values="(1, 2020), (2, 2020), (3, 2020)"
-    )
+    source_table = _seed_source(values="(1, 2020), (2, 2020), (3, 2020)")
 
     with Given("create the Iceberg destination"):
         destination = create_iceberg_destination(
@@ -299,9 +289,7 @@ def insert_after_scheduled_export_is_isolated(
             order_by="id",
         )
 
-    with And(
-        "snapshot log has two linearised append snapshots (original + follow-up)"
-    ):
+    with And("snapshot log has two linearised append snapshots (original + follow-up)"):
         snapshots = get_snapshots(
             destination=destination,
             minio_root_user=minio_root_user,

@@ -583,7 +583,9 @@ def assert_file_paths_under_prefix(
         minio_root_password=minio_root_password,
     )
     bad_paths = [
-        df.file_path for df in data_files if not df.file_path.startswith(expected_prefix)
+        df.file_path
+        for df in data_files
+        if not df.file_path.startswith(expected_prefix)
     ]
     assert not bad_paths, error(
         f"Data files not under expected prefix {expected_prefix!r} in "

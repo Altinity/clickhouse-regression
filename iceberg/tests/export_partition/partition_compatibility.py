@@ -125,7 +125,9 @@ def _run_rejected_case(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: compound identity (year, region)")
 def accepted_compound_identity(self, minio_root_user, minio_root_password):
     """Two-column identity partitioning on mixed (Int, String) columns."""
@@ -140,7 +142,9 @@ def accepted_compound_identity(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: year transform (toYearNumSinceEpoch)")
 def accepted_year_transform(self, minio_root_user, minio_root_password):
     """``toYearNumSinceEpoch(Date)`` maps to the Iceberg ``year`` transform."""
@@ -155,7 +159,9 @@ def accepted_year_transform(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: month transform (toMonthNumSinceEpoch)")
 def accepted_month_transform(self, minio_root_user, minio_root_password):
     """``toMonthNumSinceEpoch(Date)`` maps to the Iceberg ``month`` transform."""
@@ -170,7 +176,9 @@ def accepted_month_transform(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: day transform (toRelativeDayNum)")
 def accepted_day_transform(self, minio_root_user, minio_root_password):
     """``toRelativeDayNum(Date)`` maps to the Iceberg ``day`` transform."""
@@ -185,7 +193,9 @@ def accepted_day_transform(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: hour transform (toRelativeHourNum)")
 def accepted_hour_transform(self, minio_root_user, minio_root_password):
     """``toRelativeHourNum(DateTime)`` maps to the Iceberg ``hour`` transform."""
@@ -200,7 +210,9 @@ def accepted_hour_transform(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: truncate[4] on String")
 def accepted_truncate(self, minio_root_user, minio_root_password):
     """``icebergTruncate(N, String)`` maps to the Iceberg ``truncate[N]`` transform."""
@@ -215,7 +227,9 @@ def accepted_truncate(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: bucket[8] on Int64")
 def accepted_bucket(self, minio_root_user, minio_root_password):
     """``icebergBucket(N, col)`` maps to the Iceberg ``bucket[N]`` transform."""
@@ -230,7 +244,9 @@ def accepted_bucket(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
 @Name("accepted: compound mixed (year + bucket[16])")
 def accepted_compound_mixed(self, minio_root_user, minio_root_password):
     """Mixed compound key: ``(year-transform, bucket-transform)``."""
@@ -250,7 +266,9 @@ def accepted_compound_mixed(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: compound field order reversed")
 def rejected_reversed_order(self, minio_root_user, minio_root_password):
     """``(year, region)`` on the source vs ``(region, year)`` on the destination."""
@@ -265,7 +283,9 @@ def rejected_reversed_order(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: transform vs identity on same column")
 def rejected_transform_vs_identity(self, minio_root_user, minio_root_password):
     """Year-transform on the source but plain identity on the destination."""
@@ -280,7 +300,9 @@ def rejected_transform_vs_identity(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: bucket width mismatch ([8] vs [16])")
 def rejected_bucket_width_mismatch(self, minio_root_user, minio_root_password):
     """Same column, same transform family, different bucket width."""
@@ -295,7 +317,9 @@ def rejected_bucket_width_mismatch(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: truncate width mismatch ([4] vs [8])")
 def rejected_truncate_width_mismatch(self, minio_root_user, minio_root_password):
     """Same column, same transform family, different truncate width."""
@@ -310,7 +334,9 @@ def rejected_truncate_width_mismatch(self, minio_root_user, minio_root_password)
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: field-count mismatch (2 vs 1)")
 def rejected_field_count_mismatch(self, minio_root_user, minio_root_password):
     """Compound source vs single-column destination."""
@@ -325,7 +351,9 @@ def rejected_field_count_mismatch(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: unsupported MergeTree expression (intDiv)")
 def rejected_unsupported_expression(self, minio_root_user, minio_root_password):
     """Valid MergeTree expressions that have no Iceberg-transform equivalent."""
@@ -345,7 +373,9 @@ def rejected_unsupported_expression(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: different partition columns (year vs id)")
 def rejected_column_mismatch(self, minio_root_user, minio_root_password):
     """Source partitioned by one column, destination by another."""
@@ -360,7 +390,9 @@ def rejected_column_mismatch(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
 @Name("rejected: partitioned source, unpartitioned destination")
 def rejected_unpartitioned_destination(self, minio_root_user, minio_root_password):
     """Source partitioned by ``year``; Iceberg table has no partition spec."""

@@ -74,9 +74,7 @@ def assert_duplicate_export_rejected(result, message=None):
     assert expected_message in result.output, error(result.output)
 
 
-def query_expecting_duplicate_export_rejection(
-    node, sql, settings=None, message=None
-):
+def query_expecting_duplicate_export_rejection(node, sql, settings=None, message=None):
     """Run ``sql`` and assert duplicate-export rejection (exit 36 or 238)."""
     result = node.query(sql, settings=settings, ignore_exception=True)
     assert_duplicate_export_rejected(result, message=message)
@@ -368,9 +366,7 @@ def export_part(
 
     expect_failure = exitcode != 0 or message is not None
 
-    with By(
-        f"running EXPORT PART '{part_name}' from {source_table} to {name}"
-    ):
+    with By(f"running EXPORT PART '{part_name}' from {source_table} to {name}"):
         if expect_failure:
             result = node.query(
                 f"ALTER TABLE {source_table} "
@@ -516,9 +512,7 @@ def insert_into_iceberg_destination(
     if not any(key == "allow_experimental_insert_into_iceberg" for key, _ in settings):
         settings.append(("allow_experimental_insert_into_iceberg", 1))
 
-    settings = _apply_glue_metadata_path_workaround(
-        self.context.catalog, settings
-    )
+    settings = _apply_glue_metadata_path_workaround(self.context.catalog, settings)
 
     expect_failure = exitcode != 0 or message is not None
 
@@ -572,9 +566,7 @@ def truncate_iceberg_destination(
     if not any(key == "allow_experimental_insert_into_iceberg" for key, _ in settings):
         settings.append(("allow_experimental_insert_into_iceberg", 1))
 
-    settings = _apply_glue_metadata_path_workaround(
-        self.context.catalog, settings
-    )
+    settings = _apply_glue_metadata_path_workaround(self.context.catalog, settings)
 
     expect_failure = exitcode != 0 or message is not None
 

@@ -222,7 +222,9 @@ def read_via_icebergS3_table_function(
         # no-catalog: the CH table name matches the last path segment the
         # IcebergS3 storage was created with.
         name = as_destination_name(destination)
-        storage_endpoint = f"{DEFAULT_S3_ENDPOINT_HOST}/{DEFAULT_S3_WAREHOUSE_BUCKET}/data/{name}/"
+        storage_endpoint = (
+            f"{DEFAULT_S3_ENDPOINT_HOST}/{DEFAULT_S3_WAREHOUSE_BUCKET}/data/{name}/"
+        )
     else:
         # catalog-backed: locate the table through the warehouse prefix that
         # PyIceberg uses when creating the table (``s3://warehouse/data``).

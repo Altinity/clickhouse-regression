@@ -49,6 +49,7 @@ MODULES = (
     "truncate",
     "minmax_pruning",
     "zk_compat",
+    # "casting",  # Altinity/ClickHouse#1779 — enable once auto-cast export lands
 )
 
 

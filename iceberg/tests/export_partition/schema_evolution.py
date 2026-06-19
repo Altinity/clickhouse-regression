@@ -133,9 +133,7 @@ def add_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("insert the second partition with a score"):
-        insert_data(
-            table_name=source_table, values="(3, 2021, 42), (4, 2021, NULL)"
-        )
+        insert_data(table_name=source_table, values="(3, 2021, 42), (4, 2021, NULL)")
 
     with And("export the 2021 partition"):
         export_partition(
@@ -205,9 +203,7 @@ def drop_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("insert the first partition"):
-        insert_data(
-            table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')"
-        )
+        insert_data(table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')")
 
     with And("create the Iceberg destination with the extra column"):
         destination = create_iceberg_destination(
@@ -225,9 +221,7 @@ def drop_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("DROP COLUMN note on both sides"):
-        alter_source(
-            source_table=source_table, alter_clause="DROP COLUMN note"
-        )
+        alter_source(source_table=source_table, alter_clause="DROP COLUMN note")
         alter_iceberg_destination(
             destination=destination, alter_clause="DROP COLUMN note"
         )
@@ -362,9 +356,7 @@ def rename_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("insert the first partition"):
-        insert_data(
-            table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')"
-        )
+        insert_data(table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')")
 
     with And("create the Iceberg destination with the initial schema"):
         destination = create_iceberg_destination(
@@ -429,9 +421,7 @@ def rename_column_between_exports(self, minio_root_user, minio_root_password):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations("1.0"))
 @Name("source-only schema drift is rejected at EXPORT")
-def source_only_schema_drift_rejected(
-    self, minio_root_user, minio_root_password
-):
+def source_only_schema_drift_rejected(self, minio_root_user, minio_root_password):
     """Altering only the source schema leaves the destination behind;
     the next ``EXPORT PARTITION`` is rejected with
     ``INCOMPATIBLE_COLUMNS`` instead of silently truncating.
@@ -473,9 +463,7 @@ def source_only_schema_drift_rejected(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory("1.0"))
 @Name("iceberg schema history grows after ADD COLUMN")
-def iceberg_schema_history_advances(
-    self, minio_root_user, minio_root_password
-):
+def iceberg_schema_history_advances(self, minio_root_user, minio_root_password):
     """``ADD COLUMN`` on the Iceberg destination grows
     ``table.schemas()`` by at least one entry, and the latest schema
     contains the new field.

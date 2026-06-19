@@ -9,7 +9,9 @@ append-only history.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_DirectWrites
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_DirectWrites,
+)
 
 from helpers.common import getuid
 
@@ -40,7 +42,9 @@ SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 
 
-def _assert_snapshot_history_grows(destination, minio_root_user, minio_root_password, expected_at_least):
+def _assert_snapshot_history_grows(
+    destination, minio_root_user, minio_root_password, expected_at_least
+):
     """Catalog-mode-only: assert PyIceberg sees a monotonically growing
     snapshot history of at least ``expected_at_least`` entries.
     """

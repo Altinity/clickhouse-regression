@@ -48,6 +48,7 @@ from iceberg.tests.export_partition.steps.verification import (
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 
+
 def _seed_source(values="(1, 2020), (2, 2020), (3, 2021), (4, 2021)"):
     """Create a ReplicatedMergeTree with two partitions (2020, 2021)."""
     source_table = f"mt_{getuid()}"
@@ -79,9 +80,7 @@ def _disable_failpoint(name, node=None):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_Transactions_SnapshotChain("1.0"))
 @Name("sequential exports append one append-snapshot each")
-def sequential_exports_append_snapshots(
-    self, minio_root_user, minio_root_password
-):
+def sequential_exports_append_snapshots(self, minio_root_user, minio_root_password):
     """Two sequential exports produce two append snapshots, linearly
     chained, with strictly increasing ``sequence_number``.
     """
@@ -150,9 +149,7 @@ def sequential_exports_append_snapshots(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_Transactions_Idempotency("1.0"))
 @Name("duplicate export within TTL is rejected")
-def duplicate_export_within_ttl_rejected(
-    self, minio_root_user, minio_root_password
-):
+def duplicate_export_within_ttl_rejected(self, minio_root_user, minio_root_password):
     """A second export of the same ``(source, destination, partition)``
     within the manifest TTL is rejected with
     ``EXPORT_PARTITION_ALREADY_EXPORTED`` / "Export with key ..."; the
@@ -295,17 +292,14 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
             minio_root_password=minio_root_password,
         )
         assert len(snapshots) == 2, error(
-            f"Expected 2 snapshots after TTL-expiry re-export, "
-            f"got {len(snapshots)}"
+            f"Expected 2 snapshots after TTL-expiry re-export, " f"got {len(snapshots)}"
         )
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_Transactions_CrashRecovery("1.0"))
 @Name("commit survives pre-publish failure (non-retry cleanup)")
-def commit_survives_pre_publish_failure(
-    self, minio_root_user, minio_root_password
-):
+def commit_survives_pre_publish_failure(self, minio_root_user, minio_root_password):
     """With ``iceberg_writes_non_retry_cleanup`` armed, the commit retries
     after a pre-publish exception and ends with exactly one append
     snapshot containing the full row count (data files are not discarded).
@@ -396,10 +390,7 @@ def commit_idempotent_after_post_commit_pre_status_crash(
                 partition_id="2020",
             )
 
-        with And(
-            "status converges to COMPLETED on retry "
-            "(not FAILED / KILLED)"
-        ):
+        with And("status converges to COMPLETED on retry " "(not FAILED / KILLED)"):
             wait_for_export_status(
                 source_table=source_table,
                 destination=destination,
@@ -439,9 +430,7 @@ def commit_idempotent_after_post_commit_pre_status_crash(
                 f"prevent a double-commit."
             )
 
-        with And(
-            "snapshot summary carries the ClickHouse export transaction id"
-        ):
+        with And("snapshot summary carries the ClickHouse export transaction id"):
             summary = get_current_snapshot_summary(
                 destination=destination,
                 minio_root_user=minio_root_user,
@@ -600,9 +589,7 @@ def commit_durable_across_post_publish_exception(
                 order_by="id",
             )
 
-        with And(
-            "snapshot summary carries the ClickHouse export transaction id"
-        ):
+        with And("snapshot summary carries the ClickHouse export transaction id"):
             summary = get_current_snapshot_summary(
                 destination=destination,
                 minio_root_user=minio_root_user,
