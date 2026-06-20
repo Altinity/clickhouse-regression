@@ -31,6 +31,7 @@ git apply /diff-0.2.9-progress.patch
 fi
 
 if [ ${RELEASE} == 0.2.9 ]
+then
 git apply /diff-0.2.9-json.patch
 fi
 
