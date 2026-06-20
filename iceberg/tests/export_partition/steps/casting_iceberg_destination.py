@@ -116,7 +116,9 @@ def create_casting_catalog_iceberg_destination(
             namespaces=namespace,
         )
 
-    with And(f"CH CREATE TABLE {namespace}.{table_name} with Iceberg-compatible schema"):
+    with And(
+        f"CH CREATE TABLE {namespace}.{table_name} with Iceberg-compatible schema"
+    ):
         create_sql = textwrap.dedent(
             f"""
             CREATE TABLE {qualified_sql} ({columns})
@@ -190,7 +192,9 @@ def create_casting_iceberg_destination(
         )
 
     if catalog != "ice":
-        raise ValueError(f"Unsupported catalog mode for casting destinations: {catalog!r}")
+        raise ValueError(
+            f"Unsupported catalog mode for casting destinations: {catalog!r}"
+        )
 
     return create_casting_catalog_iceberg_destination(
         columns=columns,
