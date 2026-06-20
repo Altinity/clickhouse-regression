@@ -16,7 +16,9 @@
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/
 
 **Build Report:**
-TBD
+
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/27626627067/ci_run_report.html
+
 
 **Summary:**
 
@@ -79,6 +81,10 @@ TBD
         * 6.2.2 [MSAN](#msan)
         * 6.2.3 [UBSAN](#ubsan)
         * 6.2.4 [TSAN](#tsan)
+        * 6.2.5 [Sanitizer Test Results Summary](#sanitizer-test-results-summary)
+        * 6.2.6 [Identified Issues](#identified-issues)
+        * 6.2.7 [Failure Justification](#failure-justification)
+        * 6.2.8 [Conclusion](#conclusion)
     * 6.3 [Compatibility with Client Drivers](#compatibility-with-client-drivers)
         * 6.3.1 [Python `clickhouse_driver`](#python-clickhouse_driver)
         * 6.3.2 [ODBC `clickhouse-odbc`](#odbc-clickhouse-odbc)
@@ -103,6 +109,8 @@ TBD
 ## Introduction
 
 This test plan covers testing of ClickHouse 26.3 LTS (long-term support) Altinity Stable release.
+
+Test results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/
 
 ## Timeline
 
@@ -131,74 +139,75 @@ The following team members SHALL be dedicated to the release:
 
 ### Open Issues
 
-* No open issues
+* [clickhouse-driver] [`use_client_time_zone` ignored for string datetime literals in INSERT when `async_insert` is enabled](https://github.com/ClickHouse/ClickHouse/issues/108038) — 2 failing timezone tests on 26.3; passes on 25.8; workaround: `SETTINGS async_insert=0`
 
 ### Summary
-Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
+Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/27626627067/ci_run_report.html
 
 > [!NOTE]
 > **\*Pass** - tests passed with known fails
 
-| Test Suite  | Result                                        | Comments |
+| Test Suite | Result | Comments |
 | --- |-----------------------------------------------| --- |
-| Stateless | [Pass](#stateless)                     |   |
-| Stress | [Pass](#stress)                        |   |
-| Integration | [Pass](#integration)                   |   |
-| AES Encryption | [Pass](#aes-encryption)                |   |
-| Aggregate Functions | [Pass](#aggregate-functions)           |   |
-| Alter | [Pass](#alter)                 |   |
-| Atomic Insert | [Pass](#atomic-insert)                 |   |
-| Attach | [Pass](#attach)                        |   |
-| Base58 | [Pass](#base58)                        |   |
-| Ontime Benchmark | [Pass](#ontime-benchmark)              |   |
-| ClickHouse Keeper | [Pass](#clickhouse-keeper)             |   |
-| ClickHouse Keeper Failover | [Pass](#clickhouse-keeper-failover)   |   |
-| Data Types | [Pass](#data-types)                    |   |
-| DateTime64 Extended Range | [Pass](#datetime64-extended-range)     |   |
-| Disk Level Encryption | [Pass](#disk-level-encryption)         |   |
-| DNS | [Pass](#dns)                           |   |
-| Engines  | [Pass](#engines)                       |  |
-| Example | [Pass](#example)                       |   |
-| Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
-| Functions | [Pass](#functions)                     |   |
-| Iceberg | [Pass](#iceberg)                       |   |
-| JWT Authentication | [Pass](#jwt-authentication)           |   |
-| Kafka | [Pass](#kafka)                         |   |
-| Kerberos | [Pass](#kerberos)                      |   |
-| Key Value | [Pass](#key-value)                     |   |
-| LDAP | [Pass](#ldap)                          |   |
-| Lightweight Delete | [Pass](#lightweight-delete)            |    |
-| Memory | [Pass](#memory)                       |   |
-| Parquet | [Pass](#parquet)                       |   |
-| Part Moves Between Shards | [Pass](#part-moves-between-shards)     |   |
-| RBAC | [Pass](#rbac)                          |   |
-| S3 | [Pass](#s3)                           |  |
-| Selects | [Pass](#selects)                       |   |
-| Session Timezone | [Pass](#session-timezone)              |   |
-| Settings | [Pass](#settings)                      |   |
-| SSL Server | [Pass](#ssl-server)                    |   |
-| Swarms | [Pass](#swarms)                        |   |
-| Tiered Storage | [Pass](#tiered-storage)                |   |
-| Version | [Pass](#version)                       |   |
-| Window Functions | [Pass](#window-functions)             |   |
-| Python `clickhouse_driver` | [Pass](#python-clickhouse_driver)            | 377 passed, 109 skipped  |
-| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
-| SQLAlchemy | [Pass](#sqlalchemy)                           | 388 passed, 27 warnings   |
-| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |  Tests run: 232, Failures: 0, Errors: 0, Skipped: 0 |
-| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
-| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
-| Kubernetes `clickhouse-operator` | [*Pass](#kubernetes-clickhouse-operator)       | Tests run: 80, 1 XFail, 2 Fails (expected)  |
-| Altinity.Cloud | [Pass](#altinitycloud)                        |   |
-| Production Cluster Operation | [Pass](#production-cluster-operation)         |   |
-| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
-| Grafana | [Pass](#grafana)                              |   |
-| Tableau | [*Pass](#tableau)                     | 849 passed, 24 failed (97%). Expected fails. |
-| Superset | [Pass](#superset)                             |   |
-| Grype | [Pass](#grype)                         |   |
+| Stateless | [Pass](#stateless) | |
+| Stress | [Pass](#stress) | |
+| Integration | [Pass](#integration) | |
+| AES Encryption | [Pass](#aes-encryption) | |
+| Aggregate Functions | [Pass](#aggregate-functions) | |
+| Alter | [Pass](#alter) | |
+| Atomic Insert | [Pass](#atomic-insert) | |
+| Attach | [Pass](#attach) | |
+| Base58 | [Pass](#base58) | |
+| Ontime Benchmark | [Pass](#ontime-benchmark) | |
+| ClickHouse Keeper | [Pass](#clickhouse-keeper) | |
+| ClickHouse Keeper Failover | [Pass](#clickhouse-keeper-failover) | |
+| Data Types | [Pass](#data-types) | |
+| DateTime64 Extended Range | [Pass](#datetime64-extended-range) | |
+| Disk Level Encryption | [Pass](#disk-level-encryption) | |
+| DNS | [Pass](#dns) | |
+| Engines | [Pass](#engines) | |
+| Example | [Pass](#example) | |
+| Extended Precision Data Types | [Pass](#extended-precision-data-types) | |
+| Functions | [Pass](#functions) | |
+| Iceberg | [Pass](#iceberg) | |
+| JWT Authentication | [Pass](#jwt-authentication) | |
+| Kafka | [Pass](#kafka) | |
+| Kerberos | [Pass](#kerberos) | |
+| Key Value | [Pass](#key-value) | |
+| LDAP | [Pass](#ldap) | |
+| Lightweight Delete | [Pass](#lightweight-delete) | |
+| Memory | [Pass](#memory) | |
+| Parquet | [Pass](#parquet) | |
+| Part Moves Between Shards | [Pass](#part-moves-between-shards) | |
+| RBAC | [Pass](#rbac) | |
+| S3 | [Pass](#s3) | |
+| Selects | [Pass](#selects) | |
+| Session Timezone | [Pass](#session-timezone) | |
+| Settings | [Pass](#settings) | |
+| SSL Server | [Pass](#ssl-server) | |
+| Swarms | [Pass](#swarms) | |
+| Tiered Storage | [Pass](#tiered-storage) | |
+| Version | [Pass](#version) | |
+| Window Functions | [Pass](#window-functions) | |
+| Python `clickhouse_driver` | [*Pass](#python-clickhouse_driver) | 371 passed, 113 skipped, 2 failed (expected). JSON tests skipped; datetime fails tracked in [#108038](https://github.com/ClickHouse/ClickHouse/issues/108038) |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc) | |
+| SQLAlchemy | [Pass](#sqlalchemy) | 388 passed, 27 warnings |
+| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc) | Tests run: 231, Failures: 0, Errors: 0, Skipped: 0 |
+| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc) | |
+| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup) | |
+| Kubernetes `clickhouse-operator` | [*Pass](#kubernetes-clickhouse-operator) | Tests run: 80, 1 XFail, 2 Fails (expected) |
+| Altinity.Cloud | [Pass](#altinitycloud) | |
+| Production Cluster Operation | [Pass](#production-cluster-operation) | |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade) | |
+| Grafana | [Pass](#grafana) | |
+| Tableau | [*Pass](#tableau) | 849 passed, 24 failed (97%). Expected fails. |
+| Superset | [Pass](#superset) | |
+| Grype | [Pass](#grype) | |
 
 ## Scope
 
-The scope of testing ClickHouse 25.8 Altinity Stable LTS release SHALL be defined as follows.
+The scope of testing ClickHouse 26.3 Altinity Stable LTS release SHALL be defined as follows.
+
 
 ### Automated Regression Tests
 
@@ -209,51 +218,61 @@ The following automated regression test suites SHALL be executed.
 Results:
 
 * ARM Binary
-  * [Stateless tests (arm_binary, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28arm_binary%2C+parallel%29&name_2=Tests) 
-  * [Stateless tests (arm_binary, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28arm_binary%2C+sequential%29&name_2=Tests)
- 
-* ARM Coverage
-  * [Stateless tests (arm_coverage, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28arm_coverage%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (arm_coverage, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28arm_coverage%2C+sequential%29&name_2=Tests)
+ * [Stateless tests (arm_binary, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fbinary%2C%20parallel%29)
+ * [Stateless tests (arm_binary, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fbinary%2C%20sequential%29)
 
-* AMD Binary
-  * [Stateless tests (amd_binary, ParallelReplicas, s3 storage, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_binary%2C+ParallelReplicas%2C+s3+storage%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_binary, ParallelReplicas, s3 storage, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_binary%2C+ParallelReplicas%2C+s3+storage%2C+sequential%29&name_2=Tests)
-  * [Stateless tests (amd_binary, old analyzer, s3 storage, DatabaseReplicated, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_binary%2C+old+analyzer%2C+s3+storage%2C+DatabaseReplicated%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_binary, old analyzer, s3 storage, DatabaseReplicated, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_binary%2C+old+analyzer%2C+s3+storage%2C+DatabaseReplicated%2C+sequential%29&name_2=Tests)
- 
+* ARM ASan (Azure)
+ * [Stateless tests (arm_asan, azure, parallel, 1/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fasan%2C%20azure%2C%20parallel%2C%201%2F4%29)
+ * [Stateless tests (arm_asan, azure, parallel, 2/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fasan%2C%20azure%2C%20parallel%2C%202%2F4%29)
+ * [Stateless tests (arm_asan, azure, parallel, 3/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fasan%2C%20azure%2C%20parallel%2C%203%2F4%29)
+ * [Stateless tests (arm_asan, azure, parallel, 4/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fasan%2C%20azure%2C%20parallel%2C%204%2F4%29)
+ * [Stateless tests (arm_asan, azure, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fasan%2C%20azure%2C%20sequential%2C%201%2F2%29)
+ * [Stateless tests (arm_asan, azure, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28arm%5Fasan%2C%20azure%2C%20sequential%2C%202%2F2%29)
+
 * AMD Debug
-  * [Stateless tests (amd_debug, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_debug%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_debug, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_debug%2C+sequential%29&name_2=Tests)
-  * [Stateless tests (amd_debug, AsyncInsert, s3 storage, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_debug%2C+AsyncInsert%2C+s3+storage%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_debug, AsyncInsert, s3 storage, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_debug%2C+AsyncInsert%2C+s3+storage%2C+sequential%29&name_2=Tests)
-  * [Stateless tests (amd_debug, distributed plan, s3 storage, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_debug%2C+distributed+plan%2C+s3+storage%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_debug, distributed plan, s3 storage, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_debug%2C+distributed+plan%2C+s3+storage%2C+sequential%29&name_2=Tests)
+ * [Stateless tests (amd_debug, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fdebug%2C%20parallel%29)
+ * [Stateless tests (amd_debug, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fdebug%2C%20sequential%29)
+ * [Stateless tests (amd_debug, distributed plan, s3 storage, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fdebug%2C%20distributed%20plan%2C%20s3%20storage%2C%20parallel%29)
+ * [Stateless tests (amd_debug, distributed plan, s3 storage, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fdebug%2C%20distributed%20plan%2C%20s3%20storage%2C%20sequential%29)
+
+* AMD Coverage
+ * [Stateless tests (amd_coverage, 1/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%201%2F8%29)
+ * [Stateless tests (amd_coverage, 2/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%202%2F8%29)
+ * [Stateless tests (amd_coverage, 3/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%203%2F8%29)
+ * [Stateless tests (amd_coverage, 4/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%204%2F8%29)
+ * [Stateless tests (amd_coverage, 5/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%205%2F8%29)
+ * [Stateless tests (amd_coverage, 6/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%206%2F8%29)
+ * [Stateless tests (amd_coverage, 7/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%207%2F8%29)
+ * [Stateless tests (amd_coverage, 8/8)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fcoverage%2C%208%2F8%29)
 
 * AMD UBSan
-  * [Stateless tests (amd_ubsan, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_ubsan%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_ubsan, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_ubsan%2C+sequential%29&name_2=Tests)
+ * [Stateless tests (amd_ubsan, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fubsan%2C%20parallel%29)
+ * [Stateless tests (amd_ubsan, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fubsan%2C%20sequential%29)
 
 * AMD ASan
-  * [Stateless tests (amd_asan, distributed plan, parallel, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_asan%2C+distributed+plan%2C+parallel%2C+1%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_asan, distributed plan, parallel, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_asan%2C+distributed+plan%2C+parallel%2C+2%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_asan, distributed plan, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_asan%2C+distributed+plan%2C+sequential%29&name_2=Tests)
+ * [Stateless tests (amd_asan, distributed plan, parallel, 1/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fasan%2C%20distributed%20plan%2C%20parallel%2C%201%2F4%29)
+ * [Stateless tests (amd_asan, distributed plan, parallel, 2/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fasan%2C%20distributed%20plan%2C%20parallel%2C%202%2F4%29)
+ * [Stateless tests (amd_asan, distributed plan, parallel, 3/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fasan%2C%20distributed%20plan%2C%20parallel%2C%203%2F4%29)
+ * [Stateless tests (amd_asan, distributed plan, parallel, 4/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fasan%2C%20distributed%20plan%2C%20parallel%2C%204%2F4%29)
+ * [Stateless tests (amd_asan, db disk, distributed plan, sequential)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20distributed%20plan%2C%20sequential%29)
 
 * AMD MSan
-  * [Stateless tests (amd_msan, parallel, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_msan%2C+parallel%2C+1%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_msan, parallel, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_msan%2C+parallel%2C+2%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_msan, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_msan%2C+sequential%2C+1%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_msan, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_msan%2C+sequential%2C+2%2F2%29&name_2=Tests)
+ * [Stateless tests (amd_msan, WasmEdge, parallel, 1/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fmsan%2C%20WasmEdge%2C%20parallel%2C%201%2F4%29)
+ * [Stateless tests (amd_msan, WasmEdge, parallel, 2/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fmsan%2C%20WasmEdge%2C%20parallel%2C%202%2F4%29)
+ * [Stateless tests (amd_msan, WasmEdge, parallel, 3/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fmsan%2C%20WasmEdge%2C%20parallel%2C%203%2F4%29)
+ * [Stateless tests (amd_msan, WasmEdge, parallel, 4/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fmsan%2C%20WasmEdge%2C%20parallel%2C%204%2F4%29)
+ * [Stateless tests (amd_msan, WasmEdge, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fmsan%2C%20WasmEdge%2C%20sequential%2C%201%2F2%29)
+ * [Stateless tests (amd_msan, WasmEdge, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Fmsan%2C%20WasmEdge%2C%20sequential%2C%202%2F2%29)
 
 * AMD TSan
-  * [Stateless tests (amd_tsan, parallel, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+parallel%2C+1%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_tsan, parallel, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+parallel%2C+2%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_tsan, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+sequential%2C+1%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_tsan, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+sequential%2C+2%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_tsan, s3 storage, parallel)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+s3+storage%2C+parallel%29&name_2=Tests)
-  * [Stateless tests (amd_tsan, s3 storage, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+s3+storage%2C+sequential%2C+1%2F2%29&name_2=Tests)
-  * [Stateless tests (amd_tsan, s3 storage, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stateless+tests+%28amd_tsan%2C+s3+storage%2C+sequential%2C+2%2F2%29&name_2=Tests)
- 
+ * [Stateless tests (amd_tsan, parallel, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20parallel%2C%201%2F2%29)
+ * [Stateless tests (amd_tsan, parallel, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20parallel%2C%202%2F2%29)
+ * [Stateless tests (amd_tsan, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20sequential%2C%201%2F2%29)
+ * [Stateless tests (amd_tsan, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20sequential%2C%202%2F2%29)
+ * [Stateless tests (amd_tsan, s3 storage, parallel, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20s3%20storage%2C%20parallel%2C%201%2F2%29)
+ * [Stateless tests (amd_tsan, s3 storage, parallel, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20s3%20storage%2C%20parallel%2C%202%2F2%29)
+ * [Stateless tests (amd_tsan, s3 storage, sequential, 1/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20s3%20storage%2C%20sequential%2C%201%2F2%29)
+ * [Stateless tests (amd_tsan, s3 storage, sequential, 2/2)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stateless%20tests%20%28amd%5Ftsan%2C%20s3%20storage%2C%20sequential%2C%202%2F2%29)
 
 
 The standard `stateless` suite that consists of running SQL, python and bash scripts that check various features of the server.
@@ -262,10 +281,16 @@ The standard `stateless` suite that consists of running SQL, python and bash scr
 
 Results:
 
-* [Stress test (amd_debug)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stress+test+%28amd_debug%29)
-* [Stress test (amd_msan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stress+test+%28amd_msan%29)
-* [Stress test (amd_tsan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stress+test+%28amd_tsan%29)
-* [Stress test (amd_ubsan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Stress+test+%28amd_ubsan%29)
+* [Stress test (amd_debug)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28amd%5Fdebug%29)
+* [Stress test (amd_msan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28amd%5Fmsan%29)
+* [Stress test (amd_release)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28amd%5Frelease%29)
+* [Stress test (amd_tsan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28amd%5Ftsan%29)
+* [Stress test (amd_ubsan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28amd%5Fubsan%29)
+* [Stress test (arm_asan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28arm%5Fasan%29)
+* [Stress test (arm_asan, s3)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28arm%5Fasan%2C%20s3%29)
+* [Stress test (azure, amd_msan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28azure%2C%20amd%5Fmsan%29)
+* [Stress test (azure, amd_tsan)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Stress%20test%20%28azure%2C%20amd%5Ftsan%29)
+
 
 The standard `stress` suite that consists of running tests from the `stateless` suite in parallel to check for server hang-up and crashes.
 
@@ -274,33 +299,40 @@ The standard `stress` suite that consists of running tests from the `stateless` 
 Results:
 
 * ARM Binary
-  * [Integration tests (arm_binary, distributed plan, 1/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28arm_binary%2C+distributed+plan%2C+1%2F4%29&name_2=Tests)
-  * [Integration tests (arm_binary, distributed plan, 2/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28arm_binary%2C+distributed+plan%2C+2%2F4%29&name_2=Tests)
-  * [Integration tests (arm_binary, distributed plan, 3/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28arm_binary%2C+distributed+plan%2C+3%2F4%29&name_2=Tests)
-  * [Integration tests (arm_binary, distributed plan, 4/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28arm_binary%2C+distributed+plan%2C+4%2F4%29&name_2=Tests)
+ * [Integration tests (arm_binary, distributed plan, 1/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28arm%5Fbinary%2C%20distributed%20plan%2C%201%2F4%29)
+ * [Integration tests (arm_binary, distributed plan, 3/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28arm%5Fbinary%2C%20distributed%20plan%2C%203%2F4%29)
+ * [Integration tests (arm_binary, distributed plan, 4/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28arm%5Fbinary%2C%20distributed%20plan%2C%204%2F4%29)
 
 * AMD Binary
-  * [Integration tests (amd_binary, 1/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_binary%2C+1%2F5%29&name_2=Tests)
-  * [Integration tests (amd_binary, 2/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_binary%2C+2%2F5%29&name_2=Tests)
-  * [Integration tests (amd_binary, 3/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_binary%2C+3%2F5%29&name_2=Tests)
-  * [Integration tests (amd_binary, 4/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_binary%2C+4%2F5%29&name_2=Tests)
-  * [Integration tests (amd_binary, 5/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_binary%2C+5%2F5%29&name_2=Tests)
+ * [Integration tests (amd_binary, 1/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fbinary%2C%201%2F5%29)
+ * [Integration tests (amd_binary, 2/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fbinary%2C%202%2F5%29)
+ * [Integration tests (amd_binary, 3/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fbinary%2C%203%2F5%29)
+ * [Integration tests (amd_binary, 4/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fbinary%2C%204%2F5%29)
+ * [Integration tests (amd_binary, 5/5)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fbinary%2C%205%2F5%29)
 
 * AMD ASan
-  * [Integration tests (amd_asan, old analyzer, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+1%2F6%29&name_2=Tests)
-  * [Integration tests (amd_asan, old analyzer, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+2%2F6%29&name_2=Tests)
-  * [Integration tests (amd_asan, old analyzer, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=1393&sha=d1ca9be99e7e2d6e49f689ee1a6ae4e3f96a62e4&name_0=PR&name_1=Integration%20tests%20%28amd_asan%2C%20old%20analyzer%2C%203%2F6%29)
-  * [Integration tests (amd_asan, old analyzer, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+4%2F6%29&name_2=Tests)
-  * [Integration tests (amd_asan, old analyzer, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+5%2F6%29&name_2=Tests)
-  * [Integration tests (amd_asan, old analyzer, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+6%2F6%29&name_2=Tests)
+ * [Integration tests (amd_asan, db disk, old analyzer, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20old%20analyzer%2C%201%2F6%29)
+ * [Integration tests (amd_asan, db disk, old analyzer, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20old%20analyzer%2C%202%2F6%29)
+ * [Integration tests (amd_asan, db disk, old analyzer, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20old%20analyzer%2C%203%2F6%29)
+ * [Integration tests (amd_asan, db disk, old analyzer, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20old%20analyzer%2C%204%2F6%29)
+ * [Integration tests (amd_asan, db disk, old analyzer, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20old%20analyzer%2C%205%2F6%29)
+ * [Integration tests (amd_asan, db disk, old analyzer, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fasan%2C%20db%20disk%2C%20old%20analyzer%2C%206%2F6%29)
+
+* AMD MSan
+ * [Integration tests (amd_msan, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fmsan%2C%201%2F6%29)
+ * [Integration tests (amd_msan, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fmsan%2C%202%2F6%29)
+ * [Integration tests (amd_msan, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fmsan%2C%203%2F6%29)
+ * [Integration tests (amd_msan, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fmsan%2C%204%2F6%29)
+ * [Integration tests (amd_msan, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fmsan%2C%205%2F6%29)
+ * [Integration tests (amd_msan, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Fmsan%2C%206%2F6%29)
 
 * AMD TSan
-  * [Integration tests (amd_tsan, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_tsan%2C+1%2F6%29&name_2=Tests)
-  * [Integration tests (amd_tsan, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_tsan%2C+2%2F6%29&name_2=Tests)
-  * [Integration tests (amd_tsan, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_tsan%2C+3%2F6%29&name_2=Tests)
-  * [Integration tests (amd_tsan, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_tsan%2C+4%2F6%29&name_2=Tests)
-  * [Integration tests (amd_tsan, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_tsan%2C+5%2F6%29&name_2=Tests)
-  * [Integration tests (amd_tsan, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_tsan%2C+6%2F6%29&name_2=Tests)
+ * [Integration tests (amd_tsan, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Ftsan%2C%201%2F6%29)
+ * [Integration tests (amd_tsan, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Ftsan%2C%202%2F6%29)
+ * [Integration tests (amd_tsan, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Ftsan%2C%203%2F6%29)
+ * [Integration tests (amd_tsan, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Ftsan%2C%204%2F6%29)
+ * [Integration tests (amd_tsan, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Ftsan%2C%205%2F6%29)
+ * [Integration tests (amd_tsan, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=f8d4966ea4c372d9f538642cef144cf3f66d46d9&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28amd%5Ftsan%2C%206%2F6%29)
 
 
 The standard `integration` suite of tests consists of various suites of automated tests that use [PyTest Framework](https://pytest.org) .
@@ -311,8 +343,8 @@ The standard `integration` suite of tests consists of various suites of automate
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aes_encryption/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aes_encryption/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aes_encryption/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aes_encryption/report.html
 
 Altinity AES Encryption tests.
 
@@ -320,27 +352,27 @@ Altinity AES Encryption tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions3/report.html
-  
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions3/report.html
+ 
 Altinity Aggregate Functions integration tests.
 
 ##### Alter
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter1/attach_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter2/attach_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter/move_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter/replace_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter1/attach_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter2/attach_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter/move_partition/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter/replace_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter1/attach_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter2/attach_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter/move_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/alter/replace_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter1/attach_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter2/attach_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter/move_partition/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/alter/replace_partition/report.html
 
 Altinity Alter tests.
 
@@ -348,8 +380,8 @@ Altinity Alter tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/atomic_insert/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/atomic_insert/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/atomic_insert/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/atomic_insert/report.html
 
 Altinity Atomic Insert integration tests.
 
@@ -357,8 +389,8 @@ Altinity Atomic Insert integration tests.
 
 Results:
 
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63345293900
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63332529761
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/attach/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86%5F64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/attach/report.html
 
 Altinity Attach tests.
 
@@ -366,8 +398,8 @@ Altinity Attach tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/base_58/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/base_58/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/base_58/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/base_58/report.html
 
 Altinity Base58 encode and decode functions integration tests.
 
@@ -375,12 +407,12 @@ Altinity Base58 encode and decode functions integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/minio/report.html
 
 Altinity OnTime Benchmark tests.
 
@@ -388,14 +420,14 @@ Altinity OnTime Benchmark tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/no_ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/no_ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/no_ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/no_ssl/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/no_ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/no_ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/no_ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper1/ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/no_ssl/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper2/ssl/report.html
 
 Altinity ClickHouse Keeper integration tests.
 
@@ -403,8 +435,8 @@ Altinity ClickHouse Keeper integration tests.
 
 Results:
 
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63345293709
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63332529783
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/clickhouse%5Fkeeper%5Ffailover/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86%5F64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/clickhouse%5Fkeeper%5Ffailover/report.html
 
 Altinity ClickHouse Keeper Failover integration tests.
 
@@ -412,8 +444,8 @@ Altinity ClickHouse Keeper Failover integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/data_types/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/data_types/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/data_types/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/data_types/report.html
 
 Altinity data types integration tests.
 
@@ -421,8 +453,8 @@ Altinity data types integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/datetime64_extended_range/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/datetime64_extended_range/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/datetime64_extended_range/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/datetime64_extended_range/report.html
 
 Altinity DateTime64 extended range integration tests.
 
@@ -430,8 +462,8 @@ Altinity DateTime64 extended range integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/disk_level_encryption/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/disk_level_encryption/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/disk_level_encryption/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/disk_level_encryption/report.html
 
 Altinity Disk Level Encryption integration tests.
 
@@ -439,15 +471,15 @@ Altinity Disk Level Encryption integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/dns/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/dns/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/dns/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/dns/report.html
 
 Altinity DNS integration tests.
 
 ##### Engines
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
 
 Altinity Engines tests.
 
@@ -455,8 +487,8 @@ Altinity Engines tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/example/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/example/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/example/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/example/report.html
 
 Altinity Example tests.
 
@@ -464,8 +496,8 @@ Altinity Example tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/extended_precision_data_types/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/extended_precision_data_types/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/extended_precision_data_types/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/extended_precision_data_types/report.html
 
 Altinity Extended Precision Data Types integration tests.
 
@@ -473,8 +505,8 @@ Altinity Extended Precision Data Types integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/functions/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/functions/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/functions/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/functions/report.html
 
 Altinity Functions tests.
 
@@ -482,20 +514,19 @@ Altinity Functions tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/iceberg2/report.html
 
 Altinity Iceberg tests.
-
 
 ##### JWT Authentication
 
 Results:
 
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63345302185
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63332529810
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/jwt%5Fauthentication/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86%5F64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/jwt%5Fauthentication/report.html
 
 Altinity JWT Authentication tests.
 
@@ -503,8 +534,8 @@ Altinity JWT Authentication tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/kafka/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/kafka/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/kafka/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/kafka/report.html
 
 Altinity Kafka integration tests.
 
@@ -512,8 +543,8 @@ Altinity Kafka integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/kerberos/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/kerberos/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/kerberos/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/kerberos/report.html
 
 Altinity Kerberos integration tests.
 
@@ -521,8 +552,8 @@ Altinity Kerberos integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/key_value/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/key_value/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/key_value/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/key_value/report.html
 
 Altinity Key Value function tests.
 
@@ -530,12 +561,12 @@ Altinity Key Value function tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/authentication/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/external_user_directory/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/role_mapping/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/authentication/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/external_user_directory/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/role_mapping/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/authentication/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/external_user_directory/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/role_mapping/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/authentication/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/external_user_directory/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/role_mapping/report.html
 
 Altinity LDAP integration tests.
 
@@ -543,8 +574,8 @@ Altinity LDAP integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/lightweight_delete/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/lightweight_delete/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/lightweight_delete/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/lightweight_delete/report.html
 
 Altinity Lightweight Delete integration tests.
 
@@ -552,8 +583,8 @@ Altinity Lightweight Delete integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/memory/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/memory/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/memory/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/memory/report.html
 
 Altinity Memory tests.
 
@@ -561,12 +592,12 @@ Altinity Memory tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquetaws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquetminio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquetaws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquetminio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquetaws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquetminio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquetaws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquetminio/report.html
 
 Altinity Parquet format integration tests.
 
@@ -574,8 +605,8 @@ Altinity Parquet format integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/part_moves_between_shards/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/part_moves_between_shards/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/part_moves_between_shards/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/part_moves_between_shards/report.html
 
 Altinity Part Moves Between Shards integration tests.
 
@@ -583,51 +614,50 @@ Altinity Part Moves Between Shards integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac3/report.html
 
 Altinity RBAC integration tests.
 
 ##### S3
 
 AWS Results:
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
 
 Azure Results:
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
 
 GCS Results:
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
 
 MinIO Results:
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s33/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s33/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s33/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s33/minio/report.html
 
 Export Parts Results:
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3part/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3part/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3part/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3part/minio/report.html
 
 Export Partition Results:
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3partition/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3partition/minio/report.html
-
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3partition/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3partition/minio/report.html
 
 Altinity S3 integration tests.
 
@@ -635,8 +665,8 @@ Altinity S3 integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/selects/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/selects/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/selects/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/selects/report.html
 
 Altinity Selects tests.
 
@@ -644,8 +674,8 @@ Altinity Selects tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/session_timezone/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/session_timezone/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/session_timezone/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/session_timezone/report.html
 
 Altinity Session Timezone tests.
 
@@ -653,8 +683,8 @@ Altinity Session Timezone tests.
 
 Results:
 
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63403280149
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63403233526
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/settings/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86%5F64/with%5Fanalyzer/zookeeper/without%5Fthread%5Ffuzzer/settings/report.html
 
 Altinity Settings tests.
 
@@ -662,12 +692,12 @@ Altinity Settings tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server1/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server2/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server1/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server2/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server3/report.html
 
 Altinity basic SSL server integration tests.
 
@@ -675,8 +705,8 @@ Altinity basic SSL server integration tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/swarms/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/swarms/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/swarms/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/swarms/report.html
 
 Altinity Swarms tests.
 
@@ -684,14 +714,14 @@ Altinity Swarms tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/local/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3amazon/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/local/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3amazon/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/local/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3amazon/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/local/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3amazon/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/s3gcs/report.html
 
 Altinity Tiered-Storage tests.
 
@@ -699,8 +729,8 @@ Altinity Tiered-Storage tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/version/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/version/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/version/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/version/report.html
 
 Altinity Version tests.
 
@@ -708,8 +738,8 @@ Altinity Version tests.
 
 Results:
 
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/window_functions/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/window_functions/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/window_functions/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/window_functions/report.html
 
 Altinity Window Functions integration tests.
 
@@ -751,11 +781,11 @@ Results:
 #### Failure Justification
 The majority of sanitizer test failures fall into two categories:
 
-**1. Infrastructure/Performance Issues (~80% of failures)**  
-Sanitizers add significant runtime overhead (TSAN/MSAN: 5–15x, ASAN: 2x). This causes server startup timeouts, query timeouts, and job timeouts (3-hour limit) before test completion.  
+**1. Infrastructure/Performance Issues (~80% of failures)** 
+Sanitizers add significant runtime overhead (TSAN/MSAN: 5–15x, ASAN: 2x). This causes server startup timeouts, query timeouts, and job timeouts (3-hour limit) before test completion. 
 These failures are expected behavior for sanitizer builds.
 
-**2. Real Bugs Found (~20% of failures)**  
+**2. Real Bugs Found (~20% of failures)** 
 Three bugs were identified across multiple sanitizers:
 
 | Bug | Description | Status |
@@ -766,8 +796,7 @@ Three bugs were identified across multiple sanitizers:
 
 #### Conclusion
 The sanitizer tests successfully identified real bugs in ClickHouse. Two of the three bugs are already tracked in upstream ClickHouse. The high failure count is primarily due to 
-expected sanitizer performance overhead, not quality issues with ClickHouse 25.8.
-
+expected sanitizer performance overhead, not quality issues with ClickHouse 26.3.
 
 ### Compatibility with Client Drivers
 
@@ -779,8 +808,30 @@ clickhouse-driver version:
 * 0.2.10
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-driver/
-  
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-driver/
+
+**Results:** 371 passed, 113 skipped, 2 failed (on 26.3.13; for comparison, 25.8: 377 passed, 109 skipped, 0 failed).
+
+Two distinct compatibility problems were found on 26.3.13. They have different root causes and are tracked separately:
+
+**Problem 1 — JSON type (driver compatibility gap, 4 tests skipped)**
+
+clickhouse-driver 0.2.10 supports `Object('json')`, but ClickHouse removed that type in 25.11 in favor of native `JSON`:
+
+* ClickHouse: [#85718](https://github.com/ClickHouse/ClickHouse/pull/85718) — removed `Object('json')`
+* clickhouse-driver: [#478](https://github.com/mymarilyn/clickhouse-driver/pull/478) — native `JSON` type support (not yet released in 0.2.10)
+
+Without a patch, JSON tests fail on both sides: with the old `Object('json')` syntax the server returns `Unknown data type family: Object`; with native `JSON` syntax the driver returns `Unknown type JSON`. Tests are skipped on 26.3+ via [`diff-26.3.patch`](https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-26.3.patch) until the driver supports native JSON.
+
+**Problem 2 — DateTime timezone (ClickHouse server bug, 2 tests failed)**
+
+`DateTimeTimezonesTestCase.test_use_client_timezone` and `DateTime64TimezonesTestCase.test_use_client_timezone` fail on 26.3. The driver sends binary timestamps correctly; the failure is in the CLI string-literal insert path when `async_insert` is enabled by default on 26.3+.
+
+* ClickHouse issue filed: [#108038](https://github.com/ClickHouse/ClickHouse/issues/108038) — `use_client_time_zone` ignored for string datetime literals in INSERT when `async_insert` is enabled
+
+
+
+
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
 Compatibility with the [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
@@ -798,10 +849,10 @@ The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc
 #### SQLAlchemy
 
 clickhouse-sqlalchemy version: 
-* 0.2.9
+* 0.3.2
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-sqlalchemy/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-sqlalchemy/
 
 The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) ClickHouse dialect for SQLAlchemy.
 
@@ -811,13 +862,14 @@ clickhouse-jdbc version:
 * 0.9.0
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-jdbc/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-jdbc/v0.9.0/
+
+**Results:** Tests run: 231, Failures: 0, Errors: 0, Skipped: 0 (clickhouse-jdbc 0.9.0 against ClickHouse 26.3.13.10001).
 
 Results (DBeaver): 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/DBeaver/
 
-The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
-
+The [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
 ### Backup `clickhouse-backup`
 
@@ -842,7 +894,6 @@ clickhouse-operator version:
 Results: 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/ - before fix
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator-ddl-fix/ - after ddl-fix
-
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
@@ -909,11 +960,11 @@ Compatibility with [Tableau].
 
 **TDVT version comparison:** All three builds produced identical results:
 
-| Version                          | Failures |
+| Version | Failures |
 |----------------------------------|----------|
-| Latest LTS (Altinity 26.3)       | 24       |
-| Previous LTS (Altinity 25.8)     | 24       |
-| Upstream (ClickHouse 26.3.12.3)  | 24       |
+| Latest LTS (Altinity 26.3) | 24 |
+| Previous LTS (Altinity 25.8) | 24 |
+| Upstream (ClickHouse 26.3.12.3) | 24 |
 
 All 24 failures are the exact same set across all three builds. They are pre-existing ClickHouse/JDBC connector limitations, not version-specific regressions.
 
@@ -932,12 +983,11 @@ The tests were run against Superset version `4.1.1`. Currently, there is an issu
 
 Results:
 
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/grype/altinityinfra_clickhouse-keeper_0-25.8.16.10001.altinitytest/results.html
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/grype/altinityinfra_clickhouse-server_0-25.8.16.10001.altinitytest-alpine/results.html
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/grype/altinityinfra_clickhouse-server_0-25.8.16.10001.altinitytest/results.html
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/grype/altinityinfra_clickhouse-keeper_0-26.3.13.10001.altinitytest/results.html
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest-alpine/results.html
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest/results.html
 
 [Grype](https://github.com/anchore/grype) Docker image vulnerability scanner.
-
 
 [Grafana]: https://grafana.com/
 [Tableau]: https://www.tableau.com/
