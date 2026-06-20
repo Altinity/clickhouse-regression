@@ -142,9 +142,7 @@ def peer_completes_export_when_initiator_setting_disabled(
                 f"IDENTIFIED WITH plaintext_password BY '' "
                 f"SETTINGS PROFILE {_EXPORT_GATE_OFF_PROFILE}"
             )
-            replica.query(
-                f"GRANT ALL ON default.* TO {_EXPORT_GATE_OFF_USER}"
-            )
+            replica.query(f"GRANT ALL ON default.* TO {_EXPORT_GATE_OFF_USER}")
 
     def _iceberg_gate_session_value(node, user=None):
         settings = []
@@ -170,8 +168,7 @@ def peer_completes_export_when_initiator_setting_disabled(
         )
 
     with And(
-        f"sanity-check default sessions still observe gate enabled "
-        f"on both replicas"
+        f"sanity-check default sessions still observe gate enabled " f"on both replicas"
     ):
         for replica in replicas:
             v = _iceberg_gate_session_value(replica, user=None)
@@ -193,9 +190,7 @@ def peer_completes_export_when_initiator_setting_disabled(
     with And(f"wait for {enabled_replica.name} to pick up the parts"):
         sync_replica(table_name=table_name, node=enabled_replica)
 
-    with Given(
-        "create a catalog-backed iceberg destination wired up on every replica"
-    ):
+    with Given("create a catalog-backed iceberg destination wired up on every replica"):
         # Use ``default`` so CREATE DATABASE is not gated on the auxiliary user.
         destination = create_iceberg_destination(
             columns=SIMPLE_COLUMNS,

@@ -132,6 +132,7 @@ def ensure_zk_path_absent(self, path):
     traces back to a concrete ZK state rather than a generic "still
     present".
     """
+
     def _recursive_delete(target):
         children = _zkcli_children(self, target)
         if children is None:

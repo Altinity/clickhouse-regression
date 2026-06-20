@@ -272,9 +272,7 @@ def _translate_type(text, ids):
         )
 
     if key in ("enum8", "enum16"):
-        raise UnsupportedCHTypeError(
-            f"{head} has no Iceberg mapping in getIcebergType"
-        )
+        raise UnsupportedCHTypeError(f"{head} has no Iceberg mapping in getIcebergType")
 
     if key == "datetime64":
         # ``DateTime64(p)`` -> Iceberg ``timestamp``. Precision is irrelevant
@@ -290,11 +288,14 @@ def _translate_type(text, ids):
         # The list *field* itself is reported non-required in the
         # ``datatypes.py`` mapping table; required=False is applied at the
         # NestedField layer in ``ch_columns_to_pyiceberg_schema`` below.
-        return ListType(
-            element_id=element_id,
-            element_type=element_type,
-            element_required=True,
-        ), False
+        return (
+            ListType(
+                element_id=element_id,
+                element_type=element_type,
+                element_required=True,
+            ),
+            False,
+        )
 
     if key == "map":
         # ``Map(K, V)`` requires exactly two top-level type args.
@@ -307,13 +308,16 @@ def _translate_type(text, ids):
         value_type, _ = _translate_type(args[1], ids)
         key_id = ids.take()
         value_id = ids.take()
-        return MapType(
-            key_id=key_id,
-            key_type=key_type,
-            value_id=value_id,
-            value_type=value_type,
-            value_required=True,
-        ), True
+        return (
+            MapType(
+                key_id=key_id,
+                key_type=key_type,
+                value_id=value_id,
+                value_type=value_type,
+                value_required=True,
+            ),
+            True,
+        )
 
     if key == "tuple":
         # ``Tuple(x Int32, y String)`` -> ``StructType([NestedField(...), ...])``.
@@ -472,7 +476,9 @@ def _parse_transform_expr(expr, column_id_map):
                 f"partition column {column!r} is not in the schema"
             )
         transform = (
-            BucketTransform(width) if key == "icebergbucket" else TruncateTransform(width)
+            BucketTransform(width)
+            if key == "icebergbucket"
+            else TruncateTransform(width)
         )
         return column, transform
 

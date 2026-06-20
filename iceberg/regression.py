@@ -19,6 +19,7 @@ from helpers.common import (
     check_is_altinity_build,
     experimental_analyzer,
     check_if_antalya_build,
+    check_if_antalya_post_26_3_10_20001,
 )
 
 
@@ -390,6 +391,17 @@ ffails = {
         Skip,
         "RENAME COLUMN on IcebergS3 destination is NOT_IMPLEMENTED before 26.3",
         check_clickhouse_version("<26.3"),
+    ),
+    "/iceberg/export partition/*/casting": (
+        Skip,
+        "Altinity/ClickHouse#1779 export auto-cast requires antalya > 26.3.10.20001",
+        lambda test: not check_if_antalya_post_26_3_10_20001(test),
+    ),
+    "/iceberg/export partition/glue catalog/casting": (
+        Skip,
+        "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
+        "ice-rest-catalog); Glue/LocalStack DataLakeCatalog is out of scope.",
+        lambda test: True,
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,

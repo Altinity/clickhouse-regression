@@ -82,9 +82,7 @@ def _seed_source():
             partition_by=SIMPLE_PARTITION_BY,
         )
     with And("insert three rows into partition 2020"):
-        insert_data(
-            table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)"
-        )
+        insert_data(table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)")
     return source_table
 
 
@@ -279,9 +277,7 @@ def catalog_export_appends_snapshot_visible_via_catalog(
         summary = snapshot.summary
         total_records = None
         if summary is not None:
-            total_records = (summary.additional_properties or {}).get(
-                "total-records"
-            )
+            total_records = (summary.additional_properties or {}).get("total-records")
         assert total_records == "3", error(
             f"Catalog snapshot summary reported total-records={total_records!r}, "
             f"expected '3'. Summary: {summary!r}"

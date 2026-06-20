@@ -9,7 +9,9 @@ files (``IcebergMinMaxIndexPrunedFiles`` and ``read_rows`` confirm).
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_MinMaxPruning
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_MinMaxPruning,
+)
 
 from helpers.common import getuid
 
@@ -115,8 +117,7 @@ def pruning_predicate_narrows_read_rows(self, minio_root_user, minio_root_passwo
 
     with When(f"SELECT ... WHERE id = {target_id} with log_comment for metrics"):
         result = node.query(
-            f"SELECT id, year FROM {dest_name} WHERE id = {target_id} "
-            f"ORDER BY id",
+            f"SELECT id, year FROM {dest_name} WHERE id = {target_id} " f"ORDER BY id",
             settings=[("log_comment", log_comment)],
         )
         assert result.output.strip() == f"{target_id}\t2022", error(
@@ -201,13 +202,11 @@ def pruning_range_predicate(self, minio_root_user, minio_root_password):
         # 2021 ids: 100, 110, 120. Predicate selects all three and
         # nothing from 2020 or 2022.
         result = node.query(
-            f"SELECT id FROM {dest_name} WHERE id BETWEEN 100 AND 120 "
-            f"ORDER BY id",
+            f"SELECT id FROM {dest_name} WHERE id BETWEEN 100 AND 120 " f"ORDER BY id",
             settings=[("log_comment", log_comment)],
         )
         assert result.output.strip().splitlines() == ["100", "110", "120"], error(
-            f"unexpected rows for range predicate on {dest_name}:\n"
-            f"{result.output}"
+            f"unexpected rows for range predicate on {dest_name}:\n" f"{result.output}"
         )
 
     with And("flush logs"):

@@ -29,6 +29,8 @@ xfails = {
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1873",
             check_clickhouse_version("~25.8"),
+        )
+    ],
     "/swarms/feature/node failure/check restart clickhouse on swarm node": [
         (
             Fail, 

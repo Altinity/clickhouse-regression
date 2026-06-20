@@ -66,9 +66,7 @@ def _seed_source(minio_root_user, minio_root_password):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_StoragePaths_PathFormat("1.0"))
 @Name("full path: metadata.json location is an absolute s3:// URI")
-def full_path_metadata_has_absolute_s3_uri(
-    self, minio_root_user, minio_root_password
-):
+def full_path_metadata_has_absolute_s3_uri(self, minio_root_user, minio_root_password):
     """With ``write_full_path_in_iceberg_metadata = 1`` the
     ``metadata.json`` ``location`` is an absolute ``s3://`` URI.
     """
@@ -111,9 +109,7 @@ def full_path_metadata_has_absolute_s3_uri(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_StoragePaths_PathFormat("1.0"))
 @Name("default: metadata.json location is bucket-relative (no FS scheme)")
-def default_metadata_has_relative_location(
-    self, minio_root_user, minio_root_password
-):
+def default_metadata_has_relative_location(self, minio_root_user, minio_root_password):
     """The default ``write_full_path_in_iceberg_metadata = 0`` keeps
     ``location`` bucket-relative (no FS scheme).
     """
@@ -213,9 +209,7 @@ def deep_prefix_hierarchy(self, minio_root_user, minio_root_password):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_StoragePaths_Isolation("1.0"))
 @Name("multiple destinations share a bucket but stay isolated")
-def multiple_destinations_share_bucket(
-    self, minio_root_user, minio_root_password
-):
+def multiple_destinations_share_bucket(self, minio_root_user, minio_root_password):
     """Two destinations under different prefixes of the same bucket
     receive distinct data and read back only their own rows.
     """
