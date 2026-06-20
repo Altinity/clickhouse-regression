@@ -2,8 +2,9 @@
 
 Each scenario compares ``EXPORT PARTITION`` against an ``INSERT INTO dest
 SELECT * FROM source`` benchmark on twin Iceberg destinations with identical
-casted schemas. Cast pairs are derived from ``canBeSafelyCast`` in
-``src/DataTypes/Utils.cpp``.
+casted schemas. Destinations are created through ClickHouse DDL
+(:mod:`casting_iceberg_destination`); catalog modes use
+``CREATE TABLE datalake.\\`namespace.table\\``` with Iceberg-compatible types.
 """
 
 from dataclasses import dataclass
@@ -14,6 +15,7 @@ from testflows.asserts import error
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
+    count_rows,
     create_replicated_mergetree,
     insert_data,
     resolve_first_partition_id,
@@ -24,14 +26,15 @@ from iceberg.tests.export_partition.steps.export_operations import (
 
 BAD_ARGUMENTS = 36
 LOSSY_CAST_REJECTION_MESSAGE = "lossy cast"
+from iceberg.tests.export_partition.steps.casting_iceberg_destination import (
+    create_casting_iceberg_destination,
+)
+from iceberg.tests.export_partition.steps.manifest_validation import (
+    assert_manifest_spec_matches_partition,
+    assert_snapshot_row_count,
+)
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
-    create_iceberg_destination,
-)
-from iceberg.tests.export_partition.steps.common import count_rows
-from iceberg.tests.export_partition.steps.manifest_validation import (
-    assert_snapshot_row_count,
-    assert_manifest_spec_matches_partition,
 )
 from iceberg.tests.export_partition.steps.verification import (
     assert_destination_row_count,
@@ -52,26 +55,19 @@ class CastCase:
     where_clause: str = "year = 2020"
     order_by: str = "id"
     allow_lossy_cast: bool = False
-    expect_export_rejection: bool = False
+    expect_rejection: bool = False
 
 
-# Mirrors ``canBeSafelyCast`` families that map to Iceberg destination DDL.
+# Integer boundaries for Iceberg-native signed destinations.
+_INT32_MAX = 2147483647
+_INT32_MIN = -2147483648
+_INT64_MAX = 9223372036854775807
+_UINT64_MAX = 18446744073709551615
+
+# Mirrors ``canBeSafelyCast`` families whose destination DDL uses Iceberg-native
+# types (signed int/long, float/double, string, date, nested list/map/struct).
 # String targets cover the ``to_which_type.isString()`` escape hatch.
 SAFE_CAST_CASES = (
-    CastCase(
-        name="UInt16 widens to UInt32",
-        source_columns="id UInt16, year UInt16",
-        dest_columns="id UInt32, year UInt32",
-        partition_by="year",
-        values="(1, 2020), (2, 2020)",
-    ),
-    CastCase(
-        name="UInt32 widens to UInt64",
-        source_columns="id UInt32, year UInt32",
-        dest_columns="id UInt64, year UInt64",
-        partition_by="year",
-        values="(1, 2020), (2, 2020)",
-    ),
     CastCase(
         name="Int32 widens to Int64",
         source_columns="id Int32, year Int32",
@@ -119,9 +115,9 @@ SAFE_CAST_CASES = (
         values="(1, 2020, 10), (2, 2020, NULL)",
     ),
     CastCase(
-        name="Array(UInt32) to Array(UInt64)",
-        source_columns="id Int64, year Int32, tags Array(UInt32)",
-        dest_columns="id Int64, year Int32, tags Array(UInt64)",
+        name="Array(Int32) to Array(Int64)",
+        source_columns="id Int64, year Int32, tags Array(Int32)",
+        dest_columns="id Int64, year Int32, tags Array(Int64)",
         partition_by="year",
         values="(1, 2020, [1, 2]), (2, 2020, [3])",
     ),
@@ -143,20 +139,94 @@ SAFE_CAST_CASES = (
 
 LOSSY_CAST_CASES = (
     CastCase(
-        name="UInt64 narrows to UInt32 without allow_lossy_cast",
+        name="UInt64 narrows to Int32 without allow_lossy_cast",
         source_columns="id UInt64, year UInt32",
-        dest_columns="id UInt32, year UInt32",
+        dest_columns="id Int32, year Int32",
         partition_by="year",
         values="(4294967296, 2020)",
-        expect_export_rejection=True,
+        expect_rejection=True,
     ),
     CastCase(
-        name="UInt64 narrows to UInt32 with allow_lossy_cast",
+        name="UInt64 narrows to Int32 with allow_lossy_cast",
         source_columns="id UInt64, year UInt32",
-        dest_columns="id UInt32, year UInt32",
+        dest_columns="id Int32, year Int32",
         partition_by="year",
         values="(4294967296, 2020)",
         allow_lossy_cast=True,
+    ),
+)
+
+# Values outside the destination signed range must follow the same INSERT SELECT
+# and EXPORT PARTITION lossy-cast rules (reject by default, truncate in lockstep
+# when ``export_merge_tree_part_allow_lossy_cast = 1``).
+OUT_OF_BOUNDS_CAST_CASES = (
+    CastCase(
+        name="Int64 above INT32_MAX rejected without allow_lossy_cast",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=f"({_INT32_MAX + 1}, 2020)",
+        expect_rejection=True,
+    ),
+    CastCase(
+        name="Int64 above INT32_MAX with allow_lossy_cast",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=f"({_INT32_MAX + 1}, 2020)",
+        allow_lossy_cast=True,
+    ),
+    CastCase(
+        name="Int64 below INT32_MIN rejected without allow_lossy_cast",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=f"({_INT32_MIN - 1}, 2020)",
+        expect_rejection=True,
+    ),
+    CastCase(
+        name="Int64 below INT32_MIN with allow_lossy_cast",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=f"({_INT32_MIN - 1}, 2020)",
+        allow_lossy_cast=True,
+    ),
+    CastCase(
+        name="UInt64 above INT64_MAX rejected without allow_lossy_cast",
+        source_columns="id UInt64, year Int32",
+        dest_columns="id Int64, year Int32",
+        partition_by="year",
+        values=f"({_INT64_MAX + 1}, 2020)",
+        expect_rejection=True,
+    ),
+    CastCase(
+        name="UInt64 above INT64_MAX with allow_lossy_cast",
+        source_columns="id UInt64, year Int32",
+        dest_columns="id Int64, year Int32",
+        partition_by="year",
+        values=f"({_INT64_MAX + 1}, 2020)",
+        allow_lossy_cast=True,
+    ),
+    CastCase(
+        name="UInt64 UINT64_MAX to Int64 with allow_lossy_cast",
+        source_columns="id UInt64, year Int32",
+        dest_columns="id Int64, year Int32",
+        partition_by="year",
+        values=f"({_UINT64_MAX}, 2020)",
+        allow_lossy_cast=True,
+    ),
+    CastCase(
+        name="Int64 boundary mix to Int32 with allow_lossy_cast",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=(
+            f"(1, 2020), ({_INT32_MAX}, 2020), ({_INT32_MAX + 1}, 2020), "
+            f"({_INT32_MIN}, 2020), ({_INT32_MIN - 1}, 2020)"
+        ),
+        allow_lossy_cast=True,
+        order_by="id",
     ),
 )
 
@@ -176,6 +246,8 @@ def insert_select_into_iceberg_destination(
     select_query,
     node=None,
     settings=None,
+    exitcode=0,
+    message=None,
 ):
     """``INSERT INTO <iceberg> <select>`` — INSERT SELECT cast benchmark."""
     if node is None:
@@ -183,9 +255,13 @@ def insert_select_into_iceberg_destination(
     if settings is None:
         settings = [("allow_experimental_insert_into_iceberg", 1)]
     name = as_destination_name(destination)
+    expect_failure = exitcode != 0 or message is not None
     node.query(
         f"INSERT INTO {name} {select_query}",
         settings=settings,
+        exitcode=exitcode,
+        message=message,
+        ignore_exception=expect_failure,
     )
 
 
@@ -259,7 +335,7 @@ def run_cast_parity_case(
     insert_data(table_name=source_table, values=case.values)
 
     with Given("Iceberg destination for INSERT SELECT benchmark"):
-        dest_insert = create_iceberg_destination(
+        dest_insert = create_casting_iceberg_destination(
             columns=case.dest_columns,
             partition_by=case.partition_by,
             minio_root_user=minio_root_user,
@@ -268,7 +344,7 @@ def run_cast_parity_case(
         )
 
     with And("twin Iceberg destination for EXPORT PARTITION"):
-        dest_export = create_iceberg_destination(
+        dest_export = create_casting_iceberg_destination(
             columns=case.dest_columns,
             partition_by=case.partition_by,
             minio_root_user=minio_root_user,
@@ -284,7 +360,7 @@ def run_cast_parity_case(
         else resolve_first_partition_id(table_name=source_table, node=node)
     )
 
-    if case.expect_export_rejection:
+    if case.expect_rejection:
         with When("EXPORT PARTITION is rejected for lossy cast without setting"):
             export_partition(
                 source_table=source_table,
@@ -294,6 +370,25 @@ def run_cast_parity_case(
                 exitcode=BAD_ARGUMENTS,
                 message=LOSSY_CAST_REJECTION_MESSAGE,
                 wait_for_completion=False,
+                node=node,
+            )
+        with And("INSERT SELECT still writes the lossily casted benchmark rows"):
+            insert_select_into_iceberg_destination(
+                destination=dest_insert,
+                select_query=f"SELECT * FROM {source_table}",
+                node=node,
+            )
+            expected_rows = count_rows(
+                table_name=source_table,
+                where=case.where_clause,
+                node=node,
+            )
+            assert_destination_row_count(
+                destination=dest_insert,
+                expected=expected_rows,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+                where_clause=case.where_clause,
                 node=node,
             )
         return

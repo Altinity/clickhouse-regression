@@ -45,42 +45,42 @@ CISCO_SOURCE_COLUMNS = """
     `kafkaCluster` LowCardinality(String)
 """
 
-# Iceberg-legal destination types reachable from the source via
-# ``canBeSafelyCast`` / INSERT SELECT (PR 1779 export parity target).
+# Iceberg-compatible destination DDL (signed int / string / long only).
+# Used in ``CREATE TABLE datalake.`ns.table` (...)`` via CH, not raw MergeTree types.
 CISCO_DEST_COLUMNS = """
     `eventDate` Date,
-    `timestamp` UInt32,
+    `timestamp` Int32,
     `version` String,
     `remoteIP` String,
     `serverIP` String,
     `handling` String,
-    `mspOrganizationId` UInt64,
-    `originIds` Array(UInt64),
-    `organizationIds` Array(UInt64),
-    `originTypes` Array(UInt32),
+    `mspOrganizationId` Int64,
+    `originIds` Array(Int64),
+    `organizationIds` Array(Int64),
+    `originTypes` Array(Int32),
     `qname` String,
     `threatTypes` Array(String),
     `threats` Array(String),
     `noisyDomain` Int32,
     `qtype` Int32,
     `rcode` Int32,
-    `blockedCategories` Array(UInt32),
-    `allCategories` Array(UInt32),
-    `flags` Array(UInt32),
+    `blockedCategories` Array(Int32),
+    `allCategories` Array(Int32),
+    `flags` Array(Int32),
     `publicSuffix` String,
     `host` String,
-    `retention` UInt32,
+    `retention` Int32,
     `clientReportingId_lengthPrefix` Int32,
     `clientReportingId_schemaId` Int32,
-    `clientReportingId_vendorId` UInt32,
-    `clientReportingId_deviceClassId` UInt32,
-    `clientReportingId_componentClassId` UInt64,
+    `clientReportingId_vendorId` Int32,
+    `clientReportingId_deviceClassId` Int32,
+    `clientReportingId_componentClassId` Int64,
     `clientReportingId_deviceSpecifier` String,
-    `ruleId` Nullable(UInt64),
+    `ruleId` Nullable(Int64),
     `destinationCountries` Array(String),
     `logType` Nullable(String),
     `kafkaPartition` Int32,
-    `kafkaOffset` UInt64,
+    `kafkaOffset` Int64,
     `kafkaTopic` String,
     `kafkaCluster` String
 """
