@@ -874,10 +874,10 @@ The [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 ### Backup `clickhouse-backup`
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-backup/
 
 Results (ACM):
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup-acm/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -900,7 +900,7 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 #### Altinity.Cloud
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/launch_with_25.8.16.10001.altinitytest/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/acm-launch-and-upgrade/launch_with_26.3.13.10001.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
@@ -913,19 +913,18 @@ Approved by Mikhail Filimonov.
 ### Upgrade and Downgrade
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/upgrade_downgrade_from_25.3.6.10034.altinitystable_to_25.8.4.20014.altinitytest/
-* Downgrade to 25.3.8 works in 25.8.16 (after change in [PR #1407](https://github.com/Altinity/ClickHouse/pull/1407))
-* Downgrade to previous 25.8.x versions works.
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/acm-launch-and-upgrade/upgrade_downgrade_from_25.8.16.10002.altinitystable_to_26.3.13.10001.altinitytest/
+
 
 The upgrade and downgrade.
 
 #### Upgrade
 
-* from 25.3 to 25.8
+* from 25.8 to 26.3
 
 #### Downgrade
 
-* From 25.8 to 25.3
+* From 26.3 to 25.8
 
 ### Compatibility With BI Tools
 
