@@ -68,6 +68,8 @@ def create_webdriver(self, hub_url=None, timeout=120):
 @TestStep(When)
 def take_screenshot(self, driver, name="screenshot"):
     """Save a browser screenshot under ``lts/superset/screenshots/``."""
+    time.sleep(0.3)
+
     screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
     os.makedirs(screenshots_dir, exist_ok=True)
 

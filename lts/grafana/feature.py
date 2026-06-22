@@ -11,6 +11,7 @@ from lts.grafana.steps.environment import (
     grafana_environment,
     wait_for_grafana,
     wait_for_selenium,
+    wait_for_clickhouse_via_grafana,
 )
 
 
@@ -51,5 +52,9 @@ def feature(
     with And("Selenium Grid is ready"):
         wait_for_selenium()
 
+    with And("ClickHouse is reachable from Grafana"):
+        wait_for_clickhouse_via_grafana()
+
     Feature(run=load("lts.grafana.tests.login", "feature"))
     Feature(run=load("lts.grafana.tests.datasource_query", "feature"))
+    Feature(run=load("lts.grafana.tests.panel_graph", "feature"))

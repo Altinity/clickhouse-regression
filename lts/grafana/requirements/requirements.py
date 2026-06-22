@@ -94,6 +94,23 @@ RQ_SRS_102_Grafana_Compatibility_LTS = Requirement(
     num="3.4.1",
 )
 
+RQ_SRS_102_Grafana_PanelVisualization = Requirement(
+    name="RQ.SRS-102.Grafana.PanelVisualization",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Grafana SHALL render a time-series graph panel using data queried from\n"
+        "ClickHouse through the Altinity clickhouse-grafana datasource plugin.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.5.1",
+)
+
 SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
     name="SRS-102 Altinity Grafana ClickHouse Plugin LTS Testing",
     description=None,
@@ -127,6 +144,8 @@ SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
         Heading(name="RQ.SRS-102.Grafana.DatasourceQuery", level=3, num="3.3.1"),
         Heading(name="Compatibility", level=2, num="3.4"),
         Heading(name="RQ.SRS-102.Grafana.Compatibility.LTS", level=3, num="3.4.1"),
+        Heading(name="Panel Visualization", level=2, num="3.5"),
+        Heading(name="RQ.SRS-102.Grafana.PanelVisualization", level=3, num="3.5.1"),
     ),
     requirements=(
         RQ_SRS_102_Grafana_Environment,
@@ -134,6 +153,7 @@ SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
         RQ_SRS_102_Grafana_Login,
         RQ_SRS_102_Grafana_DatasourceQuery,
         RQ_SRS_102_Grafana_Compatibility_LTS,
+        RQ_SRS_102_Grafana_PanelVisualization,
     ),
     content=r"""
 # SRS-102 Altinity Grafana ClickHouse Plugin LTS Testing

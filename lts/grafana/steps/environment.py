@@ -178,3 +178,72 @@ def wait_for_selenium(self, timeout=120):
             pass
         time.sleep(5)
     fail(f"Selenium Grid did not become ready within {timeout}s")
+
+
+@TestStep(Given)
+def wait_for_clickhouse_via_grafana(self, timeout=60):
+    """Verify ClickHouse is reachable from the Docker network.
+
+    First ensures ClickHouse itself is healthy (exec into the ClickHouse
+    container), then verifies Grafana can reach it via the Docker network.
+    """
+    compose_file = self.context.grafana_compose_file
+    env = self.context.grafana_compose_env
+
+    deadline = time.time() + timeout
+
+    # First: make sure ClickHouse is healthy by querying it directly
+    while time.time() < deadline:
+        result = subprocess.run(
+            _compose_cmd(compose_file)
+            + [
+                "exec",
+                "-T",
+                "clickhouse",
+                "clickhouse-client",
+                "--query",
+                "SELECT 1",
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0 and "1" in result.stdout:
+            note("ClickHouse is healthy (direct exec)")
+            break
+        note(
+            f"ClickHouse not ready: rc={result.returncode} "
+            f"stdout={result.stdout.strip()!r} stderr={result.stderr.strip()[:200]!r}"
+        )
+        time.sleep(3)
+    else:
+        fail(f"ClickHouse container not healthy within {timeout}s")
+
+    # Second: verify Grafana can reach ClickHouse over the network
+    while time.time() < deadline:
+        result = subprocess.run(
+            _compose_cmd(compose_file)
+            + [
+                "exec",
+                "-T",
+                "grafana",
+                "wget",
+                "-q",
+                "-O",
+                "-",
+                "--timeout=5",
+                "http://clickhouse:8123/?query=SELECT+1",
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0 and "1" in result.stdout:
+            note("ClickHouse is reachable from Grafana container")
+            return
+        note(
+            f"Grafana->ClickHouse probe: rc={result.returncode} "
+            f"stdout={result.stdout.strip()!r} stderr={result.stderr.strip()[:200]!r}"
+        )
+        time.sleep(3)
+    fail(f"ClickHouse not reachable from Grafana within {timeout}s")
