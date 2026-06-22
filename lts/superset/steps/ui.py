@@ -6,6 +6,7 @@ A small set of REST helpers is kept solely for fixture-style setup
 smoke test relies on); the actual verification is done through the UI.
 """
 
+import http.cookiejar
 import json
 import os
 import time
@@ -67,9 +68,7 @@ def create_webdriver(self, hub_url=None, timeout=120):
 @TestStep(When)
 def take_screenshot(self, driver, name="screenshot"):
     """Save a browser screenshot under ``lts/superset/screenshots/``."""
-    screenshots_dir = os.path.join(
-        current().context.configs_dir, "..", "screenshots"
-    )
+    screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
     os.makedirs(screenshots_dir, exist_ok=True)
 
     filename = f"{name}.png"
@@ -88,9 +87,7 @@ def take_screenshot(self, driver, name="screenshot"):
 
 def _internal_url(self):
     """Return the URL the browser uses to reach Superset (over the Docker network)."""
-    return getattr(
-        self.context, "superset_internal_url", "http://superset:8088"
-    )
+    return getattr(self.context, "superset_internal_url", "http://superset:8088")
 
 
 @TestStep(Given)
@@ -110,9 +107,7 @@ def login(self, driver, username="admin", password="admin"):
     from selenium.webdriver.support import expected_conditions as EC
 
     wait = WebDriverWait(driver, 30)
-    username_input = wait.until(
-        EC.presence_of_element_located((By.ID, "username"))
-    )
+    username_input = wait.until(EC.presence_of_element_located((By.ID, "username")))
     password_input = driver.find_element(By.ID, "password")
     username_input.clear()
     username_input.send_keys(username)
@@ -140,9 +135,9 @@ def verify_logged_in(self, driver):
             EC.presence_of_element_located((By.CSS_SELECTOR, "nav.navbar")),
         )
     )
-    assert "/login" not in driver.current_url, (
-        f"Still on login page: {driver.current_url}"
-    )
+    assert (
+        "/login" not in driver.current_url
+    ), f"Still on login page: {driver.current_url}"
     note(f"Successfully verified login - current URL: {driver.current_url}")
 
 
@@ -156,8 +151,29 @@ def _superset_host_url(self):
     return getattr(self.context, "superset_url", "http://127.0.0.1:8088")
 
 
+def _get_api_opener():
+    """Return a urllib opener with a per-context cookie jar.
+
+    Superset's CSRF protection is session-based: the CSRF token returned by
+    ``/api/v1/security/csrf_token/`` is only valid for the session that
+    received it. We therefore need the same cookie jar for login,
+    CSRF token retrieval, and any subsequent state-changing POST/PUT/DELETE.
+    """
+    ctx = current().context
+    opener = getattr(ctx, "superset_api_opener", None)
+    if opener is None:
+        jar = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+        ctx.superset_api_opener = opener
+    return opener
+
+
 def _http(method, url, headers=None, data=None, timeout=30):
-    """Minimal urllib wrapper that returns ``(status, body_text)``."""
+    """Minimal urllib wrapper that returns ``(status, body_text)``.
+
+    Uses the context-scoped opener so cookies (and thus the Superset session)
+    persist across calls.
+    """
     payload = None
     if data is not None:
         if isinstance(data, (dict, list)):
@@ -168,8 +184,9 @@ def _http(method, url, headers=None, data=None, timeout=30):
     req = urllib.request.Request(
         url, data=payload, headers=headers or {}, method=method
     )
+    opener = _get_api_opener()
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with opener.open(req, timeout=timeout) as resp:
             return resp.status, resp.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as e:
         return e.code, e.read().decode("utf-8", errors="replace")
@@ -245,17 +262,8 @@ def _ensure_database(self, name, scheme="http"):
     tokens = self.context.superset_api_tokens
     driver_name = self.context.clickhouse_driver
 
-    list_url = (
-        f"{base}/api/v1/database/?q="
-        + urllib.request.quote(
-            json.dumps(
-                {
-                    "filters": [
-                        {"col": "database_name", "opr": "eq", "value": name}
-                    ]
-                }
-            )
-        )
+    list_url = f"{base}/api/v1/database/?q=" + urllib.request.quote(
+        json.dumps({"filters": [{"col": "database_name", "opr": "eq", "value": name}]})
     )
     status, body = _http("GET", list_url, headers=_auth_headers(tokens))
     if status == 200:
@@ -320,8 +328,7 @@ def _ensure_dataset(self, database_id, schema, table_name):
     )
     if status not in (200, 201):
         fail(
-            f"Failed to create dataset {schema}.{table_name}: "
-            f"HTTP {status}: {body}"
+            f"Failed to create dataset {schema}.{table_name}: " f"HTTP {status}: {body}"
         )
     return json.loads(body).get("id")
 
@@ -416,9 +423,7 @@ def navigate_to_sql_lab(self, driver, base_url=None):
     wait = WebDriverWait(driver, 30)
     wait.until(
         EC.any_of(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, ".ace_editor")
-            ),
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".ace_editor")),
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, "[data-test='sql-editor']")
             ),
@@ -442,19 +447,18 @@ def run_sql_in_editor(self, driver, query):
     from selenium.webdriver.support import expected_conditions as EC
 
     wait = WebDriverWait(driver, 30)
-    editor = wait.until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, ".ace_editor textarea")
-        )
-    )
-    editor.click()
-    time.sleep(0.3)
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".ace_editor")))
 
-    actions = ActionChains(driver)
-    actions.key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL)
-    actions.send_keys(Keys.DELETE)
-    actions.send_keys(query)
-    actions.perform()
+    # Use the ACE API to set editor content directly — avoids fragile
+    # textarea click/type interactions with the hidden input element.
+    driver.execute_script(
+        """
+        var editor = ace.edit(document.querySelector('.ace_editor'));
+        editor.setValue(arguments[0], 1);
+        editor.focus();
+        """,
+        query,
+    )
     time.sleep(0.5)
     note(f"Typed query into editor: {query}")
 
@@ -477,9 +481,9 @@ def run_sql_in_editor(self, driver, query):
         pass
 
     if not triggered_via_button:
-        ActionChains(driver).key_down(Keys.CONTROL).send_keys(
-            Keys.ENTER
-        ).key_up(Keys.CONTROL).perform()
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys(Keys.ENTER).key_up(
+            Keys.CONTROL
+        ).perform()
         note("Triggered Run via Ctrl+Enter")
 
     WebDriverWait(driver, 60).until(
@@ -513,9 +517,7 @@ def get_sql_lab_result_text(self, driver):
     ]
     for sel in selectors:
         try:
-            el = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, sel))
-            )
+            el = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, sel)))
             text = el.text
             if text and text.strip():
                 note(

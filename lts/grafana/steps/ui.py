@@ -67,9 +67,7 @@ def take_screenshot(self, driver, name="screenshot"):
     The PNG is saved into the test's work directory and attached
     to the test report via the `save_screenshot` method + metric().
     """
-    screenshots_dir = os.path.join(
-        current().context.configs_dir, "..", "screenshots"
-    )
+    screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
     os.makedirs(screenshots_dir, exist_ok=True)
 
     filename = f"{name}.png"
@@ -189,9 +187,7 @@ def select_datasource(self, driver, datasource_name):
 
     wait = WebDriverWait(driver, 30)
     ds_link = wait.until(
-        EC.element_to_be_clickable(
-            (By.XPATH, f"//a[contains(., '{datasource_name}')]")
-        )
+        EC.element_to_be_clickable((By.XPATH, f"//a[contains(., '{datasource_name}')]"))
     )
     ds_link.click()
     note(f"Selected datasource: {datasource_name}")
@@ -209,8 +205,7 @@ def click_explore_datasource(self, driver):
         EC.element_to_be_clickable(
             (
                 By.CSS_SELECTOR,
-                "a[href*='/explore'][data-testid*='explore'], "
-                "a[href*='/explore']",
+                "a[href*='/explore'][data-testid*='explore'], " "a[href*='/explore']",
             )
         )
     )

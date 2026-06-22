@@ -77,8 +77,12 @@ def superset_environment(
         _compose_cmd(compose_file) + ["build", "superset"],
         cwd=configs_dir,
         env=env,
+        capture_output=True,
+        text=True,
     )
     if build.returncode != 0:
+        note(f"stdout: {build.stdout}")
+        note(f"stderr: {build.stderr}")
         fail(f"docker compose build failed with exit code {build.returncode}")
 
     up = subprocess.run(
@@ -101,6 +105,8 @@ def superset_environment(
             _compose_cmd(compose_file) + ["down", "--remove-orphans", "-v"],
             cwd=configs_dir,
             env=env,
+            capture_output=True,
+            text=True,
         )
 
 

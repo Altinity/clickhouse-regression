@@ -1,4 +1,5 @@
 """Test scenarios for querying ClickHouse through the Grafana datasource plugin."""
+
 import re
 
 from testflows.core import *
@@ -69,9 +70,7 @@ def select_version_via_explore(self):
         take_screenshot(driver=driver, name="sql_editor")
 
     with And("I query ClickHouse for version via Grafana API"):
-        result_text = run_query_via_api(
-            driver=driver, query="SELECT version()"
-        )
+        result_text = run_query_via_api(driver=driver, query="SELECT version()")
 
     with Then("the result should contain the ClickHouse version"):
         assert re.search(
@@ -79,9 +78,9 @@ def select_version_via_explore(self):
         ), f"No version pattern found in result: {result_text}"
 
         if expected_version:
-            assert expected_version in result_text, (
-                f"Expected version '{expected_version}' not found in result: {result_text}"
-            )
+            assert (
+                expected_version in result_text
+            ), f"Expected version '{expected_version}' not found in result: {result_text}"
             note(f"Version matches: {expected_version}")
         else:
             note(f"Version returned: {result_text}")

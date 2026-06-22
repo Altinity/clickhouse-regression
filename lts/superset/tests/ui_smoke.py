@@ -74,9 +74,7 @@ def ui_clickhouse_smoke(self):
         take_screenshot(driver=driver, name="03_databases_list")
 
     with Then("the 'clickhouse' connection is visible in the Databases list"):
-        verify_clickhouse_database_listed(
-            driver=driver, database_name="clickhouse"
-        )
+        verify_clickhouse_database_listed(driver=driver, database_name="clickhouse")
         take_screenshot(driver=driver, name="04_clickhouse_connection_visible")
 
     with When("I open SQL Lab"):
@@ -96,9 +94,7 @@ def ui_clickhouse_smoke(self):
         "country values"
     ):
         result_text = get_sql_lab_result_text(driver=driver)
-        assert result_text and result_text.strip(), (
-            "SQL Lab result panel was empty"
-        )
+        assert result_text and result_text.strip(), "SQL Lab result panel was empty"
         countries_seen = [c for c in ("US", "DE", "FR", "UK", "JP") if c in result_text]
         assert countries_seen, (
             "Expected at least one of the seeded countries (US/DE/FR/UK/JP) "
