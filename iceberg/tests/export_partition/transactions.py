@@ -2,8 +2,10 @@
 
 Verifies that successful exports append exactly one linearised snapshot,
 that the ZooKeeper-backed idempotency key rejects duplicates within the
-TTL (and that ``force_export`` and TTL expiry release that gate), and
-that failpoints in the commit path leave the destination atomically
+TTL (and that ``force_export`` releases that gate on older builds). After
+Altinity/ClickHouse#1917 (``>26.3.10.20001.altinityantalya``) manifest TTL
+no longer releases the gate — ``system.replicated_partition_exports`` is a
+history table — and that failpoints in the commit path leave the destination
 either committed or untouched.
 """
 
@@ -18,7 +20,7 @@ from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_Transactions_CrashRecovery,
 )
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_post_26_3_10_20001
 
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
@@ -249,10 +251,18 @@ def force_export_bypasses_ttl_gate(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_Transactions_Idempotency("1.0"))
 @Name("TTL expiry permits re-export of the same partition")
 def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
-    """After the manifest TTL expires the gate is released and a re-export
-    of the same partition succeeds, adding a second snapshot.
+    """Manifest TTL behaviour for duplicate exports of the same key.
+
+    * Builds ``<= 26.3.10.20001.altinityantalya``: after
+      ``export_merge_tree_partition_manifest_ttl`` elapses the idempotency
+      gate is released and a re-export succeeds (second snapshot).
+    * Builds ``> 26.3.10.20001`` (Altinity/ClickHouse#1917): manifest TTL is
+      removed; ``system.replicated_partition_exports`` is a history table and
+      the second export is still rejected with
+      ``EXPORT_PARTITION_ALREADY_EXPORTED``.
     """
     ttl_seconds = 3
+    ttl_settings = [("export_merge_tree_partition_manifest_ttl", ttl_seconds)]
     source_table = _seed_source(values="(1, 2020), (2, 2020), (3, 2020)")
 
     with Given("create the Iceberg destination"):
@@ -267,33 +277,56 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
             source_table=source_table,
             destination=destination,
             partition_id="2020",
-            extra_settings=[
-                ("export_merge_tree_partition_manifest_ttl", ttl_seconds),
-            ],
+            extra_settings=ttl_settings,
         )
 
-    with And(f"wait long enough for the TTL to expire ({ttl_seconds * 2}s)"):
+    with And(f"wait long enough for the TTL window to elapse ({ttl_seconds * 2}s)"):
         time.sleep(ttl_seconds * 2)
 
-    with And("second export is accepted after TTL expiry"):
-        export_partition(
-            source_table=source_table,
-            destination=destination,
-            partition_id="2020",
-            extra_settings=[
-                ("export_merge_tree_partition_manifest_ttl", ttl_seconds),
-            ],
-        )
+    if check_if_antalya_post_26_3_10_20001(self):
+        with Then(
+            "second export is still rejected once manifest TTL is a history-only "
+            "field (Altinity/ClickHouse#1917)"
+        ):
+            export_partition(
+                source_table=source_table,
+                destination=destination,
+                partition_id="2020",
+                extra_settings=ttl_settings,
+                exitcode=EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
+                message="Export with key",
+                wait_for_completion=False,
+            )
 
-    with Then("snapshot log has grown by one"):
-        snapshots = get_snapshots(
-            destination=destination,
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
-        )
-        assert len(snapshots) == 2, error(
-            f"Expected 2 snapshots after TTL-expiry re-export, " f"got {len(snapshots)}"
-        )
+        with And("only the original snapshot remains"):
+            snapshots = get_snapshots(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+            assert len(snapshots) == 1, error(
+                f"Expected 1 snapshot after duplicate re-export rejection, "
+                f"got {len(snapshots)}"
+            )
+    else:
+        with And("second export is accepted after TTL expiry"):
+            export_partition(
+                source_table=source_table,
+                destination=destination,
+                partition_id="2020",
+                extra_settings=ttl_settings,
+            )
+
+        with Then("snapshot log has grown by one"):
+            snapshots = get_snapshots(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+            assert len(snapshots) == 2, error(
+                f"Expected 2 snapshots after TTL-expiry re-export, "
+                f"got {len(snapshots)}"
+            )
 
 
 @TestScenario
