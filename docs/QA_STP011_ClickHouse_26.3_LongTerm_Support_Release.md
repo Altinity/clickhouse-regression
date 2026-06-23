@@ -839,10 +839,10 @@ Compatibility with the [clickhouse-driver](https://github.com/mymarilyn/clickhou
 #### ODBC `clickhouse-odbc`
 
 clickhouse-odbc version: 
-* v1.3.0.20241018
+* v1.2.1.20220905
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-odbc/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
@@ -867,7 +867,7 @@ Results:
 **Results:** Tests run: 231, Failures: 0, Errors: 0, Skipped: 0 (clickhouse-jdbc 0.9.0 against ClickHouse 26.3.13.10001).
 
 Results (DBeaver): 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/DBeaver/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/DBeaver/
 
 The [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
@@ -929,7 +929,7 @@ Compatibility with the following BI tools.
 #### Grafana
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/grafana/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/grafana/
 
 Compatibility with [Grafana].
 
@@ -966,7 +966,7 @@ All 24 failures are the exact same set across all three builds. They are pre-exi
 #### Superset
 
 Results:
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/superset/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/superset/
 
 Compatibility with [Superset].
 
