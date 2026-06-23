@@ -889,7 +889,7 @@ clickhouse-operator version:
 * 0.27.2
 
 Results: 
-* [reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-operator/](https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-operator/)
+* [https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-operator/](https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-operator/)
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
