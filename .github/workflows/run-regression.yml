@@ -867,7 +867,7 @@ jobs:
     secrets: inherit
 
   oauth:
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 'oauth') && (inputs.is_workflow_call != true || contains(inputs.package, 'antalya')) }}
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 'oauth') && contains(inputs.package, 'antalya') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: oauth
