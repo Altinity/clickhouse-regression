@@ -124,7 +124,7 @@ The following team members SHALL be dedicated to the release:
 * Davit Mnatobishvili (clickhouse-odbc, grafana, superset, DBeaver)
 * Alsu Giliazova (regression, clickhouse-jdbc, sqlalchemy, clickhouse-driver)
 * Carlos Raymundo (regression)
-* Saba Momtselidze (clickhouse-operator)
+* Saba Momtselidze (clickhouse-)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup, ACM upgrade and downgrade)
 * Julian Huang (Tableau)
 * Mikhail Filimonov (production clusters, support team feedback)
@@ -195,7 +195,7 @@ Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/stable-26.3
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc) | Tests run: 231, Failures: 0, Errors: 0, Skipped: 0 |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc) | |
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup) | |
-| Kubernetes `clickhouse-operator` | [*Pass](#kubernetes-clickhouse-operator) | Tests run: 80, 1 XFail, 2 Fails (expected) |
+| Kubernetes `clickhouse-operator` | [Pass](#kubernetes-clickhouse-operator) | Tests run: 111, 6 XFail|
 | Altinity.Cloud | [Pass](#altinitycloud) | |
 | Production Cluster Operation | [Pass](#production-cluster-operation) | |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade) | |
@@ -885,15 +885,11 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 #### Kubernetes `clickhouse-operator`
 
-Note:
-the build tag used for final run: altinityinfra/clickhouse-server:1403-25.8.16.10001.altinitytest-alpine
-
 clickhouse-operator version: 
-* 0.25.2
+* 0.27.2
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/ - before fix
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator-ddl-fix/ - after ddl-fix
+* reports.s3.amazonaws.com/index.html#reports/26.3.13-lts/clickhouse-operator/
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
