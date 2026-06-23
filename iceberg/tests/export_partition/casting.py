@@ -247,9 +247,6 @@ def cisco_schema(self, minio_root_user, minio_root_password):
         )
 
 
-SCENARIOS = SAFE_SCENARIOS + LOSSY_SCENARIOS + (cisco_schema,)
-
-
 @TestFeature
 @Name("casting")
 def feature(self, minio_root_user, minio_root_password):
