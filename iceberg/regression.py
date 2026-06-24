@@ -397,6 +397,12 @@ ffails = {
         "Altinity/ClickHouse#1779 export auto-cast requires antalya > 26.3.10.20001",
         lambda test: not check_if_antalya_post_26_3_10_20001(test),
     ),
+    "/iceberg/export partition/*/catalogs/drop with purge allows recreating same table": (
+        Skip,
+        "Altinity/ClickHouse#1909 iceberg_delete_data_on_drop purge requires "
+        "antalya > 26.3.10.20001",
+        lambda test: not check_if_antalya_post_26_3_10_20001(test),
+    ),
     "/iceberg/export partition/glue catalog/casting": (
         Skip,
         "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "

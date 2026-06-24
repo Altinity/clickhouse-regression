@@ -194,7 +194,8 @@ def check_if_antalya_pre_26_1(test=None):
 
 # Next Antalya 26.3 release after 26.3.10.20001.altinityantalya.
 # Gates PR 1779 export auto-cast, PR 1874 system.tables partition/sorting keys,
-# and PR 1917 replicated_partition_exports history table (no manifest TTL release).
+# PR 1909 iceberg_delete_data_on_drop purge, and PR 1917
+# replicated_partition_exports history table (no manifest TTL release).
 ANTALYA_POST_26_3_10_20001 = ">26.3.10.20001"
 
 

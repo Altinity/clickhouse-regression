@@ -6,6 +6,8 @@ and ``rest`` / ``glue`` (``DataLakeCatalog`` commit path, external-reader
 round-trip via PyIceberg).
 """
 
+import textwrap
+
 from testflows.core import *
 from testflows.asserts import error
 
@@ -40,16 +42,25 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
     create_iceberg_s3_destination,
     create_pyiceberg_catalog_destination,
 )
+from iceberg.tests.export_partition.steps.casting_iceberg_destination import (
+    create_casting_catalog_iceberg_destination,
+)
 from iceberg.tests.export_partition.steps.verification import (
     assert_destination_row_count,
     read_via_icebergS3_table_function,
 )
 
-
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 
 FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
+
+DROP_PURGE_SETTINGS = [("iceberg_delete_data_on_drop", 1)]
+INSERT_INTO_ICEBERG_SETTINGS = [("allow_experimental_insert_into_iceberg", 1)]
+_CATALOG_CREATE_SETTINGS = [
+    ("allow_experimental_database_iceberg", 1),
+    ("write_full_path_in_iceberg_metadata", 1),
+]
 
 
 # PyIceberg description of the same shape as ``SIMPLE_COLUMNS`` / ``SIMPLE_PARTITION_BY``.
@@ -71,6 +82,7 @@ CATALOG_PARTITION_SPEC = PartitionSpec(
 
 NO_CATALOG_MODES = ("no",)
 EXTERNAL_CATALOG_MODES = ("ice", "glue")
+ICE_CATALOG_MODES = ("ice",)
 
 
 def _seed_source():
@@ -364,11 +376,170 @@ def catalog_external_reader_round_trips_exported_data(
         )
 
 
+def _no_catalog_iceberg_s3_create_sql(
+    table_name, columns, partition_by, url, minio_root_user, minio_root_password
+):
+    return textwrap.dedent(
+        f"""
+        CREATE TABLE {table_name} ({columns})
+        ENGINE = IcebergS3('{url}', '{minio_root_user}', '{minio_root_password}')
+        PARTITION BY {partition_by}
+        SETTINGS s3_retry_attempts = 1
+        """
+    ).strip()
+
+
+def _catalog_iceberg_create_sql(
+    destination, columns, partition_by, minio_root_user, minio_root_password
+):
+    s3_url = (
+        f"{DEFAULT_S3_ENDPOINT_HOST}/"
+        f"{DEFAULT_S3_WAREHOUSE_BUCKET}/data/{destination['table_name']}/"
+    )
+    qualified_sql = (
+        f"{destination['database_name']}."
+        f"`{destination['namespace']}.{destination['table_name']}`"
+    )
+    pclause = f"PARTITION BY {partition_by}" if partition_by else ""
+    return (
+        qualified_sql,
+        textwrap.dedent(
+            f"""
+            CREATE TABLE {qualified_sql} ({columns})
+            ENGINE = IcebergS3('{s3_url}', '{minio_root_user}', '{minio_root_password}')
+            {pclause}
+            SETTINGS s3_retry_attempts = 1, iceberg_format_version = 2
+            """
+        ).strip(),
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration_NoCatalog("1.0"))
+@Name("drop with purge allows recreating same table")
+def no_catalog_drop_with_purge_recreates_same_table(
+    self, minio_root_user, minio_root_password
+):
+    """With ``iceberg_delete_data_on_drop = 1``, ``DROP TABLE`` removes the
+    on-disk Iceberg metadata so the same ``IcebergS3`` table name and URL
+    can be created again without error (Altinity/ClickHouse#1909).
+    """
+    node = self.context.node
+    table_name = f"iceberg_{getuid()}"
+    url = (
+        f"{DEFAULT_S3_ENDPOINT_HOST}/"
+        f"{DEFAULT_S3_WAREHOUSE_BUCKET}/data/{table_name}/"
+    )
+    create_sql = _no_catalog_iceberg_s3_create_sql(
+        table_name=table_name,
+        columns=SIMPLE_COLUMNS,
+        partition_by=SIMPLE_PARTITION_BY,
+        url=url,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
+
+    with Given("create an IcebergS3 table"):
+        node.query(create_sql, settings=FULL_PATHS_SETTING)
+
+    with When("drop the table with iceberg_delete_data_on_drop enabled"):
+        node.query(
+            f"DROP TABLE {table_name} SYNC",
+            settings=DROP_PURGE_SETTINGS,
+        )
+
+    with Then("recreate the same table name at the same location succeeds"):
+        node.query(create_sql, settings=FULL_PATHS_SETTING)
+
+    with And("the fresh table accepts writes"):
+        node.query(
+            f"INSERT INTO {table_name} VALUES (1, 2020)",
+            settings=INSERT_INTO_ICEBERG_SETTINGS,
+        )
+        assert_destination_row_count(
+            destination=table_name,
+            expected=1,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with Finally(f"drop destination {table_name} if it still exists"):
+        node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"))
+@Name("drop with purge allows recreating same table")
+def catalog_drop_with_purge_recreates_same_table(
+    self, minio_root_user, minio_root_password
+):
+    """With ``iceberg_delete_data_on_drop = 1``, ``DROP TABLE`` on a
+    ``DataLakeCatalog`` Iceberg table removes warehouse metadata so the
+    same qualified name can be created again without error
+    (Altinity/ClickHouse#1909).
+    """
+    node = self.context.node
+
+    with Given("create a catalog-backed Iceberg table via ClickHouse DDL"):
+        destination = create_casting_catalog_iceberg_destination(
+            columns=SIMPLE_COLUMNS,
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            cleanup=False,
+        )
+
+    qualified_sql, create_sql = _catalog_iceberg_create_sql(
+        destination=destination,
+        columns=SIMPLE_COLUMNS,
+        partition_by=SIMPLE_PARTITION_BY,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
+
+    try:
+        with When("drop the table with iceberg_delete_data_on_drop enabled"):
+            node.query(
+                f"DROP TABLE {qualified_sql} SYNC",
+                settings=DROP_PURGE_SETTINGS,
+                use_file=True,
+            )
+
+        with Then("recreate the same catalog table name succeeds"):
+            node.query(
+                create_sql,
+                settings=_CATALOG_CREATE_SETTINGS,
+                use_file=True,
+            )
+
+        with And("the fresh table accepts writes through DataLakeCatalog"):
+            node.query(
+                f"INSERT INTO {qualified_sql} VALUES (1, 2020)",
+                settings=INSERT_INTO_ICEBERG_SETTINGS,
+                use_file=True,
+            )
+            assert_destination_row_count(
+                destination=destination,
+                expected=1,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+    finally:
+        with Finally(f"drop catalog destination {qualified_sql} if it exists"):
+            node.query(
+                f"DROP TABLE IF EXISTS {qualified_sql} SYNC",
+                use_file=True,
+            )
+            node.query(f"DROP DATABASE IF EXISTS {destination['database_name']}")
+
+
 SCENARIOS = (
     (no_catalog_read_via_icebergS3_table_function, NO_CATALOG_MODES),
     (no_catalog_drop_destination_keeps_metadata, NO_CATALOG_MODES),
+    (no_catalog_drop_with_purge_recreates_same_table, NO_CATALOG_MODES),
     (catalog_export_appends_snapshot_visible_via_catalog, EXTERNAL_CATALOG_MODES),
     (catalog_external_reader_round_trips_exported_data, EXTERNAL_CATALOG_MODES),
+    (catalog_drop_with_purge_recreates_same_table, ICE_CATALOG_MODES),
 )
 
 
