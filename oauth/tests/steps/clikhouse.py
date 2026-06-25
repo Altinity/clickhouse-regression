@@ -225,8 +225,14 @@ def change_token_processors(
     node=None,
     replace=False,
     replace_section=False,
+    restart=True,
 ):
     """Change ClickHouse token processor configuration.
+
+    When ``restart=True`` (default) ClickHouse is restarted to apply the
+    change. Pass ``restart=False`` to write the config without a restart
+    (e.g. when the caller wants to apply it via ``SYSTEM RELOAD CONFIG``
+    instead, to keep existing native sessions alive).
 
     When ``replace=True``, the processor element gets ``replace="replace"``
     so that it fully replaces the base processor definition.
@@ -325,7 +331,7 @@ def change_token_processors(
         entries=entries,
         config_d_dir=config_d_dir,
         preprocessed_name="config.xml",
-        restart=True,
+        restart=restart,
         config_file=f"{processor_name}_config.xml",
         node=node,
     )
@@ -711,21 +717,38 @@ def change_user_quota(
     )
 
 
+@contextmanager
 def open_native_jwt_session(
     token,
-    container_node="clickhouse1",
+    node=None,
     target_host="clickhouse1",
     target_port=9000,
 ):
-    """Open a long-lived ``clickhouse-client --jwt`` TCP session.
+    """Open a long-lived ``clickhouse-client --jwt`` native TCP session.
 
-    Not yet re-implemented; callers should ``Skip`` until the
-    replacement helper lands.
+    Runs an interactive ``clickhouse-client-tty`` inside the ``node``
+    container (default: ``bash-tools``), connecting to
+    ``target_host:target_port`` and authenticating with the JWT
+    ``token``. Yields a client handle whose ``.query(...)`` reuses the
+    single underlying TCP connection, so the session persists across
+    calls -- unlike the one-shot ``node.query(..., settings=[("jwt",
+    token)])`` path which opens and closes a connection per query.
+
+    Usage::
+
+        with open_native_jwt_session(token=token) as session:
+            session.query("SELECT currentUser()")
+
+    The connection is closed automatically when the ``with`` block
+    exits.
     """
-    raise NotImplementedError(
-        "open_native_jwt_session is not yet re-implemented; "
-        "dependent scenarios should Skip until the replacement helper lands."
-    )
+    if node is None:
+        node = current().context.bash_tools
+
+    with node.client(
+        client_args={"host": target_host, "port": target_port, "jwt": token}
+    ) as client:
+        yield client
 
 
 @TestStep(Given)

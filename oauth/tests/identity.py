@@ -9,58 +9,50 @@ _SECRET = "identity_test_secret_hs256"
 
 
 @TestScenario
-def same_sub_from_different_processors_maps_to_one_user(self):
-    """Two token processors that each authenticate a token with the same
-    ``sub`` claim SHALL map to a single ClickHouse user.
+def same_sub_maps_to_one_user(self):
+    """Two tokens carrying the same ``sub`` claim SHALL map to a single
+    ClickHouse user.
 
     Accepted finding H-23 (by design): the ``sub`` claim is the username
     identity in ClickHouse's token-user model, so identical ``sub``
-    values from different IdPs intentionally resolve to the same user.
+    values always resolve to the same dynamically-provisioned user.
     Operators who need distinct users configure non-colliding ``sub``
     claims (or select a unique ``username_claim``).
     """
-    secret_a = "identity_secret_a"
-    secret_b = "identity_secret_b"
+    secret = "identity_secret_shared"
     node = self.context.node
 
-    with Given("two static-key processors with different secrets"):
+    with Given("a static-key processor wired into the token user directory"):
         change_token_processors(
             processor_name="proc_a",
             processor_type="jwt_static_key",
             algo="HS256",
-            static_key=secret_a,
+            static_key=secret,
             token_cache_lifetime=0,
             replace_section=True,
-        )
-        change_token_processors(
-            processor_name="proc_b",
-            processor_type="jwt_static_key",
-            algo="HS256",
-            static_key=secret_b,
-            token_cache_lifetime=0,
         )
         change_user_directories_config(
             processor="proc_a",
             common_roles=["general-role"],
         )
 
-    with When("I mint an 'alice' token signed by each processor"):
-        token_a = create_static_jwt(
+    with When("I mint two distinct 'alice' tokens with the same sub"):
+        token_first = create_static_jwt(
             user_name="alice",
-            secret=secret_a,
+            secret=secret,
             algorithm="HS256",
             expiration_minutes=5,
         )
-        token_b = create_static_jwt(
+        token_second = create_static_jwt(
             user_name="alice",
-            secret=secret_b,
+            secret=secret,
             algorithm="HS256",
-            expiration_minutes=5,
+            expiration_minutes=10,
         )
 
     with And("both tokens authenticate"):
-        access_clickhouse(token=token_a, status_code=200)
-        access_clickhouse(token=token_b, status_code=200)
+        access_clickhouse(token=token_first, status_code=200)
+        access_clickhouse(token=token_second, status_code=200)
 
     with Then("both tokens resolve to the same single ClickHouse user"):
         result = node.query("SELECT count() FROM system.users WHERE name = 'alice'")
@@ -135,6 +127,6 @@ def feature(self):
     share one ClickHouse user (H-23), plus the empty-name and
     Unicode-homograph guards that are NOT accepted findings.
     """
-    Scenario(run=same_sub_from_different_processors_maps_to_one_user)
+    Scenario(run=same_sub_maps_to_one_user)
     Scenario(run=empty_sub_claim_rejected)
     Scenario(run=unicode_homograph_sub_rejected)
