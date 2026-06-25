@@ -508,6 +508,120 @@ def user_directories_without_token_block(self):
         check_clickhouse_is_alive()
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    ),
+)
+def invalid_roles_filter_regex_unmatched_bracket(self):
+    """ClickHouse SHALL reject a user-directory config whose
+    ``roles_filter`` contains an unmatched-bracket regex at parse time
+    (fail-closed validation of the RE2 pattern).
+    """
+    with Given("I apply a user_directories config with a malformed roles_filter"):
+        apply_fatal_user_directories_config(
+            entries={
+                "user_directories": {
+                    "token": {
+                        "processor": "keycloak",
+                        "common_roles": {"general-role": {}},
+                        "roles_filter": "[broken",
+                    }
+                }
+            },
+            expected_message="Invalid 'roles_filter' regex",
+            config_file="user_directory_roles_filter_unmatched.xml",
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    ),
+)
+def sibling_processor_parse_failure_disables_all_token_auth(self):
+    """A valid processor SHALL be disabled when a sibling processor fails
+    to parse — ``parseTokenProcessors`` is all-or-nothing, so one bad
+    processor disables ALL token authentication for that config cycle.
+    """
+    client = self.context.provider_client
+
+    with Given("I configure a valid keycloak OpenID processor"):
+        endpoints = client.OAuthProvider.openid_endpoints()
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
+            replace=True,
+        )
+
+    with And("I add a sibling processor with an invalid type"):
+        change_token_processors(
+            processor_name="proc_b",
+            processor_type="completely_invalid_type_xyz",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("token auth is disabled because the sibling failed to parse"):
+        assert_misconfigured_processor_rejects(token=token)
+
+
+@TestScenario
+def token_directory_first_does_not_crash_basic_auth(self):
+    """With the token user-directory ordered before ``users_xml``, a
+    non-token (Basic-auth) request SHALL receive a clean auth decision
+    (accept or reject) instead of aborting with a ``LOGICAL_ERROR``.
+
+    Note: the storage chain terminating on a first-match method mismatch
+    is accepted/pre-existing ClickHouse behaviour (H-12), so a 401/403
+    is fine — this only guards against the ``typeid_cast`` crash (H-25),
+    i.e. an HTTP 500 ``LOGICAL_ERROR``.
+    """
+    client = self.context.provider_client
+
+    with Given("I configure a working OpenID token processor"):
+        endpoints = client.OAuthProvider.openid_endpoints()
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            token_cache_lifetime=0,
+            replace_section=True,
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
+        )
+
+    with And("I order the token directory before users_xml"):
+        change_user_directories_order(
+            entries_in_order=[
+                (
+                    "token",
+                    {"processor": "keycloak", "common_roles": {"general-role": {}}},
+                ),
+                ("users_xml", {"path": "/etc/clickhouse-server/users.xml"}),
+            ]
+        )
+
+    with When("I send a Basic-auth request for the local 'default' user"):
+        http_code = basic_auth_request(user="default")
+
+    with Then("ClickHouse returns a clean auth decision (no LOGICAL_ERROR 500)"):
+        assert http_code in ("200", "401", "403"), error(
+            f"Expected a clean auth decision, got HTTP {http_code}"
+        )
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
 @TestFeature
 @Name("configuration")
 @Requirements(
@@ -537,3 +651,6 @@ def feature(self):
     Scenario(run=empty_user_directories_section)
     Scenario(run=user_directories_without_token_block)
     Scenario(run=enable_token_auth_disabled_rejects_tokens)
+    Scenario(run=invalid_roles_filter_regex_unmatched_bracket)
+    Scenario(run=sibling_processor_parse_failure_disables_all_token_auth)
+    Scenario(run=token_directory_first_does_not_crash_basic_auth)

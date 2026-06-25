@@ -99,6 +99,34 @@ def no_token_processor_configured(self):
 
 
 @TestScenario
+def bearer_token_not_exposed_via_client_http_header(self):
+    """The bearer ``Authorization`` header SHALL NOT be retained in
+    ``client_info.http_headers``: reading it back via
+    ``getClientHTTPHeader('Authorization')`` SHALL NOT return the raw
+    token, so the credential cannot be exfiltrated through SQL.
+    """
+    client = self.context.provider_client
+
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then(
+        "the raw token is not retrievable via " "getClientHTTPHeader('Authorization')"
+    ):
+        body = access_clickhouse(
+            token=token,
+            status_code=200,
+            query=(
+                "SELECT getClientHTTPHeader('Authorization') "
+                "SETTINGS allow_get_client_http_header=1"
+            ),
+        )
+        assert token not in body, error(
+            "bearer token leaked via getClientHTTPHeader('Authorization')"
+        )
+
+
+@TestScenario
 @Requirements(
     RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"),
     RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
@@ -137,4 +165,5 @@ def feature(self):
     Scenario(run=malformed_token_rejected)
     Scenario(run=valid_token_on_all_nodes)
     Scenario(run=no_token_processor_configured)
+    Scenario(run=bearer_token_not_exposed_via_client_http_header)
     Scenario(run=valid_token_accepted_under_load)

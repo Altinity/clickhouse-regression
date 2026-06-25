@@ -1,6 +1,7 @@
 import json
 import time
 
+from jwt_authentication.tests.steps import create_static_jwt
 from oauth.tests.steps.clikhouse import *
 from oauth.tests.steps.common import *
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
@@ -304,6 +305,39 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
                 note(f"could not restore accessTokenLifespan: {e}")
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_Caching_CacheEviction_CacheLifetime("1.0"),
+)
+def cache_invalidated_when_processor_secret_changes(self):
+    """A token cached under a processor's old secret SHALL stop
+    authenticating once the processor is reconfigured with a different
+    secret — the cache SHALL NOT outlive the validating key.
+    """
+    secret_1 = "cache_invalidation_secret_one"
+    secret_2 = "cache_invalidation_secret_two"
+
+    with Given("I configure a static-key processor with a long token cache"):
+        configure_static_key_processor(secret=secret_1, token_cache_lifetime=300)
+
+    with And("I mint a token signed by the first secret"):
+        token = create_static_jwt(
+            user_name="alice",
+            secret=secret_1,
+            algorithm="HS256",
+            expiration_minutes=15,
+        )
+
+    with And("I prime the cache with a successful auth"):
+        access_clickhouse(token=token, status_code=200)
+
+    with When("I reconfigure the processor with a different secret"):
+        configure_static_key_processor(secret=secret_2, token_cache_lifetime=300)
+
+    with Then("the token signed by the old secret no longer authenticates"):
+        assert_token_rejected(token=token)
+
+
 @TestFeature
 @Name("cache semantics")
 @Requirements(
@@ -322,3 +356,4 @@ def feature(self):
     Scenario(run=new_token_replaces_cache_entry_for_same_user)
     Scenario(run=expired_cache_entry_persists_until_next_auth)
     Scenario(run=cache_entry_capped_at_token_exp_when_token_expires_first)
+    Scenario(run=cache_invalidated_when_processor_secret_changes)

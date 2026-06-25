@@ -27,11 +27,16 @@ def configure_openid_token_processor(
     processor_type="OpenID",
     common_roles=("general-role",),
     roles_filter=None,
+    roles_transform=None,
+    default_profile=None,
     token_cache_lifetime=None,
     username_claim=None,
     groups_claim=None,
     expected_issuer=None,
     expected_audience=None,
+    userinfo_endpoint=None,
+    token_introspection_endpoint=None,
+    include_introspection=True,
     replace=True,
 ):
     """Configure the standard provider-backed OpenID token processor and
@@ -42,6 +47,12 @@ def configure_openid_token_processor(
     the introspection client credentials are wired from context, so the
     same call works unchanged across identity providers.
 
+    ``userinfo_endpoint`` / ``token_introspection_endpoint`` override the
+    discovered endpoints (used to point at unreachable URLs in
+    availability/fail-closed tests). Pass ``include_introspection=False``
+    to configure a userinfo-only processor (no introspection endpoint or
+    credentials).
+
     Optional knobs (cache lifetime, claim names, issuer/audience pinning)
     are forwarded as-is; ``change_token_processors`` ignores any that are
     ``None``. Pass ``common_roles=None`` to omit the ``common_roles``
@@ -50,13 +61,29 @@ def configure_openid_token_processor(
     client = self.context.provider_client
     endpoints = client.OAuthProvider.openid_endpoints()
 
+    introspection_endpoint = None
+    introspection_client_id = None
+    introspection_client_secret = None
+    if include_introspection:
+        introspection_endpoint = (
+            token_introspection_endpoint
+            if token_introspection_endpoint is not None
+            else endpoints.token_introspection_endpoint
+        )
+        introspection_client_id = self.context.introspection_client_id
+        introspection_client_secret = self.context.introspection_client_secret
+
     change_token_processors(
         processor_name=processor_name,
         processor_type=processor_type,
-        userinfo_endpoint=endpoints.userinfo_endpoint,
-        token_introspection_endpoint=endpoints.token_introspection_endpoint,
-        introspection_client_id=self.context.introspection_client_id,
-        introspection_client_secret=self.context.introspection_client_secret,
+        userinfo_endpoint=(
+            userinfo_endpoint
+            if userinfo_endpoint is not None
+            else endpoints.userinfo_endpoint
+        ),
+        token_introspection_endpoint=introspection_endpoint,
+        introspection_client_id=introspection_client_id,
+        introspection_client_secret=introspection_client_secret,
         token_cache_lifetime=token_cache_lifetime,
         username_claim=username_claim,
         groups_claim=groups_claim,
@@ -68,7 +95,55 @@ def configure_openid_token_processor(
         processor=processor_name,
         common_roles=list(common_roles) if common_roles is not None else None,
         roles_filter=roles_filter,
+        roles_transform=roles_transform,
+        default_profile=default_profile,
     )
+
+
+@TestStep(Given)
+def configure_static_key_processor(
+    self,
+    *,
+    secret,
+    processor_name="proc_a",
+    algo="HS256",
+    token_cache_lifetime=0,
+    allow_no_expiration=None,
+    common_roles=("general-role",),
+    default_profile=None,
+    with_user_directory=True,
+    replace_section=True,
+    node=None,
+):
+    """Configure a single ``jwt_static_key`` token processor and (by
+    default) point the token user-directory at it.
+
+    This is the static-key counterpart to
+    :func:`configure_openid_token_processor`. It keeps the very common
+    "one HS256 processor + token directory" setup in one place so
+    scenarios stay declarative.
+
+    Pass ``with_user_directory=False`` when the scenario configures the
+    user-directory itself (e.g. with a custom ``default_profile`` order).
+    """
+    change_token_processors(
+        processor_name=processor_name,
+        processor_type="jwt_static_key",
+        algo=algo,
+        static_key=secret,
+        token_cache_lifetime=token_cache_lifetime,
+        allow_no_expiration=allow_no_expiration,
+        replace_section=replace_section,
+        node=node,
+    )
+
+    if with_user_directory:
+        change_user_directories_config(
+            processor=processor_name,
+            common_roles=list(common_roles) if common_roles is not None else None,
+            default_profile=default_profile,
+            node=node,
+        )
 
 
 @TestStep(Then)
