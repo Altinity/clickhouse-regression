@@ -53,6 +53,46 @@ def tampered_signature_rejected(self):
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
 )
+def wrong_auth_header_ignored(self):
+    """ClickHouse SHALL NOT grant the OAuth identity when a valid token is
+    supplied under a non-standard header (``Authentication`` instead of
+    ``Authorization``): the bearer credential is only read from the
+    ``Authorization`` header, so the request falls back to the
+    unauthenticated ``default`` user rather than the token's subject.
+    """
+    client = self.context.provider_client
+
+    with Given("I get a valid OAuth token from the provider"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with And("I confirm the token authenticates under the 'Authorization' header"):
+        authorized_user = access_clickhouse(token=token, status_code=200).strip()
+        assert authorized_user and authorized_user != "default", error()
+
+    with Then(
+        "ClickHouse ignores the token under the 'Authentication' header and "
+        "runs the request as the unauthenticated 'default' user"
+    ):
+        body = access_clickhouse(
+            token=token,
+            status_code=200,
+            header=f"Authentication: Bearer {token}",
+        ).strip()
+        assert body == "default", error(
+            f"expected unauthenticated fallback to 'default', got '{body}'"
+        )
+
+    with And("the OAuth identity was not granted via the wrong header"):
+        assert body != authorized_user, error()
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
+)
 def malformed_token_rejected(self):
     """ClickHouse SHALL reject a completely malformed token."""
     with Then("ClickHouse rejects the garbage token"):
@@ -162,6 +202,7 @@ def feature(self):
     Scenario(run=valid_token_accepted)
     Scenario(run=empty_token_rejected)
     Scenario(run=tampered_signature_rejected)
+    Scenario(run=wrong_auth_header_ignored)
     Scenario(run=malformed_token_rejected)
     Scenario(run=valid_token_on_all_nodes)
     Scenario(run=no_token_processor_configured)
