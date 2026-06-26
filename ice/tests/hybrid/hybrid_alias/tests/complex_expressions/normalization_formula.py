@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -91,6 +92,7 @@ def normalization_formula_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_ComplexExpression("1.0"))
 @Name("normalization formula")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: normalized_value ALIAS (value - min_value) / (max_value - min_value)."""

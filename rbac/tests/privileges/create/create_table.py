@@ -1093,11 +1093,17 @@ def create_as_another_table(self, node=None):
                             )
 
                         with And(
-                            "grant SHOW TABLES privilege on source table to the user"
+                            "grant SHOW TABLES/COLUMNS privilege on source table to the user"
                         ):
-                            node.query(
-                                f"GRANT SHOW TABLES ON {source_table_name} TO {user_name}"
-                            )
+                            # PR #94556: CREATE TABLE ... AS now requires SHOW COLUMNS instead of SHOW TABLES
+                            if check_clickhouse_version(">=26.1")(self):
+                                node.query(
+                                    f"GRANT SHOW COLUMNS ON {source_table_name} TO {user_name}"
+                                )
+                            else:
+                                node.query(
+                                    f"GRANT SHOW TABLES ON {source_table_name} TO {user_name}"
+                                )
                             node.query(
                                 f"CREATE TABLE {table_name} AS {source_table_name}",
                                 settings=[("user", f"{user_name}")],

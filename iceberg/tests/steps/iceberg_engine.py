@@ -177,7 +177,11 @@ def create_experimental_iceberg_database(
     self,
     **kwargs,
 ):
-    if self.context.catalog == "rest":
+    # ``"rest"`` and ``"ice"`` both route through the same helper because
+    # ``ice-rest-catalog`` is the only REST catalog wired up in
+    # ``iceberg/iceberg_env``. See :func:`iceberg.tests.steps.catalog.create_catalog`
+    # for the rationale on the two labels.
+    if self.context.catalog in ("rest", "ice"):
         return create_experimental_iceberg_database_with_rest_catalog(
             **kwargs,
         )
@@ -236,6 +240,7 @@ def read_data_from_clickhouse_iceberg_table(
     use_cache_for_count_from_files="0",
     lock_object_storage_task_distribution_ms=None,
     max_threads=None,
+    iceberg_partition_timezone=None,
 ):
     if node is None:
         node = self.context.node
@@ -299,6 +304,9 @@ def read_data_from_clickhouse_iceberg_table(
                 max_threads,
             )
         )
+
+    if iceberg_partition_timezone is not None:
+        settings.append(("iceberg_partition_timezone", iceberg_partition_timezone))
 
     if use_iceberg_metadata_files_cache and (check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)):
         settings.append(

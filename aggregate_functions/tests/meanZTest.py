@@ -14,7 +14,9 @@ from aggregate_functions.tests.welchTTest import scenario as checks
 def scenario(self, func="meanZTest({params})", table=None, snapshot_id=None):
     """Check meanZTest aggregate function by using the same tests as for welchTTest."""
 
-    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
         clickhouse_version = ">=24.3"
     elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"

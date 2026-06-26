@@ -1,0 +1,19 @@
+diff --git a/tests/columns/test_json.py b/tests/columns/test_json.py
+index c1fa92b..7b3c453 100644
+--- a/tests/columns/test_json.py
++++ b/tests/columns/test_json.py
+@@ -6,6 +6,14 @@ from tests.testcase import BaseTestCase
+ class JSONTestCase(BaseTestCase):
+     required_server_version = (22, 3, 2)
+ 
++    def setUp(self):
++        super(JSONTestCase, self).setUp()
++        if self.server_version >= (25, 11):
++            self.skipTest(
++                'Object(json) type was removed in ClickHouse 25.11; '
++                'native JSON type is not yet supported by clickhouse-driver'
++            )
++
+     def client_kwargs(self, version):
+         return {'settings': {'allow_experimental_object_type': True}}
+ 

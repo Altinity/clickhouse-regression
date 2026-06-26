@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -87,6 +88,7 @@ def case_expr_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Conditional("1.0"))
 @Name("case expr alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: case_expr ALIAS CASE value WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'other' END."""

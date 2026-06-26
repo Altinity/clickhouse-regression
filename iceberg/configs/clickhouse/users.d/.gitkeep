@@ -1,0 +1,8 @@
+# Intentionally empty — this directory exists only to back the docker-compose
+# bind mount declared in iceberg_env*/clickhouse-service.yml at
+# `${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/`. Static user-profile
+# overlays should live in iceberg/configs/clickhouse/users.xml or
+# config.d/, not here. Files are added at runtime by feature setup steps
+# (see iceberg/tests/export_partition/feature.py for the EXPORT PARTITION
+# overlay) via helpers.config.users_d.create_and_add, and removed again on
+# scope exit.

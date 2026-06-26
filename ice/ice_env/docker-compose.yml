@@ -54,7 +54,7 @@ services:
         target: /root/.ice.yaml
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:debug-0.12.0
+    image: altinity/ice-rest-catalog:debug-0.16.0
     restart: unless-stopped
     ports:
       - '5000:5000'
@@ -112,6 +112,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -124,6 +125,7 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -136,12 +138,13 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper1:
         condition: service_healthy
 
   keeper:
-    image: altinity/clickhouse-keeper:25.8.14.20001.altinityantalya
+    image: altinity/clickhouse-keeper:25.8.22.20001.altinityantalya
     container_name: keeper
     hostname: keeper
     ports:

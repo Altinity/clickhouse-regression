@@ -223,9 +223,15 @@ def help_option(self, node=None):
     node = self.context.node if node is None else node
     exitcode = 0
     message = (
-        "Usage: clickhouse --zookeeper-logs-dir /var/lib/zookeeper/data/version-2"
+        "Usage: clickhouse keeper-converter --zookeeper-logs-dir /var/lib/zookeeper/data/version-2"
         " --zookeeper-snapshots-dir /var/lib/zookeeper/data/version-2"
         " --output-dir /var/lib/clickhouse/coordination/snapshots"
+        if check_clickhouse_version(">=26.5")(self)
+        else (
+            "Usage: clickhouse --zookeeper-logs-dir /var/lib/zookeeper/data/version-2"
+            " --zookeeper-snapshots-dir /var/lib/zookeeper/data/version-2"
+            " --output-dir /var/lib/clickhouse/coordination/snapshots"
+        )
     )
 
     with When("using -h"):

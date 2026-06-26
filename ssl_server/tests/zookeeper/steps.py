@@ -439,11 +439,27 @@ def add_to_clickhouse_secure_zookeeper_config_file(
 
 
 @TestStep(When)
-def check_clickhouse_connection_to_zookeeper(self, node=None, message=None):
-    """Check ClickHouse connection to ZooKeeper."""
+def check_clickhouse_connection_to_zookeeper(self, node=None, message=None, messages=None):
+    """Check ClickHouse connection to ZooKeeper.
 
+    Use ``message`` for a single expected substring, or ``messages`` when any of
+    several TLS failure diagnostics is acceptable (e.g. handshake alert vs.
+    NO_CIPHERS_AVAILABLE when the client stack rejects the cipher before the peer).
+    """
     if node is None:
         node = self.context.node
+
+    if messages is not None:
+        if message is not None:
+            raise ValueError("pass only one of message= or messages=")
+
+        r = node.query(
+            "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON",
+            message=None,
+            ignore_exception=True,
+        )
+        assert any(m in r.output for m in messages), error(r.output)
+        return r
 
     node.query(
         "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON", message=message

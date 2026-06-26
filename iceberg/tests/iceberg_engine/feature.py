@@ -51,7 +51,9 @@ def feature(self, minio_root_user, minio_root_password):
             test=load("iceberg.tests.iceberg_engine.partition_evolution", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
-            test=load("iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"),
+            test=load(
+                "iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"
+            ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.check_datatypes", "feature"),
@@ -63,8 +65,21 @@ def feature(self, minio_root_user, minio_root_password):
             ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
-            test=load("iceberg.tests.iceberg_engine.dot_separated_column_names", "feature"),
+            test=load(
+                "iceberg.tests.iceberg_engine.dot_separated_column_names", "feature"
+            ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        Feature(
+            test=load("iceberg.tests.iceberg_engine.sort_key_timezone", "feature"),
+        )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        Feature(
+            test=load(
+                "iceberg.tests.iceberg_engine.show_data_lake_catalogs_repro", "feature"
+            ),
+        )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        # Feature(
+        #     test=load("iceberg.tests.iceberg_engine.alter_support", "feature"),
+        # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     with Feature("glue catalog"):
         self.context.catalog = "glue"
@@ -111,7 +126,9 @@ def feature(self, minio_root_user, minio_root_password):
             test=load("iceberg.tests.iceberg_engine.partition_evolution", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
-            test=load("iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"),
+            test=load(
+                "iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"
+            ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.check_datatypes", "feature"),
@@ -123,5 +140,12 @@ def feature(self, minio_root_user, minio_root_password):
             ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
-            test=load("iceberg.tests.iceberg_engine.dot_separated_column_names", "feature"),
+            test=load(
+                "iceberg.tests.iceberg_engine.dot_separated_column_names", "feature"
+            ),
+        )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        Feature(
+            test=load(
+                "iceberg.tests.iceberg_engine.show_data_lake_catalogs_repro", "feature"
+            ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)

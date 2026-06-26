@@ -1,175 +1,155 @@
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
-import json
-import time
-import base64
 
 
-def _base64url_encode_json(data: dict) -> str:
-    """Encode a dict to base64url without padding."""
-    json_bytes = json.dumps(data, separators=(",", ":"), sort_keys=True).encode()
-    b64 = base64.urlsafe_b64encode(json_bytes).decode().rstrip("=")
-    return b64
-
-
-def _build_jwt(header: dict, payload: dict, signature: str = "invalid") -> str:
-    """Compose a JWT string with provided header, payload and dummy signature."""
-    return f"{_base64url_encode_json(header)}.{_base64url_encode_json(payload)}.{signature}"
-
-
-def _default_payload(
-    sub: str = "demo", aud: str = "clickhouse", exp: int | None = None
-) -> dict:
-    now = int(time.time())
-    return {
-        "sub": sub,
-        "aud": aud,
-        "iat": now,
-        "exp": now + 3600 if exp is None else exp,
-    }
-
-
-@TestCheck
-def verify_keycloak_tokens_flow(self, config_step):
-    """Verify Keycloak token processing behavior."""
-
-    with Given("I set Keycloak token-related configuration"):
-        config_step()
-
-    with When("I get an OAuth token from the provider"):
-        client = self.context.provider_client
-        token = client.OAuthProvider.get_oauth_token()
-
-    with Then("I try to access ClickHouse with the token"):
-        # response = access_clickhouse(token=token)
-        # assert response.status_code == 200, error()
-        pass
-
-    with And("I check that the ClickHouse server is still alive"):
-        check_clickhouse_is_alive()
-
-
-@TestSketch(Scenario)
+@TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
     RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes_Fallback("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Tokens_Operational_ProviderType("1.0"),
 )
-def tokens_scenarios(self):
-    """Check Keycloak token requirements."""
+def openid_discovery_mode(self):
+    """ClickHouse SHALL validate tokens using OpenID userinfo endpoint."""
     client = self.context.provider_client
 
-    configurations = [
-        client.OAuthProvider.access_token_support,
-        client.OAuthProvider.tokens_operation_modes,
-        client.OAuthProvider.tokens_operation_modes_fallback,
-        client.OAuthProvider.tokens_configuration_validation,
-        client.OAuthProvider.tokens_operational_provider_type,
-    ]
+    with Given("I configure a token processor with provider OpenID endpoints"):
+        configure_openid_token_processor()
 
-    for i in configurations:
-        verify_keycloak_tokens_flow(config_step=i)
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("ClickHouse accepts the token"):
+        access_clickhouse(token=token, status_code=200)
 
 
-# Incorrect token generators
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"),
+)
+def invalid_jwks_uri_rejected(self):
+    """ClickHouse SHALL reject tokens when ``jwks_uri`` points to a non-existent endpoint.
+
+    Since antalya-26.3 the ``openid`` processor no longer accepts
+    ``jwks_uri``. This scenario uses ``jwt_dynamic_jwks`` instead to
+    verify that an unreachable JWKS endpoint causes token rejection.
+    """
+    client = self.context.provider_client
+
+    with Given("I configure a jwt_dynamic_jwks processor with an invalid jwks_uri"):
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="jwt_dynamic_jwks",
+            jwks_uri="http://keycloak:8080/invalid/jwks",
+            replace=True,
+        )
+
+    with And("I configure user directories"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("ClickHouse rejects the token (AUTHENTICATION_FAILED)"):
+        access_clickhouse(token=token, status_code=403)
 
 
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"))
-def token_with_unsupported_alg(self) -> str:
-    header = {"alg": "HS1024", "typ": "JWT"}
-    payload = _default_payload()
-    return _build_jwt(header, payload, signature="sig")
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
+)
+def userinfo_only_accepts_valid_token(self):
+    """An OpenID processor configured with only ``userinfo_endpoint``
+    (no introspection) SHALL validate and accept a valid token."""
+    client = self.context.provider_client
+
+    with Given("I configure an OpenID processor with userinfo only"):
+        configure_openid_token_processor(include_introspection=False)
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("ClickHouse accepts the token via userinfo validation"):
+        access_clickhouse(token=token, status_code=200)
 
 
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Typ("1.0"))
-def token_with_unsupported_typ(self) -> str:
-    header = {"alg": "HS256", "typ": "JWE"}
-    payload = _default_payload()
-    return _build_jwt(header, payload, signature="sig")
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
+)
+def unreachable_introspection_rejects_token(self):
+    """When introspection is configured but the endpoint is unreachable,
+    authentication SHALL fail closed (introspection is not silently
+    skipped) even though ``userinfo_endpoint`` is valid."""
+    client = self.context.provider_client
+
+    with Given(
+        "I configure OpenID with a valid userinfo and an unreachable "
+        "introspection endpoint"
+    ):
+        configure_openid_token_processor(
+            token_introspection_endpoint=(
+                "http://keycloak:8080/does-not-exist/introspect"
+            ),
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("ClickHouse rejects the token (introspection unreachable)"):
+        assert_token_rejected(token=token)
 
 
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"))
-def token_with_invalid_signature(self) -> str:
-    header = {"alg": "HS256", "typ": "JWT"}
-    payload = _default_payload()
-    return _build_jwt(header, payload, signature="invalid-signature")
+@TestScenario
+def auth_does_not_hang_on_unreachable_introspection(self):
+    """ClickHouse SHALL NOT block indefinitely when the introspection
+    endpoint is non-routable; the request returns and the server stays
+    responsive."""
+    client = self.context.provider_client
 
+    with Given(
+        "I configure OpenID with a non-routable introspection endpoint "
+        "and a valid userinfo endpoint"
+    ):
+        configure_openid_token_processor(
+            token_introspection_endpoint="http://10.255.255.1:9999/hang",
+        )
 
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Sub("1.0"))
-def token_with_unknown_sub(self) -> str:
-    header = {"alg": "HS256", "typ": "JWT"}
-    payload = _default_payload(sub="nonexistent-user")
-    return _build_jwt(header, payload, signature="sig")
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
 
+    with Then("the auth request completes instead of hanging"):
+        assert_auth_request_completes(token=token)
 
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Aud("1.0"))
-def token_with_invalid_aud(self) -> str:
-    header = {"alg": "HS256", "typ": "JWT"}
-    payload = _default_payload(aud="unexpected-audience")
-    return _build_jwt(header, payload, signature="sig")
-
-
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Exp("1.0"))
-def token_with_expired_exp(self) -> str:
-    header = {"alg": "HS256", "typ": "JWT"}
-    expired_ts = int(time.time()) - 3600
-    payload = _default_payload(exp=expired_ts)
-    return _build_jwt(header, payload, signature="sig")
-
-
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"))
-def token_malformed(self) -> str:
-    return "not.a.valid-jwt"
-
-
-@TestStep(Given)
-@Requirements(RQ_SRS_042_OAuth_Authentication_TokenHandling_EmptyString("1.0"))
-def token_empty_string(self) -> str:
-    return ""
-
-
-@TestCheck
-def try_access_with_incorrect_token(self, token_step):
-    """Obtain incorrect token and try to access ClickHouse (no real request)."""
-
-    with Given("I generate an incorrect token"):
-        token = token_step()
-        note(token)
-
-    with Then("I try to access ClickHouse with the token"):
-        response = access_clickhouse(token=token)
-        assert response.status_code == 401, error()
-
-    with And("I check that the ClickHouse server is still alive"):
+    with And("the server is still alive"):
         check_clickhouse_is_alive()
 
 
 @TestScenario
-def incorrect_tokens(self):
-    """Check ClickHouse behavior with incorrect access tokens."""
-    generators = [
-        token_with_unsupported_alg,
-        token_with_unsupported_typ,
-        token_with_invalid_signature,
-        token_with_unknown_sub,
-        token_with_invalid_aud,
-        token_with_expired_exp,
-        token_malformed,
-        token_empty_string,
-    ]
+def auth_does_not_hang_on_unreachable_userinfo(self):
+    """ClickHouse SHALL NOT block indefinitely when the userinfo endpoint
+    is non-routable; the request returns and the server stays
+    responsive."""
+    client = self.context.provider_client
 
-    for i in generators:
-        try_access_with_incorrect_token(token_step=i)
+    with Given(
+        "I configure OpenID with a non-routable userinfo endpoint and a "
+        "valid introspection endpoint"
+    ):
+        configure_openid_token_processor(
+            userinfo_endpoint="http://10.255.255.1:9999/hang",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("the auth request completes instead of hanging"):
+        assert_auth_request_completes(token=token)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
 
 
 @TestFeature
@@ -177,10 +157,12 @@ def incorrect_tokens(self):
 @Requirements(
     RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
     RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
-    RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors("1.0"),
 )
 def feature(self):
-    """Feature to test Keycloak token requirements."""
-
-    Scenario(run=tokens_scenarios)
-    Scenario(run=incorrect_tokens)
+    """Token validation tests that exercise the configured token processor."""
+    Scenario(run=openid_discovery_mode)
+    Scenario(run=invalid_jwks_uri_rejected)
+    Scenario(run=userinfo_only_accepts_valid_token)
+    Scenario(run=unreachable_introspection_rejects_token)
+    Scenario(run=auth_does_not_hang_on_unreachable_introspection)
+    Scenario(run=auth_does_not_hang_on_unreachable_userinfo)

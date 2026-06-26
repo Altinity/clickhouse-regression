@@ -5,14 +5,15 @@ from oauth.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Credentials("1.0"), RQ_SRS_042_OAuth_Azure_ApplicationSetup("1.0")
+    RQ_SRS_042_OAuth_Credentials("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"),
 )
 def check_authentication_flow(self):
-    """Check the authentication flow with Azure AD."""
+    """Check the authentication flow with the configured identity provider."""
     client = self.context.provider_client
 
     with Given(f"I get an OAuth token from {self.context.provider_name}"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("I try to access ClickHouse with the token"):
         access_clickhouse(token=token)
@@ -24,7 +25,7 @@ def check_authentication_with_invalid_token(self):
     client = self.context.provider_client
 
     with Given(f"I get an OAuth token from {self.context.provider_name}"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
         token = token[:-4] + "7b39"
 
     with When("I try to access ClickHouse with the invalid token"):
@@ -33,9 +34,8 @@ def check_authentication_with_invalid_token(self):
 
 @TestFeature
 @Requirements(
-    RQ_SRS_042_OAuth_Azure_Token_Supported("1.0"),
-    RQ_SRS_042_OAuth_Azure_GetAccessToken("1.0"),
     RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
 )
 @Name("sanity")
 def feature(self):

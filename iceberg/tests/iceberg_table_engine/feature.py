@@ -23,7 +23,12 @@ def feature(self, minio_root_user, minio_root_password):
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load(
-            "iceberg.tests.iceberg_table_engine.iceberg_writes_minmax",
-            "write_min_max_pruning",
+            "iceberg.tests.iceberg_table_engine.iceberg_writes_minmax", "write_min_max_pruning"
+        ),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load(
+            "iceberg.tests.iceberg_table_engine.system_tables_partition_sorting_keys",
+            "system_tables_partition_sorting_keys",
         ),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)

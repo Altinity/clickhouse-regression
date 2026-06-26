@@ -11,6 +11,7 @@ def create_table_with_iceberg_engine(
     table_name=None,
     node=None,
     allow_dynamic_metadata_for_data_lakes=False,
+    iceberg_partition_timezone=None,
 ):
     """Create table with Iceberg table engine."""
     if node is None:
@@ -19,14 +20,17 @@ def create_table_with_iceberg_engine(
     if table_name is None:
         table_name = "iceberg_table_" + getuid()
 
-    settings = ""
+    settings_list = []
     if allow_dynamic_metadata_for_data_lakes:
-        settings = "SETTINGS allow_dynamic_metadata_for_data_lakes = true"
+        settings_list.append("allow_dynamic_metadata_for_data_lakes = true")
+    if iceberg_partition_timezone is not None:
+        settings_list.append(f"iceberg_partition_timezone = '{iceberg_partition_timezone}'")
+    settings = ("SETTINGS " + ", ".join(settings_list)) if settings_list else ""
 
     try:
         node.query(
             f"""
-            CREATE TABLE {table_name} 
+            CREATE TABLE {table_name}
             ENGINE=Iceberg('{url}', '{access_key_id}', '{secret_access_key}')
             {settings}
             """

@@ -2,9 +2,9 @@ name: 🗓 Scheduled Altinity 23.3
 run-name: 🗓 Scheduled Altinity 23.3
 on:
   workflow_dispatch:
-  #Run at 10:00 PM (UTC) on Friday
+  #Run at 10:00 PM (UTC) on Saturday
   schedule:
-    - cron: "0 22 * * 5"
+    - cron: "0 22 * * 6"
 
 jobs:
   altinitystable-23-3-x86-zookeeper:
@@ -13,12 +13,4 @@ jobs:
       package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
       version: '23.3.19.33'
       arch: x86
-    secrets: inherit
-
-  altinitystable-23-3-arm-zookeeper:
-    uses: ./.github/workflows/run-regression.yml
-    with:
-      package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
-      version: '23.3.19.33'
-      arch: arm64
     secrets: inherit

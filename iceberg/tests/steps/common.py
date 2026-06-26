@@ -420,6 +420,7 @@ def compare_iceberg_and_merge_tree_schemas(self, merge_tree_table_name, iceberg_
         "Nullable(Float64)": "double",
         "Nullable(String)": "string",
         "Nullable(Date)": "date",
+        "Nullable(Date32)": "date",
         "Nullable(Bool)": "boolean",
     }
 

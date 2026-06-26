@@ -160,42 +160,6 @@ def get_parts_to_do(self, source_table, timeout=30, delay=3, node=None):
 
 
 @TestStep
-def get_exception_replica(self, source_table, timeout=30, delay=3, node=None):
-    """Get exception_replica from system.replicated_partition_exports."""
-    return get_export_field(
-        field_name="exception_replica",
-        source_table=source_table,
-        timeout=timeout,
-        delay=delay,
-        node=node,
-    )
-
-
-@TestStep
-def get_last_exception(self, source_table, timeout=30, delay=3, node=None):
-    """Get last_exception from system.replicated_partition_exports."""
-    return get_export_field(
-        field_name="last_exception",
-        source_table=source_table,
-        timeout=timeout,
-        delay=delay,
-        node=node,
-    )
-
-
-@TestStep
-def get_exception_part(self, source_table, timeout=30, delay=3, node=None):
-    """Get exception_part from system.replicated_partition_exports."""
-    return get_export_field(
-        field_name="exception_part",
-        source_table=source_table,
-        timeout=timeout,
-        delay=delay,
-        node=node,
-    )
-
-
-@TestStep
 def get_exception_count(self, source_table, timeout=30, delay=3, node=None):
     """Get exception_count from system.replicated_partition_exports."""
     return get_export_field(

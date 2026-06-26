@@ -2,7 +2,7 @@ services:
       
   spark-iceberg:
     image: tabulario/spark-iceberg
-    container_name: spark-iceberg
+    container_name: iceberg_spark
     build: spark/
     depends_on:
       - rest
@@ -34,7 +34,7 @@ services:
       - CATALOG_S3_ENDPOINT=http://minio:9000
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:0.12.0
+    image: altinity/ice-rest-catalog:0.16.0
     restart: unless-stopped
     ports:
       - '5000:5000' # iceberg/http
@@ -50,7 +50,7 @@ services:
   
   localstack:
     image: localstack/localstack-pro
-    container_name: localstack
+    container_name: iceberg_localstack
     ports:
       - "4566:4566"  
     environment:
@@ -90,6 +90,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      # Mount precreated Iceberg table files for icebergLocal() tests
+      - "../tests/icebergS3_table_function/iceberg_table/:/mnt/iceberg_table/"
     depends_on:
       zookeeper1:
         condition: service_healthy

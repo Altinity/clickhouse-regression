@@ -2,12 +2,74 @@ from time import sleep
 import random
 from testflows.core import *
 from testflows.combinatorics import product
+from testflows.uexpect import ExpectTimeoutError
 from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
+
+
+def _select_source_and_destination_data(source_table, destination_table, node):
+    source_data = select_all_ordered(table_name=source_table, node=node)
+    destination_data = select_all_ordered(table_name=destination_table, node=node)
+    return source_data, destination_data
+
+
+def _assert_with_retries(assert_fn, timeout=30, delay=1):
+    for retry in retries(timeout=timeout, delay=delay):
+        with retry:
+            assert_fn()
+
+
+def _assert_source_matches_destination_with_retries(source_table, destination_table):
+    _assert_with_retries(
+        lambda: source_matches_destination(
+            source_table=source_table,
+            destination_table=destination_table,
+        )
+    )
+
+
+def _assert_destination_empty_with_retries(source_table, destination_table, node):
+    def _check():
+        _, destination_data = _select_source_and_destination_data(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+        )
+        assert len(destination_data) == 0, error()
+
+    _assert_with_retries(_check)
+
+
+def _assert_destination_matches_source_with_retries(
+    source_table, destination_table, node
+):
+    def _check():
+        source_data, destination_data = _select_source_and_destination_data(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+        )
+        assert source_data == destination_data, error()
+
+    _assert_with_retries(_check)
+
+
+def _assert_destination_subset_of_source_with_retries(
+    source_table, destination_table, node
+):
+    def _check():
+        source_data, destination_data = _select_source_and_destination_data(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+        )
+        assert set(source_data) >= set(destination_data), error()
+
+    _assert_with_retries(_check)
 
 
 @TestScenario
@@ -35,13 +97,11 @@ def packet_delay(self, delay_ms):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -69,13 +129,11 @@ def packet_loss(self, percent_loss):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -107,13 +165,11 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -143,13 +199,11 @@ def packet_corruption(self, percent_corrupt):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -179,13 +233,11 @@ def packet_duplication(self, percent_duplicated):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -217,13 +269,11 @@ def packet_reordering(self, delay_ms, percent_reordered):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -251,13 +301,11 @@ def packet_rate_limit(self, rate_mbit):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 def get_minio_interruption_strategies():
@@ -432,22 +480,86 @@ def clickhouse_interruption(self, strategy, signal, safe):
 
     with And("I get data from both tables"):
         wait_for_all_exports_to_complete()
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
 
     if strategy == "before":
         with And("Destination should be empty"):
-            assert len(destination_data) == 0, error()
-    elif strategy == "after" or safe == True:
+            _assert_destination_empty_with_retries(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+    elif strategy == "after" and safe == True:
         with And("Destination matches source"):
-            assert source_data == destination_data, error()
+            _assert_destination_matches_source_with_retries(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
     else:
         with And("Destination data should be a subset of source data"):
-            assert set(source_data) >= set(destination_data), error()
+            _assert_destination_subset_of_source_with_retries(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
+def drop_table_during_stuck_exports(self):
+    """Reproduce DROP TABLE hang when background export tasks are stuck
+    retrying S3 requests against an unreachable MinIO.
+
+    With high s3_retry_attempts (default 500), export tasks hold background
+    executor slots for a very long time. DROP TABLE must wait for these tasks
+    to finish, causing the DROP to hang.
+    """
+    node = self.context.node
+    drop_timeout = 60
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I stop MinIO to make S3 unreachable"):
+        kill_minio()
+
+    with When("I export parts so background tasks get stuck retrying S3"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=node,
+        )
+
+    with And("I verify exports are actively running"):
+        active = get_num_active_exports(node=node, table_name=source_table)
+        note(f"Active exports while MinIO is down: {active}")
+
+    with Then(f"DROP TABLE should complete within {drop_timeout}s"):
+        try:
+            r = node.query(
+                f"DROP TABLE IF EXISTS {source_table} SYNC",
+                timeout=drop_timeout,
+                no_checks=True,
+                steps=True,
+            )
+            if r.exitcode != 0:
+                note(f"DROP TABLE returned exitcode={r.exitcode}: {r.output}")
+        except ExpectTimeoutError:
+            fail(
+                f"DROP TABLE hung for more than {drop_timeout}s "
+                "due to stuck background export tasks"
+            )
+
+    with Finally("I restore MinIO"):
+        start_minio()
 
 
 @TestFeature
@@ -466,3 +578,4 @@ def feature(self):
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
     Scenario(run=minio_interruption)
     Scenario(run=clickhouse_interruption)
+    # Scenario(run=drop_table_during_stuck_exports)

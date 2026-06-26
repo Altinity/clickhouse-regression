@@ -6,15 +6,16 @@ set -xe
 cd clickhouse-jdbc
 # git checkout v0.9.0
 
-Ensure dependencies
-apt update
-apt install -y maven openjdk-17-jdk
-
-# for mac os
-# brew update
-# brew install maven openjdk@17
-
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+# Ensure dependencies
+if [[ "$(uname)" == "Darwin" ]]; then
+    brew update
+    brew install maven openjdk@17
+    export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
+else
+    apt update
+    apt install -y maven openjdk-17-jdk
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+fi
 export PATH=$JAVA_HOME/bin:$PATH
 
 # 1. Build dependencies with tests skipped

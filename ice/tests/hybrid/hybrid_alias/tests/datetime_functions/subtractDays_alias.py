@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -79,6 +80,7 @@ def subtractDays_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_DateTimeFunction("1.0"))
 @Name("subtractDays alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: date_minus_days ALIAS subtractDays(date_col, 7)."""

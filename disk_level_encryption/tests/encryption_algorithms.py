@@ -2,6 +2,7 @@ from testflows.asserts import values as That
 from testflows.core.name import basename
 from disk_level_encryption.requirements.requirements import *
 from disk_level_encryption.tests.steps import *
+from helpers.common import check_clickhouse_version
 from testflows.asserts import snapshot, error
 
 entries = {
@@ -154,11 +155,17 @@ def check_changing_encryption_algorithm(
             ]
 
     with And("I add storage configuration that uses encrypted disk"):
+        validate_during_invalid = (
+            (lambda: verify_data_unreadable_with_new_key(table_name=table_name))
+            if check_clickhouse_version(">=25.3")(self)
+            else None
+        )
         add_invalid_encrypted_disk_configuration(
             entries=wrong_entries,
             recover_entries=entries_in_this_test,
             message="Exception",
             restart=True,
+            validate_during_invalid=validate_during_invalid,
         )
 
     with Then("I expect all files has ENC header before restart"):
@@ -239,12 +246,19 @@ def check_hex_changing_encryption_algorithm(
                 "algorithm"
             ]
 
+
     with And("I add storage configuration that uses encrypted disk"):
+        validate_during_invalid = (
+            (lambda: verify_data_unreadable_with_new_key(table_name=table_name))
+            if check_clickhouse_version(">=25.3")(self)
+            else None
+        )
         add_invalid_encrypted_disk_configuration(
             entries=wrong_entries,
             recover_entries=entries_in_this_test,
             message="Exception",
             restart=True,
+            validate_during_invalid=validate_during_invalid,
         )
 
     with Then("I expect all files has ENC header before restart"):

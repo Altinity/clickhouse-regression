@@ -7,6 +7,7 @@
 #
 import time
 from tiered_storage.tests.common import get_used_disks_for_table
+from helpers.common import check_clickhouse_version
 
 from tiered_storage.requirements import *
 
@@ -100,8 +101,16 @@ def scenario(self, cluster, node="clickhouse1"):
                             f" AND name = '201903_6_6_0' and active = 1 FORMAT TabSeparated"
                         ).output.strip()
 
-                    with Then("the disk name should be 'external'"):
-                        assert disk == "external", error()
+                    expected_disk = (
+                        "external_cache"
+                        if (
+                            check_clickhouse_version(">=26.3")(self)
+                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                        )
+                        else "external"
+                    )
+                    with Then(f"the disk name should be '{expected_disk}'"):
+                        assert disk == expected_disk, error()
 
                 with When("I restart merges"):
                     node.query(f"SYSTEM START MERGES {name}")
@@ -133,8 +142,16 @@ def scenario(self, cluster, node="clickhouse1"):
                     with Then("number of disks should be 1"):
                         assert len(disks) == 1, error()
 
-                    with And("all disks should be 'external'"):
-                        assert all(d == "external" for d in disks), error()
+                    expected_disk = (
+                        "external_cache"
+                        if (
+                            check_clickhouse_version(">=26.3")(self)
+                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                        )
+                        else "external"
+                    )
+                    with And(f"all disks should be '{expected_disk}'"):
+                        assert all(d == expected_disk for d in disks), error()
 
                 with When("in the end I get number of rows in the table"):
                     count = node.query(

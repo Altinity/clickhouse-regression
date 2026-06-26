@@ -33,6 +33,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     engine=engine,
                     partition_by="a",
                     node=client,
+                    order_by="a"
                 )
 
                 table_before = client.query(
@@ -61,22 +62,20 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     message=detach_message,
                 )
                 if exitcode is None:
-                    table_after_detach = client.query(
-                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
-                    )
+                    for attempt in retries(timeout=timeout, delay=delay):
+                        with attempt:
+                            table_after_detach = client.query(
+                                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
+                            )
+                            assert (
+                                table_before.output != table_after_detach.output
+                            ), error()
                 else:
                     table_after_detach = client.query(
                         f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated",
                         errorcode=exitcode,
                         message=select_message,
                     )
-
-                if exitcode is None:
-                    for attempt in retries(timeout=timeout, delay=delay):
-                        with attempt:
-                            assert (
-                                table_before.output != table_after_detach.output
-                            ), error()
 
             with And("I attach detached partition back"):
                 if "temporary" in table.__name__ and check_clickhouse_version(
@@ -100,11 +99,11 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                 with Then(
                     "I check that data is the same as it was before attach detach"
                 ):
-                    table_after = client.query(
-                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
-                    )
                     for attempt in retries(timeout=timeout, delay=delay):
                         with attempt:
+                            table_after = client.query(
+                                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                            )
                             assert table_before.output == table_after.output, error()
 
 
@@ -125,12 +124,14 @@ def check_attach_partition_from_with_temporary_tables(
                 table_name=source_table_name,
                 engine=source_table_engine,
                 partition_by="a",
+                order_by="a"
             )
         if "replicated" in destination_table.__name__:
             destination_table(
                 table_name=destination_table_name,
                 engine=destination_table_engine,
                 partition_by="a",
+                order_by="a"
             )
 
     with Given("I open a single clickhouse instance"):
@@ -152,6 +153,8 @@ def check_attach_partition_from_with_temporary_tables(
                         engine=source_table_engine,
                         partition_by="a",
                         node=client,
+                        order_by="a"
+
                     )
                 if "replicated" not in destination_table.__name__:
                     destination_table(
@@ -159,6 +162,8 @@ def check_attach_partition_from_with_temporary_tables(
                         engine=destination_table_engine,
                         partition_by="a",
                         node=client,
+                        order_by="a"
+
                     )
 
             with And(
@@ -216,17 +221,17 @@ def check_attach_partition_from_with_temporary_tables(
 
     with And(f"I check that all replicas of destination table have same data:"):
         if "replicated" in destination_table.__name__:
-            destination_partition_data_1 = self.context.node_1.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
-            )
-            destination_partition_data_2 = self.context.node_2.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
-            )
-            destination_partition_data_3 = self.context.node_3.query(
-                f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=300, delay=10):
                 with attempt:
+                    destination_partition_data_1 = self.context.node_1.query(
+                        f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                    )
+                    destination_partition_data_2 = self.context.node_2.query(
+                        f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                    )
+                    destination_partition_data_3 = self.context.node_3.query(
+                        f"SELECT * FROM {destination_table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                    )
                     assert (
                         destination_partition_data_1.output
                         == destination_partition_data_2.output

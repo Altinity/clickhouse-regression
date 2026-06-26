@@ -15,8 +15,12 @@ apt install git -y
 
 git clone --branch "${RELEASE}" --depth 1 --single-branch "https://github.com/xzkostyan/clickhouse-sqlalchemy.git"
 cd clickhouse-sqlalchemy
-# git apply /sqlalchemy.patch
-git apply /diff_0_2_9.patch
+if [[ "${RELEASE}" == 0.2.* ]]; then
+  git apply /diff_0_2_9.patch
+else
+  git apply /sqlalchemy.patch
+fi
+git apply /diff-asynch-soft-close.patch
 
 apt install python3-pip -y
 

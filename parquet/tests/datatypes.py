@@ -206,7 +206,16 @@ def supporteduuid(self):
     with Given("I have a Parquet file with uuid"):
         import_file = os.path.join("arrow", "uuid-arrow.parquet")
 
-    import_export(snapshot_name="uuid_2_structure", import_file=import_file)
+    # Upstream imports the Parquet UUID logical type as native UUID starting
+    # with 26.4, while the Antalya build picked up the same behavior in 26.3
+    # (antalya 25.8 / 26.1 still infer Nullable(FixedString(16))).
+    snapshot_name = (
+        "uuid_2_structure_above_26"
+        if check_clickhouse_version(">=26.4")(self)
+        or (check_if_antalya_build(self) and check_clickhouse_version(">=26.3")(self))
+        else "uuid_2_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -247,7 +256,12 @@ def parquetgo(self):
     with Given("I have a Parquet file generated via parquet-go library"):
         import_file = os.path.join("datatypes", "parquet_go.parquet")
 
-    import_export(snapshot_name="parquet_go_structure", import_file=import_file)
+    snapshot_name = (
+        "parquet_go_structure_above_26"
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        else "parquet_go_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -295,7 +309,12 @@ def enum(self):
     with Given("I have a Parquet file with enum datatype"):
         import_file = os.path.join("datatypes", "adam_genotypes.parquet")
 
-    import_export(snapshot_name="enum_structure", import_file=import_file)
+    snapshot_name = (
+        "enum_structure_above_26"
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        else "enum_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -447,7 +466,12 @@ def fixedstring(self):
     with Given("I have a Parquet file with FixedString(16) datatype"):
         import_file = os.path.join("datatypes", "fixed.parquet")
 
-    import_export(snapshot_name="fixed_structure", import_file=import_file)
+    snapshot_name = (
+        "fixed_structure_above_26"
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        else "fixed_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -527,7 +551,12 @@ def nullsinid(self):
     with Given("I have a large Parquet file with int64 datatype having nulls"):
         import_file = os.path.join("datatypes", "p2.parquet")
 
-    import_export(snapshot_name="int64_nulls_structure", import_file=import_file)
+    snapshot_name = (
+        "int64_nulls_structure_above_26"
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        else "int64_nulls_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -798,7 +827,12 @@ def large_string_map(self):
     with Given("I have a Parquet file with negative int64"):
         import_file = os.path.join("arrow", "large_string_map.brotli.parquet")
 
-    import_export(snapshot_name="large_string_map_structure", import_file=import_file)
+    snapshot_name = (
+        "large_string_map_structure_above_26"
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        else "large_string_map_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -837,10 +871,20 @@ def selectdatewithfilter(self):
 
         with Then("I check the output is correct"):
             with values() as that:
+
+                snapshot_name = (
+                    "import_using_filter_structure_above_26"
+                    if check_clickhouse_version_or_antalya(">=26.1")(self)
+                    else "import_using_filter_structure"
+                )
+
+                snapshot_id = "antalya" if check_if_antalya_pre_26_1(self) else None
+
                 assert that(
                     snapshot(
                         import_column_structure.output.strip(),
-                        name="import_using_filter_structure",
+                        name=snapshot_name,
+                        id=snapshot_id,
                     )
                 ), error()
 
@@ -874,15 +918,19 @@ def selectdatewithfilter(self):
 )
 def unsupportednull(self):
     """Checking that ClickHouse outputs an error when trying to import a Parquet file with 'null' datatype."""
-    if check_clickhouse_version("<24.2")(self):
-        message, exitcode = ("DB::Exception: Unsupported Parquet type", 50)
-    else:
-        message, exitcode = ("DB::Exception: Unsupported Parquet type", 124)
 
     node = self.context.node
-    table_name = "table_" + getuid()
 
     for number in range(1, 3):
+        table_name = "table_" + getuid()
+
+        if check_clickhouse_version_or_antalya(">=26.1")(self):
+            message, exitcode = (None, 0)
+        elif check_clickhouse_version("<24.2")(self):
+            message, exitcode = ("DB::Exception: Unsupported Parquet type", 50)
+        else:
+            message, exitcode = ("DB::Exception: Unsupported Parquet type", 124)
+
         with Given("I have a Parquet file with null datatype"):
             import_file = os.path.join("datatypes", f"issue6630_{number}.parquet")
 
@@ -895,6 +943,7 @@ def unsupportednull(self):
                 """,
                 message=message,
                 exitcode=exitcode,
+                settings=[("max_memory_usage", 20000000000)],
             )
 
 

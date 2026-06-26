@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -91,6 +92,7 @@ def weighted_sum_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_ComplexExpression("1.0"))
 @Name("weighted sum")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: weighted_sum ALIAS (value1 * 0.3) + (value2 * 0.5) + (value3 * 0.2)."""

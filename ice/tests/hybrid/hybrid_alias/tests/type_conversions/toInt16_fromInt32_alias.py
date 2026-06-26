@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -79,6 +80,7 @@ def toInt16_fromInt32_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_TypeConversion("1.0"))
 @Name("toInt16 from Int32 alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: value_int16 ALIAS toInt16(value) - Shrinking conversion from Int32."""

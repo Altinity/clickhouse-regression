@@ -144,6 +144,8 @@ allow_hyperscan = r"""'{"default":"1"}'"""
 
 allow_introspection_functions = r"""'{"default":"0"}'"""
 
+allow_local_data_lakes = r"""'{"default":"0"}'"""
+
 allow_materialized_view_with_bad_select = r"""'{"default":"1"}'"""
 
 allow_named_collection_override_by_default = r"""'{"default":"1"}'"""

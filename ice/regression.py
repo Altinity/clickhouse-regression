@@ -16,7 +16,32 @@ from helpers.common import check_clickhouse_version, check_if_not_antalya_build
 from parquet.tests.common import start_minio
 
 
-xfails = {}
+xfails = {
+    '/ice/feature/hybrid/hybrid_alias/query context/subquery alias/subquery select alias': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+    '/ice/feature/hybrid/hybrid_alias/query context/subquery nested/cte with alias': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+    '/ice/feature/hybrid/hybrid_alias/query context/subquery nested/cte with group by': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+    '/ice/feature/hybrid/hybrid_alias/query context/subquery nested/cte with order by': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+    '/ice/feature/hybrid/hybrid_alias/query context/subquery nested/cte with limit': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+   '/ice/feature/hybrid/hybrid_alias/query context/subquery nested/cte with order by and limit': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+    '/ice/feature/hybrid/hybrid_alias/query context/union alias/union all with alias': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+    '/ice/feature/hybrid/hybrid_alias/query context/set operations alias/intersect except with alias/*': [
+        (Fail, 'https://github.com/Altinity/ClickHouse/issues/1424'),
+    ],
+}
 
 ffails = {}
 

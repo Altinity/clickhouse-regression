@@ -29,6 +29,9 @@ def feature(self, minio_root_user, minio_root_password):
     Feature(
         test=load("swarms.tests.object_storage_cluster_profile_events", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("swarms.tests.task_rescheduling", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     # Feature(
     #     test=load("swarms.tests.swarm_iceberg_partition_pruning", "feature"),
     # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)

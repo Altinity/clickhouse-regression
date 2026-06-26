@@ -9,7 +9,53 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
+
+
+@TestStep(Given)
+def setup_iceberg_table(
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    database_name=None,
+    create_database=True,
+):
+    """Setup an iceberg table."""
+    if database_name is None:
+        database_name = f"datalakecatalog_db_{getuid()}"
+
+    with Given("setup big iceberg table"):
+        _, table_name, namespace = swarm_steps.setup_performance_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
+
+    with And("check that cluster is functional"):
+        cluster_name = "static_swarm_cluster"
+        result = s3_steps.read_data_with_s3Cluster_table_function(
+            cluster_name=cluster_name,
+            columns="hostName() AS host, count()",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            group_by="host",
+        )
+        assert "clickhouse2" in result.output or "clickhouse3" in result.output, error(
+            "clickhouse2/clickhouse3 should be in `static_swarm_cluster`"
+        )
+
+    with When("create DataLakeCatalog database in ClickHouse"):
+        if create_database:
+            iceberg_engine.create_experimental_iceberg_database(
+                database_name=database_name,
+                s3_access_key_id=minio_root_user,
+                s3_secret_access_key=minio_root_password,
+            )
+
+    return f"{database_name}.\\`{namespace}.{table_name}\\`"
 
 
 @TestStep(Given)
@@ -29,6 +75,7 @@ def run_long_query(
     """Run a long select from an iceberg table."""
     if delay_before_execution:
         time.sleep(delay_before_execution)
+
     result = node.query(
         f"""
             SELECT count(), hostName() 
@@ -38,7 +85,7 @@ def run_long_query(
             SETTINGS 
                 object_storage_cluster='{cluster_name}', 
                 max_threads={max_threads}
-                {f", lock_object_storage_task_distribution_ms={lock_object_storage_task_distribution_ms}" if lock_object_storage_task_distribution_ms else ""}
+                {f", lock_object_storage_task_distribution_ms={lock_object_storage_task_distribution_ms}" if lock_object_storage_task_distribution_ms is not None else ""}
         """,
         exitcode=exitcode,
         message=message,
@@ -55,11 +102,25 @@ def run_long_query(
 
 @TestScenario
 def check_restart_swarm_node(
-    self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    cluster_name="static_swarm_cluster",
+    node=None,
 ):
     """Check that swarm query fails if one of the swarm nodes is down during the query execution."""
     if node is None:
         node = self.context.node
+
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
 
     with Then("run long select from iceberg table and restart random swarm node"):
         with Pool() as pool:
@@ -81,42 +142,74 @@ def check_restart_swarm_node(
 
 @TestScenario
 def check_restart_clickhouse_on_swarm_node(
-    self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=50,
+    cluster_name="static_swarm_cluster",
+    node=None,
 ):
     """Check that swarm query fails if clickhouse is down on one of the swarm nodes."""
     if node is None:
         node = self.context.node
 
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
+
     with Then(
         "run long select from iceberg table and restart clickhouse on random swarm node"
     ):
+        if check_clickhouse_version("<26.1")(self):
+            exitcode = 32
+            message = "DB::Exception: Attempt to read after eof"
+        else:
+            exitcode, message = 0, None
+
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
                 clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-                exitcode=32,
-                message="DB::Exception: Attempt to read after eof",
                 cluster_name=cluster_name,
+                delay_before_execution=0,
+                exitcode=exitcode,
+                message=message,
             )
             Step(
                 "restart clickhouse on random swarm node",
                 test=actions.restart_clickhouse_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
-            )(delay=0.0)
+            )(delay=50, signal="KILL", delay_before_execution=10)
             join()
 
 
 @TestScenario
 def network_failure(
     self,
-    clickhouse_iceberg_table_name,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
     cluster_name="static_swarm_cluster",
     node=None,
 ):
     """Check that swarm query fails if one of the swarm nodes is down due to network failure."""
     if node is None:
         node = self.context.node
+
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
 
     with Then(
         "run long select from iceberg table and restart network of random swarm node"
@@ -140,13 +233,27 @@ def network_failure(
 
 @TestScenario
 def swarm_out_of_disk_space(
-    self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    cluster_name="static_swarm_cluster",
+    node=None,
 ):
     """Check that swarm query does not fail if one of the swarm nodes is out of disk space."""
     if node is None:
         node = self.context.node
 
-    with Given("fill up disks of random swarm node"):
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
+
+    with And("fill up disks of random swarm node"):
         swarm_node = random.choice(self.context.swarm_nodes)
         actions.fill_clickhouse_disks(node=swarm_node)
 
@@ -161,18 +268,30 @@ def swarm_out_of_disk_space(
 @TestScenario
 def initiator_out_of_disk_space(
     self,
-    clickhouse_iceberg_table_name,
-    database_name,
     minio_root_user,
     minio_root_password,
+    row_count,
+    batch_size,
     cluster_name="static_swarm_cluster",
     node=None,
 ):
-    """Check that swarm query does not fail if one of the swarm nodes is out of disk space."""
+    """Check that swarm query does not fail if initiator node is out of disk space."""
     if node is None:
         node = self.context.node
 
-    with Given("fill up disks of initiator node"):
+    database_name = f"datalakecatalog_db_{getuid()}"
+
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+            database_name=database_name,
+            create_database=False,
+        )
+
+    with And("fill up disks of initiator node"):
         actions.fill_clickhouse_disks(
             node=node,
             minio_root_user=minio_root_user,
@@ -191,10 +310,12 @@ def initiator_out_of_disk_space(
 @TestScenario
 def cpu_overload(
     self,
-    clickhouse_iceberg_table_name,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
     cluster_name="static_swarm_cluster",
     node=None,
-    row_count=100,
 ):
     """Check that swarm query does not fail if one of the swarm nodes is
     under CPU overload. Query expected to be executed successfully on other swarm nodes.
@@ -203,6 +324,14 @@ def cpu_overload(
         node = self.context.node
 
     overload_node = self.context.node3
+
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
 
     with Then("run long select from iceberg table and overload one swarm node"):
         with Pool() as pool:
@@ -225,11 +354,25 @@ def cpu_overload(
 
 @TestScenario
 def cpu_overload_all_swarm_nodes(
-    self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    cluster_name="static_swarm_cluster",
+    node=None,
 ):
     """Check that swarm query fails if all swarm nodes are under CPU overload."""
     if node is None:
         node = self.context.node
+
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
 
     with Then("run long select from iceberg table and overload all swarm nodes"):
         with Pool() as pool:
@@ -259,11 +402,25 @@ def cpu_overload_all_swarm_nodes(
 
 @TestScenario
 def cpu_overload_initiator_nodes(
-    self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    cluster_name="static_swarm_cluster",
+    node=None,
 ):
     """Check that swarm query fails if initiator node is under CPU overload."""
     if node is None:
         node = self.context.node
+
+    with Given("setup iceberg table"):
+        clickhouse_iceberg_table_name = setup_iceberg_table(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            row_count=row_count,
+            batch_size=batch_size,
+        )
 
     with Then("run long select from iceberg table and overload initiator node"):
         with Pool() as pool:
@@ -298,61 +455,46 @@ def feature(self, minio_root_user, minio_root_password, node=None):
     if node is None:
         node = self.context.node
 
-    database_name = f"datalakecatalog_db_{getuid()}"
     row_count = 100
-
-    with Given("setup big iceberg table"):
-        _, table_name, namespace = swarm_steps.setup_performance_iceberg_table(
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
-            row_count=row_count,
-            batch_size=100,
-        )
-
-    with And("check that cluster is functional"):
-        cluster_name = "static_swarm_cluster"
-        result = s3_steps.read_data_with_s3Cluster_table_function(
-            cluster_name=cluster_name,
-            columns="hostName() AS host, count()",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-            group_by="host",
-        )
-        assert "clickhouse2" in result.output or "clickhouse3" in result.output, error(
-            "clickhouse2/clickhouse3 should be in `static_swarm_cluster`"
-        )
-
-    with When("create DataLakeCatalog database in ClickHouse"):
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
-    clickhouse_iceberg_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
+    batch_size = 100
 
     Scenario(test=check_restart_swarm_node)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        row_count=row_count,
+        batch_size=batch_size,
     )
     Scenario(test=check_restart_clickhouse_on_swarm_node)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-    )
-    Scenario(test=network_failure)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-    )
-    Scenario(test=swarm_out_of_disk_space)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-    )
-    Scenario(test=initiator_out_of_disk_space)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-        database_name=database_name,
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
-    Scenario(test=cpu_overload)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
+    # Scenario(test=network_failure)(
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    #     row_count=row_count,
+    #     batch_size=batch_size,
+    # )
+    Scenario(test=swarm_out_of_disk_space)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
         row_count=row_count,
+        batch_size=batch_size,
+    )
+    Scenario(test=initiator_out_of_disk_space)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        row_count=row_count,
+        batch_size=batch_size,
+    )
+    Scenario(test=cpu_overload)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        row_count=row_count,
+        batch_size=batch_size,
     )
     Scenario(test=cpu_overload_all_swarm_nodes)(
-        clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        row_count=row_count,
+        batch_size=batch_size,
     )

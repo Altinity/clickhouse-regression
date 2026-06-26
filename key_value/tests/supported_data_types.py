@@ -52,3 +52,9 @@ def feature(self, node="clickhouse1"):
         with Feature(f"{constant_type}"):
             for scenario in loads(current_module(), Scenario):
                 scenario(constant_type=constant_type, nullable=False)
+
+    if check_clickhouse_version(">=26.5")(self):
+        for constant_type in ["String", "FixedString(3)"]:
+            with Feature(f"Nullable({constant_type})"):
+                for scenario in loads(current_module(), Scenario):
+                    scenario(constant_type=constant_type, nullable=True)

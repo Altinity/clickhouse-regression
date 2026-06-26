@@ -32,6 +32,7 @@ def add_remove_replicas(
                 table_name=source_table_name,
                 active_replicas=active_replicas,
                 engine=engine,
+                order_by="a"
             )
         join()
 
@@ -154,6 +155,8 @@ def replica(self):
                     table_name=destination_table_name,
                     node=node,
                     engine=destination_table_engine,
+                    order_by="a",
+
                 )
 
         with And("I create source table on the first node and insert data"):
@@ -161,6 +164,7 @@ def replica(self):
                 table_name=source_table_name,
                 node=self.context.node_1,
                 engine=source_table_engine,
+                order_by="a",
             )
             insert_random(table_name=source_table_name, node=self.context.node_1)
             self.context.active_replicas.append(0)

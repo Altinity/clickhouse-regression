@@ -4,7 +4,7 @@ from testflows.asserts import error
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
-from helpers.common import getuid, check_clickhouse_version
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 
 @TestScenario
@@ -83,7 +83,7 @@ def prewhere_clause(self, table_name, node=None):
     table_name_without_backslashes = table_name.replace("\\", "")
     exitcode, message = 0, None
 
-    if check_clickhouse_version("<=26.1")(self):
+    if check_clickhouse_version("<26.2")(self) and not (check_clickhouse_version(">=26.1")(self) and check_if_antalya_build(self)):
         exitcode = 182
         storage_name = "IcebergS3" if check_clickhouse_version(">=25")(self) else "Iceberg"
         message = f"DB::Exception: Storage {storage_name} (table {table_name_without_backslashes}) does not support PREWHERE. (ILLEGAL_PREWHERE)"

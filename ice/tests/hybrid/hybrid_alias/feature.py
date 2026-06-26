@@ -140,3 +140,8 @@ def feature(self, minio_root_user, minio_root_password):
             current_dir=hash_encoding_functions_dir, subdirectory="hash_encoding_functions"
         )
         run_tests(test_features, minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    with Feature("query context"):
+        query_context_dir = os.path.join(tests_dir, "query_context")
+        test_features = discover_test_features(current_dir=query_context_dir, subdirectory="query_context")
+        run_tests(test_features, minio_root_user=minio_root_user, minio_root_password=minio_root_password)

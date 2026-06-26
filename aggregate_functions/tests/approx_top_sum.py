@@ -14,8 +14,12 @@ from aggregate_functions.tests.topKWeighted import scenario as checks
 def scenario(self, func="approx_top_sum({params})", table=None, snapshot_id=None):
     """Check approx_top_sum, aggregate function by using the same checks as for topKWeighted."""
 
+    clickhouse_version = None
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, add_analyzer=True
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version, add_analyzer=True
     )
 
     if table is None:

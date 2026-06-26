@@ -7,6 +7,7 @@
 #
 import time
 from tiered_storage.tests.common import get_used_disks_for_table
+from helpers.common import check_clickhouse_version
 from testflows.core import *
 from testflows.asserts import error
 
@@ -63,8 +64,16 @@ def scenario(self, storage_type):
                     f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
                     f" AND name = '{parts[0]}' and active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
-            with Then("the disk name should be 'external'"):
-                assert disks == ["external"], error()
+            expected_disk = (
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
+            )
+            with Then(f"the disk name should be '{expected_disk}'"):
+                assert disks == [expected_disk], error()
 
         with When(f"I move partition 201903 to 'external' {storage_type}"):
             time.sleep(1)
@@ -76,8 +85,16 @@ def scenario(self, storage_type):
                     f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
                     " AND partition = '201903' and active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
-            with Then("both disk names should be 'external'"):
-                assert disks == ["external"] * 2, error()
+            expected_disk = (
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
+            )
+            with Then(f"both disk names should be '{expected_disk}'"):
+                assert disks == [expected_disk] * 2, error()
 
         with When("in the end I get the number of rows in the table"):
             count = node.query(

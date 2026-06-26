@@ -7,7 +7,11 @@ from testflows.core.name import clean
 
 append_path(sys.path, "..")
 
-from helpers.common import experimental_analyzer, check_with_any_sanitizer
+from helpers.common import (
+    experimental_analyzer,
+    check_with_any_sanitizer,
+    check_is_boringssl_build,
+)
 from helpers.cluster import create_cluster, check_clickhouse_version
 from helpers.argparser import argparser, CaptureClusterArgs
 from aes_encryption.requirements import *
@@ -19,6 +23,7 @@ issue_24029 = "https://github.com/ClickHouse/ClickHouse/issues/24029"
 issue_39987 = "https://github.com/ClickHouse/ClickHouse/issues/39987"
 issue_40826 = "https://github.com/ClickHouse/ClickHouse/issues/40826"
 issue_65116 = "https://github.com/ClickHouse/ClickHouse/issues/65116"
+fips_build = "FIPS build with AWS-LC does not support cfb1/cfb8 modes"
 
 xfails = {
     # decrypt
@@ -99,6 +104,12 @@ xfails = {
     "performance/:/:": [(Fail, issue_65116, check_clickhouse_version(">=24.4"))],
     "/aes encryption/performance/*": [
         (Fail, "fails due to runners change, need to adjust thresholds")
+    ],
+    "/aes encryption/encrypt/invalid parameters/invalid mode value*": [
+        (Fail, fips_build, check_is_boringssl_build)
+    ],
+    "/aes encryption/decrypt/invalid parameters/invalid mode value*": [
+        (Fail, fips_build, check_is_boringssl_build)
     ],
 }
 

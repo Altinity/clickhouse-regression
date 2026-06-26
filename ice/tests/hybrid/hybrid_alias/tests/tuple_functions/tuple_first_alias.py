@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -41,6 +42,7 @@ def tuple_first_alias(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_TupleFunction("1.0"))
 @Name("tuple first alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: tuple_first ALIAS tupleElement(tuple_col, 1)."""

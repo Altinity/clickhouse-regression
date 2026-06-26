@@ -8,7 +8,11 @@ append_path(sys.path, "..")
 
 from ssl_keeper.helpers.cluster import Cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import (
+    check_clickhouse_version,
+    check_is_fips_clickhouse_build,
+    experimental_analyzer,
+)
 
 
 xfails = {
@@ -18,14 +22,29 @@ xfails = {
     "/ssl keeper/FIPS SSL/openssl check/port:%%%%/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
+    "/ssl keeper/fips 140-3/tcp connection check/port﹕9440/just disabling TLSv1․1 suite connection should work": [
+        (Fail, "BoringSSL/AWS-LC requires contiguous TLS version range; disabling only TLSv1.1 creates a gap")
+    ],
+    "/ssl keeper/fips 140-3/tcp connection check/port﹕9440/just disabling TLSv1․2 suite connection should work": [
+        (Fail, "BoringSSL/AWS-LC requires contiguous TLS version range; disabling only TLSv1.2 creates a gap")
+    ],
 }
 xflags = {}
+
+ffails = {
+    ":/fips 140-3/doc config": (
+        Skip,
+        "fips doc configs apply only to FIPS builds",
+        lambda test: not check_is_fips_clickhouse_build(test),
+    ),
+}
 
 
 @TestModule
 @ArgumentParser(argparser)
 @XFails(xfails)
 @XFlags(xflags)
+@FFails(ffails)
 @Name("ssl keeper")
 @CaptureClusterArgs
 def regression(
@@ -49,7 +68,13 @@ def regression(
         self.context.stress = stress
 
     with Cluster(
-        **cluster_args,
+        local=cluster_args.get("local", False),
+        clickhouse_binary_path=cluster_args.get("clickhouse_path"),
+        collect_service_logs=cluster_args.get("collect_service_logs", False),
+        thread_fuzzer=cluster_args.get("thread_fuzzer", False),
+        docker_compose_project_dir=os.path.join(
+            current_dir(), "ssl_keeper_env"
+        ),
         nodes=nodes,
     ) as cluster:
         self.context.cluster = cluster
@@ -64,7 +89,8 @@ def regression(
                 )
 
         Feature(run=load("ssl_keeper.tests.sanity", "feature"))
-        Feature(run=load("ssl_keeper.tests.fips_ssl", "feature"))
+        # Feature(run=load("ssl_keeper.tests.fips_ssl", "feature"))
+        Feature(run=load("ssl_keeper.tests.fips_ssl_140_3", "feature"))
 
 
 if main():

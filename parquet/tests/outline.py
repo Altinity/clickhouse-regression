@@ -12,6 +12,10 @@ def import_export(
     self, snapshot_name, import_file, snapshot_id=None, limit=None, settings=None
 ):
     """Import parquet file into a clickhouse table and export it back."""
+
+    if check_clickhouse_version_or_antalya(">=26.1")(self):
+        settings = [("max_memory_usage", 20000000000)]
+
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
@@ -26,6 +30,8 @@ def import_export(
             snapshot_id = f"{self.context.snapshot_id}_above_24"
         else:
             snapshot_id = self.context.snapshot_id
+        if check_if_antalya_pre_26_1(self):
+            snapshot_id = f"{snapshot_id}_antalya"
 
     with Given("I save file structure"):
         import_column_structure = node.query(

@@ -1,10 +1,12 @@
 import os
+import re
 import uuid
 import time
 import inspect
 import hashlib
 import threading
 import tempfile
+from urllib.parse import unquote
 
 from testflows._core.cli.arg.common import description
 
@@ -806,7 +808,7 @@ class Cluster(object):
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
-        docker_compose="docker-compose",
+        docker_compose="docker-compose --log-level ERROR",
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
@@ -819,6 +821,9 @@ class Cluster(object):
         self.environ = {} if (environ is None) else environ
         self.clickhouse_binary_path = clickhouse_binary_path
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
+        self.clickhouse_package_path = None
+        self.clickhouse_docker_image_name = None
+        self.source_docker_image = None
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -885,6 +890,9 @@ class Cluster(object):
                     self.clickhouse_binary_path = f"./{filename}"
 
             elif self.clickhouse_binary_path.startswith("docker://"):
+                self.source_docker_image = self.clickhouse_binary_path.split(
+                    "docker://", 1
+                )[-1]
                 if current().context.clickhouse_version is None:
                     parsed_version = ""
                     for c in self.clickhouse_binary_path.rsplit(":", 1)[-1]:
@@ -907,6 +915,17 @@ class Cluster(object):
                 )
 
             if self.clickhouse_binary_path.endswith(".deb"):
+                self.clickhouse_package_path = os.path.abspath(
+                    self.clickhouse_binary_path
+                )
+                base_os_name = "altinityinfra/clickhouse-regression-multiarch-3.0"
+                package_name = os.path.basename(self.clickhouse_binary_path)
+                sanitized_tag = re.sub(
+                    r"[^a-zA-Z0-9_.-]", "_", unquote(package_name)
+                )
+                self.clickhouse_docker_image_name = (
+                    f"{base_os_name}:{sanitized_tag}"
+                )
                 with Given(
                     "unpack deb package", description=f"{self.clickhouse_binary_path}"
                 ):
@@ -1042,11 +1061,13 @@ class Cluster(object):
                     raise
                 except ExpectTimeoutError:
                     self.close_control_shell()
-                    timeout = timeout - (time.time() - time_start)
-                    if timeout <= 0:
-                        raise RuntimeError(
-                            f"failed to get docker container id for the {node} service"
-                        )
+
+                if time.time() - time_start > timeout:
+                    raise RuntimeError(
+                        f"failed to get docker container id for the {node} service "
+                        f"within {timeout}s (docker-compose ps -q output={container_id!r})"
+                    )
+                time.sleep(1)
         return container_id
 
     def shell(self, node, timeout=300):
@@ -1253,6 +1274,27 @@ class Cluster(object):
 
     def up(self, timeout=30 * 60):
         """Bring cluster up."""
+        # Compose expands ${CLICKHOUSE_TESTS_DIR}; if unset, volume mounts break and
+        # ClickHouse never becomes queryable (hangs in wait_clickhouse_healthy).
+        self.environ.setdefault(
+            "CLICKHOUSE_TESTS_DIR", os.path.abspath(self.configs_dir)
+        )
+        if self.clickhouse_docker_image_name:
+            self.environ.setdefault(
+                "CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME",
+                self.clickhouse_docker_image_name,
+            )
+        elif getattr(self, "source_docker_image", None):
+            derived_name = re.sub(
+                r"[^a-zA-Z0-9_.-]",
+                "_",
+                self.source_docker_image.replace("/", "_"),
+            )
+            self.environ.setdefault(
+                "CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME",
+                derived_name,
+            )
+
         if self.local:
             with Given("I am running in local mode"):
                 with Then("check --clickhouse-binary-path is specified"):
@@ -1275,6 +1317,38 @@ class Cluster(object):
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
+
+                if self.clickhouse_docker_image_name:
+                    self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"] = (
+                        self.clickhouse_docker_image_name
+                    )
+
+            if self.clickhouse_package_path:
+                with And("I build the ClickHouse docker image from the package"):
+                    base_os = "altinityinfra/clickhouse-regression-multiarch:3.0"
+                    repo_root = os.path.abspath(
+                        os.path.join(self.configs_dir, "..")
+                    )
+                    package_relpath = os.path.relpath(
+                        self.clickhouse_package_path, repo_root
+                    )
+                    dockerfile = os.path.join(
+                        repo_root,
+                        "docker-compose",
+                        "base_os",
+                        "clickhouse-regression-multiarch.Dockerfile",
+                    )
+                    self.command(
+                        None,
+                        f"docker build "
+                        f'--build-arg BASE_OS="{base_os}" '
+                        f'--build-arg CLICKHOUSE_PACKAGE="{package_relpath}" '
+                        f'-t clickhouse-regression/{self.clickhouse_docker_image_name} '
+                        f'-f "{dockerfile}" '
+                        f'"{repo_root}"',
+                        exitcode=0,
+                        timeout=300,
+                    )
 
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
@@ -1357,6 +1431,11 @@ class Cluster(object):
                     self.node(name).start_clickhouse(
                         wait_healthy=False, thread_fuzzer=self.thread_fuzzer
                     )
+
+        with Then("wait for all ClickHouse servers to be healthy"):
+            for name in self.nodes["clickhouse"]:
+                if name.startswith("clickhouse"):
+                    self.node(name).wait_clickhouse_healthy()
 
         self.running = True
 
