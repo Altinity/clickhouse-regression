@@ -299,6 +299,7 @@ Results:
 
 * ARM Binary
  * [Integration tests (arm_binary, distributed plan, 1/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=abfb10aa7da3f2f8212fe01a3facccac9e21163e&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28arm%5Fbinary%2C%20distributed%20plan%2C%201%2F4%29)
+ * [Integration tests (arm_binary, distributed plan, 2/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=abfb10aa7da3f2f8212fe01a3facccac9e21163e&name_0=MasterCI&name_1=Integration%20tests%20%28arm_binary%2C%20distributed%20plan%2C%202%2F4%29)
  * [Integration tests (arm_binary, distributed plan, 3/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=abfb10aa7da3f2f8212fe01a3facccac9e21163e&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28arm%5Fbinary%2C%20distributed%20plan%2C%203%2F4%29)
  * [Integration tests (arm_binary, distributed plan, 4/4)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=stable-26.3&sha=abfb10aa7da3f2f8212fe01a3facccac9e21163e&name%5F0=MasterCI&name%5F1=Integration%20tests%20%28arm%5Fbinary%2C%20distributed%20plan%2C%204%2F4%29)
 
@@ -976,10 +977,11 @@ The tests were run against Superset version `4.1.1`. Currently, there is an issu
 #### Grype
 
 Results:
+* [ClickHouse-Keeper](https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/grype/altinityinfra_clickhouse-keeper_0-26.3.13.10001.altinitytest/results.html)
+* [ClickHouse-Server Alpine](https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest-alpine/results.html)
+* [ClickHouse-Server Ubuntu](https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest/results.html)
 
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/grype/altinityinfra_clickhouse-keeper_0-26.3.13.10001.altinitytest/results.html
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest-alpine/results.html
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest/results.html
+
 
 [Grype](https://github.com/anchore/grype) Docker image vulnerability scanner.
 
