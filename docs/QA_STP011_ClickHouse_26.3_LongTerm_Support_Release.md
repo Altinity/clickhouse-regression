@@ -9,7 +9,7 @@
 
 ## Execution Summary
 
-**Completed:** TBD
+**Completed:** June 26, 2026
 
 **Test Results:**
 
@@ -19,10 +19,9 @@
 
 * https://s3.amazonaws.com/altinity-build-artifacts/REFs/stable-26.3/f8d4966ea4c372d9f538642cef144cf3f66d46d9/27626627067/ci_run_report.html
 
-
 **Summary:**
 
-**In progress.**
+**Approved for release.**
 
 ## Table of Contents
 
