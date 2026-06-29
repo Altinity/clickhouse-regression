@@ -747,19 +747,19 @@ Altinity Window Functions integration tests.
 
 #### ASAN
 Results:
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21962416400
+* https://github.com/Altinity/clickhouse-regression/actions/runs/28267902981
 
 #### MSAN
 Results:
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21962390306
+* https://github.com/Altinity/clickhouse-regression/actions/runs/28268653376
 
 #### UBSAN
 Results:
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21962441034
+* https://github.com/Altinity/clickhouse-regression/actions/runs/28267981863
 
 #### TSAN
 Results:
-* https://github.com/Altinity/clickhouse-regression/actions/runs/21962462044
+* https://github.com/Altinity/clickhouse-regression/actions/runs/28268148630
 
 #### Sanitizer Test Results Summary
 | Sanitizer | Total Jobs | Failed | Timeouts | Primary Failure Mode |
