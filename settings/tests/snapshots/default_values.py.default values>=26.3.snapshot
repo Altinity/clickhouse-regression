@@ -2836,6 +2836,8 @@ show_data_lake_catalogs_in_system_tables = r"""'{"default":"0"}'"""
 
 show_processlist_include_internal = r"""'{"default":"1"}'"""
 
+show_remote_databases_in_system_tables = r"""'{"default":"0"}'"""
+
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
 single_join_prefer_left_table = r"""'{"default":"1"}'"""
