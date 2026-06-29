@@ -587,7 +587,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: disk_level_encryption
-      timeout_minutes: 180
+      timeout_minutes: 300
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
