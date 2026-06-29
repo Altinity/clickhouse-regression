@@ -141,7 +141,7 @@ The following team members SHALL be dedicated to the release:
 * [clickhouse-driver] [`use_client_time_zone` ignored for string datetime literals in INSERT when `async_insert` is enabled](https://github.com/ClickHouse/ClickHouse/issues/108038) — 2 failing timezone tests on 26.3; passes on 25.8; workaround: `SETTINGS async_insert=0`
 
 ### Summary
-Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/27626627067/ci_run_report.html
+Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/28142888526/ci_run_report.html
 
 > [!NOTE]
 > **\*Pass** - tests passed with known fails
