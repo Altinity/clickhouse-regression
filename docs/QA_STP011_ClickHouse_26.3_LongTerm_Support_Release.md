@@ -766,39 +766,39 @@ Results:
 #### Sanitizer Test Results Summary
 | Sanitizer | Total Jobs | Failed | Timeouts | Primary Failure Mode |
 |-----------|------------|--------|----------|---------------------|
-| **UBSAN** | 65 | 7 | 1 | CPU overload (SERVER_OVERLOADED), test timeouts |
-| **ASAN** | 65 | 10 | 4 | Server startup delays, data corruption errors |
-| **TSAN** | 65 | 14 | 8 | Server startup failures due to TSAN overhead |
-| **MSAN** | 65 | 16 | 10 | Server startup failures due to MSAN overhead |
+| **UBSAN** | 69 | 1 | 0 | Single known bug (Iceberg `prewhere_info`); all other suites pass |
+| **ASAN** | 69 | 12 | 0 | OOM kills (exit 137) on high-memory suites; ASAN memory overhead (2–5x) exceeds the 32 GB runner RAM even after moving these jobs to dedicated-CPU `type-ccx33` |
+| **TSAN** | 69 | 4 | 4 | Job timeouts (3h limit) on long suites due to 5–15x TSAN slowdown |
+| **MSAN** | 69 | 6 | 5 | Job timeouts (3h limit) on long suites; query/`async_insert` timeouts under MSAN overhead |
 
 #### Identified Issues
 | Issue | UBSAN | ASAN | TSAN | MSAN | Type | GitHub Issue |
 |-------|:-----:|:----:|:----:|:----:|------|--------------|
-| UNKNOWN_CODEC (Code 432) - Data corruption in partition operations | ✓ | ✓ | ✓ | ✓ | **Bug** | Under investigation |
-| Merge Part UINT32_MAX overflow (`Source part 0_101_101_4294967295`) | - | ✓ | ✓ | ✓ | **Bug** | [#69001](https://github.com/ClickHouse/ClickHouse/issues/69001) |
-| Iceberg Metadata Not Initialized (server crash on ALTER TABLE) | ✓ | - | ✓ | ✓ | **Bug** | [#86024](https://github.com/ClickHouse/ClickHouse/issues/86024) |
-| Server startup failures (Connection refused) | Rare | Moderate | Severe | Severe | Infra | Expected with sanitizers |
-| Settings snapshot assertion failures | ✓ | ✓ | ✓ | ✓ | Test | Test environment issue |
+| Iceberg `Logical error: 'prewhere_info'` — server crash (`abortOnFailedAssertion`) when a row policy is defined on an Iceberg/Parquet table queried without an explicit `PREWHERE`. Sanitizer-only: the trigger is a `chassert(prewhere_info)`, which is a no-op in release builds. | ✓ | ✓ | ✓ | ✓ | **Bug** | Fixed upstream in [#100361](https://github.com/ClickHouse/ClickHouse/pull/100361); **not backported to `stable-26.3`**. Row-policy scenarios are `xfail`ed under sanitizers, but the server crash still cascades, so `iceberg_2` remains red. |
+| OOM kills (exit 137) on high-memory suites (`functions`, `selects`, `parquet`, `memory`, `lightweight_delete`, `clickhouse_keeper*`, `alter_attach_partition*`, `s3_minio_3`) | - | Severe | Minor | Minor | Infra | Expected — ASAN memory overhead (2–5x) exceeds the 32 GB runner RAM. A 64 GB runner tier would be required to fully eliminate these OOMs. |
+| Job timeouts (180–245 min — GitHub Actions per-job limit) on long suites (`s3_*`, `disk_level_encryption`, `aggregate_functions_3`, `ldap_role_mapping`, `tiered_storage_gcs`, `alter_replace_partition`, `memory`) | 0 | 0 | 4 | 5 | Infra | Expected — TSAN/MSAN add 5–15x runtime overhead, exceeding the 3h wall-clock per-job limit. |
+
+> Note: the three bugs reported for 25.8 (`UNKNOWN_CODEC` data corruption, `MERGE_OVERFLOW` [#69001](https://github.com/ClickHouse/ClickHouse/issues/69001), and `Iceberg Metadata Not Initialized` [#86024](https://github.com/ClickHouse/ClickHouse/issues/86024)) are no longer reproducing in the 26.3 sanitizer runs.
 
 #### Failure Justification
-The majority of sanitizer test failures fall into two categories:
+The remaining sanitizer test failures fall into two categories:
 
-**1. Infrastructure/Performance Issues (~80% of failures)** 
-Sanitizers add significant runtime overhead (TSAN/MSAN: 5–15x, ASAN: 2x). This causes server startup timeouts, query timeouts, and job timeouts (3-hour limit) before test completion. 
-These failures are expected behavior for sanitizer builds.
+**1. Infrastructure / Performance issues (~90% of failures)**
+Sanitizers add significant runtime overhead (TSAN/MSAN: 5–15x, ASAN: 2–5x memory). Two predictable failure modes account for almost the entire failure count:
+- **OOM kills (exit 137)** under ASAN — the heaviest suites still exceed 32 GB RAM under the ASAN allocator. Affected: `functions`, `selects`, `parquet`, `memory`, `lightweight_delete`, `clickhouse_keeper`, `clickhouse_keeper_ssl`, `alter_attach_partition_1`, `alter_attach_partition_2`, `alter_replace_partition`, `s3_minio_3`. Resolving these would require a 64 GB runner tier.
+- **Job timeouts (180–245 min)** under TSAN/MSAN — long suites do not finish within the GitHub Actions 3h wall-clock limit. Affected on MSAN: `alter_replace_partition`, `disk_level_encryption`, `ldap_role_mapping`, `memory`, `tiered_storage_gcs`. On TSAN: `aggregate_functions_1`, `alter_replace_partition`, `disk_level_encryption`, `memory`.
 
-**2. Real Bugs Found (~20% of failures)** 
-Three bugs were identified across multiple sanitizers:
+These failures are expected behavior for sanitizer builds and do not indicate a regression in ClickHouse 26.3.
+
+**2. Real bugs found (~10% of failures)**
+One real bug was identified by the sanitizer runs and is already fixed upstream:
 
 | Bug | Description | Status |
 |-----|-------------|--------|
-| **UNKNOWN_CODEC** | Data corruption during ALTER ATTACH/REPLACE PARTITION operations causing invalid codec family codes | Under investigation |
-| **Merge Part Overflow** | Integer overflow (UINT32_MAX) in part numbering during OPTIMIZE TABLE - [#69001](https://github.com/ClickHouse/ClickHouse/issues/69001) | Open since Aug 2024 |
-| **Iceberg Metadata** | Uninitialized metadata during ALTER TABLE on Iceberg tables with DataLakeCatalog - [#86024](https://github.com/ClickHouse/ClickHouse/issues/86024) | Open, assigned |
+| **Iceberg `prewhere_info` Logical error** | Server crash on Iceberg/Parquet tables with a row-level policy when the query has no explicit `PREWHERE` clause. The trigger is a `chassert`, only enabled in sanitizer/debug builds — release builds of 26.3 are not affected. | Fixed upstream in [#100361](https://github.com/ClickHouse/ClickHouse/pull/100361) (merged 2026-03-29). **Not present in `stable-26.3` at the release SHA `abfb10aa7da3f2f8212fe01a3facccac9e21163e`** (last commit on that path predates the upstream merge). |
 
 #### Conclusion
-The sanitizer tests successfully identified real bugs in ClickHouse. Two of the three bugs are already tracked in upstream ClickHouse. The high failure count is primarily due to 
-expected sanitizer performance overhead, not quality issues with ClickHouse 26.3.
+The 26.3 sanitizer runs are markedly cleaner than the 25.8 runs: the three product bugs that justified failures in 25.8 (`UNKNOWN_CODEC`, merge-part `UINT32_MAX` overflow, `Iceberg Metadata Not Initialized`) no longer reproduce. UBSAN is essentially clean (1 failure, no timeouts). One new product bug was caught — an Iceberg `prewhere_info` `Logical error` when row policies are applied. The crash is gated by `chassert` and therefore only manifests on sanitizer/debug builds; release builds of 26.3 are not affected. The bug is fixed upstream in [#100361](https://github.com/ClickHouse/ClickHouse/pull/100361), but **the fix is not in `stable-26.3`** — the branch this release is built from. The remaining failure count is dominated by expected sanitizer overhead (OOM under ASAN, 3h job-timeout cap under TSAN/MSAN), none of which indicates a quality regression in ClickHouse 26.3.
 
 ### Compatibility with Client Drivers
 
