@@ -123,7 +123,7 @@ The following team members SHALL be dedicated to the release:
 * Davit Mnatobishvili (clickhouse-odbc, grafana, superset, DBeaver)
 * Alsu Giliazova (regression, clickhouse-jdbc, sqlalchemy, clickhouse-driver)
 * Carlos Raymundo (regression)
-* Saba Momtselidze (clickhouse-)
+* Saba Momtselidze (clickhouse-operator)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup, ACM upgrade and downgrade)
 * Julian Huang (Tableau)
 * Mikhail Filimonov (production clusters, support team feedback)
@@ -477,6 +477,8 @@ Results:
 Altinity DNS integration tests.
 
 ##### Engines
+
+Results:
 
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/stable-26.3/abfb10aa7da3f2f8212fe01a3facccac9e21163e/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
