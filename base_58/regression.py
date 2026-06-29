@@ -15,13 +15,19 @@ from helpers.common import check_clickhouse_version, experimental_analyzer, chec
 pr_70846 = "https://github.com/ClickHouse/ClickHouse/pull/70846"
 
 xfails = {
-    # Memory usage tests fail with sanitizers due to test code issues and memory overhead
+    # Memory-delta assertions incompatible with sanitizer allocators
+    # (b58_decode_memory_usage > 0 fails under ASAN/MSAN).
     "/base58/memory usage/*": [
         (
-            Error,
-            "Memory usage tests have issues with sanitizer builds",
+            Fail,
+            "Memory-delta assertions incompatible with sanitizer allocators",
             check_with_any_sanitizer,
-        )
+        ),
+        (
+            Error,
+            "Memory-delta assertions incompatible with sanitizer allocators",
+            check_with_any_sanitizer,
+        ),
     ],
     "alias input/alias instead of table and column": [(Fail, "not implemented")],
     "/base58/unsupported types constant/Nullable（FixedString（3））/*": [

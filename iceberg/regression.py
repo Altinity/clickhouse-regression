@@ -33,6 +33,15 @@ xfails = {
             check_with_any_sanitizer,
         )
     ],
+    # Logical error 'prewhere_info' on Iceberg row policies without PREWHERE (sanitizer-only chassert).
+    # Fixed upstream in CH#100361; not backported to stable-26.3.
+    "/iceberg/iceberg table engine/feature/row policies/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/100361 - not backported to stable-26.3",
+            check_with_any_sanitizer,
+        )
+    ],
     "/iceberg/export partition/*/manifest integrity/value_counts across data files sum to source row count": [
         (
             Fail,
