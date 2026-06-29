@@ -87,7 +87,7 @@ def scenario(self, name, engine):
                             f"SELECT sleep(3), sleep(2), sleep(1), count() FROM {name} FORMAT TabSeparated",
                             steps=False,
                             timeout=60,
-                        ).output.strip()
+                        ).output.strip().strip('\x07')
                         assert r == "0\t0\t0\t10", error()
 
         with And("in parallel I perform select count"):
