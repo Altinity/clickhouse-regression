@@ -31,6 +31,8 @@ xfails = {
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/86024 - Iceberg metadata initialization bug with sanitizers",
             check_with_any_sanitizer,
+        )
+    ],
     "/iceberg/export partition/*/manifest integrity/value_counts across data files sum to source row count": [
         (
             Fail,

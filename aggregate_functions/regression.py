@@ -877,9 +877,15 @@ def regression(
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
-            # MSAN builds are very slow, need longer timeouts for data insertion
+            # Sanitizer builds (ASAN/TSAN/MSAN/UBSAN) are 5-10x slower; the heavy
+            # INSERTs with all data types in `populate tables with test data`
+            # can exceed the default 120s wait_for_async_insert_timeout on slower
+            # CI runners. receive/send_timeout cover network-level waits;
+            # wait_for_async_insert_timeout covers the server-side async insert
+            # flush ack which is what actually trips first under sanitizers.
             default_query_settings.append(("receive_timeout", 900))
             default_query_settings.append(("send_timeout", 900))
+            default_query_settings.append(("wait_for_async_insert_timeout", 900))
             self.context.default_query_settings = default_query_settings
 
     with And("I populate tables with test data"):

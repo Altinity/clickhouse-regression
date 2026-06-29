@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster, create_cluster
-from helpers.common import check_clickhouse_version, check_with_any_sanitizer
+from helpers.common import check_clickhouse_version
 from helpers.argparser import (
     argparser_s3 as argparser_base,
     CaptureClusterArgs,
@@ -36,13 +36,7 @@ xfails = {
     ],
 }
 
-ffails = {
-    "/benchmark/*": (
-        Skip,
-        "Benchmark tests are too slow with sanitizer builds",
-        check_with_any_sanitizer,
-    ),
-}
+ffails = {}
 
 
 def argparser(parser):

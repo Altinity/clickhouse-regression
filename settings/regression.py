@@ -10,8 +10,12 @@ from helpers.argparser import (
     CaptureClusterArgs,
 )
 
-from helpers.common import check_clickhouse_version, check_if_head, check_with_any_sanitizer
-from helpers.common import check_clickhouse_version, check_if_head, check_if_latest
+from helpers.common import (
+    check_clickhouse_version,
+    check_if_head,
+    check_if_latest,
+    check_with_any_sanitizer,
+)
 
 xfails = {
     # Profiler settings have different defaults in sanitizer builds (profilers disabled)
