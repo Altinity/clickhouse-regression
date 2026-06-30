@@ -979,9 +979,9 @@ The tests were run against Superset version `4.1.1`. Currently, there is an issu
 #### Grype
 
 Results:
-* [ClickHouse-Keeper](https://altinity-build-artifacts.s3.amazonaws.com/REFs/v26.3.13.10001.altinitystable/921dcf5c0189e5c731bb6a59316927eb8107d399/grype/altinityinfra_clickhouse-keeper_0-26.3.13.10001.altinitytest/results.html)
-* [ClickHouse-Server Alpine](https://altinity-build-artifacts.s3.amazonaws.com/REFs/v26.3.13.10001.altinitystable/921dcf5c0189e5c731bb6a59316927eb8107d399/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest-alpine/results.html)
-* [ClickHouse-Server Ubuntu](https://altinity-build-artifacts.s3.amazonaws.com/REFs/v26.3.13.10001.altinitystable/921dcf5c0189e5c731bb6a59316927eb8107d399/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitytest/results.html)
+* [ClickHouse-Keeper](https://s3.amazonaws.com/altinity-build-artifacts/REFs/v26.3.13.10001.altinitystable/921dcf5c0189e5c731bb6a59316927eb8107d399/grype/altinityinfra_clickhouse-keeper_0-26.3.13.10001.altinitystable/results.html)
+* [ClickHouse-Server Alpine](https://s3.amazonaws.com/altinity-build-artifacts/REFs/v26.3.13.10001.altinitystable/921dcf5c0189e5c731bb6a59316927eb8107d399/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitystable-alpine/results.html)
+* [ClickHouse-Server Ubuntu](https://s3.amazonaws.com/altinity-build-artifacts/REFs/v26.3.13.10001.altinitystable/921dcf5c0189e5c731bb6a59316927eb8107d399/grype/altinityinfra_clickhouse-server_0-26.3.13.10001.altinitystable/results.html)
 
 
 
