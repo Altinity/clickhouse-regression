@@ -2,7 +2,7 @@ from testflows.core import *
 
 from helpers.datatypes import Float64
 from helpers.tables import is_numeric, common_columns, unwrap
-from helpers.common import check_clickhouse_version, check_current_cpu
+from helpers.common import check_clickhouse_version, check_current_cpu, check_with_tsan
 from aggregate_functions.tests.steps import (
     execute_query,
     permutations_with_replacement,
@@ -68,8 +68,10 @@ def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
 
     with Check("with group by"):
         snapshot_name_override = None
-        if "State" in self.name and "_binary" in getattr(
-            self.context, "clickhouse_path", ""
+        # TSAN produces same FP rounding as the binary build for rankCorrState.
+        if "State" in self.name and (
+            "_binary" in getattr(self.context, "clickhouse_path", "")
+            or check_with_tsan(self)
         ):
             snapshot_name_override = (
                 current().name.replace("/part 3", "") + "_binary"

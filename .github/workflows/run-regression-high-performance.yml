@@ -233,7 +233,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 1
-      timeout_minutes: 180
+      timeout_minutes: 360
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -269,7 +269,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 3
-      timeout_minutes: 240
+      timeout_minutes: 360
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -303,11 +303,11 @@ jobs:
     with:
       suite_name: alter
       job_name: alter_replace_partition
-      timeout_minutes: 180
+      timeout_minutes: 360
       storage_path: /replace_partition
       regression_args: '--only "/alter/replace partition/*"'
       artifact_name: alter-replace-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -329,7 +329,7 @@ jobs:
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -351,7 +351,7 @@ jobs:
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 2/*"'
       artifact_name: alter-attach-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -496,7 +496,7 @@ jobs:
       part: ${{ matrix.part }}
       timeout_minutes: 180
       storage_path: /no_ssl
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -521,7 +521,7 @@ jobs:
       storage_path: /ssl
       regression_args: '--ssl'
       artifact_name: clickhouse_keeper-ssl-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -669,7 +669,7 @@ jobs:
     with:
       suite_name: functions
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -829,7 +829,7 @@ jobs:
     with:
       suite_name: ldap/role_mapping
       job_name: ldap_role_mapping
-      timeout_minutes: 180
+      timeout_minutes: 360
       artifact_name: ldap-role_mapping-artifacts
       ref: ${{ inputs.ref }}
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
@@ -848,7 +848,7 @@ jobs:
     with:
       suite_name: lightweight_delete
       timeout_minutes: 300
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -864,8 +864,8 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: memory
-      timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      timeout_minutes: 360
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -884,7 +884,7 @@ jobs:
       timeout_minutes: 300
       storage_path: /no_s3
       ref: ${{ inputs.ref }}
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -1295,7 +1295,7 @@ jobs:
       storage_path: /minio
       regression_args: '--storage minio'
       artifact_name: s3-minio-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1312,7 +1312,7 @@ jobs:
     with:
       suite_name: selects
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1452,7 +1452,7 @@ jobs:
     with:
       suite_name: tiered_storage
       job_name: tiered_storage_gcs
-      timeout_minutes: 180
+      timeout_minutes: 360
       storage_path: /gcs
       regression_args: '--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: tiered_storage-gcs-artifacts

@@ -40,7 +40,12 @@ xfails = {
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/100361 - not backported to stable-26.3",
             check_with_any_sanitizer,
-        )
+        ),
+        (
+            Error,
+            "https://github.com/ClickHouse/ClickHouse/pull/100361 - not backported to stable-26.3",
+            check_with_any_sanitizer,
+        ),
     ],
     "/iceberg/export partition/*/manifest integrity/value_counts across data files sum to source row count": [
         (

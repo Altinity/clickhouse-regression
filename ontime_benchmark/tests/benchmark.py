@@ -14,9 +14,12 @@ def insert_ontime_data(self, from_year, to_year, table_name, node=None):
     if node is None:
         node = self.context.node
 
+    # Sanitizer builds are 3-4x slower; bump ingest timeout accordingly.
+    query_timeout = 3600 if check_with_any_sanitizer(self) else 1200
+
     node.query(
         f"INSERT INTO {table_name} SELECT * FROM ontime_data WHERE Year BETWEEN {from_year} AND {to_year}",
-        timeout=1200,
+        timeout=query_timeout,
     )
 
 
@@ -26,6 +29,11 @@ def fetch_ontime_data(self, from_year, to_year, node=None):
 
     if node is None:
         node = self.context.node
+
+    # Sanitizer builds are 3-4x slower; bump CSV.gz ingest timeouts accordingly.
+    sanitized = check_with_any_sanitizer(self)
+    query_timeout = 3600 if sanitized else 1200
+    receive_timeout = 1800 if sanitized else 600
 
     with Given("I create a table to store ontime data locally"):
         create_ontime_table(
@@ -45,10 +53,10 @@ def fetch_ontime_data(self, from_year, to_year, node=None):
         node.query(
             f"INSERT INTO ontime_data "
             f"SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) "
-            "SETTINGS receive_timeout=600, "
+            f"SETTINGS receive_timeout={receive_timeout}, "
             "max_insert_threads=10, "  # This affects memory more than it affects performance
             "max_memory_usage=29500000000;",  # Runners have about this much available memory
-            timeout=1200,
+            timeout=query_timeout,
         )
 
 
