@@ -630,7 +630,7 @@ class ClickHouseNode(Node):
                 "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_TIME_US=10000"
             )
 
-    def wait_clickhouse_healthy(self, timeout=90, check_version=True, initial_delay=0):
+    def wait_clickhouse_healthy(self, timeout=600, check_version=True, initial_delay=0):
         with By(f"waiting until ClickHouse server on {self.name} is healthy"):
             for attempt in retries(
                 timeout=timeout, delay=5, initial_delay=initial_delay
@@ -782,7 +782,7 @@ class ClickHouseNode(Node):
 
     def start_clickhouse(
         self,
-        timeout=60,
+        timeout=600,
         wait_healthy=True,
         user=None,
         thread_fuzzer=False,
@@ -843,9 +843,7 @@ class ClickHouseNode(Node):
                         timeout=timeout, check_version=check_version, initial_delay=2
                     )
 
-    def restart_clickhouse(
-        self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None
-    ):
+    def restart_clickhouse(self, timeout=600, safe=True, wait_healthy=True, retry_count=5, user=None):
         """Restart ClickHouse server."""
         self.stop_clickhouse(timeout=timeout, safe=safe)
 

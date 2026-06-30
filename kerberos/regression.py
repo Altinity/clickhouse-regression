@@ -8,12 +8,27 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import check_clickhouse_version, experimental_analyzer, check_with_msan
 from kerberos.requirements.requirements import *
 
 xfails = {
     "config/principal and realm specified/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/26197")
+    ],
+    # MSAN aborts on every kerberos request: bufferToString strips trailing
+    # NUL bytes from opaque AP-REP tokens, causing krb5 ASN.1 decoder to read
+    # uninitialized memory. Fixed upstream in CH#103114, not backported to stable-26.3.
+    "/kerberos/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/103114 - not backported to stable-26.3",
+            check_with_msan,
+        ),
+        (
+            Error,
+            "https://github.com/ClickHouse/ClickHouse/pull/103114 - not backported to stable-26.3",
+            check_with_msan,
+        ),
     ],
 }
 

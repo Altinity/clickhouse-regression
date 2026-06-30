@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import check_clickhouse_version, experimental_analyzer, check_with_any_sanitizer
 from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
 from rbac.helper.common import add_rbac_config_file
 
@@ -257,8 +257,8 @@ ffails = {
     ),
     "/rbac/part 1/privileges/system drop cache/compiled expression cache*": (
         Skip,
-        "Not supportted in ARM builds",
-        (lambda test: platform.machine() == "aarch64"),
+        "JIT compilation disabled in ARM and sanitizer builds",
+        (lambda test: platform.machine() == "aarch64" or check_with_any_sanitizer(test)),
     ),
     "rbac/part 1/privileges/:/table_type='ReplicatedReplacingMergeTree-sharded_cluster": (
         Skip,

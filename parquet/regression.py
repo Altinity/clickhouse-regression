@@ -23,6 +23,7 @@ from helpers.common import (
     allow_higher_cpu_wait_ratio,
     check_if_not_antalya_build,
     check_if_antalya_build,
+    check_with_any_sanitizer,
 )
 from parquet.tests.common import start_minio, parquet_test_columns
 
@@ -500,6 +501,18 @@ def regression(
                 min_os_cpu_wait_time_ratio_to_throw=10,
                 max_os_cpu_wait_time_ratio_to_throw=20,
             )
+
+    with And("I increase query timeouts for sanitizer builds"):
+        if check_with_any_sanitizer(self):
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            # Heavy INSERTs exceed default 120s wait_for_async_insert_timeout on
+            # slow sanitizer runners (observed in parquet under MSAN/TSAN).
+            default_query_settings.append(("receive_timeout", 900))
+            default_query_settings.append(("send_timeout", 900))
+            default_query_settings.append(("wait_for_async_insert_timeout", 900))
+            self.context.default_query_settings = default_query_settings
 
     with And("I have a Parquet table definition"):
         columns = (

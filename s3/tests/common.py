@@ -33,6 +33,10 @@ def add_config(
     if nodes is None:
         nodes = [cluster.node(node) for node in cluster.nodes["clickhouse"]]
 
+    # Sanitizer builds restart 3-4x slower; bump default config-reload timeout.
+    if check_with_any_sanitizer(current()) and timeout < 300:
+        timeout = 300
+
     def check_preprocessed_config_is_updated(after_removal=False):
         """Check that preprocessed config is updated."""
         started = time.time()
@@ -459,7 +463,7 @@ def remote_host_filter_config(
         config = create_remote_host_filter_config_content(
             urls, config_d_dir, config_file
         )
-    return add_config(config, restart=restart)
+    return add_config(config, timeout=timeout, restart=restart)
 
 
 def create_s3_max_redirects_config_content(
