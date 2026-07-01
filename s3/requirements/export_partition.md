@@ -849,13 +849,18 @@ Using the defaults (`initial = 5000 ms`, `max = 60000 ms`), the per-attempt dela
 | 5             | `5000 << 4` → capped | 60 s   |
 | 6 and beyond  | capped at `max`  | 60 s       |
 
-```mermaid
-xychart-beta
-    title "Retry back-off delay (initial = 5s, max = 60s)"
-    x-axis "Retry attempt" [1, 2, 3, 4, 5, 6, 7]
-    y-axis "Delay (seconds)" 0 --> 70
-    bar [5, 10, 20, 40, 60, 60, 60]
+Visually, with the defaults (each `█` = 5 s), the delay doubles each attempt until it flattens at the `max` cap:
+
+```text
+attempt 1    █             5 s
+attempt 2    ██            10 s
+attempt 3    ████          20 s
+attempt 4    ████████      40 s
+attempt 5    ████████████  60 s (capped at max)
+attempt 6+   ████████████  60 s (capped at max)
 ```
+
+Each retry waits twice as long as the one before it, until the delay hits `max`; from then on every retry waits exactly `max`.
 
 The per-replica back-off replaces the previous count-based retry budget, ensuring retries are paced without hammering the scheduler on every tick while never blocking other replicas from making progress.
 
