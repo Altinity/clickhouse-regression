@@ -1242,6 +1242,27 @@ RQ_ClickHouse_ExportPartition_LocalBackoffPolicy = Requirement(
         "* The delay SHALL grow as `delay = min(initial << (attempts - 1), max)` (capped exponential doubling), where `initial` is controlled by `export_merge_tree_partition_retry_initial_backoff_ms` and `max` by `export_merge_tree_partition_retry_max_backoff_ms`\n"
         "* The effective back-off resolution is bounded by the export select-task tick (~5 seconds); very short back-offs SHALL be rounded up in practice, and the scheduler SHALL wake up early when a back-off deadline is sooner than the next default tick\n"
         "\n"
+        "**How the delay grows (plain language):** the first retry waits `initial`. Every following retry waits **twice as long** as the previous one, until the wait reaches `max`, after which every retry waits exactly `max`. In other words: start at `initial`, keep doubling, never exceed `max`.\n"
+        "\n"
+        "Using the defaults (`initial = 5000 ms`, `max = 60000 ms`), the per-attempt delay is:\n"
+        "\n"
+        "| Retry attempt | Formula          | Delay      |\n"
+        "|---------------|------------------|------------|\n"
+        "| 1             | `5000 << 0`      | 5 s        |\n"
+        "| 2             | `5000 << 1`      | 10 s       |\n"
+        "| 3             | `5000 << 2`      | 20 s       |\n"
+        "| 4             | `5000 << 3`      | 40 s       |\n"
+        "| 5             | `5000 << 4` → capped | 60 s   |\n"
+        "| 6 and beyond  | capped at `max`  | 60 s       |\n"
+        "\n"
+        "```mermaid\n"
+        "xychart-beta\n"
+        '    title "Retry back-off delay (initial = 5s, max = 60s)"\n'
+        '    x-axis "Retry attempt" [1, 2, 3, 4, 5, 6, 7]\n'
+        '    y-axis "Delay (seconds)" 0 --> 70\n'
+        "    bar [5, 10, 20, 40, 60, 60, 60]\n"
+        "```\n"
+        "\n"
         "The per-replica back-off replaces the previous count-based retry budget, ensuring retries are paced without hammering the scheduler on every tick while never blocking other replicas from making progress.\n"
         "\n"
     ),
@@ -3260,6 +3281,27 @@ version: 1.0
 * The back-off SHALL only delay the retries of the replica that is backing off and SHALL NOT prevent another replica from picking up and exporting the same part, so a replica stuck backing off cannot block overall progress
 * The delay SHALL grow as `delay = min(initial << (attempts - 1), max)` (capped exponential doubling), where `initial` is controlled by `export_merge_tree_partition_retry_initial_backoff_ms` and `max` by `export_merge_tree_partition_retry_max_backoff_ms`
 * The effective back-off resolution is bounded by the export select-task tick (~5 seconds); very short back-offs SHALL be rounded up in practice, and the scheduler SHALL wake up early when a back-off deadline is sooner than the next default tick
+
+**How the delay grows (plain language):** the first retry waits `initial`. Every following retry waits **twice as long** as the previous one, until the wait reaches `max`, after which every retry waits exactly `max`. In other words: start at `initial`, keep doubling, never exceed `max`.
+
+Using the defaults (`initial = 5000 ms`, `max = 60000 ms`), the per-attempt delay is:
+
+| Retry attempt | Formula          | Delay      |
+|---------------|------------------|------------|
+| 1             | `5000 << 0`      | 5 s        |
+| 2             | `5000 << 1`      | 10 s       |
+| 3             | `5000 << 2`      | 20 s       |
+| 4             | `5000 << 3`      | 40 s       |
+| 5             | `5000 << 4` → capped | 60 s   |
+| 6 and beyond  | capped at `max`  | 60 s       |
+
+```mermaid
+xychart-beta
+    title "Retry back-off delay (initial = 5s, max = 60s)"
+    x-axis "Retry attempt" [1, 2, 3, 4, 5, 6, 7]
+    y-axis "Delay (seconds)" 0 --> 70
+    bar [5, 10, 20, 40, 60, 60, 60]
+```
 
 The per-replica back-off replaces the previous count-based retry budget, ensuring retries are paced without hammering the scheduler on every tick while never blocking other replicas from making progress.
 
