@@ -773,14 +773,10 @@ This section describes how per-part export failures are classified and how faile
 version: 1.0
 
 [ClickHouse] SHALL classify part-export failures during a partition export into two categories and handle each differently:
-* **Non-retryable errors**: deterministic errors that can never succeed on retry (e.g., schema/type incompatibilities, unsupported features, programming errors, or deterministic file/metadata conflicts). These SHALL fail the entire export task immediately.
-* **Retryable errors**: transient errors (e.g., network, object storage, Keeper/ZooKeeper, or memory-limit failures). These SHALL be retried with a per-replica exponential back-off until the export succeeds or the absolute task timeout elapses.
+* **Non-retryable errors** (see `RQ.ClickHouse.ExportPartition.ErrorClassification.NonRetryable`): deterministic errors that can never succeed on retry (e.g., schema/type incompatibilities, unsupported features, programming errors, or deterministic file/metadata conflicts). These SHALL fail the entire export task immediately.
+* **Retryable errors** (see `RQ.ClickHouse.ExportPartition.ErrorClassification.Retryable`): transient errors (e.g., network, object storage, Keeper/ZooKeeper, or memory-limit failures). These SHALL be retried with a per-replica exponential back-off until the export succeeds or the absolute task timeout elapses.
 
-The classification SHALL use an explicit denylist of non-retryable error codes; any error code not present in the denylist SHALL be treated as retryable by default.
-
-Non-retryable error codes SHALL include at least: `BAD_ARGUMENTS`, `TYPE_MISMATCH`, `CANNOT_CONVERT_TYPE`, `ILLEGAL_TYPE_OF_ARGUMENT`, `ILLEGAL_COLUMN`, `NUMBER_OF_COLUMNS_DOESNT_MATCH`, `INCOMPATIBLE_COLUMNS`, `NO_SUCH_COLUMN_IN_TABLE`, `NOT_IMPLEMENTED`, `SUPPORT_IS_DISABLED`, `LOGICAL_ERROR`, `FILE_ALREADY_EXISTS`, and `METADATA_MISMATCH`.
-
-Retryable errors include, for example: `NETWORK_ERROR`, object storage errors (e.g., `S3_ERROR`), transient Keeper/ZooKeeper errors, memory-limit errors (e.g., `MEMORY_LIMIT_EXCEEDED`), `UNFINISHED`, and runtime cast/parse errors (e.g., `CANNOT_PARSE_*`). `QUERY_WAS_CANCELLED` is handled separately by the cancellation path and does not reach the classifier.
+The classification SHALL use an explicit denylist of non-retryable error codes; any error code not present in the denylist SHALL be treated as retryable by default. `QUERY_WAS_CANCELLED` is handled separately by the cancellation path and does not reach the classifier.
 
 ### RQ.ClickHouse.ExportPartition.ErrorClassification.NonRetryable
 version: 1.0
@@ -792,6 +788,24 @@ version: 1.0
 
 Deterministic errors cannot succeed on retry, so the task SHALL fail fast instead of retrying and wasting the timeout budget.
 
+Non-retryable errors are the codes in the explicit denylist. Retrying them can never help (schema/type incompatibilities, unsupported features, programming errors, or deterministic file/metadata conflicts):
+
+| Error code | Why it is non-retryable |
+|---|---|
+| `BAD_ARGUMENTS` | Iceberg partition-transform / type / metadata-parsing rejections |
+| `TYPE_MISMATCH` | Column type incompatibility |
+| `CANNOT_CONVERT_TYPE` | Deterministic conversion failure |
+| `ILLEGAL_TYPE_OF_ARGUMENT` | Deterministic type problem |
+| `ILLEGAL_COLUMN` | Deterministic column problem |
+| `NUMBER_OF_COLUMNS_DOESNT_MATCH` | Schema shape mismatch |
+| `INCOMPATIBLE_COLUMNS` | Positional-cast schema guard (lossy cast rejection) |
+| `NO_SUCH_COLUMN_IN_TABLE` | Column missing in destination |
+| `NOT_IMPLEMENTED` | Unsupported feature |
+| `SUPPORT_IS_DISABLED` | Feature disabled |
+| `LOGICAL_ERROR` | Programming error / invariant violation |
+| `FILE_ALREADY_EXISTS` | With `file_already_exists_policy='error'`, retrying always hits the same file |
+| `METADATA_MISMATCH` | Schema/partition spec changed mid-export; files were built against the old spec and the export must restart |
+
 ### RQ.ClickHouse.ExportPartition.ErrorClassification.Retryable
 version: 1.0
 
@@ -801,7 +815,17 @@ version: 1.0
 * Recovering and completing the export successfully once the transient failure clears, without re-exporting parts that were already successfully exported
 * Transitioning the export task to the `KILLED` status (not `FAILED`) if the absolute task timeout (`export_merge_tree_partition_task_timeout_seconds`) elapses before the export succeeds, and recording an exception for the killed export
 
-Transient errors may eventually succeed, so the system SHALL keep retrying with back-off rather than failing after a limited number of attempts.
+Transient errors may eventually succeed, so the system SHALL keep retrying with back-off rather than failing after a limited number of attempts. Any error code not present in the non-retryable denylist SHALL be treated as retryable by default. Retryable errors include, for example:
+
+| Error code / category | Where it comes from |
+|---|---|
+| `NETWORK_ERROR` | Transient network failures |
+| Object storage errors (e.g., `S3_ERROR`) | Object storage transient outage (unreachable/blocked S3/MinIO) |
+| Keeper/ZooKeeper transient errors | Coordination hiccups |
+| Memory-limit errors (e.g., `MEMORY_LIMIT_EXCEEDED`) | Background memory pressure |
+| `UNFINISHED` | Iceberg: repeated metadata conflicts after N commit attempts (now retryable instead of terminal) |
+| Runtime cast / parse errors (e.g., `CANNOT_PARSE_*`) | A value that cannot parse to the destination type at runtime in the async worker |
+| `FAULT_INJECTED` | Test-only failpoint (e.g., `export_part_retryable_throw`) and other injected retryable faults |
 
 ### RQ.ClickHouse.ExportPartition.LocalBackoffPolicy
 version: 1.0
