@@ -84,6 +84,25 @@ from .verification import (
     export_and_verify_columns,
 )
 
+# Local back-off policy steps (Altinity/ClickHouse#1984)
+from .local_backoff import (
+    RETRYABLE_FAILPOINT,
+    NON_RETRYABLE_FAILPOINT,
+    INITIAL_BACKOFF_SECONDS,
+    MAX_BACKOFF_SECONDS,
+    TASK_TIMEOUT_SECONDS,
+    enable_failpoint,
+    disable_failpoint,
+    stop_moves,
+    start_moves,
+    start_export,
+    wait_for_export_status,
+    get_export_status,
+    get_local_backoff_count,
+    wait_for_local_backoff,
+    get_local_backoff_column_type,
+)
+
 # System monitoring verification steps
 from .system_monitoring import (
     verify_export_fields_populated,
@@ -164,6 +183,22 @@ __all__ = [
     # Verification
     "source_matches_destination",
     "export_and_verify_columns",
+    # Local back-off policy
+    "RETRYABLE_FAILPOINT",
+    "NON_RETRYABLE_FAILPOINT",
+    "INITIAL_BACKOFF_SECONDS",
+    "MAX_BACKOFF_SECONDS",
+    "TASK_TIMEOUT_SECONDS",
+    "enable_failpoint",
+    "disable_failpoint",
+    "stop_moves",
+    "start_moves",
+    "start_export",
+    "wait_for_export_status",
+    "get_export_status",
+    "get_local_backoff_count",
+    "wait_for_local_backoff",
+    "get_local_backoff_column_type",
     # System monitoring
     "verify_export_fields_populated",
     "verify_export_status",

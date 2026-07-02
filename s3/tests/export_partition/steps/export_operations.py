@@ -35,7 +35,9 @@ def export_partitions(
         partitions = get_partitions(table_name=source_table, node=node)
 
     if inline_settings:
-        inline_settings = self.context.default_settings
+        # Copy so appending force_export below does not mutate the shared
+        # context.default_settings list and leak into unrelated tests.
+        inline_settings = list(self.context.default_settings)
 
     if force_export:
         inline_settings.append(("export_merge_tree_partition_force_export", 1))
