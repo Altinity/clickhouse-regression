@@ -202,7 +202,8 @@ ALTER TABLE source_table
 EXPORT PARTITION ID '2020' 
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1, 
-         export_merge_tree_partition_max_retries = 5
+         export_merge_tree_partition_retry_initial_backoff_seconds = 2,
+         export_merge_tree_partition_retry_max_backoff_seconds = 30
 ```
 
 ### RQ.ClickHouse.ExportPartition.PartitionAll
@@ -609,28 +610,18 @@ Export operations and lightweight deletes may occur at different times, and the 
 ## Export operation failure handling
 
 ### RQ.ClickHouse.ExportPartition.RetryMechanism
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL automatically retry failed part exports within a partition up to a configurable maximum retry count. If all retry attempts are exhausted for a part, the entire partition export operation SHALL be marked as failed.
+[ClickHouse] SHALL retry failed part exports without a fixed retry-count budget. Retryable failures SHALL remain in `PENDING` and be retried with per-replica local back-off until the part succeeds or `export_merge_tree_partition_task_timeout_seconds` elapses. Non-retryable failures SHALL fail the export task immediately.
 
-Unlike single-part exports, partition exports involve multiple parts and may take significant time. Retry mechanisms ensure that temporary failures don't require restarting the entire export operation.
+Unlike single-part exports, partition exports involve multiple parts and may take significant time. This model avoids premature terminal failures during transient outages while still failing fast on deterministic errors.
 
 ### RQ.ClickHouse.ExportPartition.Settings.MaxRetries
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL support the `export_merge_tree_partition_max_retries` setting that controls the maximum number of retries for exporting a merge tree part in an export partition task. The default value SHALL be `3`.
+[ClickHouse] SHALL NOT rely on a per-part retry budget for `EXPORT PARTITION`. The legacy `export_merge_tree_partition_max_retries` behavior is replaced by error classification plus absolute task timeout (`export_merge_tree_partition_task_timeout_seconds`).
 
-This setting allows users to control how many times the system will retry exporting a part before marking it as failed.
-
-For example,
-
-```sql
-ALTER TABLE source_table 
-EXPORT PARTITION ID '2020' 
-TO TABLE destination_table
-SETTINGS allow_experimental_export_merge_tree_part = 1,
-         export_merge_tree_partition_max_retries = 5
-```
+Retryable failures SHALL continue until success or timeout, while non-retryable failures SHALL fail immediately.
 
 ### RQ.ClickHouse.ExportPartition.ResumeAfterFailure
 version: 1.0
@@ -751,7 +742,6 @@ version: 1.0
 
 [ClickHouse] SHALL NOT be able to cancel an in-progress `EXPORT PARTITION` operation using the `KILL QUERY` command.
 
-``
 For example,
 
 ```sql
@@ -767,28 +757,28 @@ KILL QUERY WHERE query_id = '<query_id>';
 
 ## Export retry and back-off policy
 
-This section describes how per-part export failures are classified and how failed part exports are retried using a per-replica exponential back-off. This replaces the previous count-based retry budget, where every failure (transient or not) incremented a counter until the whole task was marked `FAILED`.
+This section defines how `EXPORT PARTITION` failures are classified and retried using a per-replica exponential back-off model. The retry behavior is timeout-driven (no fixed retry budget).
 
 ### RQ.ClickHouse.ExportPartition.ErrorClassification
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL classify part-export failures during a partition export into two categories and handle each differently:
-* **Non-retryable errors** (see `RQ.ClickHouse.ExportPartition.ErrorClassification.NonRetryable`): deterministic errors that can never succeed on retry (e.g., schema/type incompatibilities, unsupported features, programming errors, or deterministic file/metadata conflicts). These SHALL fail the entire export task immediately.
-* **Retryable errors** (see `RQ.ClickHouse.ExportPartition.ErrorClassification.Retryable`): transient errors (e.g., network, object storage, Keeper/ZooKeeper, or memory-limit failures). These SHALL be retried with a per-replica exponential back-off until the export succeeds or the absolute task timeout elapses.
+[ClickHouse] SHALL classify export failures into non-retryable and retryable classes, and apply this classification to both:
+* part-export worker failures
+* commit-phase failures
 
-The classification SHALL use an explicit denylist of non-retryable error codes; any error code not present in the denylist SHALL be treated as retryable by default. `QUERY_WAS_CANCELLED` is handled separately by the cancellation path and does not reach the classifier.
+The classification SHALL use an explicit denylist of non-retryable error codes. Any error code not in the denylist SHALL be treated as retryable by default. `QUERY_WAS_CANCELLED` is handled by cancellation flow and is outside this classifier.
 
 ### RQ.ClickHouse.ExportPartition.ErrorClassification.NonRetryable
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL fail the entire partition export task immediately when a part export fails with a non-retryable error by:
+[ClickHouse] SHALL fail the entire partition export task immediately when a non-retryable error is observed in either part-export or commit phase by:
 * Transitioning the export task to the `FAILED` status without waiting or consuming the task timeout
 * Recording an exception describing the failure for the export operation
 * Not writing any exported rows from the failed export to the destination table
 
 Deterministic errors cannot succeed on retry, so the task SHALL fail fast instead of retrying and wasting the timeout budget.
 
-Non-retryable errors are the codes in the explicit denylist. Retrying them can never help (schema/type incompatibilities, unsupported features, programming errors, or deterministic file/metadata conflicts):
+Non-retryable errors are the codes in the explicit denylist. Retrying them can never help (schema/type incompatibilities, unsupported features, deterministic conversion failures, or deterministic file/metadata conflicts):
 
 | Error code | Why it is non-retryable |
 |---|---|
@@ -805,11 +795,12 @@ Non-retryable errors are the codes in the explicit denylist. Retrying them can n
 | `LOGICAL_ERROR` | Programming error / invariant violation |
 | `FILE_ALREADY_EXISTS` | With `file_already_exists_policy='error'`, retrying always hits the same file |
 | `METADATA_MISMATCH` | Schema/partition spec changed mid-export; files were built against the old spec and the export must restart |
+| `CANNOT_PARSE_*`, `VALUE_IS_OUT_OF_RANGE_OF_DATA_TYPE` | Deterministic runtime parse/range conversion error for source data |
 
 ### RQ.ClickHouse.ExportPartition.ErrorClassification.Retryable
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL keep retrying a part export that fails with a retryable error until it succeeds or the task timeout elapses by:
+[ClickHouse] SHALL keep retrying a retryable export failure until it succeeds or the task timeout elapses by:
 * Keeping the export task in the `PENDING` status while retryable failures continue, instead of failing it on a fixed retry budget
 * Spacing retry attempts using a per-replica exponential back-off (see `RQ.ClickHouse.ExportPartition.LocalBackoffPolicy`)
 * Recovering and completing the export successfully once the transient failure clears, without re-exporting parts that were already successfully exported
@@ -824,50 +815,25 @@ Transient errors may eventually succeed, so the system SHALL keep retrying with 
 | Keeper/ZooKeeper transient errors | Coordination hiccups |
 | Memory-limit errors (e.g., `MEMORY_LIMIT_EXCEEDED`) | Background memory pressure |
 | `UNFINISHED` | Iceberg: repeated metadata conflicts after N commit attempts (now retryable instead of terminal) |
-| Runtime cast / parse errors (e.g., `CANNOT_PARSE_*`) | A value that cannot parse to the destination type at runtime in the async worker |
 | `FAULT_INJECTED` | Test-only failpoint (e.g., `export_part_retryable_throw`) and other injected retryable faults |
 
 ### RQ.ClickHouse.ExportPartition.LocalBackoffPolicy
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL space out retries of a failed part export using a per-replica, in-memory exponential back-off with the following properties:
 * The back-off SHALL be **per-replica and in-memory** and SHALL NOT be stored in ZooKeeper/Keeper
 * The back-off SHALL only delay the retries of the replica that is backing off and SHALL NOT prevent another replica from picking up and exporting the same part, so a replica stuck backing off cannot block overall progress
-* The delay SHALL grow as `delay = min(initial << (attempts - 1), max)` (capped exponential doubling), where `initial` is controlled by `export_merge_tree_partition_retry_initial_backoff_ms` and `max` by `export_merge_tree_partition_retry_max_backoff_ms`
+* The delay SHALL grow as `delay = min(initial << (attempts - 1), max)` (capped exponential doubling), where `initial` is controlled by `export_merge_tree_partition_retry_initial_backoff_seconds` and `max` by `export_merge_tree_partition_retry_max_backoff_seconds`
 * The effective back-off resolution is bounded by the export select-task tick (~5 seconds); very short back-offs SHALL be rounded up in practice, and the scheduler SHALL wake up early when a back-off deadline is sooner than the next default tick
 
-**How the delay grows (plain language):** the first retry waits `initial`. Every following retry waits **twice as long** as the previous one, until the wait reaches `max`, after which every retry waits exactly `max`. In other words: start at `initial`, keep doubling, never exceed `max`.
+Using defaults (`initial = 5 s`, `max = 300 s`), delays are: 5s, 10s, 20s, 40s, 80s, 160s, 300s (capped), then 300s for subsequent retries.
 
-Using the defaults (`initial = 5000 ms`, `max = 60000 ms`), the per-attempt delay is:
-
-| Retry attempt | Formula          | Delay      |
-|---------------|------------------|------------|
-| 1             | `5000 << 0`      | 5 s        |
-| 2             | `5000 << 1`      | 10 s       |
-| 3             | `5000 << 2`      | 20 s       |
-| 4             | `5000 << 3`      | 40 s       |
-| 5             | `5000 << 4` → capped | 60 s   |
-| 6 and beyond  | capped at `max`  | 60 s       |
-
-Visually, with the defaults (each `█` = 5 s), the delay doubles each attempt until it flattens at the `max` cap:
-
-```text
-attempt 1    █             5 s
-attempt 2    ██            10 s
-attempt 3    ████          20 s
-attempt 4    ████████      40 s
-attempt 5    ████████████  60 s (capped at max)
-attempt 6+   ████████████  60 s (capped at max)
-```
-
-Each retry waits twice as long as the one before it, until the delay hits `max`; from then on every retry waits exactly `max`.
-
-The per-replica back-off replaces the previous count-based retry budget, ensuring retries are paced without hammering the scheduler on every tick while never blocking other replicas from making progress.
+The local back-off state SHOULD be observable in `system.replicated_partition_exports.local_backoff_per_part` for operational debugging.
 
 ### RQ.ClickHouse.ExportPartition.Settings.RetryInitialBackoff
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL support the `export_merge_tree_partition_retry_initial_backoff_ms` setting (type `UInt64`) that controls the initial delay, in milliseconds, before retrying a failed part export. The delay grows exponentially per replica-local retry count. The default value SHALL be `5000`.
+[ClickHouse] SHALL support the `export_merge_tree_partition_retry_initial_backoff_seconds` setting (type `UInt64`) that controls the initial delay, in seconds, before retrying a failed part export. The delay grows exponentially per replica-local retry count. The default value SHALL be `5`.
 
 For example,
 
@@ -876,13 +842,13 @@ ALTER TABLE source_table
 EXPORT PARTITION ID '2020'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1,
-         export_merge_tree_partition_retry_initial_backoff_ms = 1000
+         export_merge_tree_partition_retry_initial_backoff_seconds = 1
 ```
 
 ### RQ.ClickHouse.ExportPartition.Settings.RetryMaxBackoff
-version: 1.0
+version: 1.1
 
-[ClickHouse] SHALL support the `export_merge_tree_partition_retry_max_backoff_ms` setting (type `UInt64`) that caps the exponential growth of the retry delay, in milliseconds, for a failed part export. The default value SHALL be `60000`.
+[ClickHouse] SHALL support the `export_merge_tree_partition_retry_max_backoff_seconds` setting (type `UInt64`) that caps the exponential growth of the retry delay, in seconds, for a failed part export. The default value SHALL be `300`.
 
 For example,
 
@@ -891,12 +857,12 @@ ALTER TABLE source_table
 EXPORT PARTITION ID '2020'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1,
-         export_merge_tree_partition_retry_initial_backoff_ms = 1000,
-         export_merge_tree_partition_retry_max_backoff_ms = 5000
+         export_merge_tree_partition_retry_initial_backoff_seconds = 1,
+         export_merge_tree_partition_retry_max_backoff_seconds = 5
 ```
 
 ### RQ.ClickHouse.ExportPartition.Settings.TaskTimeout
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support the `export_merge_tree_partition_task_timeout_seconds` setting that defines the absolute wall-clock timeout for an export task. When an export continues to hit retryable failures, this timeout SHALL be the only mechanism that eventually stops the export: once it elapses, the task SHALL transition to `KILLED` (not `FAILED`). The default value SHALL be `86400` (1 day).
 
