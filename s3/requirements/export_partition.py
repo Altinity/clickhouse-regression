@@ -895,6 +895,8 @@ RQ_ClickHouse_ExportPartition_Settings_MaxRetries = Requirement(
         "\n"
         "Retryable failures SHALL continue until success or timeout, while non-retryable failures SHALL fail immediately.\n"
         "\n"
+        "For backward compatibility the `export_merge_tree_partition_max_retries` setting SHALL still be accepted (it is marked obsolete) and SHALL be silently ignored: supplying it SHALL NOT cause a query error and SHALL have no effect on retry behavior.\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -1218,6 +1220,32 @@ RQ_ClickHouse_ExportPartition_ErrorClassification_Retryable = Requirement(
     num="15.3",
 )
 
+RQ_ClickHouse_ExportPartition_ErrorClassification_PermanentDestinationErrors = Requirement(
+    name="RQ.ClickHouse.ExportPartition.ErrorClassification.PermanentDestinationErrors",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] classifies failures at the ClickHouse `ErrorCode` granularity, which cannot distinguish a *transient* object-storage/catalog error from a *permanent* one. As a result, permanent destination errors that surface as a generic retryable code SHALL currently be treated as retryable — the export SHALL stay `PENDING`, retry with back-off, and only stop at the absolute task timeout (transitioning to `KILLED`), rather than failing fast as `FAILED`.\n"
+        "\n"
+        "This applies to, for example:\n"
+        "\n"
+        "| Condition | Surfaced as | Current handling |\n"
+        "|---|---|---|\n"
+        "| Wrong credentials / access denied (S3 403) | `S3_ERROR` | Retryable → `KILLED` at timeout |\n"
+        "| Non-existent bucket / wrong endpoint (S3 404) | `S3_ERROR` | Retryable → `KILLED` at timeout |\n"
+        "| Catalog/destination authentication failure | catalog/HTTP error | Retryable → `KILLED` at timeout |\n"
+        "\n"
+        "**Known limitation:** a misconfiguration (typo in bucket, wrong secret key) is only surfaced after `export_merge_tree_partition_task_timeout_seconds` (default 1 day) as `KILLED`, instead of failing fast with a clear `FAILED`. Fast-failing these would require inspecting the underlying HTTP/S3 status, which is not available to the classifier today. Tests SHALL assert this current behavior; changing it to fast-fail is a proposed future improvement.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="15.4",
+)
+
 RQ_ClickHouse_ExportPartition_LocalBackoffPolicy = Requirement(
     name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy",
     version="1.1",
@@ -1232,6 +1260,7 @@ RQ_ClickHouse_ExportPartition_LocalBackoffPolicy = Requirement(
         "* The back-off SHALL be **per-replica and in-memory** and SHALL NOT be stored in ZooKeeper/Keeper\n"
         "* The back-off SHALL only delay retries on the replica that is backing off, and SHALL NOT prevent another replica from picking up and exporting the same part — so a replica stuck backing off can never block overall progress\n"
         "* The delay SHALL grow as `delay = min(initial << (attempts - 1), max)` (capped exponential doubling), where `initial` is `export_merge_tree_partition_retry_initial_backoff_seconds` and `max` is `export_merge_tree_partition_retry_max_backoff_seconds`\n"
+        "* The delay computation SHALL be robust at the boundaries: when `initial > max` the effective initial delay SHALL be clamped to `max`; `initial = 0` SHALL yield an effectively immediate retry (still bounded by the tick); and arbitrarily large configured values SHALL NOT overflow (they saturate at `max`)\n"
         "* The effective back-off resolution is bounded by the export select-task tick (~5 seconds); very short back-offs SHALL be rounded up in practice, and the scheduler SHALL wake up early when a back-off deadline is sooner than the next default tick\n"
         "\n"
         "With defaults (`initial = 5 s`, `max = 300 s`) the per-replica delay sequence is:\n"
@@ -1254,7 +1283,48 @@ RQ_ClickHouse_ExportPartition_LocalBackoffPolicy = Requirement(
     ),
     link=None,
     level=2,
-    num="15.4",
+    num="15.5",
+)
+
+RQ_ClickHouse_ExportPartition_LocalBackoffPolicy_State = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.State",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL maintain the per-replica back-off state exposed in `system.replicated_partition_exports.local_backoff_per_part` with the following observable semantics:\n"
+        "* A part that fails with a retryable error SHALL appear with `attempts >= 1` and a `next_retry_time` in the future\n"
+        "* `attempts` SHALL increase by one on each successive retryable failure of the same part on the same replica\n"
+        "* The entry for a part SHALL be cleared once that part is successfully exported (on the replica that exported it)\n"
+        "* All back-off entries for a task SHALL be pruned once the task reaches a terminal state (`COMPLETED`, `FAILED`, or `KILLED`)\n"
+        "* A clean export that never hits a retryable failure SHALL show an empty `local_backoff_per_part`\n"
+        "\n"
+        "This gives operators an accurate, non-stale view of which parts are currently waiting to be retried and how many times they have failed.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="15.6",
+)
+
+RQ_ClickHouse_ExportPartition_LocalBackoffPolicy_NotPersistedAcrossRestart = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.NotPersistedAcrossRestart",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL keep the back-off state purely in-memory and per-replica, so it SHALL NOT survive a replica restart. After a replica that was backing off a part restarts, its `attempts` count for that part SHALL reset (the part becomes immediately eligible again on that replica), because the state was never written to ZooKeeper/Keeper.\n"
+        "\n"
+        'This is a direct consequence of the in-memory design: a restart is effectively a "fresh start" for that replica\'s pacing, and it never blocks the part cluster-wide.\n'
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="15.7",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_RetryInitialBackoff = Requirement(
@@ -1265,7 +1335,7 @@ RQ_ClickHouse_ExportPartition_Settings_RetryInitialBackoff = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the `export_merge_tree_partition_retry_initial_backoff_seconds` setting (type `UInt64`) that controls the initial delay, in seconds, before retrying a failed part export. The delay grows exponentially per replica-local retry count. The default value SHALL be `5`.\n"
+        "[ClickHouse] SHALL support the `export_merge_tree_partition_retry_initial_backoff_seconds` setting (type `UInt64`) that controls the initial delay, in seconds, before retrying a failed part export. The delay grows exponentially per replica-local retry count. The default value SHALL be `5`. Values SHALL be parsed as `UInt64`; a non-numeric or out-of-range value SHALL be rejected with a query error.\n"
         "\n"
         "Lower it to retry sooner (e.g. for fast-recovering, flaky destinations); raise it to back off harder on a struggling destination.\n"
         "\n"
@@ -1282,7 +1352,7 @@ RQ_ClickHouse_ExportPartition_Settings_RetryInitialBackoff = Requirement(
     ),
     link=None,
     level=2,
-    num="15.5",
+    num="15.8",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_RetryMaxBackoff = Requirement(
@@ -1293,7 +1363,7 @@ RQ_ClickHouse_ExportPartition_Settings_RetryMaxBackoff = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the `export_merge_tree_partition_retry_max_backoff_seconds` setting (type `UInt64`) that caps the exponential growth of the retry delay, in seconds, for a failed part export. The default value SHALL be `300`. The cap keeps retries from drifting so far apart that a recovered destination sits idle waiting for the next attempt.\n"
+        "[ClickHouse] SHALL support the `export_merge_tree_partition_retry_max_backoff_seconds` setting (type `UInt64`) that caps the exponential growth of the retry delay, in seconds, for a failed part export. The default value SHALL be `300`. The cap keeps retries from drifting so far apart that a recovered destination sits idle waiting for the next attempt. Values SHALL be parsed as `UInt64`; a non-numeric or out-of-range value SHALL be rejected with a query error.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -1309,7 +1379,7 @@ RQ_ClickHouse_ExportPartition_Settings_RetryMaxBackoff = Requirement(
     ),
     link=None,
     level=2,
-    num="15.6",
+    num="15.9",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_TaskTimeout = Requirement(
@@ -1321,6 +1391,8 @@ RQ_ClickHouse_ExportPartition_Settings_TaskTimeout = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support the `export_merge_tree_partition_task_timeout_seconds` setting that defines the absolute wall-clock timeout for an export task. When an export keeps hitting retryable failures, this timeout SHALL be the only mechanism that eventually stops it: once it elapses, the task SHALL transition to `KILLED` (not `FAILED`). The default value SHALL be `86400` (1 day). This is the safety net that bounds "retry forever" — set it to how long an outage you are willing to wait out before giving up.\n'
+        "\n"
+        "The timeout SHALL be measured from the export manifest's `create_time`, so it spans replica handoffs and node restarts (the clock does not reset when a different replica takes over). Setting it to `0` SHALL disable the timeout entirely (the task never auto-kills on timeout). Enforcement is best-effort: the actual kill latency is bounded by one manifest-updater poll cycle.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -1335,7 +1407,7 @@ RQ_ClickHouse_ExportPartition_Settings_TaskTimeout = Requirement(
     ),
     link=None,
     level=2,
-    num="15.7",
+    num="15.10",
 )
 
 RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues = Requirement(
@@ -2199,22 +2271,37 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
             num="15.3",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy", level=2, num="15.4"
-        ),
-        Heading(
-            name="RQ.ClickHouse.ExportPartition.Settings.RetryInitialBackoff",
+            name="RQ.ClickHouse.ExportPartition.ErrorClassification.PermanentDestinationErrors",
             level=2,
-            num="15.5",
+            num="15.4",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Settings.RetryMaxBackoff",
+            name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy", level=2, num="15.5"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.State",
             level=2,
             num="15.6",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Settings.TaskTimeout",
+            name="RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.NotPersistedAcrossRestart",
             level=2,
             num="15.7",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.RetryInitialBackoff",
+            level=2,
+            num="15.8",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.RetryMaxBackoff",
+            level=2,
+            num="15.9",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.TaskTimeout",
+            level=2,
+            num="15.10",
         ),
         Heading(name="Network resilience", level=1, num="16"),
         Heading(
@@ -2399,7 +2486,10 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_ErrorClassification,
         RQ_ClickHouse_ExportPartition_ErrorClassification_NonRetryable,
         RQ_ClickHouse_ExportPartition_ErrorClassification_Retryable,
+        RQ_ClickHouse_ExportPartition_ErrorClassification_PermanentDestinationErrors,
         RQ_ClickHouse_ExportPartition_LocalBackoffPolicy,
+        RQ_ClickHouse_ExportPartition_LocalBackoffPolicy_State,
+        RQ_ClickHouse_ExportPartition_LocalBackoffPolicy_NotPersistedAcrossRestart,
         RQ_ClickHouse_ExportPartition_Settings_RetryInitialBackoff,
         RQ_ClickHouse_ExportPartition_Settings_RetryMaxBackoff,
         RQ_ClickHouse_ExportPartition_Settings_TaskTimeout,
@@ -2504,10 +2594,13 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 15.1 [RQ.ClickHouse.ExportPartition.ErrorClassification](#rqclickhouseexportpartitionerrorclassification)
     * 15.2 [RQ.ClickHouse.ExportPartition.ErrorClassification.NonRetryable](#rqclickhouseexportpartitionerrorclassificationnonretryable)
     * 15.3 [RQ.ClickHouse.ExportPartition.ErrorClassification.Retryable](#rqclickhouseexportpartitionerrorclassificationretryable)
-    * 15.4 [RQ.ClickHouse.ExportPartition.LocalBackoffPolicy](#rqclickhouseexportpartitionlocalbackoffpolicy)
-    * 15.5 [RQ.ClickHouse.ExportPartition.Settings.RetryInitialBackoff](#rqclickhouseexportpartitionsettingsretryinitialbackoff)
-    * 15.6 [RQ.ClickHouse.ExportPartition.Settings.RetryMaxBackoff](#rqclickhouseexportpartitionsettingsretrymaxbackoff)
-    * 15.7 [RQ.ClickHouse.ExportPartition.Settings.TaskTimeout](#rqclickhouseexportpartitionsettingstasktimeout)
+    * 15.4 [RQ.ClickHouse.ExportPartition.ErrorClassification.PermanentDestinationErrors](#rqclickhouseexportpartitionerrorclassificationpermanentdestinationerrors)
+    * 15.5 [RQ.ClickHouse.ExportPartition.LocalBackoffPolicy](#rqclickhouseexportpartitionlocalbackoffpolicy)
+    * 15.6 [RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.State](#rqclickhouseexportpartitionlocalbackoffpolicystate)
+    * 15.7 [RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.NotPersistedAcrossRestart](#rqclickhouseexportpartitionlocalbackoffpolicynotpersistedacrossrestart)
+    * 15.8 [RQ.ClickHouse.ExportPartition.Settings.RetryInitialBackoff](#rqclickhouseexportpartitionsettingsretryinitialbackoff)
+    * 15.9 [RQ.ClickHouse.ExportPartition.Settings.RetryMaxBackoff](#rqclickhouseexportpartitionsettingsretrymaxbackoff)
+    * 15.10 [RQ.ClickHouse.ExportPartition.Settings.TaskTimeout](#rqclickhouseexportpartitionsettingstasktimeout)
 * 16 [Network resilience](#network-resilience)
     * 16.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
     * 16.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
@@ -3057,6 +3150,8 @@ version: 1.1
 
 Retryable failures SHALL continue until success or timeout, while non-retryable failures SHALL fail immediately.
 
+For backward compatibility the `export_merge_tree_partition_max_retries` setting SHALL still be accepted (it is marked obsolete) and SHALL be silently ignored: supplying it SHALL NOT cause a query error and SHALL have no effect on retry behavior.
+
 ### RQ.ClickHouse.ExportPartition.ResumeAfterFailure
 version: 1.0
 
@@ -3268,6 +3363,21 @@ This lets an export ride out a real outage (e.g. S3 down for 20 minutes) and fin
 | `UNFINISHED` | Iceberg: repeated metadata conflicts after N commit attempts (now retryable instead of terminal) |
 | `FAULT_INJECTED` | Test-only failpoint (e.g., `export_part_retryable_throw`) and other injected retryable faults |
 
+### RQ.ClickHouse.ExportPartition.ErrorClassification.PermanentDestinationErrors
+version: 1.0
+
+[ClickHouse] classifies failures at the ClickHouse `ErrorCode` granularity, which cannot distinguish a *transient* object-storage/catalog error from a *permanent* one. As a result, permanent destination errors that surface as a generic retryable code SHALL currently be treated as retryable — the export SHALL stay `PENDING`, retry with back-off, and only stop at the absolute task timeout (transitioning to `KILLED`), rather than failing fast as `FAILED`.
+
+This applies to, for example:
+
+| Condition | Surfaced as | Current handling |
+|---|---|---|
+| Wrong credentials / access denied (S3 403) | `S3_ERROR` | Retryable → `KILLED` at timeout |
+| Non-existent bucket / wrong endpoint (S3 404) | `S3_ERROR` | Retryable → `KILLED` at timeout |
+| Catalog/destination authentication failure | catalog/HTTP error | Retryable → `KILLED` at timeout |
+
+**Known limitation:** a misconfiguration (typo in bucket, wrong secret key) is only surfaced after `export_merge_tree_partition_task_timeout_seconds` (default 1 day) as `KILLED`, instead of failing fast with a clear `FAILED`. Fast-failing these would require inspecting the underlying HTTP/S3 status, which is not available to the classifier today. Tests SHALL assert this current behavior; changing it to fast-fail is a proposed future improvement.
+
 ### RQ.ClickHouse.ExportPartition.LocalBackoffPolicy
 version: 1.1
 
@@ -3277,6 +3387,7 @@ Back-off exists so a failing part is not retried in a tight, wasteful loop: each
 * The back-off SHALL be **per-replica and in-memory** and SHALL NOT be stored in ZooKeeper/Keeper
 * The back-off SHALL only delay retries on the replica that is backing off, and SHALL NOT prevent another replica from picking up and exporting the same part — so a replica stuck backing off can never block overall progress
 * The delay SHALL grow as `delay = min(initial << (attempts - 1), max)` (capped exponential doubling), where `initial` is `export_merge_tree_partition_retry_initial_backoff_seconds` and `max` is `export_merge_tree_partition_retry_max_backoff_seconds`
+* The delay computation SHALL be robust at the boundaries: when `initial > max` the effective initial delay SHALL be clamped to `max`; `initial = 0` SHALL yield an effectively immediate retry (still bounded by the tick); and arbitrarily large configured values SHALL NOT overflow (they saturate at `max`)
 * The effective back-off resolution is bounded by the export select-task tick (~5 seconds); very short back-offs SHALL be rounded up in practice, and the scheduler SHALL wake up early when a back-off deadline is sooner than the next default tick
 
 With defaults (`initial = 5 s`, `max = 300 s`) the per-replica delay sequence is:
@@ -3296,10 +3407,29 @@ part 2020_3_3_0:
 
 The back-off state SHOULD be observable in `system.replicated_partition_exports.local_backoff_per_part` (part name, attempt count, next retry time) for operational debugging.
 
+### RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.State
+version: 1.0
+
+[ClickHouse] SHALL maintain the per-replica back-off state exposed in `system.replicated_partition_exports.local_backoff_per_part` with the following observable semantics:
+* A part that fails with a retryable error SHALL appear with `attempts >= 1` and a `next_retry_time` in the future
+* `attempts` SHALL increase by one on each successive retryable failure of the same part on the same replica
+* The entry for a part SHALL be cleared once that part is successfully exported (on the replica that exported it)
+* All back-off entries for a task SHALL be pruned once the task reaches a terminal state (`COMPLETED`, `FAILED`, or `KILLED`)
+* A clean export that never hits a retryable failure SHALL show an empty `local_backoff_per_part`
+
+This gives operators an accurate, non-stale view of which parts are currently waiting to be retried and how many times they have failed.
+
+### RQ.ClickHouse.ExportPartition.LocalBackoffPolicy.NotPersistedAcrossRestart
+version: 1.0
+
+[ClickHouse] SHALL keep the back-off state purely in-memory and per-replica, so it SHALL NOT survive a replica restart. After a replica that was backing off a part restarts, its `attempts` count for that part SHALL reset (the part becomes immediately eligible again on that replica), because the state was never written to ZooKeeper/Keeper.
+
+This is a direct consequence of the in-memory design: a restart is effectively a "fresh start" for that replica's pacing, and it never blocks the part cluster-wide.
+
 ### RQ.ClickHouse.ExportPartition.Settings.RetryInitialBackoff
 version: 1.1
 
-[ClickHouse] SHALL support the `export_merge_tree_partition_retry_initial_backoff_seconds` setting (type `UInt64`) that controls the initial delay, in seconds, before retrying a failed part export. The delay grows exponentially per replica-local retry count. The default value SHALL be `5`.
+[ClickHouse] SHALL support the `export_merge_tree_partition_retry_initial_backoff_seconds` setting (type `UInt64`) that controls the initial delay, in seconds, before retrying a failed part export. The delay grows exponentially per replica-local retry count. The default value SHALL be `5`. Values SHALL be parsed as `UInt64`; a non-numeric or out-of-range value SHALL be rejected with a query error.
 
 Lower it to retry sooner (e.g. for fast-recovering, flaky destinations); raise it to back off harder on a struggling destination.
 
@@ -3316,7 +3446,7 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
 ### RQ.ClickHouse.ExportPartition.Settings.RetryMaxBackoff
 version: 1.1
 
-[ClickHouse] SHALL support the `export_merge_tree_partition_retry_max_backoff_seconds` setting (type `UInt64`) that caps the exponential growth of the retry delay, in seconds, for a failed part export. The default value SHALL be `300`. The cap keeps retries from drifting so far apart that a recovered destination sits idle waiting for the next attempt.
+[ClickHouse] SHALL support the `export_merge_tree_partition_retry_max_backoff_seconds` setting (type `UInt64`) that caps the exponential growth of the retry delay, in seconds, for a failed part export. The default value SHALL be `300`. The cap keeps retries from drifting so far apart that a recovered destination sits idle waiting for the next attempt. Values SHALL be parsed as `UInt64`; a non-numeric or out-of-range value SHALL be rejected with a query error.
 
 For example,
 
@@ -3333,6 +3463,8 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
 version: 1.1
 
 [ClickHouse] SHALL support the `export_merge_tree_partition_task_timeout_seconds` setting that defines the absolute wall-clock timeout for an export task. When an export keeps hitting retryable failures, this timeout SHALL be the only mechanism that eventually stops it: once it elapses, the task SHALL transition to `KILLED` (not `FAILED`). The default value SHALL be `86400` (1 day). This is the safety net that bounds "retry forever" — set it to how long an outage you are willing to wait out before giving up.
+
+The timeout SHALL be measured from the export manifest's `create_time`, so it spans replica handoffs and node restarts (the clock does not reset when a different replica takes over). Setting it to `0` SHALL disable the timeout entirely (the task never auto-kills on timeout). Enforcement is best-effort: the actual kill latency is bounded by one manifest-updater poll cycle.
 
 For example,
 
