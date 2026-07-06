@@ -437,6 +437,12 @@ def run_relay_failover(self, source_table, destination_table, partition, nodes, 
     ``mode`` selects the failure source: ``FAILPOINT_MODE`` (per-replica retryable
     failpoint) or ``MINIO_MODE`` (shared MinIO outage).
     """
+    # A real MinIO outage first spins inside the AWS SDK's own retry loop before the
+    # background export worker sees a failure, so the first local back-off entry only
+    # appears after ~60-70s (see retryable_minio_outage_recovers). The failpoint
+    # throws immediately, so the default wait is fine there.
+    backoff_timeout = 120 if mode == MINIO_MODE else 60
+
     with When("I inject a retryable failure and let the first replica start"):
         inject_retryable_failure(mode=mode, nodes=nodes)
         stop_moves(source_table=source_table, nodes=nodes[1:])
@@ -450,7 +456,10 @@ def run_relay_failover(self, source_table, destination_table, partition, nodes, 
 
     with And(f"the first replica {nodes[0].name} backs off"):
         wait_for_local_backoff(
-            source_table=source_table, partition=partition, nodes=[nodes[0]]
+            source_table=source_table,
+            partition=partition,
+            nodes=[nodes[0]],
+            timeout=backoff_timeout,
         )
 
     for i in range(len(nodes) - 1):
@@ -462,7 +471,10 @@ def run_relay_failover(self, source_table, destination_table, partition, nodes, 
 
         with And(f"{nodes[i + 1].name} picks up the part and backs off"):
             wait_for_local_backoff(
-                source_table=source_table, partition=partition, nodes=[nodes[i + 1]]
+                source_table=source_table,
+                partition=partition,
+                nodes=[nodes[i + 1]],
+                timeout=backoff_timeout,
             )
 
     with When("I clear the failure, restart the killed replicas and resume moves"):
@@ -494,6 +506,10 @@ def run_chaos_failover(
 
     down = set()
 
+    # See run_relay_failover: a MinIO outage takes ~60-70s to surface the first
+    # ClickHouse-level failure, so the first local back-off needs a longer wait.
+    backoff_timeout = 120 if mode == MINIO_MODE else 60
+
     with When("I inject a retryable failure and start the export"):
         inject_retryable_failure(mode=mode, nodes=nodes)
         start_export(
@@ -503,7 +519,9 @@ def run_chaos_failover(
             node=nodes[0],
             settings=short_backoff_settings(),
         )
-        wait_for_local_backoff(source_table=source_table, partition=partition)
+        wait_for_local_backoff(
+            source_table=source_table, partition=partition, timeout=backoff_timeout
+        )
 
     with When("I randomly kill and restart replicas"):
         for _ in range(iterations):

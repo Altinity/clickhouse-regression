@@ -1,6 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
+import helpers.config.users_d as users_d
 from helpers.common import getuid
 from helpers.create import partitioned_replicated_merge_tree_table
 from helpers.queries import select_all_ordered
@@ -163,6 +164,7 @@ def settings_boundaries(self, initial, max_backoff):
             source_table=source_table,
             destination_table=s3_table_name,
         )
+
 
 @TestScenario
 @Requirements(
@@ -803,16 +805,36 @@ def all_replicas_backoff_independently(self):
 )
 def backoff_resets_on_restart(self):
     """Check that the in-memory back-off does not survive a replica restart: after the
-    backing-off replica restarts, its attempt count resets."""
+    backing-off replica restarts, its attempt count resets.
+
+    The failure source is a wrong-credentials S3 destination (a persistent
+    ``S3_ERROR``) rather than an in-memory failpoint. A failpoint is wiped when the
+    replica is killed, leaving a window in which the restarted replica exports the
+    part successfully (task ``COMPLETED``, back-off entries pruned) before the
+    failpoint can be re-armed — so a fresh back-off never reappears and the reset
+    is unobservable. A permanent credential error keeps failing across the restart,
+    so the replica deterministically re-registers a back-off that starts over from
+    a low attempt count.
+    """
 
     failing_node = self.context.nodes[0]
     healthy_nodes = [n for n in self.context.nodes if n is not failing_node]
     source_table = None
 
     try:
-        with Given("I create a source table and an S3 table on every replica"):
-            source_table, s3_table_name = populated_source_and_s3_table(
-                destination_cluster="replicated_cluster"
+        with Given(
+            "I create a source table and a wrong-credentials S3 table on every replica"
+        ):
+            source_table = f"source_{getuid()}"
+            partitioned_replicated_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                columns=default_columns(),
+                stop_merges=True,
+                cluster="replicated_cluster",
+            )
+            s3_table_name = create_s3_table_wrong_credentials(
+                cluster="replicated_cluster"
             )
             partition = get_partitions(table_name=source_table, node=failing_node)[0]
 
@@ -820,9 +842,6 @@ def backoff_resets_on_restart(self):
             "I stop moves on the healthy replicas so only the first replica exports"
         ):
             stop_moves(source_table=source_table, nodes=healthy_nodes)
-
-        with And("I enable the retryable failpoint on the failing replica only"):
-            enable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=[failing_node])
 
         with When("I start the export and let the attempt count grow"):
             start_export(
@@ -835,18 +854,17 @@ def backoff_resets_on_restart(self):
             wait_for_backoff_attempts(
                 source_table=source_table,
                 partition=partition,
-                min_attempts=3,
+                min_attempts=4,
                 nodes=[failing_node],
             )
             before = get_backoff_attempts(
                 source_table=source_table, partition=partition, node=failing_node
             )
 
-        with And("I restart the failing replica and re-enable the failpoint"):
+        with And("I restart the failing replica"):
             kill_node(node=failing_node)
             start_node(node=failing_node)
             wait_for_nodes_ready(nodes=[failing_node])
-            enable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=[failing_node])
 
         with Then("the attempt count starts over (in-memory state was lost)"):
             wait_for_backoff_attempts(
@@ -854,6 +872,7 @@ def backoff_resets_on_restart(self):
                 partition=partition,
                 min_attempts=1,
                 nodes=[failing_node],
+                delay=1,
             )
             after = get_backoff_attempts(
                 source_table=source_table, partition=partition, node=failing_node
@@ -1154,6 +1173,28 @@ def feature(self):
       are retried with a per-replica in-memory exponential back-off until the
       export succeeds or the absolute task timeout elapses (task becomes KILLED).
     """
+
+    with Given(
+        "I lower s3_retry_attempts so background exports surface object-storage "
+        "failures quickly during MinIO-outage scenarios"
+    ):
+        # The background export worker's S3 client retries each operation up to
+        # ``s3_retry_attempts`` (default 500) times. Once earlier scenarios have
+        # warmed the S3 connection pool, a killed MinIO leaves dead keep-alive
+        # sockets whose reads block per retry, so the first ClickHouse-level failure
+        # (and therefore the first local back-off entry) can take minutes to appear
+        # -> the MinIO-outage scenarios time out even though the export is behaving
+        # correctly. In isolation (cold pool) a fresh connect() is refused instantly
+        # and the same scenario passes in seconds. Lowering the profile default
+        # makes failures surface fast regardless of pool state. It must live in
+        # users.d (25.8+ rejects the setting in config.d) and it reaches the
+        # background worker (unlike query-level s3_retry_* settings).
+        for node in self.context.nodes:
+            users_d.create_and_add(
+                entries={"profiles": {"default": {"s3_retry_attempts": "3"}}},
+                config_file="s3_retry_attempts.xml",
+                node=node,
+            )
 
     Feature(run=happy_path)
     Feature(run=error_classification_and_observability)
