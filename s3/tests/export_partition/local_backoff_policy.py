@@ -19,15 +19,9 @@ def populated_source_and_s3_table(
 ):
     """Create a populated replicated source table and an empty S3 destination table.
 
-    ``destination_cluster`` controls where the S3 destination table is created. It
-    defaults to ``None`` (only the initiating node). Scenarios that expect a
-    replica other than the initiator to complete the export must pass the cluster
-    name so every replica has a destination table to write to — otherwise a
-    healthy replica has nothing to export into and the task can only ever be
-    finished by the initiating node.
-
-    ``destination_columns`` overrides the S3 table columns (used by the
-    non-retryable schema-mismatch scenarios).
+    ``destination_cluster`` creates the destination on every replica (needed when a
+    non-initiating replica must complete the export); ``None`` uses only the
+    initiating node. ``destination_columns`` overrides the S3 table columns.
     """
     source_table = f"source_{getuid()}"
     partitioned_replicated_merge_tree_table(
@@ -46,11 +40,6 @@ def populated_source_and_s3_table(
         columns=destination_columns,
     )
     return source_table, s3_table_name
-
-
-# ---------------------------------------------------------------------------
-# Phase 1 — Happy path
-# ---------------------------------------------------------------------------
 
 
 @TestScenario
@@ -227,11 +216,6 @@ def task_timeout_zero_disables(self):
             disable_failpoint(failpoint=RETRYABLE_FAILPOINT)
 
 
-# ---------------------------------------------------------------------------
-# Phase 2 — Error classification and observability
-# ---------------------------------------------------------------------------
-
-
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_SystemTables_Exports("1.0"))
 def local_backoff_per_part_column(self):
@@ -403,11 +387,8 @@ def retryable_minio_outage_recovers(self):
             )
 
         with Then("a local back-off entry appears and the task stays PENDING"):
-            # A real MinIO outage first spins inside the AWS SDK's own retry loop
-            # (query-level s3_retry_* settings do not reach the background export
-            # worker), so the first ClickHouse-level part failure — and therefore the
-            # first local back-off entry — only appears after ~60-70s. Wait longer than
-            # that window so the retryable failure registers before the test gives up.
+            # A real MinIO outage spins inside the AWS SDK retry loop first, so the
+            # first ClickHouse-level failure can take ~60-70s to surface; wait longer.
             wait_for_local_backoff(
                 source_table=source_table, partition=partition, timeout=120
             )
@@ -637,15 +618,8 @@ def s3_permanent_error_retries_until_timeout(self):
             timeout=120,
         )
 
-    # No destination-emptiness check here: the destination is deliberately
-    # configured with wrong credentials, so a SELECT against it fails with the
-    # same S3_ERROR (SignatureDoesNotMatch) as the writes. Reaching KILLED (every
-    # write attempt failed before committing) is the documented behavior.
-
-
-# ---------------------------------------------------------------------------
-# Phase 3 — Multi-replica choreography
-# ---------------------------------------------------------------------------
+    # No destination-emptiness check: the wrong credentials make a SELECT against
+    # the destination fail with the same S3_ERROR as the writes.
 
 
 @TestScenario
@@ -654,17 +628,13 @@ def s3_permanent_error_retries_until_timeout(self):
     RQ_ClickHouse_ExportPartition_ResumeAfterFailure("1.0"),
 )
 def local_backoff_is_replica_local(self):
-    """Check that the local back-off is replica-local: a replica that backs off must
-    not block another replica from completing the same part, and the back-off state
-    must only appear on the affected replica.
+    """Check that the local back-off is replica-local: a backing-off replica must not
+    block another replica from completing the same part, and the back-off state must
+    only appear on the affected replica.
 
-    The hand-off is orchestrated deterministically with SYSTEM STOP/START MOVES,
-    mirroring the upstream integration test
-    ``test_export_partition_local_backoff_does_not_block_other_replica``. Without
-    this two-phase control the failing replica wakes on its own back-off expiry
-    (~1-2s) and re-locks the freed part before the healthy replicas' coarser
-    (~5s) scheduler tick, starving them and stalling the export until the task
-    timeout. See ``export_partition_local_backoff_policy.md`` for details.
+    Moves are stopped/started deterministically so the failing replica does not wake
+    on its own back-off expiry and re-lock the part before the healthy replicas' tick.
+    See ``export_partition_local_backoff_policy.md`` for details.
     """
 
     failing_node = self.context.nodes[0]
@@ -808,13 +778,10 @@ def backoff_resets_on_restart(self):
     backing-off replica restarts, its attempt count resets.
 
     The failure source is a wrong-credentials S3 destination (a persistent
-    ``S3_ERROR``) rather than an in-memory failpoint. A failpoint is wiped when the
-    replica is killed, leaving a window in which the restarted replica exports the
-    part successfully (task ``COMPLETED``, back-off entries pruned) before the
-    failpoint can be re-armed — so a fresh back-off never reappears and the reset
-    is unobservable. A permanent credential error keeps failing across the restart,
-    so the replica deterministically re-registers a back-off that starts over from
-    a low attempt count.
+    ``S3_ERROR``) rather than an in-memory failpoint, which would be wiped by the
+    restart and let the replica export successfully before it could re-arm. The
+    permanent error keeps failing across the restart, so the back-off deterministically
+    re-registers from a low attempt count.
     """
 
     failing_node = self.context.nodes[0]
@@ -1121,6 +1088,7 @@ def chaos_failover_minio(self):
 
 @TestFeature
 def happy_path(self):
+    """Exports succeed with valid back-off settings, and invalid settings are rejected."""
     Scenario(run=backoff_settings_accepted)
     Scenario(run=happy_default_settings)
     Scenario(run=no_backoff_on_clean_export)
@@ -1131,6 +1099,8 @@ def happy_path(self):
 
 @TestFeature
 def error_classification_and_observability(self):
+    """Non-retryable errors fail fast, retryable errors back off and stay PENDING, and
+    the back-off state is observable in system.replicated_partition_exports."""
     Scenario(run=local_backoff_per_part_column)
     Scenario(run=non_retryable_error_fails_task)
     Scenario(run=non_retryable_column_count_mismatch)
@@ -1146,6 +1116,8 @@ def error_classification_and_observability(self):
 
 @TestFeature
 def multi_replica_choreography(self):
+    """The replica-local back-off, task timeout, and idempotency hold across replica
+    hand-offs, kills/restarts, and MinIO outages."""
     Scenario(run=local_backoff_is_replica_local)
     Scenario(run=all_replicas_backoff_independently)
     Scenario(run=backoff_resets_on_restart)
@@ -1163,7 +1135,7 @@ def multi_replica_choreography(self):
     RQ_ClickHouse_ExportPartition_RetryMechanism("1.1"),
     RQ_ClickHouse_ExportPartition_ResumeAfterFailure("1.0"),
 )
-def feature(self):
+def feature(self, s3_retry_attempts=3):
     """Check the per-part local back-off policy for export partition (Altinity/ClickHouse#1984).
 
     Failures are split into two kinds:
@@ -1178,20 +1150,15 @@ def feature(self):
         "I lower s3_retry_attempts so background exports surface object-storage "
         "failures quickly during MinIO-outage scenarios"
     ):
-        # The background export worker's S3 client retries each operation up to
-        # ``s3_retry_attempts`` (default 500) times. Once earlier scenarios have
-        # warmed the S3 connection pool, a killed MinIO leaves dead keep-alive
-        # sockets whose reads block per retry, so the first ClickHouse-level failure
-        # (and therefore the first local back-off entry) can take minutes to appear
-        # -> the MinIO-outage scenarios time out even though the export is behaving
-        # correctly. In isolation (cold pool) a fresh connect() is refused instantly
-        # and the same scenario passes in seconds. Lowering the profile default
-        # makes failures surface fast regardless of pool state. It must live in
-        # users.d (25.8+ rejects the setting in config.d) and it reaches the
-        # background worker (unlike query-level s3_retry_* settings).
+        # With the default (500), a warmed connection pool + killed MinIO leaves the
+        # export worker blocking on dead sockets, so failures take minutes to surface
+        # and the outage scenarios time out. Must live in users.d (config.d is rejected
+        # on 25.8+) to reach the background worker.
         for node in self.context.nodes:
             users_d.create_and_add(
-                entries={"profiles": {"default": {"s3_retry_attempts": "3"}}},
+                entries={
+                    "profiles": {"default": {"s3_retry_attempts": s3_retry_attempts}}
+                },
                 config_file="s3_retry_attempts.xml",
                 node=node,
             )
