@@ -8,7 +8,15 @@ from .storage import (
     valid_partition_key_types_columns,
     create_temp_bucket,
     create_s3_table,
+    create_s3_table_wrong_credentials,
     escape_json_for_sql,
+)
+
+# Node lifecycle steps
+from .nodes import (
+    kill_node,
+    start_node,
+    wait_for_nodes_ready,
 )
 
 # Container management steps
@@ -84,6 +92,47 @@ from .verification import (
     export_and_verify_columns,
 )
 
+# Local back-off policy steps (Altinity/ClickHouse#1984)
+from .local_backoff import (
+    RETRYABLE_FAILPOINT,
+    NON_RETRYABLE_FAILPOINT,
+    INITIAL_BACKOFF_SECONDS,
+    MAX_BACKOFF_SECONDS,
+    TASK_TIMEOUT_SECONDS,
+    OBSOLETE_MAX_RETRIES,
+    DEFAULT_INITIAL_BACKOFF,
+    DEFAULT_MAX_BACKOFF,
+    DEFAULT_TASK_TIMEOUT,
+    FAILPOINT_MODE,
+    MINIO_MODE,
+    short_backoff_settings,
+    enable_failpoint,
+    disable_failpoint,
+    stop_moves,
+    start_moves,
+    start_export,
+    wait_for_export_status,
+    get_export_status,
+    get_local_backoff_count,
+    wait_for_local_backoff,
+    get_local_backoff_column_type,
+    get_backoff_attempts,
+    wait_for_backoff_attempts,
+    backoff_next_retry_in_future,
+    wait_for_backoff_next_retry_in_future,
+    wait_for_local_backoff_on_all,
+    assert_task_stays_pending,
+    assert_destination_empty,
+    assert_destination_unchanged,
+    assert_setting_rejected,
+    assert_export_fails_fast,
+    reset_backoff_test_state,
+    inject_retryable_failure,
+    clear_retryable_failure,
+    run_relay_failover,
+    run_chaos_failover,
+)
+
 # System monitoring verification steps
 from .system_monitoring import (
     verify_export_fields_populated,
@@ -108,7 +157,12 @@ __all__ = [
     "valid_partition_key_types_columns",
     "create_temp_bucket",
     "create_s3_table",
+    "create_s3_table_wrong_credentials",
     "escape_json_for_sql",
+    # Node lifecycle
+    "kill_node",
+    "start_node",
+    "wait_for_nodes_ready",
     # Containers
     "kill_minio",
     "start_minio",
@@ -164,6 +218,44 @@ __all__ = [
     # Verification
     "source_matches_destination",
     "export_and_verify_columns",
+    # Local back-off policy
+    "RETRYABLE_FAILPOINT",
+    "NON_RETRYABLE_FAILPOINT",
+    "INITIAL_BACKOFF_SECONDS",
+    "MAX_BACKOFF_SECONDS",
+    "TASK_TIMEOUT_SECONDS",
+    "OBSOLETE_MAX_RETRIES",
+    "DEFAULT_INITIAL_BACKOFF",
+    "DEFAULT_MAX_BACKOFF",
+    "DEFAULT_TASK_TIMEOUT",
+    "FAILPOINT_MODE",
+    "MINIO_MODE",
+    "short_backoff_settings",
+    "enable_failpoint",
+    "disable_failpoint",
+    "stop_moves",
+    "start_moves",
+    "start_export",
+    "wait_for_export_status",
+    "get_export_status",
+    "get_local_backoff_count",
+    "wait_for_local_backoff",
+    "get_local_backoff_column_type",
+    "get_backoff_attempts",
+    "wait_for_backoff_attempts",
+    "backoff_next_retry_in_future",
+    "wait_for_backoff_next_retry_in_future",
+    "wait_for_local_backoff_on_all",
+    "assert_task_stays_pending",
+    "assert_destination_empty",
+    "assert_destination_unchanged",
+    "assert_setting_rejected",
+    "assert_export_fails_fast",
+    "reset_backoff_test_state",
+    "inject_retryable_failure",
+    "clear_retryable_failure",
+    "run_relay_failover",
+    "run_chaos_failover",
     # System monitoring
     "verify_export_fields_populated",
     "verify_export_status",

@@ -776,6 +776,8 @@ do_not_merge_across_partitions_select_final = r"""'{"default":"0"}'"""
 
 drain_timeout = r"""'{"default":"3"}'"""
 
+dynamic_throw_on_type_mismatch = r"""'{"default":"1"}'"""
+
 empty_result_for_aggregation_by_constant_keys_on_empty_set = r"""'{"default":"1"}'"""
 
 empty_result_for_aggregation_by_empty_set = r"""'{"default":"0"}'"""
@@ -3045,6 +3047,8 @@ validate_experimental_and_suspicious_types_inside_nested_types = r"""'{"default"
 validate_mutation_query = r"""'{"default":"1"}'"""
 
 validate_polygons = r"""'{"default":"1"}'"""
+
+variant_throw_on_type_mismatch = r"""'{"default":"1"}'"""
 
 vector_search_filter_strategy = r"""'{"default":"auto"}'"""
 

@@ -418,7 +418,7 @@ def key_or_iv_length_for_mode(self, mode, key_len, iv_len):
                     "DB::Exception: Failed to decrypt"
                     if check_clickhouse_version("<25.4")(self)
                     else "DB::Exception: Cannot decrypt: invalid PKCS#7 padding"
-                    if check_clickhouse_version(">=26.1")(self)
+                    if check_clickhouse_version(">26.6")(self)
                     else "DB::Exception: EVP_DecryptFinal_ex failed"
                 ),
             )
@@ -450,7 +450,7 @@ def key_or_iv_length_for_mode(self, mode, key_len, iv_len):
                         "DB::Exception: Failed to decrypt"
                         if check_clickhouse_version("<25.4")(self)
                         else "DB::Exception: Cannot decrypt: invalid PKCS#7 padding"
-                        if check_clickhouse_version(">=26.1")(self)
+                        if check_clickhouse_version(">26.6")(self)
                         else "DB::Exception: EVP_DecryptFinal_ex failed"
                     ),
                 )
@@ -475,7 +475,7 @@ def key_or_iv_length_for_mode(self, mode, key_len, iv_len):
                         "DB::Exception: Failed to decrypt"
                         if check_clickhouse_version("<25.4")(self)
                         else "DB::Exception: Cannot decrypt: invalid PKCS#7 padding"
-                        if check_clickhouse_version(">=26.1")(self)
+                        if check_clickhouse_version(">26.6")(self)
                         else "DB::Exception: EVP_DecryptFinal_ex failed"
                     ),
                 )

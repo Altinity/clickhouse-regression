@@ -304,6 +304,13 @@ xfails = {
             and check_if_not_antalya_build(),
         )
     ],
+    "/iceberg/export partition/: catalog/catalogs/drop with purge allows recreating same table": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1906",
+            check_clickhouse_version("<=26.3.13.20001"),
+        )
+    ],
 }
 
 ffails = {

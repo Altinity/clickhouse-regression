@@ -126,7 +126,7 @@ def configured_volume(self, volume):
 
 
 @TestSketch(Scenario)
-@Flags(TE)
+# @Flags(TE)
 def volume_combos(self):
     """Test exporting to various storage policies."""
 

@@ -258,6 +258,12 @@ def pending_mutations_disabled(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
+    with And("I capture the source data before starting the mutation"):
+        source_data_before_mutation = select_all_ordered(
+            table_name=source_table,
+            node=self.context.node,
+        )
+
     with And("I start a mutation and stop merges to keep it pending"):
         delete.alter_table_delete_rows(
             table_name=source_table,
@@ -273,10 +279,13 @@ def pending_mutations_disabled(self):
             settings=[("export_merge_tree_part_throw_on_pending_mutations", 0)],
         )
 
-    with Then("I should not see an error and export should succeed"):
+    with Then(
+        "the export should succeed with the data as it was before the pending mutation"
+    ):
         source_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
+            source_data=source_data_before_mutation,
         )
 
 
@@ -302,6 +311,12 @@ def pending_patch_parts_disabled(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
+    with And("I capture the source data before creating patch parts"):
+        source_data_before_update = select_all_ordered(
+            table_name=source_table,
+            node=self.context.node,
+        )
+
     with And("I perform a lightweight UPDATE to create patch parts"):
         self.context.node.query(
             f"UPDATE {source_table} SET i = i + 1000 WHERE p = 1",
@@ -309,20 +324,22 @@ def pending_patch_parts_disabled(self):
             steps=True,
         )
 
-    with When("I try to export partitions with pending patch parts (default settings)"):
-        results = export_partitions(
+    with When("I export partitions with pending patch parts (throw setting disabled)"):
+        export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
-            exitcode=1,
-            check_export=False,
+            exitcode=0,
             settings=[("export_merge_tree_part_throw_on_pending_patch_parts", 0)],
         )
 
-    with Then("I should not see an error and export should succeed"):
+    with Then(
+        "the export should succeed with the data as it was before the pending patch parts"
+    ):
         source_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
+            source_data=source_data_before_update,
         )
 
 
