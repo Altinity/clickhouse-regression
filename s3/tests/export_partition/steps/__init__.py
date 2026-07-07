@@ -9,6 +9,7 @@ from .storage import (
     create_temp_bucket,
     create_s3_table,
     create_s3_table_wrong_credentials,
+    create_s3_table_wrong_endpoint,
     escape_json_for_sql,
 )
 
@@ -21,6 +22,8 @@ from .nodes import (
 
 # Container management steps
 from .containers import (
+    block_s3_network,
+    unblock_s3_network,
     kill_minio,
     start_minio,
     kill_keeper,
@@ -158,12 +161,15 @@ __all__ = [
     "create_temp_bucket",
     "create_s3_table",
     "create_s3_table_wrong_credentials",
+    "create_s3_table_wrong_endpoint",
     "escape_json_for_sql",
     # Node lifecycle
     "kill_node",
     "start_node",
     "wait_for_nodes_ready",
     # Containers
+    "block_s3_network",
+    "unblock_s3_network",
     "kill_minio",
     "start_minio",
     "kill_keeper",
