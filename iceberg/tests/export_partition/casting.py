@@ -263,7 +263,7 @@ def feature(self, minio_root_user, minio_root_password):
                 minio_root_user=minio_root_user,
                 minio_root_password=minio_root_password,
             )
-    with Feature("out_of_bounds"):
+    with Feature("out of bounds"):
         for scenario in OUT_OF_BOUNDS_SCENARIOS:
             Scenario(test=scenario, flags=TE)(
                 minio_root_user=minio_root_user,

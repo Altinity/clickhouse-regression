@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_post_26_3_13_20001
 
 from iceberg.tests.export_partition.steps.common import (
     count_rows,
@@ -23,9 +23,6 @@ from iceberg.tests.export_partition.steps.common import (
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
 )
-
-BAD_ARGUMENTS = 36
-LOSSY_CAST_REJECTION_MESSAGE = "lossy cast"
 from iceberg.tests.export_partition.steps.casting_iceberg_destination import (
     create_casting_iceberg_destination,
 )
@@ -40,6 +37,23 @@ from iceberg.tests.export_partition.steps.verification import (
     assert_destination_row_count,
     select_from_destination,
 )
+
+BAD_ARGUMENTS = 36
+INCOMPATIBLE_COLUMNS = 122
+LOSSY_CAST_REJECTION_MESSAGE = "lossy cast"
+
+
+def _lossy_cast_rejection_expectation(test):
+    """Client exit code / message for lossy-cast rejection without the setting.
+
+    Builds ``<= 26.3.13.20001.altinityantalya``: reject with
+    ``BAD_ARGUMENTS`` (36) / ``lossy cast``. Antalya builds
+    ``> 26.3.13.20001`` use ``INCOMPATIBLE_COLUMNS`` (122), matching
+    ``schema_evolution.source_only_schema_drift_rejected``.
+    """
+    if check_if_antalya_post_26_3_13_20001(test):
+        return INCOMPATIBLE_COLUMNS, "INCOMPATIBLE_COLUMNS"
+    return BAD_ARGUMENTS, LOSSY_CAST_REJECTION_MESSAGE
 
 
 @dataclass(frozen=True)
@@ -361,14 +375,17 @@ def run_cast_parity_case(
     )
 
     if case.expect_rejection:
+        rejection_exitcode, rejection_message = _lossy_cast_rejection_expectation(
+            self
+        )
         with When("EXPORT PARTITION is rejected for lossy cast without setting"):
             export_partition(
                 source_table=source_table,
                 destination=dest_export,
                 partition_id=partition_id,
                 settings=export_settings,
-                exitcode=BAD_ARGUMENTS,
-                message=LOSSY_CAST_REJECTION_MESSAGE,
+                exitcode=rejection_exitcode,
+                message=rejection_message,
                 wait_for_completion=False,
                 node=node,
             )
