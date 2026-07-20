@@ -186,3 +186,21 @@ def create_s3_table_wrong_credentials(
         cluster=cluster,
         secret_access_key="wrong_secret_key_deadbeef",
     )
+
+
+@TestStep(Given)
+def create_s3_table_wrong_endpoint(
+    self, table_name="s3_bad_endpoint", columns=None, cluster=None
+):
+    """Create a destination S3 table pointing at a non-existent bucket on the MinIO
+    endpoint (valid credentials), so writes fail with a NoSuchBucket (S3_ERROR) error.
+
+    Pass ``cluster`` to create the destination on every replica."""
+    uri = f"http://minio1:9001/nonexistent-{getuid()}/data/"
+    return create_s3_table(
+        table_name=table_name,
+        create_new_bucket=False,
+        columns=columns,
+        cluster=cluster,
+        uri=uri,
+    )

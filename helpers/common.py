@@ -207,6 +207,19 @@ def check_if_antalya_post_26_3_10_20001(test=None):
     )
 
 
+# After Antalya 26.3.13.20001, EXPORT PARTITION lossy-cast rejection uses
+# INCOMPATIBLE_COLUMNS (122) instead of BAD_ARGUMENTS (36).
+ANTALYA_POST_26_3_13_20001 = ">26.3.13.20001"
+
+
+def check_if_antalya_post_26_3_13_20001(test=None):
+    """True on Antalya builds newer than ``26.3.13.20001.altinityantalya``."""
+    return (
+        check_if_antalya_build(test)
+        and check_clickhouse_version(ANTALYA_POST_26_3_13_20001)(test)
+    )
+
+
 def check_clickhouse_version_or_antalya(version):
     """Return a predicate that is True when either ``check_clickhouse_version(version)``
     matches *or* the build is an Antalya build.

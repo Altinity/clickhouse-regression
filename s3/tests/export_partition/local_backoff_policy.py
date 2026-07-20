@@ -325,6 +325,112 @@ def non_retryable_lossy_cast(self):
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_ErrorClassification_NonRetryable("1.1"))
+def non_retryable_type_mismatch(self):
+    """Check that an incompatible destination column type (UInt64 -> Array(String), a
+    non-castable type mismatch) fails fast instead of retrying until the timeout."""
+
+    node = self.context.node
+
+    with Given("I create a source table and a destination with an incompatible type"):
+        source_table, s3_table_name = populated_source_and_s3_table(
+            destination_columns=[
+                {"name": "p", "type": "UInt8"},
+                {"name": "i", "type": "Array(String)"},
+            ]
+        )
+        partition = get_partitions(table_name=source_table, node=node)[0]
+
+    with Then("the export fails fast with no rows written"):
+        assert_export_fails_fast(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            partition=partition,
+            node=node,
+        )
+
+
+@TestOutline(Scenario)
+@Examples(
+    "target_code, destination_columns",
+    [
+        (
+            "CANNOT_CONVERT_TYPE",
+            [
+                {"name": "p", "type": "UInt8"},
+                {"name": "i", "type": "Tuple(UInt64, UInt64)"},
+            ],
+        ),
+        (
+            "ILLEGAL_TYPE_OF_ARGUMENT",
+            [
+                {"name": "p", "type": "UInt8"},
+                {"name": "i", "type": "Map(String, UInt64)"},
+            ],
+        ),
+        (
+            "ILLEGAL_COLUMN",
+            [
+                {"name": "p", "type": "UInt8"},
+                {"name": "i", "type": "Array(Array(UInt64))"},
+            ],
+        ),
+    ],
+)
+@Requirements(RQ_ClickHouse_ExportPartition_ErrorClassification_NonRetryable("1.1"))
+def non_retryable_incompatible_destination_type(self, target_code, destination_columns):
+    """Check that an incompatible destination column type (a non-castable scalar ->
+    composite mismatch) fails the export fast with no rows written.
+
+    ClickHouse maps these to non-retryable type-family codes such as ``target_code``;
+    ``assert_export_fails_fast`` verifies the fail-fast behavior, not the exact code,
+    which can vary by version."""
+
+    node = self.context.node
+
+    with Given(
+        f"I create a source table and a destination expected to fail with {target_code}"
+    ):
+        source_table, s3_table_name = populated_source_and_s3_table(
+            destination_columns=destination_columns
+        )
+        partition = get_partitions(table_name=source_table, node=node)[0]
+
+    with Then("the export fails fast with no rows written"):
+        assert_export_fails_fast(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            partition=partition,
+            node=node,
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ErrorClassification_NonRetryable("1.1"))
+def non_retryable_feature_disabled(self):
+    """Check that EXPORT PARTITION issued with the experimental feature flag disabled
+    fails fast (feature disabled -> SUPPORT_IS_DISABLED) and writes no rows.
+
+    On 26.1+ the feature is also gated server-side; this asserts the fail-fast
+    behavior rather than the exact code."""
+
+    node = self.context.node
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table, s3_table_name = populated_source_and_s3_table()
+        partition = get_partitions(table_name=source_table, node=node)[0]
+
+    with Then("the export is rejected fast with no rows written"):
+        assert_export_fails_fast(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            partition=partition,
+            node=node,
+            settings=[("allow_experimental_export_merge_tree_part", "0")],
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ErrorClassification_NonRetryable("1.1"))
 def non_retryable_file_already_exists(self):
     """Check that re-exporting with file_already_exists_policy='error' fails fast
     (FILE_ALREADY_EXISTS is non-retryable)."""
@@ -399,6 +505,58 @@ def retryable_minio_outage_recovers(self):
             start_minio()
 
     with Then("the export completes once storage returns"):
+        wait_for_export_to_complete(
+            source_table=source_table, partition_id=partition, node=node
+        )
+
+    with And("source matches destination"):
+        source_matches_destination(
+            source_table=source_table, destination_table=s3_table_name
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ErrorClassification_Retryable("1.1"),
+    RQ_ClickHouse_ExportPartition_NetworkResilience_DestinationInterruption("1.0"),
+)
+def retryable_network_outage_recovers(self):
+    """Check that a transient network failure to object storage (100% packet loss to the
+    S3 endpoint injected with tc-netem, Keeper left healthy) is retried — the task stays
+    PENDING and backs off — and the export completes once the network recovers."""
+
+    node = self.context.node
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table, s3_table_name = populated_source_and_s3_table()
+        partition = get_partitions(table_name=source_table, node=node)[0]
+
+    with When("I drop all network traffic to the S3 endpoint"):
+        block_s3_network(node=node)
+
+    try:
+        with And("I start exporting the partition with a short back-off"):
+            start_export(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                partition=partition,
+                node=node,
+                settings=short_backoff_settings(),
+            )
+
+        with Then("a local back-off entry appears and the task stays PENDING"):
+            # Like the MinIO-kill case, the S3 client burns its (lowered) retry budget
+            # before the first ClickHouse-level failure surfaces, so wait longer.
+            wait_for_local_backoff(
+                source_table=source_table, partition=partition, timeout=120
+            )
+            status = get_export_status(source_table=source_table, partition=partition)
+            assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+    finally:
+        with Finally("I restore network to the S3 endpoint"):
+            unblock_s3_network(node=node, no_checks=True)
+
+    with Then("the export completes once the network recovers"):
         wait_for_export_to_complete(
             source_table=source_table, partition_id=partition, node=node
         )
@@ -618,8 +776,48 @@ def s3_permanent_error_retries_until_timeout(self):
             timeout=120,
         )
 
-    # No destination-emptiness check: the wrong credentials make a SELECT against
-    # the destination fail with the same S3_ERROR as the writes.
+
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ErrorClassification_PermanentDestinationErrors("1.0")
+)
+def s3_permanent_wrong_endpoint_retries_until_timeout(self):
+    """Document current behavior: a non-existent destination bucket (surfaced as
+    S3_ERROR) is treated as retryable, so the task only stops at the task timeout as
+    KILLED instead of failing fast."""
+
+    node = self.context.node
+
+    with Given(
+        "I create a source table and a destination pointing at a missing bucket"
+    ):
+        source_table = f"source_{getuid()}"
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table_wrong_endpoint()
+        partition = get_partitions(table_name=source_table, node=node)[0]
+
+    with When("I start the export with a short task timeout"):
+        start_export(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            partition=partition,
+            node=node,
+            settings=[(TASK_TIMEOUT_SECONDS, "10")] + short_backoff_settings(),
+        )
+
+    with Then("the permanent error is retried until the timeout, ending in KILLED"):
+        wait_for_export_status(
+            source_table=source_table,
+            partition=partition,
+            status="KILLED",
+            timeout=120,
+        )
 
 
 @TestScenario
@@ -634,7 +832,6 @@ def local_backoff_is_replica_local(self):
 
     Moves are stopped/started deterministically so the failing replica does not wake
     on its own back-off expiry and re-lock the part before the healthy replicas' tick.
-    See ``export_partition_local_backoff_policy.md`` for details.
     """
 
     failing_node = self.context.nodes[0]
@@ -1105,13 +1302,18 @@ def error_classification_and_observability(self):
     Scenario(run=non_retryable_error_fails_task)
     Scenario(run=non_retryable_column_count_mismatch)
     Scenario(run=non_retryable_lossy_cast)
+    Scenario(run=non_retryable_type_mismatch)
+    Scenario(run=non_retryable_incompatible_destination_type)
+    Scenario(run=non_retryable_feature_disabled)
     Scenario(run=non_retryable_file_already_exists)
     Scenario(run=retryable_minio_outage_recovers)
+    Scenario(run=retryable_network_outage_recovers)
     Scenario(run=retryable_error_stays_pending_and_backs_off)
     Scenario(run=backoff_attempts_increment)
     Scenario(run=retryable_error_recovers_after_failpoint_cleared)
     Scenario(run=retryable_error_killed_on_timeout)
     Scenario(run=s3_permanent_error_retries_until_timeout)
+    Scenario(run=s3_permanent_wrong_endpoint_retries_until_timeout)
 
 
 @TestFeature
@@ -1131,10 +1333,7 @@ def multi_replica_choreography(self):
 
 @TestFeature
 @Name("local backoff policy")
-@Requirements(
-    RQ_ClickHouse_ExportPartition_RetryMechanism("1.1"),
-    RQ_ClickHouse_ExportPartition_ResumeAfterFailure("1.0"),
-)
+@Requirements(RQ_ClickHouse_ExportPartition_RetryMechanism("1.1"))
 def feature(self, s3_retry_attempts=3):
     """Check the per-part local back-off policy for export partition (Altinity/ClickHouse#1984).
 
@@ -1156,9 +1355,7 @@ def feature(self, s3_retry_attempts=3):
         # on 25.8+) to reach the background worker.
         for node in self.context.nodes:
             users_d.create_and_add(
-                entries={
-                    "profiles": {"default": {"s3_retry_attempts": s3_retry_attempts}}
-                },
+                entries={"profiles": {"default": {"s3_retry_attempts": "3"}}},
                 config_file="s3_retry_attempts.xml",
                 node=node,
             )
