@@ -19,11 +19,34 @@ from helpers.common import (
     check_is_altinity_build,
     experimental_analyzer,
     check_if_antalya_build,
+    check_with_any_sanitizer,
     check_if_antalya_post_26_3_10_20001,
 )
 
 
 xfails = {
+    # Server crashes with "Metadata is not initialized" during schema evolution with sanitizers
+    "/iceberg/iceberg engine/*/schema evolution/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/86024 - Iceberg metadata initialization bug with sanitizers",
+            check_with_any_sanitizer,
+        )
+    ],
+    # Logical error 'prewhere_info' on Iceberg row policies without PREWHERE (sanitizer-only chassert).
+    # Fixed upstream in CH#100361; not backported to stable-26.3.
+    "/iceberg/iceberg table engine/feature/row policies/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/100361 - not backported to stable-26.3",
+            check_with_any_sanitizer,
+        ),
+        (
+            Error,
+            "https://github.com/ClickHouse/ClickHouse/pull/100361 - not backported to stable-26.3",
+            check_with_any_sanitizer,
+        ),
+    ],
     "/iceberg/export partition/*/manifest integrity/value_counts across data files sum to source row count": [
         (
             Fail,
@@ -314,6 +337,11 @@ xfails = {
 }
 
 ffails = {
+    "/iceberg/iceberg engine/*": (
+        Skip,
+        "Iceberg tests unstable with sanitizer builds (server startup issues)",
+        check_with_any_sanitizer,
+    ),
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",

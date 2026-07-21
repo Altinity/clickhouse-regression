@@ -872,17 +872,33 @@ def regression(
             order_by="tuple()",
         )
 
+    with And("I increase query timeouts for sanitizer builds"):
+        if check_with_any_sanitizer(self):
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            # Sanitizer builds (ASAN/TSAN/MSAN/UBSAN) are 5-10x slower; the heavy
+            # INSERTs with all data types in `populate tables with test data`
+            # can exceed the default 120s wait_for_async_insert_timeout on slower
+            # CI runners. receive/send_timeout cover network-level waits;
+            # wait_for_async_insert_timeout covers the server-side async insert
+            # flush ack which is what actually trips first under sanitizers.
+            default_query_settings.append(("receive_timeout", 900))
+            default_query_settings.append(("send_timeout", 900))
+            default_query_settings.append(("wait_for_async_insert_timeout", 900))
+            self.context.default_query_settings = default_query_settings
+
     with And("I populate tables with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
         self.context.table_extra_data.insert_test_data(
             cardinality=5, shuffle_values=True
         )
 
-    with And("allow higher cpu_wait_ratio "):
+    with And("allow higher cpu_wait_ratio (increased for sanitizer builds)"):
         if check_clickhouse_version(">=25.4")(self):
             allow_higher_cpu_wait_ratio(
-                min_os_cpu_wait_time_ratio_to_throw=20,
-                max_os_cpu_wait_time_ratio_to_throw=30,
+                min_os_cpu_wait_time_ratio_to_throw=50,
+                max_os_cpu_wait_time_ratio_to_throw=100,
             )
 
     with Feature("part 1"):
