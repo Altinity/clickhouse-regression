@@ -1010,7 +1010,7 @@ jobs:
     secrets: inherit
 
   s3_aws_1:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1031,7 +1031,7 @@ jobs:
     secrets: inherit
 
   s3_aws_2:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1397,7 +1397,7 @@ jobs:
     secrets: inherit
     
   tiered_storage_aws:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
