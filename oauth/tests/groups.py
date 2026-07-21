@@ -414,6 +414,42 @@ def deleted_user_rejected_after_cache(self):
         assert_token_rejected(token=token)
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_GroupFiltering("1.0"),
+)
+def malformed_roles_transform_fails_closed(self):
+    """A malformed ``roles_transform`` SHALL fail closed: ClickHouse
+    rejects the user-directory config at startup (``BAD_ARGUMENTS``)
+    rather than silently mapping groups with an unvalidated transform.
+
+    The transform must be a sed-style ``s/pattern/replacement/`` rule;
+    anything else is refused while setting up access control, so token
+    authentication never comes up with a half-applied mapping.
+    """
+    with Given(
+        "I overlay user_directories/token with a malformed roles_transform "
+        "and expect ClickHouse to refuse to start"
+    ):
+        apply_fatal_user_directories_config(
+            entries={
+                "user_directories": {
+                    "token": {
+                        "processor": "keycloak",
+                        "common_roles": {"general-role": {}},
+                        "roles_filter": "^grafana-.*$",
+                        "roles_transform": "s/[invalid(regex",
+                    }
+                }
+            },
+            expected_message="Invalid roles_transform format",
+            config_file="user_directory_roles_transform_malformed.xml",
+        )
+
+    with Then("ClickHouse comes back up after the bad config is removed"):
+        check_clickhouse_is_alive()
+
+
 @TestFeature
 @Name("groups")
 @Requirements(
@@ -432,3 +468,4 @@ def feature(self):
     Scenario(run=dynamic_group_membership_update)
     Scenario(run=disabled_user_rejected_after_cache)
     Scenario(run=deleted_user_rejected_after_cache)
+    Scenario(run=malformed_roles_transform_fails_closed)

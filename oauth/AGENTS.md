@@ -4,8 +4,8 @@ Living reference for anyone (human or AI) working in `oauth/`. Follows
 the [AGENTS.md](https://www.agents.md/) convention: this file is the
 agent-facing equivalent of `README.md`. The closest `AGENTS.md` to a
 file being edited wins, so feel free to add nested ones inside
-`tests/security_audit/` or `tests/client_oauth_login/` if those
-sub-suites grow their own conventions.
+`tests/client_oauth_login/` if those sub-suites grow their own
+conventions.
 
 Keep this short, accurate, and updated as the suite evolves.
 
@@ -46,16 +46,21 @@ oauth/
 │   │   ├── google_application.py         # Google provider (token-only)
 │   │   ├── clikhouse.py                  # access_clickhouse, change_token_processors, …
 │   │   └── common.py                     # composite steps: configure_openid_token_processor, assert_query_denied, provider_user, …
-│   ├── authentication.py                 # baseline: valid/empty/tampered tokens
-│   ├── tokens.py                         # processor-config (OpenID discovery, bad jwks_uri)
-│   ├── jwt_manipulation.py               # JWT-mutation negatives (alg=none, exp past, …)
+│   ├── authentication.py                 # baseline: valid/empty/tampered tokens, header-leak
+│   ├── tokens.py                         # processor-config (OpenID discovery, introspection, availability)
+│   ├── jwt_manipulation.py               # JWT-mutation negatives (alg=none, exp past, typ/iat/crit, malformed sig)
 │   ├── parameters_and_caching.py         # username_claim, groups_claim, expected_*, cache
-│   ├── access_control.py                 # cross-realm / cross-client authz negatives
-│   ├── groups.py                         # role mapping, dynamic membership, disable/delete
+│   ├── cache_semantics.py                # cache eviction / per-user / reload invalidation
+│   ├── access_control.py                 # cross-realm / cross-client authz, default_profile, host allowlist
+│   ├── groups.py                         # role mapping, dynamic membership, disable/delete, roles_transform
 │   ├── tls.py                            # HTTPS happy path
-│   ├── configuration.py                  # processor-type validation
+│   ├── configuration.py                  # processor / user-directory config validation, fail-closed
+│   ├── sql_jwt_users.py                  # CREATE USER … IDENTIFIED WITH jwt (PROCESSOR / CLAIMS)
+│   ├── identity.py                       # principal namespacing / empty-sub / homograph
+│   ├── log_hygiene.py                    # log injection / PII / kid / processor-name leakage
+│   ├── quotas.py                         # failed-auth quota binding
+│   ├── sessions.py                       # named-session isolation / long-lived session revalidation
 │   ├── sanity.py                         # 2-line sanity scenarios
-│   ├── security_audit/                   # H-/M-/L- audit-finding regressions
 │   └── client_oauth_login/               # `clickhouse-client --login` (PR #1606+)
 ├── README.md                             # how to provision Azure (manual)
 └── AGENTS.md                             # this file
@@ -147,7 +152,7 @@ REQUIRED_METHODS = (
     "openid_endpoints",
     "default_idp",
     # JWT mutation (used heavily by tokens / jwt_manipulation / tls /
-    # security_audit). Provider-agnostic implementation lives in
+    # identity / log_hygiene). Provider-agnostic implementation lives in
     # ``provider_protocol`` itself but providers re-export it for
     # discoverability.
     "modify_jwt_token",
@@ -554,10 +559,10 @@ This suite *tests* an authentication subsystem. A few hard rules:
 - A change that touches `tests/steps/provider_protocol.py` MUST update
   every concrete provider in the same commit and re-run the contract
   smoke test (§5.4).
-- A change that adds a step helper used by `tests/security_audit/*`
-  MUST verify imports across the package — see the
-  `python -c "import oauth.tests.security_audit.feature"`
-  one-liner that we use as a smoke test.
+- A change that adds a shared step helper MUST verify imports across the
+  package — e.g. `python -c "import oauth.tests.identity,
+  oauth.tests.log_hygiene, oauth.tests.quotas, oauth.tests.sessions"` as
+  a smoke test.
 - PRs touching the suite should reference the upstream
   PR/issue number(s) being verified (e.g. `Altinity/ClickHouse#1606`,
   `ClickHouse/ClickHouse#103603`) so the test↔fix mapping stays

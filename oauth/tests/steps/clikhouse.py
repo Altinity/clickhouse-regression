@@ -64,6 +64,7 @@ def access_clickhouse(
     node=None,
     query=None,
     query_params=None,
+    header=None,
 ):
     """Execute a query against ClickHouse with bearer-token auth.
 
@@ -75,6 +76,9 @@ def access_clickhouse(
     """
     if node is None:
         node = self.context.bash_tools
+
+    if header is None:
+        header = f"Authorization: Bearer {token}"
 
     port = 8443 if https else 8123
     http_prefix = "https" if https else "http"
@@ -94,7 +98,7 @@ def access_clickhouse(
         f'curl -s -o {tmp_file} -w "%{{http_code}}" '
         f"--location -X POST '{url}' "
         f"--data-binary '{safe_query}' "
-        f"--header 'Authorization: Bearer {token}'"
+        f"--header '{header}'"
     )
 
     if https:
@@ -221,8 +225,14 @@ def change_token_processors(
     node=None,
     replace=False,
     replace_section=False,
+    restart=True,
 ):
     """Change ClickHouse token processor configuration.
+
+    When ``restart=True`` (default) ClickHouse is restarted to apply the
+    change. Pass ``restart=False`` to write the config without a restart
+    (e.g. when the caller wants to apply it via ``SYSTEM RELOAD CONFIG``
+    instead, to keep existing native sessions alive).
 
     When ``replace=True``, the processor element gets ``replace="replace"``
     so that it fully replaces the base processor definition.
@@ -321,7 +331,7 @@ def change_token_processors(
         entries=entries,
         config_d_dir=config_d_dir,
         preprocessed_name="config.xml",
-        restart=True,
+        restart=restart,
         config_file=f"{processor_name}_config.xml",
         node=node,
     )
@@ -707,21 +717,38 @@ def change_user_quota(
     )
 
 
+@contextmanager
 def open_native_jwt_session(
     token,
-    container_node="clickhouse1",
+    node=None,
     target_host="clickhouse1",
     target_port=9000,
 ):
-    """Open a long-lived ``clickhouse-client --jwt`` TCP session.
+    """Open a long-lived ``clickhouse-client --jwt`` native TCP session.
 
-    Not yet re-implemented; callers should ``Skip`` until the
-    replacement helper lands.
+    Runs an interactive ``clickhouse-client-tty`` inside the ``node``
+    container (default: ``bash-tools``), connecting to
+    ``target_host:target_port`` and authenticating with the JWT
+    ``token``. Yields a client handle whose ``.query(...)`` reuses the
+    single underlying TCP connection, so the session persists across
+    calls -- unlike the one-shot ``node.query(..., settings=[("jwt",
+    token)])`` path which opens and closes a connection per query.
+
+    Usage::
+
+        with open_native_jwt_session(token=token) as session:
+            session.query("SELECT currentUser()")
+
+    The connection is closed automatically when the ``with`` block
+    exits.
     """
-    raise NotImplementedError(
-        "open_native_jwt_session is not yet re-implemented; "
-        "dependent scenarios should Skip until the replacement helper lands."
-    )
+    if node is None:
+        node = current().context.bash_tools
+
+    with node.client(
+        client_args={"host": target_host, "port": target_port, "jwt": token}
+    ) as client:
+        yield client
 
 
 @TestStep(Given)
@@ -730,3 +757,79 @@ def reload_clickhouse_config(self, node=None):
     if node is None:
         node = self.context.node
     node.query("SYSTEM RELOAD CONFIG")
+
+
+def search_server_log(node, pattern, lines=500):
+    """Grep the recent ``clickhouse-server.log`` lines for a literal pattern.
+
+    Returns the matching lines as a single newline-joined string (empty
+    string if no matches). Plain function so it can be called from
+    anywhere to read state.
+    """
+    cmd = (
+        f"tail -n {lines} /var/log/clickhouse-server/clickhouse-server.log "
+        f"| grep -F -- '{pattern}' || true"
+    )
+    return node.command(cmd, steps=False).output.strip()
+
+
+@TestStep(Then)
+def assert_auth_request_completes(
+    self,
+    token,
+    ip="clickhouse1",
+    max_time=120,
+    node=None,
+):
+    """Assert a bearer-auth request returns instead of hanging forever.
+
+    Used by availability scenarios where a provider endpoint is
+    unreachable: ClickHouse SHALL NOT block the request thread
+    indefinitely. ``curl --max-time`` bounds the wait; if the request
+    is still pending at ``max_time`` the helper fails because the auth
+    path hung. Returns the elapsed seconds.
+    """
+    if node is None:
+        node = self.context.bash_tools
+
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/ch_avail_{uid}.txt"
+    curl_command = (
+        f'curl -s -o {tmp_file} -w "%{{http_code}}" '
+        f"--max-time {max_time} "
+        f"--location 'http://{ip}:8123/?query=SELECT%201' "
+        f"--header 'Authorization: Bearer {token}'"
+    )
+
+    start = time.time()
+    node.command(command=curl_command, timeout=(max_time + 60) * 1000)
+    elapsed = time.time() - start
+
+    note(f"Auth request completed in {elapsed:.1f}s")
+    assert elapsed < max_time, error(
+        f"Auth request did not complete within {max_time}s — the auth "
+        f"path appears to hang on the unreachable endpoint"
+    )
+    return elapsed
+
+
+@TestStep(Then)
+def basic_auth_request(self, user, password="", ip="clickhouse1", node=None):
+    """Send a Basic-auth HTTP request and return the 3-char HTTP status code.
+
+    Used to assert that ClickHouse returns a clean auth decision for a
+    non-token credential (rather than aborting the access-storage chain).
+    """
+    if node is None:
+        node = self.context.bash_tools
+
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/ch_basic_{uid}.txt"
+    url = f"http://{ip}:8123/?query=SELECT%20currentUser()"
+    curl_command = (
+        f"curl -s -o {tmp_file} -w '%{{http_code}}' "
+        f"--location '{url}' "
+        f"--user '{user}:{password}'"
+    )
+    result = node.command(command=curl_command)
+    return result.output.strip()[-3:]

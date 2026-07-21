@@ -122,8 +122,16 @@ def create_s3_table(
     create_new_bucket=False,
     columns=None,
     partition_by="p",
+    uri=None,
+    access_key_id=None,
+    secret_access_key=None,
 ):
-    """Create a destination S3 table."""
+    """Create a destination S3 table.
+
+    ``uri``/``access_key_id``/``secret_access_key`` default to the context values.
+    Override them to point the destination at a broken location (e.g. wrong
+    credentials) for error-classification tests.
+    """
 
     if create_new_bucket:
         create_temp_bucket()
@@ -131,12 +139,19 @@ def create_s3_table(
     if columns is None:
         columns = default_columns(simple=True)
 
+    if uri is None:
+        uri = self.context.uri
+    if access_key_id is None:
+        access_key_id = self.context.access_key_id
+    if secret_access_key is None:
+        secret_access_key = self.context.secret_access_key
+
     table_name = f"{table_name}_{getuid()}"
     engine = f"""
         S3(
-            '{self.context.uri}',
-            '{self.context.access_key_id}',
-            '{self.context.secret_access_key}',
+            '{uri}',
+            '{access_key_id}',
+            '{secret_access_key}',
             filename='{table_name}',
             format='Parquet',
             compression='auto',
@@ -153,3 +168,39 @@ def create_s3_table(
     )
 
     return table_name
+
+
+@TestStep(Given)
+def create_s3_table_wrong_credentials(
+    self, table_name="s3_bad_creds", columns=None, cluster=None
+):
+    """Create a destination S3 table pointing at a valid bucket but with an invalid
+    secret key, so writes fail with an access-denied (S3_ERROR) error.
+
+    Pass ``cluster`` to create the destination on every replica (needed when a
+    replica other than the initiator may pick up the part)."""
+    return create_s3_table(
+        table_name=table_name,
+        create_new_bucket=True,
+        columns=columns,
+        cluster=cluster,
+        secret_access_key="wrong_secret_key_deadbeef",
+    )
+
+
+@TestStep(Given)
+def create_s3_table_wrong_endpoint(
+    self, table_name="s3_bad_endpoint", columns=None, cluster=None
+):
+    """Create a destination S3 table pointing at a non-existent bucket on the MinIO
+    endpoint (valid credentials), so writes fail with a NoSuchBucket (S3_ERROR) error.
+
+    Pass ``cluster`` to create the destination on every replica."""
+    uri = f"http://minio1:9001/nonexistent-{getuid()}/data/"
+    return create_s3_table(
+        table_name=table_name,
+        create_new_bucket=False,
+        columns=columns,
+        cluster=cluster,
+        uri=uri,
+    )

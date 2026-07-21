@@ -2,9 +2,9 @@ name: 🗓 Scheduled ClickHouse 26.3
 run-name: 🗓 Scheduled ClickHouse 26.3
 on:
   workflow_dispatch:
-  #Run at 10:00 PM (UTC) on Sunday
+  #Run at 10:00 PM (UTC) on Saturday
   schedule:
-    - cron: "0 22 * * 0"
+    - cron: "0 22 * * 6"
 
 jobs:
   get_clickhouse_version:
@@ -33,14 +33,3 @@ jobs:
       run_s3_suites: false
       arch: x86
     secrets: inherit
-
-  clickhouse-26-3-arm-with-analyzer_zookeeper:
-   needs: get_clickhouse_version
-   uses: ./.github/workflows/run-regression.yml
-   name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
-   with:
-     package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-     version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
-     extra_args: '--with-analyzer'
-     arch: arm64
-   secrets: inherit

@@ -341,6 +341,31 @@ def get_column_types(table_name):
     return column_names_and_types
 
 
+def _parse_tsv_value(value, col_type):
+    """Parse a TabSeparated cell value according to its ClickHouse column type."""
+    if value == "\\N":
+        return None
+
+    if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
+        try:
+            return float(value)
+        except ValueError:
+            return value
+
+    if (
+        col_type.startswith("Int")
+        or col_type.startswith("Nullable(Int")
+        or col_type.startswith("UInt")
+        or col_type.startswith("Nullable(UInt")
+    ):
+        try:
+            return int(value)
+        except ValueError:
+            return value
+
+    return value
+
+
 def parse_table_output(output, column_names_and_types):
     """Parses a tab-separated string output into a list of lists with appropriate types, ensuring correct column mapping."""
     rows = output.strip().split("\n")
@@ -350,23 +375,7 @@ def parse_table_output(output, column_names_and_types):
         values = row.split("\t")
         parsed_row = []
         for value, (_, col_type) in zip(values, column_names_and_types):
-            if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
-                try:
-                    parsed_row.append(float(value))
-                except ValueError:
-                    parsed_row.append(value)
-            elif (
-                col_type.startswith("Int")
-                or col_type.startswith("Nullable(Int")
-                or col_type.startswith("UInt")
-                or col_type.startswith("Nullable(UInt")
-            ):
-                try:
-                    parsed_row.append(int(value))
-                except ValueError:
-                    parsed_row.append(value)
-            else:
-                parsed_row.append(value)
+            parsed_row.append(_parse_tsv_value(value, col_type))
         parsed_data.append(parsed_row)
 
     return parsed_data
@@ -397,9 +406,21 @@ def compare_select_outputs(output1, output2, table_name1, rel_tol=1e-3, abs_tol=
             zip(row1, row2), column_names_and_types
         ):
             if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
-                if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
+                if val1 is None or val2 is None:
+                    if val1 != val2:
+                        note(
+                            f"Float values are not equal in column {col_name}: {val1} != {val2}"
+                        )
+                        return False
+                elif isinstance(val1, (int, float)) and isinstance(val2, (int, float)):
+                    if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
+                        note(
+                            f"Float values are not close enough in column {col_name}: {val1} != {val2}"
+                        )
+                        return False
+                elif val1 != val2:
                     note(
-                        f"Float values are not close enough in column {col_name}: {val1} != {val2}"
+                        f"Float values are not equal in column {col_name}: {val1} != {val2}"
                     )
                     return False
             elif val1 != val2:

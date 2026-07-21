@@ -330,6 +330,47 @@ def claims_enforced_via_sql(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_SQLJWTUsers_ClaimsClause("1.0"),
+    RQ_SRS_042_OAuth_SQLJWTUsers_AuthenticationFlow("1.0"),
+)
+def claim_mismatch_rejected_consistently(self):
+    """A token that fails a SQL user's ``CLAIMS`` check SHALL be rejected,
+    and resubmitting the same token SHALL be rejected again — a rejected
+    claim check SHALL NOT prime the cache with the claimed identity.
+    """
+    uid = getuid()[:8]
+    username = f"jwt_claim_cache_{uid}"
+
+    with Given("two static-key processors are configured"):
+        two_static_key_processors()
+
+    with And(f"I create {username} requiring department=engineering"):
+        create_sql_jwt_user(
+            username=username,
+            processor=_PROC_A,
+            claims={"department": "engineering"},
+        )
+
+    with When("I mint a token for the user WITHOUT the required claim"):
+        token = create_static_jwt(
+            user_name=username,
+            secret=_SECRET_A,
+            algorithm="HS256",
+            expiration_minutes=5,
+        )
+
+    with Then("the token is rejected"):
+        assert_token_rejected(token=token)
+
+    with And(
+        "resubmitting the same token is rejected again "
+        "(the rejection did not prime the cache)"
+    ):
+        assert_token_rejected(token=token)
+
+
+@TestScenario
 @Requirements(RQ_SRS_042_OAuth_SQLJWTUsers_Validation_EmptyProcessor("1.0"))
 def empty_processor_name_rejected(self):
     """``CREATE USER ... IDENTIFIED WITH jwt PROCESSOR ''`` SHALL be
@@ -406,5 +447,6 @@ def feature(self):
     Scenario(run=processor_pin_rejects_wrong_processor_token)
     Scenario(run=alter_repin_changes_accepted_processor)
     Scenario(run=claims_enforced_via_sql)
+    Scenario(run=claim_mismatch_rejected_consistently)
     Scenario(run=empty_processor_name_rejected)
     Scenario(run=invalid_claims_json_rejected)

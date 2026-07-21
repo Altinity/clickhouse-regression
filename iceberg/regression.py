@@ -19,6 +19,7 @@ from helpers.common import (
     check_is_altinity_build,
     experimental_analyzer,
     check_if_antalya_build,
+    check_if_antalya_post_26_3_10_20001,
 )
 
 
@@ -303,6 +304,13 @@ xfails = {
             and check_if_not_antalya_build(),
         )
     ],
+    "/iceberg/export partition/: catalog/catalogs/drop with purge allows recreating same table": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1906",
+            check_clickhouse_version("<=26.3.13.20001"),
+        )
+    ],
 }
 
 ffails = {
@@ -385,6 +393,22 @@ ffails = {
         "EXPORT PARTITION TO Apache Iceberg is only supported on Antalya builds > 26.1",
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
+    ),
+    "/iceberg/export partition/*/schema evolution/rename column between exports": (
+        Skip,
+        "RENAME COLUMN on IcebergS3 destination is NOT_IMPLEMENTED before 26.3",
+        check_clickhouse_version("<26.3"),
+    ),
+    "/iceberg/export partition/*/casting": (
+        Skip,
+        "Altinity/ClickHouse#1779 export auto-cast requires antalya > 26.3.10.20001",
+        lambda test: not check_if_antalya_post_26_3_10_20001(test),
+    ),
+    "/iceberg/export partition/glue catalog/casting": (
+        Skip,
+        "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
+        "ice-rest-catalog); Glue/LocalStack DataLakeCatalog is out of scope.",
+        lambda test: True,
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,

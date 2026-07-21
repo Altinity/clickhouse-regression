@@ -166,9 +166,7 @@ def snapshot_summary_records_match(self, minio_root_user, minio_root_password):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_PartitionSpec("1.0"))
 @Name("partition spec references source columns")
-def manifest_partition_spec_matches_source(
-    self, minio_root_user, minio_root_password
-):
+def manifest_partition_spec_matches_source(self, minio_root_user, minio_root_password):
     """The Iceberg partition spec's source columns match ``PARTITION BY``."""
     source_table = f"mt_{getuid()}"
     columns = "id Int64, year Int32, region String"
@@ -312,9 +310,7 @@ def value_counts_sum_to_row_count(self, minio_root_user, minio_root_password):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_PathLayout("1.0"))
 @Name("data file paths live under the table prefix")
-def data_file_paths_under_table_prefix(
-    self, minio_root_user, minio_root_password
-):
+def data_file_paths_under_table_prefix(self, minio_root_user, minio_root_password):
     """Every ``data_file.file_path`` starts with the table's storage
     location (absolute ``s3://`` URI per the Iceberg spec). Currently
     XFail: ``MultipleFileWriter::startNewFile`` writes
@@ -439,11 +435,14 @@ def external_reader_round_trips_exported_data(
                 f"{type(exc).__name__}: {exc}"
             )
         except (FileNotFoundError, OSError) as exc:
-            offending = [df.file_path for df in get_data_files(
-                destination=destination,
-                minio_root_user=minio_root_user,
-                minio_root_password=minio_root_password,
-            )]
+            offending = [
+                df.file_path
+                for df in get_data_files(
+                    destination=destination,
+                    minio_root_user=minio_root_user,
+                    minio_root_password=minio_root_password,
+                )
+            ]
             assert False, error(
                 f"External reader (PyIceberg) failed to open a data file "
                 f"written by EXPORT PARTITION. This is the user-visible "

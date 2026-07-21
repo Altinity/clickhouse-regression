@@ -1,6 +1,8 @@
 from itertools import combinations
 from testflows.core import *
 from testflows.asserts import error
+
+from helpers.create import partitioned_replicated_merge_tree_table
 from s3.tests.export_partition.steps import *
 from helpers.queries import *
 from helpers.common import getuid

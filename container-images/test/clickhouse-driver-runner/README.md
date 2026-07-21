@@ -23,7 +23,7 @@ If you don't have docker image for tests:
 ```bash
 docker build . -t clickhouse-driver
 
-docker run --rm -v $(pwd)/PACKAGES:/clickhouse -e RELEASE=0.2.9 clickhouse-driver
+docker run --rm -v $(pwd)/PACKAGES:/clickhouse -e RELEASE=0.2.10 clickhouse-driver
 ```
 
 Link to the instruction how to run tests on local machine `https://clickhouse-driver.readthedocs.io/en/latest/development.html`

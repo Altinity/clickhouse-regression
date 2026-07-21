@@ -1,7 +1,6 @@
 <clickhouse>
     <profiles>
         <default>
-            <readonly>2</readonly>
         </default>
     </profiles>
     <users>

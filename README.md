@@ -9,23 +9,17 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ##  🗓 Scheduled Regression Runs
 
-Results for **the latest** scheduled workflow runs.
+Results for **the latest** scheduled workflow runs. Most scheduled runs are **x86 only**. **arm64** runs on ClickHouse **head**, **Altinity stable 25.8**, and **Antalya 26.3**.
 
 | ClickHouse Version                  | Status                                                                                                                                                                                                                                                                                |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **`head`**                          | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml)                  |
-| **`latest`**                        | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
+| **`head`** (x86 + arm64)            | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml)                  |
 | **`26.3`**                          | [![🗓 Scheduled ClickHouse 26.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml) |
 | **`25.8`**                          | [![🗓 Scheduled ClickHouse 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml) |
-| **`25.3`**                          | [![Scheduled ClickHouse 25.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-3.yml) |
-| **`24.8`**                          | [![Scheduled ClickHouse 24.8 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-8.yml)       |
-| **`24.3`**                          | [![Scheduled ClickHouse 24.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml)       |
-| **`23.8`**                          | [![Scheduled ClickHouse 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml)                  |
-| **`23.3`**                          | [![Scheduled ClickHouse 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml)                  |
-| **`26.3.10.20001.altinityantalya`** | [![🗓 Scheduled Altinity 26.3 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml)      |
+| **`26.3.10.20001.altinityantalya`** (x86 + arm64) | [![🗓 Scheduled Altinity 26.3 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml)      |
 | **`26.1.11.20001.altinityantalya`** | [![🗓 Scheduled Altinity 26.1 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-1.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-1.yml)      |
 | **`25.8.22.20001.altinityantalya`** | [![🗓 Scheduled Altinity 25.8 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml)      |
-| **`25.8.16.10002.altinitystable`** | [![🗓 Scheduled Altinity 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml)      |
+| **`25.8.16.10002.altinitystable`** (x86 + arm64) | [![🗓 Scheduled Altinity 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml)      |
 | **`25.3.8.10042.altinitystable`**  | [![Scheduled Altinity 25.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-3.yml)                        |
 | **`24.8.14.10545.altinitystable`**  | [![Scheduled Altinity 24.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-8.yml)                        |
 | **`24.3.18.10426.altinitystable`**     | [![🗓 Scheduled Altinity 24.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml)                        |
@@ -33,15 +27,20 @@ Results for **the latest** scheduled workflow runs.
 | **`23.3.19.33.altinitystable`**     | [![🗓 Scheduled Altinity 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml)                        |
 ## 📅 Timetable of Scheduled Regression Runs
 
-| Day           | latest & head | Every Other Version |
-| ------------- | ------------- | ------------------- |
-| **Sunday**    | ❌ No          | ❌ No                |
-| **Monday**    | ❌ No          | ❌ No                |
-| **Tuesday**   | **✅ Yes**     | ❌ No                |
-| **Wednesday** | ❌ No          | ❌ No                |
-| **Thursday**  | **✅ Yes**     | ❌ No                |
-| **Friday**    | ❌ No          | ❌ No                |
-| **Saturday**  | **✅ Yes**     | **✅ Yes**           |
+All times UTC.
+
+| Day           | head | Other versions |
+| ------------- | ---- | -------------- |
+| **Sunday**    | ❌   | ❌             |
+| **Monday**    | ❌   | ❌             |
+| **Tuesday**   | ✅   | ❌             |
+| **Wednesday** | ❌   | ❌             |
+| **Thursday**  | ✅   | ❌             |
+| **Friday**    | ❌   | ❌             |
+| **Saturday**  | ❌   | ✅             |
+
+- **head** runs at 00:00 UTC on Tuesday and Thursday (x86 + arm64).
+- **All other versions** run once a week at 22:00 UTC on Saturday (x86 only, except **Altinity stable 25.8** and **Antalya 26.3** which also run arm64).
 
 ## 🔍 Table of Contents
 

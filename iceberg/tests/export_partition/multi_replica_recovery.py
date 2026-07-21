@@ -74,9 +74,7 @@ def _zk_server_command(zk_node, subcommand, **kwargs):
     directly instead of the ``ZooKeeperNode`` helper keeps us decoupled
     from ``use_zookeeper_nodes=True`` at the regression entrypoint.
     """
-    return zk_node.command(
-        f"zkServer.sh {subcommand}", steps=False, **kwargs
-    )
+    return zk_node.command(f"zkServer.sh {subcommand}", steps=False, **kwargs)
 
 
 def _zk_wait_healthy(zk_node, timeout=60):
@@ -214,7 +212,9 @@ def _setup_replicated_source(table_name, nodes):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency("1.0")
+)
 @Name("concurrent exports from different replicas on different partitions")
 def concurrent_cross_replica_different_partitions(
     self, minio_root_user, minio_root_password
@@ -326,7 +326,9 @@ def concurrent_cross_replica_different_partitions(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency("1.0")
+)
 @Name("concurrent exports of the same partition from different replicas are idempotent")
 def concurrent_cross_replica_same_partition_idempotent(
     self, minio_root_user, minio_root_password
@@ -413,9 +415,7 @@ def concurrent_cross_replica_same_partition_idempotent(
         )
         operation = getattr(snapshots[0].summary, "operation", None)
         op_str = str(getattr(operation, "value", operation))
-        assert op_str == "append", error(
-            f"Expected append snapshot, got {op_str!r}"
-        )
+        assert op_str == "append", error(f"Expected append snapshot, got {op_str!r}")
 
     with And("destination row count matches the partition exactly once"):
         assert_destination_row_count(
@@ -508,9 +508,7 @@ def _run_single_replica_zk_recovery(
         )
         operation = getattr(snapshots[0].summary, "operation", None)
         op_str = str(getattr(operation, "value", operation))
-        assert op_str == "append", error(
-            f"Expected append snapshot, got {op_str!r}"
-        )
+        assert op_str == "append", error(f"Expected append snapshot, got {op_str!r}")
 
     with And("destination holds the partition's rows intact"):
         assert_destination_row_count(
@@ -521,9 +519,7 @@ def _run_single_replica_zk_recovery(
         )
 
 
-def _run_multi_replica_zk_recovery(
-    self, disturb, minio_root_user, minio_root_password
-):
+def _run_multi_replica_zk_recovery(self, disturb, minio_root_user, minio_root_password):
     """Shared body: two replicas export different partitions, ``disturb``
     is applied mid-flight, and both commits must converge with the
     destination ending in two linearised append snapshots and no row loss.
@@ -758,9 +754,7 @@ def initiator_dies_mid_commit_peer_finalizes_exactly_once(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"))
 @Name("export recovers after a ZooKeeper restart mid-flight")
-def export_recovers_after_zookeeper_restart(
-    self, minio_root_user, minio_root_password
-):
+def export_recovers_after_zookeeper_restart(self, minio_root_user, minio_root_password):
     """Single-replica export survives a graceful ZooKeeper restart
     (clean session expiry, reconnect, commit to ``COMPLETED``).
     """
@@ -823,6 +817,7 @@ def cross_replica_exports_survive_zookeeper_docker_kill(
         minio_root_password=minio_root_password,
     )
 
+
 # =============================================================================
 # Stress-only randomised replica chaos
 # =============================================================================
@@ -866,6 +861,7 @@ def _kill_container_stop(victim):
     """
     victim.stop()
 
+
 # (label, kill_fn) pairs the stress scenarios pick from at random. Revival
 # is uniformly handled by :func:`_ensure_alive` regardless of which kill
 # mode was used, so the pair only carries the kill side.
@@ -903,7 +899,7 @@ def _ensure_alive(victim):
     container_running = False
     try:
         result = victim.command("true", no_checks=True, steps=False)
-        container_running = (result.exitcode == 0)
+        container_running = result.exitcode == 0
     except Exception:
         container_running = False
 
@@ -993,6 +989,7 @@ def _setup_chaos_table_with_destination(
         )
 
     return table_name, destination
+
 
 @TestStep(When)
 def _run_chaos_loop(self, kill_candidates, duration_s, rng):
@@ -1167,9 +1164,7 @@ def _phased_kill_iteration(
                     f"{[s.snapshot_id for s in snapshots]!r}"
                 )
 
-            _assert_snapshot_chain_valid(
-                snapshots, where=f"iter {iteration} {phase}"
-            )
+            _assert_snapshot_chain_valid(snapshots, where=f"iter {iteration} {phase}")
 
     finally:
         if not revived_inline:
@@ -1180,9 +1175,7 @@ def _phased_kill_iteration(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos("1.0"))
 @Name("randomised replica kill at varied export-lifecycle phases")
-def stress_replica_kill_at_random_phase(
-    self, minio_root_user, minio_root_password
-):
+def stress_replica_kill_at_random_phase(self, minio_root_user, minio_root_password):
     """Repeat ``STRESS_ITERATIONS`` rounds of "schedule, kill, settle"
     with random phase, kill mode, and restart policy. Each iteration must
     converge to a terminal status with snapshot integrity preserved.
@@ -1231,9 +1224,7 @@ def stress_replica_kill_at_random_phase(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos("1.0"))
 @Name("repeated initiator bounce during a single export")
-def stress_initiator_repeated_bounce(
-    self, minio_root_user, minio_root_password
-):
+def stress_initiator_repeated_bounce(self, minio_root_user, minio_root_password):
     """Repeatedly stop+start the initiating replica during one export.
 
     The export must converge to a terminal status from the survivor's
@@ -1302,9 +1293,7 @@ def stress_initiator_repeated_bounce(
                 f"Repeated bounce must not produce duplicate snapshots; "
                 f"got {len(snapshots)}: {[s.snapshot_id for s in snapshots]!r}"
             )
-            _assert_snapshot_chain_valid(
-                snapshots, where="repeated initiator bounce"
-            )
+            _assert_snapshot_chain_valid(snapshots, where="repeated initiator bounce")
 
     finally:
         with Finally("ensure the initiator is online before the suite continues"):
@@ -1314,9 +1303,7 @@ def stress_initiator_repeated_bounce(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos("1.0"))
 @Name("multi-partition fleet under randomised replica chaos")
-def stress_multi_partition_chaos(
-    self, minio_root_user, minio_root_password
-):
+def stress_multi_partition_chaos(self, minio_root_user, minio_root_password):
     """Schedule N partition exports concurrently from alternating replicas
     and run a chaos thread that randomly bounces a victim replica for
     :data:`STRESS_CHAOS_DURATION_S` seconds. After chaos exits, every
@@ -1401,9 +1388,7 @@ def stress_multi_partition_chaos(
                 f"got {len(snapshots)} snapshots for {len(partitions)} "
                 f"partitions: {[s.snapshot_id for s in snapshots]!r}"
             )
-            _assert_snapshot_chain_valid(
-                snapshots, where="multi-partition chaos"
-            )
+            _assert_snapshot_chain_valid(snapshots, where="multi-partition chaos")
 
     finally:
         with Finally(f"ensure {victim.name} is online before the suite continues"):

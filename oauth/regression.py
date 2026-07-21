@@ -7,7 +7,16 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.common import check_if_not_antalya_build, check_clickhouse_version
+from helpers.common import (
+    check_if_not_antalya_build,
+    check_if_antalya_build,
+    check_clickhouse_version,
+)
+from oauth.tests.steps.clikhouse import (
+    change_user_jwt_auth,
+    change_token_processors,
+    change_user_directories_config,
+)
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
@@ -96,6 +105,56 @@ xfails = {
             "propagated to the cache write.",
         )
     ],
+    "/oauth/jwt_manipulation/mismatched typ rejected": [
+        (
+            Fail,
+            "DEFECT_M14 — no JWT typ / token-class enforcement. A "
+            "jwt_static_key processor pinned with expected_typ=JWT still "
+            "accepts a token whose header is typ=id+jwt (HTTP 200, "
+            "currentUser()=alice) instead of rejecting it. The "
+            "expected_typ pin has no effect on validation, enabling "
+            "ID-token / wrong-token-class substitution. See "
+            "issues/M14-expected-typ-header-pin-not-enforced.md. Will go "
+            "green once the JWT processors enforce expected_typ against "
+            "the decoded header.",
+        )
+    ],
+    "/oauth/jwt_manipulation/unknown crit header rejected": [
+        (
+            Fail,
+            "DEFECT_L12 — unknown JWT crit header silently accepted. A "
+            "token whose header declares an unrecognised critical "
+            "extension (crit=[urn:example:unknown-extension]) is "
+            "authenticated (HTTP 200, currentUser()=alice) instead of "
+            "being rejected per RFC 7515 4.1.11. See "
+            "issues/L12-unknown-crit-header-silently-accepted.md. Will go "
+            "green once the JWT processors reject tokens carrying "
+            "unsupported crit extensions.",
+        )
+    ],
+    "/oauth/identity/unicode homograph sub rejected": [
+        (
+            Fail,
+            "DEFECT_L14 — Unicode-homograph sub collision creates "
+            "indistinguishable users. A token whose sub is a Cyrillic "
+            "homograph of an ASCII name (аlice, U+0430) is accepted "
+            "(HTTP 200) and provisioned as a second, visually-identical "
+            "principal instead of being rejected by a confusable-name "
+            "guard. Will go green once ClickHouse rejects or normalizes "
+            "homograph sub claims.",
+        )
+    ],
+    "/oauth/log hygiene/control chars in sub rejected": [
+        (
+            Fail,
+            "DEFECT_L09 — sub with control / SQL metacharacters reaches "
+            "system.users and dynamic-user provisioning verbatim. A token "
+            "whose sub is 'alice;DROP_<uid>' is accepted (HTTP 200) and a "
+            "dynamic user is created with the metacharacter name instead "
+            "of being rejected or sanitised. Will go green once ClickHouse "
+            "rejects/sanitises control / metacharacter sub claims.",
+        )
+    ],
     "/oauth/client login/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
         (
             Fail,
@@ -114,11 +173,6 @@ xfails = {
 }
 
 ffails = {
-    "/oauth/*": (
-        Skip,
-        "OAuth not implemented in non Antalya build",
-        check_if_not_antalya_build,
-    ),
     "/oauth/client login/client oauth login/connection block segfault/*": (
         Skip,
         "Waiting for upstream fix: Altinity/ClickHouse#1696 / "
@@ -171,7 +225,6 @@ def regression(
     client_id=None,
     client_secret=None,
     refresh_token=None,
-    run_security=False,
 ):
     """Run tests for OAuth in ClickHouse."""
 
@@ -251,25 +304,21 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    if check_clickhouse_version(">=26.3")(self):
-        Scenario(run=load("oauth.tests.sanity", "feature"))
-        Scenario(run=load("oauth.tests.configuration", "feature"))
-        Scenario(run=load("oauth.tests.authentication", "feature"))
-        Scenario(run=load("oauth.tests.tokens", "feature"))
-        Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-        Scenario(run=load("oauth.tests.access_control", "feature"))
-        Scenario(run=load("oauth.tests.groups", "feature"))
-        Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
-        Scenario(run=load("oauth.tests.tls", "feature"))
-        Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
-    else:
-        pass
-
-    # with Feature("client login"):
-    #     Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
-
-    if run_security:
-        Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
+    Scenario(run=load("oauth.tests.sanity", "feature"))
+    Scenario(run=load("oauth.tests.configuration", "feature"))
+    Scenario(run=load("oauth.tests.authentication", "feature"))
+    Scenario(run=load("oauth.tests.tokens", "feature"))
+    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+    Scenario(run=load("oauth.tests.cache_semantics", "feature"))
+    Scenario(run=load("oauth.tests.access_control", "feature"))
+    Scenario(run=load("oauth.tests.groups", "feature"))
+    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+    Scenario(run=load("oauth.tests.tls", "feature"))
+    Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
+    Scenario(run=load("oauth.tests.identity", "feature"))
+    Scenario(run=load("oauth.tests.log_hygiene", "feature"))
+    Scenario(run=load("oauth.tests.quotas", "feature"))
+    # Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
 
 if main():

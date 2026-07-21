@@ -11,6 +11,7 @@ from s3.tests.export_partition.steps import (
     default_columns,
     check_killed_export_status,
     check_export_status,
+    wait_for_export_to_start,
 )
 from helpers.create import partitioned_replicated_merge_tree_table
 from helpers.common import getuid
@@ -29,14 +30,17 @@ def kill_export_partition_command(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
+        # Many parts (with merges stopped so they are not collapsed) keep the
+        # export busy long enough to be cancelled once the network is throttled,
+        # instead of finishing before KILL can take effect.
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=False,
+            stop_merges=True,
             cluster="replicated_cluster",
-            number_of_partitions=5,
-            number_of_parts=10,
+            number_of_partitions=2,
+            number_of_parts=100,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -47,18 +51,26 @@ def kill_export_partition_command(self):
     with And("I slow the network to make export take longer"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    with When("I start exporting a partition"):
+    with When("I start exporting a partition in the background"):
+        # exitcode=None tolerates the export query erroring when it is cancelled
+        # by KILL, so the background step does not fail or retry on cancellation.
         Step(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             partitions=[partition_to_export],
             check_export=False,
+            exitcode=None,
         )
 
-        time.sleep(0.001)
+    with And("I wait for the export to be in progress before killing it"):
+        wait_for_export_to_start(
+            source_table=source_table,
+            partition_id=partition_to_export,
+        )
 
-        Step(test=kill_export_partition, parallel=True)(
+    with And("I kill the in-progress export"):
+        kill_export_partition(
             partition_id=partition_to_export,
             source_table=source_table,
             destination_table=s3_table_name,

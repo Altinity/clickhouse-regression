@@ -70,9 +70,7 @@ def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_MovesControl("1.0"))
 @Name("STOP MOVES holds the export PENDING, START MOVES resumes it")
-def stop_moves_holds_export_pending(
-    self, minio_root_user, minio_root_password
-):
+def stop_moves_holds_export_pending(self, minio_root_user, minio_root_password):
     """``SYSTEM STOP MOVES`` keeps the export PENDING and leaves the
     destination empty; ``SYSTEM START MOVES`` lets it complete cleanly
     with one append snapshot.
@@ -160,9 +158,7 @@ def stop_moves_holds_export_pending(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_KillExport("1.0"))
 @Name("KILL EXPORT PARTITION while moves are stopped transitions to KILLED")
-def kill_export_while_stopped_marks_killed(
-    self, minio_root_user, minio_root_password
-):
+def kill_export_while_stopped_marks_killed(self, minio_root_user, minio_root_password):
     """``KILL EXPORT PARTITION`` issued while ``SYSTEM STOP MOVES`` holds
     the export PENDING transitions the row to ``KILLED``, and a subsequent
     ``SYSTEM START MOVES`` does not resurrect it.
@@ -250,9 +246,7 @@ def kill_export_while_stopped_marks_killed(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_KillExport("1.0"))
 @Name("KILL EXPORT PARTITION during commit transitions to KILLED")
-def kill_export_during_commit_marks_killed(
-    self, minio_root_user, minio_root_password
-):
+def kill_export_during_commit_marks_killed(self, minio_root_user, minio_root_password):
     """With ``export_partition_commit_always_throw`` armed and very high
     ``max_retries``, every commit attempt throws and the export stays
     PENDING. ``KILL`` issued mid-retry must transition the row to
@@ -438,9 +432,7 @@ def missing_partition_id_rejected(self, minio_root_user, minio_root_password):
         self.context.node.query(
             f"ALTER TABLE {source_table} "
             f"EXPORT PARTITION ID '1900' TO TABLE {dest_name}",
-            settings=prepare_export_partition_settings(
-                self.context.catalog, None
-            ),
+            settings=prepare_export_partition_settings(self.context.catalog, None),
             no_checks=True,
         )
         # Give the scheduler a moment to see there are no parts.

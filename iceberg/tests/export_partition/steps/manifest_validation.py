@@ -14,6 +14,8 @@ MinIO credentials, and dispatch internally:
 
 * ``rest`` / ``glue`` modes use the ``pyiceberg_catalog`` handle attached to
   the destination dict (created by ``iceberg.tests.steps.catalog``).
+* Casting ``ice`` catalog destinations created via ClickHouse DDL carry
+  ``metadata_prefix`` instead; they load as :class:`StaticTable` from MinIO.
 * ``no_catalog`` mode scans MinIO for the newest ``*.metadata.json`` under
   the IcebergS3 table's prefix and loads it as a :class:`StaticTable`.
 
@@ -301,25 +303,30 @@ def load_pyiceberg_table(
 ):
     """Load the destination as a PyIceberg ``Table`` regardless of catalog mode.
 
-    Callers should refresh the returned table before asserting on the
-    current snapshot if a ``EXPORT PARTITION`` was just issued - PyIceberg
-    caches metadata otherwise.
+    Callers should refresh catalog-backed tables before asserting on the
+    current snapshot if a ``EXPORT PARTITION`` was just issued. ``StaticTable``
+    loads the newest ``*.metadata.json`` from MinIO and must not call
+    ``refresh()`` (PyIceberg raises ``NotImplementedError``).
     """
     handle = as_pyiceberg_handle(destination)
-    if handle is not None:
+    if handle is not None and "pyiceberg_catalog" in handle:
         catalog = handle["pyiceberg_catalog"]
         table = catalog.load_table(f"{handle['namespace']}.{handle['table_name']}")
         table.refresh()
         return table
 
+    if isinstance(destination, dict) and "metadata_prefix" in destination:
+        table_prefix = destination["metadata_prefix"]
+    else:
+        table_name = as_destination_name(destination)
+        table_prefix = f"{no_catalog_prefix_root}/{table_name}"
     from pyiceberg.table import StaticTable
 
-    table_name = as_destination_name(destination)
     metadata_location = _latest_metadata_location(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
         bucket=bucket,
-        table_prefix=f"{no_catalog_prefix_root}/{table_name}",
+        table_prefix=table_prefix,
         endpoint_url=endpoint_url,
     )
     properties = {
@@ -583,7 +590,9 @@ def assert_file_paths_under_prefix(
         minio_root_password=minio_root_password,
     )
     bad_paths = [
-        df.file_path for df in data_files if not df.file_path.startswith(expected_prefix)
+        df.file_path
+        for df in data_files
+        if not df.file_path.startswith(expected_prefix)
     ]
     assert not bad_paths, error(
         f"Data files not under expected prefix {expected_prefix!r} in "

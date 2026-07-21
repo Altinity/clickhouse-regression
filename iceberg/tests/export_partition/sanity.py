@@ -195,9 +195,7 @@ def multi_partition_alter(self, minio_root_user, minio_root_password):
             f"ALTER TABLE {source_table}\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name},\n"
             f"  EXPORT PARTITION ID '2021' TO TABLE {dest_name}",
-            settings=prepare_export_partition_settings(
-                self.context.catalog, None
-            ),
+            settings=prepare_export_partition_settings(self.context.catalog, None),
         )
 
     with And("wait for both exports to complete"):

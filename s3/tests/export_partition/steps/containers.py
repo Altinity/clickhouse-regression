@@ -1,5 +1,36 @@
 from testflows.core import *
 
+S3_ENDPOINT_PORT = 9001
+
+
+@TestStep(When)
+def block_s3_network(self, node, port=S3_ENDPOINT_PORT, device="eth0"):
+    """Drop all packets to the MinIO endpoint port on ``node`` using tc-netem.
+
+    Only S3-bound traffic is affected (Keeper coordination and the local client
+    connection stay healthy), so the export worker keeps running and surfaces a
+    retryable object-storage failure. Pair with :func:`unblock_s3_network`."""
+    node.command(f"tc qdisc add dev {device} root handle 1: prio", exitcode=0)
+    node.command(
+        f"tc qdisc add dev {device} parent 1:3 handle 30: netem loss 100%",
+        exitcode=0,
+    )
+    node.command(
+        f"tc filter add dev {device} protocol ip parent 1:0 prio 3 u32 "
+        f"match ip protocol 6 0xff match ip dport {port} 0xffff flowid 1:3",
+        exitcode=0,
+    )
+
+
+@TestStep(When)
+def unblock_s3_network(self, node, device="eth0", no_checks=False):
+    """Remove the tc-netem rule added by :func:`block_s3_network`."""
+    node.command(
+        f"tc qdisc del dev {device} root",
+        exitcode=None if no_checks else 0,
+        no_checks=no_checks,
+    )
+
 
 @TestStep(When)
 def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):

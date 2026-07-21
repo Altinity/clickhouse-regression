@@ -16,6 +16,8 @@
     * 3.5 [RQ.Iceberg.ExportPartition.DataTypes.Composite](#rqicebergexportpartitiondatatypescomposite)
     * 3.6 [RQ.Iceberg.ExportPartition.DataTypes.UnsupportedRejection](#rqicebergexportpartitiondatatypesunsupportedrejection)
     * 3.7 [RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces](#rqicebergexportpartitiondatatypesexportsurfaces)
+    * 3.8 [RQ.Iceberg.ExportPartition.Casting.SafeCasts](#rqicebergexportpartitioncastingsafecasts)
+    * 3.9 [RQ.Iceberg.ExportPartition.Casting.LossyCasts](#rqicebergexportpartitioncastinglossycasts)
 * 4 [Committed Iceberg metadata](#committed-iceberg-metadata)
     * 4.1 [RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain](#rqicebergexportpartitionmanifestintegritysnapshotchain)
     * 4.2 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec](#rqicebergexportpartitionmanifestintegritypartitionspec)
@@ -185,6 +187,20 @@ The rejection SHALL fire either when the destination is created or when the expo
 version: 1.0
 
 [ClickHouse] SHALL preserve the same Iceberg type mapping and round-trip row equality when the export is issued as either `EXPORT PARTITION ID '<id>'` or `EXPORT PART '<part_name>'` against a `no_catalog` IcebergS3 destination (direct writes, no REST/Glue catalog on read-back).
+
+### RQ.Iceberg.ExportPartition.Casting.SafeCasts
+version: 1.0
+
+[ClickHouse] SHALL apply the same safe positional column casts during `EXPORT PARTITION` that `INSERT INTO <iceberg_destination> SELECT * FROM <source>` applies when the MergeTree source and Iceberg destination schemas differ only by `canBeSafelyCast`-permitted type pairs. The exported rows and committed snapshot metadata SHALL match an INSERT SELECT benchmark on a twin destination.
+
+**Regression module:** `iceberg.tests.export_partition.casting` (`casting.py`, `safe`).
+
+### RQ.Iceberg.ExportPartition.Casting.LossyCasts
+version: 1.0
+
+[ClickHouse] SHALL reject `EXPORT PARTITION` that would require a lossy cast when `export_merge_tree_part_allow_lossy_cast = 0`, and SHALL accept the export (with truncated values matching INSERT SELECT) when the setting is enabled.
+
+**Regression module:** `iceberg.tests.export_partition.casting` (`casting.py`, `lossy`).
 
 ## Committed Iceberg metadata
 

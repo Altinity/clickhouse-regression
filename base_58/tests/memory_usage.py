@@ -101,6 +101,12 @@ def memory_usage_for_constant_input(self, node=None):
     if node is None:
         node = self.context.node
 
+    base58_settings = (
+        " SETTINGS function_base58_max_input_size = 0"
+        if check_clickhouse_version(">=26.6")(self)
+        else ""
+    )
+
     with Check("constant input"):
         for attempt in retries(timeout=100, delay=10):
             with attempt:
@@ -108,7 +114,7 @@ def memory_usage_for_constant_input(self, node=None):
 
                 with When("I run base58 encode function"):
                     r = node.query(
-                        f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
+                        f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}'){base58_settings} FORMAT TabSeparated",
                         query_id=id_for_retry + 0,
                     )
                     b58_encoded_string = r.output
@@ -122,7 +128,7 @@ def memory_usage_for_constant_input(self, node=None):
 
                 with When("I run base58 decode function"):
                     r = node.query(
-                        f"SELECT base58Decode('{b58_encoded_string}') FORMAT TabSeparated",
+                        f"SELECT base58Decode('{b58_encoded_string}'){base58_settings} FORMAT TabSeparated",
                         query_id=id_for_retry + 2,
                     )
                     b58_decoded_string = r.output

@@ -16,7 +16,7 @@ from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory,
 )
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_post_26_3_10_20001
 
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
@@ -41,6 +41,7 @@ from iceberg.tests.export_partition.steps.verification import (
 
 BAD_ARGUMENTS = 36
 INCOMPATIBLE_COLUMNS = 122
+NUMBER_OF_COLUMNS_DOESNT_MATCH = 20
 
 
 ICEBERG_WRITE_SETTINGS = [("allow_experimental_insert_into_iceberg", 1)]
@@ -133,9 +134,7 @@ def add_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("insert the second partition with a score"):
-        insert_data(
-            table_name=source_table, values="(3, 2021, 42), (4, 2021, NULL)"
-        )
+        insert_data(table_name=source_table, values="(3, 2021, 42), (4, 2021, NULL)")
 
     with And("export the 2021 partition"):
         export_partition(
@@ -205,9 +204,7 @@ def drop_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("insert the first partition"):
-        insert_data(
-            table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')"
-        )
+        insert_data(table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')")
 
     with And("create the Iceberg destination with the extra column"):
         destination = create_iceberg_destination(
@@ -225,9 +222,7 @@ def drop_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("DROP COLUMN note on both sides"):
-        alter_source(
-            source_table=source_table, alter_clause="DROP COLUMN note"
-        )
+        alter_source(source_table=source_table, alter_clause="DROP COLUMN note")
         alter_iceberg_destination(
             destination=destination, alter_clause="DROP COLUMN note"
         )
@@ -362,9 +357,7 @@ def rename_column_between_exports(self, minio_root_user, minio_root_password):
         )
 
     with And("insert the first partition"):
-        insert_data(
-            table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')"
-        )
+        insert_data(table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')")
 
     with And("create the Iceberg destination with the initial schema"):
         destination = create_iceberg_destination(
@@ -429,12 +422,14 @@ def rename_column_between_exports(self, minio_root_user, minio_root_password):
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations("1.0"))
 @Name("source-only schema drift is rejected at EXPORT")
-def source_only_schema_drift_rejected(
-    self, minio_root_user, minio_root_password
-):
+def source_only_schema_drift_rejected(self, minio_root_user, minio_root_password):
     """Altering only the source schema leaves the destination behind;
-    the next ``EXPORT PARTITION`` is rejected with
-    ``INCOMPATIBLE_COLUMNS`` instead of silently truncating.
+    the next ``EXPORT PARTITION`` is rejected instead of silently truncating.
+
+    Before Altinity/ClickHouse#1779 (``>26.3.10.20001.altinityantalya``) the
+    error is ``INCOMPATIBLE_COLUMNS``; afterward it is
+    ``NUMBER_OF_COLUMNS_DOESNT_MATCH`` because column-count mismatch is
+    checked before type compatibility.
     """
     source_table = f"mt_{getuid()}"
     initial_columns = "id Int64, year Int32"
@@ -460,12 +455,18 @@ def source_only_schema_drift_rejected(
         insert_data(table_name=source_table, values="(1, 2020, 10)")
 
     with Then("EXPORT PARTITION is rejected for schema mismatch"):
+        if check_if_antalya_post_26_3_10_20001(self):
+            expected_exitcode = NUMBER_OF_COLUMNS_DOESNT_MATCH
+            expected_message = "NUMBER_OF_COLUMNS"
+        else:
+            expected_exitcode = INCOMPATIBLE_COLUMNS
+            expected_message = "INCOMPATIBLE_COLUMNS"
         export_partition(
             source_table=source_table,
             destination_table=as_destination_name(destination),
             partition_id="2020",
-            exitcode=INCOMPATIBLE_COLUMNS,
-            message="INCOMPATIBLE_COLUMNS",
+            exitcode=expected_exitcode,
+            message=expected_message,
             wait_for_completion=False,
         )
 
@@ -473,9 +474,7 @@ def source_only_schema_drift_rejected(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory("1.0"))
 @Name("iceberg schema history grows after ADD COLUMN")
-def iceberg_schema_history_advances(
-    self, minio_root_user, minio_root_password
-):
+def iceberg_schema_history_advances(self, minio_root_user, minio_root_password):
     """``ADD COLUMN`` on the Iceberg destination grows
     ``table.schemas()`` by at least one entry, and the latest schema
     contains the new field.

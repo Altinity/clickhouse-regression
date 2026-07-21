@@ -201,13 +201,11 @@ def create_pyiceberg_catalog_destination(
             s3_endpoint=pyiceberg_s3_endpoint,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            clean_up_minio_bucket=False,
+            clean_up_minio_bucket=True,
         )
 
     with And(f"ensure namespace {namespace!r} exists"):
-        catalog_steps.create_namespace(
-            catalog=pyiceberg_catalog, namespace=namespace
-        )
+        catalog_steps.create_namespace(catalog=pyiceberg_catalog, namespace=namespace)
 
     with And(f"materialise iceberg table {namespace}.{table_name} through the catalog"):
         pyiceberg_catalog.create_table(
@@ -396,9 +394,7 @@ def create_iceberg_destination(
         skip(f"catalog mode {catalog!r}: {e}")
 
     try:
-        partition_spec = ch_partition_by_to_pyiceberg_spec(
-            partition_by, column_id_map
-        )
+        partition_spec = ch_partition_by_to_pyiceberg_spec(partition_by, column_id_map)
     except UnsupportedCHPartitionExprError as e:
         skip(f"catalog mode {catalog!r}: {e}")
 

@@ -47,9 +47,38 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
 )
 
 # ``EXPORT_PARTITION_ALREADY_EXPORTED`` (server error code 1006) when a
-# duplicate export key is still live in Keeper. ``clickhouse-client`` maps
-# it to ``1006 % 256``.
+# duplicate export key is still live in Keeper. Older builds surface the
+# same rejection as ``BAD_ARGUMENTS`` (client exit 36); newer builds map
+# ``1006 % 256`` to client exit 238. Requirements allow either:
+# ``EXPORT_PARTITION_ALREADY_EXPORTED``, historically ``BAD_ARGUMENTS``.
+EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_LEGACY = 36
 EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE = 238
+EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODES = frozenset(
+    {
+        EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_LEGACY,
+        EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
+    }
+)
+DUPLICATE_EXPORT_REJECTION_MESSAGE = "Export with key"
+
+
+def assert_duplicate_export_rejected(result, message=None):
+    """Assert ``result`` is a synchronous duplicate-export rejection."""
+    from testflows.asserts import error
+
+    assert result.exitcode in EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODES, error(
+        "expected duplicate-export client exit 36 or 238, "
+        f"got {result.exitcode}: {result.output}"
+    )
+    expected_message = message or DUPLICATE_EXPORT_REJECTION_MESSAGE
+    assert expected_message in result.output, error(result.output)
+
+
+def query_expecting_duplicate_export_rejection(node, sql, settings=None, message=None):
+    """Run ``sql`` and assert duplicate-export rejection (exit 36 or 238)."""
+    result = node.query(sql, settings=settings, ignore_exception=True)
+    assert_duplicate_export_rejected(result, message=message)
+    return result
 
 
 # ClickHouse bug workaround (Glue only).
@@ -261,15 +290,26 @@ def export_partition(
         f"running EXPORT PARTITION id '{partition_id}' from "
         f"{source_table} to {name}"
     ):
-        result = node.query(
+        sql = (
             f"ALTER TABLE {source_table} "
             f"EXPORT PARTITION ID '{partition_id}' "
-            f"TO TABLE {name}",
-            settings=settings,
-            exitcode=exitcode,
-            message=message,
-            ignore_exception=expect_failure,
+            f"TO TABLE {name}"
         )
+        if exitcode == EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE:
+            result = query_expecting_duplicate_export_rejection(
+                node,
+                sql,
+                settings=settings,
+                message=message,
+            )
+        else:
+            result = node.query(
+                sql,
+                settings=settings,
+                exitcode=exitcode,
+                message=message,
+                ignore_exception=expect_failure,
+            )
 
     if wait_for_completion and not expect_failure:
         with And(f"waiting for export of partition '{partition_id}' to complete"):
@@ -326,9 +366,7 @@ def export_part(
 
     expect_failure = exitcode != 0 or message is not None
 
-    with By(
-        f"running EXPORT PART '{part_name}' from {source_table} to {name}"
-    ):
+    with By(f"running EXPORT PART '{part_name}' from {source_table} to {name}"):
         if expect_failure:
             result = node.query(
                 f"ALTER TABLE {source_table} "
@@ -474,9 +512,7 @@ def insert_into_iceberg_destination(
     if not any(key == "allow_experimental_insert_into_iceberg" for key, _ in settings):
         settings.append(("allow_experimental_insert_into_iceberg", 1))
 
-    settings = _apply_glue_metadata_path_workaround(
-        self.context.catalog, settings
-    )
+    settings = _apply_glue_metadata_path_workaround(self.context.catalog, settings)
 
     expect_failure = exitcode != 0 or message is not None
 
@@ -530,9 +566,7 @@ def truncate_iceberg_destination(
     if not any(key == "allow_experimental_insert_into_iceberg" for key, _ in settings):
         settings.append(("allow_experimental_insert_into_iceberg", 1))
 
-    settings = _apply_glue_metadata_path_workaround(
-        self.context.catalog, settings
-    )
+    settings = _apply_glue_metadata_path_workaround(self.context.catalog, settings)
 
     expect_failure = exitcode != 0 or message is not None
 

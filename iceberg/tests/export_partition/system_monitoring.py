@@ -62,7 +62,9 @@ def _seed_source_two_partitions():
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports("1.0")
+)
 @Name("every system.replicated_partition_exports column is populated on success")
 def system_table_columns_populated_on_success(
     self, minio_root_user, minio_root_password
@@ -130,12 +132,9 @@ def system_table_columns_populated_on_success(
             f"source_table mismatch: {src_tab!r} vs {source_table!r}"
         )
         assert dest_tab == dest_table_in_system, error(
-            f"destination_table mismatch: {dest_tab!r} vs "
-            f"{dest_table_in_system!r}"
+            f"destination_table mismatch: {dest_tab!r} vs " f"{dest_table_in_system!r}"
         )
-        assert partition_id == "2020", error(
-            f"partition_id mismatch: {partition_id!r}"
-        )
+        assert partition_id == "2020", error(f"partition_id mismatch: {partition_id!r}")
 
     with And("parts_count > 0 and parts_to_do stays within bounds"):
         # ``parts_to_do`` is populated from the ZK ``processing`` children
@@ -167,9 +166,7 @@ def system_table_columns_populated_on_success(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_PartLog("1.0"))
 @Name("system.part_log records one ExportPart per exported part")
-def part_log_records_exported_parts(
-    self, minio_root_user, minio_root_password
-):
+def part_log_records_exported_parts(self, minio_root_user, minio_root_password):
     """Each exported part produces an ``ExportPart`` row in
     ``system.part_log`` on the replica that drove the export.
     """
@@ -214,9 +211,7 @@ def part_log_records_exported_parts(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents("1.0"))
 @Name("PartsExports and ExportPartitionZooKeeper* profile events increment")
-def profile_events_increment_on_success(
-    self, minio_root_user, minio_root_password
-):
+def profile_events_increment_on_success(self, minio_root_user, minio_root_password):
     """``PartsExports`` and ``ExportPartitionZooKeeperRequests`` increase
     around a clean export; ``PartsExportFailures`` does not move.
     """
@@ -256,9 +251,8 @@ def profile_events_increment_on_success(
             f"got delta={parts_delta}"
         )
 
-        failure_delta = (
-            after.get("PartsExportFailures", 0)
-            - before.get("PartsExportFailures", 0)
+        failure_delta = after.get("PartsExportFailures", 0) - before.get(
+            "PartsExportFailures", 0
         )
         assert failure_delta == 0, error(
             f"PartsExportFailures must not move during a clean export, "
@@ -275,9 +269,7 @@ def profile_events_increment_on_success(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance("1.0"))
 @Name("KILL EXPORT preserves source_replica and create_time")
-def kill_export_preserves_provenance(
-    self, minio_root_user, minio_root_password
-):
+def kill_export_preserves_provenance(self, minio_root_user, minio_root_password):
     """``KILL EXPORT PARTITION`` transitions the row to ``KILLED`` and
     preserves ``source_replica`` and ``create_time`` from the PENDING row.
     The export is parked with ``SYSTEM STOP MOVES`` to keep PENDING observable.
@@ -291,9 +283,7 @@ def kill_export_preserves_provenance(
             partition_by=SIMPLE_PARTITION_BY,
         )
     with And("insert one part into partition 2020"):
-        insert_data(
-            table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)"
-        )
+        insert_data(table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)")
 
     with Given("create the Iceberg destination"):
         destination = create_iceberg_destination(
@@ -376,9 +366,7 @@ def kill_export_preserves_provenance(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance("1.0"))
 @Name("KILL EXPORT during commit preserves provenance and diagnostic fields")
-def kill_during_commit_preserves_provenance(
-    self, minio_root_user, minio_root_password
-):
+def kill_during_commit_preserves_provenance(self, minio_root_user, minio_root_password):
     """Provenance (``source_replica`` / ``create_time``) survives a KILL
     issued while the export is retrying through the
     ``export_partition_commit_always_throw`` failpoint, which keeps it
@@ -399,9 +387,7 @@ def kill_during_commit_preserves_provenance(
             partition_by=SIMPLE_PARTITION_BY,
         )
     with And("insert one part into partition 2020"):
-        insert_data(
-            table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)"
-        )
+        insert_data(table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)")
 
     with Given("create the Iceberg destination"):
         destination = create_iceberg_destination(
@@ -451,12 +437,8 @@ def kill_during_commit_preserves_provenance(
                 "Expected a system.replicated_partition_exports row "
                 "after wait_for_export_to_start"
             )
-            in_flight_replica, in_flight_create_time = (
-                in_flight_row.split("\t")
-            )
-            assert in_flight_replica, error(
-                "source_replica empty in the in-flight row"
-            )
+            in_flight_replica, in_flight_create_time = in_flight_row.split("\t")
+            assert in_flight_replica, error("source_replica empty in the in-flight row")
             assert int(in_flight_create_time) > 0, error(
                 f"create_time should be populated in the in-flight row, "
                 f"got {in_flight_create_time!r}"

@@ -67,9 +67,9 @@ def take_screenshot(self, driver, name="screenshot"):
     The PNG is saved into the test's work directory and attached
     to the test report via the `save_screenshot` method + metric().
     """
-    screenshots_dir = os.path.join(
-        current().context.configs_dir, "..", "screenshots"
-    )
+    time.sleep(0.3)
+
+    screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
     os.makedirs(screenshots_dir, exist_ok=True)
 
     filename = f"{name}.png"
@@ -189,9 +189,7 @@ def select_datasource(self, driver, datasource_name):
 
     wait = WebDriverWait(driver, 30)
     ds_link = wait.until(
-        EC.element_to_be_clickable(
-            (By.XPATH, f"//a[contains(., '{datasource_name}')]")
-        )
+        EC.element_to_be_clickable((By.XPATH, f"//a[contains(., '{datasource_name}')]"))
     )
     ds_link.click()
     note(f"Selected datasource: {datasource_name}")
@@ -209,8 +207,7 @@ def click_explore_datasource(self, driver):
         EC.element_to_be_clickable(
             (
                 By.CSS_SELECTOR,
-                "a[href*='/explore'][data-testid*='explore'], "
-                "a[href*='/explore']",
+                "a[href*='/explore'][data-testid*='explore'], " "a[href*='/explore']",
             )
         )
     )
@@ -311,30 +308,39 @@ def open_explore_with_query(
     format="table",
     datasource_uid="clickhouse-direct",
     base_url="http://grafana:3000",
+    date_time_col=None,
+    date_time_type=None,
 ):
     """Navigate directly to Grafana Explore with a pre-configured query.
 
     Bypasses Angular plugin UI interaction by encoding the query and format
     into the Explore URL, which Grafana reads on page load.
+
+    When date_time_col and date_time_type are provided, they configure the
+    timestamp column for macro expansion ($timeFilter, $timeSeries, etc).
     """
     import json
     import urllib.parse
 
+    query_obj = {
+        "refId": "A",
+        "query": query,
+        "rawQuery": True,
+        "format": format,
+        "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": datasource_uid,
+        },
+    }
+    if date_time_col:
+        query_obj["dateTimeCol"] = date_time_col
+    if date_time_type:
+        query_obj["dateTimeType"] = date_time_type
+
     left = json.dumps(
         {
             "datasource": datasource_uid,
-            "queries": [
-                {
-                    "refId": "A",
-                    "query": query,
-                    "rawQuery": True,
-                    "format": format,
-                    "datasource": {
-                        "type": "vertamedia-clickhouse-datasource",
-                        "uid": datasource_uid,
-                    },
-                }
-            ],
+            "queries": [query_obj],
         }
     )
     url = f"{base_url}/explore?orgId=1&left={urllib.parse.quote(left)}"
@@ -344,9 +350,38 @@ def open_explore_with_query(
 
 
 @TestStep(When)
-def set_format_as_table(self, driver):
-    """Placeholder — format is set via the API query step instead."""
-    note("Format will be set via API query — skipping UI dropdown change")
+def click_run_query(self, driver):
+    """Click the Run query button in Explore and wait for results to appear."""
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
+    wait = WebDriverWait(driver, 30)
+    run_btn = wait.until(
+        EC.element_to_be_clickable(
+            (
+                By.CSS_SELECTOR,
+                "button[data-testid='data-testid RefreshPicker run button']",
+            )
+        )
+    )
+    run_btn.click()
+    note("Clicked Run query button")
+
+    time.sleep(2)
+
+    WebDriverWait(driver, 60).until(
+        EC.any_of(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[class*='table']")),
+            EC.presence_of_element_located((By.CSS_SELECTOR, "table")),
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[class*='uPlot']")),
+            EC.presence_of_element_located((By.CSS_SELECTOR, "canvas")),
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "[data-testid='data-testid explore content'] table")
+            ),
+        )
+    )
+    note("Query results rendered")
 
 
 @TestStep(When)
@@ -393,45 +428,6 @@ def enter_and_run_query(self, driver, query):
     time.sleep(5)
 
 
-@TestStep(When)
-def run_query_via_api(self, driver, query, datasource_uid="clickhouse-direct"):
-    """Execute a ClickHouse query through the Grafana datasource proxy API.
-
-    Uses the browser's authenticated session to call the Grafana /api/ds/query
-    endpoint. Returns the raw response text from the API.
-    """
-    result = driver.execute_async_script(
-        """
-        var callback = arguments[arguments.length - 1];
-        fetch('/api/ds/query', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                queries: [{
-                    refId: 'A',
-                    datasource: {
-                        type: 'vertamedia-clickhouse-datasource',
-                        uid: arguments[0]
-                    },
-                    rawSql: arguments[1],
-                    format: 'table',
-                    rawQuery: true
-                }],
-                from: '1609459200000',
-                to: '1893456000000'
-            })
-        })
-        .then(function(r) { return r.text(); })
-        .then(function(t) { callback(t); })
-        .catch(function(e) { callback('error: ' + e.message); });
-        """,
-        datasource_uid,
-        query,
-    )
-    note(f"API query result: {result[:500]}")
-    return result
-
-
 @TestStep(Then)
 def get_query_result_text(self, driver):
     """Extract text content from the Explore query result area.
@@ -474,3 +470,144 @@ def get_query_result_text(self, driver):
         return body_text
     except Exception:
         fail("Could not find any query result area")
+
+
+@TestStep(Then)
+def verify_graph_panel_rendered(self, driver):
+    """Verify that a graph/time-series visualization has rendered.
+
+    Checks for canvas or uPlot elements which indicate the graph library
+    has drawn data. Works in both Explore and Dashboard contexts.
+    """
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
+    wait = WebDriverWait(driver, 30)
+
+    graph_rendered = wait.until(
+        EC.any_of(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[class*='uPlot']")),
+            EC.presence_of_element_located((By.CSS_SELECTOR, "canvas")),
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "[data-testid='data-testid panel content'] canvas")
+            ),
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, ".panel-container canvas")
+            ),
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-panelid] canvas")),
+        )
+    )
+    assert graph_rendered, "Graph did not render any visual content"
+    note("Graph rendered successfully (canvas/uPlot element found)")
+
+
+@TestStep(When)
+def create_dashboard_with_timeseries_panel(
+    self,
+    driver,
+    title,
+    query,
+    date_time_col="event_time",
+    date_time_type="DATETIME",
+    datasource_uid="clickhouse-direct",
+):
+    """Create a Grafana dashboard with a time-series panel via the API.
+
+    The panel query model includes dateTimeCol and dateTimeType so that
+    $timeSeriesMs/$timeFilterMs macros are expanded correctly by the plugin.
+    Returns the dashboard UID.
+    """
+    import json
+
+    dashboard_payload = json.dumps(
+        {
+            "dashboard": {
+                "title": title,
+                "panels": [
+                    {
+                        "type": "timeseries",
+                        "title": title,
+                        "gridPos": {"h": 12, "w": 24, "x": 0, "y": 0},
+                        "datasource": {
+                            "type": "vertamedia-clickhouse-datasource",
+                            "uid": datasource_uid,
+                        },
+                        "targets": [
+                            {
+                                "refId": "A",
+                                "rawSql": query,
+                                "query": query,
+                                "rawQuery": True,
+                                "format": "time_series",
+                                "database": "default",
+                                "table": "test_grafana",
+                                "dateCol": "",
+                                "dateTimeCol": date_time_col,
+                                "dateTimeType": date_time_type,
+                                "dateTimeColDataType": "",
+                                "round": "0s",
+                                "intervalFactor": 1,
+                                "skip_comments": True,
+                                "datasource": {
+                                    "type": "vertamedia-clickhouse-datasource",
+                                    "uid": datasource_uid,
+                                },
+                            }
+                        ],
+                        "fieldConfig": {
+                            "defaults": {"color": {"mode": "palette-classic"}},
+                            "overrides": [],
+                        },
+                    }
+                ],
+                "time": {"from": "now-24h", "to": "now"},
+                "timezone": "browser",
+            },
+            "overwrite": True,
+        }
+    )
+
+    result = driver.execute_async_script(
+        """
+        var callback = arguments[arguments.length - 1];
+        fetch('/api/dashboards/db', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: arguments[0]
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(j) { callback(JSON.stringify(j)); })
+        .catch(function(e) { callback('error: ' + e.message); });
+        """,
+        dashboard_payload,
+    )
+    note(f"Dashboard creation response: {result}")
+
+    resp = json.loads(result)
+    uid = resp.get("uid", "")
+    assert uid, f"Failed to create dashboard: {result}"
+    note(f"Created dashboard with UID: {uid}")
+    return uid
+
+
+@TestStep(When)
+def navigate_to_dashboard(self, driver, uid, base_url="http://grafana:3000"):
+    """Open a Grafana dashboard by UID and wait for panels to load."""
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
+    driver.get(f"{base_url}/d/{uid}?orgId=1&from=now-24h&to=now")
+    time.sleep(5)
+
+    WebDriverWait(driver, 30).until(
+        EC.any_of(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "[data-testid='data-testid panel content']")
+            ),
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".panel-container")),
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-panelid]")),
+        )
+    )
+    note(f"Dashboard loaded: {driver.current_url}")

@@ -616,6 +616,8 @@ default_temporary_table_engine = r"""'{"default":"Memory"}'"""
 
 default_view_definer = r"""'{"default":"CURRENT_USER"}'"""
 
+defer_partition_pruning_after_final = r"""'{"default":"1"}'"""
+
 delta_lake_enable_engine_predicate = r"""'{"default":"1"}'"""
 
 delta_lake_enable_expression_visitor_logging = r"""'{"default":"0"}'"""
@@ -773,6 +775,8 @@ distributed_replica_max_ignored_errors = r"""'{"default":"0"}'"""
 do_not_merge_across_partitions_select_final = r"""'{"default":"0"}'"""
 
 drain_timeout = r"""'{"default":"3"}'"""
+
+dynamic_throw_on_type_mismatch = r"""'{"default":"1"}'"""
 
 empty_result_for_aggregation_by_constant_keys_on_empty_set = r"""'{"default":"1"}'"""
 
@@ -2834,6 +2838,8 @@ show_data_lake_catalogs_in_system_tables = r"""'{"default":"0"}'"""
 
 show_processlist_include_internal = r"""'{"default":"1"}'"""
 
+show_remote_databases_in_system_tables = r"""'{"default":"0"}'"""
+
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
 single_join_prefer_left_table = r"""'{"default":"1"}'"""
@@ -3041,6 +3047,8 @@ validate_experimental_and_suspicious_types_inside_nested_types = r"""'{"default"
 validate_mutation_query = r"""'{"default":"1"}'"""
 
 validate_polygons = r"""'{"default":"1"}'"""
+
+variant_throw_on_type_mismatch = r"""'{"default":"1"}'"""
 
 vector_search_filter_strategy = r"""'{"default":"auto"}'"""
 

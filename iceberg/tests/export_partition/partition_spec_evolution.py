@@ -9,7 +9,9 @@ manifest entries tag each data file with the correct partition tuple.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_PartitionSpecEvolution
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_PartitionSpecEvolution,
+)
 
 from helpers.common import getuid
 
@@ -43,9 +45,7 @@ FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("single spec for multiple partition exports")
-def single_spec_for_multiple_partitions(
-    self, minio_root_user, minio_root_password
-):
+def single_spec_for_multiple_partitions(self, minio_root_user, minio_root_password):
     """Three sequential exports keep ``table.specs()`` size-1 with
     ``default-spec-id = 0`` (no spec evolution).
     """
@@ -106,9 +106,7 @@ def single_spec_for_multiple_partitions(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("partition tuple matches partition_id across exports")
-def partition_tuple_matches_partition_id(
-    self, minio_root_user, minio_root_password
-):
+def partition_tuple_matches_partition_id(self, minio_root_user, minio_root_password):
     """Every manifest entry's partition tuple matches the
     ``partition_id`` we used when exporting that partition.
     """
@@ -148,7 +146,9 @@ def partition_tuple_matches_partition_id(
             )
             exported.append(pid)
 
-    with Then("every manifest entry's partition value matches an exported partition_id"):
+    with Then(
+        "every manifest entry's partition value matches an exported partition_id"
+    ):
         data_files = get_data_files(
             destination=destination,
             minio_root_user=minio_root_user,
@@ -177,9 +177,7 @@ def partition_tuple_matches_partition_id(
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("multi-column partition spec is preserved")
-def multi_column_partition_spec_preserved(
-    self, minio_root_user, minio_root_password
-):
+def multi_column_partition_spec_preserved(self, minio_root_user, minio_root_password):
     """A source partitioned by ``(year, region)`` produces an Iceberg
     spec with both identity fields in declared order; every data file
     carries a two-value partition tuple.
