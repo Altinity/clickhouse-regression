@@ -10,7 +10,7 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.tests.common import temporary_bucket_path
+from s3.tests.common import temporary_bucket_path, parse_s3_uri
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
 
@@ -30,6 +30,13 @@ def argparser(parser):
         "--with-s3amazon",
         action="store_true",
         help="use S3 Amazon Cloud storage for external disk",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--with-s3hetzner",
+        action="store_true",
+        help="use Hetzner S3-compatible storage for external disk",
         default=False,
     )
 
@@ -62,6 +69,38 @@ def argparser(parser):
         help="S3 Amazon uri",
         type=Secret(name="aws_s3_uri"),
         default=os.getenv("S3_AMAZON_URI"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-access-key",
+        action="store",
+        help="Hetzner S3 access key",
+        type=Secret(name="hetzner_s3_access_key"),
+        default=os.getenv("HETZNER_S3_ACCESS_KEY"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-key-id",
+        action="store",
+        help="Hetzner S3 key id",
+        type=Secret(name="hetzner_s3_key_id"),
+        default=os.getenv("HETZNER_S3_KEY_ID"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-uri",
+        action="store",
+        help="Hetzner S3 URI including bucket and base prefix",
+        type=Secret(name="hetzner_s3_uri"),
+        default=os.getenv("HETZNER_S3_URI"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-region",
+        action="store",
+        help="Hetzner S3 signing region",
+        type=Secret(name="hetzner_s3_region"),
+        default=os.getenv("HETZNER_S3_REGION"),
     )
 
     parser.add_argument(
@@ -156,28 +195,39 @@ def feature(
     cluster,
     with_minio=False,
     with_s3amazon=False,
+    with_s3hetzner=False,
     with_s3gcs=False,
     environ=None,
     base_uri=None,
+    s3_region=None,
+    s3_endpoint_url=None,
 ):
     """Execute tests for tiered storage feature."""
 
     args = {"cluster": cluster}
     common_args = dict(args=args, flags=TE)
 
-    if with_s3amazon:
+    if with_s3amazon or with_s3hetzner:
         with Given("a temporary S3 path"):
-            bucket_name, bucket_prefix = (
-                base_uri.split(".amazonaws.com/")[-1].strip("/").split("/", maxsplit=1)
+            s3_endpoint_url, bucket_name, bucket_prefix = parse_s3_uri(base_uri)
+            if with_s3hetzner and not bucket_prefix:
+                bucket_prefix = "data"
+                base_uri = f"{s3_endpoint_url}/{bucket_name}/{bucket_prefix}/"
+            cleanup_prefix = (
+                f"{bucket_prefix}/tiered_storage" if bucket_prefix else "tiered_storage"
             )
             temp_s3_path = temporary_bucket_path(
                 bucket_name=bucket_name,
-                bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                bucket_prefix=cleanup_prefix,
                 secret_access_key=environ["S3_AMAZON_ACCESS_KEY"],
                 access_key_id=environ["S3_AMAZON_KEY_ID"],
-                storage="aws_s3",
+                storage="hetzner" if with_s3hetzner else "aws_s3",
+                aws_region=s3_region,
+                s3_endpoint_url=s3_endpoint_url,
             )
-            environ["S3_AMAZON_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}/"
+            environ["S3_AMAZON_URI"] = (
+                f"{base_uri.rstrip('/')}/tiered_storage/{temp_s3_path}/"
+            )
 
     if with_s3gcs:
         with Given("a temporary GCS path"):
@@ -195,7 +245,9 @@ def feature(
             )
             environ["GCS_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}"
 
-    with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
+    with add_storage_config(
+        with_minio, with_s3amazon or with_s3hetzner, with_s3gcs, environ
+    ):
         Scenario(
             run=load("tiered_storage.tests.startup_and_queries", "scenario"),
             **common_args,
@@ -347,10 +399,15 @@ def regression(
     stress=None,
     with_minio=False,
     with_s3amazon=False,
+    with_s3hetzner=False,
     with_s3gcs=False,
     aws_s3_access_key=None,
     aws_s3_key_id=None,
     aws_s3_uri=None,
+    hetzner_s3_access_key=None,
+    hetzner_s3_key_id=None,
+    hetzner_s3_uri=None,
+    hetzner_s3_region=None,
     gcs_key_secret=None,
     gcs_key_id=None,
     gcs_uri=None,
@@ -361,7 +418,7 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if with_minio or with_s3amazon or with_s3gcs:
+    if with_minio or with_s3amazon or with_s3hetzner or with_s3gcs:
         if not self.skip:
             self.skip = []
         self.skip.append(The("/tiered storage/:/:/manual move with downtime"))
@@ -384,6 +441,30 @@ def regression(
             base_uri = aws_s3_uri.value
             aws_region = base_uri.split(".")[1]
 
+        if with_s3hetzner:
+            assert (
+                hetzner_s3_key_id.value is not None
+            ), "HETZNER_S3_KEY_ID env variable must be defined or passed through the command line"
+            assert (
+                hetzner_s3_access_key.value is not None
+            ), "HETZNER_S3_ACCESS_KEY env variable must be defined or passed through the command line"
+            assert (
+                hetzner_s3_uri.value is not None
+            ), "HETZNER_S3_URI env variable must be defined or passed through the command line"
+            environ["S3_AMAZON_KEY_ID"] = hetzner_s3_key_id.value
+            environ["S3_AMAZON_ACCESS_KEY"] = hetzner_s3_access_key.value
+            base_uri = hetzner_s3_uri.value
+            aws_region = (
+                hetzner_s3_region.value if hetzner_s3_region is not None else None
+            )
+            s3_endpoint_url, _, _ = parse_s3_uri(base_uri)
+            environ["S3_AMAZON_URI"] = base_uri
+            environ["AWS_ACCESS_KEY_ID"] = hetzner_s3_key_id.value
+            environ["AWS_SECRET_ACCESS_KEY"] = hetzner_s3_access_key.value
+            environ["AWS_ENDPOINT_URL_S3"] = s3_endpoint_url
+            if aws_region:
+                environ["AWS_DEFAULT_REGION"] = aws_region
+
         if with_s3gcs:
             assert (
                 gcs_key_id.value is not None
@@ -396,15 +477,27 @@ def regression(
             environ["GCS_KEY_SECRET"] = gcs_key_secret.value
             base_uri = gcs_uri.value
 
+        if with_s3amazon:
+            environ["S3_AMAZON_URI"] = base_uri
+            environ["AWS_ACCESS_KEY_ID"] = aws_s3_key_id.value
+            environ["AWS_SECRET_ACCESS_KEY"] = aws_s3_access_key.value
+            if aws_region:
+                environ["AWS_DEFAULT_REGION"] = aws_region
+
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+
+    cluster_environ = dict(environ)
+    if aws_region and "AWS_DEFAULT_REGION" not in cluster_environ:
+        cluster_environ["AWS_DEFAULT_REGION"] = aws_region
 
     with Cluster(
         **cluster_args,
         nodes=nodes,
-        environ={"AWS_DEFAULT_REGION": aws_region},
+        environ=cluster_environ,
     ) as cluster:
         cluster.with_minio = with_minio
-        cluster.with_s3amazon = with_s3amazon
+        cluster.with_s3amazon = with_s3amazon or with_s3hetzner
+        cluster.with_s3hetzner = with_s3hetzner
         cluster.with_s3gcs = with_s3gcs
         self.context.cluster = cluster
 
@@ -419,6 +512,8 @@ def regression(
             name = "with minio"
         elif with_s3amazon:
             name = "with s3amazon"
+        elif with_s3hetzner:
+            name = "with s3hetzner"
         elif with_s3gcs:
             name = "with s3gcs"
 
@@ -426,9 +521,11 @@ def regression(
             cluster=cluster,
             with_minio=with_minio,
             with_s3amazon=with_s3amazon,
+            with_s3hetzner=with_s3hetzner,
             with_s3gcs=with_s3gcs,
             environ=environ,
             base_uri=base_uri,
+            s3_region=aws_region,
         )
 
 

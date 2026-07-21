@@ -4,9 +4,12 @@
 set -x
 
 if [[ "$artifacts" == "hetzner" ]]; then
+  # Avoid set -x expanding secret values into the job log.
+  { set +x; } 2>/dev/null
   export AWS_ACCESS_KEY_ID="$HETZNER_S3_KEY_ID"
   export AWS_SECRET_ACCESS_KEY="$HETZNER_S3_ACCESS_KEY"
   export AWS_DEFAULT_REGION="$HETZNER_S3_REGION"
+  set -x
 fi
 
 if [[ $1 == 1 ]];

@@ -84,6 +84,7 @@ on:
           - s3_all
           - s3_aws
           - s3_gcs
+          - s3_hetzner
           - s3_minio
           - selects
           - session_timezone
@@ -91,6 +92,7 @@ on:
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
+          - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
           - window_functions

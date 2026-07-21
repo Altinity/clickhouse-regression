@@ -12,9 +12,12 @@ cat raw.log | xzcat | xz -z -T $(nproc) - > raw.log.2
 mv raw.log.2 raw.log
 
 if [[ "$artifacts" == "hetzner" ]]; then
+  # Avoid set -x expanding secret values into the job log.
+  { set +x; } 2>/dev/null
   export AWS_ACCESS_KEY_ID="$HETZNER_S3_KEY_ID"
   export AWS_SECRET_ACCESS_KEY="$HETZNER_S3_ACCESS_KEY"
   export AWS_DEFAULT_REGION="$HETZNER_S3_REGION"
+  set -x
 fi
 
 #Specify whether logs should be uploaded.
@@ -27,8 +30,6 @@ then
     ./retry.sh 5 30 aws $aws_endpoint_args s3 cp fails.log.txt $SUITE_REPORT_BUCKET_PATH/fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws $aws_endpoint_args s3 cp report.html $SUITE_REPORT_BUCKET_PATH/report.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
-    ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
-    ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
     ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
     # oauth (and similar suites) collect docker service logs next to the compose
     # env dir (envs/<provider>/_service_logs), not at <suite>/_service_logs.

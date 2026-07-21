@@ -809,6 +809,116 @@ def aws_s3_regression(
 
 
 @TestFeature
+@Name("hetzner")
+def hetzner_s3_regression(
+    self,
+    uri,
+    key_id,
+    access_key,
+    region,
+    cluster_args,
+    with_analyzer=False,
+):
+    """Setup and run Hetzner S3-compatible tests."""
+    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+
+    if uri is None or uri.value is None:
+        fail("Hetzner S3 URI needs to be set")
+    uri = uri.value
+
+    if key_id is None or key_id.value is None:
+        fail("Hetzner S3 key id needs to be set")
+    key_id = key_id.value
+
+    if access_key is None or access_key.value is None:
+        fail("Hetzner S3 access key needs to be set")
+    access_key = access_key.value
+
+    region_value = region.value if region is not None else None
+
+    s3_endpoint_url, bucket, bucket_prefix = parse_s3_uri(uri)
+
+    if not bucket_prefix:
+        bucket_prefix = "data"
+        uri = f"{s3_endpoint_url}/{bucket}/{bucket_prefix}/"
+
+    self.context.storage = "hetzner"
+    self.context.access_key_id = key_id
+    self.context.secret_access_key = access_key
+    self.context.bucket_name = bucket
+    self.context.bucket_prefix = bucket_prefix
+    self.context.region = region_value
+    self.context.s3_endpoint_url = s3_endpoint_url
+
+    with Given("docker-compose cluster"):
+        cluster_environ = {
+            "S3_AMAZON_ACCESS_KEY": access_key,
+            "S3_AMAZON_KEY_ID": key_id,
+            "AWS_ACCESS_KEY_ID": key_id,
+            "AWS_SECRET_ACCESS_KEY": access_key,
+            "AWS_ENDPOINT_URL_S3": s3_endpoint_url,
+        }
+        if region_value:
+            cluster_environ["AWS_DEFAULT_REGION"] = region_value
+
+        cluster = create_cluster(
+            **cluster_args,
+            nodes=nodes,
+            environ=cluster_environ,
+            configs_dir=current_dir(),
+        )
+
+        self.context.cluster = cluster
+        self.context.cluster.bucket = bucket
+        self.context.node = cluster.node("clickhouse1")
+
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=15,
+                max_os_cpu_wait_time_ratio_to_throw=25,
+            )
+
+    with And("I add all possible clusters for nodes"):
+        add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+    with And("I get all possible clusters for nodes"):
+        self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+
+    with Feature("part 1"):
+        Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+    with Feature("part 2"):
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
+
+
+@TestFeature
 @Name("azure")
 def azure_regression(
     self,
@@ -1006,6 +1116,16 @@ def regression(
             region=s3_args["aws_s3_region"],
             key_id=s3_args["aws_s3_key_id"],
             access_key=s3_args["aws_s3_access_key"],
+            with_analyzer=with_analyzer,
+        )
+
+    if "hetzner" in storages:
+        Feature(test=hetzner_s3_regression)(
+            cluster_args=cluster_args,
+            uri=s3_args["hetzner_s3_uri"],
+            region=s3_args["hetzner_s3_region"],
+            key_id=s3_args["hetzner_s3_key_id"],
+            access_key=s3_args["hetzner_s3_access_key"],
             with_analyzer=with_analyzer,
         )
 

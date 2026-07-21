@@ -97,6 +97,7 @@ on:
           - s3_aws
           - s3_azure
           - s3_gcs
+          - s3_hetzner
           - s3_minio
           - export_part
           - export_partition
@@ -108,6 +109,7 @@ on:
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
+          - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
           - version
@@ -1049,6 +1051,48 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
+  s3_hetzner_1:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_hetzner
+      timeout_minutes: 360
+      part: 1
+      storage_path: /hetzner
+      regression_args: '--storage hetzner'
+      artifact_name: s3-hetzner-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/hetzner/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_hetzner_2:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_hetzner
+      timeout_minutes: 360
+      part: 2
+      storage_path: /hetzner
+      regression_args: '--storage hetzner'
+      artifact_name: s3-hetzner-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/hetzner/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   s3_azure_1:
     if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1362,6 +1406,26 @@ jobs:
       storage_path: /aws
       regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
       artifact_name: tiered_storage-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_hetzner' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_hetzner
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--with-s3hetzner'
+      artifact_name: tiered_storage-hetzner-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
