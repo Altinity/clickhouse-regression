@@ -147,7 +147,7 @@ fi
 if [[ -z "$S3_ENDPOINT" ]]; then
   JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
 else
-  JOB_BUCKET_URL=https://$S3_ENDPOINT/$artifact_s3_bucket_path
+  JOB_BUCKET_URL=$S3_ENDPOINT/$artifact_s3_bucket_path
 fi
 
 echo "confidential=$confidential" >>$GITHUB_ENV
