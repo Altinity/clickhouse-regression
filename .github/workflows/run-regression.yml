@@ -1395,7 +1395,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-    
+
   tiered_storage_aws:
     if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
