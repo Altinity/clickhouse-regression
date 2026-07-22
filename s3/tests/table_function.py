@@ -828,8 +828,6 @@ def ssec_encryption_check(self):
     """Check that S3 encrypts files when SSEC option is enabled."""
     if self.context.storage == "hetzner":
         skip("SSE-C (customer-provided keys) not supported on Hetzner S3")
-    if self.context.storage not in ["aws_s3"]:
-        xfail(f"not supported on {self.context.storage}")
 
     node = current().context.node
     name = f"table_{getuid()}"
@@ -918,8 +916,6 @@ def ssec(self):
     """Check S3 table function with SSEC option enabled."""
     if self.context.storage == "hetzner":
         skip("SSE-C (customer-provided keys) not supported on Hetzner S3")
-    if self.context.storage not in ["aws_s3"]:
-        xfail(f"not supported on {self.context.storage}")
 
     with Given("I define S3 SSEC option"):
         add_ssec_s3_option()
