@@ -304,21 +304,25 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.cache_semantics", "feature"))
-    Scenario(run=load("oauth.tests.access_control", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
-    Scenario(run=load("oauth.tests.tls", "feature"))
-    Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
-    Scenario(run=load("oauth.tests.identity", "feature"))
-    Scenario(run=load("oauth.tests.log_hygiene", "feature"))
-    Scenario(run=load("oauth.tests.quotas", "feature"))
-    # Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+    if check_clickhouse_version("<26.3")(self):
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+    else:
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+        Scenario(run=load("oauth.tests.configuration", "feature"))
+        Scenario(run=load("oauth.tests.authentication", "feature"))
+        Scenario(run=load("oauth.tests.tokens", "feature"))
+        Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+        Scenario(run=load("oauth.tests.cache_semantics", "feature"))
+        Scenario(run=load("oauth.tests.access_control", "feature"))
+        Scenario(run=load("oauth.tests.groups", "feature"))
+        Scenario(run=load("oauth.tests.concurrency", "feature"))
+        Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+        Scenario(run=load("oauth.tests.tls", "feature"))
+        Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
+        Scenario(run=load("oauth.tests.identity", "feature"))
+        Scenario(run=load("oauth.tests.log_hygiene", "feature"))
+        Scenario(run=load("oauth.tests.quotas", "feature"))
+        # Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
 
 if main():
