@@ -97,11 +97,11 @@ jobs:
       # Hetzner: used both for hetzner report uploads (artifacts=hetzner, in
       # setup.sh/create_and_upload_logs.sh) and for the hetzner test storage
       # (s3/tiered_storage suites), independent of the artifacts destination.
-      HETZNER_S3_BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
-      HETZNER_S3_REGION: ${{ secrets.HETZNER_S3_REGION }}
+      HETZNER_S3_BUCKET: ${{ vars.HETZNER_S3_BUCKET }}
+      HETZNER_S3_REGION: ${{ vars.HETZNER_S3_REGION }}
       HETZNER_S3_KEY_ID: ${{ secrets.HETZNER_S3_KEY_ID }}
       HETZNER_S3_ACCESS_KEY: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
-      HETZNER_S3_URI: "https://${{ secrets.HETZNER_S3_REGION }}.your-objectstorage.com/${{ secrets.HETZNER_S3_BUCKET }}/"
+      HETZNER_S3_URI: "https://${{ vars.HETZNER_S3_REGION }}.your-objectstorage.com/${{ vars.HETZNER_S3_BUCKET }}/"
       # Docker credentials
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
