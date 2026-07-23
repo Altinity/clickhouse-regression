@@ -861,11 +861,6 @@ def execute_query(
     if snapshot_name is None:
         snapshot_name = current().name
 
-    if getattr(current().context, "storage", None) == "hetzner":
-        snapshot_name = snapshot_name.replace(
-            "/parquet/hetzner/", "/parquet/aws s3/", 1
-        )
-
     if "DateTime64" in snapshot_name:
         if check_clickhouse_version(">=22.8")(current()):
             snapshot_name += ">=22.8"
