@@ -190,8 +190,6 @@ def access_failed(self):
     if self.context.storage == "azure":
         message = "Server failed to authenticate"
     elif self.context.storage == "hetzner":
-        # Disk points at an AWS endpoint but env carries Hetzner keys,
-        # so AWS rejects the unknown access key id.
         message = "The AWS Access Key Id you provided does not exist in our records"
     else:
         message = (
@@ -274,8 +272,6 @@ def access_failed_skip_check(self):
                     exitcode=243,
                 )
                 if self.context.storage == "hetzner":
-                    # Disk points at an AWS endpoint but env carries Hetzner
-                    # keys, so AWS rejects the unknown access key id.
                     assert (
                         "The AWS Access Key Id you provided does not exist in our records"
                         in r.output
@@ -362,8 +358,6 @@ def access_default(self):
     if self.context.storage == "azure":
         message = "Server failed to authenticate"
     elif self.context.storage == "hetzner":
-        # Disk points at an AWS endpoint but env carries Hetzner keys,
-        # so AWS rejects the unknown access key id.
         message = "The AWS Access Key Id you provided does not exist in our records"
     else:
         message = (
