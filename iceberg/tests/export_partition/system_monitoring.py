@@ -1,11 +1,12 @@
-"""``system.replicated_partition_exports`` / profile event monitoring.
+"""Export status system tables and profile-event monitoring.
 
 Verifies that an observer can reconstruct "what happened" from the system
 tables alone (column population, part-log entries, profile events) and
 that provenance fields survive ``KILL EXPORT PARTITION``.
-"""
 
-import time
+* ``ReplicatedMergeTree`` — ``system.replicated_partition_exports``
+* plain ``MergeTree`` — ``system.partition_exports`` (Altinity/ClickHouse#2032)
+"""
 
 from testflows.core import *
 from testflows.asserts import error
@@ -20,14 +21,19 @@ from iceberg.requirements.export_partition import (
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
+    SOURCE_ENGINE_PLAIN,
     create_replicated_mergetree,
     insert_data,
+    source_engine,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
     kill_export_partition,
 )
 from iceberg.tests.export_partition.steps.export_status import (
+    export_kill_provenance_columns,
+    export_status_table_display_name,
+    export_success_monitoring_columns,
     get_export_events,
     get_export_row,
     get_exported_part_log,
@@ -48,7 +54,7 @@ SIMPLE_PARTITION_BY = "year"
 def _seed_source_two_partitions():
     """Two partitions, each with its own MergeTree part."""
     source_table = f"mt_{getuid()}"
-    with Given("create the source ReplicatedMergeTree"):
+    with Given("create the source table"):
         create_replicated_mergetree(
             table_name=source_table,
             columns=SIMPLE_COLUMNS,
@@ -61,20 +67,54 @@ def _seed_source_two_partitions():
     return source_table
 
 
+def _assert_parts_count_invariants(parts_count, parts_to_do):
+    """Shared ``parts_count`` / ``parts_to_do`` bounds for both system tables."""
+    pc = int(parts_count)
+    ptd = int(parts_to_do)
+    assert pc >= 1, error(
+        f"parts_count should be >= 1 for a non-empty partition, got {parts_count!r}"
+    )
+    assert 0 <= ptd <= pc, error(
+        f"parts_to_do should be in [0, {pc}], got {parts_to_do!r}"
+    )
+
+
+def _assert_identity_columns(
+    fields,
+    source_table,
+    dest_table_in_system,
+    expected_partition_id="2020",
+):
+    (
+        src_tab,
+        dest_tab,
+        partition_id,
+    ) = fields[:3]
+    assert src_tab == source_table, error(
+        f"source_table mismatch: {src_tab!r} vs {source_table!r}"
+    )
+    assert dest_tab == dest_table_in_system, error(
+        f"destination_table mismatch: {dest_tab!r} vs {dest_table_in_system!r}"
+    )
+    assert partition_id == expected_partition_id, error(
+        f"partition_id mismatch: {partition_id!r}"
+    )
+
+
 @TestScenario
 @Requirements(
     RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports("1.0")
 )
-@Name("every system.replicated_partition_exports column is populated on success")
+@Name("every export status system table column is populated on success")
 def system_table_columns_populated_on_success(
     self, minio_root_user, minio_root_password
 ):
-    """After a clean export, every column in ``system.replicated_partition_exports``
-    carries a meaningful value (identifiers match, ``parts_to_do`` converged,
-    provenance populated, no exceptions).
+    """After a clean export, the export status system table carries meaningful
+    values (identifiers match, ``parts_to_do`` converged, provenance populated,
+    no exceptions).
     """
-    node = self.context.node
     source_table = _seed_source_two_partitions()
+    status_table = export_status_table_display_name()
 
     with Given("create the Iceberg destination"):
         destination = create_iceberg_destination(
@@ -83,11 +123,6 @@ def system_table_columns_populated_on_success(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    # ``dest_table_in_system`` is what CH stores in
-    # ``system.replicated_partition_exports.destination_table`` — under
-    # no_catalog mode that's the bare CH-side identifier, under catalog
-    # mode it's ``<namespace>.<table>`` because CH's StorageID pops the
-    # database off. See ``as_system_destination_table`` for details.
     dest_table_in_system = as_system_destination_table(destination)
 
     with When("export partition 2020 and wait for completion"):
@@ -97,24 +132,50 @@ def system_table_columns_populated_on_success(
             partition_id="2020",
         )
 
-    with Then("collect the row as a single tab-separated record"):
+    with Then(f"collect the row from {status_table} as a single tab-separated record"):
+        columns = export_success_monitoring_columns()
         row = get_export_row(
             source_table=source_table,
             partition_id="2020",
             destination=destination,
-            columns=(
-                "source_table, destination_table, partition_id, status, "
-                "parts_count, parts_to_do, source_replica, "
-                "toUnixTimestamp(create_time), exception_count"
-            ),
+            columns=columns,
         )
         assert row is not None, error(
-            "Export row missing from system.replicated_partition_exports"
+            f"Export row missing from {status_table}"
         )
         fields = row.split("\t")
-        assert len(fields) == 9, error(
-            f"Expected 9 fields in the system row, got {len(fields)}: {fields!r}"
+        expected_field_count = 8 if source_engine() == SOURCE_ENGINE_PLAIN else 9
+        assert len(fields) == expected_field_count, error(
+            f"Expected {expected_field_count} fields in the system row, "
+            f"got {len(fields)}: {fields!r}"
         )
+
+    if source_engine() == SOURCE_ENGINE_PLAIN:
+        (
+            src_tab,
+            dest_tab,
+            partition_id,
+            status,
+            parts_count,
+            parts_to_do,
+            create_time_unix,
+            exception_count,
+        ) = fields
+        _assert_identity_columns(
+            fields, source_table, dest_table_in_system, expected_partition_id="2020"
+        )
+        with And("parts_count > 0 and parts_to_do stays within bounds"):
+            _assert_parts_count_invariants(parts_count, parts_to_do)
+        with And("status is COMPLETED and provenance fields are populated"):
+            assert status == "COMPLETED", error(f"Unexpected status: {status!r}")
+            assert int(create_time_unix) > 0, error(
+                f"create_time should be a real timestamp, got {create_time_unix!r}"
+            )
+            assert int(exception_count) == 0, error(
+                f"exception_count should be zero for a clean export, "
+                f"got {exception_count!r}"
+            )
+    else:
         (
             src_tab,
             dest_tab,
@@ -126,41 +187,24 @@ def system_table_columns_populated_on_success(
             create_time_unix,
             exception_count,
         ) = fields
-
-    with And("the identifying columns match the ALTER arguments"):
-        assert src_tab == source_table, error(
-            f"source_table mismatch: {src_tab!r} vs {source_table!r}"
+        _assert_identity_columns(
+            fields, source_table, dest_table_in_system, expected_partition_id="2020"
         )
-        assert dest_tab == dest_table_in_system, error(
-            f"destination_table mismatch: {dest_tab!r} vs " f"{dest_table_in_system!r}"
-        )
-        assert partition_id == "2020", error(f"partition_id mismatch: {partition_id!r}")
-
-    with And("parts_count > 0 and parts_to_do stays within bounds"):
-        # ``parts_to_do`` is populated from the ZK ``processing`` children
-        # (ExportPartitionManifestUpdatingTask.cpp::getPartitionExportsInfo:
-        # ``info.parts_to_do = processing_parts.size()``). Those children
-        # are not guaranteed to be pruned the moment ``status`` becomes
-        # ``COMPLETED``, so the only invariant we can assert is that the
-        # counter stays within ``[0, parts_count]``.
-        pc = int(parts_count)
-        ptd = int(parts_to_do)
-        assert pc >= 1, error(
-            f"parts_count should be >= 1 for a non-empty partition, got {parts_count!r}"
-        )
-        assert 0 <= ptd <= pc, error(
-            f"parts_to_do should be in [0, {pc}], got {parts_to_do!r}"
-        )
-
-    with And("status is COMPLETED and provenance fields are populated"):
-        assert status == "COMPLETED", error(f"Unexpected status: {status!r}")
-        assert source_replica, error("source_replica must not be empty")
-        assert int(create_time_unix) > 0, error(
-            f"create_time should be a real timestamp, got {create_time_unix!r}"
-        )
-        assert int(exception_count) == 0, error(
-            f"exception_count should be zero for a clean export, got {exception_count!r}"
-        )
+        with And("parts_count > 0 and parts_to_do stays within bounds"):
+            # ``parts_to_do`` is populated from the ZK ``processing`` children
+            # on ReplicatedMergeTree; those children are not guaranteed to be
+            # pruned the moment ``status`` becomes ``COMPLETED``.
+            _assert_parts_count_invariants(parts_count, parts_to_do)
+        with And("status is COMPLETED and provenance fields are populated"):
+            assert status == "COMPLETED", error(f"Unexpected status: {status!r}")
+            assert source_replica, error("source_replica must not be empty")
+            assert int(create_time_unix) > 0, error(
+                f"create_time should be a real timestamp, got {create_time_unix!r}"
+            )
+            assert int(exception_count) == 0, error(
+                f"exception_count should be zero for a clean export, "
+                f"got {exception_count!r}"
+            )
 
 
 @TestScenario
@@ -168,7 +212,7 @@ def system_table_columns_populated_on_success(
 @Name("system.part_log records one ExportPart per exported part")
 def part_log_records_exported_parts(self, minio_root_user, minio_root_password):
     """Each exported part produces an ``ExportPart`` row in
-    ``system.part_log`` on the replica that drove the export.
+    ``system.part_log`` on the node that drove the export.
     """
     node = self.context.node
     source_table = _seed_source_two_partitions()
@@ -189,7 +233,6 @@ def part_log_records_exported_parts(self, minio_root_user, minio_root_password):
             destination=destination,
             partition_id="2020",
         )
-        # part_log is buffered; flush it to guarantee the row is visible.
         node.query("SYSTEM FLUSH LOGS")
 
     with Then("at least one ExportPart entry was appended"):
@@ -212,8 +255,9 @@ def part_log_records_exported_parts(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents("1.0"))
 @Name("PartsExports and ExportPartitionZooKeeper* profile events increment")
 def profile_events_increment_on_success(self, minio_root_user, minio_root_password):
-    """``PartsExports`` and ``ExportPartitionZooKeeperRequests`` increase
-    around a clean export; ``PartsExportFailures`` does not move.
+    """``PartsExports`` increases around a clean export; ``PartsExportFailures``
+    does not move. On ``ReplicatedMergeTree`` only, ``ExportPartitionZooKeeperRequests``
+    also increases.
     """
     source_table = _seed_source_two_partitions()
 
@@ -259,24 +303,27 @@ def profile_events_increment_on_success(self, minio_root_user, minio_root_passwo
             f"got delta={failure_delta}"
         )
 
-        zk_key = "ExportPartitionZooKeeperRequests"
-        zk_delta = after.get(zk_key, 0) - before.get(zk_key, 0)
-        assert zk_delta > 0, error(
-            f"{zk_key} should increase during an export, got delta={zk_delta}"
-        )
+        if source_engine() != SOURCE_ENGINE_PLAIN:
+            zk_key = "ExportPartitionZooKeeperRequests"
+            zk_delta = after.get(zk_key, 0) - before.get(zk_key, 0)
+            assert zk_delta > 0, error(
+                f"{zk_key} should increase during an export, got delta={zk_delta}"
+            )
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance("1.0"))
-@Name("KILL EXPORT preserves source_replica and create_time")
+@Name("KILL EXPORT preserves provenance fields")
 def kill_export_preserves_provenance(self, minio_root_user, minio_root_password):
     """``KILL EXPORT PARTITION`` transitions the row to ``KILLED`` and
-    preserves ``source_replica`` and ``create_time`` from the PENDING row.
-    The export is parked with ``SYSTEM STOP MOVES`` to keep PENDING observable.
+    preserves provenance from the PENDING row (``create_time`` on plain
+    ``MergeTree``; ``source_replica`` + ``create_time`` on
+    ``ReplicatedMergeTree``). The export is parked with ``SYSTEM STOP MOVES``.
     """
     node = self.context.node
+    status_table = export_status_table_display_name()
     source_table = f"mt_{getuid()}"
-    with Given("create the source ReplicatedMergeTree"):
+    with Given("create the source table"):
         create_replicated_mergetree(
             table_name=source_table,
             columns=SIMPLE_COLUMNS,
@@ -296,6 +343,7 @@ def kill_export_preserves_provenance(self, minio_root_user, minio_root_password)
         node.query(f"SYSTEM STOP MOVES {source_table}")
 
     moves_restored = False
+    pending_provenance = None
     try:
         with And("schedule EXPORT PARTITION without waiting"):
             export_partition(
@@ -308,7 +356,7 @@ def kill_export_preserves_provenance(self, minio_root_user, minio_root_password)
                 ],
             )
 
-        with And("sample source_replica/create_time in PENDING"):
+        with And("sample provenance fields in PENDING"):
             wait_for_export_to_start(
                 source_table=source_table,
                 destination=destination,
@@ -318,14 +366,22 @@ def kill_export_preserves_provenance(self, minio_root_user, minio_root_password)
                 source_table=source_table,
                 partition_id="2020",
                 destination=destination,
-                columns="source_replica, toUnixTimestamp(create_time)",
+                columns=export_kill_provenance_columns(),
             )
-            pending_replica, pending_create_time = pending_row.split("\t")
-            assert pending_replica, error("source_replica empty in PENDING row")
-            assert int(pending_create_time) > 0, error(
-                f"create_time should be populated in PENDING row, "
-                f"got {pending_create_time!r}"
-            )
+            pending_provenance = pending_row.split("\t")
+            if source_engine() == SOURCE_ENGINE_PLAIN:
+                (pending_create_time,) = pending_provenance
+                assert int(pending_create_time) > 0, error(
+                    f"create_time should be populated in PENDING row, "
+                    f"got {pending_create_time!r}"
+                )
+            else:
+                pending_replica, pending_create_time = pending_provenance
+                assert pending_replica, error("source_replica empty in PENDING row")
+                assert int(pending_create_time) > 0, error(
+                    f"create_time should be populated in PENDING row, "
+                    f"got {pending_create_time!r}"
+                )
 
         with And("KILL EXPORT PARTITION"):
             kill_export_partition(
@@ -345,42 +401,52 @@ def kill_export_preserves_provenance(self, minio_root_user, minio_root_password)
             with Finally("restore the scheduler"):
                 node.query(f"SYSTEM START MOVES {source_table}")
 
-    with Then("KILLED row preserves source_replica and create_time"):
+    with Then(f"KILLED row in {status_table} preserves the sampled provenance"):
         killed_row = get_export_row(
             source_table=source_table,
             partition_id="2020",
             destination=destination,
-            columns="source_replica, toUnixTimestamp(create_time)",
+            columns=export_kill_provenance_columns(),
         )
-        killed_replica, killed_create_time = killed_row.split("\t")
-        assert killed_replica == pending_replica, error(
-            f"source_replica changed after KILL: "
-            f"{pending_replica!r} -> {killed_replica!r}"
-        )
-        assert killed_create_time == pending_create_time, error(
-            f"create_time changed after KILL: "
-            f"{pending_create_time!r} -> {killed_create_time!r}"
-        )
+        killed_provenance = killed_row.split("\t")
+        if source_engine() == SOURCE_ENGINE_PLAIN:
+            (killed_create_time,) = killed_provenance
+            (pending_create_time,) = pending_provenance
+            assert killed_create_time == pending_create_time, error(
+                f"create_time changed after KILL: "
+                f"{pending_create_time!r} -> {killed_create_time!r}"
+            )
+        else:
+            killed_replica, killed_create_time = killed_provenance
+            pending_replica, pending_create_time = pending_provenance
+            assert killed_replica == pending_replica, error(
+                f"source_replica changed after KILL: "
+                f"{pending_replica!r} -> {killed_replica!r}"
+            )
+            assert killed_create_time == pending_create_time, error(
+                f"create_time changed after KILL: "
+                f"{pending_create_time!r} -> {killed_create_time!r}"
+            )
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance("1.0"))
 @Name("KILL EXPORT during commit preserves provenance and diagnostic fields")
 def kill_during_commit_preserves_provenance(self, minio_root_user, minio_root_password):
-    """Provenance (``source_replica`` / ``create_time``) survives a KILL
-    issued while the export is retrying through the
-    ``export_partition_commit_always_throw`` failpoint, which keeps it
-    wedged in PENDING. Complements :func:`kill_export_preserves_provenance`
-    by exercising the in-flight commit path rather than STOP MOVES.
+    """Provenance survives a KILL issued while the export is retrying through the
+    ``export_partition_commit_always_throw`` failpoint. Complements
+    :func:`kill_export_preserves_provenance` by exercising the in-flight commit
+    path rather than STOP MOVES.
 
     The terminal status decides assert-vs-skip: ``KILLED`` runs the
     provenance asserts; ``COMPLETED`` / ``FAILED`` ``skip()`` (failpoint
     ineffective or retries exhausted before we could KILL).
     """
     node = self.context.node
+    status_table = export_status_table_display_name()
     failpoint = "export_partition_commit_always_throw"
     source_table = f"mt_{getuid()}"
-    with Given("create the source ReplicatedMergeTree"):
+    with Given("create the source table"):
         create_replicated_mergetree(
             table_name=source_table,
             columns=SIMPLE_COLUMNS,
@@ -398,8 +464,7 @@ def kill_during_commit_preserves_provenance(self, minio_root_user, minio_root_pa
         )
 
     failpoint_armed = False
-    in_flight_replica = None
-    in_flight_create_time = None
+    in_flight_provenance = None
     try:
         with When(f"arm the {failpoint} REGULAR failpoint"):
             node.query(f"SYSTEM ENABLE FAILPOINT {failpoint}")
@@ -431,18 +496,27 @@ def kill_during_commit_preserves_provenance(self, minio_root_user, minio_root_pa
                 source_table=source_table,
                 partition_id="2020",
                 destination=destination,
-                columns="source_replica, toUnixTimestamp(create_time)",
+                columns=export_kill_provenance_columns(),
             )
             assert in_flight_row, error(
-                "Expected a system.replicated_partition_exports row "
-                "after wait_for_export_to_start"
+                f"Expected a {status_table} row after wait_for_export_to_start"
             )
-            in_flight_replica, in_flight_create_time = in_flight_row.split("\t")
-            assert in_flight_replica, error("source_replica empty in the in-flight row")
-            assert int(in_flight_create_time) > 0, error(
-                f"create_time should be populated in the in-flight row, "
-                f"got {in_flight_create_time!r}"
-            )
+            in_flight_provenance = in_flight_row.split("\t")
+            if source_engine() == SOURCE_ENGINE_PLAIN:
+                (in_flight_create_time,) = in_flight_provenance
+                assert int(in_flight_create_time) > 0, error(
+                    f"create_time should be populated in the in-flight row, "
+                    f"got {in_flight_create_time!r}"
+                )
+            else:
+                in_flight_replica, in_flight_create_time = in_flight_provenance
+                assert in_flight_replica, error(
+                    "source_replica empty in the in-flight row"
+                )
+                assert int(in_flight_create_time) > 0, error(
+                    f"create_time should be populated in the in-flight row, "
+                    f"got {in_flight_create_time!r}"
+                )
 
         with When("KILL EXPORT PARTITION immediately while still PENDING"):
             kill_export_partition(
@@ -491,24 +565,34 @@ def kill_during_commit_preserves_provenance(self, minio_root_user, minio_root_pa
                 node.query(f"SYSTEM DISABLE FAILPOINT {failpoint}")
 
     with Then(
-        "KILLED row preserves source_replica + create_time observed "
+        f"KILLED row in {status_table} preserves provenance observed "
         "while the export was still in-flight"
     ):
         killed_row = get_export_row(
             source_table=source_table,
             partition_id="2020",
             destination=destination,
-            columns="source_replica, toUnixTimestamp(create_time)",
+            columns=export_kill_provenance_columns(),
         )
-        killed_replica, killed_create_time = killed_row.split("\t")
-        assert killed_replica == in_flight_replica, error(
-            f"source_replica changed across KILL: "
-            f"{in_flight_replica!r} -> {killed_replica!r}"
-        )
-        assert killed_create_time == in_flight_create_time, error(
-            f"create_time changed across KILL: "
-            f"{in_flight_create_time!r} -> {killed_create_time!r}"
-        )
+        killed_provenance = killed_row.split("\t")
+        if source_engine() == SOURCE_ENGINE_PLAIN:
+            (killed_create_time,) = killed_provenance
+            (in_flight_create_time,) = in_flight_provenance
+            assert killed_create_time == in_flight_create_time, error(
+                f"create_time changed across KILL: "
+                f"{in_flight_create_time!r} -> {killed_create_time!r}"
+            )
+        else:
+            killed_replica, killed_create_time = killed_provenance
+            in_flight_replica, in_flight_create_time = in_flight_provenance
+            assert killed_replica == in_flight_replica, error(
+                f"source_replica changed across KILL: "
+                f"{in_flight_replica!r} -> {killed_replica!r}"
+            )
+            assert killed_create_time == in_flight_create_time, error(
+                f"create_time changed across KILL: "
+                f"{in_flight_create_time!r} -> {killed_create_time!r}"
+            )
 
 
 SCENARIOS = (

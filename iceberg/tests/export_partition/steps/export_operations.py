@@ -5,6 +5,9 @@ Adapted from the s3 export_partition steps. The main adjustments are:
 * Waiting for completion is optional (some scenarios need to observe a
   ``PENDING`` state first).
 * Supports a list of destination tables per call (useful for fan-out tests).
+* Completion polling uses :func:`export_status.wait_for_export_status`, which
+  reads from ``system.replicated_partition_exports`` or
+  ``system.partition_exports`` depending on ``self.context.source_engine``.
 
 EXPORT PARTITION needs two ClickHouse experimental flags enabled, and
 they live in different layers:
@@ -22,9 +25,9 @@ they live in different layers:
   ``configs/clickhouse/users.d/allow_experimental_insert_into_iceberg.xml``.
   We additionally inject it per-query in :func:`export_partition` so
   scenarios that pass an explicit ``settings=`` list keep the
-  synchronous gate (``StorageReplicatedMergeTree::exportPartitionToTable``)
-  satisfied, matching what :func:`insert_into_iceberg_destination` and
-  :func:`truncate_iceberg_destination` already do.
+  synchronous gate satisfied on both ``ReplicatedMergeTree`` and plain
+  ``MergeTree`` sources, matching what :func:`insert_into_iceberg_destination`
+  and :func:`truncate_iceberg_destination` already do.
 """
 
 from testflows.core import *
@@ -267,8 +270,8 @@ def export_partition(
         message: Expected substring in the error output. Typically set
             together with ``exitcode`` when asserting rejection.
         wait_for_completion: If ``True`` and no rejection is expected, block
-            until the row in ``system.replicated_partition_exports`` reaches
-            ``COMPLETED``.
+            until the export status system table reports ``COMPLETED`` for
+            this ``(source_table, partition_id, destination)`` triple.
     """
     if node is None:
         node = self.context.node
@@ -596,12 +599,12 @@ def kill_export_partition(
     :func:`export_partition`. The ``WHERE`` clause is built via
     :func:`iceberg.tests.export_partition.steps.export_status._destination_where_pieces`
     so the ``destination_database`` / ``destination_table`` filter is
-    aligned with what ``system.replicated_partition_exports`` actually
-    stores — an unqualified ``ns.tbl`` split out from the catalog-mode
+    aligned with what the export status system table actually stores —
+    an unqualified ``ns.tbl`` split out from the catalog-mode
     identifier ``datalake_xxx.\\`ns.tbl\\``` (see the helper's docstring
     for the rationale). Using the fully-qualified SQL identifier here
     would match no row under Ice / Glue and silently leave the target
-    PENDING, which is the Phase 3 regression this fixed.
+    PENDING.
     """
     if node is None:
         node = self.context.node

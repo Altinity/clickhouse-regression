@@ -16,7 +16,7 @@ from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory,
 )
 
-from helpers.common import getuid, check_if_antalya_post_26_3_10_20001
+from helpers.common import getuid, check_clickhouse_version
 
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
@@ -455,7 +455,7 @@ def source_only_schema_drift_rejected(self, minio_root_user, minio_root_password
         insert_data(table_name=source_table, values="(1, 2020, 10)")
 
     with Then("EXPORT PARTITION is rejected for schema mismatch"):
-        if check_if_antalya_post_26_3_10_20001(self):
+        if check_clickhouse_version(">26.3.10.20001")(self):
             expected_exitcode = NUMBER_OF_COLUMNS_DOESNT_MATCH
             expected_message = "NUMBER_OF_COLUMNS"
         else:

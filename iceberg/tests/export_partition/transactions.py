@@ -20,7 +20,7 @@ from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_Transactions_CrashRecovery,
 )
 
-from helpers.common import getuid, check_if_antalya_post_26_3_10_20001
+from helpers.common import getuid, check_clickhouse_version
 
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
@@ -39,7 +39,6 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
 from iceberg.tests.export_partition.steps.manifest_validation import (
     get_current_snapshot_summary,
     get_snapshots,
-    load_pyiceberg_table,
 )
 from iceberg.tests.export_partition.steps.verification import (
     assert_destination_row_count,
@@ -52,9 +51,9 @@ SIMPLE_PARTITION_BY = "year"
 
 
 def _seed_source(values="(1, 2020), (2, 2020), (3, 2021), (4, 2021)"):
-    """Create a ReplicatedMergeTree with two partitions (2020, 2021)."""
+    """Create a source table with two partitions (2020, 2021)."""
     source_table = f"mt_{getuid()}"
-    with Given("create source ReplicatedMergeTree"):
+    with Given("create source table"):
         create_replicated_mergetree(
             table_name=source_table,
             columns=SIMPLE_COLUMNS,
@@ -283,7 +282,7 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
     with And(f"wait long enough for the TTL window to elapse ({ttl_seconds * 2}s)"):
         time.sleep(ttl_seconds * 2)
 
-    if check_if_antalya_post_26_3_10_20001(self):
+    if check_clickhouse_version(">26.3.10.20001")(self):
         with Then(
             "second export is still rejected once manifest TTL is a history-only "
             "field (Altinity/ClickHouse#1917)"

@@ -1,20 +1,28 @@
 """Entry point for the ``export_partition`` suite.
 
-Each scenario module inside ``export_partition/`` is parameterised three ways
-by running the same feature under three different catalog contexts:
+Each scenario module is parameterised by **catalog** and **source engine**:
 
-* ``"no_catalog"`` - pure Iceberg writes via ``ENGINE = IcebergS3(...)``.
-* ``"ice"``        - DataLakeCatalog backed by the Altinity ``ice-rest-catalog``
+Catalog (``self.context.catalog``):
+
+* ``"no"``   - pure Iceberg writes via ``ENGINE = IcebergS3(...)``.
+* ``"ice"``  - DataLakeCatalog backed by the Altinity ``ice-rest-catalog``
   service (an Iceberg REST Catalog Spec implementation).
-* ``"glue"``       - Glue DataLakeCatalog (LocalStack).
+* ``"glue"`` - Glue DataLakeCatalog (LocalStack).
 
-Scenarios read ``self.context.catalog`` to choose the right helpers (see
-``steps/iceberg_destination.py``) so individual tests stay mode-agnostic.
+Source engine (``self.context.source_engine``):
+
+* ``"replicated"`` - ``ReplicatedMergeTree`` (default; ZooKeeper-backed export
+  coordination, ``system.replicated_partition_exports``).
+* ``"plain"``      - ``MergeTree`` (Altinity/ClickHouse#2032;
+  ``system.partition_exports``).
+
+Scenarios read ``self.context.catalog`` for destination helpers (see
+``steps/iceberg_destination.py``) and ``self.context.source_engine`` for
+source DDL (see ``steps/common.create_export_source_table``).
 
 Some modules are only meaningful in a single mode (e.g. ``catalogs.py``
-exercises catalog-specific commit paths). Those modules internally skip
-scenarios that do not apply to the current ``self.context.catalog`` and are
-therefore still loaded here for completeness.
+exercises catalog-specific commit paths; ``zk_compat.py`` is replicated-only).
+Those modules internally skip scenarios that do not apply.
 """
 
 from testflows.core import *
@@ -27,6 +35,7 @@ from iceberg.requirements.export_partition import (
 
 
 CATALOG_MODES = ("no", "ice", "glue")
+SOURCE_ENGINE_MODES = ("replicated", "plain")
 
 
 MODULES = (
@@ -68,7 +77,7 @@ def _load_modules(self, minio_root_user, minio_root_password):
 @Specifications(SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg)
 @Name("export partition")
 def feature(self, minio_root_user, minio_root_password):
-    """Run export-partition tests across every supported catalog mode."""
+    """Run export-partition tests across every catalog and source-engine mode."""
     with Given(
         "enable export-partition Iceberg and EXPORT PART gates in the default profile"
     ):
@@ -91,4 +100,7 @@ def feature(self, minio_root_user, minio_root_password):
     for mode in CATALOG_MODES:
         with Feature(f"{mode} catalog"):
             self.context.catalog = mode
-            _load_modules(self, minio_root_user, minio_root_password)
+            for engine in SOURCE_ENGINE_MODES:
+                with Feature(f"{engine} merge tree"):
+                    self.context.source_engine = engine
+                    _load_modules(self, minio_root_user, minio_root_password)
