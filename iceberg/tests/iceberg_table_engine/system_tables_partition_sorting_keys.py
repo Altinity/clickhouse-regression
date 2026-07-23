@@ -5,7 +5,6 @@ from helpers.common import (
     getuid,
     check_clickhouse_version,
     check_if_antalya_build,
-    check_if_antalya_post_26_3_10_20001,
 )
 
 import pyarrow as pa
@@ -23,7 +22,10 @@ def _assert_on_antalya_26_1_plus(test):
 
 def _keys_from_metadata_without_snapshot(test):
     """PR 1874: keys readable from table metadata before any data snapshot."""
-    return check_if_antalya_post_26_3_10_20001(test)
+    return (
+        check_if_antalya_build(test)
+        and check_clickhouse_version(">26.3.10.20001")(test)
+    )
 
 
 def assert_system_table_keys(node, table_name, partition_key, sorting_key):
