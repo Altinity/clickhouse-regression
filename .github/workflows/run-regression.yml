@@ -52,6 +52,7 @@ on:
           - all
           - all_aws
           - all_gcs
+          - all_hetzner
           - aes_encryption
           - aggregate_functions
           - atomic_insert
@@ -1052,7 +1053,7 @@ jobs:
     secrets: inherit
 
   s3_hetzner_1:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1073,7 +1074,7 @@ jobs:
     secrets: inherit
 
   s3_hetzner_2:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1417,7 +1418,7 @@ jobs:
     secrets: inherit
 
   tiered_storage_hetzner:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_hetzner' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_hetzner' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
