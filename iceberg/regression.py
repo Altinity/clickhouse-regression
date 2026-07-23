@@ -318,7 +318,7 @@ xfails = {
             check_clickhouse_version(">=26.3.13.20001"),
         )
     ],
-    "/iceberg/export partition/: catalog/*/transactions/commit survives pre-publish failure (non-retry cleanup)": [
+    "/iceberg/export partition/: catalog/*/transactions/commit survives pre-publish failure": [
         (
             Fail,
             "Altinity/ClickHouse#1984 changed non-retryable pre-publish "

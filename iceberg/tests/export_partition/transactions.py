@@ -330,7 +330,7 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
 
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_Transactions_CrashRecovery("1.0"))
-@Name("commit survives pre-publish failure (non-retry cleanup)")
+@Name("commit survives pre-publish failure")
 def commit_survives_pre_publish_failure(self, minio_root_user, minio_root_password):
     """With ``iceberg_writes_non_retry_cleanup`` armed, the commit retries
     after a pre-publish exception and ends with exactly one append
