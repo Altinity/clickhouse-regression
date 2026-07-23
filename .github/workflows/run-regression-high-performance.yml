@@ -64,6 +64,7 @@ on:
           - benchmark_all
           - benchmark_aws
           - benchmark_gcs
+          - benchmark_hetzner
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
@@ -86,6 +87,7 @@ on:
           - oauth
           - parquet_all
           - parquet
+          - parquet_hetzner
           - parquet_minio
           - parquet_s3
           - parquet_native_v3
@@ -246,11 +248,11 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 1/*" ${{ inputs.extra_args }} 
+      extra_args: --only "/aggregate functions/part 1/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   aggregate_functions_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -264,11 +266,11 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 2/*" ${{ inputs.extra_args }} 
+      extra_args: --only "/aggregate functions/part 2/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   aggregate_functions_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -345,7 +347,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   alter_attach_partition_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -480,6 +482,29 @@ jobs:
       storage_path: /minio
       regression_args: '--storage minio'
       artifact_name: benchmark-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  benchmark_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'benchmark_hetzner' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_hetzner
+    with:
+      suite_name: ontime_benchmark
+      job_name: ontime_benchmark_hetzner
+      suite_executable: benchmark.py
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--storage hetzner'
+      artifact_name: benchmark-hetzner-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -937,6 +962,26 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
+  parquet_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_hetzner' || inputs.suite == 'parquet_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_hetzner
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--storage hetzner --only "/parquet/hetzner/*"'
+      artifact_name: parquet-hetzner-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   parquet_native_v3:
     if: ${{ inputs.parquet_native_v3 == true && (inputs.suite == 'all' || inputs.suite == 'parquet_native_v3' || inputs.suite == 'parquet_all') }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1012,7 +1057,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   rbac_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1030,7 +1075,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   rbac_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1177,7 +1222,6 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  
   s3_azure_2:
     if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1383,7 +1427,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   settings:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'settings' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1452,7 +1496,7 @@ jobs:
       extra_args: --only "/ssl server/part 3/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
-    secrets: inherit 
+    secrets: inherit
 
   swarms:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'swarms' }}
@@ -1469,7 +1513,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-    
+
   tiered_storage_aws:
     if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml

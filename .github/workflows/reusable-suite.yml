@@ -96,7 +96,6 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
       # Hetzner: used both for hetzner report uploads (artifacts=hetzner, in
       # setup.sh/create_and_upload_logs.sh) and for the hetzner test storage
-      # (s3/tiered_storage suites), independent of the artifacts destination.
       HETZNER_S3_BUCKET: ${{ vars.HETZNER_S3_BUCKET }}
       HETZNER_S3_REGION: ${{ vars.HETZNER_S3_REGION }}
       HETZNER_S3_KEY_ID: ${{ secrets.HETZNER_S3_KEY_ID }}
@@ -109,7 +108,7 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-      # LocalStack token 
+      # LocalStack token
       LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
       # Python encoding
       PYTHONIOENCODING: utf-8
@@ -176,8 +175,8 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/${{ env.SUITE_EXECUTABLE }}
               ${{ env.REGRESSION_ARGS }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
+              ${{ env.args }} || EXITCODE=$?;
+              .github/add_link_to_logs.sh;
               exit $EXITCODE
 
       - name: 📝 Create and upload logs
@@ -197,4 +196,4 @@ jobs:
 
       - name: ♻️ Cache sync
         if: always()
-        uses: ./.github/actions/cache-sync 
+        uses: ./.github/actions/cache-sync
