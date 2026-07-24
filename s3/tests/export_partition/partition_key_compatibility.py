@@ -461,64 +461,20 @@ def subset_round_trip(self):
         assert rt_rows == src_rows, error()
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
-def nullable_partition_column_rejected(self):
-    """A Nullable partition column can only match through the identical-AST
-    or per-column fast paths - the dynamic proof always rejects it because a
-    NULL forms its own destination partition. Source PARTITION BY (a, b)
-    with ``b Nullable(Int32)`` into destination PARTITION BY b: the fast
-    paths still accept (b is in source terms). Same source into destination
-    PARTITION BY a with ``a Nullable(Int32)`` and different values of a
-    forces the dynamic path, which must reject."""
-    node = self.context.node
-    columns = [
-        {"name": "id", "type": "Int64"},
-        {"name": "a", "type": "Nullable(Int32)"},
-        {"name": "b", "type": "Int32"},
-    ]
-
-    with Given("source RMT PARTITION BY (b) with a Nullable"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=columns,
-            partition_by="b",
-            cluster="replicated_cluster",
-        )
-
-    with And(
-        "S3 hive destination PARTITION BY a (Nullable) - covered by neither fast path"
-    ):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=columns,
-            partition_by="a",
-        )
-
-    with And("rows where a differs"):
-        node.query(f"INSERT INTO {source_table} VALUES (1, 10, 5), (2, 11, 5)")
-
-    with When("I export the source partition"):
-        partition_id = get_partitions(table_name=source_table, node=node)[0]
-        result = node.query(
-            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
-            f"TO TABLE {destination_table}",
-            settings=self.context.default_settings,
-            no_checks=True,
-        )
-    with Then("it is rejected with BAD_ARGUMENTS"):
-        assert result.exitcode != 0, error(f"expected reject, got: {result.output!r}")
-        assert "BAD_ARGUMENTS" in result.output, error(result.output)
-
-
 @TestFeature
 @Name("partition key compatibility")
 def feature(self):
-    """Partition-key compatibility gate for hive S3 exports (Altinity/ClickHouse#2074)."""
+    """Partition-key compatibility gate for hive S3 exports (Altinity/ClickHouse#2074).
+
+    Note: the gate's Nullable-reject branch is not exercised end-to-end here.
+    Hive S3 refuses ``Nullable`` partition columns at ``CREATE TABLE`` time
+    ("Hive partitioning supports only partition columns of types: Integer,
+    Date, Time, DateTime and String/FixedString"), so the gate never sees a
+    Nullable destination column for a hive destination - that branch is only
+    reachable through Iceberg destinations. The oracle self-tests still
+    encode the rule so a regression in ``predict_accept`` is caught.
+    """
     Scenario(run=oracle_self_tests)
     Scenario(run=compatibility_matrix)
     Scenario(run=per_partition_acceptance)
     Scenario(run=subset_round_trip)
-    Scenario(run=nullable_partition_column_rejected)

@@ -105,6 +105,7 @@
     * 20.1 [RQ.ClickHouse.ExportPartition.Logging](#rqclickhouseexportpartitionlogging)
 * 21 [Monitoring export operations](#monitoring-export-operations)
     * 21.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
+    * 21.2 [RQ.ClickHouse.ExportPartition.Observability.RetryExceptionReported](#rqclickhouseexportpartitionobservabilityretryexceptionreported)
 * 22 [Enabling export functionality](#enabling-export-functionality)
     * 22.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
     * 22.2 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled](#rqclickhouseexportpartitionsettingsallowexperimentaldisabled)
@@ -1063,20 +1064,41 @@ SETTINGS allow_experimental_export_merge_tree_part = 1
 ### Partition key compatibility
 
 #### RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey
-version: 1.0
+version: 2.0
 
-[ClickHouse] SHALL validate that source and destination tables have the same partition key expression by:
-* Checking that the partition key expression matches between source and destination tables
-* Throwing a `BAD_ARGUMENTS` exception (error code 36) with message "Tables have different partition key" when partition keys differ
-* Performing this validation during the initial export setup phase
+[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending column.
 
-Matching partition keys ensure that exported data is organized correctly in the destination storage.
+For a plain (hive) object-storage destination, [ClickHouse] SHALL accept an export when any of the following holds for every destination partition term:
 
-For example, if `source_table` is partitioned by `toYYYYMM(date)` and `destination_table` is partitioned by `toYYYYMMDD(date)`, the following command SHALL output an error:
+* The source and destination `PARTITION BY` expressions format to the same string (identical partition keys, including non-monotonic expressions such as hashes).
+* The destination is unpartitioned.
+* The source `PARTITION BY` already contains the exact destination term (same column, same function, same integer argument). This covers a source that adds extra partition columns on top of the destination's, in any column order.
+* For a bare-column destination term, the destination column is part of the source partition key, is not `Nullable`, and the source part's stored `min` equals its stored `max` for that column across the exported partition (dynamic single-value proof).
+
+[ClickHouse] SHALL reject the export with `BAD_ARGUMENTS` when none of the above holds, and the message SHALL name:
+
+* the offending destination column when it is not part of the source partition key,
+* the `Nullable` partition column when a `NULL` might form its own destination partition without a structural match,
+* the column that spans multiple destination partitions when the dynamic proof fails.
+
+The rejection SHALL be synchronous - `system.replicated_partition_exports` MUST NOT contain a row for the rejected `(source, destination, partition)` triple.
+
+Acceptance is per-partition and data-dependent: the same `(source_key, destination_key)` pair MAY be accepted for one partition and rejected for another when the partitions differ in the values they hold.
+
+For example, before this behaviour a source partitioned by `(year, country)` and a destination partitioned by `year` were rejected as different partition keys; after it, exports SHALL succeed because every source partition has a single year:
 
 ```sql
-ALTER TABLE source_table 
-EXPORT PARTITION ID '2020' 
+ALTER TABLE source_table
+EXPORT PARTITION ID '2020-US'
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
+
+Conversely a source partitioned by `toYYYYMM(dt)` whose part holds two different days SHALL be rejected against a destination partitioned by `dt`:
+
+```sql
+ALTER TABLE source_table
+EXPORT PARTITION ID '202403'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1
 ```

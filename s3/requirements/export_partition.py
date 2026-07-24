@@ -1587,24 +1587,45 @@ RQ_ClickHouse_ExportPartition_Restrictions_LocalTable = Requirement(
 
 RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey = Requirement(
     name="RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey",
-    version="1.0",
+    version="2.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL validate that source and destination tables have the same partition key expression by:\n"
-        "* Checking that the partition key expression matches between source and destination tables\n"
-        '* Throwing a `BAD_ARGUMENTS` exception (error code 36) with message "Tables have different partition key" when partition keys differ\n'
-        "* Performing this validation during the initial export setup phase\n"
+        "[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending column.\n"
         "\n"
-        "Matching partition keys ensure that exported data is organized correctly in the destination storage.\n"
+        "For a plain (hive) object-storage destination, [ClickHouse] SHALL accept an export when any of the following holds for every destination partition term:\n"
         "\n"
-        "For example, if `source_table` is partitioned by `toYYYYMM(date)` and `destination_table` is partitioned by `toYYYYMMDD(date)`, the following command SHALL output an error:\n"
+        "* The source and destination `PARTITION BY` expressions format to the same string (identical partition keys, including non-monotonic expressions such as hashes).\n"
+        "* The destination is unpartitioned.\n"
+        "* The source `PARTITION BY` already contains the exact destination term (same column, same function, same integer argument). This covers a source that adds extra partition columns on top of the destination's, in any column order.\n"
+        "* For a bare-column destination term, the destination column is part of the source partition key, is not `Nullable`, and the source part's stored `min` equals its stored `max` for that column across the exported partition (dynamic single-value proof).\n"
+        "\n"
+        "[ClickHouse] SHALL reject the export with `BAD_ARGUMENTS` when none of the above holds, and the message SHALL name:\n"
+        "\n"
+        "* the offending destination column when it is not part of the source partition key,\n"
+        "* the `Nullable` partition column when a `NULL` might form its own destination partition without a structural match,\n"
+        "* the column that spans multiple destination partitions when the dynamic proof fails.\n"
+        "\n"
+        "The rejection SHALL be synchronous - `system.replicated_partition_exports` MUST NOT contain a row for the rejected `(source, destination, partition)` triple.\n"
+        "\n"
+        "Acceptance is per-partition and data-dependent: the same `(source_key, destination_key)` pair MAY be accepted for one partition and rejected for another when the partitions differ in the values they hold.\n"
+        "\n"
+        "For example, before this behaviour a source partitioned by `(year, country)` and a destination partitioned by `year` were rejected as different partition keys; after it, exports SHALL succeed because every source partition has a single year:\n"
         "\n"
         "```sql\n"
-        "ALTER TABLE source_table \n"
-        "EXPORT PARTITION ID '2020' \n"
+        "ALTER TABLE source_table\n"
+        "EXPORT PARTITION ID '2020-US'\n"
+        "TO TABLE destination_table\n"
+        "SETTINGS allow_experimental_export_merge_tree_part = 1\n"
+        "```\n"
+        "\n"
+        "Conversely a source partitioned by `toYYYYMM(dt)` whose part holds two different days SHALL be rejected against a destination partitioned by `dt`:\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE source_table\n"
+        "EXPORT PARTITION ID '202403'\n"
         "TO TABLE destination_table\n"
         "SETTINGS allow_experimental_export_merge_tree_part = 1\n"
         "```\n"
@@ -2411,6 +2432,11 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
             level=2,
             num="21.1",
         ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Observability.RetryExceptionReported",
+            level=2,
+            num="21.2",
+        ),
         Heading(name="Enabling export functionality", level=1, num="22"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Settings.AllowExperimental",
@@ -2534,6 +2560,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Settings_ForceExport,
         RQ_ClickHouse_ExportPartition_Logging,
         RQ_ClickHouse_ExportPartition_SystemTables_Exports,
+        RQ_ClickHouse_ExportPartition_Observability_RetryExceptionReported,
         RQ_ClickHouse_ExportPartition_Settings_AllowExperimental,
         RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled,
         RQ_ClickHouse_ExportPartition_Settings_OverwriteFile,
@@ -2653,6 +2680,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 20.1 [RQ.ClickHouse.ExportPartition.Logging](#rqclickhouseexportpartitionlogging)
 * 21 [Monitoring export operations](#monitoring-export-operations)
     * 21.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
+    * 21.2 [RQ.ClickHouse.ExportPartition.Observability.RetryExceptionReported](#rqclickhouseexportpartitionobservabilityretryexceptionreported)
 * 22 [Enabling export functionality](#enabling-export-functionality)
     * 22.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
     * 22.2 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled](#rqclickhouseexportpartitionsettingsallowexperimentaldisabled)
@@ -3611,20 +3639,41 @@ SETTINGS allow_experimental_export_merge_tree_part = 1
 ### Partition key compatibility
 
 #### RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey
-version: 1.0
+version: 2.0
 
-[ClickHouse] SHALL validate that source and destination tables have the same partition key expression by:
-* Checking that the partition key expression matches between source and destination tables
-* Throwing a `BAD_ARGUMENTS` exception (error code 36) with message "Tables have different partition key" when partition keys differ
-* Performing this validation during the initial export setup phase
+[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending column.
 
-Matching partition keys ensure that exported data is organized correctly in the destination storage.
+For a plain (hive) object-storage destination, [ClickHouse] SHALL accept an export when any of the following holds for every destination partition term:
 
-For example, if `source_table` is partitioned by `toYYYYMM(date)` and `destination_table` is partitioned by `toYYYYMMDD(date)`, the following command SHALL output an error:
+* The source and destination `PARTITION BY` expressions format to the same string (identical partition keys, including non-monotonic expressions such as hashes).
+* The destination is unpartitioned.
+* The source `PARTITION BY` already contains the exact destination term (same column, same function, same integer argument). This covers a source that adds extra partition columns on top of the destination's, in any column order.
+* For a bare-column destination term, the destination column is part of the source partition key, is not `Nullable`, and the source part's stored `min` equals its stored `max` for that column across the exported partition (dynamic single-value proof).
+
+[ClickHouse] SHALL reject the export with `BAD_ARGUMENTS` when none of the above holds, and the message SHALL name:
+
+* the offending destination column when it is not part of the source partition key,
+* the `Nullable` partition column when a `NULL` might form its own destination partition without a structural match,
+* the column that spans multiple destination partitions when the dynamic proof fails.
+
+The rejection SHALL be synchronous - `system.replicated_partition_exports` MUST NOT contain a row for the rejected `(source, destination, partition)` triple.
+
+Acceptance is per-partition and data-dependent: the same `(source_key, destination_key)` pair MAY be accepted for one partition and rejected for another when the partitions differ in the values they hold.
+
+For example, before this behaviour a source partitioned by `(year, country)` and a destination partitioned by `year` were rejected as different partition keys; after it, exports SHALL succeed because every source partition has a single year:
 
 ```sql
-ALTER TABLE source_table 
-EXPORT PARTITION ID '2020' 
+ALTER TABLE source_table
+EXPORT PARTITION ID '2020-US'
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
+
+Conversely a source partitioned by `toYYYYMM(dt)` whose part holds two different days SHALL be rejected against a destination partitioned by `dt`:
+
+```sql
+ALTER TABLE source_table
+EXPORT PARTITION ID '202403'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1
 ```
@@ -3777,6 +3826,8 @@ version: 1.0
 * `create_time` - when the export operation was created
 * `update_time` - last update time of the export operation
 * `local_backoff_per_part` - per-part local back-off information for parts currently backing off on this replica, exposing at least the `part` name, the `attempts` count, and the `next_retry_time`
+* `exception_count` - the number of export failures (retries) counted so far for the task
+* `last_exception_per_replica` - per-replica last-exception entries, each exposing at least the `replica`, the error `message`, the offending `part`, and a per-replica `count`
 
 The table SHALL track export operations before they complete and SHALL show completed or failed exports until they are cleaned up (based on TTL).
 
@@ -3790,6 +3841,17 @@ SELECT source_table, destination_table, partition_id, status,
 FROM system.replicated_partition_exports
 WHERE status = 'IN_PROGRESS'
 ```
+
+### RQ.ClickHouse.ExportPartition.Observability.RetryExceptionReported
+version: 1.0
+
+[ClickHouse] SHALL make export-partition retries observable to the user: whenever a part export fails with a retryable error and the retry mechanism kicks in, the failure SHALL be visible in `system.replicated_partition_exports` with the following semantics:
+* `exception_count` SHALL be greater than zero and SHALL keep increasing while the part keeps failing
+* `last_exception_per_replica` SHALL contain one entry per replica that has hit a failure, and each entry SHALL carry a non-empty error `message` describing the reason for the retry, together with the `replica` name and the offending `part`
+* When a failure is confined to a subset of replicas, only those replicas SHALL appear in `last_exception_per_replica`; when every replica fails, every replica SHALL appear
+* Concurrent exports (e.g. from different source tables) SHALL each track their own `exception_count` and `last_exception_per_replica` independently
+
+This holds regardless of the retryable failure source (transient network/object-storage/Keeper errors, memory-limit errors, out-of-disk errors, or an injected retryable failpoint), so an operator can always see that retries are happening and why.
 
 ## Enabling export functionality
 
