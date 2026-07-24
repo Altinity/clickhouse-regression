@@ -56,6 +56,7 @@ on:
           - benchmark_all
           - benchmark_aws
           - benchmark_gcs
+          - benchmark_hetzner
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
@@ -77,6 +78,7 @@ on:
           - memory
           - parquet_all
           - parquet
+          - parquet_hetzner
           - parquet_minio
           - parquet_s3
           - part_moves_between_shards
@@ -84,6 +86,7 @@ on:
           - s3_all
           - s3_aws
           - s3_gcs
+          - s3_hetzner
           - s3_minio
           - selects
           - session_timezone
@@ -91,6 +94,7 @@ on:
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
+          - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
           - window_functions
@@ -98,7 +102,11 @@ on:
         description: "Artifact S3 bucket"
         type: choice
         options:
+          - hetzner
           - internal
+          - public
+          - builds
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice

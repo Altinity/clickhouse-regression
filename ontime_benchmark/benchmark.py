@@ -93,6 +93,9 @@ def regression(
     gcs_uri = s3_args.get("gcs_uri")
     gcs_key_id = s3_args.get("gcs_key_id")
     gcs_key_secret = s3_args.get("gcs_key_secret")
+    hetzner_s3_uri = s3_args.get("hetzner_s3_uri")
+    hetzner_s3_key_id = s3_args.get("hetzner_s3_key_id")
+    hetzner_s3_access_key = s3_args.get("hetzner_s3_access_key")
 
     for storage in storages:
         environ = {}
@@ -129,6 +132,23 @@ def regression(
                 uri = gcs_uri.value
                 access_key_id = gcs_key_id.value
                 secret_access_key = gcs_key_secret.value
+
+            elif "hetzner" == storage.lower():
+                with Given("I make sure the Hetzner S3 credentials are set"):
+                    if hetzner_s3_uri is None or hetzner_s3_uri.value is None:
+                        fail("Hetzner S3 URI needs to be set")
+                    if hetzner_s3_key_id is None or hetzner_s3_key_id.value is None:
+                        fail("Hetzner S3 key id needs to be set")
+                    if (
+                        hetzner_s3_access_key is None
+                        or hetzner_s3_access_key.value is None
+                    ):
+                        fail("Hetzner S3 access key needs to be set")
+
+                s3_endpoint_url, bucket, _ = parse_s3_uri(hetzner_s3_uri.value)
+                uri = f"{s3_endpoint_url}/{bucket}/data/benchmark/"
+                access_key_id = hetzner_s3_key_id.value
+                secret_access_key = hetzner_s3_access_key.value
 
             self.context.uri = uri
             self.context.access_key_id = access_key_id
