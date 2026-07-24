@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.asserts import error
 from .export_status import wait_for_export_to_complete
 
 
@@ -102,6 +103,99 @@ def export_partition_all(
             wait_for_export_to_complete(
                 partition_id=partition, source_table=source_table, node=node
             )
+
+
+@TestStep(When)
+def export_partition_by_id(
+    self,
+    source_table,
+    destination_table,
+    partition_id,
+    node,
+    exitcode=0,
+    settings=None,
+    query_settings_sql="",
+):
+    """Issue a single ``EXPORT PARTITION ID`` and, on success, wait for
+    completion. Returns the raw query result so callers can inspect reject
+    output when ``exitcode != 0``.
+    """
+    if settings is None:
+        settings = self.context.default_settings
+
+    with By(f"exporting partition '{partition_id}' from {source_table}"):
+        result = node.query(
+            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
+            f"TO TABLE {destination_table}{query_settings_sql}",
+            settings=settings,
+            exitcode=exitcode,
+            ignore_exception=(exitcode != 0),
+            steps=True,
+        )
+    if exitcode == 0:
+        wait_for_export_to_complete(
+            partition_id=partition_id, source_table=source_table, node=node
+        )
+    return result
+
+
+@TestStep(Then)
+def assert_no_scheduled_exports(
+    self,
+    source_table,
+    node,
+    destination_table=None,
+    partition_id=None,
+):
+    """Assert nothing matching the filter was scheduled in
+    ``system.replicated_partition_exports`` (i.e. the gate rejected
+    synchronously)."""
+    where = [f"source_table = '{source_table}'"]
+    if destination_table is not None:
+        where.append(f"destination_table = '{destination_table}'")
+    if partition_id is not None:
+        where.append(f"partition_id = '{partition_id}'")
+    count = node.query(
+        "SELECT count() FROM system.replicated_partition_exports "
+        f"WHERE {' AND '.join(where)}"
+    ).output.strip()
+    assert count == "0", error(f"expected 0 scheduled tasks for {where}, got {count}")
+
+
+@TestStep(When)
+def get_partition_min_max(self, source_table, partition_id, columns, node):
+    """Return ``{col: (min, max), ...}`` for ``columns`` on one source
+    partition. Values are the raw string form returned by ClickHouse."""
+    if not columns:
+        return {}
+    projection = ", ".join(f"min({c}), max({c})" for c in columns)
+    row = (
+        node.query(
+            f"SELECT {projection} FROM {source_table} "
+            f"WHERE _partition_id = '{partition_id}' FORMAT TabSeparated"
+        )
+        .output.strip()
+        .split("\t")
+    )
+    return {c: (row[2 * i], row[2 * i + 1]) for i, c in enumerate(columns)}
+
+
+@TestStep(When)
+def get_partition_id_where(self, source_table, where, node):
+    """Return the single ``_partition_id`` matching a WHERE filter on the
+    source table (fails loudly if the filter matches multiple partitions)."""
+    output = (
+        node.query(
+            f"SELECT DISTINCT _partition_id FROM {source_table} "
+            f"WHERE {where} FORMAT TabSeparated"
+        )
+        .output.strip()
+        .splitlines()
+    )
+    assert len(output) == 1, error(
+        f"expected exactly one partition matching {where!r}, got {output!r}"
+    )
+    return output[0].strip()
 
 
 @TestStep(When)

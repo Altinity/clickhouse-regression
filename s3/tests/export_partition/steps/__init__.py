@@ -37,6 +37,10 @@ from .export_operations import (
     get_partitions,
     export_partitions,
     export_partition_all,
+    export_partition_by_id,
+    assert_no_scheduled_exports,
+    get_partition_min_max,
+    get_partition_id_where,
     kill_export_partition,
 )
 
@@ -193,6 +197,10 @@ __all__ = [
     "get_partitions",
     "export_partitions",
     "export_partition_all",
+    "export_partition_by_id",
+    "assert_no_scheduled_exports",
+    "get_partition_min_max",
+    "get_partition_id_where",
     "kill_export_partition",
     # Export status
     "get_export_events",
