@@ -1846,6 +1846,8 @@ RQ_ClickHouse_ExportPartition_SystemTables_Exports = Requirement(
         "* `create_time` - when the export operation was created\n"
         "* `update_time` - last update time of the export operation\n"
         "* `local_backoff_per_part` - per-part local back-off information for parts currently backing off on this replica, exposing at least the `part` name, the `attempts` count, and the `next_retry_time`\n"
+        "* `exception_count` - the number of export failures (retries) counted so far for the task\n"
+        "* `last_exception_per_replica` - per-replica last-exception entries, each exposing at least the `replica`, the error `message`, the offending `part`, and a per-replica `count`\n"
         "\n"
         "The table SHALL track export operations before they complete and SHALL show completed or failed exports until they are cleaned up (based on TTL).\n"
         "\n"
@@ -1864,6 +1866,28 @@ RQ_ClickHouse_ExportPartition_SystemTables_Exports = Requirement(
     link=None,
     level=2,
     num="21.1",
+)
+
+RQ_ClickHouse_ExportPartition_Observability_RetryExceptionReported = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Observability.RetryExceptionReported",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL make export-partition retries observable to the user: whenever a part export fails with a retryable error and the retry mechanism kicks in, the failure SHALL be visible in `system.replicated_partition_exports` with the following semantics:\n"
+        "* `exception_count` SHALL be greater than zero and SHALL keep increasing while the part keeps failing\n"
+        "* `last_exception_per_replica` SHALL contain one entry per replica that has hit a failure, and each entry SHALL carry a non-empty error `message` describing the reason for the retry, together with the `replica` name and the offending `part`\n"
+        "* When a failure is confined to a subset of replicas, only those replicas SHALL appear in `last_exception_per_replica`; when every replica fails, every replica SHALL appear\n"
+        "* Concurrent exports (e.g. from different source tables) SHALL each track their own `exception_count` and `last_exception_per_replica` independently\n"
+        "\n"
+        "This holds regardless of the retryable failure source (transient network/object-storage/Keeper errors, memory-limit errors, out-of-disk errors, or an injected retryable failpoint), so an operator can always see that retries are happening and why.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="21.2",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_AllowExperimental = Requirement(

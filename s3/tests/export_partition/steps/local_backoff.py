@@ -3,6 +3,7 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
+import helpers.config.config as server_config
 from helpers.queries import select_all_ordered
 
 from .containers import kill_minio, start_minio
@@ -33,6 +34,15 @@ DEFAULT_TASK_TIMEOUT = 86400
 # Injection modes for the multi-replica orchestration helpers.
 FAILPOINT_MODE = "failpoint"
 MINIO_MODE = "minio"
+
+# Expected substrings in last_exception_per_replica.message per failure mode, used
+# by the general observability check to confirm a meaningful message is surfaced.
+# These match the human-readable exception message text (not the error-code name):
+# the retryable failpoint reports "Failpoint: export_part_retryable_throw".
+FAILURE_MESSAGE_HINT = {
+    FAILPOINT_MODE: RETRYABLE_FAILPOINT,
+    MINIO_MODE: "S3",
+}
 
 
 def short_backoff_settings(initial=1, max_backoff=2):
@@ -379,6 +389,264 @@ def assert_export_fails_fast(
             expected_rows=expected_rows,
             node=node,
         )
+
+
+@TestStep(Then)
+def get_exception_count_for(self, source_table, partition, node=None):
+    """Return exception_count (the retry/failure counter) for one partition on a node."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"SELECT sum(exception_count) FROM system.replicated_partition_exports "
+        f"WHERE source_table = '{source_table}' AND partition_id = '{partition}'",
+        exitcode=0,
+    )
+    value = result.output.strip()
+    if not value or value == "\\N":
+        return 0
+    return int(value)
+
+
+@TestStep(Then)
+def wait_for_exception_count(
+    self, source_table, partition, min_count=1, node=None, timeout=90, delay=3
+):
+    """Wait until exception_count reaches at least ``min_count`` (retries are counted)."""
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            current = get_exception_count_for(
+                source_table=source_table, partition=partition, node=node
+            )
+            assert current >= min_count, error(
+                f"expected exception_count >= {min_count}, got {current}"
+            )
+
+
+@TestStep(Then)
+def get_last_exception_per_replica(self, source_table, partition, node=None):
+    """Return the per-replica last-exception entries for a partition as a list of
+    dicts ``{replica, message, part, count}``. Reads
+    system.replicated_partition_exports.last_exception_per_replica (populated from
+    the Keeper last_exception znode, so it is visible from any node)."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"SELECT tupleElement(t, 'replica'), tupleElement(t, 'message'), "
+        f"tupleElement(t, 'part'), tupleElement(t, 'count') FROM ("
+        f"SELECT arrayJoin(last_exception_per_replica) AS t "
+        f"FROM system.replicated_partition_exports "
+        f"WHERE source_table = '{source_table}' AND partition_id = '{partition}') "
+        f"FORMAT TabSeparated",
+        exitcode=0,
+    )
+
+    entries = []
+    for line in result.output.strip().splitlines():
+        if not line.strip():
+            continue
+        parts = line.split("\t")
+        entries.append(
+            {
+                "replica": parts[0],
+                "message": parts[1] if len(parts) > 1 else "",
+                "part": parts[2] if len(parts) > 2 else "",
+                "count": int(parts[3]) if len(parts) > 3 and parts[3] else 0,
+            }
+        )
+    return entries
+
+
+@TestStep(Then)
+def get_replicas_with_exception(self, source_table, partition, node=None):
+    """Return the set of replica names that have reported an exception for a partition."""
+    entries = get_last_exception_per_replica(
+        source_table=source_table, partition=partition, node=node
+    )
+    return {e["replica"] for e in entries if e["replica"]}
+
+
+@TestStep(Then)
+def assert_retry_is_observable(
+    self,
+    source_table,
+    partition,
+    min_replicas=1,
+    expected_message_substr=None,
+    node=None,
+):
+    """General failure-observability check: whenever a part export fails and retries
+    kick in, this MUST be observable to the user.
+
+    Asserts that:
+    * ``exception_count`` is greater than zero (retries are counted), and
+    * ``last_exception_per_replica`` has at least ``min_replicas`` entries, each with
+      a non-empty error message (and containing ``expected_message_substr`` when
+      given) so the user can see *why* a retry happened and *which* replica hit it.
+
+    Drop this into any scenario that drives a retryable failure.
+    """
+    count = get_exception_count_for(
+        source_table=source_table, partition=partition, node=node
+    )
+    assert count > 0, error(
+        f"retries must be observable: exception_count is {count}, expected > 0"
+    )
+
+    entries = get_last_exception_per_replica(
+        source_table=source_table, partition=partition, node=node
+    )
+    assert len(entries) >= min_replicas, error(
+        f"expected an exception reported on >= {min_replicas} replica(s), "
+        f"got {len(entries)}: {entries}"
+    )
+
+    for entry in entries:
+        assert entry["message"].strip() != "", error(
+            f"replica {entry['replica']!r} reported an empty error message"
+        )
+        if expected_message_substr is not None:
+            assert expected_message_substr in entry["message"], error(
+                f"replica {entry['replica']!r} message {entry['message']!r} does not "
+                f"contain expected {expected_message_substr!r}"
+            )
+
+
+@TestStep(Then)
+def wait_for_retry_is_observable(
+    self,
+    source_table,
+    partition,
+    min_replicas=1,
+    expected_message_substr=None,
+    node=None,
+    timeout=120,
+    delay=3,
+):
+    """Poll until the retry becomes observable (see ``assert_retry_is_observable``)."""
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            assert_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                min_replicas=min_replicas,
+                expected_message_substr=expected_message_substr,
+                node=node,
+            )
+
+
+@TestStep(Then)
+def wait_for_error_reported_on_replica_count(
+    self, source_table, partition, expected_count, node=None, timeout=120, delay=3
+):
+    """Wait until exactly ``expected_count`` distinct replicas have reported an
+    exception for the partition (used by the one/subset/all scope test)."""
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            replicas = get_replicas_with_exception(
+                source_table=source_table, partition=partition, node=node
+            )
+            assert len(replicas) >= expected_count, error(
+                f"expected >= {expected_count} replicas reporting an exception, "
+                f"got {len(replicas)}: {sorted(replicas)}"
+            )
+
+
+@TestStep(Then)
+def assert_progress_tracked(self, source_table, partition, node=None):
+    """Assert the export exposes sane progress in system.replicated_partition_exports:
+    ``parts_count`` > 0 and 0 <= ``parts_to_do`` <= ``parts_count``."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"SELECT parts_count, parts_to_do FROM system.replicated_partition_exports "
+        f"WHERE source_table = '{source_table}' AND partition_id = '{partition}' LIMIT 1 "
+        f"FORMAT TabSeparated",
+        exitcode=0,
+    )
+    row = result.output.strip().split("\t")
+    parts_count = int(row[0])
+    parts_to_do = int(row[1])
+    assert parts_count > 0, error(f"expected parts_count > 0, got {parts_count}")
+    assert 0 <= parts_to_do <= parts_count, error(
+        f"parts_to_do {parts_to_do} out of range [0, {parts_count}]"
+    )
+
+
+# A low background merges/mutations memory limit (bytes) applied server-wide via
+# config.d. The background part-export worker's memory is tracked against this
+# limit (the "Merges and mutations memory limit" reported at startup), NOT the
+# per-query max_memory_usage, so lowering it makes a part export fail with a
+# (retryable) MEMORY_LIMIT_EXCEEDED. Tune if the export does not exceed it on a
+# given build/dataset.
+OOM_MERGES_MEMORY_LIMIT = 52428800  # 50 MiB
+
+
+@TestStep(Given)
+def limit_export_worker_memory(
+    self,
+    value=OOM_MERGES_MEMORY_LIMIT,
+    setting="merges_mutations_memory_usage_soft_limit",
+    nodes=None,
+):
+    """Lower a server memory limit via config.d on the given nodes so the background
+    part-export worker fails with a (retryable) MEMORY_LIMIT_EXCEEDED.
+
+    ``setting`` selects the knob:
+      - ``merges_mutations_memory_usage_soft_limit`` (default): bounds only
+        background merges/mutations/exports, so it can be set very low without
+        starving foreground/system queries. Targeted and low-risk.
+      - ``max_server_memory_usage``: bounds the whole server. Also caps the export,
+        but must stay above the server's baseline RSS or the node won't come back
+        healthy; usually needs larger export data to trip.
+
+    Written to config.d (server config) and reverted automatically (file removed +
+    restart) at test end.
+    """
+    if nodes is None:
+        nodes = self.context.nodes
+
+    for node in nodes:
+        server_config.create_and_add(
+            entries={setting: str(value)},
+            config_file="export_oom_memory_limit.xml",
+            config_d_dir="/etc/clickhouse-server/config.d",
+            preprocessed_name="config.xml",
+            node=node,
+        )
+
+
+@TestStep(When)
+def inject_failure_on_scope(self, mode, nodes, failing_nodes, source_table=None):
+    """Set up a retryable failure on ``failing_nodes`` only, and stop moves on the
+    healthy nodes so that only the intended replicas attempt (and therefore report)
+    the failure.
+
+    ``FAILPOINT_MODE`` is a node-local injection; ``MINIO_MODE`` is cluster-wide, so
+    its scope is enforced only via stop_moves on the healthy replicas.
+    """
+    healthy_nodes = [n for n in nodes if n not in failing_nodes]
+    if source_table is not None and healthy_nodes:
+        stop_moves(source_table=source_table, nodes=healthy_nodes)
+
+    if mode == FAILPOINT_MODE:
+        enable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=failing_nodes)
+    elif mode == MINIO_MODE:
+        kill_minio()
+
+
+@TestStep(Finally)
+def clear_failure_on_scope(self, mode, nodes, failing_nodes, source_table=None):
+    """Undo ``inject_failure_on_scope`` and resume moves everywhere."""
+    if mode == FAILPOINT_MODE:
+        disable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=failing_nodes)
+    elif mode == MINIO_MODE:
+        start_minio()
+
+    if source_table is not None:
+        start_moves(source_table=source_table, nodes=nodes)
 
 
 @TestStep(Finally)

@@ -1229,6 +1229,8 @@ version: 1.0
 * `create_time` - when the export operation was created
 * `update_time` - last update time of the export operation
 * `local_backoff_per_part` - per-part local back-off information for parts currently backing off on this replica, exposing at least the `part` name, the `attempts` count, and the `next_retry_time`
+* `exception_count` - the number of export failures (retries) counted so far for the task
+* `last_exception_per_replica` - per-replica last-exception entries, each exposing at least the `replica`, the error `message`, the offending `part`, and a per-replica `count`
 
 The table SHALL track export operations before they complete and SHALL show completed or failed exports until they are cleaned up (based on TTL).
 
@@ -1242,6 +1244,17 @@ SELECT source_table, destination_table, partition_id, status,
 FROM system.replicated_partition_exports
 WHERE status = 'IN_PROGRESS'
 ```
+
+### RQ.ClickHouse.ExportPartition.Observability.RetryExceptionReported
+version: 1.0
+
+[ClickHouse] SHALL make export-partition retries observable to the user: whenever a part export fails with a retryable error and the retry mechanism kicks in, the failure SHALL be visible in `system.replicated_partition_exports` with the following semantics:
+* `exception_count` SHALL be greater than zero and SHALL keep increasing while the part keeps failing
+* `last_exception_per_replica` SHALL contain one entry per replica that has hit a failure, and each entry SHALL carry a non-empty error `message` describing the reason for the retry, together with the `replica` name and the offending `part`
+* When a failure is confined to a subset of replicas, only those replicas SHALL appear in `last_exception_per_replica`; when every replica fails, every replica SHALL appear
+* Concurrent exports (e.g. from different source tables) SHALL each track their own `exception_count` and `last_exception_per_replica` independently
+
+This holds regardless of the retryable failure source (transient network/object-storage/Keeper errors, memory-limit errors, out-of-disk errors, or an injected retryable failpoint), so an operator can always see that retries are happening and why.
 
 ## Enabling export functionality
 
