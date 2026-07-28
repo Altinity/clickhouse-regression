@@ -211,7 +211,14 @@ def oracle_self_tests(self):
 @TestScenario
 def check_case(self, source_terms, dest_terms, shape_name, shape_values):
     """One matrix cell: build the tables, insert the shape, export the
-    first source partition, and compare the gate's response to the oracle."""
+    first source partition, and compare the gate's response to the oracle.
+
+    Only the first source partition is exercised per cell: for current
+    SHAPES a multi-partition insert produces structurally homogeneous
+    partitions, so testing the rest is redundant. Heterogeneous per-table
+    behaviour (one partition accepts, another rejects) is covered by
+    ``per_partition_acceptance``.
+    """
     node = self.context.node
     src_partition_by = partition_by_sql(source_terms)
     dst_partition_by = partition_by_sql(dest_terms)
@@ -493,6 +500,13 @@ def multi_part_partition_reject(self):
             result.output
         )
         assert "column 'dt'" in result.output, error(result.output)
+    with And("nothing is scheduled"):
+        assert_no_scheduled_exports(
+            source_table=source_table,
+            destination_table=destination_table,
+            partition_id="202403",
+            node=node,
+        )
 
 
 @TestScenario
@@ -572,6 +586,13 @@ def three_term_destination_mixed_decisions(self):
             result.output
         )
         assert "column 'dt'" in result.output, error(result.output)
+    with And("nothing is scheduled for the FR partition"):
+        assert_no_scheduled_exports(
+            source_table=source_table,
+            destination_table=destination_table,
+            partition_id=fr_partition,
+            node=node,
+        )
 
 
 @TestScenario
