@@ -116,6 +116,33 @@ xfails = {
             "entry once the manifest carries format settings end-to-end.",
         )
     ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery alias/subquery select alias": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with alias": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with group by": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with limit": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by and limit": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/union alias/union all with alias": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/set operations alias/intersect except with alias/*": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/constants/default json/*": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/2122"),
+    ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
@@ -452,6 +479,11 @@ ffails = {
         "ice-rest-catalog); Glue/LocalStack DataLakeCatalog is out of scope.",
         lambda test: True,
     ),
+    "/iceberg/hybrid": (
+        Skip,
+        "Hybrid table engine is Antalya-only",
+        check_if_not_antalya_build,
+    ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
     #     "https://github.com/clickhouse/clickhouse/issues/86024",
@@ -467,6 +499,7 @@ ffails = {
 
 _RUNTIME_USERS_D_FILES = (
     "allow_experimental_insert_into_iceberg.xml",
+    "allow_experimental_hybrid_table.xml",
 )
 
 
@@ -476,7 +509,12 @@ def _sweep_runtime_users_d_overlays():
     for name in _RUNTIME_USERS_D_FILES:
         path = os.path.join(users_d_dir, name)
         if os.path.exists(path):
-            os.remove(path)
+            try:
+                os.remove(path)
+            except PermissionError:
+                # Container-written overlays are often root-owned on the host.
+                # Hybrid feature still forces enable_analyzer via query settings.
+                pass
 
 
 @TestModule
@@ -563,6 +601,10 @@ def regression(
     Feature(
         test=load("iceberg.tests.export_partition.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    # Feature(
+    #     test=load("iceberg.tests.hybrid.feature", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     # Feature(
     #     test=load("iceberg.tests.catalogs.feature", "feature"),
