@@ -374,6 +374,15 @@ xfails = {
             check_clickhouse_version(">=26.3.13.20001"),
         )
     ],
+    "/iceberg/export partition/: catalog/*/partition compatibility/reversed destination column order maps values by name": [
+        (
+            Fail,
+            "EXPORT PARTITION matches source columns to the destination "
+            "positionally (like INSERT SELECT *), so permuted destination "
+            "column order mis-assigns values and can break partition "
+            "semantics (https://github.com/Altinity/ClickHouse/issues/2123)",
+        )
+    ],
 }
 
 ffails = {
