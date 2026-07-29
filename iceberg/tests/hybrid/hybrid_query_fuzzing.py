@@ -8,7 +8,7 @@ from swarms.requirements.requirements import *
 
 import swarms.tests.steps.swarm_steps as swarm_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
-import ice.steps.hybrid as hybrid_steps
+import iceberg.tests.steps.hybrid as hybrid_steps
 
 
 def load_queries_from_sql_file(sql_file_path):
