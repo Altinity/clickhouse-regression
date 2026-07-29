@@ -8,15 +8,39 @@ from s3.requirements.export_partition import (
     RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey,
 )
 from s3.tests.export_partition.steps import (
+    assert_export_rejected,
     assert_no_scheduled_exports,
+    count_rows,
     create_s3_table,
+    disable_failpoint,
+    drop_partition_by_id,
+    enable_failpoint,
     export_partition_by_id,
+    get_first_partition_id,
     get_partition_id_where,
     get_partition_min_max,
     get_partitions,
+    insert_values,
+    RETRYABLE_FAILPOINT,
+    select_rows,
+    setup_source_and_hive_destination,
+    short_backoff_settings,
+    start_export,
+    wait_for_exception_count,
+    wait_for_export_to_complete,
 )
 
 
+# Error codes referenced in reject assertions (see
+# ``export_partition_local_backoff_policy.md``).
+BAD_ARGUMENTS = 36
+INCOMPATIBLE_COLUMNS = 122
+NUMBER_OF_COLUMNS_DOESNT_MATCH = 190
+
+
+# Matrix inputs for ``compatibility_matrix``: columns available in the
+# source/destination schema, source and destination PARTITION BY term
+# tuples, and value shapes chosen to hit every oracle branch.
 COLUMNS = [
     {"name": "id", "type": "Int64"},
     {"name": "a", "type": "Int32"},
@@ -27,8 +51,6 @@ COLUMNS = [
     {"name": "s", "type": "String"},
 ]
 
-# Tuple of strings = one PARTITION BY expression rendered into SQL:
-# `()` is unpartitioned, `("a",)` is `PARTITION BY a`, etc.
 SOURCE_KEYS = [
     (),
     ("a",),
@@ -60,8 +82,6 @@ DEST_KEYS = [
     ("a", "s"),
 ]
 
-# VALUES rows matching COLUMNS. Chosen to hit every oracle branch:
-# single-value min/max, splits on a/dt/ts/s.
 SHAPES = {
     "single_row": [
         "(1, 10, 20, 30, '2024-03-05', '2024-03-05 12:00:00', 'x')",
@@ -89,7 +109,7 @@ SHAPES = {
 }
 
 
-def partition_by_sql(terms):
+def _partition_by_sql(terms):
     """Render a term tuple as the SQL body of a ``PARTITION BY`` clause."""
     if not terms:
         return "tuple()"
@@ -98,7 +118,7 @@ def partition_by_sql(terms):
     return "(" + ", ".join(terms) + ")"
 
 
-def term_column(term):
+def _term_column(term):
     """Return the underlying column a source term operates on
     (``toYYYYMM(dt)`` -> ``dt``, ``a % 4`` -> ``a``, ``a`` -> ``a``)."""
     if "(" in term:
@@ -108,11 +128,10 @@ def term_column(term):
     return term.strip()
 
 
-def predict_accept(source_terms, dest_terms, min_max):
-    """Predict whether the hive gate accepts.
-
-    Returns ``(accept, expected_substrings)``. On reject every substring in
-    the tuple must appear in the ``BAD_ARGUMENTS`` message so both the
+def _predict_accept(source_terms, dest_terms, min_max):
+    """Predict whether the hive gate accepts. Returns
+    ``(accept, expected_substrings)``; on reject every substring in the
+    tuple must appear in the ``BAD_ARGUMENTS`` message so both the
     reason and the offending column are pinned.
     """
     if tuple(source_terms) == tuple(dest_terms):
@@ -120,7 +139,7 @@ def predict_accept(source_terms, dest_terms, min_max):
     if not dest_terms:
         return True, ()
     source_terms_set = set(source_terms)
-    source_cols = {term_column(t) for t in source_terms}
+    source_cols = {_term_column(t) for t in source_terms}
     for col in dest_terms:
         if col in source_terms_set:
             continue
@@ -128,14 +147,14 @@ def predict_accept(source_terms, dest_terms, min_max):
             return False, (f"column '{col}'",)
         lo, hi = min_max[col]
         if lo != hi:
-            return False, ("spans multiple destination partitions", f"column '{col}'")
+            return False, ("multiple destination partitions", f"column '{col}'")
     return True, ()
 
 
 @TestScenario
 def oracle_self_tests(self):
-    """Pin ``predict_accept`` on every decision path in pure Python so a
-    regression in the oracle is caught before any ClickHouse run."""
+    """Pin ``_predict_accept`` on every decision path in pure Python so
+    an oracle regression is caught before any ClickHouse run."""
     cases = [
         (("a",), ("a",), {"a": ("1", "5")}, True, (), "identical keys"),
         ((), (), {}, True, (), "both unpartitioned"),
@@ -170,7 +189,7 @@ def oracle_self_tests(self):
             ("a",),
             {"a": ("0", "4")},
             False,
-            ("spans multiple destination partitions", "column 'a'"),
+            ("multiple destination partitions", "column 'a'"),
             "non-monotonic source and split range",
         ),
         (
@@ -194,66 +213,60 @@ def oracle_self_tests(self):
             ("dt",),
             {"dt": ("2024-03-05", "2024-03-20")},
             False,
-            ("spans multiple destination partitions", "column 'dt'"),
+            ("multiple destination partitions", "column 'dt'"),
             "monthly source, bare dt destination, exported partition holds two days",
         ),
     ]
-    for source_terms, dest_terms, min_max, expect_accept, expect_subs, note in cases:
-        accept, substrings = predict_accept(source_terms, dest_terms, min_max)
+    for (
+        source_terms,
+        dest_terms,
+        min_max,
+        expect_accept,
+        expect_subs,
+        note_text,
+    ) in cases:
+        accept, substrings = _predict_accept(source_terms, dest_terms, min_max)
         assert accept == expect_accept, error(
-            f"{note}: expected accept={expect_accept}, got {accept}"
+            f"{note_text}: expected accept={expect_accept}, got {accept}"
         )
         assert substrings == expect_subs, error(
-            f"{note}: expected substrings={expect_subs!r}, got {substrings!r}"
+            f"{note_text}: expected substrings={expect_subs!r}, got {substrings!r}"
         )
 
 
 @TestScenario
 def check_case(self, source_terms, dest_terms, shape_name, shape_values):
     """One matrix cell: build the tables, insert the shape, export the
-    first source partition, and compare the gate's response to the oracle.
-
-    Only the first source partition is exercised per cell: for current
-    SHAPES a multi-partition insert produces structurally homogeneous
-    partitions, so testing the rest is redundant. Heterogeneous per-table
-    behaviour (one partition accepts, another rejects) is covered by
-    ``per_partition_acceptance``.
+    first source partition, and compare the gate's response to the
+    oracle. Only the first source partition is exercised per cell (the
+    remaining partitions are structurally homogeneous, so testing them
+    is redundant; heterogeneous per-table behaviour is covered by
+    ``per_partition_acceptance``).
     """
     node = self.context.node
-    src_partition_by = partition_by_sql(source_terms)
-    dst_partition_by = partition_by_sql(dest_terms)
-
-    with Given(f"a source RMT PARTITION BY {src_partition_by}"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=COLUMNS,
-            partition_by=src_partition_by,
-            cluster="replicated_cluster",
+    with Given("source RMT and hive S3 destination"):
+        source_table, destination_table = setup_source_and_hive_destination(
+            src_columns=COLUMNS,
+            src_partition_by=_partition_by_sql(source_terms),
+            dst_partition_by=_partition_by_sql(dest_terms),
         )
-
-    with And(f"an S3 hive destination PARTITION BY {dst_partition_by}"):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=COLUMNS,
-            partition_by=dst_partition_by,
-        )
-
-    with And(f"data shape {shape_name}"):
-        node.query(f"INSERT INTO {source_table} VALUES {', '.join(shape_values)}")
+    with And("data inserted into source"):
+        insert_values(table_name=source_table, values=", ".join(shape_values))
 
     with When("I pick the first source partition and read its min/max"):
-        partition_id = get_partitions(table_name=source_table, node=node)[0]
-        relevant_cols = sorted({term_column(t) for t in source_terms} | set(dest_terms))
+        partition_id = get_first_partition_id(table_name=source_table)
+        relevant_cols = sorted(
+            {_term_column(t) for t in source_terms} | set(dest_terms)
+        )
         min_max = get_partition_min_max(
             source_table=source_table,
             partition_id=partition_id,
             columns=relevant_cols,
             node=node,
         )
-
-    expect_accept, expect_substrings = predict_accept(source_terms, dest_terms, min_max)
+    expect_accept, expect_substrings = _predict_accept(
+        source_terms, dest_terms, min_max
+    )
 
     if expect_accept:
         with Then("the export succeeds"):
@@ -264,49 +277,36 @@ def check_case(self, source_terms, dest_terms, shape_name, shape_values):
                 node=node,
             )
         with And("destination rows equal the exported source partition"):
-            src_rows = node.query(
-                f"SELECT * FROM {source_table} WHERE _partition_id = '{partition_id}' "
-                f"ORDER BY id FORMAT TabSeparated"
-            ).output
-            dst_rows = node.query(
-                f"SELECT * FROM {destination_table} ORDER BY id FORMAT TabSeparated"
-            ).output
+            src_rows = select_rows(
+                table_name=source_table,
+                where=f"_partition_id = '{partition_id}'",
+                order_by="id",
+            )
+            dst_rows = select_rows(table_name=destination_table, order_by="id")
             assert src_rows == dst_rows, error()
     else:
-        with Then("the export is rejected with BAD_ARGUMENTS"):
-            result = export_partition_by_id(
+        with Then("the export is rejected with BAD_ARGUMENTS and nothing is scheduled"):
+            assert_export_rejected(
                 source_table=source_table,
                 destination_table=destination_table,
                 partition_id=partition_id,
-                node=node,
-                exitcode=36,
-            )
-            assert "BAD_ARGUMENTS" in result.output, error(result.output)
-            for fragment in expect_substrings:
-                assert fragment in result.output, error(
-                    f"expected {fragment!r} in error, got: {result.output!r}"
-                )
-        with And("nothing is scheduled"):
-            assert_no_scheduled_exports(
-                source_table=source_table,
-                destination_table=destination_table,
-                partition_id=partition_id,
-                node=node,
+                exitcode=BAD_ARGUMENTS,
+                expected_substrings=("BAD_ARGUMENTS",) + expect_substrings,
             )
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def compatibility_matrix(self):
-    """Assert every ``product(SOURCE_KEYS, DEST_KEYS, SHAPES)`` combination
-    against the oracle."""
+    """Assert every ``product(SOURCE_KEYS, DEST_KEYS, SHAPES)``
+    combination against the oracle."""
     with Pool(4) as pool:
         for source_terms, dest_terms, (shape_name, shape_values) in product(
             SOURCE_KEYS, DEST_KEYS, list(SHAPES.items())
         ):
             name = (
-                f"src[{partition_by_sql(source_terms)}] "
-                f"dst[{partition_by_sql(dest_terms)}] "
+                f"src[{_partition_by_sql(source_terms)}] "
+                f"dst[{_partition_by_sql(dest_terms)}] "
                 f"shape[{shape_name}]"
             )
             Scenario(name, test=check_case, parallel=True, executor=pool)(
@@ -324,131 +324,41 @@ def per_partition_acceptance(self):
     """The gate decides per partition: in one table with a split March
     partition and a single-day April partition, March rejects and April
     exports."""
-    node = self.context.node
     columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+    )
+    insert_values(
+        table_name=source_table,
+        values="(1, '2024-03-05'), (2, '2024-03-20'), (3, '2024-04-10')",
+    )
 
-    with Given("a source RMT PARTITION BY toYYYYMM(dt)"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=columns,
-            partition_by="toYYYYMM(dt)",
-            cluster="replicated_cluster",
-        )
-    with And("an S3 hive destination PARTITION BY dt"):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=columns,
-            partition_by="dt",
-        )
-    with And("March splits (two days) and April is single-day"):
-        node.query(
-            f"INSERT INTO {source_table} VALUES "
-            f"(1, '2024-03-05'), (2, '2024-03-20'), (3, '2024-04-10')"
-        )
-
-    with When("I export the March partition"):
-        result = export_partition_by_id(
+    with When("I export the March partition (two days)"):
+        assert_export_rejected(
             source_table=source_table,
             destination_table=destination_table,
             partition_id="202403",
-            node=node,
-            exitcode=36,
+            exitcode=BAD_ARGUMENTS,
+            expected_substrings=(
+                "BAD_ARGUMENTS",
+                "multiple destination partitions",
+                "column 'dt'",
+            ),
         )
-    with Then("it is rejected synchronously and nothing is scheduled"):
-        assert "BAD_ARGUMENTS" in result.output, error(result.output)
-        assert "spans multiple destination partitions" in result.output, error(
-            result.output
-        )
-        assert "column 'dt'" in result.output, error(result.output)
-        assert_no_scheduled_exports(
-            source_table=source_table, partition_id="202403", node=node
-        )
-
-    with When("I export the April partition"):
+    with When("I export the April partition (single day)"):
         export_partition_by_id(
             source_table=source_table,
             destination_table=destination_table,
             partition_id="202404",
-            node=node,
+            node=self.context.node,
         )
-    with Then("only the April row is present in the destination"):
-        rows = node.query(
-            f"SELECT id, dt FROM {destination_table} ORDER BY id FORMAT TabSeparated"
-        ).output.strip()
+    with Then("only the April row is in the destination"):
+        rows = select_rows(
+            table_name=destination_table, columns="id, dt", order_by="id"
+        )
         assert rows == "3\t2024-04-10", error(f"got: {rows!r}")
-
-
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
-def subset_round_trip(self):
-    """Flagship new-accept case: source ``(year, country)`` -> destination
-    ``year``. Every source partition holds one year, so all export through
-    the per-column fast path. Assert end-to-end data integrity by
-    round-tripping through S3 back into a fresh RMT."""
-    node = self.context.node
-    columns = [
-        {"name": "id", "type": "UInt64"},
-        {"name": "year", "type": "UInt16"},
-        {"name": "country", "type": "String"},
-    ]
-
-    with Given("source RMT PARTITION BY (year, country)"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=columns,
-            partition_by="(year, country)",
-            cluster="replicated_cluster",
-        )
-    with And("S3 hive destination PARTITION BY year"):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=columns,
-            partition_by="year",
-        )
-    with And("three source partitions across two years"):
-        node.query(
-            f"INSERT INTO {source_table} VALUES "
-            f"(1, 2020, 'US'), (2, 2020, 'FR'), (3, 2021, 'US')"
-        )
-
-    with When("I export every source partition"):
-        for partition_id in get_partitions(table_name=source_table, node=node):
-            export_partition_by_id(
-                source_table=source_table,
-                destination_table=destination_table,
-                partition_id=partition_id,
-                node=node,
-            )
-
-    with Then("the destination holds every source row"):
-        src_rows = node.query(
-            f"SELECT id, year, country FROM {source_table} ORDER BY id "
-            f"FORMAT TabSeparated"
-        ).output
-        dst_rows = node.query(
-            f"SELECT id, year, country FROM {destination_table} ORDER BY id "
-            f"FORMAT TabSeparated"
-        ).output
-        assert src_rows == dst_rows, error()
-
-    with And("round-tripping back into a fresh RMT reproduces the source"):
-        roundtrip_table = f"rt_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=roundtrip_table,
-            columns=columns,
-            partition_by="(year, country)",
-            cluster="replicated_cluster",
-        )
-        node.query(f"INSERT INTO {roundtrip_table} SELECT * FROM {destination_table}")
-        rt_rows = node.query(
-            f"SELECT id, year, country FROM {roundtrip_table} ORDER BY id "
-            f"FORMAT TabSeparated"
-        ).output
-        assert rt_rows == src_rows, error()
 
 
 @TestScenario
@@ -457,56 +367,34 @@ def multi_part_partition_reject(self):
     """The gate must fold min/max across all parts of a source partition,
     not judge per part. Two single-day inserts (kept as separate parts by
     stopping merges) span two days in aggregate and must reject."""
-    node = self.context.node
     columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+        stop_merges=True,
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    insert_values(table_name=source_table, values="(2, '2024-03-20')")
 
-    with Given("a source RMT with merges stopped, PARTITION BY toYYYYMM(dt)"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=columns,
-            partition_by="toYYYYMM(dt)",
-            cluster="replicated_cluster",
-            stop_merges=True,
-        )
-    with And("an S3 hive destination PARTITION BY dt"):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=columns,
-            partition_by="dt",
-        )
-    with And("two single-day inserts into the same partition"):
-        node.query(f"INSERT INTO {source_table} VALUES (1, '2024-03-05')")
-        node.query(f"INSERT INTO {source_table} VALUES (2, '2024-03-20')")
     with And("both inserts landed as separate active parts"):
-        parts = node.query(
-            f"SELECT count() FROM system.parts WHERE table = '{source_table}' "
-            f"AND partition_id = '202403' AND active"
-        ).output.strip()
-        assert parts == "2", error(f"expected 2 active parts, got {parts}")
+        parts = count_rows(
+            table_name="system.parts",
+            where=(f"table = '{source_table}' AND partition_id = '202403' AND active"),
+        )
+        assert parts == 2, error(f"expected 2 active parts, got {parts}")
 
-    with When("I export the March partition"):
-        result = export_partition_by_id(
-            source_table=source_table,
-            destination_table=destination_table,
-            partition_id="202403",
-            node=node,
-            exitcode=36,
-        )
-    with Then("the gate rejects on combined min/max, naming column 'dt'"):
-        assert "BAD_ARGUMENTS" in result.output, error(result.output)
-        assert "spans multiple destination partitions" in result.output, error(
-            result.output
-        )
-        assert "column 'dt'" in result.output, error(result.output)
-    with And("nothing is scheduled"):
-        assert_no_scheduled_exports(
-            source_table=source_table,
-            destination_table=destination_table,
-            partition_id="202403",
-            node=node,
-        )
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id="202403",
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=(
+            "BAD_ARGUMENTS",
+            "multiple destination partitions",
+            "column 'dt'",
+        ),
+    )
 
 
 @TestScenario
@@ -525,28 +413,18 @@ def three_term_destination_mixed_decisions(self):
         {"name": "dt", "type": "Date"},
         {"name": "country", "type": "String"},
     ]
-
-    with Given("source RMT PARTITION BY (year, toYYYYMM(dt), country)"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=columns,
-            partition_by="(year, toYYYYMM(dt), country)",
-            cluster="replicated_cluster",
-        )
-    with And("S3 hive destination PARTITION BY (year, dt, country)"):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=columns,
-            partition_by="(year, dt, country)",
-        )
-    with And("one single-day US partition and one two-day FR partition"):
-        node.query(
-            f"INSERT INTO {source_table} VALUES "
-            f"(1, 2024, '2024-03-05', 'US'), (2, 2024, '2024-03-05', 'US'), "
-            f"(3, 2024, '2024-03-05', 'FR'), (4, 2024, '2024-03-20', 'FR')"
-        )
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="(year, toYYYYMM(dt), country)",
+        dst_partition_by="(year, dt, country)",
+    )
+    insert_values(
+        table_name=source_table,
+        values=(
+            "(1, 2024, '2024-03-05', 'US'), (2, 2024, '2024-03-05', 'US'), "
+            "(3, 2024, '2024-03-05', 'FR'), (4, 2024, '2024-03-20', 'FR')"
+        ),
+    )
 
     with When("I look up the US and FR source partition ids"):
         us_partition = get_partition_id_where(
@@ -564,34 +442,26 @@ def three_term_destination_mixed_decisions(self):
             node=node,
         )
     with Then("only the US rows land in the destination"):
-        rows = node.query(
-            f"SELECT id, year, dt, country FROM {destination_table} "
-            f"ORDER BY id FORMAT TabSeparated"
-        ).output.strip()
-        assert rows == "1\t2024\t2024-03-05\tUS\n2\t2024\t2024-03-05\tUS", error(
+        rows = select_rows(
+            table_name=destination_table,
+            columns="id, year, dt, country",
+            order_by="id",
+        )
+        assert rows == ("1\t2024\t2024-03-05\tUS\n2\t2024\t2024-03-05\tUS"), error(
             f"got: {rows!r}"
         )
 
     with When("I export the two-day FR partition"):
-        result = export_partition_by_id(
+        assert_export_rejected(
             source_table=source_table,
             destination_table=destination_table,
             partition_id=fr_partition,
-            node=node,
-            exitcode=36,
-        )
-    with Then("it rejects with 'spans multiple destination partitions' on 'dt'"):
-        assert "BAD_ARGUMENTS" in result.output, error(result.output)
-        assert "spans multiple destination partitions" in result.output, error(
-            result.output
-        )
-        assert "column 'dt'" in result.output, error(result.output)
-    with And("nothing is scheduled for the FR partition"):
-        assert_no_scheduled_exports(
-            source_table=source_table,
-            destination_table=destination_table,
-            partition_id=fr_partition,
-            node=node,
+            exitcode=BAD_ARGUMENTS,
+            expected_substrings=(
+                "BAD_ARGUMENTS",
+                "multiple destination partitions",
+                "column 'dt'",
+            ),
         )
 
 
@@ -599,34 +469,23 @@ def three_term_destination_mixed_decisions(self):
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def export_partition_all_gate_is_atomic(self):
     """``EXPORT PARTITION ALL`` runs the gate synchronously while
-    scheduling, so a single failing partition rejects the whole ALTER with
-    ``BAD_ARGUMENTS``. The ``export_merge_tree_partition_all_on_error``
-    setting governs **runtime** conflicts during async processing, not the
-    scheduling-time gate: ``skip_conflicts`` still yields the same reject.
+    scheduling, so a single failing partition rejects the whole ALTER
+    with ``BAD_ARGUMENTS``. ``export_merge_tree_partition_all_on_error``
+    governs **runtime** conflicts during async processing, not the
+    scheduling-time gate: ``skip_conflicts`` still yields the same
+    reject.
     """
     node = self.context.node
     columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
-
-    with Given("a source RMT PARTITION BY toYYYYMM(dt)"):
-        source_table = f"src_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=source_table,
-            columns=columns,
-            partition_by="toYYYYMM(dt)",
-            cluster="replicated_cluster",
-        )
-    with And("an S3 hive destination PARTITION BY dt"):
-        destination_table = create_s3_table(
-            table_name="dst",
-            create_new_bucket=True,
-            columns=columns,
-            partition_by="dt",
-        )
-    with And("March splits (two days) and April is single-day"):
-        node.query(
-            f"INSERT INTO {source_table} VALUES "
-            f"(1, '2024-03-05'), (2, '2024-03-20'), (3, '2024-04-10')"
-        )
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+    )
+    insert_values(
+        table_name=source_table,
+        values="(1, '2024-03-05'), (2, '2024-03-20'), (3, '2024-04-10')",
+    )
 
     for on_error in ("throw_first", "skip_conflicts"):
         with When(f"I run EXPORT PARTITION ALL with on_error={on_error}"):
@@ -635,37 +494,1295 @@ def export_partition_all_gate_is_atomic(self):
                 f"TO TABLE {destination_table} "
                 f"SETTINGS export_merge_tree_partition_all_on_error = '{on_error}'",
                 settings=self.context.default_settings,
-                exitcode=36,
+                exitcode=BAD_ARGUMENTS,
                 ignore_exception=True,
             )
         with Then(f"[{on_error}] the whole ALTER is rejected synchronously"):
-            assert "BAD_ARGUMENTS" in result.output, error(result.output)
-            assert "spans multiple destination partitions" in result.output, error(
-                result.output
-            )
-            assert "column 'dt'" in result.output, error(result.output)
+            for fragment in (
+                "BAD_ARGUMENTS",
+                "multiple destination partitions",
+                "column 'dt'",
+            ):
+                assert fragment in result.output, error(result.output)
         with And(f"[{on_error}] nothing is scheduled and destination stays empty"):
             assert_no_scheduled_exports(
                 source_table=source_table,
                 destination_table=destination_table,
                 node=node,
             )
-            dst_count = node.query(
-                f"SELECT count() FROM {destination_table}"
-            ).output.strip()
-            assert dst_count == "0", error(
-                f"[{on_error}] expected empty destination, got {dst_count}"
+            assert count_rows(table_name=destination_table) == 0, error(
+                f"[{on_error}] expected empty destination"
             )
 
 
-@TestFeature
-@Name("partition key compatibility")
-def feature(self):
-    """Partition-key compatibility gate for hive S3 exports (Altinity/ClickHouse#2074)."""
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def subset_round_trip(self):
+    """Flagship new-accept case: source ``(year, country)`` -> destination
+    ``year``. Every source partition holds one year, so all export through
+    the per-column fast path. Round-trip through S3 back into a fresh RMT
+    to assert end-to-end data integrity.
+    """
+    node = self.context.node
+    columns = [
+        {"name": "id", "type": "UInt64"},
+        {"name": "year", "type": "UInt16"},
+        {"name": "country", "type": "String"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="(year, country)",
+        dst_partition_by="year",
+    )
+    insert_values(
+        table_name=source_table,
+        values="(1, 2020, 'US'), (2, 2020, 'FR'), (3, 2021, 'US')",
+    )
+
+    with When("I export every source partition"):
+        for partition_id in get_partitions(table_name=source_table, node=node):
+            export_partition_by_id(
+                source_table=source_table,
+                destination_table=destination_table,
+                partition_id=partition_id,
+                node=node,
+            )
+
+    src_rows = select_rows(
+        table_name=source_table, columns="id, year, country", order_by="id"
+    )
+    dst_rows = select_rows(
+        table_name=destination_table, columns="id, year, country", order_by="id"
+    )
+    with Then("the destination holds every source row"):
+        assert src_rows == dst_rows, error()
+
+    with And("round-tripping back into a fresh RMT reproduces the source"):
+        roundtrip_table = f"rt_{getuid()}"
+        create_replicated_merge_tree_table(
+            table_name=roundtrip_table,
+            columns=columns,
+            partition_by="(year, country)",
+            cluster="replicated_cluster",
+        )
+        node.query(f"INSERT INTO {roundtrip_table} SELECT * FROM {destination_table}")
+        rt_rows = select_rows(
+            table_name=roundtrip_table, columns="id, year, country", order_by="id"
+        )
+        assert rt_rows == src_rows, error()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def reversed_multicolumn_partition_key_layout(self):
+    """Source ``PARTITION BY (year, country)``, destination
+    ``PARTITION BY (country, year)``. Gate accepts (both terms are bare
+    columns of source key). Assert destination partition directories
+    reflect the destination ``(country, year)`` order.
+    """
+    node = self.context.node
+    columns = [
+        {"name": "id", "type": "UInt64"},
+        {"name": "year", "type": "UInt16"},
+        {"name": "country", "type": "String"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="(year, country)",
+        dst_partition_by="(country, year)",
+    )
+    insert_values(table_name=source_table, values="(1, 2024, 'FR')")
+
+    source_partition = get_first_partition_id(table_name=source_table)
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=source_partition,
+        node=node,
+    )
+
+    with Then("destination row content matches source"):
+        rows = select_rows(
+            table_name=destination_table, columns="id, year, country", order_by="id"
+        )
+        assert rows == "1\t2024\tFR", error(f"got: {rows!r}")
+
+    with And("destination _partition_id leads with country, not year"):
+        dst_partition = select_rows(
+            table_name=destination_table, columns="DISTINCT _partition_id"
+        )
+        assert (
+            dst_partition.startswith("FR") or "FR" in dst_partition.split("-")[0]
+        ), error(
+            f"expected destination partition id to lead with 'FR' (country), "
+            f"got {dst_partition!r} (source was {source_partition!r})"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def swapped_same_type_columns_positional_cast(self):
+    """Two same-type payload columns with the same names on both sides
+    but their positions swapped between source and destination. The
+    gate compares by name (both sides ``PARTITION BY ts``) and accepts,
+    while payload CAST is positional, so source ``ts`` would land in
+    destination ``x`` and vice versa. Compare by explicit column name
+    (``SELECT *`` would print identically under a swap) and pin the
+    destination ``ts`` holding source ``ts`` values (2024), not source
+    ``x`` values (2020).
+    """
+    node = self.context.node
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ts", "type": "DateTime"},
+        {"name": "x", "type": "DateTime"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "x", "type": "DateTime"},
+        {"name": "ts", "type": "DateTime"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="ts",
+    )
+    insert_values(
+        table_name=source_table,
+        values=(
+            "(1, '2024-03-05 12:00:00', '2020-01-01 09:00:00'), "
+            "(2, '2024-03-05 12:00:00', '2020-01-02 09:00:00')"
+        ),
+    )
+
+    partition_id = get_first_partition_id(table_name=source_table)
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+    )
+
+    with Then("values stay with the column they came from (name-based compare)"):
+        src_rows = select_rows(
+            table_name=source_table, columns="id, ts, x", order_by="id"
+        )
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, ts, x", order_by="id"
+        )
+        assert src_rows == dst_rows, error(
+            f"schema-swap silently corrupted values:\nsrc={src_rows!r}\ndst={dst_rows!r}"
+        )
+    with And("destination ts holds 2024 (source ts), destination x holds 2020"):
+        dst_ts_years = select_rows(
+            table_name=destination_table,
+            columns="DISTINCT toYear(ts)",
+            order_by="1",
+        )
+        assert dst_ts_years == "2024", error(f"got dst ts years: {dst_ts_years!r}")
+        dst_x_years = select_rows(
+            table_name=destination_table,
+            columns="DISTINCT toYear(x)",
+            order_by="1",
+        )
+        assert dst_x_years == "2020", error(f"got dst x years: {dst_x_years!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def swap_under_multi_part_and_export_all(self):
+    """Combine the schema-swap hazard with multi-part partitions and
+    ``EXPORT PARTITION ALL``. Source has two source partitions each
+    landing as separate parts (merges stopped). Assert swap invariants
+    hold for every partition exported via one ``EXPORT PARTITION ALL``.
+    """
+    node = self.context.node
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ts", "type": "DateTime"},
+        {"name": "x", "type": "DateTime"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "x", "type": "DateTime"},
+        {"name": "ts", "type": "DateTime"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="toDate(ts)",
+        stop_merges=True,
+    )
+    insert_values(
+        table_name=source_table,
+        values="(1, '2024-03-05 12:00:00', '2020-01-01 09:00:00')",
+    )
+    insert_values(
+        table_name=source_table,
+        values="(2, '2024-04-10 12:00:00', '2020-02-02 09:00:00')",
+    )
+
+    with When("I run EXPORT PARTITION ALL and wait for both to COMPLETE"):
+        node.query(
+            f"ALTER TABLE {source_table} EXPORT PARTITION ALL "
+            f"TO TABLE {destination_table}",
+            settings=self.context.default_settings,
+        )
+        for partition_id in get_partitions(table_name=source_table, node=node):
+            wait_for_export_to_complete(
+                source_table=source_table, partition_id=partition_id, node=node
+            )
+
+    with Then("values stay with the column they came from on every row"):
+        src_rows = select_rows(
+            table_name=source_table, columns="id, ts, x", order_by="id"
+        )
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, ts, x", order_by="id"
+        )
+        assert src_rows == dst_rows, error(
+            f"schema-swap corruption under EXPORT PARTITION ALL:\n"
+            f"src={src_rows!r}\ndst={dst_rows!r}"
+        )
+    with And("destination ts holds 2024 across both partitions"):
+        dst_ts_years = select_rows(
+            table_name=destination_table,
+            columns="DISTINCT toYear(ts)",
+            order_by="1",
+        )
+        assert dst_ts_years == "2024", error(f"got: {dst_ts_years!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def extra_destination_column_without_default(self):
+    """Destination has an extra payload column without ``DEFAULT`` /
+    ``MATERIALIZED``. Positional CAST cannot bind it. Expected: reject
+    at the schema guard with ``NUMBER_OF_COLUMNS_DOESNT_MATCH`` (190).
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "a", "type": "Int32"},
+    ]
+    dst_columns = src_columns + [{"name": "b", "type": "Int32"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="a",
+    )
+    insert_values(table_name=source_table, values="(1, 42)")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=NUMBER_OF_COLUMNS_DOESNT_MATCH,
+        expected_substrings=("NUMBER_OF_COLUMNS_DOESNT_MATCH",),
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def extra_destination_column_with_default(self):
+    """Destination has an extra payload column with ``DEFAULT``.
+    Positional INSERT semantics should populate it from the default
+    expression. Expected: accept; destination has the extra column
+    filled with the default (42 here).
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "a", "type": "Int32"},
+    ]
+    dst_columns = src_columns + [
+        {"name": "b", "type": "Int32", "default": "42"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="a",
+    )
+    insert_values(table_name=source_table, values="(1, 10), (2, 10)")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=self.context.node,
+    )
+    with Then("id and a match source, b is filled with the default"):
+        rows = select_rows(
+            table_name=destination_table, columns="id, a, b", order_by="id"
+        )
+        assert rows == "1\t10\t42\n2\t10\t42", error(f"got: {rows!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def extra_destination_column_materialized(self):
+    """Destination has an extra ``MATERIALIZED`` column computed from
+    existing columns. Expected: accept; the extra column is populated
+    from its expression.
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "a", "type": "Int32"},
+    ]
+    dst_columns = src_columns + [
+        {"name": "a_doubled", "type": "Int32", "materialized": "a * 2"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="a",
+    )
+    insert_values(table_name=source_table, values="(1, 7), (2, 7)")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=self.context.node,
+    )
+    with Then("a_doubled is present in destination and equals a * 2"):
+        rows = select_rows(
+            table_name=destination_table, columns="id, a, a_doubled", order_by="id"
+        )
+        assert rows == "1\t7\t14\n2\t7\t14", error(f"got: {rows!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def source_has_more_columns_than_destination(self):
+    """Source has more payload columns than destination. Positional CAST
+    cannot bind the tail. Expected: reject at the schema guard with
+    ``NUMBER_OF_COLUMNS_DOESNT_MATCH`` (190).
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "a", "type": "Int32"},
+        {"name": "b", "type": "Int32"},
+    ]
+    dst_columns = src_columns[:2]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="a",
+    )
+    insert_values(table_name=source_table, values="(1, 10, 20)")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=NUMBER_OF_COLUMNS_DOESNT_MATCH,
+        expected_substrings=("NUMBER_OF_COLUMNS_DOESNT_MATCH",),
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_type_widening(self):
+    """Same partition-key column name, safe widening cast on the type
+    (``UInt16`` -> ``UInt32``). Expected: accept; destination values
+    preserved.
+    """
+    src_columns = [
+        {"name": "id", "type": "UInt64"},
+        {"name": "year", "type": "UInt16"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "UInt64"},
+        {"name": "year", "type": "UInt32"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="year",
+    )
+    insert_values(table_name=source_table, values="(1, 2024), (2, 2024)")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=self.context.node,
+    )
+    with Then("destination holds the same values with the widened type"):
+        rows = select_rows(
+            table_name=destination_table, columns="id, year", order_by="id"
+        )
+        assert rows == "1\t2024\n2\t2024", error(f"got: {rows!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_type_narrowing(self):
+    """Same partition-key column name, unsafe narrowing cast on the type
+    (``UInt32`` -> ``UInt16``). Expected: reject at the schema guard
+    with ``INCOMPATIBLE_COLUMNS`` (122).
+    """
+    src_columns = [
+        {"name": "id", "type": "UInt64"},
+        {"name": "year", "type": "UInt32"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "UInt64"},
+        {"name": "year", "type": "UInt16"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="year",
+    )
+    insert_values(table_name=source_table, values="(1, 2024), (2, 2024)")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=INCOMPATIBLE_COLUMNS,
+        expected_substrings=("INCOMPATIBLE_COLUMNS", "year"),
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_timezone_drift(self):
+    """Same partition-key name and same ``PARTITION BY toDate(ts)`` text,
+    but source ``ts`` is ``DateTime('UTC')`` and destination is
+    ``DateTime('Asia/Tokyo')``. The stored epoch is preserved but
+    ``toDate(ts)`` on the destination is evaluated in Tokyo — so
+    ``2024-03-05 15:00 UTC`` (``2024-03-06 00:00 Tokyo``) ends up in
+    destination partition ``2024-03-06``. Pin the observed drift.
+    """
+    node = self.context.node
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ts", "type": "DateTime('UTC')"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ts", "type": "DateTime('Asia/Tokyo')"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="toDate(ts)",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05 15:00:00')")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=node,
+    )
+    with Then("the epoch value is preserved (UTC read of dest.ts equals source.ts)"):
+        both = node.query(
+            f"SELECT toUnixTimestamp((SELECT ts FROM {source_table})), "
+            f"toUnixTimestamp((SELECT ts FROM {destination_table})) "
+            f"FORMAT TabSeparated"
+        ).output.strip()
+        src_epoch, dst_epoch = both.split("\t")
+        assert src_epoch == dst_epoch, error(
+            f"epoch drift: src={src_epoch}, dst={dst_epoch}"
+        )
+    with And("the destination toDate(ts) evaluates in Tokyo, one day ahead"):
+        dst_date = select_rows(
+            table_name=destination_table, columns="DISTINCT toDate(ts)"
+        )
+        assert dst_date == "2024-03-06", error(
+            f"expected destination-side toDate(ts) = 2024-03-06 (Tokyo), got {dst_date!r}"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def payload_lossy_cast_uint64_to_int32(self):
+    """Lossy cast on a **payload** column (not the partition key).
+    Source ``cnt UInt64``, destination ``cnt Int32``. Values that fit in
+    Int32 still trigger ``INCOMPATIBLE_COLUMNS`` because the type
+    mapping itself is unsafe; ``export_merge_tree_part_allow_lossy_cast``
+    is the opt-in.
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+        {"name": "cnt", "type": "UInt64"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+        {"name": "cnt", "type": "Int32"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05', 100)")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=INCOMPATIBLE_COLUMNS,
+        expected_substrings=("INCOMPATIBLE_COLUMNS", "cnt"),
+        check_no_scheduled=False,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def payload_lossy_cast_with_opt_in_accepts(self):
+    """Paired with ``payload_lossy_cast_uint64_to_int32``: with
+    ``export_merge_tree_part_allow_lossy_cast = 1`` the same
+    UInt64 -> Int32 payload cast is accepted (values that fit in Int32
+    land correctly; the setting is the user's explicit opt-in).
+    """
+    node = self.context.node
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+        {"name": "cnt", "type": "UInt64"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+        {"name": "cnt", "type": "Int32"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05', 100)")
+
+    partition_id = get_first_partition_id(table_name=source_table)
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+        query_settings_sql=(" SETTINGS export_merge_tree_part_allow_lossy_cast = 1"),
+    )
+    with Then("destination has the row with cnt preserved"):
+        row = select_rows(table_name=destination_table, columns="id, dt, cnt")
+        assert row == "1\t2024-03-05\t100", error(f"got: {row!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_case_sensitivity(self):
+    """Column names are case-sensitive: source column is ``Ts``,
+    destination is ``ts``. The name-based gate must reject with
+    ``column 'ts'`` (not found in source key).
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "Ts", "type": "DateTime"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ts", "type": "DateTime"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="Ts",
+        dst_partition_by="ts",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05 12:00:00')")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=("BAD_ARGUMENTS", "column 'ts'"),
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def payload_column_name_mismatch(self):
+    """Realistic ETL shape: source names its date ``order_date``,
+    destination renames it to ``ship_date``. Positional CAST would
+    happily land the values, but the name-based gate must reject with
+    ``column 'ship_date'`` (not in source key columns).
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "order_date", "type": "DateTime"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ship_date", "type": "DateTime"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=src_columns,
+        dst_columns=dst_columns,
+        src_partition_by="order_date",
+        dst_partition_by="ship_date",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05 12:00:00')")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=("BAD_ARGUMENTS", "column 'ship_date'"),
+    )
+
+
+def _try_create_hive_destination(columns, partition_by):
+    """Try to create a hive S3 destination; return (table_name_or_None,
+    exception_or_None). Used to pin scenarios where Hive S3 may reject
+    the destination at CREATE TABLE time.
+    """
+    try:
+        return (
+            create_s3_table(
+                table_name="dst",
+                create_new_bucket=True,
+                columns=columns,
+                partition_by=partition_by,
+            ),
+            None,
+        )
+    except Exception as exc:
+        return None, exc
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def algebraically_equivalent_partition_expression(self):
+    """Source ``PARTITION BY toYYYYMM(dt)``, destination
+    ``PARTITION BY toYYYYMM(dt) + 0``. Semantically identical, textually
+    different. The destination term is not a bare column, so either
+    fails at destination CREATE TABLE (Hive S3 requires bare-column
+    partition keys) or is rejected by the gate. Pin whichever happens.
+    """
+    columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+    ]
+    source_table = f"src_{getuid()}"
+    create_replicated_merge_tree_table(
+        table_name=source_table,
+        columns=columns,
+        partition_by="toYYYYMM(dt)",
+        cluster="replicated_cluster",
+    )
+
+    destination_table, exc = _try_create_hive_destination(
+        columns=columns, partition_by="toYYYYMM(dt) + 0"
+    )
+    if destination_table is None:
+        note(f"Hive S3 rejects expression-form PARTITION BY at CREATE TABLE: {exc}")
+        return
+
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=("BAD_ARGUMENTS",),
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def destination_partition_key_is_materialized(self):
+    """Destination has a ``MATERIALIZED`` column and partitions by it.
+    Like the algebraic-equivalence case, the destination partition key
+    is not a bare source column, and Hive S3 may reject at CREATE TABLE.
+    Pin whichever happens.
+    """
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+    ]
+    dst_columns = src_columns + [
+        {"name": "m", "type": "UInt32", "materialized": "toYYYYMM(dt)"},
+    ]
+    source_table = f"src_{getuid()}"
+    create_replicated_merge_tree_table(
+        table_name=source_table,
+        columns=src_columns,
+        partition_by="toYYYYMM(dt)",
+        cluster="replicated_cluster",
+    )
+
+    destination_table, exc = _try_create_hive_destination(
+        columns=dst_columns, partition_by="m"
+    )
+    if destination_table is None:
+        note(f"Hive S3 rejects materialized partition key at CREATE TABLE: {exc}")
+        return
+
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=("BAD_ARGUMENTS",),
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_lowcardinality_string(self):
+    """``LowCardinality(String)`` (the default string type in real-world
+    analytics tables). Round-trip a partition; Hive treats it as
+    ``String`` underneath.
+    """
+    node = self.context.node
+    columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "country", "type": "LowCardinality(String)"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="country",
+    )
+    insert_values(table_name=source_table, values="(1, 'FR'), (2, 'FR'), (3, 'US')")
+
+    with When("I export every source partition"):
+        for partition_id in get_partitions(table_name=source_table, node=node):
+            export_partition_by_id(
+                source_table=source_table,
+                destination_table=destination_table,
+                partition_id=partition_id,
+                node=node,
+            )
+    with Then("destination holds every source row"):
+        src_rows = select_rows(
+            table_name=source_table, columns="id, country", order_by="id"
+        )
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, country", order_by="id"
+        )
+        assert src_rows == dst_rows, error()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_fixedstring(self):
+    """``FixedString(N)`` is in the Hive-supported partition types list.
+    Round-trip a partition and confirm rows match.
+    """
+    columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "code", "type": "FixedString(3)"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="code",
+    )
+    insert_values(table_name=source_table, values="(1, 'FRA'), (2, 'FRA')")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=self.context.node,
+    )
+    with Then("destination holds both rows"):
+        src_rows = select_rows(
+            table_name=source_table, columns="id, code", order_by="id"
+        )
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, code", order_by="id"
+        )
+        assert src_rows == dst_rows, error()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_unsupported_types_hive_rejects(self):
+    """Hive S3 partitioning is documented to support only Integer, Date,
+    Time, DateTime, String, FixedString. Iterate over types that are NOT
+    in that list and confirm destination CREATE TABLE rejects each with
+    the "Hive partitioning supports only" message.
+    """
+    node = self.context.node
+    cases = [
+        ("Nullable(Int32)", "Nullable(Int32)"),
+        ("Enum8", "Enum8('a' = 1, 'b' = 2)"),
+        ("UUID", "UUID"),
+        ("Decimal(9, 2)", "Decimal(9, 2)"),
+        ("DateTime64(3)", "DateTime64(3)"),
+    ]
+    for label, type_expr in cases:
+        with When(f"I try to CREATE the destination with PARTITION BY {label}"):
+            table_name = f"dst_unsupported_{getuid()}"
+            engine = (
+                f"S3('{self.context.uri}', '{self.context.access_key_id}', "
+                f"'{self.context.secret_access_key}', filename='{table_name}', "
+                f"format='Parquet', compression='auto', "
+                f"partition_strategy='hive')"
+            )
+            result = node.query(
+                f"CREATE TABLE {table_name} (id Int64, k {type_expr}) "
+                f"ENGINE = {engine} PARTITION BY k",
+                no_checks=True,
+                settings=self.context.default_settings,
+            )
+        with Then(f"[{label}] CREATE TABLE fails with the Hive type-restriction"):
+            assert result.exitcode != 0, error(
+                f"[{label}] expected CREATE TABLE to fail, exit={result.exitcode}"
+            )
+            assert (
+                "Hive partitioning" in result.output
+                or "partition column" in result.output
+            ), error(
+                f"[{label}] expected Hive-partitioning error, got: {result.output!r}"
+            )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def payload_complex_types_round_trip(self):
+    """Payload columns (not partition key) can be complex types
+    (Nullable, LowCardinality, Array, Tuple). Round-trip a mixed-bag
+    payload and confirm every column value is preserved.
+    """
+    columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "dt", "type": "Date"},
+        {"name": "n", "type": "Nullable(Int64)"},
+        {"name": "s", "type": "LowCardinality(String)"},
+        {"name": "arr", "type": "Array(Int32)"},
+        {"name": "tpl", "type": "Tuple(a Int32, b String)"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+    )
+    insert_values(
+        table_name=source_table,
+        values=(
+            "(1, '2024-03-05', 42, 'FR', [1, 2, 3], (7, 'seven')), "
+            "(2, '2024-03-05', NULL, 'US', [], (0, ''))"
+        ),
+    )
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=self.context.node,
+    )
+    with Then("destination row content matches source column-by-column"):
+        src_rows = select_rows(
+            table_name=source_table,
+            columns="id, dt, n, s, arr, tpl",
+            order_by="id",
+        )
+        dst_rows = select_rows(
+            table_name=destination_table,
+            columns="id, dt, n, s, arr, tpl",
+            order_by="id",
+        )
+        assert src_rows == dst_rows, error(f"\nsrc={src_rows!r}\ndst={dst_rows!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def re_export_same_partition_idempotency(self):
+    """Recovery-flow question: what happens if I export the same source
+    partition twice back-to-back? Users must not silently double their
+    data — either the count stays at 1 (no-op / idempotent) or the
+    second call errors; duplication would be a bug.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    partition_id = get_first_partition_id(table_name=source_table)
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+    )
+    assert count_rows(table_name=destination_table) == 1, error(
+        "expected 1 row after first export"
+    )
+
+    with When("I export the same partition a second time"):
+        second = node.query(
+            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
+            f"TO TABLE {destination_table}",
+            settings=self.context.default_settings,
+            no_checks=True,
+        )
+    with Then("re-export must not silently double the destination"):
+        second_count = count_rows(table_name=destination_table)
+        note(
+            f"re-export exit={second.exitcode}, destination row count "
+            f"went from 1 to {second_count}"
+        )
+        assert not (second.exitcode == 0 and second_count == 2), error(
+            f"re-export silently duplicated the row: dst count = {second_count}, "
+            f"second-call exit = {second.exitcode}"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def export_drop_source_partition_export_again(self):
+    """User workflow: export a partition, drop it from source (data is
+    safely in S3 now), then attempt to export the same partition_id
+    again. Must not silently double the destination.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    partition_id = get_first_partition_id(table_name=source_table)
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+    )
+    drop_partition_by_id(table_name=source_table, partition_id=partition_id)
+    with When("I attempt to export the same partition_id again"):
+        result = node.query(
+            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
+            f"TO TABLE {destination_table}",
+            settings=self.context.default_settings,
+            no_checks=True,
+        )
+    with Then("the second export does not silently succeed"):
+        dst_count = count_rows(table_name=destination_table)
+        note(
+            f"post-drop re-export exit={result.exitcode}, destination count={dst_count}"
+        )
+        assert dst_count == 1, error(
+            f"post-drop re-export changed destination unexpectedly: "
+            f"exit={result.exitcode}, count={dst_count}"
+        )
+
+
+def _run_export_under_failpoint(
+    self,
+    source_table,
+    destination_table,
+    partition_id,
+    node,
+    mid_flight_action,
+):
+    """Common driver for the "concurrent X during export under failpoint"
+    scenarios: enable the retryable failpoint, start the export, wait for
+    a retry to be observed, run ``mid_flight_action()`` while the export
+    is stalled, then disable the failpoint and wait for completion.
+    """
+    try:
+        with When("I enable the retryable failpoint and schedule the export"):
+            enable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=[node])
+            start_export(
+                source_table=source_table,
+                destination_table=destination_table,
+                partition=partition_id,
+                node=node,
+                settings=short_backoff_settings(initial=1, max_backoff=2),
+            )
+        with And("I wait until at least one retry has been observed"):
+            wait_for_exception_count(
+                source_table=source_table,
+                partition=partition_id,
+                min_count=1,
+                node=node,
+                timeout=30,
+                delay=1,
+            )
+        with And("I perform the mid-flight action"):
+            mid_flight_action()
+        with When("I disable the failpoint and wait for COMPLETED"):
+            disable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=[node])
+            wait_for_export_to_complete(
+                source_table=source_table,
+                partition_id=partition_id,
+                node=node,
+            )
+    finally:
+        node.query(f"SYSTEM DISABLE FAILPOINT {RETRYABLE_FAILPOINT}", no_checks=True)
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def concurrent_insert_during_export_under_failpoint(self):
+    """Under a retryable failpoint (export retries with backoff), insert
+    a new row into the same source partition mid-flight. The export's
+    effect on the destination must be limited to parts registered at
+    scheduling time — new inserts must not silently land without a
+    second EXPORT.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    partition_id = get_first_partition_id(table_name=source_table)
+
+    _run_export_under_failpoint(
+        self,
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+        mid_flight_action=lambda: insert_values(
+            table_name=source_table, values="(2, '2024-03-05')"
+        ),
+    )
+
+    with Then("destination must not silently include the mid-export insert"):
+        dst_ids = select_rows(table_name=destination_table, columns="id", order_by="id")
+        assert dst_ids == "1", error(
+            f"expected only id=1 in destination (scheduler must freeze part-list "
+            f"at registration), got ids={dst_ids!r}"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def concurrent_merge_during_export(self):
+    """Source has two parts (merges stopped). Under a retryable
+    failpoint, re-enable merges so the two parts collapse into one
+    while the export retries. Destination must match the source at
+    scheduling time.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+        stop_merges=True,
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    insert_values(table_name=source_table, values="(2, '2024-03-05')")
+    partition_id = get_first_partition_id(table_name=source_table)
+
+    def _merge_parts():
+        node.query(f"SYSTEM START MERGES {source_table}")
+        node.query(f"OPTIMIZE TABLE {source_table} FINAL")
+
+    _run_export_under_failpoint(
+        self,
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+        mid_flight_action=_merge_parts,
+    )
+
+    with Then("destination contains both original rows exactly once"):
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, dt", order_by="id"
+        )
+        assert dst_rows == "1\t2024-03-05\n2\t2024-03-05", error(f"got: {dst_rows!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def accept_records_completed_task_in_system_table(self):
+    """A successful export leaves a COMPLETED row with sane metadata in
+    ``system.replicated_partition_exports``. Pin the happy-path shape.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+    partition_id = get_first_partition_id(table_name=source_table)
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=partition_id,
+        node=node,
+    )
+    with Then("system.replicated_partition_exports has a COMPLETED row"):
+        row = select_rows(
+            table_name="system.replicated_partition_exports",
+            columns="status, exception_count, partition_id, destination_table",
+            where=(
+                f"source_table = '{source_table}' "
+                f"AND partition_id = '{partition_id}'"
+            ),
+        )
+        assert row, error("no row in system.replicated_partition_exports")
+        status, exc_count, part_id, dst = row.split("\t")
+        assert status == "COMPLETED", error(f"status={status!r}")
+        assert exc_count == "0", error(f"exception_count={exc_count!r}")
+        assert part_id == partition_id, error(f"partition_id={part_id!r}")
+        assert dst == destination_table, error(f"destination_table={dst!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def query_log_contains_export_partition_query(self):
+    """Basic auditability: after ``ALTER TABLE ... EXPORT PARTITION``,
+    the query must show up in ``system.query_log`` (QueryFinish event)
+    so operators can see when an export was triggered.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="dt",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05')")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=node,
+    )
+    node.query("SYSTEM FLUSH LOGS")
+
+    with Then("system.query_log has a QueryFinish for the EXPORT PARTITION statement"):
+        finish_rows = count_rows(
+            table_name="system.query_log",
+            where=(
+                "type = 'QueryFinish' "
+                "AND query LIKE '%EXPORT PARTITION%' "
+                f"AND query LIKE '%{source_table}%' "
+                f"AND query LIKE '%{destination_table}%'"
+            ),
+        )
+        assert finish_rows >= 1, error(
+            f"expected >=1 QueryFinish for EXPORT PARTITION on "
+            f"{source_table} -> {destination_table}, got {finish_rows}"
+        )
+
+
+@TestSuite
+def oracle(self):
+    """Pure-Python self-tests for ``_predict_accept``."""
     Scenario(run=oracle_self_tests)
+
+
+@TestSuite
+def gate_decisions(self):
+    """Core gate accept/reject behavior: the full matrix plus targeted
+    per-partition, multi-part, three-term-destination, and
+    ``EXPORT PARTITION ALL`` variants."""
     Scenario(run=compatibility_matrix)
     Scenario(run=per_partition_acceptance)
     Scenario(run=multi_part_partition_reject)
     Scenario(run=three_term_destination_mixed_decisions)
     Scenario(run=export_partition_all_gate_is_atomic)
+
+
+@TestSuite
+def data_integrity_round_trip(self):
+    """End-to-end integrity of accepted exports and destination partition
+    layout follows the destination DDL, not the source."""
     Scenario(run=subset_round_trip)
+    Scenario(run=reversed_multicolumn_partition_key_layout)
+
+
+@TestSuite
+def positional_cast_hazards(self):
+    """Name-based partition-key gate + positional payload CAST can
+    silently corrupt data when schema positions disagree."""
+    Scenario(run=swapped_same_type_columns_positional_cast)
+    Scenario(run=swap_under_multi_part_and_export_all)
+
+
+@TestSuite
+def schema_arity_and_defaults(self):
+    """Payload column-count mismatches (extra dest with/without DEFAULT
+    or MATERIALIZED; source has more columns)."""
+    Scenario(run=extra_destination_column_without_default)
+    Scenario(run=extra_destination_column_with_default)
+    Scenario(run=extra_destination_column_materialized)
+    Scenario(run=source_has_more_columns_than_destination)
+
+
+@TestSuite
+def type_mismatch_and_lossy_cast(self):
+    """Same-name partition-key column with different types (widen /
+    narrow / timezone drift) and payload lossy-cast with/without opt-in."""
+    Scenario(run=partition_key_type_widening)
+    Scenario(run=partition_key_type_narrowing)
+    Scenario(run=partition_key_timezone_drift)
+    Scenario(run=payload_lossy_cast_uint64_to_int32)
+    Scenario(run=payload_lossy_cast_with_opt_in_accepts)
+
+
+@TestSuite
+def partition_key_shape(self):
+    """Name-based gate corner cases and non-bare destination partition
+    keys: case sensitivity, renamed payload columns, algebraically-
+    equivalent expressions, and MATERIALIZED destination keys."""
+    Scenario(run=partition_key_case_sensitivity)
+    Scenario(run=payload_column_name_mismatch)
+    Scenario(run=algebraically_equivalent_partition_expression)
+    Scenario(run=destination_partition_key_is_materialized)
+
+
+@TestSuite
+def production_types(self):
+    """Real-world DDL type coverage for hive S3 partition columns."""
+    Scenario(run=partition_key_lowcardinality_string)
+    Scenario(run=partition_key_fixedstring)
+    Scenario(run=partition_key_unsupported_types_hive_rejects)
+    Scenario(run=payload_complex_types_round_trip)
+
+
+@TestSuite
+def lifecycle_and_concurrency(self):
+    """User workflows: re-export idempotency, export-then-drop
+    -then-re-export, and concurrent INSERT / MERGE hitting an export
+    that is retrying under a failpoint."""
+    Scenario(run=re_export_same_partition_idempotency)
+    Scenario(run=export_drop_source_partition_export_again)
+    Scenario(run=concurrent_insert_during_export_under_failpoint)
+    Scenario(run=concurrent_merge_during_export)
+
+
+@TestSuite
+def observability(self):
+    """Successful exports leave a COMPLETED row in
+    ``system.replicated_partition_exports`` and a ``QueryFinish`` in
+    ``system.query_log`` for the initiating statement."""
+    Scenario(run=accept_records_completed_task_in_system_table)
+    Scenario(run=query_log_contains_export_partition_query)
+
+
+@TestFeature
+@Name("partition key compatibility")
+def feature(self):
+    """Partition-key compatibility gate for hive S3 exports
+    (Altinity/ClickHouse#2074)."""
+    Feature(run=oracle)
+    Feature(run=gate_decisions)
+    Feature(run=data_integrity_round_trip)
+    Feature(run=positional_cast_hazards)
+    Feature(run=schema_arity_and_defaults)
+    Feature(run=type_mismatch_and_lossy_cast)
+    Feature(run=partition_key_shape)
+    Feature(run=production_types)
+    Feature(run=lifecycle_and_concurrency)
+    Feature(run=observability)
