@@ -1816,6 +1816,33 @@ class Cluster(object):
                 time.sleep(1)
         return container_id
 
+    def node_container_network(self, node=None, container_id=None, timeout=300):
+        """Return the name of the docker network a service's container is attached to.
+
+        Must be called with self.lock acquired.
+        """
+        if container_id is None:
+            if node is None:
+                raise TypeError("either node or container_id must be specified")
+            container_id = self.node_container_id(node=node, timeout=timeout)
+
+        c = self.control_shell(
+            "docker inspect --format "
+            "'{{range $net, $conf := .NetworkSettings.Networks}}{{$net}} {{end}}' "
+            f"{container_id}",
+            timeout=timeout,
+        )
+
+        networks = c.output.split() if c.exitcode == 0 else []
+
+        if not networks:
+            raise RuntimeError(
+                f"failed to get the docker network of the "
+                f"{node if node is not None else container_id} container"
+            )
+
+        return networks[0]
+
     def shell(self, node, timeout=300):
         """Returns unique shell terminal to be used."""
         container_id = None

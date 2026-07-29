@@ -1,10 +1,18 @@
-from platform import processor
-
 from s3.tests.common import *
 from s3.requirements import *
 from lightweight_delete.tests.steps import *
 
-DOCKER_NETWORK = "s3_env_default" if processor() == "x86_64" else "s3_env_arm64"
+
+@TestStep(Given)
+def container_and_network(self, node_name):
+    """Return the container id and the docker network name of a cluster node."""
+    cluster = self.context.cluster
+
+    with cluster.lock:
+        container_id = cluster.node_container_id(node=node_name)
+        network = cluster.node_container_network(container_id=container_id)
+
+    return container_id, network
 
 
 @TestStep(When)
@@ -13,14 +21,17 @@ def disconnect_reconnect(self, node=None):
     if node is None:
         node = self.context.node
 
+    with Given("I get the container id and network name"):
+        container_id, network = container_and_network(node_name=node.name)
+
     with When("I disconnect the docker node"):
         self.context.cluster.command(
-            None, f"docker network disconnect {DOCKER_NETWORK} s3_env_clickhouse1_1"
+            None, f"docker network disconnect --force {network} {container_id}"
         )
 
     with And("I reconnect the docker node"):
         self.context.cluster.command(
-            None, f"docker network connect {DOCKER_NETWORK} s3_env_clickhouse1_1"
+            None, f"docker network connect {network} {container_id}"
         )
 
 
@@ -38,22 +49,19 @@ def automatic_reconnection(self, policy_name, disk_name="external", node=None):
     with When("I insert some data into the table"):
         node.query(f"INSERT INTO {table_name} VALUES (1, 2)")
 
-    with And("I get container id and network id"):
-        container_id = self.context.cluster.node_container_id(node="clickhouse1")
-        network_id = self.context.cluster.command(
-            None, f"docker network ls --filter 'name={DOCKER_NETWORK}' -q"
-        ).output
+    with And("I get container id and network name"):
+        container_id, network = container_and_network(node_name=node.name)
 
     with And("I stop the connection to the node with the table"):
         self.context.cluster.command(
-            None, f"docker network disconnect --force {network_id} {container_id}"
+            None, f"docker network disconnect --force {network} {container_id}"
         )
 
     time.sleep(5)
 
     with And("I enable the connection to the node with the table"):
         self.context.cluster.command(
-            None, f"docker network connect {network_id} {container_id}"
+            None, f"docker network connect {network} {container_id}"
         )
 
     with Then("I check the table"):
