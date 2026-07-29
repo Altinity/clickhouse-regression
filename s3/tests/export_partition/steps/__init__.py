@@ -42,6 +42,13 @@ from .export_operations import (
     get_partition_min_max,
     get_partition_id_where,
     kill_export_partition,
+    insert_values,
+    select_rows,
+    count_rows,
+    drop_partition_by_id,
+    get_first_partition_id,
+    setup_source_and_hive_destination,
+    assert_export_rejected,
 )
 
 # Export status and monitoring steps
@@ -202,6 +209,13 @@ __all__ = [
     "get_partition_min_max",
     "get_partition_id_where",
     "kill_export_partition",
+    "insert_values",
+    "select_rows",
+    "count_rows",
+    "drop_partition_by_id",
+    "get_first_partition_id",
+    "setup_source_and_hive_destination",
+    "assert_export_rejected",
     # Export status
     "get_export_events",
     "get_export_partition_zookeeper_events",

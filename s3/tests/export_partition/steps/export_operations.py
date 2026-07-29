@@ -1,6 +1,9 @@
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import getuid
+from helpers.create import create_replicated_merge_tree_table
 from .export_status import wait_for_export_to_complete
+from .storage import create_s3_table
 
 
 @TestStep(When)
@@ -196,6 +199,152 @@ def get_partition_id_where(self, source_table, where, node):
         f"expected exactly one partition matching {where!r}, got {output!r}"
     )
     return output[0].strip()
+
+
+# NOTE: The helpers below are intentionally plain Python functions, not
+# ``@TestStep``s. A ``@TestStep`` called from a ``@TestScenario`` gets
+# wrapped in a Step context that returns the inner ``Result`` object
+# (message, reason, type) instead of the function's raw return value; the
+# caller then unpacks/formats the ``Result`` and gets garbage like
+# ``'OK'`` (the enum member's stringification). Plain functions always
+# return their raw value regardless of caller context. Where these
+# helpers internally invoke a value-returning ``@TestStep`` (e.g.
+# ``create_s3_table``), that call is wrapped in a local
+# ``with Given()/When()`` block so the raw value is returned there too.
+
+
+def _current_node(node):
+    """Resolve default node from the current test's context."""
+    if node is not None:
+        return node
+    from testflows.core import current
+
+    return current().context.node
+
+
+def insert_values(table_name, values, node=None):
+    """``INSERT INTO {table_name} VALUES {values}`` on the given node."""
+    _current_node(node).query(f"INSERT INTO {table_name} VALUES {values}")
+
+
+def select_rows(table_name, columns="*", order_by=None, where=None, node=None):
+    """``SELECT {columns} [WHERE ...] [ORDER BY ...] FORMAT TabSeparated``;
+    returns the query's output as a stripped string.
+    """
+    query = f"SELECT {columns} FROM {table_name}"
+    if where:
+        query += f" WHERE {where}"
+    if order_by:
+        query += f" ORDER BY {order_by}"
+    query += " FORMAT TabSeparated"
+    return _current_node(node).query(query).output.strip()
+
+
+def count_rows(table_name, where=None, node=None):
+    """Return ``SELECT count() FROM {table_name} [WHERE ...]`` as an int."""
+    query = f"SELECT count() FROM {table_name}"
+    if where:
+        query += f" WHERE {where}"
+    return int(_current_node(node).query(query).output.strip())
+
+
+def drop_partition_by_id(table_name, partition_id, node=None):
+    """``ALTER TABLE {table_name} DROP PARTITION ID '{partition_id}'``."""
+    _current_node(node).query(
+        f"ALTER TABLE {table_name} DROP PARTITION ID '{partition_id}'"
+    )
+
+
+def get_first_partition_id(table_name, node=None):
+    """Return the first partition_id from ``system.parts`` for the table.
+    Inlines the query (rather than calling the ``get_partitions``
+    ``@TestStep``) so it can be called safely from any context.
+    """
+    output = (
+        _current_node(node)
+        .query(
+            f"SELECT DISTINCT partition_id FROM system.parts "
+            f"WHERE table = '{table_name}' AND partition_id NOT LIKE 'patch-%'"
+        )
+        .output
+    )
+    return sorted(row.strip() for row in output.splitlines())[0]
+
+
+def setup_source_and_hive_destination(
+    src_columns,
+    src_partition_by,
+    dst_columns=None,
+    dst_partition_by=None,
+    stop_merges=False,
+):
+    """Create a replicated MergeTree source and a hive S3 destination with
+    matching (or provided) columns/partition_by. Returns
+    ``(source_table, destination_table)``. Inner ``@TestStep`` calls are
+    wrapped in ``with Given()`` blocks so the raw destination table name
+    is returned (not a ``Result``).
+    """
+    if dst_columns is None:
+        dst_columns = src_columns
+    if dst_partition_by is None:
+        dst_partition_by = src_partition_by
+    source_table = f"src_{getuid()}"
+    with Given(f"replicated MergeTree source PARTITION BY {src_partition_by}"):
+        create_replicated_merge_tree_table(
+            table_name=source_table,
+            columns=src_columns,
+            partition_by=src_partition_by,
+            cluster="replicated_cluster",
+            stop_merges=stop_merges,
+        )
+    with Given(f"hive S3 destination PARTITION BY {dst_partition_by}"):
+        destination_table = create_s3_table(
+            table_name="dst",
+            create_new_bucket=True,
+            columns=dst_columns,
+            partition_by=dst_partition_by,
+        )
+    return source_table, destination_table
+
+
+def assert_export_rejected(
+    source_table,
+    destination_table,
+    partition_id,
+    exitcode,
+    expected_substrings=(),
+    node=None,
+    check_no_scheduled=True,
+):
+    """Attempt ``export_partition_by_id`` and assert it fails with the
+    given ``exitcode`` and every substring in ``expected_substrings`` is
+    present in the error output. Also asserts no task was scheduled
+    unless ``check_no_scheduled=False``. Returns the raw result.
+    """
+    node = _current_node(node)
+    with When(
+        f"I attempt to export partition '{partition_id}' expecting exit={exitcode}"
+    ):
+        result = export_partition_by_id(
+            source_table=source_table,
+            destination_table=destination_table,
+            partition_id=partition_id,
+            node=node,
+            exitcode=exitcode,
+        )
+    for fragment in expected_substrings:
+        assert fragment in result.output, error(
+            f"expected {fragment!r} in error, got: {result.output!r}"
+        )
+    if check_no_scheduled:
+        with Then("no export task was scheduled"):
+            assert_no_scheduled_exports(
+                source_table=source_table,
+                destination_table=destination_table,
+                partition_id=partition_id,
+                node=node,
+            )
+    return result
 
 
 @TestStep(When)

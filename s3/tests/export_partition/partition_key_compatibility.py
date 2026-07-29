@@ -12,6 +12,7 @@ from s3.tests.export_partition.steps import (
     assert_no_scheduled_exports,
     count_rows,
     create_s3_table,
+    create_temp_bucket,
     disable_failpoint,
     drop_partition_by_id,
     enable_failpoint,
@@ -35,7 +36,7 @@ from s3.tests.export_partition.steps import (
 # ``export_partition_local_backoff_policy.md``).
 BAD_ARGUMENTS = 36
 INCOMPATIBLE_COLUMNS = 122
-NUMBER_OF_COLUMNS_DOESNT_MATCH = 190
+NUMBER_OF_COLUMNS_DOESNT_MATCH = 20
 
 
 # Matrix inputs for ``compatibility_matrix``: columns available in the
@@ -607,15 +608,12 @@ def reversed_multicolumn_partition_key_layout(self):
         )
         assert rows == "1\t2024\tFR", error(f"got: {rows!r}")
 
-    with And("destination _partition_id leads with country, not year"):
-        dst_partition = select_rows(
-            table_name=destination_table, columns="DISTINCT _partition_id"
-        )
-        assert (
-            dst_partition.startswith("FR") or "FR" in dst_partition.split("-")[0]
-        ), error(
-            f"expected destination partition id to lead with 'FR' (country), "
-            f"got {dst_partition!r} (source was {source_partition!r})"
+    with And("destination hive directories lead with country, not year"):
+        dst_path = select_rows(table_name=destination_table, columns="DISTINCT _path")
+        assert "/country=FR/year=2024/" in dst_path, error(
+            f"expected destination hive layout '/country=FR/year=2024/' "
+            f"(destination key order), got {dst_path!r} "
+            f"(source partition was {source_partition!r})"
         )
 
 
@@ -819,35 +817,33 @@ def extra_destination_column_with_default(self):
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def extra_destination_column_materialized(self):
-    """Destination has an extra ``MATERIALIZED`` column computed from
-    existing columns. Expected: accept; the extra column is populated
-    from its expression.
+    """A hive S3 destination cannot declare an extra ``MATERIALIZED``
+    column at all: the S3 engine accepts only ordinary columns, so
+    ``CREATE TABLE`` is rejected before any export runs. This is also why
+    the export arity check, which skips MATERIALIZED columns, cannot be
+    exercised against a hive S3 destination.
     """
-    src_columns = [
-        {"name": "id", "type": "Int64"},
-        {"name": "a", "type": "Int32"},
-    ]
-    dst_columns = src_columns + [
-        {"name": "a_doubled", "type": "Int32", "materialized": "a * 2"},
-    ]
-    source_table, destination_table = setup_source_and_hive_destination(
-        src_columns=src_columns,
-        dst_columns=dst_columns,
-        src_partition_by="a",
-    )
-    insert_values(table_name=source_table, values="(1, 7), (2, 7)")
+    node = self.context.node
+    table_name = f"dst_{getuid()}"
 
-    export_partition_by_id(
-        source_table=source_table,
-        destination_table=destination_table,
-        partition_id=get_first_partition_id(table_name=source_table),
-        node=self.context.node,
-    )
-    with Then("a_doubled is present in destination and equals a * 2"):
-        rows = select_rows(
-            table_name=destination_table, columns="id, a, a_doubled", order_by="id"
+    with Given("a temporary bucket path"):
+        create_temp_bucket()
+
+    with When("I create a hive S3 destination with a MATERIALIZED column"):
+        node.query(
+            f"CREATE TABLE {table_name} "
+            f"(id Int64, a Int32, a_doubled Int32 MATERIALIZED a * 2) "
+            f"ENGINE = S3('{self.context.uri}', "
+            f"'{self.context.access_key_id}', "
+            f"'{self.context.secret_access_key}', "
+            f"filename='{table_name}', format='Parquet', "
+            f"partition_strategy='hive') PARTITION BY a",
+            exitcode=BAD_ARGUMENTS,
+            message=(
+                "DB::Exception: Special columns like MATERIALIZED, ALIAS or EPHEMERAL "
+                "are not supported for s3 storage."
+            ),
         )
-        assert rows == "1\t7\t14\n2\t7\t14", error(f"got: {rows!r}")
 
 
 @TestScenario
@@ -948,12 +944,15 @@ def partition_key_type_narrowing(self):
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def partition_key_timezone_drift(self):
-    """Same partition-key name and same ``PARTITION BY toDate(ts)`` text,
-    but source ``ts`` is ``DateTime('UTC')`` and destination is
-    ``DateTime('Asia/Tokyo')``. The stored epoch is preserved but
-    ``toDate(ts)`` on the destination is evaluated in Tokyo — so
-    ``2024-03-05 15:00 UTC`` (``2024-03-06 00:00 Tokyo``) ends up in
-    destination partition ``2024-03-06``. Pin the observed drift.
+    """Same partition-key column name and the same bare ``PARTITION BY ts``
+    on both sides, but source ``ts`` is ``DateTime('UTC')`` and destination
+    is ``DateTime('Asia/Tokyo')``. A timezone is only a parse/format
+    attribute of ``DateTime``, so casting between two timezones keeps the
+    underlying instant: the exported row must read back as the same point in
+    time, and must agree with what ``INSERT ... SELECT`` puts in an
+    identically shaped destination. Hive writes the partition value into the
+    object path as text, so the paths are recorded too -- they show which
+    timezone each writer formatted with.
     """
     node = self.context.node
     src_columns = [
@@ -967,7 +966,7 @@ def partition_key_timezone_drift(self):
     source_table, destination_table = setup_source_and_hive_destination(
         src_columns=src_columns,
         dst_columns=dst_columns,
-        src_partition_by="toDate(ts)",
+        src_partition_by="ts",
     )
     insert_values(table_name=source_table, values="(1, '2024-03-05 15:00:00')")
 
@@ -977,22 +976,44 @@ def partition_key_timezone_drift(self):
         partition_id=get_first_partition_id(table_name=source_table),
         node=node,
     )
-    with Then("the epoch value is preserved (UTC read of dest.ts equals source.ts)"):
-        both = node.query(
+    with Given("a second destination of the same shape filled by INSERT SELECT"):
+        inserted_table = create_s3_table(
+            table_name="dst_inserted",
+            create_new_bucket=True,
+            columns=dst_columns,
+            partition_by="ts",
+        )
+        node.query(f"INSERT INTO {inserted_table} SELECT * FROM {source_table}")
+
+    with When("I read the instant and the hive path written by each writer"):
+        epochs = node.query(
             f"SELECT toUnixTimestamp((SELECT ts FROM {source_table})), "
-            f"toUnixTimestamp((SELECT ts FROM {destination_table})) "
+            f"toUnixTimestamp((SELECT ts FROM {destination_table})), "
+            f"toUnixTimestamp((SELECT ts FROM {inserted_table})) "
             f"FORMAT TabSeparated"
         ).output.strip()
-        src_epoch, dst_epoch = both.split("\t")
-        assert src_epoch == dst_epoch, error(
-            f"epoch drift: src={src_epoch}, dst={dst_epoch}"
+        src_epoch, exported_epoch, inserted_epoch = epochs.split("\t")
+        exported_path = select_rows(
+            table_name=destination_table, columns="DISTINCT _path"
         )
-    with And("the destination toDate(ts) evaluates in Tokyo, one day ahead"):
-        dst_date = select_rows(
+        inserted_path = select_rows(table_name=inserted_table, columns="DISTINCT _path")
+        evidence = (
+            f"source epoch={src_epoch}; "
+            f"exported epoch={exported_epoch} path={exported_path!r}; "
+            f"INSERT SELECT epoch={inserted_epoch} path={inserted_path!r}"
+        )
+
+    with Then("EXPORT PARTITION and INSERT SELECT store the same instant"):
+        assert exported_epoch == inserted_epoch, error(evidence)
+    with And("that instant is the source instant"):
+        assert exported_epoch == src_epoch, error(evidence)
+    with And("the destination reads it back in Tokyo, one day ahead of UTC"):
+        exported_date = select_rows(
             table_name=destination_table, columns="DISTINCT toDate(ts)"
         )
-        assert dst_date == "2024-03-06", error(
-            f"expected destination-side toDate(ts) = 2024-03-06 (Tokyo), got {dst_date!r}"
+        assert exported_date == "2024-03-06", error(
+            f"expected destination-side toDate(ts) = 2024-03-06 (Tokyo), "
+            f"got {exported_date!r}; {evidence}"
         )
 
 
@@ -1136,117 +1157,63 @@ def payload_column_name_mismatch(self):
     )
 
 
-def _try_create_hive_destination(columns, partition_by):
-    """Try to create a hive S3 destination; return (table_name_or_None,
-    exception_or_None). Used to pin scenarios where Hive S3 may reject
-    the destination at CREATE TABLE time.
-    """
-    try:
-        return (
-            create_s3_table(
-                table_name="dst",
-                create_new_bucket=True,
-                columns=columns,
-                partition_by=partition_by,
-            ),
-            None,
-        )
-    except Exception as exc:
-        return None, exc
-
-
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def algebraically_equivalent_partition_expression(self):
-    """Source ``PARTITION BY toYYYYMM(dt)``, destination
-    ``PARTITION BY toYYYYMM(dt) + 0``. Semantically identical, textually
-    different. The destination term is not a bare column, so either
-    fails at destination CREATE TABLE (Hive S3 requires bare-column
-    partition keys) or is rejected by the gate. Pin whichever happens.
+    """A destination key that is algebraically equivalent to the source key
+    but textually different (source ``toYYYYMM(dt)``, destination
+    ``toYYYYMM(dt) + 0``) cannot be set up at all: hive partitioning
+    requires every partition-by term to be a bare storage column, so
+    ``CREATE TABLE`` is rejected before any export runs. This is why the
+    gate's textual-versus-semantic comparison cannot be reached from a hive
+    S3 destination.
     """
-    columns = [
-        {"name": "id", "type": "Int64"},
-        {"name": "dt", "type": "Date"},
-    ]
-    source_table = f"src_{getuid()}"
-    create_replicated_merge_tree_table(
-        table_name=source_table,
-        columns=columns,
-        partition_by="toYYYYMM(dt)",
-        cluster="replicated_cluster",
-    )
+    node = self.context.node
+    table_name = f"dst_{getuid()}"
 
-    destination_table, exc = _try_create_hive_destination(
-        columns=columns, partition_by="toYYYYMM(dt) + 0"
-    )
-    if destination_table is None:
-        note(f"Hive S3 rejects expression-form PARTITION BY at CREATE TABLE: {exc}")
-        return
+    with Given("a temporary bucket path"):
+        create_temp_bucket()
 
-    insert_values(table_name=source_table, values="(1, '2024-03-05')")
-    assert_export_rejected(
-        source_table=source_table,
-        destination_table=destination_table,
-        partition_id=get_first_partition_id(table_name=source_table),
-        exitcode=BAD_ARGUMENTS,
-        expected_substrings=("BAD_ARGUMENTS",),
-    )
-
-
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
-def destination_partition_key_is_materialized(self):
-    """Destination has a ``MATERIALIZED`` column and partitions by it.
-    Like the algebraic-equivalence case, the destination partition key
-    is not a bare source column, and Hive S3 may reject at CREATE TABLE.
-    Pin whichever happens.
-    """
-    src_columns = [
-        {"name": "id", "type": "Int64"},
-        {"name": "dt", "type": "Date"},
-    ]
-    dst_columns = src_columns + [
-        {"name": "m", "type": "UInt32", "materialized": "toYYYYMM(dt)"},
-    ]
-    source_table = f"src_{getuid()}"
-    create_replicated_merge_tree_table(
-        table_name=source_table,
-        columns=src_columns,
-        partition_by="toYYYYMM(dt)",
-        cluster="replicated_cluster",
-    )
-
-    destination_table, exc = _try_create_hive_destination(
-        columns=dst_columns, partition_by="m"
-    )
-    if destination_table is None:
-        note(f"Hive S3 rejects materialized partition key at CREATE TABLE: {exc}")
-        return
-
-    insert_values(table_name=source_table, values="(1, '2024-03-05')")
-    assert_export_rejected(
-        source_table=source_table,
-        destination_table=destination_table,
-        partition_id=get_first_partition_id(table_name=source_table),
-        exitcode=BAD_ARGUMENTS,
-        expected_substrings=("BAD_ARGUMENTS",),
-    )
+    with When("I create a hive S3 destination with an expression partition key"):
+        node.query(
+            f"CREATE TABLE {table_name} "
+            f"(id Int64, dt Date) "
+            f"ENGINE = S3('{self.context.uri}', "
+            f"'{self.context.access_key_id}', "
+            f"'{self.context.secret_access_key}', "
+            f"filename='{table_name}', format='Parquet', "
+            f"partition_strategy='hive') PARTITION BY toYYYYMM(dt) + 0",
+            exitcode=BAD_ARGUMENTS,
+            message=(
+                "DB::Exception: Hive partitioning expects that the partition by "
+                "expression columns are a part of the storage columns"
+            ),
+        )
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def partition_key_lowcardinality_string(self):
-    """``LowCardinality(String)`` (the default string type in real-world
-    analytics tables). Round-trip a partition; Hive treats it as
-    ``String`` underneath.
+    """``LowCardinality(String)`` is the default string type in real-world
+    analytics tables, but hive partitioning accepts only plain ``String``
+    or ``FixedString`` for a partition column (see
+    ``partition_key_unsupported_types_hive_rejects``). So the realistic
+    shape is a ``LowCardinality(String)`` source key exported into a
+    ``String`` destination key, which the export has to cast. Round-trip
+    every partition and confirm the values survive.
     """
     node = self.context.node
-    columns = [
+    src_columns = [
         {"name": "id", "type": "Int64"},
         {"name": "country", "type": "LowCardinality(String)"},
     ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "country", "type": "String"},
+    ]
     source_table, destination_table = setup_source_and_hive_destination(
-        src_columns=columns,
+        src_columns=src_columns,
+        dst_columns=dst_columns,
         src_partition_by="country",
     )
     insert_values(table_name=source_table, values="(1, 'FR'), (2, 'FR'), (3, 'US')")
@@ -1303,19 +1270,58 @@ def partition_key_fixedstring(self):
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def partition_key_datetime64(self):
+    """``DateTime64(N)`` is a hive-supported partition type. Hive carries
+    the partition value as text in the object path, so the sub-second part
+    has to survive that round trip. Export a partition and confirm the
+    value comes back with its milliseconds intact.
+    """
+    columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "ts", "type": "DateTime64(3)"},
+    ]
+    source_table, destination_table = setup_source_and_hive_destination(
+        src_columns=columns,
+        src_partition_by="ts",
+    )
+    insert_values(table_name=source_table, values="(1, '2024-03-05 15:00:00.123')")
+
+    export_partition_by_id(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        node=self.context.node,
+    )
+    with Then("the destination holds the same value, milliseconds included"):
+        src_rows = select_rows(table_name=source_table, columns="id, ts", order_by="id")
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, ts", order_by="id"
+        )
+        assert src_rows == dst_rows, error(f"src={src_rows!r}, dst={dst_rows!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def partition_key_unsupported_types_hive_rejects(self):
-    """Hive S3 partitioning is documented to support only Integer, Date,
-    Time, DateTime, String, FixedString. Iterate over types that are NOT
-    in that list and confirm destination CREATE TABLE rejects each with
-    the "Hive partitioning supports only" message.
+    """Hive partitioning accepts the integer widths, ``String``,
+    ``FixedString``, ``Date``, ``Date32``, ``Time``, ``Time64``,
+    ``DateTime``, ``DateTime64`` and ``Bool`` as partition columns (see
+    ``RQ.HivePartitioning.Writes.DataTypes``) -- the server's error text
+    names a shorter summary than the set it actually accepts. Iterate over
+    types outside that set and confirm destination CREATE TABLE rejects
+    each one.
     """
     node = self.context.node
+
+    with Given("a temporary bucket path"):
+        create_temp_bucket()
+
     cases = [
         ("Nullable(Int32)", "Nullable(Int32)"),
         ("Enum8", "Enum8('a' = 1, 'b' = 2)"),
         ("UUID", "UUID"),
         ("Decimal(9, 2)", "Decimal(9, 2)"),
-        ("DateTime64(3)", "DateTime64(3)"),
+        ("LowCardinality(String)", "LowCardinality(String)"),
     ]
     for label, type_expr in cases:
         with When(f"I try to CREATE the destination with PARTITION BY {label}"):
@@ -1490,10 +1496,14 @@ def _run_export_under_failpoint(
     scenarios: enable the retryable failpoint, start the export, wait for
     a retry to be observed, run ``mid_flight_action()`` while the export
     is stalled, then disable the failpoint and wait for completion.
+
+    The failpoint is armed on every replica, not just the one issuing the
+    ALTER: any replica can pick up the part, so arming a single node leaves
+    the export free to succeed elsewhere and never stall.
     """
     try:
         with When("I enable the retryable failpoint and schedule the export"):
-            enable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=[node])
+            enable_failpoint(failpoint=RETRYABLE_FAILPOINT)
             start_export(
                 source_table=source_table,
                 destination_table=destination_table,
@@ -1513,14 +1523,17 @@ def _run_export_under_failpoint(
         with And("I perform the mid-flight action"):
             mid_flight_action()
         with When("I disable the failpoint and wait for COMPLETED"):
-            disable_failpoint(failpoint=RETRYABLE_FAILPOINT, nodes=[node])
+            disable_failpoint(failpoint=RETRYABLE_FAILPOINT)
             wait_for_export_to_complete(
                 source_table=source_table,
                 partition_id=partition_id,
                 node=node,
             )
     finally:
-        node.query(f"SYSTEM DISABLE FAILPOINT {RETRYABLE_FAILPOINT}", no_checks=True)
+        for cluster_node in self.context.nodes:
+            cluster_node.query(
+                f"SYSTEM DISABLE FAILPOINT {RETRYABLE_FAILPOINT}", no_checks=True
+            )
 
 
 @TestScenario
@@ -1734,12 +1747,11 @@ def type_mismatch_and_lossy_cast(self):
 @TestSuite
 def partition_key_shape(self):
     """Name-based gate corner cases and non-bare destination partition
-    keys: case sensitivity, renamed payload columns, algebraically-
-    equivalent expressions, and MATERIALIZED destination keys."""
+    keys: case sensitivity, renamed payload columns, and algebraically-
+    equivalent expressions."""
     Scenario(run=partition_key_case_sensitivity)
     Scenario(run=payload_column_name_mismatch)
     Scenario(run=algebraically_equivalent_partition_expression)
-    Scenario(run=destination_partition_key_is_materialized)
 
 
 @TestSuite
@@ -1747,6 +1759,7 @@ def production_types(self):
     """Real-world DDL type coverage for hive S3 partition columns."""
     Scenario(run=partition_key_lowcardinality_string)
     Scenario(run=partition_key_fixedstring)
+    Scenario(run=partition_key_datetime64)
     Scenario(run=partition_key_unsupported_types_hive_rejects)
     Scenario(run=payload_complex_types_round_trip)
 
