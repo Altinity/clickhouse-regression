@@ -1787,8 +1787,7 @@ def observability(self):
 @TestFeature
 @Name("partition key compatibility")
 def feature(self):
-    """Partition-key compatibility gate for hive S3 exports
-    (Altinity/ClickHouse#2074)."""
+    """Partition-key compatibility gate for hive S3 exports."""
     Feature(run=oracle)
     Feature(run=gate_decisions)
     Feature(run=data_integrity_round_trip)

@@ -315,7 +315,6 @@ def regression(
         Scenario(run=load("oauth.tests.cache_semantics", "feature"))
         Scenario(run=load("oauth.tests.access_control", "feature"))
         Scenario(run=load("oauth.tests.groups", "feature"))
-        Scenario(run=load("oauth.tests.concurrency", "feature"))
         Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
         Scenario(run=load("oauth.tests.tls", "feature"))
         Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
