@@ -353,9 +353,9 @@ def merge_during_export_retains_parts_on_disk(self):
             f"partition {merge_partition} should have merged to one part, "
             f"got {parts_after_merge!r}"
         )
-        assert (
-            get_num_active_exports(node=node, table_name=source_table) > 0
-        ), error("export finished before merge-during-export could be observed")
+        assert get_num_active_exports(node=node, table_name=source_table) > 0, error(
+            "export finished before merge-during-export could be observed"
+        )
 
     with And("the exporting part is still active on disk after the merge"):
         exporting_parts = get_active_export_part_names(

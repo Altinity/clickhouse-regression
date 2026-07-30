@@ -18,6 +18,7 @@ from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
     insert_data,
     sync_replica,
+    require_replicated_source,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     prepare_export_partition_settings,
@@ -286,6 +287,10 @@ SCENARIOS = (peer_completes_export_when_initiator_setting_disabled,)
 def feature(self, minio_root_user, minio_root_password):
     """EXPORT PARTITION scenarios that need a multi-replica catalog-backed cluster."""
 
+    require_replicated_source(
+        "peer failover and cross-replica export completion require "
+        "ReplicatedMergeTree"
+    )
     if not hasattr(self.context, "nodes") or len(self.context.nodes) < 2:
         skip("need at least two ClickHouse replicas")
     if self.context.catalog not in CATALOG_MODES_FOR_REPLICAS:

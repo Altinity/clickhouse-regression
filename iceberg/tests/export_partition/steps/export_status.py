@@ -1,7 +1,8 @@
 """Status / event helpers for EXPORT PARTITION.
 
-These wrap ``system.replicated_partition_exports``, ``system.events`` and
-``system.part_log`` so tests do not need to repeat the same polling logic.
+These wrap the export status system tables (``system.replicated_partition_exports``
+or ``system.partition_exports``), ``system.events`` and ``system.part_log`` so
+tests do not need to repeat the same polling logic.
 
 Adapted from ``s3/tests/export_partition/steps/export_status.py``. Default
 timeouts are slightly higher because Iceberg commits involve an extra HTTP /
@@ -13,9 +14,44 @@ import json
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.tests.export_partition.steps.iceberg_destination import (
-    as_system_destination_table,
+from iceberg.tests.export_partition.steps.common import (
+    SOURCE_ENGINE_PLAIN,
+    partition_exports_system_table,
+    source_engine,
 )
+
+
+def export_success_monitoring_columns(test=None):
+    """``SELECT`` column list for post-success system-table population checks.
+
+    Plain ``MergeTree`` rows live in ``system.partition_exports`` and omit
+    ``source_replica`` / ``last_exception_per_replica`` (see
+    ``StorageSystemPartitionExports`` in Altinity/ClickHouse#2032).
+    """
+    if source_engine(test) == SOURCE_ENGINE_PLAIN:
+        return (
+            "source_table, destination_table, partition_id, status, "
+            "parts_count, parts_to_do, "
+            "toUnixTimestamp(create_time), exception_count"
+        )
+    return (
+        "source_table, destination_table, partition_id, status, "
+        "parts_count, parts_to_do, source_replica, "
+        "toUnixTimestamp(create_time), exception_count"
+    )
+
+
+def export_kill_provenance_columns(test=None):
+    """Columns sampled before/after ``KILL EXPORT PARTITION`` provenance checks."""
+    if source_engine(test) == SOURCE_ENGINE_PLAIN:
+        return "toUnixTimestamp(create_time)"
+    return "source_replica, toUnixTimestamp(create_time)"
+
+
+def export_status_table_display_name(test=None):
+    """Short name for error messages (``partition_exports`` vs ``replicated_…``)."""
+    table = partition_exports_system_table(test)
+    return table.split(".", 1)[-1]
 
 
 def _destination_where_pieces(destination=None, destination_table=None):
@@ -106,11 +142,44 @@ def get_export_row(
     where_clause = " AND ".join(where)
 
     output = node.query(
-        f"SELECT {columns} FROM system.replicated_partition_exports "
+        f"SELECT {columns} FROM {partition_exports_system_table(self)} "
         f"WHERE {where_clause}",
     ).output.strip()
 
     return output if output else None
+
+
+@TestStep(When)
+def count_partition_export_rows(
+    self,
+    source_table,
+    partition_id,
+    destination=None,
+    destination_table=None,
+    node=None,
+):
+    """Return how many export rows match the filter in the status system table.
+
+    Uses :func:`partition_exports_system_table` so callers work on both
+    ``ReplicatedMergeTree`` (``system.replicated_partition_exports``) and plain
+    ``MergeTree`` (``system.partition_exports``).
+    """
+    if node is None:
+        node = self.context.node
+
+    where = [
+        f"source_table = '{source_table}'",
+        f"partition_id = '{partition_id}'",
+    ]
+    where.extend(_destination_where_pieces(destination, destination_table))
+    where_clause = " AND ".join(where)
+
+    return int(
+        node.query(
+            f"SELECT count() FROM {partition_exports_system_table(self)} "
+            f"WHERE {where_clause}"
+        ).output.strip()
+    )
 
 
 @TestStep(When)
@@ -125,7 +194,7 @@ def wait_for_export_status(
     delay=3,
     node=None,
 ):
-    """Poll ``system.replicated_partition_exports`` until ``status`` matches.
+    """Poll the export status system table until ``status`` matches.
 
     Fails the scenario on timeout, reporting the last observed status.
 
@@ -164,7 +233,7 @@ def wait_for_export_to_start(
     delay=1,
     node=None,
 ):
-    """Wait until an export row appears in ``system.replicated_partition_exports``.
+    """Wait until an export row appears in the export status system table.
 
     The scheduler may not insert the row immediately, so this helper polls
     until ``count() > 0``.
@@ -186,7 +255,7 @@ def wait_for_export_to_start(
         with attempt:
             count = int(
                 node.query(
-                    f"SELECT count() FROM system.replicated_partition_exports "
+                    f"SELECT count() FROM {partition_exports_system_table(self)} "
                     f"WHERE {where_clause}"
                 ).output.strip()
             )
@@ -246,7 +315,7 @@ def wait_for_exports_to_settle(
     for attempt in retries(timeout=timeout, delay=delay):
         with attempt:
             last_pending = node.query(
-                f"SELECT count() FROM system.replicated_partition_exports "
+                f"SELECT count() FROM {partition_exports_system_table(self)} "
                 f"WHERE {where_clause} "
                 f"  AND status NOT IN ('COMPLETED', 'FAILED', 'KILLED')",
             ).output.strip()
@@ -319,106 +388,3 @@ def get_exported_part_log(self, node=None):
         "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart'"
     ).output
     return [line.strip() for line in output.splitlines() if line.strip()]
-
-
-def _export_zk_path(source_table, destination, partition_id, ch_database="default"):
-    """Construct the ZK path that holds the export task entry for one
-    ``(source_table, partition_id, destination)`` triple.
-
-    Mirrors the ``{partition_id}_{database}.{destination_table}`` export
-    key convention ClickHouse stores under
-    ``/clickhouse/tables/{source_table}/exports/`` (see e.g.
-    ``ExportPartitionUtils::commit`` and the integration helpers shipped
-    with the upstream EXPORT PARTITION PR).
-
-    ``ch_database`` defaults to ``default`` because the regression suite
-    runs all scenarios against ClickHouse's default database.
-
-    Note that the destination side of the key is the *unqualified* table
-    name CH stores in ``system.replicated_partition_exports.destination_table``,
-    not the catalog-qualified identifier passed to ``ALTER TABLE``;
-    :func:`as_system_destination_table` already implements that split.
-    """
-    dest_table = as_system_destination_table(destination)
-    export_key = f"{partition_id}_{ch_database}.{dest_table}"
-    return f"/clickhouse/tables/{source_table}/exports/{export_key}"
-
-
-@TestStep(When)
-def get_export_commit_attempts(
-    self,
-    source_table,
-    destination,
-    partition_id,
-    node=None,
-    ch_database="default",
-):
-    """Read the ``commit_attempts`` znode value for an export task.
-
-    Returns the integer value, or ``None`` if the znode does not exist
-    (the export hasn't reached the commit stage yet, or has not failed
-    once).
-
-    This is the authoritative "is the commit retry loop active?"
-    signal: ``ExportPartitionUtils::handleCommitFailure`` increments
-    this znode on every failed commit attempt. The
-    ``system.replicated_partition_exports.exception_count`` column does
-    *not* aggregate these failures reliably as of the EXPORT PARTITION
-    implementation PR (see the upstream test
-    ``test_export_task_timeout_kills_stuck_pending_task`` and its TODO),
-    so commit-failpoint scenarios poll this znode directly.
-    """
-    if node is None:
-        node = self.context.node
-    path = _export_zk_path(source_table, destination, partition_id, ch_database)
-    output = node.query(
-        f"SELECT value FROM system.zookeeper "
-        f"WHERE path = '{path}' AND name = 'commit_attempts'"
-    ).output.strip()
-    return int(output) if output else None
-
-
-@TestStep(When)
-def get_export_zk_last_exception(
-    self,
-    source_table,
-    destination,
-    partition_id,
-    replica_name="replica1",
-    node=None,
-    ch_database="default",
-):
-    """Read the per-replica ``last_exception`` znode for an export task.
-
-    Returns the exception text or ``""`` when the znode is empty / absent.
-
-    The znode lives under
-    ``.../exports/{export_key}/exceptions_per_replica/{replica}/last_exception``
-    and exposes the most recent commit-side failure recorded by that
-    replica. We read it directly because the system table aggregation
-    over ``exceptions_per_replica`` is currently incomplete (same caveat
-    as :func:`get_export_commit_attempts`).
-
-    Caveat for KILL-path scenarios
-    ------------------------------
-    The first commit attempt fires synchronously in
-    ``handlePartExportSuccess``, but the manifest-updating task only
-    flushes ``exceptions_per_replica`` on its ~30s poll cycle. A
-    KILL that lands inside that window leaves the znode empty, so
-    callers that issue a user-initiated KILL during commit retry
-    should not assume this helper returns a non-empty string.
-    Scenarios that *can* assume it (e.g. timeout-based FAILED/KILLED
-    where the engine itself waited a poll cycle) are the natural
-    callers; otherwise, drop the assertion.
-    """
-    if node is None:
-        node = self.context.node
-    path = (
-        f"{_export_zk_path(source_table, destination, partition_id, ch_database)}"
-        f"/exceptions_per_replica/{replica_name}/last_exception"
-    )
-    output = node.query(
-        f"SELECT value FROM system.zookeeper "
-        f"WHERE path = '{path}' AND name = 'exception'"
-    ).output.strip()
-    return output

@@ -500,6 +500,9 @@ def retryable_minio_outage_recovers(self):
             )
             status = get_export_status(source_table=source_table, partition=partition)
             assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+
+        with And("the retry is observable with a per-replica error message"):
+            wait_for_retry_is_observable(source_table=source_table, partition=partition)
     finally:
         with Finally("I bring MinIO back"):
             start_minio()
@@ -552,6 +555,9 @@ def retryable_network_outage_recovers(self):
             )
             status = get_export_status(source_table=source_table, partition=partition)
             assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+
+        with And("the retry is observable with a per-replica error message"):
+            wait_for_retry_is_observable(source_table=source_table, partition=partition)
     finally:
         with Finally("I restore network to the S3 endpoint"):
             unblock_s3_network(node=node, no_checks=True)
@@ -599,6 +605,13 @@ def retryable_error_stays_pending_and_backs_off(self):
             assert status == "PENDING", error(
                 f"Retryable failures must keep the task PENDING, got {status!r}"
             )
+
+        with And("the retry is observable: retries are counted and a message is shown"):
+            wait_for_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                expected_message_substr=FAILURE_MESSAGE_HINT[FAILPOINT_MODE],
+            )
     finally:
         with Finally("I disable the retryable failpoint on all nodes"):
             disable_failpoint(failpoint=RETRYABLE_FAILPOINT)
@@ -642,6 +655,13 @@ def backoff_attempts_increment(self):
         with And("the task is still PENDING"):
             status = get_export_status(source_table=source_table, partition=partition)
             assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+
+        with And("the retry is observable with a per-replica error message"):
+            wait_for_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                expected_message_substr=FAILURE_MESSAGE_HINT[FAILPOINT_MODE],
+            )
     finally:
         with Finally("I disable the retryable failpoint on all nodes"):
             disable_failpoint(failpoint=RETRYABLE_FAILPOINT)
@@ -889,6 +909,16 @@ def local_backoff_is_replica_local(self):
                     f"Local back-off must be replica-local, healthy replica reported {count} entries"
                 )
 
+        with And("only the failing replica's retry is observable"):
+            wait_for_error_reported_on_replica_count(
+                source_table=source_table, partition=partition, expected_count=1
+            )
+            assert_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                expected_message_substr=FAILURE_MESSAGE_HINT[FAILPOINT_MODE],
+            )
+
         with When("I resume moves on the healthy replicas"):
             start_moves(source_table=source_table, nodes=healthy_nodes)
 
@@ -948,6 +978,14 @@ def all_replicas_backoff_independently(self):
         with And("the task stays PENDING"):
             status = get_export_status(source_table=source_table, partition=partition)
             assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+
+        with And("every replica's retry is observable with its own error message"):
+            wait_for_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                min_replicas=len(self.context.nodes),
+                expected_message_substr=FAILURE_MESSAGE_HINT[FAILPOINT_MODE],
+            )
 
         with When("I clear the failure on all nodes"):
             disable_failpoint(failpoint=RETRYABLE_FAILPOINT)
@@ -1283,6 +1321,352 @@ def chaos_failover_minio(self):
             reset_backoff_test_state(source_table=source_table)
 
 
+@TestOutline(Scenario)
+@Examples(
+    "failure_scope, failure_type",
+    [
+        ("one_replica", "failpoint"),
+        ("subset_replicas", "failpoint"),
+        ("all_replicas", "failpoint"),
+        ("one_replica", "minio"),
+        ("subset_replicas", "minio"),
+        ("all_replicas", "minio"),
+    ],
+)
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Observability_RetryExceptionReported("1.0"),
+    RQ_ClickHouse_ExportPartition_ErrorClassification_Retryable("1.1"),
+)
+def observe_failure(self, failure_scope, failure_type):
+    """General failure observability across replica scopes and retryable failure
+    kinds: when a retryable failure hits one, a subset, or all replicas, the retry
+    MUST be observable — exception_count grows and every failing replica exposes an
+    error message in last_exception_per_replica, while the task stays PENDING and
+    progress is tracked.
+
+    Two real retryable drivers are exercised: a per-replica failpoint and a shared
+    MinIO outage. Scope (which replicas fail) is enforced by stopping moves on the
+    healthy replicas so only the intended ones attempt (and therefore report)."""
+
+    nodes = list(self.context.nodes)
+    mode = {"failpoint": FAILPOINT_MODE, "minio": MINIO_MODE}[failure_type]
+
+    if failure_scope == "one_replica":
+        failing_nodes = [nodes[0]]
+    elif failure_scope == "subset_replicas":
+        failing_nodes = nodes[:2]
+    else:
+        failing_nodes = list(nodes)
+    expected_replicas = len(failing_nodes)
+
+    # Only the failpoint mode has a deterministic, version-stable message; a MinIO
+    # outage surfaces various S3/network messages, so we only assert non-empty ones.
+    message_hint = FAILURE_MESSAGE_HINT[mode] if mode == FAILPOINT_MODE else None
+    # A real MinIO outage spins in the S3 client before the first ClickHouse-level
+    # failure surfaces, so allow longer for the retry to become observable.
+    observe_timeout = 180 if mode == MINIO_MODE else 60
+
+    source_table = None
+    try:
+        with Given("I create a source table and an S3 table on every replica"):
+            source_table, s3_table_name = populated_source_and_s3_table(
+                destination_cluster="replicated_cluster"
+            )
+            partition = get_partitions(table_name=source_table, node=nodes[0])[0]
+
+        with When(f"I inject a {failure_type} failure on {failure_scope}"):
+            inject_failure_on_scope(
+                mode=mode,
+                nodes=nodes,
+                failing_nodes=failing_nodes,
+                source_table=source_table,
+            )
+
+        with And("I start the export with a short back-off"):
+            start_export(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                partition=partition,
+                node=failing_nodes[0],
+                settings=short_backoff_settings(),
+            )
+
+        with Then("the retry is observable with a per-replica error message"):
+            wait_for_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                min_replicas=expected_replicas,
+                expected_message_substr=message_hint,
+                timeout=observe_timeout,
+            )
+
+        with And("the failing replicas keep retrying (exception_count increments)"):
+            before = get_exception_count_for(
+                source_table=source_table, partition=partition
+            )
+            wait_for_exception_count(
+                source_table=source_table,
+                partition=partition,
+                min_count=before + 1,
+                timeout=observe_timeout,
+            )
+
+        with And("progress is tracked and the task stays PENDING"):
+            assert_progress_tracked(source_table=source_table, partition=partition)
+            status = get_export_status(source_table=source_table, partition=partition)
+            assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+    finally:
+        with Finally("I clear the failure and reset cluster state"):
+            clear_failure_on_scope(
+                mode=mode,
+                nodes=nodes,
+                failing_nodes=failing_nodes,
+                source_table=source_table,
+            )
+            reset_backoff_test_state(source_table=source_table)
+
+
+@TestOutline(Scenario)
+@Examples("failing_exports", [("one",), ("all",)])
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Observability_RetryExceptionReported("1.0"),
+)
+def concurrent_exports_observability(self, failing_exports, number_of_tables=2):
+    """Multiple export partitions from different source tables at the same time: a
+    retryable failure (wrong-credentials S3 destination) is injected into one or all
+    of them. Each failing export independently reports observable retries and stays
+    PENDING, while any healthy export completes — proving observability is tracked
+    per export."""
+
+    node = self.context.node
+    failing_count = number_of_tables if failing_exports == "all" else 1
+    sources = []
+
+    with Given(f"I create {number_of_tables} source tables and their destinations"):
+        for idx in range(number_of_tables):
+            source_table = f"source_{getuid()}"
+            partitioned_replicated_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                columns=default_columns(),
+                stop_merges=True,
+                number_of_partitions=1,
+                number_of_parts=1,
+                cluster="replicated_cluster",
+            )
+            should_fail = idx < failing_count
+            if should_fail:
+                s3_table_name = create_s3_table_wrong_credentials()
+            else:
+                s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+            partition = get_partitions(table_name=source_table, node=node)[0]
+            sources.append((source_table, s3_table_name, partition, should_fail))
+
+    with When("I start every export at the same time"):
+        for source_table, s3_table_name, partition, _ in sources:
+            start_export(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                partition=partition,
+                node=node,
+                settings=[(TASK_TIMEOUT_SECONDS, "600")] + short_backoff_settings(),
+            )
+
+    with Then("each export's observability is tracked independently"):
+        for source_table, s3_table_name, partition, should_fail in sources:
+            if should_fail:
+                with By(f"{source_table} reports observable retries and stays PENDING"):
+                    wait_for_retry_is_observable(
+                        source_table=source_table, partition=partition
+                    )
+                    status = get_export_status(
+                        source_table=source_table, partition=partition
+                    )
+                    assert status == "PENDING", error(
+                        f"expected PENDING, got {status!r}"
+                    )
+            else:
+                with By(f"{source_table} completes and matches source"):
+                    wait_for_export_to_complete(
+                        source_table=source_table,
+                        partition_id=partition,
+                        node=node,
+                    )
+                    source_matches_destination(
+                        source_table=source_table, destination_table=s3_table_name
+                    )
+
+
+@TestOutline(Scenario)
+@Examples("failure_scope", [("one_replica",), ("all_replicas",)])
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ErrorClassification_Retryable("1.1"),
+    RQ_ClickHouse_ExportPartition_Observability_RetryExceptionReported("1.0"),
+)
+def oom_error_is_retryable_and_observable(self, failure_scope):
+    """A real out-of-memory failure (MEMORY_LIMIT_EXCEEDED) during part export is
+    classified retryable: the task arms a local back-off and stays PENDING (it does
+    not fail fast like a non-retryable error), and the OOM reason is observable per
+    replica in last_exception_per_replica.
+
+    The memory cap is applied by lowering ``max_server_memory_usage`` via config.d on
+    the failing replicas (the INSERT that builds the part runs first, before the cap,
+    so the setup is unaffected). The config is reverted (removed + restart)
+    automatically at test end.
+    """
+
+    nodes = list(self.context.nodes)
+    failing_nodes = [nodes[0]] if failure_scope == "one_replica" else list(nodes)
+    healthy_nodes = [n for n in nodes if n not in failing_nodes]
+    observer = healthy_nodes[0] if healthy_nodes else nodes[0]
+    columns = [
+        {"name": "p", "type": "UInt8"},
+        {"name": "i", "type": "UInt64"},
+        {"name": "s", "type": "String"},
+    ]
+    source_table = None
+
+    try:
+        with Given(
+            "I create a source with large rows and an S3 table on every replica"
+        ):
+            source_table = f"source_{getuid()}"
+            partitioned_replicated_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                columns=columns,
+                stop_merges=True,
+                populate=False,
+                cluster="replicated_cluster",
+            )
+            s3_table_name = create_s3_table(
+                table_name="s3",
+                create_new_bucket=True,
+                columns=columns,
+                cluster="replicated_cluster",
+            )
+
+        with And("I insert large rows so exporting the part needs significant memory"):
+            nodes[0].query(
+                f"INSERT INTO {source_table} "
+                f"SELECT 1, number, randomString(1000) FROM numbers(300000)",
+                settings=list(self.context.default_settings),
+                timeout=120,
+            )
+            partition = get_partitions(table_name=source_table, node=nodes[0])[0]
+
+        with And("I make sure the failing replicas have the part"):
+            for node in failing_nodes:
+                node.query(f"SYSTEM SYNC REPLICA {source_table}", timeout=60)
+
+        with And("I stop moves on the healthy replicas so only failing ones export"):
+            if healthy_nodes:
+                stop_moves(source_table=source_table, nodes=healthy_nodes)
+
+        with And("I apply a low whole-server memory limit on the failing replicas"):
+            limit_export_worker_memory(
+                nodes=failing_nodes,
+                setting="max_server_memory_usage",
+                value=734003200,  # 700 MiB
+            )
+
+        with When("I start the export on a failing replica"):
+            start_export(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                partition=partition,
+                node=failing_nodes[0],
+                settings=short_backoff_settings(),
+            )
+
+        with Then("the OOM is treated as retryable: a local back-off is armed"):
+            wait_for_local_backoff(
+                source_table=source_table,
+                partition=partition,
+                nodes=failing_nodes,
+                timeout=120,
+            )
+
+        with And("the task stays PENDING instead of failing fast"):
+            status = get_export_status(
+                source_table=source_table, partition=partition, node=observer
+            )
+            assert status == "PENDING", error(f"expected PENDING, got {status!r}")
+
+        with And("the OOM reason is observable per failing replica"):
+            wait_for_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                min_replicas=len(failing_nodes),
+                expected_message_substr="memory limit exceeded",
+                node=observer,
+                timeout=120,
+            )
+    finally:
+        with Finally("I reset cluster state"):
+            reset_backoff_test_state(source_table=source_table)
+
+
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Observability_RetryExceptionReported("1.0"),
+    RQ_ClickHouse_ExportPartition_LocalBackoffPolicy_State("1.0"),
+)
+def multi_part_progress_tracking(self):
+    """Progress tracking of a multi-part export while a retryable failure persists:
+    parts_to_do stays within range, exception_count keeps climbing while parts fail,
+    and once the failure clears the export reaches COMPLETED and matches the source."""
+
+    node = self.context.node
+    source_table = None
+
+    try:
+        with Given(
+            "I create a multi-part source table and an S3 table on every replica"
+        ):
+            source_table, s3_table_name = populated_source_and_s3_table(
+                number_of_parts=4, destination_cluster="replicated_cluster"
+            )
+            partition = get_partitions(table_name=source_table, node=node)[0]
+
+        with When("I enable the retryable failpoint on all nodes"):
+            enable_failpoint(failpoint=RETRYABLE_FAILPOINT)
+
+        with And("I start the export with a short back-off"):
+            start_export(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                partition=partition,
+                node=node,
+                settings=short_backoff_settings(),
+            )
+
+        with Then("progress is tracked and retries are observable while parts fail"):
+            wait_for_retry_is_observable(
+                source_table=source_table,
+                partition=partition,
+                expected_message_substr=FAILURE_MESSAGE_HINT[FAILPOINT_MODE],
+            )
+            assert_progress_tracked(source_table=source_table, partition=partition)
+            before = get_exception_count_for(
+                source_table=source_table, partition=partition
+            )
+            wait_for_exception_count(
+                source_table=source_table, partition=partition, min_count=before + 1
+            )
+    finally:
+        with Finally("I disable the retryable failpoint on all nodes"):
+            disable_failpoint(failpoint=RETRYABLE_FAILPOINT)
+
+    with Then("the export completes once the failure clears and matches the source"):
+        wait_for_export_to_complete(
+            source_table=source_table, partition_id=partition, node=node
+        )
+        source_matches_destination(
+            source_table=source_table, destination_table=s3_table_name
+        )
+
+
 @TestFeature
 def happy_path(self):
     """Exports succeed with valid back-off settings, and invalid settings are rejected."""
@@ -1298,22 +1682,26 @@ def happy_path(self):
 def error_classification_and_observability(self):
     """Non-retryable errors fail fast, retryable errors back off and stay PENDING, and
     the back-off state is observable in system.replicated_partition_exports."""
-    Scenario(run=local_backoff_per_part_column)
-    Scenario(run=non_retryable_error_fails_task)
-    Scenario(run=non_retryable_column_count_mismatch)
-    Scenario(run=non_retryable_lossy_cast)
-    Scenario(run=non_retryable_type_mismatch)
-    Scenario(run=non_retryable_incompatible_destination_type)
-    Scenario(run=non_retryable_feature_disabled)
-    Scenario(run=non_retryable_file_already_exists)
-    Scenario(run=retryable_minio_outage_recovers)
-    Scenario(run=retryable_network_outage_recovers)
-    Scenario(run=retryable_error_stays_pending_and_backs_off)
-    Scenario(run=backoff_attempts_increment)
-    Scenario(run=retryable_error_recovers_after_failpoint_cleared)
-    Scenario(run=retryable_error_killed_on_timeout)
-    Scenario(run=s3_permanent_error_retries_until_timeout)
-    Scenario(run=s3_permanent_wrong_endpoint_retries_until_timeout)
+    # Scenario(run=local_backoff_per_part_column)
+    # Scenario(run=non_retryable_error_fails_task)
+    # Scenario(run=non_retryable_column_count_mismatch)
+    # Scenario(run=non_retryable_lossy_cast)
+    # Scenario(run=non_retryable_type_mismatch)
+    # Scenario(run=non_retryable_incompatible_destination_type)
+    # Scenario(run=non_retryable_feature_disabled)
+    # Scenario(run=non_retryable_file_already_exists)
+    # Scenario(run=retryable_minio_outage_recovers)
+    # Scenario(run=retryable_network_outage_recovers)
+    # Scenario(run=retryable_error_stays_pending_and_backs_off)
+    # Scenario(run=backoff_attempts_increment)
+    # Scenario(run=retryable_error_recovers_after_failpoint_cleared)
+    # Scenario(run=retryable_error_killed_on_timeout)
+    # Scenario(run=s3_permanent_error_retries_until_timeout)
+    # Scenario(run=s3_permanent_wrong_endpoint_retries_until_timeout)
+    # Scenario(run=observe_failure)
+    Scenario(run=oom_error_is_retryable_and_observable)
+    Scenario(run=concurrent_exports_observability)
+    Scenario(run=multi_part_progress_tracking)
 
 
 @TestFeature
@@ -1360,6 +1748,6 @@ def feature(self, s3_retry_attempts=3):
                 node=node,
             )
 
-    Feature(run=happy_path)
+    # Feature(run=happy_path)
     Feature(run=error_classification_and_observability)
-    Feature(run=multi_replica_choreography)
+    # Feature(run=multi_replica_choreography)

@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid, check_if_antalya_post_26_3_13_20001
+from helpers.common import getuid, check_clickhouse_version
 
 from iceberg.tests.export_partition.steps.common import (
     count_rows,
@@ -46,12 +46,11 @@ LOSSY_CAST_REJECTION_MESSAGE = "lossy cast"
 def _lossy_cast_rejection_expectation(test):
     """Client exit code / message for lossy-cast rejection without the setting.
 
-    Builds ``<= 26.3.13.20001.altinityantalya``: reject with
-    ``BAD_ARGUMENTS`` (36) / ``lossy cast``. Antalya builds
-    ``> 26.3.13.20001`` use ``INCOMPATIBLE_COLUMNS`` (122), matching
+    Builds ``< 26.3.13.20001``: reject with ``BAD_ARGUMENTS`` (36) / ``lossy cast``.
+    Builds ``>= 26.3.13.20001`` use ``INCOMPATIBLE_COLUMNS`` (122), matching
     ``schema_evolution.source_only_schema_drift_rejected``.
     """
-    if check_if_antalya_post_26_3_13_20001(test):
+    if check_clickhouse_version(">=26.3.13.20001")(test):
         return INCOMPATIBLE_COLUMNS, "INCOMPATIBLE_COLUMNS"
     return BAD_ARGUMENTS, LOSSY_CAST_REJECTION_MESSAGE
 

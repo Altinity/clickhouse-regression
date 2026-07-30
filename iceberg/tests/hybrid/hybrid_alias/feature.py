@@ -22,9 +22,9 @@ def discover_test_features(current_dir=None, subdirectory=None):
             module_name = filename[:-3]  # Remove .py
             # Construct module path based on subdirectory
             if subdirectory:
-                module_path = f"ice.tests.hybrid.hybrid_alias.tests.{subdirectory}.{module_name}"
+                module_path = f"iceberg.tests.hybrid.hybrid_alias.tests.{subdirectory}.{module_name}"
             else:
-                module_path = f"ice.tests.hybrid.hybrid_alias.tests.{module_name}"
+                module_path = f"iceberg.tests.hybrid.hybrid_alias.tests.{module_name}"
             test_features.append(module_path)
 
     return test_features

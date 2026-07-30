@@ -90,7 +90,9 @@ def access_clickhouse(
     if query is None:
         query = "SELECT currentUser()"
 
-    uid = getuid()[:8]
+    # Full uid (not truncated) so concurrent callers never share a response
+    # file -- a [:8] slice of uuid1 can collide when many auths run at once.
+    uid = getuid()
     tmp_file = f"/tmp/ch_response_{uid}.txt"
 
     safe_query = query.replace("'", "'\\''")
@@ -157,7 +159,7 @@ def assert_token_rejected(self, token, ip="clickhouse1", https=False, node=None)
     http_prefix = "https" if https else "http"
     url = f"{http_prefix}://{ip}:{port}/"
 
-    uid = getuid()[:8]
+    uid = getuid()
     tmp_file = f"/tmp/ch_response_{uid}.txt"
 
     curl_command = (
@@ -792,7 +794,7 @@ def assert_auth_request_completes(
     if node is None:
         node = self.context.bash_tools
 
-    uid = getuid()[:8]
+    uid = getuid()
     tmp_file = f"/tmp/ch_avail_{uid}.txt"
     curl_command = (
         f'curl -s -o {tmp_file} -w "%{{http_code}}" '
@@ -823,7 +825,7 @@ def basic_auth_request(self, user, password="", ip="clickhouse1", node=None):
     if node is None:
         node = self.context.bash_tools
 
-    uid = getuid()[:8]
+    uid = getuid()
     tmp_file = f"/tmp/ch_basic_{uid}.txt"
     url = f"http://{ip}:8123/?query=SELECT%20currentUser()"
     curl_command = (

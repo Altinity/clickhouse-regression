@@ -1,6 +1,6 @@
 # Hybrid table engine
 
-The Hybrid table engine builds on top of the [Distributed](./distributed.md) table engine. It allows exposing several data sources as one logical table and assigning every source its own predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`, global JOIN pushdown, and so on) while copying or migrating data across clusters, storage types, or formats.
+The Hybrid table engine builds on top of the Distributed table engine. It allows exposing several data sources as one logical table and assigning every source its own predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`, global JOIN pushdown, and so on) while copying or migrating data across clusters, storage types, or formats.
 
 Typical use cases include:
 

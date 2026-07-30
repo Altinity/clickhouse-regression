@@ -29,6 +29,7 @@ from iceberg.tests.export_partition.steps.export_operations import (
     prepare_export_partition_settings,
 )
 from iceberg.tests.export_partition.steps.export_status import (
+    count_partition_export_rows,
     get_export_row,
     wait_for_export_status,
     wait_for_export_to_start,
@@ -54,9 +55,9 @@ UNKNOWN_TABLE = 60
 
 
 def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
-    """Create a ReplicatedMergeTree with a single partition 2020 of 3 rows."""
+    """Create a source table with a single partition 2020 of 3 rows."""
     source_table = f"mt_{getuid()}"
-    with Given("create the source ReplicatedMergeTree"):
+    with Given("create the source table"):
         create_replicated_mergetree(
             table_name=source_table,
             columns=SIMPLE_COLUMNS,
@@ -371,7 +372,7 @@ def invalid_destination_rejected_synchronously(
 ):
     """``ALTER ... EXPORT PARTITION TO TABLE <missing>`` is rejected
     synchronously with ``UNKNOWN_TABLE``; the source is untouched and no
-    row appears in ``system.replicated_partition_exports``.
+    row appears in the export status system table.
     """
     node = self.context.node
     source_table = _seed_source()
@@ -392,18 +393,14 @@ def invalid_destination_rejected_synchronously(
             "Source row count changed after a rejected EXPORT"
         )
 
-    with And("no entry lands in system.replicated_partition_exports"):
-        count = int(
-            node.query(
-                f"SELECT count() FROM system.replicated_partition_exports "
-                f"WHERE source_table = '{source_table}' "
-                f"AND partition_id = '2020' "
-                f"AND destination_table = '{missing_dest}'"
-            ).output.strip()
+    with And("no export status row is recorded for the rejected ALTER"):
+        count = count_partition_export_rows(
+            source_table=source_table,
+            partition_id="2020",
+            destination_table=missing_dest,
         )
         assert count == 0, error(
-            f"Expected no system.replicated_partition_exports row for the "
-            f"rejected ALTER, got count={count}"
+            f"Expected no export status row for the rejected ALTER, got count={count}"
         )
 
 

@@ -14,17 +14,15 @@ from helpers.argparser import (
     CaptureMinioArgs,
 )
 from helpers.common import (
-    check_clickhouse_version,
     check_if_not_antalya_build,
-    check_is_altinity_build,
+    check_clickhouse_version,
     experimental_analyzer,
     check_if_antalya_build,
-    check_if_antalya_post_26_3_10_20001,
 )
 
 
 xfails = {
-    "/iceberg/export partition/*/manifest integrity/value_counts across data files sum to source row count": [
+    "/iceberg/export partition/: catalog/*/manifest integrity/value_counts across data files sum to source row count": [
         (
             Fail,
             "ClickHouse EXPORT PARTITION never populates `value_counts` in "
@@ -33,7 +31,7 @@ xfails = {
             "upper_bounds). The Avro field is left null.",
         )
     ],
-    "/iceberg/export partition/*/manifest integrity/data file paths live under the table prefix": [
+    "/iceberg/export partition/: catalog/*/manifest integrity/data file paths live under the table prefix": [
         (
             Fail,
             "ClickHouse EXPORT PARTITION writes `path_in_storage` (bucket-"
@@ -44,7 +42,7 @@ xfails = {
             "MultipleFileWriter::startNewFile in MultipleFileWriter.cpp.",
         )
     ],
-    "/iceberg/export partition/*/manifest integrity/external iceberg reader round-trips exported data": [
+    "/iceberg/export partition/: catalog/*/manifest integrity/external iceberg reader round-trips exported data": [
         (
             Fail,
             "PyIceberg cannot scan EXPORT PARTITION data files: Parquet "
@@ -55,7 +53,7 @@ xfails = {
             "may instead fail with FileNotFoundError (local FileIO fallback).",
         )
     ],
-    "/iceberg/export partition/*/catalogs/catalog: external reader round-trips exported data": [
+    "/iceberg/export partition/: catalog/*/catalogs/catalog: external reader round-trips exported data": [
         (
             Fail,
             "Same Parquet field-id / name-mapping gap as the no_catalog "
@@ -66,7 +64,7 @@ xfails = {
             "data_file.file_path lacks a URI scheme.",
         )
     ],
-    "/iceberg/export partition/ice catalog/truncate/export after truncate repopulates destination": [
+    "/iceberg/export partition/ice catalog/*/truncate/export after truncate repopulates destination": [
         (
             Fail,
             "ClickHouse bug: TRUNCATE and EXPORT disagree on the Iceberg "
@@ -91,7 +89,7 @@ xfails = {
             "new writes only instead of the inherited snapshot chain.",
         )
     ],
-    "/iceberg/export partition/*/datatypes/*/accepted/accepted*UInt64*": [
+    "/iceberg/export partition/: catalog/*/datatypes/*/accepted/accepted*UInt64*": [
         (
             Fail,
             "ClickHouse maps UInt64 to Iceberg long (signed). Values above "
@@ -101,7 +99,7 @@ xfails = {
             "out-of-range values at export time.",
         )
     ],
-    "/iceberg/export partition/*/settings/output_format_parquet_compression_method flows to data files": [
+    "/iceberg/export partition/: catalog/*/settings/output_format_parquet_compression_method flows to data files": [
         (
             Fail,
             "ClickHouse EXPORT PARTITION does not propagate format-level "
@@ -117,6 +115,33 @@ xfails = {
             "default codec. Intentional for now per dev; remove this "
             "entry once the manifest carries format settings end-to-end.",
         )
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery alias/subquery select alias": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with alias": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with group by": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with limit": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by and limit": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/union alias/union all with alias": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/query context/set operations alias/intersect except with alias/*": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
+    ],
+    "/iceberg/hybrid/hybrid_alias/constants/default json/*": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/2122"),
     ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
@@ -304,11 +329,58 @@ xfails = {
             and check_if_not_antalya_build(),
         )
     ],
-    "/iceberg/export partition/: catalog/catalogs/drop with purge allows recreating same table": [
+    "/iceberg/export partition/: catalog/*/catalogs/drop with purge allows recreating same table": [
         (
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1906",
             check_clickhouse_version("<=26.3.13.20001"),
+        )
+    ],
+    "/iceberg/export partition/: catalog/*/disaster recovery/KILL EXPORT PARTITION during commit transitions to KILLED": [
+        (
+            Fail,
+            "Altinity/ClickHouse#1984 per-part backoff removed "
+            "export_merge_tree_partition_max_retries; failpoint harness "
+            "needs a dev update on >=26.3.13.20001",
+            check_clickhouse_version(">=26.3.13.20001"),
+        )
+    ],
+    "/iceberg/export partition/: catalog/*/transactions/commit survives pre-publish failure": [
+        (
+            Fail,
+            "Altinity/ClickHouse#1984 changed non-retryable pre-publish "
+            "classification; iceberg_writes_non_retry_cleanup failpoint "
+            "harness needs a dev update on >=26.3.13.20001",
+            check_clickhouse_version(">=26.3.13.20001"),
+        )
+    ],
+    "/iceberg/export partition/: catalog/plain merge tree/disaster recovery/KILL EXPORT PARTITION while moves are stopped transitions to KILLED": [
+        (
+            Fail,
+            "Plain MergeTree KILL EXPORT PARTITION: "
+            "MergeTreePartitionExportScheduler::kill uses "
+            "tasks.find(transaction_id) but the registry map is keyed by "
+            "composite_key (partition + destination) "
+            "(Altinity/ClickHouse#2032)",
+            check_clickhouse_version(">=26.3.13.20001"),
+        )
+    ],
+    "/iceberg/export partition/: catalog/plain merge tree/system monitoring/KILL EXPORT preserves provenance fields": [
+        (
+            Fail,
+            "Plain MergeTree KILL EXPORT PARTITION: same scheduler kill() "
+            "lookup bug as disaster recovery/KILL while moves stopped "
+            "(Altinity/ClickHouse#2032)",
+            check_clickhouse_version(">=26.3.13.20001"),
+        )
+    ],
+    "/iceberg/export partition/: catalog/*/partition compatibility/reversed destination column order maps values by name": [
+        (
+            Fail,
+            "EXPORT PARTITION matches source columns to the destination "
+            "positionally (like INSERT SELECT *), so permuted destination "
+            "column order mis-assigns values and can break partition "
+            "semantics (https://github.com/Altinity/ClickHouse/issues/2123)",
         )
     ],
 }
@@ -394,21 +466,32 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
     ),
-    "/iceberg/export partition/*/schema evolution/rename column between exports": (
+    "/iceberg/export partition/: catalog/*/schema evolution/rename column between exports": (
         Skip,
         "RENAME COLUMN on IcebergS3 destination is NOT_IMPLEMENTED before 26.3",
         check_clickhouse_version("<26.3"),
     ),
-    "/iceberg/export partition/*/casting": (
+    "/iceberg/export partition/: catalog/plain merge tree/*": (
         Skip,
-        "Altinity/ClickHouse#1779 export auto-cast requires antalya > 26.3.10.20001",
-        lambda test: not check_if_antalya_post_26_3_10_20001(test),
+        "Plain MergeTree EXPORT PARTITION requires antalya >= 26.3.13.20001 "
+        "(Altinity/ClickHouse#2032)",
+        check_clickhouse_version("<26.3.13.20001"),
     ),
-    "/iceberg/export partition/glue catalog/casting": (
+    "/iceberg/export partition/: catalog/*/casting": (
+        Skip,
+        "Altinity/ClickHouse#1779 export auto-cast requires > 26.3.10.20001",
+        check_clickhouse_version("<=26.3.10.20001"),
+    ),
+    "/iceberg/export partition/glue catalog/*/casting": (
         Skip,
         "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
         "ice-rest-catalog); Glue/LocalStack DataLakeCatalog is out of scope.",
         lambda test: True,
+    ),
+    "/iceberg/hybrid": (
+        Skip,
+        "Hybrid table engine is Antalya-only",
+        check_if_not_antalya_build,
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
@@ -425,6 +508,7 @@ ffails = {
 
 _RUNTIME_USERS_D_FILES = (
     "allow_experimental_insert_into_iceberg.xml",
+    "allow_experimental_hybrid_table.xml",
 )
 
 
@@ -434,7 +518,12 @@ def _sweep_runtime_users_d_overlays():
     for name in _RUNTIME_USERS_D_FILES:
         path = os.path.join(users_d_dir, name)
         if os.path.exists(path):
-            os.remove(path)
+            try:
+                os.remove(path)
+            except PermissionError:
+                # Container-written overlays are often root-owned on the host.
+                # Hybrid feature still forces enable_analyzer via query settings.
+                pass
 
 
 @TestModule
@@ -521,6 +610,10 @@ def regression(
     Feature(
         test=load("iceberg.tests.export_partition.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    # Feature(
+    #     test=load("iceberg.tests.hybrid.feature", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     # Feature(
     #     test=load("iceberg.tests.catalogs.feature", "feature"),

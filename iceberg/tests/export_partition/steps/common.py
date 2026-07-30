@@ -2,10 +2,10 @@
 
 The utilities here cover:
 
-* Creating and tearing down the source ``ReplicatedMergeTree`` table the
-  export reads from.
-* Cheap lookups against ``system.parts`` /
-  ``system.replicated_partition_exports`` used by almost every scenario.
+* Creating and tearing down the source MergeTree-family table the export
+  reads from (``ReplicatedMergeTree`` or plain ``MergeTree``).
+* Cheap lookups against ``system.parts`` and the export status system tables
+  (``system.replicated_partition_exports`` or ``system.partition_exports``).
 
 The experimental feature itself is enabled server-side via
 ``configs/clickhouse/config.d/export_partition.xml``
@@ -18,9 +18,46 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+SOURCE_ENGINE_REPLICATED = "replicated"
+SOURCE_ENGINE_PLAIN = "plain"
+
+
+def source_engine(test=None):
+    """Return ``self.context.source_engine`` (defaults to ``replicated``)."""
+    if test is None:
+        test = current()
+    return getattr(test.context, "source_engine", SOURCE_ENGINE_REPLICATED)
+
+
+def partition_exports_system_table(test=None):
+    """System table that tracks EXPORT PARTITION for the current source engine."""
+    if source_engine(test) == SOURCE_ENGINE_PLAIN:
+        return "system.partition_exports"
+    return "system.replicated_partition_exports"
+
+
+def require_replicated_source(reason):
+    """Skip unless ``self.context.source_engine`` is ``replicated``."""
+    engine = source_engine()
+    if engine != SOURCE_ENGINE_REPLICATED:
+        skip(
+            f"scenario is replicated-only: {reason} "
+            f"(current source engine: {engine!r})"
+        )
+
+
+def _export_source_base_settings(extra_settings):
+    base_settings = [
+        "enable_block_number_column = 1",
+        "enable_block_offset_column = 1",
+    ]
+    if extra_settings:
+        base_settings.extend(extra_settings)
+    return ", ".join(base_settings)
+
 
 @TestStep(Given)
-def create_replicated_mergetree(
+def create_export_source_table(
     self,
     table_name=None,
     columns="id Int64, year Int32",
@@ -33,26 +70,16 @@ def create_replicated_mergetree(
     on_cluster=None,
     cleanup=True,
 ):
-    """Create a ReplicatedMergeTree source table used by EXPORT PARTITION.
+    """Create a source table for EXPORT PARTITION.
 
-    The defaults match the ClickHouse integration tests in the PR: an
-    ``(id, year)`` schema partitioned by ``year`` with the block number/offset
-    columns enabled (required by the export scheduler).
+    Dispatches on ``self.context.source_engine``:
 
-    Args:
-        table_name: Name for the source table. Defaults to a unique name.
-        columns: Column list for the ``CREATE TABLE`` body.
-        partition_by: Expression used for ``PARTITION BY``.
-        order_by: Expression used for ``ORDER BY``.
-        zk_path: ZooKeeper path for the replicated table. Defaults to
-            ``/clickhouse/tables/<table_name>``.
-        replica_name: Replica identifier used in ``ReplicatedMergeTree``.
-        extra_settings: Optional list of ``"key = value"`` strings appended to
-            the default SETTINGS clause.
-        node: ClickHouse node to create the table on (defaults to
-            ``self.context.node``).
-        on_cluster: Optional cluster name to attach ``ON CLUSTER <name>``.
-        cleanup: If ``True`` the table is dropped with ``SYNC`` in ``Finally``.
+    * ``replicated`` (default): ``ReplicatedMergeTree`` with ZooKeeper path.
+    * ``plain``: plain ``MergeTree`` (Altinity/ClickHouse#2032).
+
+    The defaults match the ClickHouse integration tests: an ``(id, year)``
+    schema partitioned by ``year`` with block number/offset columns enabled
+    (required by the export scheduler).
     """
     if node is None:
         node = self.context.node
@@ -60,22 +87,21 @@ def create_replicated_mergetree(
     if table_name is None:
         table_name = f"mt_{getuid()}"
 
-    if zk_path is None:
-        zk_path = f"/clickhouse/tables/{table_name}"
-
-    base_settings = [
-        "enable_block_number_column = 1",
-        "enable_block_offset_column = 1",
-    ]
-    if extra_settings:
-        base_settings.extend(extra_settings)
-    settings_str = ", ".join(base_settings)
-
+    settings_str = _export_source_base_settings(extra_settings)
     cluster_clause = f"ON CLUSTER {on_cluster} " if on_cluster else ""
+
+    if source_engine(self) == SOURCE_ENGINE_PLAIN:
+        engine_clause = "ENGINE = MergeTree()"
+    else:
+        if zk_path is None:
+            zk_path = f"/clickhouse/tables/{table_name}"
+        engine_clause = (
+            f"ENGINE = ReplicatedMergeTree('{zk_path}', '{replica_name}')"
+        )
 
     query = f"""
         CREATE TABLE {table_name} {cluster_clause}({columns})
-        ENGINE = ReplicatedMergeTree('{zk_path}', '{replica_name}')
+        {engine_clause}
         PARTITION BY {partition_by}
         ORDER BY {order_by}
         SETTINGS {settings_str}
@@ -92,6 +118,10 @@ def create_replicated_mergetree(
                     drop_query += f" ON CLUSTER {on_cluster}"
                 drop_query += " SYNC"
                 node.query(drop_query)
+
+
+# Backward-compatible alias — all existing call sites dispatch via context.
+create_replicated_mergetree = create_export_source_table
 
 
 @TestStep(Given)
@@ -191,4 +221,7 @@ def count_rows(self, table_name, where=None, node=None):
 @TestStep(Given)
 def sync_replica(self, table_name, node):
     """Run ``SYSTEM SYNC REPLICA`` on the given node for a replicated table."""
+    require_replicated_source(
+        "SYSTEM SYNC REPLICA applies only to ReplicatedMergeTree sources"
+    )
     node.query(f"SYSTEM SYNC REPLICA {table_name}")

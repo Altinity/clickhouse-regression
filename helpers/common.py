@@ -192,34 +192,6 @@ def check_if_antalya_pre_26_1(test=None):
     return not check_clickhouse_version(">=26.1")(test)
 
 
-# Next Antalya 26.3 release after 26.3.10.20001.altinityantalya.
-# Gates PR 1779 export auto-cast, PR 1874 system.tables partition/sorting keys,
-# PR 1909 iceberg_delete_data_on_drop purge, and PR 1917
-# replicated_partition_exports history table (no manifest TTL release).
-ANTALYA_POST_26_3_10_20001 = ">26.3.10.20001"
-
-
-def check_if_antalya_post_26_3_10_20001(test=None):
-    """True on Antalya builds newer than ``26.3.10.20001.altinityantalya``."""
-    return (
-        check_if_antalya_build(test)
-        and check_clickhouse_version(ANTALYA_POST_26_3_10_20001)(test)
-    )
-
-
-# After Antalya 26.3.13.20001, EXPORT PARTITION lossy-cast rejection uses
-# INCOMPATIBLE_COLUMNS (122) instead of BAD_ARGUMENTS (36).
-ANTALYA_POST_26_3_13_20001 = ">26.3.13.20001"
-
-
-def check_if_antalya_post_26_3_13_20001(test=None):
-    """True on Antalya builds newer than ``26.3.13.20001.altinityantalya``."""
-    return (
-        check_if_antalya_build(test)
-        and check_clickhouse_version(ANTALYA_POST_26_3_13_20001)(test)
-    )
-
-
 def check_clickhouse_version_or_antalya(version):
     """Return a predicate that is True when either ``check_clickhouse_version(version)``
     matches *or* the build is an Antalya build.
