@@ -350,7 +350,9 @@ def parse_table_output(output, column_names_and_types):
         values = row.split("\t")
         parsed_row = []
         for value, (_, col_type) in zip(values, column_names_and_types):
-            if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
+            if value == "\\N":
+                parsed_row.append(None)
+            elif col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
                 try:
                     parsed_row.append(float(value))
                 except ValueError:
@@ -397,7 +399,13 @@ def compare_select_outputs(output1, output2, table_name1, rel_tol=1e-3, abs_tol=
             zip(row1, row2), column_names_and_types
         ):
             if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
-                if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
+                if val1 is None or val2 is None:
+                    if val1 != val2:
+                        note(
+                            f"Float values are not equal in column {col_name}: {val1} != {val2}"
+                        )
+                        return False
+                elif not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
                     note(
                         f"Float values are not close enough in column {col_name}: {val1} != {val2}"
                     )
