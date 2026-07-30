@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <named_collections>
+        <iceberg_conf>
+            <url>http://minio:9000/warehouse/</url>
+            <access_key_id>admin</access_key_id>
+            <secret_access_key>password</secret_access_key>
+        </iceberg_conf>
+    </named_collections>
+</clickhouse>

@@ -1,0 +1,262 @@
+cas_id	old_sev	status	anchor	audit
+CAS-003	High	🟡 partially mitigated (still-present)	`Pool/CasPartWriteTxn.cpp:77`; `ContentAddressedTransaction.h:291`; opt-in sha256 at `ContentAddressedSettings.cpp:74`	ad1-hash-determinism
+CAS-037	Med	✅ fixed	`Formats/CasPoolMetaFormat.h:29-31`; `Pool/CasPoolMeta.cpp:56-102, 148`; `Formats/CasLayout.cpp:36`	ad1-hash-determinism
+CAS-107	Low	🟡 still-present (BE half only; weakened)	no `static_assert`/BE guard in tree; explicit BE wire ops at `Primitives/CasCodecUtil.h:18-40`, `Primitives/CasBlobDigest.h:177-186`, `Gc/CasGcShardPlan.h:38-41`	ad1-hash-determinism
+CAS-018	High (compliance)	🔴 still-present	`ContentAddressedTransaction.cpp:1034`; no SLA setting in `ContentAddressedSettings.cpp`	ad2-deletion-erasure
+CAS-019	High (compliance)	🔴 still-present	`Gc/CasBlobInDegree.cpp:364-448`; `Pool/CasRefLedger.cpp:2801,2890`	ad2-deletion-erasure
+CAS-043	High (leak/observ)	🔴 still-present	`ContentAddressedTransaction.cpp:1032-1074`; `Gc/CasGc.cpp:1833,2075,2170`	ad2-deletion-erasure
+CAS-070	Med	🔴 still-present (detached folded in; shadow still separate; snap retention unchanged)	`ContentAddressedTransaction.cpp:1044-1074`; `Pool/CasPool.h:79-84`	ad2-deletion-erasure
+CAS-071	Med	🔴 still-present (GCS-versioning-enabled now fail-closed; S3 variants + object-lock + CRR + soft-delete uncovered)	`Backend/CasObjectStorageBackend.cpp:55-84`; `Gc/CasGc.cpp:519`	ad2-deletion-erasure
+CAS-013	High	🛠 will-fix (largely fixed; missing `DETAIL`/`DEADLINE`/`NAMESPACE` in SQL)	`Parsers/ASTSystemQuery.h:153`, `InterpreterSystemQuery.cpp:2524-2551`	ad3-day2-dr-runbook
+CAS-014	High	🛠 will-fix (liveness triple exposed; no `bytes_pending_reclaim`, no continuous physical-bytes)	`StorageSystemContentAddressedMounts.cpp:52-55`, `Gc/CasGcScheduler.h:118-125`	ad3-day2-dr-runbook
+CAS-040	Med (OBSERV)	🔴 still-present	`Storages/System/StorageSystemParts.cpp:74`	ad3-day2-dr-runbook
+CAS-084	Low (LEAK)	🔴 still-present	absence: no MPU calls under CAS `Tools/`,`Gc/`,`Pool/` (only `Backend/CasObjectStorageBackend.cpp:813-828`)	ad3-day2-dr-runbook
+CAS-093	Med (INT)	🔴 still-present	`Tools/CasFsck.cpp` (no repair path); `InterpreterSystemQuery.cpp:2524-2551` (no `REPAIR` verb)	ad3-day2-dr-runbook
+CAS-101	Low (OBSERV)	🔴 still-present	`Storages/System/StorageSystemParts.cpp:74`; `StorageSystemReplicatedFetches.cpp` unchanged	ad3-day2-dr-runbook
+CAS-102	Low (OBSERV)	🔴 still-present	`Storages/System/StorageSystemReplicatedFetches.cpp:27-60` (no relink flag)	ad3-day2-dr-runbook
+CAS-214		Info	`Common/ProfileEvents.cpp` (`grep -c '^\s*M(Cas' → 142`); `Backend/CasInstrumentedBackend.cpp:113-130`	ad3-day2-dr-runbook
+CAS-008	High	🔴 still-present (reshaped, Med) — ref-log / snapshot 64 MiB caps replace the root-shard journal 64 MiB cap; write availability still coupled to admission-budget compaction / eviction.	`Formats/CasRefLogFormat.h:68-79`, `Pool/CasRefLedger.cpp:572-577`, `Pool/CasPartWriteTxn.cpp:824-872`	ad5-resource-exhaustion
+CAS-049	Med	✅ fixed — decode cache is byte-budgeted LRU (not wholesale-clear).	`Pool/CasManifestReader.cpp:37-40`, `Pool/CasPool.h:78`	ad5-resource-exhaustion
+CAS-084	Med (LEAK/DAY2)	🔴 still-present — CAS backend still does not abort / list / report incomplete multipart uploads.	`Backend/CasObjectStorageBackend.cpp` (no `abortMultipart*` symbol anywhere in CAS tree)	ad5-resource-exhaustion
+CAS-092	Med	✅ fixed — `shard_write_seq` symbol removed; per-namespace state is LRU-bounded.	`Pool/CasRefLedger.cpp:762-810`, `Pool/CasPool.h:204`	ad5-resource-exhaustion
+CAS-100	Low / Low	🔴 RES-7 still-present (no per-tenant quota in shared pool); RES-6 removed in original shape but replaced by hard fail-closed only writes (see NEW-ad5-1).	`Pool/CasRefLedger.cpp:1208`, `Pool/CasBlobUploadPool.h:54`, `Pool/CasPartWriteTxn.cpp:824-872`	ad5-resource-exhaustion
+CAS-011	High	🔴 still-present	`Backend/CasObjectStorageBackend.cpp:55-84` (Native+Generation-only; fail-open on inconclusive; S3 versioning not covered)	ad6-s3-lifecycle-cross-region
+CAS-016	High	🔴 still-present	`Backend/CasObjectStorageBackend.cpp:55-84` (no lifecycle-rule inspection anywhere in CAS tree)	ad6-s3-lifecycle-cross-region
+CAS-017	High	🔴 still-present	`Backend/CasObjectStorageBackend.cpp:55-84` + mutable control plane at `Pool/CasServerRoot.cpp:575-645`, `Gc/CasGc.cpp:673`, `Pool/CasPartWriteTxn.cpp:508-612`	ad6-s3-lifecycle-cross-region
+CAS-051	Med	🔴 still-present	Whole-tree: no cross-region/replica awareness; `Backend/CasObjectStorageBackend.cpp` deleteExact/promote path source-only	ad6-s3-lifecycle-cross-region
+CAS-052	Med	🔴 still-present	`Pool/CasManifestReader.cpp:56` + `Backend/CasObjectStorageBackend.cpp` (no `InvalidObjectState` / restore handling)	ad6-s3-lifecycle-cross-region
+CAS-087	Med	🟡 backend-conditional / still-present on non-AWS S3	`Pool/CasPool.cpp:1326-1328` (assumption declared, not enforced); `Parts/PartFolderAccess.cpp:166-215`	ad6-s3-lifecycle-cross-region
+CAS-114		Low / Info	zero matches for `storage_class`/`StorageClass` in CAS tree; bucket default applies	ad6-s3-lifecycle-cross-region
+CAS-054	Med	✅ fixed	`DataPartsExchange.cpp:128, 916-924, 935-937`	ad7-protocol-skew
+CAS-024	Correctness	✅ fixed-in-effect (soft-coupling residual)	`Pool/CasPool.cpp:123`; `CasManifestReader.cpp:158`; `CasBlobEnvelopeFormat.cpp:230-248`	ad7-protocol-skew
+CAS-036	Config	✅ fixed	`Formats/CasPoolMetaFormat.cpp:36-46`	ad7-protocol-skew
+CAS-031	Integrity	📐 by-design (digest anchor + path hygiene close silent-misread; blob_size trust survives as DoS-shape)	`Pool/CasPartWriteTxn.cpp:794`; `CasPartManifestFormat.cpp:198-267`; `ContentAddressedExchange.h:220-224`	ad7-protocol-skew
+CAS-209		Info	`Formats/CasFormat.cpp:64-70`; `PartFolderAccess.cpp:488-493`; `ContentAddressedMetadataStorage.cpp:2208-2220`; `DataPartsExchange.cpp:404, 889-890, 913`	ad7-protocol-skew
+CAS-007	Feature-gap / Perf	🔴 still-present	`ContentAddressedTransaction.cpp:65-73, :1491-1507`	alter-merge-mutation
+CAS-097	Correctness (Low)	🔴 still-present (narrowed to repoint outcome slot; see NEW-AMM-2)	`ContentAddressedTransaction.cpp:468-472, :509-512`	alter-merge-mutation
+CAS-104	Correctness (Low)	🔴 still-present (bounded; single-appender contract only)	`ContentAddressedTransaction.cpp:800-824`; `Parts/PartPathParser.h:72-75`	alter-merge-mutation
+CAS-111	Correctness (Low)	✅ fixed	`ContentAddressedTransaction.cpp:1520-1568`, repoint at `:362-381`	alter-merge-mutation
+CAS-117	Test-gap	🔴 still-present	no FINAL/patch-apply references in `ContentAddressed/**`	alter-merge-mutation
+CAS-018	High	🔴 still-present	`ContentAddressedTransaction.cpp:1034-1036`; no SLA in `ContentAddressedSettings.cpp`	backfill-not-reviewed
+CAS-019	High	🔴 still-present	`Gc/CasBlobInDegree.cpp:364-448`; `Pool/CasRefLedger.cpp:2801,2890`	backfill-not-reviewed
+CAS-046	High	🔴 still-present	absence in `Backend/CasObjectStorageBackend.cpp`; `DiskEncrypted` random IV	backfill-not-reviewed
+CAS-025	Med	✅ fixed	`Formats/CasPartManifestFormat.cpp:293-302`	backfill-not-reviewed
+CAS-031	Med	📐 by-design	`Pool/CasPartWriteTxn.cpp:794`; `ContentAddressedExchange.h:220-224`	backfill-not-reviewed
+CAS-036	Med	✅ fixed	`Formats/CasPoolMetaFormat.cpp:36-46` (`kMinBlobHeaderLen=240`)	backfill-not-reviewed
+CAS-042	Med	🔴 still-present	`DataPartStorageOnDiskBase.cpp:417-427`; no BACKUP/RESTORE CAS IT	backfill-not-reviewed
+CAS-047	Med	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1793` vs `:1915-1917`	backfill-not-reviewed
+CAS-054	Med	✅ fixed	`ContentAddressedExchange.cpp:13,152-153` (`kTokenVersion=car1`)	backfill-not-reviewed
+CAS-056	Med	🟡 partial/changed-shape	`gc_shards` create-once `Gc/CasGc.cpp:3022-3025`; root shards gone	backfill-not-reviewed
+CAS-057	Med	🟡 mitigated/changed-shape	`Gc/CasGc.cpp:2393-2411` (single LIST, no ns×shard fan-out)	backfill-not-reviewed
+CAS-058	Med	🔴 still-present	`Pool/CasPool.cpp:1326-1328`; `Gc/CasGc.cpp:2397-2398`	backfill-not-reviewed
+CAS-059	Med	🟡 partial	`05004_content_addressed_transactions.sh`; multi-part merge B53 gap	backfill-not-reviewed
+CAS-060	Med	🔴 still-present	`Pool/CasServerRoot.cpp:1239-1274`; orphan/precommit sweeps	backfill-not-reviewed
+CAS-061	Med	🔴 still-present	absence of text/GIN/vector tests under `test_cas_*` / `test_content_addressed_*`	backfill-not-reviewed
+CAS-062	Med	🟡 partial / 🛠 will-fix	`StorageSystemContentAddressedMounts.cpp:40-59`; `DROP_POOL_MEMBER`	backfill-not-reviewed
+CAS-063	Med	🔴 still-present	absence of PoolMeta backup/restore under `Pool/`/`Tools/`	backfill-not-reviewed
+CAS-064	Med	🔴 still-present	`Pool/CasServerRoot.h:188-223`; `CasServerRoot.cpp:428-432`	backfill-not-reviewed
+CAS-065	Med	🔴 still-present	`Backend/CasObjectStorageBackend.cpp:94-108`	backfill-not-reviewed
+CAS-066	Med	🔴 still-present	`Pool/CasPoolMeta.cpp:118-124`	backfill-not-reviewed
+CAS-067	Med	🔴 still-present	`Pool/CasPool.h:68-78` (dedup+manifest caches only; no read blob pin)	backfill-not-reviewed
+CAS-068	Med	🟡 partial	`DiskObjectStorage.cpp:876-922`; `test_cas_file_cache` (no partial-hit envelope test)	backfill-not-reviewed
+CAS-069	Med	🔴 still-present	no in-place converter; `DataPartStorageOnDiskBase.cpp:748`	backfill-not-reviewed
+CAS-070	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1044-1074`; `gc_snap_generations_to_keep`	backfill-not-reviewed
+CAS-071	Med	🔴 still-present	`Backend/CasObjectStorageBackend.cpp:55-84` (GCS-only versioning gate)	backfill-not-reviewed
+CAS-113	Med	🔴 still-present	control-plane via `CasObjectStorageBackend`; 0 DiskEncrypted refs in CAS tree	backfill-not-reviewed
+CAS-073	Low	🔴 still-present	`Parts/PartPathParser.cpp:136-168`	backfill-not-reviewed
+CAS-076	Low	📐 by-design	`Formats/CasFormat.h:49,126`; `CasFormat.cpp:112-118`	backfill-not-reviewed
+CAS-080	Low	🔴 still-present	`Pool/CasServerRoot.cpp:249-251`; MountLease `min_active` default 0	backfill-not-reviewed
+CAS-094	Low	🔴 still-present	absence of cold-blob scrub/re-hash in `Gc/`/`Tools/`	backfill-not-reviewed
+CAS-112	Low	🔴 still-present	`ContentAddressedTransaction.cpp:531-533,1188-1191`	backfill-not-reviewed
+CAS-009	High	🔴 still-present	`Formats/CasFormat.cpp:57-62`; `CasFormat.h:28` (`G_BUILD=3`)	backfill-not-reviewed
+CAS-201		Info	early-publish gone `:1349-1353`; residual commit window `:458-508`	backfill-not-reviewed
+CAS-202		Info	`CasPartManifestFormat.h:50-65`; `CasLayout.cpp:34-37`	backfill-not-reviewed
+CAS-207		Info	`DiskObjectStorage.cpp:876-922`; `test_cas_file_cache`	backfill-not-reviewed
+CAS-209		Info	`CasFormat.cpp:64-70`; `ContentAddressedExchange.cpp:152-153`	backfill-not-reviewed
+CAS-210		Info	`Pool/CasPartWriteTxn.cpp:178-212`	backfill-not-reviewed
+CAS-212		Info	`Formats/CasFormat.h:38-67` (comment-only retirement)	backfill-not-reviewed
+CAS-213		Info	`Gc/CasGcShardPlan.cpp:17-25`	backfill-not-reviewed
+CAS-039	Med	✅ fixed	`CasBlobEnvelopeFormat.cpp:162,240-248` — `logical_size` removed from envelope; `header_len` derived from `'\n'`; the size-consistency invariant it tried to enforce no longer exists (payload length = `object_size - header_len`).	bc1-offset-overflow
+CAS-095	Low	🔴 still-present	`ReadBufferFromFileView.cpp:169-179` — size_t-underflow-then-signed-cast unchanged.	bc1-offset-overflow
+CAS-095	Low	🔴 still-present	`ReadBufferFromFileView.cpp:104-129` — `SEEK_CUR` negative underflow caught only by downstream `[left_bound, right_bound]` check.	bc1-offset-overflow
+CAS-095	Low	🔴 still-present (narrower)	`CasManifestReader.cpp:144-161` + `ContentAddressedMetadataStorage.cpp:1915-1917`,`:1930` — `location.length = entry.blob_size` (manifest-trusted) flows into unguarded `offset + length`; `offset` half is now a pool constant.	bc1-offset-overflow
+CAS-038	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1819–1846` (finalize hands `hash_hex` and `temp_path` with no re-verify) + `Pool/CasPartWriteTxn.cpp:594–602` (upload verifies only size) + `ContentAddressedTransaction.cpp:293–298` (`copyData` re-reads temp)	bc2-writebuffer-spill
+CAS-038	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1819–1846` (`sink->finalize()` — no fsync) + `1749–1763` (default flags on `WriteBufferFromFile`) + `1869–1874` (`sync()` exists but is not called from `finalizeImpl`)	bc2-writebuffer-spill
+CAS-096	Low	🔴 still-present	`ContentAddressedTransaction.cpp:1749`, `.cpp:904–914`, `ContentAddressedMetadataStorage.h:381` (no preflight FS-full check; `scratchPath()` capacity contract undocumented)	bc2-writebuffer-spill
+CAS-096	Low	🔴 still-present	`ContentAddressedTransaction.cpp:1750` (Local), `.cpp:958–959` (inline overflow), `.cpp:875` (S3 staging key — new blast radius) — all `getRandomASCIIString(32)`	bc2-writebuffer-spill
+CAS-021	Med	🔴 still-present	`ContentAddressedTransaction.cpp:458-513`	bc3-exception-safety
+CAS-097	Low	🔴 still-present (re-scoped: mechanism changed, contract unchanged)	`ContentAddressedTransaction.cpp:468-472`, `:338-393`	bc3-exception-safety
+CAS-097	Low	🔴 still-present	`ContentAddressedTransaction.cpp:494-513`	bc3-exception-safety
+CAS-021	Low	✅ fixed	`Parts/PartFolderAccess.cpp:646-707`	bc3-exception-safety
+CAS-026	Med	✅ fixed	`Formats/CasTextFormat.cpp:389,401` (`object_cap` pre-decode); no `ParseFromArray` in tree	bc4-protobuf-decode
+CAS-027	Med	📐 by-design	`Formats/CasTextFormat.cpp:245–256` (`skipUnknown` on Tolerant); rule documented `Formats/README.md:46–51`	bc4-protobuf-decode
+CAS-028	Med	✅ fixed	`Formats/CasRecordStreamFormat.cpp:228–304` (NDJSON `readLine` w/ `line_cap`); no `klen`/`plen`	bc4-protobuf-decode
+CAS-039	Med	✅ fixed	`Formats/CasBlobEnvelopeFormat.h:53–74` (`logical_size` dropped); `CasBlobEnvelopeFormat.cpp:230–248` (pad-verify)	bc4-protobuf-decode
+CAS-075	Med	✅ fixed	`Formats/CasBlobEnvelopeFormat.h:53–58` (`header_hash` removed); `!`-key gate `CasTextFormat.cpp:249–251`	bc4-protobuf-decode
+CAS-077	Low	✅ fixed	`Formats/CasFoldSealFormat.cpp:190` (`tokenTypeFromWord`), `:32–37` (`nsCleanupStateFromWord`), Strict decode	bc4-protobuf-decode
+CAS-115	Med	✅ fixed	`Formats/CasPartManifestFormat.cpp:257–267` (strict-ascending check catches non-adjacent duplicates)	bc4-protobuf-decode
+CAS-048	Med	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1565-1595`, publish stamp restamped at `CasPartWriteTxn.cpp:1240`	bc6-mtime-semantics
+CAS-099	Low	🔴 still-present	`ContentAddressedTransaction.cpp:1180-1186` (no-op body; only Vanished-disk gate added)	bc6-mtime-semantics
+CAS-208		Info	Negative-grep: no `TTL` consumer of `getLastModified` in CAS tree	bc6-mtime-semantics
+CAS-024	Med	🔴 still-present	`Pool/CasManifestReader.cpp:144-168`	codeonly-line
+CAS-023	Med	✅ fixed	`Pool/CasMountRuntime.cpp:486-502` (`remount_shutting_down` latch under `remount_thread_mutex`)	codeonly-line
+CAS-025	Med	✅ fixed	`Formats/CasPartManifestFormat.cpp:293-302`	codeonly-line
+CAS-026	Med	✅ fixed	protobuf decoders replaced with text/JSON + `object_cap`; `Formats/CasFormat.cpp:93-108` (traits caps), `CasRecordStreamFormat.cpp` etc.	codeonly-line
+CAS-027	Med	🔴 still-present	`Formats/CasPartManifestFormat.cpp:145-152` (`skipUnknown` + decode-to-struct → additive fields dropped on re-encode)	codeonly-line
+CAS-028	Med	✅ fixed	`Formats/CasRecordStreamFormat.cpp:228-304` (`readLine` + `JsonObjectReader`, bounded record parse)	codeonly-line
+CAS-030	Med	🔴 still-present	`Pool/CasServerRoot.cpp:217,276`	codeonly-line
+CAS-031	Med	🔴 still-present	`Pool/CasPartWriteTxn.cpp:781-796`; receiver at `ContentAddressedMetadataStorage.cpp:2143-2221`	codeonly-line
+CAS-032	Med	🔴 still-present	`Gc/CasGc.cpp:2989-3003`	codeonly-line
+CAS-022	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1200-1287`	codeonly-line
+CAS-039	Med	✅ fixed	`Formats/CasBlobEnvelopeFormat.cpp` — no `logical_size` field remains	codeonly-line
+CAS-066	Low	🔴 still-present	`Pool/CasPoolMeta.cpp:117-124`	codeonly-line
+CAS-073	Low	🔴 still-present	`Parts/PartPathParser.cpp:136-168`	codeonly-line
+CAS-074	Low	🔴 still-present	`Formats/CasLayout.cpp:260-284` + `CasLayout.h:229-235` (`mountpointObjectKey`)	codeonly-line
+CAS-075	Low	✅ fixed	Envelope rewritten as text/JSON with pad-zone enforcement `CasBlobEnvelopeFormat.cpp:230-248`	codeonly-line
+CAS-076	Low	🔴 still-present	`Formats/CasFormat.cpp:112-118` (`traitsFor` throws for `FormatId::Roster`)	codeonly-line
+CAS-077	Low	🔴 still-present (partial)	`Formats/CasFoldSealFormat.cpp:189` (`cls` uint8 truncation cast); `tt` half fixed via `tokenTypeFromWord`	codeonly-line
+CAS-078	Low	🔴 still-present (scoped by call site)	`Backend/CasProbe.cpp:61-67`; call-site at `ContentAddressedMetadataStorage.cpp:788`	codeonly-line
+CAS-079	Low	🔴 still-present (documented by-design)	`Backend/CasObjectStorageBackend.cpp:599-636`	codeonly-line
+CAS-011	Low/Med	🔴 still-present	`Backend/CasObjectStorageBackend.cpp:55-84`	codeonly-line
+CAS-080	Low	🔴 still-present	`Pool/CasServerRoot.cpp:245-251,266-276`	codeonly-line
+CAS-096	Low	🔴 still-present	`ContentAddressedTransaction.cpp:875,959,1750` (no PID/counter)	codeonly-line
+CAS-099	Low	🔴 still-present (now admission-gated)	`ContentAddressedTransaction.cpp:1180-1186`	codeonly-line
+CAS-111	Low	✅ fixed	`ContentAddressedTransaction.cpp:1509-1601` (`content_removed` mark resolved at publish)	codeonly-line
+CAS-112	Low	🔴 still-present	`ContentAddressedTransaction.cpp:531-533,1188-1191` (`notYet("generateObjectKeyForPath"/"chmod")`)	codeonly-line
+CAS-115	Low	✅ fixed	`Formats/CasPartManifestFormat.cpp:257-267` (adjacent-only proven sufficient with worked-forgery comment)	codeonly-line
+CAS-023	Med	✅ fixed	`Pool/CasMountRuntime.cpp:431-471` (`scheduleRemount` + `remount_shutting_down`); `:486-501` (`stopRemountThread`); `Pool/CasPool.cpp:778-805` (`~Pool` order)	concurrency
+CAS-090	Low (latent)	📐 by-design (latent, unenforced)	`Pool/CasMountRuntime.h:400`; `Pool/CasMountRuntime.cpp:156-163` (`renewWatermarkOnce` unlocked); `:226-249` (reassign under `Pool::remount_mutex` only)	concurrency
+CAS-091	Low (latent)	✅ fixed by construction (ordering); residual contract-enforced race called out as NEW-concurrency-1	`Pool/CasPool.cpp:441-461` (setEventSink before `mountWritable`); `Pool/CasEventDispatcher.cpp:37-42` (residual)	concurrency
+CAS-092	Low (growth)	✅ fixed (structure removed)	Workspace grep `shard_write_seq` = 0 hits; `Pool/CasManifestReader.cpp:37-40` (LRU replacement)	concurrency
+CAS-007	High	🔴 still-present	`src/Storages/MergeTree/UniqueKey/DeleteBitmapFileOps.cpp` + `tests/queries/0_stateless/04294_content_addressed_patch_parts.sh:12` (test explicitly excludes UNIQUE KEY)	coverage-map
+CAS-061	Med (feature-gap)	🔴 still-present	zero `content_addressed` × `text/GIN/vector` test matches in `tests/queries/0_stateless`	coverage-map
+CAS-041	Med	🔴 still-present	`tests/queries/0_stateless/04280_content_addressed_clone_partition_works.sql` (same-disk only); `src/Storages/MergeTree/DataPartStorageOnDiskBase.cpp:735` byte-copy path untested cross-disk	coverage-map
+CAS-055	Med (config)	🔴 still-present	no `isContentAddressed()` gate in `src/Storages/StorageLog.cpp` / `StorageStripeLog.cpp` / `StorageDistributed.cpp` / `registerStorages.cpp` / `Interpreters/**` / `Dictionaries/SSDCacheDictionaryStorage.cpp`; no test attempts these engines on CAS	coverage-map
+CAS-109	Low–Med (perf / test-gap)	🔴 still-present	no `*content_addressed*` test references `system.query_log` / `part_log`, `EXCHANGE TABLES`, `clickhouse-disks`, or cache/web disk over CAS	coverage-map
+CAS-105	Med (feature-gap)	🔴 still-present	`05005_content_addressed_backup_restore.sh` / `04284_content_addressed_backup_pointer_holding.sh` do not cover Packed storage-type parts on RESTORE	coverage-map
+CAS-020	Med	✅ fixed	`Pool/CasRefProtocol.cpp:262-265`, `Parts/PartFolderAccess.cpp:520-529`	crash-consistency
+CAS-021	Low–Med	🔴 still-present	`ContentAddressedTransaction.cpp:458-513`	crash-consistency
+CAS-022	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1200-1249`	crash-consistency
+CAS-035	Med	🔴 still-present (mitigated at call sites via `dropRefIfPresent`)	`Pool/CasRefLedger.cpp:2811-2814`	crash-consistency
+CAS-038	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1749-1765,1819-1847`; `Pool/CasPartWriteTxn.cpp:598-602`	crash-consistency
+CAS-044	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1032-1074`; `Pool/CasRefLedger.cpp:2979-2982`	crash-consistency
+CAS-072	Low	🔴 still-present (fsck backstop, by-design)	`Gc/CasGc.cpp:793-833`	crash-consistency
+CAS-096	Low	🔴 still-present	`ContentAddressedTransaction.cpp:1749-1750,957-963`	crash-consistency
+CAS-104	Low	🔴 still-present (by-design bounded impact)	`ContentAddressedTransaction.cpp:809-836`	crash-consistency
+CAS-202		verified / N-A (positive finding)	`Formats/CasPartManifestFormat.h:50-65`, `Formats/CasLayout.cpp:34-37`; zero `#include DataTypes/**` across CAS tree	datatype-agnosticism
+CAS-107		info	`Formats/CasPartManifestFormat.h` (framing)	datatype-agnosticism
+CAS-046	High (nullifies CAS dedup)	🔴 still-present	`src/Disks/DiskEncrypted.cpp` (per-file random IV) + no CAS-side determinism / no guard in `MetadataStorages/MetadataStorageFactory.cpp`	encryption
+CAS-113		Info–Med (metadata leakage)	`ContentAddressed/Backend/CasObjectStorageBackend.cpp` control-plane writes bypass the wrapping IDisk	encryption
+CAS-113	Med (untested composition, no guard)	🔴 still-present	0 hits for `DiskEncrypted` in `ContentAddressed/**`; 0 CAS+encryption tests in `src/Disks/tests/`; no guard in `MetadataStorages/MetadataStorageFactory.cpp`	encryption
+CAS-113	Low (no cross-replica local-write dedup)	🔴 still-present	Consequence of E-1; same anchor	encryption
+CAS-204		none (info, by-design)	`ContentAddressed/Backend/CasObjectStorageBackend.cpp` uses `IObjectStorage` transparently; SSE is applied by the underlying `S3ObjectStorage`	encryption
+CAS-011	High	✅ mostly-fixed → NEW-1	`Backend/CasObjectStorageBackend.cpp:60-84`; `Gc/CasGc.cpp:517-521`; `Backend/CasProbe.cpp:215-225`	gc-protocol
+CAS-014	High	✅ fixed	`Storages/System/StorageSystemContentAddressedMounts.cpp:52-55`; `Gc/CasGcScheduler.cpp:379-394`	gc-protocol
+CAS-032	Med (LIVENESS)	🔴 still-present (attenuated)	`Gc/CasGc.cpp:2989-3003`; `Gc/CasGc.cpp:3057-3068`; `Gc/CasGcScheduler.cpp:366`	gc-protocol
+CAS-033	Med (LIVENESS)	🔴 still-present	`Gc/CasGc.cpp:1833-1842`; `Gc/CasGc.cpp:2079-2080`; `Gc/CasGc.cpp:2170-2171`	gc-protocol
+CAS-044	Med (LEAK)	🔴 still-present	`Pool/CasRefLedger.cpp:2890-2984`; no reconciler in `Gc/**`	gc-protocol
+CAS-085	Low	✅ fixed	`Pool/CasRefLedger.cpp:174-179`	gc-protocol
+CAS-088	Low	📐 by-design	`Gc/CasGc.cpp:2488-2903` (rebuild is the recovery); `CasGcScheduler.cpp:254-278`	gc-protocol
+CAS-089	Low (PERF)	🔴 still-present	`Gc/CasGc.cpp:1362, 1582, 1880-1882` (regular round intake not streamed)	gc-protocol
+CAS-092	Low (LEAK)	✅ fixed	tree-wide grep: no `shard_write_seq` remains; snapshot+log ref model replaces it	gc-protocol
+CAS-106	Low (CONFIG)	📐 by-design	`Pool/CasPool.h:84,90-99,103`	gc-protocol
+CAS-108	Low (DAY2)	🔴 still-present	`Gc/CasGc.cpp:2570-2594, 2861, 2874-2879, 2338-2367`	gc-protocol
+CAS-015	High (DATA-LOSS)	🔴 still-present; **worsened** by new SYSTEM path → see NEW-GCR-A	`CasGc.cpp:2488–2568`; `ContentAddressedMetadataStorage.cpp:621–655`; `CommandCaGcRebuild.cpp:54`	gc-rebuild-feature
+CAS-050	Med (PERF/SCALE)	🔴 still-present, unmitigated	`CasGc.cpp:2749–2770`; `discoverUniverse()` duplicated at `:2517` and `:2648`	gc-rebuild-feature
+CAS-108	DAY2 / LEAK	🟡 mixed: DoS/fan-out ✅ closed at SYSTEM parser; interrupted-rebuild `gc/gen` debris 🔴 still-present	Parser: `ParserSystemQuery.cpp:479–486`; interpreter backstop `InterpreterSystemQuery.cpp:2489–2494`; debris path: `CasGc.cpp:2570–2592, 2789, 2861, 2874`	gc-rebuild-feature
+CAS-206		Info (safe)	`CasGc.cpp:2549` (only healthy gate); refusals at `:2565, :2681, :2874` unconditional	gc-rebuild-feature
+CAS-021	Low–Med	🔴 still-present	`ContentAddressedTransaction.cpp:435-520`	idisk-contract
+CAS-022	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1200-1249`	idisk-contract
+CAS-048	Low (rated Med under CAS-048)	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1565-1595`	idisk-contract
+CAS-111	Low–Med	✅ fixed	`ContentAddressedTransaction.cpp:1509-1568`	idisk-contract
+CAS-112	Low (latent)	🔴 still-present (capability probe added)	`ContentAddressedTransaction.cpp:1188`; `ContentAddressedMetadataStorage.h:228`	idisk-contract
+CAS-112	Low (latent)	🔴 still-present	`ContentAddressedTransaction.cpp:531-534`	idisk-contract
+CAS-116	Low (Perf)	✅ fixed	`Formats/CasPartManifestFormat.cpp:329-351`; `Parts/PartFolderAccess.cpp:85-134`	idisk-contract
+CAS-001	High (DATA-LOSS)	🔴 still-present	`Parts/PartFolderAccess.cpp:270,295`; `Gc/CasGc.cpp:367`	interleaving
+CAS-002	High (SECURITY/CORRECTNESS)	🟡 mitigated (deadline+generation), still-present in strong form	`Pool/CasMountRuntime.cpp:81-142`; `Backend/CasRequestControl.cpp:225-611`; `Gc/CasGc.cpp:3002,3026,3043`	interleaving
+CAS-020	Med (LEAK)	✅ fixed (ref-plane path)	`Pool/CasRefProtocol.cpp:201-203,262-265`	interleaving
+CAS-078	Low (CORRECTNESS)	🔴 still-present (latent, unreachable via `Store::open`)	`Pool/CasPool.cpp:416`; `Backend/CasProbe.h`	interleaving
+CAS-079	Low (CORRECTNESS)	🔴 still-present (latent contract; no reachable pairing)	`Backend/CasBackend.h:210`; `Gc/CasGc.cpp:2764-2769`	interleaving
+CAS-085	Med (CORRECTNESS)	✅ fixed (single-mount authoritative)	`Pool/CasRefLedger.cpp:174-181`	interleaving
+CAS-001	Med-High	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1886, 1923`	jepsen-anomaly
+CAS-002	High	🔴 still-present (narrower)	`Backend/CasRequestControl.cpp:299-368`, `Pool/CasRefLedger.cpp:145-165`	jepsen-anomaly
+CAS-020	Med	✅ fixed	`Pool/CasRefLedger.cpp:2925-2933` (`OwnerTransition` with `old_binding`)	jepsen-anomaly
+CAS-029	Med	🔴 still-present (bounded further by boot-clock)	`Pool/CasServerRoot.cpp:806-830`, `Pool/CasMountRuntime.cpp:133`	jepsen-anomaly
+CAS-030	Med	✅ fixed (local-fence side)	`Pool/CasMountRuntime.cpp:61-84`	jepsen-anomaly
+CAS-035	Med	✅ fixed for `dropRef`	`Pool/CasRefLedger.cpp:2810-2820`, `:1398`	jepsen-anomaly
+CAS-045	Med	🔴 still-present	out-of-CAS (RMT integration)	jepsen-anomaly
+CAS-051	Med	🔴 still-present	out-of-CAS (S3 backend)	jepsen-anomaly
+CAS-007	FEATURE-GAP / PERF	🚫 not-a-bug (fenced upstream: UNIQUE KEY blocked on non-local disks)	`src/Storages/MergeTree/MergeTreeData.cpp:4523-4531`, `:7340-7345`	mergetree-part-support
+CAS-041	FEATURE-GAP / PERF	🔴 still-present (unverified)	`src/Storages/MergeTree/MergeTreeData.cpp:6740-6763`	mergetree-part-support
+CAS-042	FEATURE-GAP	🔴 still-present	`src/Storages/MergeTree/DataPartStorageOnDiskBase.cpp:422-427`	mergetree-part-support
+CAS-055	CONFIG / FEATURE-GAP	🔴 still-present (no engine/tmp/dict DDL gate)	`src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/ContentAddressedTransaction.cpp:531-534, 1188-1191, 1603-1607`	mergetree-part-support
+CAS-073	DECODE / STRUCTURAL	🔴 still-present (Ordinary-DB grammar heuristic)	`src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/Parts/PartPathParser.cpp:136-168`	mergetree-part-support
+CAS-105	TEST-GAP / FEATURE-GAP	🔴 still-present (Packed on RESTORE/ATTACH)	`src/Storages/MergeTree/MergeTreeData.cpp:5147-5168`, `:7588-7591`	mergetree-part-support
+CAS-110	PERF / TEST-GAP	✅ fixed (FETCH-to-detached now relinks)	`src/Storages/MergeTree/DataPartsExchange.cpp:700-704, 1388-1449`	mergetree-part-support
+CAS-111	CORRECTNESS	✅ fixed (unlink now stages content_removed)	`src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/ContentAddressedTransaction.cpp:1509-1569`	mergetree-part-support
+CAS-203		INFO	`PartPathParser.{h,cpp}`, `PartFolderAccess.cpp:73-80`, `DataPartsExchange.cpp:1388-`, `MergeTreeData.cpp:5167, 6744-6756`	mergetree-part-support
+CAS-006	Med (Liveness/Perf)	🔴 still-present	`ContentAddressedTransaction.cpp:435, 485-500`; `:480-484` "serially"	performance
+CAS-049	Med (Perf/Scale)	🟡 mitigated, residual cliff	`Pool/CasManifestReader.cpp:37-40` (bytes+count LRU; count cap = fixed 16384)	performance
+CAS-050	Med (Perf/Scale)	🔴 still-present	`Gc/CasGc.cpp:2756-2769` per-blob synchronous HEAD; `:2776-2777` "no bounded-pool async"	performance
+CAS-053	Med (Liveness)	🔴 still-present	`Backend/CasRequestControl.cpp:46-56` lumps 429/5xx with `PreconditionFailed`	performance
+CAS-083	Med (Liveness)	🔴 still-present	`Pool/CasRefLedger.cpp:1131-1206` leader convoy + batch-wide failure	performance
+CAS-086	Low (Perf)	🟡 mitigated at view layer, reader-level unchanged	`Pool/CasManifestReader.cpp:63-92`; `Parts/PartFolderAccess.h:381-389` (view single-flight)	performance
+CAS-089	Med (Perf/Scale)	🔴 still-present	`Gc/CasGc.cpp:1362, 2599` full `vector<BlobDelta>` materialized before flush	performance
+CAS-100	Med (Scale)	🔴 still-present	`Pool/CasPool.h:173-183` bounded per-table backoff; no per-tenant quota anywhere	performance
+CAS-109	Med (Perf)	🔴 still-present	no CAS-side gating for `SystemLog`; standard write path per flush	performance
+CAS-116	Med (Perf/Scale)	✅ fixed	`Formats/CasPartManifestFormat.cpp:329-336, 338-351` `std::lower_bound`	performance
+CAS-001	Med-High	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1886-1932`; `Pool/CasManifestReader.cpp:144-168`	read-protocol
+CAS-005	High	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1923-1933`; `Pool/CasPartWriteTxn.cpp:77`	read-protocol
+CAS-024	Med	🔴 still-present (📐 defused by mount-time pool-meta identity check)	`Pool/CasManifestReader.cpp:151-160`; `Formats/CasPoolMetaFormat.cpp:38-46`; `Pool/CasPool.cpp:118-125`	read-protocol
+CAS-034	Med	🔴 still-present	`Parts/PartFolderAccess.cpp:264-303`	read-protocol
+CAS-049	Med (perf)	✅ fixed	`Pool/CasManifestReader.cpp:37-40` (LRU `CacheBase`, `max_count=16384`, per-entry eviction)	read-protocol
+CAS-085	Low	✅ fixed (retired by design)	`Pool/CasRefLedger.cpp:174-181` (`allow_stale` no-op)	read-protocol
+CAS-086	Low	🔴 still-present (partly masked by CAS-034 single-flight on `CachedForLoad`)	`Pool/CasManifestReader.cpp:56-137`	read-protocol
+CAS-087	Low	✅ fixed for owning mount (out-of-scope for cross-node under CAS-058)	`Pool/CasRefLedger.cpp:174-181`	read-protocol
+CAS-095	Med	🔴 still-present (structural trust, EOF-guarded downstream)	`ContentAddressedMetadataStorage.cpp:1909-1918`; `Pool/CasManifestReader.cpp:156-160`	read-protocol
+CAS-098	Test-gap	⚪ info (code correct; explicit coverage still absent)	`Parts/PartFolderAccess.cpp:85-108`; `ContentAddressedMetadataStorage.cpp:1826-1830`; `Pool/CasManifestReader.cpp:149-165`	read-protocol
+CAS-002	High	🟡 mitigated (in-process fence-generation gate; store-side CAS still ETag-only)	`Pool/CasPlainObjects.cpp:21-57`, `Pool/CasMountRuntime.{h,cpp}`, `Pool/CasPartWriteTxn.cpp:676-747`	security
+CAS-003	High	✅ largely fixed (pluggable `sha256` / `xxh3-128` / `cityhash128`; algo pinned per-blob)	`Primitives/CasBlobDigest.{h,cpp}`, `Primitives/CasBlobHashingWriteBuffer.cpp:201-218`	security
+CAS-004	High	🔴 still-present · 📐 by-design (architectural)	`Pool/CasServerRoot.h:305-329`; single-credential bucket assumption pool-wide	security
+CAS-026	Med	✅ fixed (protobuf removed; text formats with fail-closed per-format decompressed caps)	`Formats/README.md:9-13`, `Formats/CasFormat.cpp:93-109`	security
+CAS-030	Med	✅ largely fixed (wall-clock never trusted; observation-based reclaim on monotonic clock)	`Pool/CasServerRoot.h:305-421`, `Pool/CasServerRoot.cpp:376-421`	security
+CAS-074	Low	🔴 still-present (mountpoint + `checkNamespace` don't reject `..`/`.`)	`Formats/CasLayout.cpp:260-284`, `Formats/CasLayout.h:229-235`	security
+CAS-211		Info	`Formats/CasBlobEnvelopeFormat.h:35-44`	security
+CAS-010	High	🔴 still-present	`src/Disks/fuzzers/` absent; no `LLVMFuzzerTestOneInput` for envelope / run-file / manifest / root-shard / gc-formats / pool-meta in `src/`. Only unit tests: `src/Disks/tests/gtest_cas_envelope.cpp`, `gtest_cas_blob_envelope_format.cpp`, `gtest_cas_part_manifest_format.cpp`, `gtest_cas_gc_state_format.cpp`, `gtest_cas_gc_outcomes_format.cpp`, `gtest_cas_fold_seal_format.cpp`, `gtest_cas_record_stream_format.cpp`, `gtest_cas_server_root_format.cpp`, `gtest_cas_ref_decode_bounds.cpp`.	test-coverage-fuzzing
+CAS-012	High	🔴 still-present	Only mock: `src/Disks/tests/gtest_cas_backend_generation.cpp`, `gtest_cas_backend_contract.cpp`. No `conditional`/`IfNoneMatch` string in `tests/integration/test_cas*/*.py` or `test_content_addressed_*/*.py`. No GCS integration test file.	test-coverage-fuzzing
+CAS-098	Med	🔴 still-present	`src/Disks/tests/gtest_cas_part_write.cpp` is the only file mentioning `wide_part`; no dedicated wide/compact/packed read-branch gtest; stateless tests do not toggle `min_bytes_for_wide_part`.	test-coverage-fuzzing
+CAS-103	Med	🔴 still-present	No `MOVE PART`/`MOVE PARTITION` grep hits in `tests/integration/test_c*a*s*/**` or `tests/queries/0_stateless/*content_addressed*` (only `04280_content_addressed_clone_partition_works.sql`, which does CLONE, not MOVE). No `ca-soak` MOVE scenario.	test-coverage-fuzzing
+CAS-105	Med	🔴 still-present	`tests/queries/0_stateless/05005_content_addressed_backup_restore.sh` — no `Packed`/`packed` inside. `04284_content_addressed_backup_pointer_holding.sh` — pointer-holding only. No RESTORE + packed-placement crossover test.	test-coverage-fuzzing
+CAS-110	Med	🟡 partial-fix	SYNC REPLICA covered (`tests/integration/test_cas_replicated_relink/test.py` lines 284, 309, 313, 318, 355, 519, 551, 557, 616, 684, 798, 868). Quorum + cloneReplica still uncovered (`rg 'quorum\	test-coverage-fuzzing
+CAS-117	Med	🔴 still-present	`04294_content_addressed_patch_parts.sh:75` and `04293_content_addressed_lightweight_delete.sh` use FINAL single-node; `test_cas_replicated_relink/test.py:312, 758` uses FINAL replicated. No FINAL-under-concurrent-merge, no `parallel_replicas` on CAS, no patch-apply-vs-GC race test.	test-coverage-fuzzing
+CAS-041	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1119` (`createHardLink` requires two part-file paths; no cross-disk relink hook)	tier3
+CAS-043	Med	🔴 still-present	`Gc/CasGc.cpp:1963` (deferred `mf_cleanup`; LC-1 reclaim model)	tier3
+CAS-103	Low	🔴 still-present	`ContentAddressedMetadataStorage.cpp:1793`/`:1830` (no reader pin); `Gc/CasGc.cpp` grep — no reader-pin API	tier3
+CAS-103	TIER-4 (`move_factor` inert on CAS source)	Info	absence in `.../ContentAddressed/` — no `IReservation`/`getAvailableSpace` override	tier3
+CAS-042	Med	🔴 still-present	`MergeTree/DataPartStorageOnDiskBase.cpp:417-427`	tier4
+CAS-105	Low–Med	🔴 still-present	`MergeTree/MergeTreeData.cpp:5147-5168` + no CAS BACKUP/RESTORE test	tier4
+CAS-109	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1200-1249` + `Tools/*` + no integration test	tier4
+CAS-110	Low	✅ fixed	`DataPartsExchange.cpp:697-704, 944` + `ContentAddressedExchange.h:50, 206-208`	tier4
+CAS-002	High (SEC/CORR)	✅ fidelity fixed	`CaCasMountCore.tla:838-852`, `CaErasureProof.tla:12-30,124,209,256-305`, `Pool/CasMountRuntime.cpp:81-142`, `Pool/CasPlainObjects.cpp:38-88`, `ContentAddressedTransaction.cpp:884-902`	tla-fidelity
+CAS-030	Med (CORR/SEC)	🟡 partially closed	`CaCasMountCore.tla:22,55,86-99,127,235`; `Pool/CasMountRuntime.cpp:61-85`; residual: `Pool/CasServerRoot.cpp:217,539-…`	tla-fidelity
+CAS-205		Info (verified core)	30+ specs under `docs/superpowers/models/` incl. new `CaErasureProof`, `CaDiskLifecycle`, `CaRelinkConfirmCore`, etc.	tla-fidelity
+CAS-009	High (latent)	🔴 still-present (worsened: no longer latent, `G_BUILD` moved 1→3)	`Formats/CasFormat.cpp:57-62`; `Formats/CasFormat.cpp:22, 26-48`; `Formats/CasTextFormat.cpp:260-269`; `Pool/CasPoolMeta.cpp:88, 147`	upgrade-compat
+CAS-027	High (COMPAT / DATA-LOSS)	🔴 still-present, acknowledged by-design (protobuf gone; JSON tolerant-key skip has the same semantics)	`Formats/CasTextFormat.cpp:245-256`; `Formats/README.md:47-49`	upgrade-compat
+CAS-037	Med (INTEGRITY/COMPAT)	✅ fixed — algo pinned in PoolMeta with explicit `allow_new` opt-in	`Formats/CasPoolMetaFormat.h:29-31`; `Pool/CasPoolMeta.cpp:75-102, 144-160`	upgrade-compat
+CAS-054	Low-Med (COMPAT)	✅ fixed — `kTokenVersion = "car1"` strict version-tag gate + fixed field count	`ContentAddressedExchange.cpp:11-17, 152-153`	upgrade-compat
+CAS-107	Low (COMPAT)	🔴 still-present, scope-reduced (wire codec now explicit BE; only CityHash-across-endianness risk remains)	`Primitives/CasCodecUtil.h:22-45`; `Primitives/CasBlobDigest.h:59, 76-86, 155-179`; `Gc/CasGcShardPlan.h:38-41`	upgrade-compat
+CAS-107		Info (COMPAT)	🔴 still-present, harmless — `v` in header stamps `G_BUILD` into hashed bytes	upgrade-compat
+CAS-209		Info/by-design	`ContentAddressedExchange.h:140-146`; `Formats/CasFormat.cpp:64-70`	upgrade-compat
+CAS-212		Info/Low	`Formats/CasFormat.h:38-68`; `src/Disks/tests/gtest_cas_text_format.cpp:39-58`	upgrade-compat
+CAS-020	Med-High	✅ fixed	`Pool/CasPartWriteTxn.cpp:1184–1229` (BUG-1a `allow_repoint` retires old binding); `Parts/PartFolderAccess.cpp:506–534` (`republishRef` rejects different-content dst)	write-protocol
+CAS-002	High	🔴 still-present	`Pool/CasPlainObjects.cpp:43,51` (fence-check outside atomic PUT; token=content ETag, not `writer_epoch`)	write-protocol
+CAS-008	High	↗ split-out	`Formats/CasRefLogFormat.h:74` (64 MiB removal-class cap still exists; churn-availability piece decoupled via per-ns ref-log + snapshot publish)	write-protocol
+CAS-021	Med	🔴 still-present	`ContentAddressedTransaction.cpp:494–513` (serial `publishStaging` + best-effort `dropRefIfMatches`)	write-protocol
+CAS-035	Med	🔴 still-present	`Pool/CasRefLedger.cpp:2810–2814` (`dropRef` throws `FILE_DOESNT_EXIST` on absent committed ref); `:2853–2856` (same in `updateRefPublishedAt`)	write-protocol
+CAS-038	Med	🔴 still-present	`ContentAddressedTransaction.cpp:1819–1846` (no `fsync`; no re-hash of on-disk bytes before upload)	write-protocol
+CAS-039	Med	✅ fixed	`Formats/CasBlobEnvelopeFormat.cpp` (v3 drops `logical_size`; `header_len` derived from `'\n'` position, no overflow surface)	write-protocol
+CAS-081	Low	✅ fixed	`Pool/CasPartWriteTxn.cpp:1354–1413` (`abandon` appends precommit-removal, THEN flips `alive`, THEN retires seq; ordering documented at 1407–1412)	write-protocol
+CAS-082	Low	🔴 still-present	`Pool/CasRefLedger.cpp:1842–1861` (idempotent no-op tolerated but retried ops still appended to journal)	write-protocol
+CAS-083	Med	🔴 still-present	`Pool/CasRefLedger.cpp` `flushRefBatch`/`commitRefChunk` (single-leader per-ns batch model unchanged)	write-protocol
+CAS-084	Low	🔴 still-present	zero `abortMultipartUpload` calls under `MetadataStorages/ContentAddressed/**`	write-protocol
+CAS-097	Low	📐 by-design	`ContentAddressedTransaction.cpp:466–472` (comment explicitly documents no-rollback for one-shots)	write-protocol
