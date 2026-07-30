@@ -826,6 +826,9 @@ def outline(self):
 @TestFeature
 def ssec_encryption_check(self):
     """Check that S3 encrypts files when SSEC option is enabled."""
+    if self.context.storage == "hetzner":
+        skip("SSE-C (customer-provided keys) not supported on Hetzner S3")
+
     node = current().context.node
     name = f"table_{getuid()}"
 
@@ -911,6 +914,8 @@ def ssec_encryption_check(self):
 @Name("ssec")
 def ssec(self):
     """Check S3 table function with SSEC option enabled."""
+    if self.context.storage == "hetzner":
+        skip("SSE-C (customer-provided keys) not supported on Hetzner S3")
 
     with Given("I define S3 SSEC option"):
         add_ssec_s3_option()

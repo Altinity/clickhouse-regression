@@ -70,7 +70,11 @@ on:
         description: "Artifact S3 bucket"
         type: choice
         options:
+          - hetzner
           - internal
+          - public
+          - builds
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice
@@ -103,6 +107,10 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+  HETZNER_S3_BUCKET: ${{ vars.HETZNER_S3_BUCKET }}
+  HETZNER_S3_REGION: ${{ vars.HETZNER_S3_REGION }}
+  HETZNER_S3_KEY_ID: ${{ secrets.HETZNER_S3_KEY_ID }}
+  HETZNER_S3_ACCESS_KEY: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}

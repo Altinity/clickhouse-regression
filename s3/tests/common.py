@@ -2,6 +2,7 @@ import os
 import base64
 import tempfile
 from contextlib import contextmanager
+from urllib.parse import urlparse
 
 from minio import Minio
 from testflows.connect import Shell
@@ -11,6 +12,28 @@ from helpers.common import *
 from helpers.queries import sync_replica, get_row_count
 
 Config = namedtuple("Config", "content path name uid preprocessed_name")
+
+
+def parse_s3_uri(uri):
+    """Return endpoint URL, bucket, and prefix from a path-style S3 URI."""
+    parsed = urlparse(uri)
+    path = parsed.path.strip("/")
+    bucket, _, prefix = path.partition("/")
+
+    if not bucket:
+        raise ValueError(f"Could not parse bucket from S3 URI: {uri}")
+
+    endpoint_url = f"{parsed.scheme}://{parsed.netloc}"
+    return endpoint_url, bucket, prefix
+
+
+def join_s3_key(*parts):
+    """Join S3 key segments without introducing duplicate slashes."""
+    return "/".join(
+        str(part).strip("/")
+        for part in parts
+        if part is not None and str(part).strip("/") != ""
+    )
 
 
 def add_config(
@@ -872,12 +895,14 @@ def get_bucket_size(
             self.context, "minio_enabled", False
         )
 
+    normalized_prefix = join_s3_key(prefix)
+
     if minio_enabled:
         with By("querying with minio client"):
             minio_client = self.context.cluster.minio_client
 
             objects = minio_client.list_objects(
-                bucket_name=name, prefix=prefix, recursive=True
+                bucket_name=name, prefix=normalized_prefix, recursive=True
             )
             return sum(obj._size for obj in objects)
 
@@ -886,9 +911,17 @@ def get_bucket_size(
 
         if self.context.storage == "gcs":
             aws = f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} aws --endpoint-url=https://storage.googleapis.com/"
+        elif self.context.storage == "hetzner":
+            # Creds come from aws container env; do not inline into logged commands.
+            s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+            if s3_endpoint_url:
+                aws = f"aws --endpoint-url={s3_endpoint_url}"
 
+        s3_path = (
+            f"s3://{name}/{normalized_prefix}" if normalized_prefix else f"s3://{name}"
+        )
         cmd = (
-            f"{aws} s3 ls s3://{name}/{prefix} --recursive --summarize | "
+            f"{aws} s3 ls {s3_path} --recursive --summarize | "
             "grep -Po --color=never '(?<=Total Size: )(.+)'"
         )
         result = self.context.cluster.command("aws", cmd, steps=False, no_checks=True)
@@ -1160,6 +1193,17 @@ def cleanup(self, storage="minio", disk="external", s3_path=None):
             f"aws s3 rm s3://{self.context.bucket_name}/data/{s3_path} --recursive",
         )
 
+    if storage == "hetzner" and s3_path is not None:
+        # Creds come from the aws container env (cluster.environ / aws-client.yml).
+        # Do not inline secrets into the command — they are logged into raw.log.
+        s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+        bucket_prefix = getattr(self.context, "bucket_prefix", None)
+        s3_key = join_s3_key(bucket_prefix, s3_path)
+        cmd = f"aws s3 rm s3://{self.context.bucket_name}/{s3_key} --recursive"
+        if s3_endpoint_url:
+            cmd += f" --endpoint-url {s3_endpoint_url}"
+        current().context.cluster.command("aws", cmd)
+
 
 @TestStep(Given)
 def aws_s3_setup_second_bucket(self, region, bucket):
@@ -1191,6 +1235,7 @@ def temporary_bucket_path(
     secret_access_key=None,
     storage=None,
     aws_region=None,
+    s3_endpoint_url=None,
 ):
     """
     Return a temporary bucket sub-path which will be cleaned up.
@@ -1217,6 +1262,7 @@ def temporary_bucket_path(
         "minio",
         "aws_s3",
         "gcs",
+        "hetzner",
     ], f"Unsupported storage: {storage}"
 
     if bucket_name is None:
@@ -1224,11 +1270,17 @@ def temporary_bucket_path(
 
     if bucket_prefix is None:
         bucket_prefix = self.context.bucket_prefix
+    bucket_prefix = (bucket_prefix or "").strip("/")
 
     if access_key_id is None:
         access_key_id = self.context.access_key_id
     if secret_access_key is None:
         secret_access_key = self.context.secret_access_key
+
+    if storage == "hetzner" and s3_endpoint_url is None:
+        s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+    if storage == "hetzner" and aws_region is None:
+        aws_region = getattr(self.context, "region", None)
 
     try:
         with When("I create a temporary bucket path"):
@@ -1237,24 +1289,30 @@ def temporary_bucket_path(
 
     finally:
         with Finally("remove the temporary bucket path"):
+            temp_key_prefix = join_s3_key(bucket_prefix, temp_path)
             if storage == "minio":
                 minio_client = self.context.cluster.minio_client
                 for obj in list(minio_client.list_objects(bucket_name, recursive=True)):
                     if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
                         continue
-                    if obj.object_name.startswith(f"{bucket_prefix}/{temp_path}"):
+                    if obj.object_name.startswith(temp_key_prefix):
                         minio_client.remove_object(bucket_name, obj.object_name)
 
-            elif storage == "aws_s3":
+            elif storage in ("aws_s3", "hetzner"):
                 cluster = current().context.cluster
 
-                cmd = f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                cmd = f"aws s3 rm s3://{bucket_name}/{temp_key_prefix} --recursive"
                 if aws_region:
                     cmd += f" --region {aws_region}"
-                if secret_access_key:
-                    cmd = f"AWS_SECRET_ACCESS_KEY={secret_access_key} {cmd}"
-                if access_key_id:
-                    cmd = f"AWS_ACCESS_KEY_ID={access_key_id} {cmd}"
+                if s3_endpoint_url:
+                    cmd += f" --endpoint-url {s3_endpoint_url}"
+                # Hetzner: prefer aws container env (avoids secrets in raw.log).
+                # aws_s3 keeps explicit env prefix for backward compatibility.
+                if storage == "aws_s3":
+                    if secret_access_key:
+                        cmd = f"AWS_SECRET_ACCESS_KEY={secret_access_key} {cmd}"
+                    if access_key_id:
+                        cmd = f"AWS_ACCESS_KEY_ID={access_key_id} {cmd}"
 
                 cluster.command("aws", cmd)
 

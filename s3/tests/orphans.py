@@ -326,6 +326,10 @@ def remove_orphans(self):
         aws = "aws"
         if self.context.storage == "minio":
             aws = f"aws --endpoint-url http://minio1:9001"
+        elif self.context.storage == "hetzner":
+            s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+            if s3_endpoint_url:
+                aws = f"aws --endpoint-url {s3_endpoint_url}"
 
         node.query(
             generate_orphan_rm_commands.format(
@@ -334,10 +338,16 @@ def remove_orphans(self):
         )
 
     with Then("I execute the rm commands"):
-        self.context.cluster.command(
-            "aws",
-            f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} bash -x /share/rm_commands.tsv",
-        )
+        # Hetzner: use aws container env (do not inline secrets into logged commands).
+        if self.context.storage == "hetzner":
+            rm_cmd = "bash -x /share/rm_commands.tsv"
+        else:
+            rm_cmd = (
+                f"AWS_ACCESS_KEY_ID={self.context.access_key_id} "
+                f"AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} "
+                f"bash -x /share/rm_commands.tsv"
+            )
+        self.context.cluster.command("aws", rm_cmd)
 
     with Then("I check for orphans"):
         assert not check_orphans()

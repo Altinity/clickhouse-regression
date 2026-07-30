@@ -87,24 +87,43 @@ fi
 echo "::endgroup::"
 
 echo "::group::Generate upload paths..."
-if [[ $artifacts == 'internal' ]]; then
-  artifact_s3_bucket_path="altinity-internal-test-reports"
-  artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
-  confidential="--confidential"
-elif [[ $artifacts == 'public' ]]; then
-  artifact_s3_bucket_path="altinity-test-reports"
-  artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
-  confidential=""
-elif [[ $artifacts == 'builds' ]]; then
-  artifact_s3_bucket_path="altinity-build-artifacts"
-  confidential=""
-  if [[ $event_name == "pull_request" ]]; then
-    artifact_s3_dir="PRs/$pr_number/$build_sha/regression"
-  else # release, push, workflow_dispatch
-    artifact_s3_dir="REFs/$GITHUB_REF_NAME/$build_sha/regression"
-  fi
 
-fi
+# Bucket layout: hetzner reuses HETZNER_S3_BUCKET; AWS values use legacy buckets.
+case "$artifacts" in
+  hetzner)
+    artifact_s3_bucket_path="${HETZNER_S3_BUCKET}"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
+    confidential="--confidential"
+    aws_endpoint_args="--endpoint-url https://${HETZNER_S3_REGION}.your-objectstorage.com"
+    S3_ENDPOINT="https://${HETZNER_S3_REGION}.your-objectstorage.com"
+    ;;
+  internal)
+    artifact_s3_bucket_path="altinity-internal-test-reports"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
+    confidential="--confidential"
+    aws_endpoint_args=""
+    ;;
+  public)
+    artifact_s3_bucket_path="altinity-test-reports"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
+    confidential=""
+    aws_endpoint_args=""
+    ;;
+  builds)
+    artifact_s3_bucket_path="altinity-build-artifacts"
+    confidential=""
+    if [[ $event_name == "pull_request" ]]; then
+      artifact_s3_dir="PRs/$pr_number/$build_sha/regression"
+    else
+      artifact_s3_dir="REFs/$GITHUB_REF_NAME/$build_sha/regression"
+    fi
+    aws_endpoint_args=""
+    ;;
+  *)
+    echo "::error::Unknown artifacts='$artifacts'"
+    exit 1
+    ;;
+esac
 
 if [[ $args == *'--with-analyzer'* ]]; then
   analyzer="with_analyzer"
@@ -125,16 +144,16 @@ else
 fi
 
 
-if [[ -z "$S3_ENDPOINT" ]]; then 
+if [[ -z "$S3_ENDPOINT" ]]; then
   JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
 else
-  JOB_BUCKET_URL=https://$S3_ENDPOINT/$artifact_s3_bucket_path
+  JOB_BUCKET_URL=$S3_ENDPOINT/$artifact_s3_bucket_path
 fi
 
 echo "confidential=$confidential" >>$GITHUB_ENV
+echo "aws_endpoint_args=$aws_endpoint_args" >>$GITHUB_ENV
 
 JOB_REPORT_INDEX=$JOB_BUCKET_URL/index.html#$artifact_s3_dir/
-echo "JOB_REPORT_INDEX=$JOB_REPORT_INDEX" >>$GITHUB_ENV
 
 JOB_S3_ROOT=s3://$artifact_s3_bucket_path/$artifact_s3_dir
 echo "JOB_S3_ROOT=$JOB_S3_ROOT" >>$GITHUB_ENV

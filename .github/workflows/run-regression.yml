@@ -52,6 +52,7 @@ on:
           - all
           - all_aws
           - all_gcs
+          - all_hetzner
           - aes_encryption
           - aggregate_functions
           - atomic_insert
@@ -64,6 +65,7 @@ on:
           - benchmark_all
           - benchmark_aws
           - benchmark_gcs
+          - benchmark_hetzner
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
@@ -86,6 +88,7 @@ on:
           - oauth
           - parquet_all
           - parquet
+          - parquet_hetzner
           - parquet_minio
           - parquet_s3
           - parquet_native_v3
@@ -97,6 +100,7 @@ on:
           - s3_aws
           - s3_azure
           - s3_gcs
+          - s3_hetzner
           - s3_minio
           - export_part
           - export_partition
@@ -108,6 +112,7 @@ on:
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
+          - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
           - version
@@ -117,7 +122,7 @@ on:
         description: "🏺 Artifact S3 bucket"
         type: choice
         options:
-          - internal
+          - hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice
@@ -176,7 +181,7 @@ on:
         description: "Artifact S3 bucket"
         type: string
         required: false
-        default: internal
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: string
@@ -238,11 +243,11 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 1/*" ${{ inputs.extra_args }} 
+      extra_args: --only "/aggregate functions/part 1/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   aggregate_functions_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -255,11 +260,11 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 2/*" ${{ inputs.extra_args }} 
+      extra_args: --only "/aggregate functions/part 2/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   aggregate_functions_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -333,7 +338,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   alter_attach_partition_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -462,6 +467,28 @@ jobs:
       storage_path: /minio
       regression_args: '--storage minio'
       artifact_name: benchmark-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  benchmark_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'benchmark_hetzner' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_hetzner
+    with:
+      suite_name: ontime_benchmark
+      job_name: ontime_benchmark_hetzner
+      suite_executable: benchmark.py
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--storage hetzner'
+      artifact_name: benchmark-hetzner-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -680,7 +707,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   iceberg_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -688,7 +715,7 @@ jobs:
       suite_name: iceberg
       part: 2
       timeout_minutes: 180
-      storage_path: /iceberg 
+      storage_path: /iceberg
       regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*" "/iceberg/export partition/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -940,6 +967,26 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
+  parquet_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_hetzner' || inputs.suite == 'parquet_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_hetzner
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--storage hetzner --only "/parquet/hetzner/*"'
+      artifact_name: parquet-hetzner-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   part_moves_between_shards:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -955,7 +1002,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   rbac_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -972,7 +1019,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   rbac_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1008,7 +1055,7 @@ jobs:
     secrets: inherit
 
   s3_aws_1:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1029,7 +1076,7 @@ jobs:
     secrets: inherit
 
   s3_aws_2:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1045,6 +1092,48 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: --only "/s3/aws s3/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_hetzner_1:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_hetzner
+      timeout_minutes: 360
+      part: 1
+      storage_path: /hetzner
+      regression_args: '--storage hetzner'
+      artifact_name: s3-hetzner-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/hetzner/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_hetzner_2:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_hetzner
+      timeout_minutes: 360
+      part: 2
+      storage_path: /hetzner
+      regression_args: '--storage hetzner'
+      artifact_name: s3-hetzner-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/hetzner/part 2/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1070,7 +1159,6 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  
   s3_azure_2:
     if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1268,7 +1356,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-  
+
   settings:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'settings' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -1334,7 +1422,7 @@ jobs:
       extra_args: --only "/ssl server/part 3/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
-    secrets: inherit 
+    secrets: inherit
 
   swarms:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'swarms' }}
@@ -1351,9 +1439,9 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-    
+
   tiered_storage_aws:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
@@ -1362,6 +1450,26 @@ jobs:
       storage_path: /aws
       regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
       artifact_name: tiered_storage-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_hetzner' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_hetzner' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_hetzner
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--with-s3hetzner'
+      artifact_name: tiered_storage-hetzner-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}

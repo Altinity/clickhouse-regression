@@ -461,7 +461,7 @@ def copy_file_to_host(self, src_node, src_path, host_filename):
 def upload_file_to_s3(self, file_src, file_dest):
     """Upload specified file to s3 bucket."""
 
-    if self.context.storage == "aws_s3":
+    if self.context.storage in ("aws_s3", "hetzner"):
         with By("Uploading a file"):
             self.context.s3_client.upload_file(
                 file_src,
@@ -565,7 +565,7 @@ def check_source_file_on_s3(
 
     parquet_file = "data_" + getuid() + ".Parquet"
 
-    if self.context.storage == "aws_s3":
+    if self.context.storage in ("aws_s3", "hetzner"):
         with By("Downloading the file"):
             self.context.s3_client.download_file(
                 self.context.aws_s3_bucket,
