@@ -3,7 +3,7 @@ version: '2.3'
 services:
   minio1:
     extends:
-      file: minio-service.yml
+      file: rustfs-service.yml
       service: minio1
 
   minio-client:
