@@ -5,7 +5,7 @@ from testflows.core import *
 
 from helpers.tables import *
 
-version_when_attach_partition_with_different_keys_merged = "26.8"
+version_when_attach_partition_with_different_keys_merged = "27.8"
 
 
 def clean_name(name):
