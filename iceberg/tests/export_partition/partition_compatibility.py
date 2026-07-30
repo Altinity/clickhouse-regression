@@ -16,7 +16,7 @@ from iceberg.requirements.export_partition import (
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
-    create_replicated_mergetree,
+    create_export_source_table,
     first_partition_id,
     insert_data,
 )
@@ -26,6 +26,9 @@ from iceberg.tests.export_partition.steps.export_operations import (
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     _require_no_catalog,
     create_iceberg_destination,
+)
+from iceberg.tests.export_partition.steps.verification import (
+    assert_source_and_destination_match,
 )
 
 
@@ -46,7 +49,7 @@ def _run_accepted_case(
     source_table = f"mt_{getuid()}"
 
     with Given("create source ReplicatedMergeTree with the partition key"):
-        create_replicated_mergetree(
+        create_export_source_table(
             table_name=source_table,
             columns=columns,
             partition_by=source_partition_by,
@@ -88,7 +91,7 @@ def _run_rejected_case(
     source_table = f"mt_{getuid()}"
 
     with Given("create source ReplicatedMergeTree with the partition key"):
-        create_replicated_mergetree(
+        create_export_source_table(
             table_name=source_table,
             columns=columns,
             partition_by=source_partition_by,
@@ -406,6 +409,62 @@ def rejected_unpartitioned_destination(self, minio_root_user, minio_root_passwor
     )
 
 
+@TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+)
+@Name("reversed destination column order maps values by name")
+def reversed_destination_column_order_maps_by_name(
+    self, minio_root_user, minio_root_password
+):
+    """When destination columns are permuted, export must still bind values by
+    name — not position — so ``PARTITION BY a`` continues to mean the same
+    field on both sides (Altinity/ClickHouse#2123).
+    """
+    source_table = f"mt_{getuid()}"
+    source_columns = "a Int32, b Int32"
+    dest_columns = "b Int32, a Int32"
+    partition_by = "a"
+
+    with Given("create source table (a, b) partitioned by a"):
+        create_export_source_table(
+            table_name=source_table,
+            columns=source_columns,
+            partition_by=partition_by,
+        )
+
+    with And("insert two rows that share one source partition"):
+        insert_data(table_name=source_table, values="(1, 1), (1, 2)")
+
+    with And("look up the partition id"):
+        partition_id = first_partition_id(table_name=source_table)
+
+    with And("create Iceberg destination (b, a) also partitioned by a"):
+        destination = create_iceberg_destination(
+            columns=dest_columns,
+            partition_by=partition_by,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with When("export the partition"):
+        export_partition(
+            source_table=source_table,
+            destination=destination,
+            partition_id=partition_id,
+        )
+
+    with Then("destination columns a and b match the source by name"):
+        assert_source_and_destination_match(
+            source_table=source_table,
+            destination=destination,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            columns="a, b",
+            order_by="b",
+        )
+
+
 # ---------------------------------------------------------------------------
 # Feature entry point
 # ---------------------------------------------------------------------------
@@ -460,3 +519,8 @@ def feature(self, minio_root_user, minio_root_password):
                 minio_root_user=minio_root_user,
                 minio_root_password=minio_root_password,
             )
+
+    Scenario(test=reversed_destination_column_order_maps_by_name, flags=TE)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
