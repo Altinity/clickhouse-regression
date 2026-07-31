@@ -15,6 +15,7 @@ from helpers.common import (
     check_clickhouse_version,
     experimental_analyzer,
     check_if_antalya_build,
+    get_settings_value,
 )
 
 from swarms.requirements.requirements import *
@@ -116,6 +117,20 @@ def regression(
         ]
         self.context.swarm_nodes = [self.context.node2, self.context.node3]
         self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]
+
+    with And("check that the object_storage_cluster (swarms) feature is available"):
+        setting_supported = (
+            get_settings_value(
+                "object_storage_cluster", node=self.context.node
+            ).strip()
+            != ""
+        )
+
+    if not setting_supported:
+        skip(
+            reason="'object_storage_cluster' setting is not available; "
+            "the swarms feature is not present in this version."
+        )
 
     with And("enable or disable experimental analyzer if needed"):
         for node in self.context.nodes:
