@@ -106,6 +106,8 @@ allow_experimental_database_paimon_rest_catalog = r"""'{"default":"0"}'"""
 
 allow_experimental_database_replicated = r"""'{"default":"1"}'"""
 
+allow_experimental_database_s3_tables = r"""'{"default":"0"}'"""
+
 allow_experimental_database_unity_catalog = r"""'{"default":"0"}'"""
 
 allow_experimental_delta_kernel_rs = r"""'{"default":"1"}'"""
@@ -115,6 +117,8 @@ allow_experimental_delta_lake_writes = r"""'{"default":"0"}'"""
 allow_experimental_dynamic_type = r"""'{"default":"1"}'"""
 
 allow_experimental_expire_snapshots = r"""'{"default":"0"}'"""
+
+allow_experimental_export_merge_tree_part = r"""'{"default":"1"}'"""
 
 allow_experimental_full_text_index = r"""'{"default":"1"}'"""
 
@@ -126,7 +130,11 @@ allow_experimental_geo_types_in_iceberg = r"""'{"default":"0"}'"""
 
 allow_experimental_hash_functions = r"""'{"default":"0"}'"""
 
+allow_experimental_hybrid_table = r"""'{"default":"0"}'"""
+
 allow_experimental_iceberg_compaction = r"""'{"default":"0"}'"""
+
+allow_experimental_iceberg_read_optimization = r"""'{"default":"1"}'"""
 
 allow_experimental_insert_into_iceberg = r"""'{"default":"0"}'"""
 
@@ -269,6 +277,8 @@ allow_rank_dense_rank_arguments = r"""'{"default":"0"}'"""
 allow_reorder_prewhere_conditions = r"""'{"default":"1"}'"""
 
 allow_replace_partition_from_empty_source = r"""'{"default":"0"}'"""
+
+allow_retries_in_cluster_requests = r"""'{"default":"0"}'"""
 
 allow_settings_after_format_in_insert = r"""'{"default":"0"}'"""
 
@@ -850,6 +860,8 @@ enable_adaptive_memory_spill_scheduler = r"""'{"default":"0"}'"""
 
 enable_add_distinct_to_in_subqueries = r"""'{"default":"0"}'"""
 
+enable_alias_marker = r"""'{"default":"1"}'"""
+
 enable_analyzer = r"""'{"default":"1"}'"""
 
 enable_automatic_decision_for_merging_across_partitions_for_final = r"""'{"default":"1"}'"""
@@ -991,6 +1003,32 @@ except_default_mode = r"""'{"default":"ALL"}'"""
 exclude_materialize_skip_indexes_on_insert = r"""'{"default":""}'"""
 
 execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
+
+export_merge_tree_part_allow_lossy_cast = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
+
+export_merge_tree_part_filename_pattern = r"""'{"default":"{part_name}_{checksum}"}'"""
+
+export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_throw_on_pending_mutations = r"""'{"default":"1"}'"""
+
+export_merge_tree_part_throw_on_pending_patch_parts = r"""'{"default":"1"}'"""
+
+export_merge_tree_partition_all_on_error = r"""'{"default":"throw_first"}'"""
+
+export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_manifest_ttl = r"""'{"default":"86400"}'"""
+
+export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
+
+export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"86400"}'"""
 
 external_storage_connect_timeout_sec = r"""'{"default":"10"}'"""
 
@@ -1272,6 +1310,8 @@ http_write_exception_in_output_format = r"""'{"default":"0"}'"""
 
 http_zlib_compression_level = r"""'{"default":"3"}'"""
 
+hybrid_table_auto_cast_columns = r"""'{"default":"1"}'"""
+
 iceberg_compaction_data_cleanup = r"""'{"default":"10800"}'"""
 
 iceberg_compaction_delay_bias = r"""'{"default":"10800"}'"""
@@ -1306,9 +1346,13 @@ iceberg_metadata_staleness_ms = r"""'{"default":"0"}'"""
 
 iceberg_orphan_files_older_than_seconds = r"""'{"default":"259200"}'"""
 
+iceberg_partition_timezone = r"""'{"default":""}'"""
+
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
+
+iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
 idle_connection_timeout = r"""'{"default":"3600"}'"""
 
@@ -1723,6 +1767,8 @@ local_filesystem_read_method = r"""'{"default":"pread_threadpool"}'"""
 local_filesystem_read_prefetch = r"""'{"default":"0"}'"""
 
 lock_acquire_timeout = r"""'{"default":"120"}'"""
+
+lock_object_storage_task_distribution_ms = r"""'{"default":"500"}'"""
 
 log_comment = r"""'{"default":""}'"""
 
@@ -2171,6 +2217,16 @@ normalize_function_names = r"""'{"default":"1"}'"""
 number_of_mutations_to_delay = r"""'{"default":"0"}'"""
 
 number_of_mutations_to_throw = r"""'{"default":"0"}'"""
+
+object_storage_cluster = r"""'{"default":""}'"""
+
+object_storage_cluster_join_mode = r"""'{"default":"allow"}'"""
+
+object_storage_max_nodes = r"""'{"default":"0"}'"""
+
+object_storage_remote_initiator = r"""'{"default":"0"}'"""
+
+object_storage_remote_initiator_cluster = r"""'{"default":""}'"""
 
 odbc_bridge_connection_pool_size = r"""'{"default":"16"}'"""
 
@@ -2954,6 +3010,8 @@ s3_min_upload_part_size = r"""'{"default":"16777216"}'"""
 
 s3_path_filter_limit = r"""'{"default":"1000"}'"""
 
+s3_propagate_credentials_to_other_storages = r"""'{"default":"0"}'"""
+
 s3_request_timeout_ms = r"""'{"default":"30000"}'"""
 
 s3_retry_attempts = r"""'{"default":"500"}'"""
@@ -3213,6 +3271,8 @@ use_lightweight_primary_key_index_analysis = r"""'{"default":"1"}'"""
 use_local_cache_for_remote_storage = r"""'{"default":"0"}'"""
 
 use_mysql_types_in_show_columns = r"""'{"default":"0"}'"""
+
+use_object_storage_list_objects_cache = r"""'{"default":"0"}'"""
 
 use_page_cache_for_disks_without_file_cache = r"""'{"default":"0"}'"""
 
