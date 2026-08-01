@@ -166,6 +166,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                 WHERE string_col IN (SELECT string_col FROM {local_table_name})
                 ORDER BY string_col
                 SETTINGS use_iceberg_partition_pruning = 1,
+                    allow_experimental_analyzer = 1,
                     object_storage_cluster_join_mode = 'local',
                     object_storage_cluster = 'replicated_cluster'
             """
@@ -280,6 +281,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                         AND boolean_col IS NOT NULL
                         ORDER BY string_col, long_col DESC, double_col
                         SETTINGS use_iceberg_partition_pruning = 1,
+                            allow_experimental_analyzer = 1,
                             object_storage_cluster_join_mode = 'local',
                             object_storage_cluster = 'replicated_cluster'
                         """
@@ -313,6 +315,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                         AND boolean_col IS NOT NULL
                         ORDER BY string_col, long_col DESC, double_col
                         SETTINGS use_iceberg_partition_pruning = 1,
+                            allow_experimental_analyzer = 1,
                             object_storage_cluster_join_mode = 'local',
                             object_storage_cluster = 'replicated_cluster'
                         """
