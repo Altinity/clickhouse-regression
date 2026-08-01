@@ -127,7 +127,7 @@ def regression(
         )
 
     if not setting_supported:
-        skip(
+        fail(
             reason="'object_storage_cluster' setting is not available; "
             "the swarms feature is not present in this version."
         )
