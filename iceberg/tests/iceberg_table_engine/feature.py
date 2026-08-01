@@ -27,6 +27,12 @@ def feature(self, minio_root_user, minio_root_password):
         ),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
+        test=load("iceberg.tests.iceberg_table_engine.deletes", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_table_engine.compaction", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
         test=load(
             "iceberg.tests.iceberg_table_engine.system_tables_partition_sorting_keys",
             "system_tables_partition_sorting_keys",
