@@ -179,6 +179,7 @@ def append(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Name("overwrite")
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=overwrite)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password

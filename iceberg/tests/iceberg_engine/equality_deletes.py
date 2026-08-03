@@ -384,6 +384,7 @@ def run_equality_deletes_combinations(self, minio_root_user, minio_root_password
 
 
 @TestFeature
+@Name("equality delete reads")
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=run_equality_deletes_combinations)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password

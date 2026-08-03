@@ -169,12 +169,18 @@ def drop_table_privilege(self, minio_root_user, minio_root_password):
             assert f"{namespace}.{table_name}" not in res.output, error()
 
         with And("check that select fails"):
-            result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-                database_name=database_name,
-                namespace=namespace,
-                table_name=table_name,
+            result = node.query(
+                f"SELECT * FROM {clickhouse_iceberg_table_name} ORDER BY tuple() FORMAT TabSeparated",
                 exitcode=60,
-                message=f"DB::Exception: Unknown table expression identifier '{database_name}.{namespace}.{table_name}'",
+                ignore_exception=True,
+            )
+            table_ref = f"{database_name}.`{namespace}.{table_name}`"
+            expected_messages = (
+                f"DB::Exception: Unknown table expression identifier '{database_name}.{namespace}.{table_name}'",
+                f"DB::Exception: Table {table_ref} does not exist",
+            )
+            assert any(message in result.output for message in expected_messages), error(
+                result.output
             )
 
 
@@ -225,6 +231,7 @@ def drop_database_privilege(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Name("rbac")
 def feature(self, minio_root_user, minio_root_password):
     """Check simple RBAC for tables from Iceberg engine."""
     Scenario(test=select_privilege)(

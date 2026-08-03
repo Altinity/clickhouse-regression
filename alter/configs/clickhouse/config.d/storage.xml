@@ -8,6 +8,15 @@
             <access_key_id>minio</access_key_id>
             <secret_access_key>minio123</secret_access_key>
         </s3_disk>
+        <cas_disk>
+            <type>object_storage</type>
+            <object_storage_type>s3</object_storage_type>
+            <metadata_type>content_addressed</metadata_type>
+            <server_root_id>alter-cas-{replica}</server_root_id>
+            <endpoint>http://minio:9001/cas/data/</endpoint>
+            <access_key_id>minio</access_key_id>
+            <secret_access_key>minio123</secret_access_key>
+        </cas_disk>
         <default>
             <keep_free_space_bytes>1024</keep_free_space_bytes>
         </default>
@@ -37,6 +46,13 @@
           </main>
         </volumes>
       </s3_policy>
+      <cas_policy>
+        <volumes>
+          <main>
+            <disk>cas_disk</disk>
+          </main>
+        </volumes>
+      </cas_policy>
         <default>
             <volumes>
                 <default>

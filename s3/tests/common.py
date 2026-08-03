@@ -157,6 +157,34 @@ def add_config(
                             wait_for_config_to_be_loaded()
 
 
+def export_merge_tree_part_supported(test):
+    """Return True if the build supports the export merge tree part feature.
+
+    Checks the setting's presence (``name`` column), not its ``value``.
+    """
+    with Then("I check whether the export merge tree part setting exists"):
+        name = get_settings_value(
+            "allow_experimental_export_merge_tree_part",
+            node=test.context.node,
+            column="name",
+        )
+    return name.strip() != ""
+
+
+def export_merge_tree_partition_supported(test):
+    """Return True if the build supports the export merge tree partition feature.
+
+    Checks the setting's presence (``name`` column), not its ``value``.
+    """
+    with Then("I check whether the export merge tree partition setting exists"):
+        name = get_settings_value(
+            "export_merge_tree_partition_force_export",
+            node=test.context.node,
+            column="name",
+        )
+    return name.strip() != ""
+
+
 def _export_partition_setting_name():
     """Return the right ``EXPORT PARTITION`` server-config flag name for the
     running ClickHouse build.
