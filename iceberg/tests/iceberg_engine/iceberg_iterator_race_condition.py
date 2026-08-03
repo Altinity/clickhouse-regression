@@ -5,8 +5,9 @@ import pyarrow as pa
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_build
 from helpers.tables import create_table_as_select
+from helpers.feature_support import validate_feature_support, setting_supported
 
 
 @TestStep
@@ -512,6 +513,13 @@ def feature(self, minio_root_user, minio_root_password):
     """Test to reproduce IcebergIterator race condition with IN subqueries.
     https://github.com/Altinity/ClickHouse/pull/1168
     """
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Swarm object_storage_cluster_join_mode",
+        check=setting_supported("object_storage_cluster_join_mode"),
+    ):
+        return
+
     Scenario(test=iceberg_iterator_race_condition)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

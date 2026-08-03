@@ -6,6 +6,7 @@ from helpers.common import (
     check_clickhouse_version,
     check_if_antalya_build,
 )
+from helpers.feature_support import validate_feature_support
 
 import pyarrow as pa
 
@@ -74,6 +75,16 @@ def system_tables_partition_sorting_keys(self, minio_root_user, minio_root_passw
             access_key_id=minio_root_user,
             secret_access_key=minio_root_password,
         )
+
+    if keys_from_metadata and not validate_feature_support(
+        self,
+        feature="Iceberg partition_key/sorting_key in system.tables",
+        check=lambda t: node.query(
+            f"SELECT partition_key FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        != "",
+    ):
+        return
 
     with Then("check partition_key and sorting_key in system.tables before first insert"):
         if _assert_on_antalya_26_1_plus(self):

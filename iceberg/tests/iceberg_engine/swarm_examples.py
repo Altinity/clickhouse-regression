@@ -2,7 +2,13 @@
 
 from testflows.core import *
 
-from helpers.common import getuid, check_clickhouse_version, check_if_not_antalya_build
+from helpers.common import (
+    getuid,
+    check_clickhouse_version,
+    check_if_not_antalya_build,
+    check_if_antalya_build,
+)
+from helpers.feature_support import validate_feature_support, setting_supported
 
 import pyarrow as pa
 
@@ -113,6 +119,13 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
 @Name("swarm")
 def feature(self, minio_root_user, minio_root_password):
     """Run swarm examples."""
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Swarm object_storage_cluster",
+        check=setting_supported("object_storage_cluster"),
+    ):
+        return
+
     Scenario(test=swarm_examples)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

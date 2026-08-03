@@ -1,7 +1,8 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_build
+from helpers.feature_support import validate_feature_support, setting_supported
 
 import pyarrow as pa
 
@@ -248,6 +249,13 @@ def feature(self, minio_root_user, minio_root_password):
     Covers all temporal transforms, both TimestampType and TimestamptzType,
     and UTC / positive-offset / negative-offset timezones.
     """
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Iceberg partition timezone",
+        check=setting_supported("iceberg_partition_timezone"),
+    ):
+        return
+
     Scenario(test=sort_key_with_day_transform_and_utc_timezone)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
