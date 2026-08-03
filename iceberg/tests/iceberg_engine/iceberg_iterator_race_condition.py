@@ -5,8 +5,9 @@ import pyarrow as pa
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_build
 from helpers.tables import create_table_as_select
+from helpers.feature_support import validate_feature_support, setting_supported
 
 
 @TestStep
@@ -166,6 +167,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                 WHERE string_col IN (SELECT string_col FROM {local_table_name})
                 ORDER BY string_col
                 SETTINGS use_iceberg_partition_pruning = 1,
+                    allow_experimental_analyzer = 1,
                     object_storage_cluster_join_mode = 'local',
                     object_storage_cluster = 'replicated_cluster'
             """
@@ -280,6 +282,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                         AND boolean_col IS NOT NULL
                         ORDER BY string_col, long_col DESC, double_col
                         SETTINGS use_iceberg_partition_pruning = 1,
+                            allow_experimental_analyzer = 1,
                             object_storage_cluster_join_mode = 'local',
                             object_storage_cluster = 'replicated_cluster'
                         """
@@ -313,6 +316,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                         AND boolean_col IS NOT NULL
                         ORDER BY string_col, long_col DESC, double_col
                         SETTINGS use_iceberg_partition_pruning = 1,
+                            allow_experimental_analyzer = 1,
                             object_storage_cluster_join_mode = 'local',
                             object_storage_cluster = 'replicated_cluster'
                         """
@@ -509,6 +513,13 @@ def feature(self, minio_root_user, minio_root_password):
     """Test to reproduce IcebergIterator race condition with IN subqueries.
     https://github.com/Altinity/ClickHouse/pull/1168
     """
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Swarm object_storage_cluster_join_mode",
+        check=setting_supported("object_storage_cluster_join_mode"),
+    ):
+        return
+
     Scenario(test=iceberg_iterator_race_condition)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

@@ -18,6 +18,8 @@ from oauth.tests.steps.clikhouse import (
     change_user_directories_config,
 )
 from helpers.cluster import create_cluster
+from helpers.feature_support import validate_feature_support
+from oauth.tests.feature_support import jwt_authentication_supported
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
@@ -237,12 +239,18 @@ def regression(
         "grafana": ("grafana",),
     }
     self.context.clickhouse_version = clickhouse_version
+    self.context.clickhouse_path = cluster_args["clickhouse_path"]
 
     if stress is not None:
         self.context.stress = stress
 
     identity_provider_lower = str(identity_provider).lower()
     provider_module = _load_provider_module(identity_provider_lower)
+
+    if not validate_feature_support(
+        self, feature="OAuth/JWT authentication", check=jwt_authentication_supported
+    ):
+        return
 
     with Given("docker-compose cluster"):
         regression_dir = os.path.dirname(os.path.abspath(__file__))

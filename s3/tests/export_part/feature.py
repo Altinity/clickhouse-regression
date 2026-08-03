@@ -1,5 +1,8 @@
 from testflows.core import *
+from helpers.common import check_if_antalya_build
+from helpers.feature_support import validate_feature_support
 from s3.requirements.export_part import *
+from s3.tests.common import export_merge_tree_part_supported
 
 
 @TestFeature
@@ -16,6 +19,11 @@ def minio(self, uri, bucket_prefix):
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
     self.context.default_settings = [("allow_experimental_export_merge_tree_part", 1)]
+
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self, feature="Export merge tree part", check=export_merge_tree_part_supported
+    ):
+        return
 
     Feature(run=load("s3.tests.export_part.sanity", "feature"))
     Feature(run=load("s3.tests.export_part.error_handling", "feature"))

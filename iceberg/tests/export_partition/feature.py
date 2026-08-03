@@ -28,6 +28,8 @@ Those modules internally skip scenarios that do not apply.
 from testflows.core import *
 
 from helpers.config import users_d
+from helpers.common import check_if_antalya_build
+from helpers.feature_support import validate_feature_support, setting_supported
 
 from iceberg.requirements.export_partition import (
     SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg,
@@ -78,6 +80,13 @@ def _load_modules(self, minio_root_user, minio_root_password):
 @Name("export partition")
 def feature(self, minio_root_user, minio_root_password):
     """Run export-partition tests across every catalog and source-engine mode."""
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Export merge tree partition",
+        check=setting_supported("export_merge_tree_partition_force_export"),
+    ):
+        return
+
     with Given(
         "enable export-partition Iceberg and EXPORT PART gates in the default profile"
     ):

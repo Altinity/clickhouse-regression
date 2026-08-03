@@ -1,7 +1,11 @@
 from testflows.core import *
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_if_antalya_build
+from helpers.feature_support import validate_feature_support
 from s3.requirements.export_partition import *
-from s3.tests.common import enable_export_partition
+from s3.tests.common import (
+    enable_export_partition,
+    export_merge_tree_partition_supported,
+)
 
 
 @TestFeature
@@ -14,6 +18,13 @@ def minio(self, uri, bucket_prefix):
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
     self.context.default_settings = [("allow_experimental_export_merge_tree_part", "1")]
+
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Export merge tree partition",
+        check=export_merge_tree_partition_supported,
+    ):
+        return
 
     # On Antalya 26.1+ the server-level gate is
     # ``allow_experimental_export_merge_tree_partition`` and is preloaded via

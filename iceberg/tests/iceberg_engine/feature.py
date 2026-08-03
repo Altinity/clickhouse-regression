@@ -33,7 +33,10 @@ def feature(self, minio_root_user, minio_root_password):
             test=load("iceberg.tests.iceberg_engine.sql_clauses", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
-            test=load("iceberg.tests.iceberg_engine.overwrite_deletes", "feature"),
+            test=load("iceberg.tests.iceberg_engine.equality_deletes", "feature"),
+        )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        Feature(
+            test=load("iceberg.tests.iceberg_engine.position_delete_reads", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.overwrite", "feature"),
@@ -108,7 +111,10 @@ def feature(self, minio_root_user, minio_root_password):
             test=load("iceberg.tests.iceberg_engine.sql_clauses", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
-            test=load("iceberg.tests.iceberg_engine.overwrite_deletes", "feature"),
+            test=load("iceberg.tests.iceberg_engine.equality_deletes", "feature"),
+        )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        Feature(
+            test=load("iceberg.tests.iceberg_engine.position_delete_reads", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.overwrite", "feature"),
