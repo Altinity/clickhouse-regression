@@ -12,13 +12,19 @@ from helpers.common import (
     experimental_analyzer,
     check_with_any_sanitizer,
     allow_higher_cpu_wait_ratio,
+    check_clickhouse_version,
 )
 from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.datatypes import *
+from alter.cas_mode import (
+    enable_cas_default_storage,
+    check_cas_mode,
+    cas_default_policy_override_path,
+)
 
 
 def argparser(parser):
-    """Custom argparser that adds a --use-specific-clickhouse-version option."""
+    """Custom argparser that adds alter-specific options."""
     base_argparser(parser)
 
     parser.add_argument(
@@ -30,6 +36,15 @@ def argparser(parser):
         "binary and stores it inside a container along the main version",
         metavar="path",
         default="docker://altinity/clickhouse-server:23.3.13.7.altinitytest",
+    )
+
+    parser.add_argument(
+        "--cas",
+        action="store_true",
+        default=False,
+        dest="use_cas",
+        help="use content-addressed storage as the default MergeTree disk "
+        "(skips filesystem-path tests that require local parts)",
     )
 
 
@@ -226,6 +241,31 @@ ffails = {
         "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
         check_with_any_sanitizer,
     ),
+    "/alter/attach partition/part 1/corrupted partitions": (
+        Skip,
+        "requires local filesystem part files under /var/lib/clickhouse",
+        check_cas_mode,
+    ),
+    "/alter/replace partition/corrupted partitions": (
+        Skip,
+        "requires local filesystem part files under /var/lib/clickhouse",
+        check_cas_mode,
+    ),
+    "/alter/attach partition/part 1/part level/too high level": (
+        Skip,
+        "renames detached parts on the local filesystem",
+        check_cas_mode,
+    ),
+    "/alter/attach partition/part 1/part level/part levels user example": (
+        Skip,
+        "renames detached parts on the local filesystem",
+        check_cas_mode,
+    ),
+    "/alter/attach partition/part 1/operations on attached partitions/multiple operations": (
+        Skip,
+        "FREEZE/UNFREEZE hard-link backups are unsupported on content-addressed disks",
+        check_cas_mode,
+    ),
 }
 
 
@@ -244,6 +284,7 @@ def regression(
     use_specific_version,
     stress=None,
     with_analyzer=False,
+    use_cas=False,
 ):
     """Alter regression."""
     nodes = {
@@ -260,8 +301,18 @@ def regression(
     self.context.uri = "http://minio:9001/root/data/alter"
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
+    self.context.use_cas_storage = False
+    self.context.default_storage_policy = None
 
     self.context.stress = stress
+
+    override = cas_default_policy_override_path()
+    if use_cas:
+        with Given("content-addressed storage as the default MergeTree disk"):
+            enable_cas_default_storage()
+    elif override.exists():
+        with Given("remove stale CAS default-policy override"):
+            override.unlink()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
