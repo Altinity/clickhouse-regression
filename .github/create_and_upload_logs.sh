@@ -34,5 +34,11 @@ then
             fi
         done
     fi
-    ./retry.sh 5 30 "aws s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
+    # Only exists if the cluster was started. Skip rather than let aws s3 cp
+    # exit 255 on a missing path and mask the real failure.
+    if [[ -d "$SUITE/_service_logs" ]]; then
+        ./retry.sh 5 30 "aws s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
+    else
+        echo "::notice title=$SUITE$STORAGE service logs::no service logs collected, skipping upload"
+    fi
 fi

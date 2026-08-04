@@ -169,6 +169,11 @@ xfails = {
     ],
     "/iceberg/iceberg engine/* catalog/swarm/*": [
         (Fail, "Only works with antalya build", check_if_not_antalya_build),
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/2139",
+            check_if_antalya_build,
+        ),
     ],
     "/iceberg/iceberg cache/rest catalog/iceberg table engine/*": [
         (Fail, "Need to investigate"),

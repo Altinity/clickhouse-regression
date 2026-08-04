@@ -100,9 +100,15 @@ SHAPES = {
     "single_row": [
         "(1, 10, 20, 30, '2024-03-05', '2024-03-05 12:00:00', 'x')",
     ],
+    # Both rows identical on every partition-relevant column (only ``id``
+    # differs), so every key pair sees a single source partition and the
+    # 2-row accepts -- including on ``ts`` -- go through a genuine
+    # min == max proof. The within-partition variation this shape used to
+    # smuggle in via ``ts`` lives in ``vary_ts_within_day`` /
+    # ``vary_ts_within_hour`` instead.
     "same_all": [
         "(1, 10, 20, 30, '2024-03-05', '2024-03-05 12:00:00', 'x')",
-        "(2, 10, 20, 30, '2024-03-05', '2024-03-05 15:00:00', 'x')",
+        "(2, 10, 20, 30, '2024-03-05', '2024-03-05 12:00:00', 'x')",
     ],
     "vary_a": [
         "(1, 10, 20, 30, '2024-03-05', '2024-03-05 12:00:00', 'x')",
@@ -273,6 +279,14 @@ def oracle_self_tests(self):
             False,
             ("multiple destination partitions", "column 'a'"),
             "negative same-residue range still splits",
+        ),
+        (
+            ("substring(s, 1, 1)",),
+            ("s",),
+            {"s": ("banana", "berry")},
+            False,
+            ("multiple destination partitions", "column 's'"),
+            "prefix source key, bare s destination, two values behind one prefix",
         ),
     ]
     for (
@@ -1339,64 +1353,262 @@ def two_dynamically_proved_columns(self):
         assert "column 'a'" not in result.output, error(result.output)
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
-def date_boundary_values_on_dynamic_proof(self):
-    """The dynamic proof at the edges of the ``Date`` domain: the epoch day
-    (1970-01-01, the type's zero value) and the ``Date`` maximum
-    (2149-06-06) must accept when their partitions are single-day, survive
-    the Parquet round trip intact, and a split partition at the epoch
-    month must still reject."""
-    node = self.context.node
-    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
-    with Given("monthly-partitioned source RMT and daily hive S3 destination"):
+# Schemas for the small dynamic-proof edge scenarios below. The explicit
+# ``DateTime('UTC')`` keeps the inserted literals server-timezone-proof:
+# with a plain ``DateTime``, '1970-01-01 00:00:00' would parse in the
+# server's timezone and could clamp below the epoch instead of storing 0.
+DATE_PROOF_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "dt", "type": "Date"},
+]
+DATETIME_PROOF_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "ts", "type": "DateTime('UTC')"},
+]
+STRING_PROOF_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "s", "type": "String"},
+]
+
+
+def _check_single_valued_partition_accepts(
+    columns,
+    src_partition_by,
+    dst_partition_by,
+    values,
+    select_columns,
+    expected_rows,
+    node,
+):
+    """Driver for the small dynamic-proof accept scenarios: a source table
+    holding exactly one partition whose rows collapse to a single
+    destination partition value; the export must accept and the rows must
+    read back unchanged."""
+    with Given(
+        f"source RMT PARTITION BY {src_partition_by} and "
+        f"hive S3 destination PARTITION BY {dst_partition_by}"
+    ):
         source_table, destination_table = setup_source_and_hive_destination(
             src_columns=columns,
-            src_partition_by="toYYYYMM(dt)",
-            dst_partition_by="dt",
+            src_partition_by=src_partition_by,
+            dst_partition_by=dst_partition_by,
         )
-    with And(
-        "single-day partitions at both Date extremes and a split epoch-month partition"
-    ):
-        insert_values(
-            table_name=source_table,
-            values=(
-                "(1, '1970-01-01'), (2, '2149-06-06'), "
-                "(3, '1970-02-01'), (4, '1970-02-15')"
-            ),
+    with And("rows sharing one destination partition value"):
+        insert_values(table_name=source_table, values=values)
+
+    with When("I export the partition"):
+        export_partition_by_id(
+            source_table=source_table,
+            destination_table=destination_table,
+            partition_id=get_first_partition_id(table_name=source_table),
+            node=node,
         )
 
-    with When("I export the single-day epoch and Date-max partitions"):
-        export_partition_by_id(
-            source_table=source_table,
-            destination_table=destination_table,
-            partition_id="197001",
-            node=node,
-        )
-        export_partition_by_id(
-            source_table=source_table,
-            destination_table=destination_table,
-            partition_id="214906",
-            node=node,
-        )
-    with Then("both boundary days read back unchanged"):
+    with Then("the rows read back unchanged"):
         rows = select_rows(
-            table_name=destination_table, columns="id, dt", order_by="id"
+            table_name=destination_table, columns=select_columns, order_by="id"
         )
-        assert rows == "1\t1970-01-01\n2\t2149-06-06", error(f"got: {rows!r}")
+        assert rows == expected_rows, error(f"got: {rows!r}")
 
-    with When("I export the two-day partition at the epoch month"):
+
+def _check_split_partition_rejects(
+    columns,
+    src_partition_by,
+    dst_partition_by,
+    values,
+    offending_column,
+    node,
+):
+    """Driver for the small dynamic-proof reject scenarios: a source table
+    holding exactly one partition that spans several destination partition
+    values; the export must reject naming the offending column, schedule
+    nothing, and write nothing."""
+    with Given(
+        f"source RMT PARTITION BY {src_partition_by} and "
+        f"hive S3 destination PARTITION BY {dst_partition_by}"
+    ):
+        source_table, destination_table = setup_source_and_hive_destination(
+            src_columns=columns,
+            src_partition_by=src_partition_by,
+            dst_partition_by=dst_partition_by,
+        )
+    with And("rows spanning several destination partition values"):
+        insert_values(table_name=source_table, values=values)
+
+    with When("I export the split partition"):
         assert_export_rejected(
             source_table=source_table,
             destination_table=destination_table,
-            partition_id="197002",
+            partition_id=get_first_partition_id(table_name=source_table),
             exitcode=BAD_ARGUMENTS,
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                f"column '{offending_column}'",
             ),
+            node=node,
         )
+
+    with Then("the rejected export wrote nothing"):
+        assert count_rows(table_name=destination_table, node=node) == 0, error(
+            "expected an empty destination after a rejected export"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def date_epoch_day_accepts(self):
+    """Dynamic proof at the lower edge of the ``Date`` domain: a partition
+    holding only the epoch day (1970-01-01, the type's stored zero) is
+    single-valued on ``dt``, must accept, and must survive the Parquet
+    round trip unchanged."""
+    _check_single_valued_partition_accepts(
+        columns=DATE_PROOF_COLUMNS,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+        values="(1, '1970-01-01'), (2, '1970-01-01')",
+        select_columns="id, dt",
+        expected_rows="1\t1970-01-01\n2\t1970-01-01",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def date_maximum_day_accepts(self):
+    """Dynamic proof at the upper edge of the ``Date`` domain: a partition
+    holding only the type maximum (2149-06-06) must accept and read back
+    unchanged."""
+    _check_single_valued_partition_accepts(
+        columns=DATE_PROOF_COLUMNS,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+        values="(1, '2149-06-06'), (2, '2149-06-06')",
+        select_columns="id, dt",
+        expected_rows="1\t2149-06-06\n2\t2149-06-06",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def date_split_partition_at_epoch_rejects(self):
+    """Dynamic proof reject where the range's lower endpoint is the
+    ``Date`` stored zero: the epoch month spans 1970-01-01 and
+    1970-01-15, so min != max must hold even when min is 0 -- a value
+    easy to conflate with 'missing'."""
+    _check_split_partition_rejects(
+        columns=DATE_PROOF_COLUMNS,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+        values="(1, '1970-01-01'), (2, '1970-01-15')",
+        offending_column="dt",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def datetime_epoch_instant_accepts(self):
+    """Dynamic proof at the lower edge of the ``DateTime`` domain: a
+    partition holding only the epoch instant (1970-01-01 00:00:00 UTC,
+    stored value 0) must accept and read back unchanged."""
+    _check_single_valued_partition_accepts(
+        columns=DATETIME_PROOF_COLUMNS,
+        src_partition_by="toDate(ts)",
+        dst_partition_by="ts",
+        values="(1, '1970-01-01 00:00:00'), (2, '1970-01-01 00:00:00')",
+        select_columns="id, ts",
+        expected_rows="1\t1970-01-01 00:00:00\n2\t1970-01-01 00:00:00",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def datetime_maximum_instant_accepts(self):
+    """Dynamic proof at the upper edge of the ``DateTime`` domain: a
+    partition holding only the type maximum (2106-02-07 06:28:15 UTC,
+    the largest stored value) must accept and read back unchanged."""
+    _check_single_valued_partition_accepts(
+        columns=DATETIME_PROOF_COLUMNS,
+        src_partition_by="toDate(ts)",
+        dst_partition_by="ts",
+        values="(1, '2106-02-07 06:28:15'), (2, '2106-02-07 06:28:15')",
+        select_columns="id, ts",
+        expected_rows="1\t2106-02-07 06:28:15\n2\t2106-02-07 06:28:15",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def datetime_full_day_span_rejects(self):
+    """Dynamic proof reject spanning an entire day at the epoch: the
+    day partition holds 00:00:00 (stored value 0) and 23:59:59 -- both
+    endpoints of the day boundary -- so it maps to two destination
+    partitions and must reject on ``column 'ts'``."""
+    _check_split_partition_rejects(
+        columns=DATETIME_PROOF_COLUMNS,
+        src_partition_by="toDate(ts)",
+        dst_partition_by="ts",
+        values="(1, '1970-01-01 00:00:00'), (2, '1970-01-01 23:59:59')",
+        offending_column="ts",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def string_single_valued_partition_accepts(self):
+    """Dynamic proof over a String column. Everywhere else in this suite
+    ``s`` reaches the destination key as a bare source term (structural
+    fast path), so the min == max comparison over String values never
+    runs. Source ``substring(s, 1, 1)`` -> destination ``s`` forces it:
+    a partition whose rows share one value must accept."""
+    _check_single_valued_partition_accepts(
+        columns=STRING_PROOF_COLUMNS,
+        src_partition_by="substring(s, 1, 1)",
+        dst_partition_by="s",
+        values="(1, 'apple'), (2, 'apple')",
+        select_columns="id, s",
+        expected_rows="1\tapple\n2\tapple",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def string_unicode_partition_accepts(self):
+    """The String dynamic proof over a multi-byte unicode value: pins the
+    min == max comparison and the hive path round trip over non-ASCII
+    bytes."""
+    _check_single_valued_partition_accepts(
+        columns=STRING_PROOF_COLUMNS,
+        src_partition_by="substring(s, 1, 1)",
+        dst_partition_by="s",
+        values="(1, '日本'), (2, '日本')",
+        select_columns="id, s",
+        expected_rows="1\t日本\n2\t日本",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def string_split_behind_shared_prefix_rejects(self):
+    """The String dynamic proof reject: two values behind the same
+    source-key prefix ('banana', 'berry' under ``substring(s, 1, 1)``)
+    land in one source partition but two destination partitions, so the
+    export must reject naming ``column 's'``."""
+    _check_split_partition_rejects(
+        columns=STRING_PROOF_COLUMNS,
+        src_partition_by="substring(s, 1, 1)",
+        dst_partition_by="s",
+        values="(1, 'banana'), (2, 'berry')",
+        offending_column="s",
+        node=self.context.node,
+    )
 
 
 @TestScenario
@@ -1852,9 +2064,28 @@ def gate_decisions(self):
     Scenario(run=multi_part_partition_reject)
     Scenario(run=three_term_destination_mixed_decisions)
     Scenario(run=two_dynamically_proved_columns)
-    Scenario(run=date_boundary_values_on_dynamic_proof)
     Scenario(run=export_partition_all_gate_is_atomic)
     Scenario(run=gate_is_replica_independent)
+
+
+@TestSuite
+def dynamic_proof_value_edges(self):
+    """Small targeted checks of the dynamic proof at the edges of the
+    value domains it compares: ``Date`` and ``DateTime`` at their epoch
+    and type-maximum boundaries, and String -- a column type that
+    everywhere else in this suite only reaches the destination key
+    through the structural fast path. One scenario per value edge, each
+    with its own tables, so a failure at one edge does not mask the
+    others."""
+    Scenario(run=date_epoch_day_accepts)
+    Scenario(run=date_maximum_day_accepts)
+    Scenario(run=date_split_partition_at_epoch_rejects)
+    Scenario(run=datetime_epoch_instant_accepts)
+    Scenario(run=datetime_maximum_instant_accepts)
+    Scenario(run=datetime_full_day_span_rejects)
+    Scenario(run=string_single_valued_partition_accepts)
+    Scenario(run=string_unicode_partition_accepts)
+    Scenario(run=string_split_behind_shared_prefix_rejects)
 
 
 @TestSuite
@@ -1920,10 +2151,10 @@ def gate_part_set_evolution(self):
 @TestFeature
 @Name("partition key compatibility")
 def feature(self):
-    """Partition-key compatibility gate for hive S3 exports
-    (Altinity/ClickHouse#2074)."""
+    """Partition-key compatibility gate for hive S3 exports."""
     Feature(run=oracle)
     Feature(run=gate_decisions)
+    Feature(run=dynamic_proof_value_edges)
     Feature(run=gate_rejects)
     Feature(run=gate_and_schema_guard)
     Feature(run=data_integrity_round_trip)

@@ -816,6 +816,10 @@ ffails = {
         Skip,
         "quantilePrometheusHistogram test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function MVTEncode": (
+        Skip,
+        "MVTEncode test is not implemented",
+    ),
 }
 
 
