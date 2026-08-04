@@ -306,6 +306,8 @@ def catalog_external_reader_round_trips_exported_data(
     the exported rows byte-exact. Catalog-mode analogue of the
     ``manifest_integrity`` external-reader scenario; skipped under
     ``no_catalog``.
+
+    Currently XFail: https://github.com/Altinity/ClickHouse/issues/2161
     """
     source_table = _seed_source()
 

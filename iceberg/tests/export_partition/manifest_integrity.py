@@ -371,12 +371,12 @@ def external_reader_round_trips_exported_data(
     """PyIceberg (a non-ClickHouse reader) can scan the destination and
     materialise the exported rows.
 
-    Currently XFail: EXPORT PARTITION writes Parquet without Iceberg
-    field-ids and IcebergS3 tables do not set
-    ``schema.name-mapping.default``, so strict readers (PyIceberg) cannot
-    map physical columns to the table schema. On older builds that still
-    write bucket-relative ``data_file.file_path`` URIs, the same scenario
-    may instead fail at FileIO open with ``FileNotFoundError``.
+    Currently XFail (https://github.com/Altinity/ClickHouse/issues/2161):
+    EXPORT PARTITION writes Parquet without Iceberg field-ids and IcebergS3
+    tables do not set ``schema.name-mapping.default``, so strict readers
+    (PyIceberg) cannot map physical columns to the table schema. On older
+    builds that still write bucket-relative ``data_file.file_path`` URIs, the
+    same scenario may instead fail at FileIO open with ``FileNotFoundError``.
     """
     source_table = f"mt_{getuid()}"
     expected_values = [(1, 2020), (2, 2020), (3, 2020)]
