@@ -5,15 +5,46 @@
         <default>
             <keep_free_space_bytes>1024</keep_free_space_bytes>
         </default>
+        <s3_disk>
+            <type>object_storage</type>
+            <object_storage_type>s3</object_storage_type>
+            <metadata_type>plain_rewritable</metadata_type>
+            <endpoint>http://minio:9000/warehouse/data/</endpoint>
+            <access_key_id>admin</access_key_id>
+            <secret_access_key>password</secret_access_key>
+        </s3_disk>
+        <cas_disk>
+            <type>object_storage</type>
+            <object_storage_type>s3</object_storage_type>
+            <metadata_type>content_addressed</metadata_type>
+            <server_root_id>cas-{replica}</server_root_id>
+            <endpoint>http://minio:9000/warehouse/data/cas/</endpoint>
+            <access_key_id>admin</access_key_id>
+            <secret_access_key>password</secret_access_key>
+        </cas_disk>
     </disks>
     <policies>
         <default>
             <volumes>
                 <default>
-                    <disk>default</disk>
+                    <disk>cas_disk</disk>
                 </default>
             </volumes>
         </default>
+        <s3_policy>
+            <volumes>
+                <main>
+                    <disk>s3_disk</disk>
+                </main>
+            </volumes>
+        </s3_policy>
+        <cas_policy>
+            <volumes>
+                <main>
+                    <disk>cas_disk</disk>
+                </main>
+            </volumes>
+        </cas_policy>
     </policies>
 </storage_configuration>
 
