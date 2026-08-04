@@ -125,7 +125,7 @@ def regression(
     ):
         return
 
-    with And("enable or disable experimental analyzer if needed"):
+    with Given("enable or disable experimental analyzer if needed"):
         for node in self.context.nodes:
             experimental_analyzer(node=node, with_analyzer=with_analyzer)
 
