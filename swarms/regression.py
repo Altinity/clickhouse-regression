@@ -16,10 +16,9 @@ from helpers.common import (
     experimental_analyzer,
     check_if_antalya_build,
 )
-from helpers.feature_support import validate_feature_support
+from helpers.feature_support import validate_feature_support, setting_supported
 
 from swarms.requirements.requirements import *
-from swarms.tests.feature_support import object_storage_cluster_supported
 
 
 xfails = {
@@ -120,7 +119,9 @@ def regression(
         self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]
 
     if check_if_antalya_build(self) and not validate_feature_support(
-        self, feature="Swarm object_storage_cluster", check=object_storage_cluster_supported
+        self,
+        feature="Swarm object_storage_cluster",
+        check=setting_supported("object_storage_cluster"),
     ):
         return
 
