@@ -1,6 +1,10 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_Insert_FirstSegmentOnly,
+)
+
 from iceberg.tests.hybrid.core.common import (
     LEFT_PREDICATE,
     RIGHT_PREDICATE,
@@ -109,6 +113,9 @@ def insert_matching_right_predicate_still_left(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_Insert_FirstSegmentOnly("1.0"),
+)
 @Name("insert routing")
 def feature(self):
     """INSERT always forwards to the first Hybrid segment."""

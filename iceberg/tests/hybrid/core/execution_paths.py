@@ -1,6 +1,12 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_LocalVsRemote,
+    RQ_ClickHouse_Hybrid_AggregationStages,
+    RQ_ClickHouse_Hybrid_SerializeQueryPlan,
+)
+
 from iceberg.tests.hybrid.core.common import (
     PREFER_LOCALHOST,
     FORCE_REMOTE,
@@ -8,6 +14,16 @@ from iceberg.tests.hybrid.core.common import (
     create_mt_mt_hybrid,
     settings_clause,
 )
+
+# serialize_query_plan=1 is the alternate remote transport (JSON plan fragment).
+SERIALIZE_PLAN_LOCALHOST = {
+    **PREFER_LOCALHOST,
+    "serialize_query_plan": 1,
+}
+SERIALIZE_PLAN_REMOTE = {
+    **FORCE_REMOTE,
+    "serialize_query_plan": 1,
+}
 
 
 # Queries that exercise the four Distributed subquery stages.
@@ -93,13 +109,33 @@ def fingerprint_prefer_localhost_and_force_remote(self):
             )
 
 
+@TestScenario
+@Name("subquery stages serialize query plan")
+def subquery_stages_serialize_query_plan(self):
+    """Four Distributed subquery stages with serialize_query_plan=1 (A/B localhost)."""
+    with Given("MT+MT Hybrid"):
+        ctx = create_mt_mt_hybrid()
+
+    with Then("prefer localhost + serialize_query_plan=1"):
+        _run_stages(self, ctx, SERIALIZE_PLAN_LOCALHOST)
+
+    with And("force remote + serialize_query_plan=1"):
+        _run_stages(self, ctx, SERIALIZE_PLAN_REMOTE)
+
+
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_LocalVsRemote("1.0"),
+    RQ_ClickHouse_Hybrid_AggregationStages("1.0"),
+    RQ_ClickHouse_Hybrid_SerializeQueryPlan("1.0"),
+)
 @Name("distributed execution")
 def feature(self):
     """Distributed subquery stages and local vs remote merge paths."""
     for scenario in (
         subquery_stages_prefer_localhost,
         subquery_stages_force_remote,
+        subquery_stages_serialize_query_plan,
         fingerprint_prefer_localhost_and_force_remote,
     ):
         Scenario(run=scenario)

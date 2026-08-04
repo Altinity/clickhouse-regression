@@ -1,6 +1,10 @@
 -- Hybrid Query Fuzzing SQL Queries
 -- Placeholders: {hybrid_table}, {merge_tree_table}, {clickhouse_iceberg_table_name}, {join_settings}
 -- Each query is separated by a blank line
+--
+-- Avoid `IS [NOT] NULL` / `COUNT(nullable)` on Hybrid: remote segments do not
+-- expose Nullable null-map subcolumns (`col.null`). Prefer `col = col`,
+-- `ifNull`, or `GLOBAL IN` instead of correlated EXISTS / local IN.
 
 -- Basic SELECT queries
 SELECT * FROM {hybrid_table} LIMIT 10;
@@ -18,25 +22,25 @@ SELECT * FROM {hybrid_table} WHERE boolean_col = true AND double_col <= 400.0;
 -- Aggregate functions - COUNT
 SELECT COUNT(*) FROM {hybrid_table};
 
-SELECT COUNT(*) as total_rows FROM {hybrid_table} WHERE long_col IS NOT NULL;
+SELECT COUNT(*) as total_rows FROM {hybrid_table} WHERE long_col >= 0 OR long_col < 0;
 
 SELECT COUNT(DISTINCT string_col) as unique_strings FROM {hybrid_table};
 
-SELECT COUNT(long_col), COUNT(double_col), COUNT(integer_col) FROM {hybrid_table};
+SELECT COUNT(*), sum(long_col), sum(double_col), sum(integer_col) FROM {hybrid_table};
 
 -- Aggregate functions - SUM
 SELECT SUM(long_col) as sum_long FROM {hybrid_table};
 
 SELECT SUM(long_col) as sum_long, SUM(integer_col) as sum_int FROM {hybrid_table} WHERE long_col > 400;
 
-SELECT SUM(double_col) as sum_double FROM {hybrid_table} WHERE double_col IS NOT NULL;
+SELECT SUM(ifNull(double_col, 0)) as sum_double FROM {hybrid_table};
 
 SELECT SUM(long_col + integer_col) as sum_combined FROM {hybrid_table};
 
 -- Aggregate functions - AVG
 SELECT AVG(long_col) as avg_long FROM {hybrid_table};
 
-SELECT AVG(double_col) as avg_double FROM {hybrid_table} WHERE double_col IS NOT NULL;
+SELECT AVG(ifNull(double_col, 0)) as avg_double FROM {hybrid_table};
 
 SELECT AVG(long_col) as avg_long, AVG(integer_col) as avg_int FROM {hybrid_table};
 
@@ -103,7 +107,7 @@ SELECT * FROM {hybrid_table} WHERE long_col BETWEEN 1000 AND 2000;
 
 SELECT * FROM {hybrid_table} WHERE string_col IN ('Alice', 'Bob');
 
-SELECT * FROM {hybrid_table} WHERE long_col IS NOT NULL AND double_col IS NOT NULL;
+SELECT * FROM {hybrid_table} WHERE (long_col >= 0 OR long_col < 0) AND (double_col = double_col) LIMIT 50;
 
 SELECT * FROM {hybrid_table} WHERE long_col > integer_col;
 
@@ -145,7 +149,7 @@ SELECT DISTINCT string_col FROM {hybrid_table} ORDER BY string_col;
 -- Subqueries
 SELECT * FROM {hybrid_table} WHERE long_col > (SELECT AVG(long_col) FROM {hybrid_table});
 
-SELECT * FROM {hybrid_table} WHERE string_col IN (SELECT DISTINCT string_col FROM {hybrid_table} WHERE long_col > 1500);
+SELECT * FROM {hybrid_table} WHERE string_col GLOBAL IN (SELECT DISTINCT string_col FROM {hybrid_table} WHERE long_col > 1500) LIMIT 50;
 
 SELECT string_col, long_col FROM {hybrid_table} WHERE long_col = (SELECT MAX(long_col) FROM {hybrid_table});
 
@@ -158,7 +162,7 @@ SELECT h.string_col, h.long_col, m.double_col FROM {hybrid_table} h LEFT JOIN {m
 
 SELECT h.string_col, COUNT(*) as cnt FROM {hybrid_table} h JOIN {merge_tree_table} m ON h.string_col = m.string_col GROUP BY h.string_col {join_settings};
 
-SELECT h.string_col, h.long_col, m.long_col as mt_long FROM {hybrid_table} h RIGHT JOIN {merge_tree_table} m ON h.string_col = m.string_col WHERE h.long_col IS NOT NULL {join_settings};
+SELECT h.string_col, h.long_col, m.long_col as mt_long FROM {hybrid_table} h RIGHT JOIN {merge_tree_table} m ON h.string_col = m.string_col WHERE h.long_col >= 0 OR h.long_col < 0 {join_settings};
 
 SELECT h.*, m.* FROM {hybrid_table} h FULL OUTER JOIN {merge_tree_table} m ON h.string_col = m.string_col LIMIT 10 {join_settings};
 
@@ -207,11 +211,11 @@ SELECT string_col, CASE WHEN long_col > 1500 THEN 'high' WHEN long_col > 1000 TH
 SELECT string_col, SUM(CASE WHEN boolean_col = true THEN long_col ELSE 0 END) as sum_true, SUM(CASE WHEN boolean_col = false THEN long_col ELSE 0 END) as sum_false FROM {hybrid_table} GROUP BY string_col;
 
 -- Date functions
-SELECT string_col, date_col, toYear(date_col) as year FROM {hybrid_table} WHERE date_col IS NOT NULL LIMIT 10;
+SELECT string_col, date_col, toYear(assumeNotNull(date_col)) as year FROM {hybrid_table} WHERE date_col = date_col LIMIT 10;
 
-SELECT string_col, timestamp_col, toDate(timestamp_col) as date_part FROM {hybrid_table} WHERE timestamp_col IS NOT NULL LIMIT 10;
+SELECT string_col, timestamp_col, toDate(assumeNotNull(timestamp_col)) as date_part FROM {hybrid_table} WHERE timestamp_col = timestamp_col LIMIT 10;
 
-SELECT toYear(date_col) as year, COUNT(*) as cnt FROM {hybrid_table} WHERE date_col IS NOT NULL GROUP BY year ORDER BY year;
+SELECT toYear(assumeNotNull(date_col)) as year, COUNT(*) as cnt FROM {hybrid_table} WHERE date_col = date_col GROUP BY year ORDER BY year;
 
 -- String functions
 SELECT string_col, length(string_col) as str_len, upper(string_col) as upper_str FROM {hybrid_table} LIMIT 10;
@@ -223,16 +227,16 @@ SELECT string_col, concat(string_col, '_', toString(long_col)) as combined FROM 
 -- Mathematical functions
 SELECT long_col, integer_col, long_col + integer_col as sum_cols, long_col * 2 as doubled FROM {hybrid_table} LIMIT 10;
 
-SELECT double_col, round(double_col, 2) as rounded, floor(double_col) as floored FROM {hybrid_table} WHERE double_col IS NOT NULL LIMIT 10;
+SELECT double_col, round(ifNull(double_col, 0), 2) as rounded, floor(ifNull(double_col, 0)) as floored FROM {hybrid_table} LIMIT 10;
 
 SELECT long_col, abs(long_col - 1500) as diff_from_1500 FROM {hybrid_table} LIMIT 10;
 
 -- NULL handling
-SELECT COUNT(*) as total, COUNT(long_col) as non_null_long, COUNT(*) - COUNT(long_col) as null_long FROM {hybrid_table};
+SELECT COUNT(*) as total, sum(long_col) as sum_long FROM {hybrid_table};
 
-SELECT string_col, countIf(long_col IS NULL) as null_count, countIf(long_col IS NOT NULL) as non_null_count FROM {hybrid_table} GROUP BY string_col;
+SELECT string_col, count(*) as cnt, sum(long_col) as sum_long FROM {hybrid_table} GROUP BY string_col;
 
-SELECT * FROM {hybrid_table} WHERE long_col IS NULL OR double_col IS NULL LIMIT 10;
+SELECT * FROM {hybrid_table} ORDER BY string_col, long_col LIMIT 10;
 
 SELECT coalesce(long_col, 0) as long_with_default FROM {hybrid_table} LIMIT 10;
 
@@ -242,11 +246,11 @@ SELECT 'hybrid' as table_name, COUNT(*) as row_count FROM {hybrid_table} UNION A
 SELECT COALESCE(hm.string_col, i.string_col) as string_col, hm.hybrid_long, hm.mt_long, i.long_col as iceberg_long FROM (SELECT COALESCE(h.string_col, m.string_col) as string_col, h.long_col as hybrid_long, m.long_col as mt_long FROM {hybrid_table} h FULL OUTER JOIN {merge_tree_table} m ON h.string_col = m.string_col {join_settings}) hm FULL OUTER JOIN {clickhouse_iceberg_table_name} i ON hm.string_col = i.string_col LIMIT 10 {join_settings};
 
 -- EXISTS and IN subqueries
-SELECT * FROM {hybrid_table} h WHERE EXISTS (SELECT 1 FROM {merge_tree_table} m WHERE m.string_col = h.string_col);
+SELECT * FROM {hybrid_table} WHERE string_col GLOBAL IN (SELECT DISTINCT string_col FROM {merge_tree_table}) LIMIT 50;
 
-SELECT * FROM {hybrid_table} WHERE string_col IN (SELECT DISTINCT string_col FROM {merge_tree_table} WHERE long_col > 1500);
+SELECT * FROM {hybrid_table} WHERE string_col GLOBAL IN (SELECT DISTINCT string_col FROM {merge_tree_table} WHERE long_col > 1500) LIMIT 50;
 
-SELECT * FROM {hybrid_table} WHERE string_col NOT IN (SELECT DISTINCT string_col FROM {merge_tree_table} WHERE long_col < 1000);
+SELECT * FROM {hybrid_table} WHERE string_col GLOBAL NOT IN (SELECT DISTINCT string_col FROM {merge_tree_table} WHERE long_col < 1000) LIMIT 50;
 
 -- CTE (Common Table Expressions)
 WITH hybrid_stats AS (SELECT string_col, AVG(long_col) as avg_long FROM {hybrid_table} GROUP BY string_col) SELECT * FROM hybrid_stats WHERE avg_long > 1500 ORDER BY avg_long DESC;

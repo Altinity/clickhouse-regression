@@ -1,5 +1,9 @@
 from testflows.core import *
 
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_PredicatePruning,
+)
+
 from iceberg.tests.hybrid.core.common import (
     PREFER_LOCALHOST,
     FORCE_REMOTE,
@@ -78,6 +82,9 @@ def where_spans_both_segments(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_PredicatePruning("1.0"),
+)
 @Name("predicate pruning")
 def feature(self):
     """Result correctness when filters hit one or both Hybrid segments."""
