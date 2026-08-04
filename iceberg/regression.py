@@ -45,6 +45,7 @@ xfails = {
     "/iceberg/export partition/: catalog/*/manifest integrity/external iceberg reader round-trips exported data": [
         (
             Fail,
+            "https://github.com/Altinity/ClickHouse/issues/2161 — "
             "PyIceberg cannot scan EXPORT PARTITION data files: Parquet "
             "written by ClickHouse lacks Iceberg field-ids and IcebergS3 "
             "tables have no schema.name-mapping.default, so strict readers "
@@ -56,6 +57,7 @@ xfails = {
     "/iceberg/export partition/: catalog/*/catalogs/catalog: external reader round-trips exported data": [
         (
             Fail,
+            "https://github.com/Altinity/ClickHouse/issues/2161 — "
             "Same Parquet field-id / name-mapping gap as the no_catalog "
             "external-reader scenario: catalog-backed tables get a proper "
             "Iceberg schema from PyIceberg at CREATE time, but EXPORT "
