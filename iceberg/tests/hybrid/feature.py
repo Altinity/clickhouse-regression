@@ -4,6 +4,7 @@ from helpers.config import config_d, users_d
 
 from iceberg.requirements.hybrid import (
     RQ_ClickHouse_Hybrid_AnalyzerRequired,
+    SRS_Hybrid_Table_Engine,
 )
 
 
@@ -29,6 +30,7 @@ def force_analyzer_for_hybrid(self):
 
 
 @TestFeature
+@Specifications(SRS_Hybrid_Table_Engine)
 @Requirements(
     RQ_ClickHouse_Hybrid_AnalyzerRequired("1.0"),
 )

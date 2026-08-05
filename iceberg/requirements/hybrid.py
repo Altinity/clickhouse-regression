@@ -688,8 +688,8 @@ RQ_ClickHouse_Hybrid_QueryFuzzing = Requirement(
     num="14.1",
 )
 
-SRS_048_ClickHouse_Hybrid_Table_Engine = Specification(
-    name="SRS-048 ClickHouse Hybrid Table Engine",
+SRS_Hybrid_Table_Engine = Specification(
+    name="SRS Hybrid Table Engine",
     description=None,
     author=None,
     date=None,
@@ -821,7 +821,7 @@ SRS_048_ClickHouse_Hybrid_Table_Engine = Specification(
         RQ_ClickHouse_Hybrid_QueryFuzzing,
     ),
     content=r"""
-# SRS-048 ClickHouse Hybrid Table Engine
+# SRS Hybrid Table Engine
 # Software Requirements Specification
 
 ## Table of Contents

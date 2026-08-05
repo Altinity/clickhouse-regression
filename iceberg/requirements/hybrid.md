@@ -1,4 +1,4 @@
-# SRS-048 ClickHouse Hybrid Table Engine
+# SRS Hybrid Table Engine
 # Software Requirements Specification
 
 ## Table of Contents
