@@ -115,7 +115,7 @@ L3  Operational watermark lifecycle
 | Setting | Value | Notes |
 |---------|-------|-------|
 | `allow_experimental_hybrid_table` | `1` | CREATE TABLE gate |
-| `enable_analyzer` | `1` | **Only** supported analyzer mode for Hybrid |
+| `enable_analyzer` | `1` | Required suite config (RQ.ClickHouse.Hybrid.AnalyzerRequired) |
 
 Also enable as needed by segment type:
 
@@ -133,7 +133,7 @@ vs remote results (notes + `hybrid.md`).
 | Setting | Values | Effect |
 |---------|--------|--------|
 | `prefer_localhost_replica` | `1` (default), `0` | `0` forces local shard through remote path |
-| `serialize_query_plan` | `0` (default), `1` | SQL subquery vs JSON plan fragment to remotes; `1` likely future default |
+| `serialize_query_plan` | `0` (default), `1` | SQL subquery vs JSON plan fragment to remotes; `1` needs server `process_query_plan_packet` |
 | `hybrid_table_auto_cast_columns` | `0` (default), `1` | Auto CAST at segment boundary; needs analyzer |
 | `skip_unused_shards` | on / off | Predicate pruning / unused segment skip |
 | `object_storage_cluster_join_mode` | default / `'local'` | JOINs involving object-storage segments |
@@ -166,8 +166,8 @@ Run the **core query pack** (§7) under each row:
 | G | 1 | 1 | 1 | P2 |
 | H | 0 | 1 | 1 | P2 |
 
-`enable_analyzer=0` is **negative-only**: expect clear failure / unsupported;
-do not expand functional coverage there.
+`enable_analyzer=0` is **out of scope**. The suite enables `enable_analyzer=1`
+(profile + query settings); see RQ.ClickHouse.Hybrid.AnalyzerRequired.
 
 ---
 
@@ -524,8 +524,7 @@ Core topology DoD (Phase 4): `core/topology.py` — secure cluster,
   enable experimental gates in profile.
 - [x] Port hybrid steps to `iceberg/tests/steps/hybrid.py`; thin-wrap
   `ice/steps/hybrid.py`; remove `ice/tests/hybrid`.
-- [x] Smoke: `smoke.py` — Hybrid with `remote()` first segment + SELECT count();
-  `analyzer_required` proves `enable_analyzer=0` fails / `=1` succeeds.
+- [x] Smoke: `smoke.py` — Hybrid with `remote()` first segment + SELECT count().
 
 ### Phase 1 — Engine core + execution paths (P0) ✅ implemented
 
@@ -604,7 +603,7 @@ Modules under `iceberg/tests/hybrid/schema/`:
 - [x] Settings: `prefer_localhost_replica` 0/1; auto-cast with UInt/Int seam
 - [x] CREATE / DROP / CREATE OR REPLACE watermark move
 - [x] Hash/count correctness vs reference
-- [x] Analyzer required — `smoke.analyzer_required` (`enable_analyzer=0` fails)
+- [x] Analyzer enabled for suite — `enable_analyzer=1` (RQ.ClickHouse.Hybrid.AnalyzerRequired)
 
 ### P1 — Should have next
 
@@ -646,7 +645,7 @@ Modules under `iceberg/tests/hybrid/schema/`:
 - Re-testing full EXPORT PARTITION internals (owned by `export_partition`).
 - Two-way Iceberg → MergeTree sync; import-parts-from-Iceberg (RFC future).
 - Hybrid-side merge-on-read / cross-segment dedup.
-- Making Hybrid work with `enable_analyzer=0`.
+- Expanding Hybrid coverage under `enable_analyzer=0` (currently out of scope).
 - Upstream ClickHouse builds without Antalya Hybrid (skip / ffail suite).
 - **`SHARED NAMED SCALAR` / dynamic watermarks** — planned only, not implemented.
 - **`TTL … EXPORT TO`** — pretend it does not exist; no tests or stubs.

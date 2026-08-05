@@ -42,7 +42,9 @@ def hybrid_replaces_distributed_head(self, minio_root_user, minio_root_password)
     """Replace a Distributed head with Hybrid; queries and INSERT path stay correct.
 
     Uses ``replicated_cluster`` (single shard) so Hybrid INSERT works: multi-shard
-    ``cluster('all')`` requires a sharding key that Hybrid/cluster() does not take.
+    ``cluster('all')`` requires a sharding key that Hybrid/cluster() don't take.
+    Local MergeTree rows are seeded on every replica so force-remote still sees
+    hot data (plain MergeTree is not cross-replica replicated).
     """
     node = self.context.node
     self.context.catalog = "no"

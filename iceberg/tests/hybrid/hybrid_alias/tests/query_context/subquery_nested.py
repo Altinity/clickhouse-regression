@@ -264,7 +264,7 @@ def cte_multiple(self):
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, computed FROM {hybrid_table} ORDER BY id",
-        "WITH high AS (SELECT id, computed FROM {hybrid_table} WHERE computed > 1000), low AS (SELECT id, computed FROM {hybrid_table} WHERE computed <= 1000) SELECT 'high' AS seg, count() AS cnt FROM high UNION ALL SELECT 'low' AS seg, count() AS cnt FROM low",
+        "WITH high AS (SELECT id, computed FROM {hybrid_table} WHERE computed > 1000), low AS (SELECT id, computed FROM {hybrid_table} WHERE computed <= 1000) SELECT * FROM (SELECT 'high' AS seg, count() AS cnt FROM high UNION ALL SELECT 'low' AS seg, count() AS cnt FROM low) ORDER BY seg",
         "WITH src AS (SELECT id, computed FROM {hybrid_table}), stats AS (SELECT avg(computed) AS avg_c FROM src) SELECT src.id, src.computed FROM src, stats WHERE src.computed > stats.avg_c ORDER BY src.id",
     ]
     order_by = "(date_col, id)"

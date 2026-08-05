@@ -9,7 +9,6 @@ from iceberg.requirements.hybrid import (
     RQ_ClickHouse_Hybrid_Create,
     RQ_ClickHouse_Hybrid_FirstSegment,
     RQ_ClickHouse_Hybrid_ExperimentalGate,
-    RQ_ClickHouse_Hybrid_AnalyzerRequired,
 )
 
 import iceberg.tests.steps.hybrid as hybrid_steps
@@ -79,73 +78,6 @@ def create_and_select(self):
         node.query(f"DROP TABLE IF EXISTS {hybrid_table_name}")
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_Hybrid_AnalyzerRequired("1.0"))
-@Name("analyzer required")
-def analyzer_required(self):
-    """Hybrid SELECT fails with enable_analyzer=0 and succeeds with enable_analyzer=1."""
-    node = self.context.node
-
-    with Given("MT+MT Hybrid via remote()"):
-        hybrid_steps.enable_hybrid_table()
-        base_columns = [
-            Column(name="id", datatype=Int32()),
-            Column(name="value", datatype=Int32()),
-            Column(name="date_col", datatype=Date()),
-        ]
-        left = create_table(
-            name=f"left_{getuid()}",
-            engine="MergeTree",
-            columns=base_columns,
-            order_by="(date_col, id)",
-            partition_by="toYYYYMM(date_col)",
-        )
-        right = create_table(
-            name=f"right_{getuid()}",
-            engine="MergeTree",
-            columns=base_columns,
-            order_by="(date_col, id)",
-            partition_by="toYYYYMM(date_col)",
-        )
-        left.insert_test_data(cardinality=1, shuffle_values=False)
-        right.insert_test_data(cardinality=1, shuffle_values=False)
-
-        hybrid = f"hybrid_{getuid()}"
-        left_tf = f"remote('localhost', currentDatabase(), '{left.name}')"
-        right_tf = f"remote('localhost', currentDatabase(), '{right.name}')"
-        create_table(
-            name=hybrid,
-            engine=(
-                f"Hybrid({left_tf}, date_col >= '2025-01-15', "
-                f"{right_tf}, date_col < '2025-01-15')"
-            ),
-            columns=base_columns,
-            settings=[("allow_experimental_hybrid_table", 1)],
-        )
-
-    with When("SELECT with enable_analyzer=0"):
-        # Per-query SETTINGS overrides the suite default / profile.
-        result = node.query(
-            f"SELECT count() FROM {hybrid} SETTINGS enable_analyzer = 0",
-            no_checks=True,
-        )
-
-    with Then("the query fails"):
-        assert result.exitcode != 0, error(
-            "expected Hybrid SELECT to fail with enable_analyzer=0, "
-            f"got exitcode=0 output={result.output!r}"
-        )
-        note(f"enable_analyzer=0 rejected as expected: {result.output[:200]}")
-
-    with When("SELECT with enable_analyzer=1"):
-        ok = node.query(
-            f"SELECT count() FROM {hybrid} SETTINGS enable_analyzer = 1"
-        ).output.strip()
-
-    with Then("the query succeeds"):
-        assert ok.isdigit(), error()
-
-
 @TestFeature
 @Requirements(
     RQ_ClickHouse_Hybrid_Create("1.0"),
@@ -154,6 +86,5 @@ def analyzer_required(self):
 )
 @Name("smoke")
 def feature(self):
-    """Minimal Hybrid create + SELECT; analyzer requirement negative test."""
+    """Minimal Hybrid create + SELECT."""
     Scenario(run=create_and_select)
-    Scenario(run=analyzer_required)

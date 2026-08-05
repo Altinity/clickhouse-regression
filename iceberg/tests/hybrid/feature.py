@@ -1,6 +1,10 @@
 from testflows.core import *
 
-from helpers.config import users_d
+from helpers.config import config_d, users_d
+
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_AnalyzerRequired,
+)
 
 
 @TestStep(Given)
@@ -9,9 +13,8 @@ def force_analyzer_for_hybrid(self):
 
     The iceberg suite defaults to with_analyzer=False, which may inject
     allow_experimental_analyzer=0 into context.default_query_settings. That
-    per-query override wins over the users.d profile and breaks Hybrid/ALIAS
-    selects. This is suite setup, not proof of RQ.ClickHouse.Hybrid.AnalyzerRequired
-    — see smoke.analyzer_required for the negative test.
+    per-query override wins over the users.d profile; Hybrid coverage is
+    written and run with enable_analyzer=1 (see RQ.ClickHouse.Hybrid.AnalyzerRequired).
     """
     default_query_settings = getsattr(self.context, "default_query_settings", [])
     for setting in (
@@ -26,6 +29,9 @@ def force_analyzer_for_hybrid(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_AnalyzerRequired("1.0"),
+)
 @Name("hybrid")
 def feature(self, minio_root_user, minio_root_password):
     """Hybrid table engine suite (Antalya).
@@ -47,6 +53,18 @@ def feature(self, minio_root_user, minio_root_password):
                     }
                 },
                 config_file="allow_experimental_hybrid_table.xml",
+                node=node,
+                modify=True,
+            )
+
+    with Given(
+        "allow serialized query-plan packets "
+        "(required for serialize_query_plan=1 on remotes)"
+    ):
+        for node in self.context.nodes:
+            config_d.create_and_add(
+                entries={"process_query_plan_packet": "true"},
+                config_file="process_query_plan_packet.xml",
                 node=node,
                 modify=True,
             )

@@ -42,7 +42,7 @@ def run_tests(test_features, minio_root_user=None, minio_root_password=None):
 
 
 @TestFeature
-@Name("hybrid_alias")
+@Name("hybrid alias")
 def feature(self, minio_root_user, minio_root_password):
     """Test hybrid alias support."""
     test_features = discover_test_features()

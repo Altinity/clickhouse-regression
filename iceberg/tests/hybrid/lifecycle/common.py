@@ -184,7 +184,12 @@ def create_hybrid_remote_iceberg(
 
 @TestStep(Given)
 def create_local_and_distributed(
-    self, rows=ALL_ROWS, cluster="replicated_cluster", local_name=None, distributed_name=None
+    self,
+    rows=ALL_ROWS,
+    cluster="replicated_cluster",
+    local_name=None,
+    distributed_name=None,
+    seed_all_replicas=True,
 ):
     """MergeTree local table + Distributed head over ``cluster``.
 
@@ -192,6 +197,11 @@ def create_local_and_distributed(
     Hybrid head that replaces Distributed can still INSERT without a
     sharding key. Multi-shard ``all`` needs a sharding key that ``cluster()``
     does not carry into Hybrid.
+
+    When ``seed_all_replicas`` is true (default), the same rows are inserted
+    on every node. Plain MergeTree is not replicated across replicas of
+    ``replicated_cluster``; without this, ``prefer_localhost_replica=0`` can
+    hit an empty replica and under-read the hot segment.
     """
     if local_name is None:
         local_name = f"local_{getuid()}"
@@ -206,9 +216,15 @@ def create_local_and_distributed(
         partition_by="toYYYYMM(date_col)",
         cluster=cluster,
     )
-    self.context.node.query(
+
+    insert = (
         f"INSERT INTO {local_name} (id, value, date_col) VALUES {values_sql(rows)}"
     )
+    if seed_all_replicas:
+        for n in self.context.nodes:
+            n.query(insert)
+    else:
+        self.context.node.query(insert)
 
     self.context.node.query(
         f"CREATE TABLE {distributed_name} AS {local_name} "

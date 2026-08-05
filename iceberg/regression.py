@@ -118,31 +118,31 @@ xfails = {
             "entry once the manifest carries format settings end-to-end.",
         )
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery alias/subquery select alias": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery alias/subquery select alias": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with alias": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with alias": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with group by": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with group by": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with order by": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with limit": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with limit": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by and limit": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with order by and limit": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/union alias/union all with alias": [
+    "/iceberg/hybrid/hybrid alias/query context/union alias/union all with alias": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/set operations alias/intersect except with alias/*": [
+    "/iceberg/hybrid/hybrid alias/query context/set operations alias/intersect except with alias/*": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/constants/default json/*": [
+    "/iceberg/hybrid/hybrid alias/constants/default json/*": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/2122"),
     ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
