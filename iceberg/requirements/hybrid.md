@@ -133,7 +133,7 @@ SET allow_experimental_hybrid_table = 1;
 ### RQ.ClickHouse.Hybrid.AnalyzerRequired
 version: 1.0
 
-[ClickHouse] SHALL support Hybrid only with `enable_analyzer = 1` (formerly `allow_experimental_analyzer = 1`). Behavior with `enable_analyzer = 0` is not supported.
+Hybrid queries SHALL be run with `enable_analyzer = 1` (formerly `allow_experimental_analyzer = 1`). The Hybrid regression suite enables the analyzer in the default profile and query settings. Behavior with `enable_analyzer = 0` is out of scope.
 
 ## Segment Predicates (Watermarks)
 
