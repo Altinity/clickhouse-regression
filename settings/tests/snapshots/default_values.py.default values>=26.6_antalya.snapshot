@@ -326,6 +326,8 @@ analyze_index_with_space_filling_curves = r"""'{"default":"1"}'"""
 
 analyzer_compatibility_allow_compound_identifiers_in_unflatten_nested = r"""'{"default":"1"}'"""
 
+analyzer_compatibility_allow_non_aggregate_in_having = r"""'{"default":"0"}'"""
+
 analyzer_compatibility_join_using_top_level_identifier = r"""'{"default":"0"}'"""
 
 analyzer_compatibility_prefer_alias_over_subcolumn = r"""'{"default":"0"}'"""
@@ -2946,6 +2948,8 @@ replication_alter_partitions_sync = r"""'{"default":"1"}'"""
 
 replication_wait_for_inactive_replica_timeout = r"""'{"default":"120"}'"""
 
+reserve_memory = r"""'{"default":"0"}'"""
+
 restore_replace_external_dictionary_source_to_null = r"""'{"default":"0"}'"""
 
 restore_replace_external_engines_to_null = r"""'{"default":"0"}'"""
@@ -3114,7 +3118,7 @@ show_data_lake_catalogs_in_system_tables = r"""'{"default":"0"}'"""
 
 show_processlist_include_internal = r"""'{"default":"1"}'"""
 
-show_remote_databases_in_system_tables = r"""'{"default":"0"}'"""
+show_remote_databases_in_system_tables = r"""'{"default":"1"}'"""
 
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
