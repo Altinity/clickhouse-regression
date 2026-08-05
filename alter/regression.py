@@ -19,7 +19,7 @@ from helpers.datatypes import *
 from alter.cas_mode import (
     enable_cas_default_storage,
     check_cas_mode,
-    cas_default_policy_override_path,
+    reset_cas_config,
 )
 
 
@@ -306,13 +306,12 @@ def regression(
 
     self.context.stress = stress
 
-    override = cas_default_policy_override_path()
     if use_cas:
         with Given("content-addressed storage as the default MergeTree disk"):
             enable_cas_default_storage()
-    elif override.exists():
-        with Given("remove stale CAS default-policy override"):
-            override.unlink()
+    else:
+        with Given("no content-addressed storage configuration"):
+            reset_cas_config()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
