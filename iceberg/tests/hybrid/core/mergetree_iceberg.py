@@ -5,6 +5,7 @@ from helpers.common import getuid
 from helpers.tables import create_table
 
 from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_AdditionalSegments,
     RQ_ClickHouse_Hybrid_Segment_MergeTree,
     RQ_ClickHouse_Hybrid_Segment_Iceberg,
 )
@@ -193,12 +194,13 @@ def cluster_mergetree_iceberg_aggregations(self, minio_root_user, minio_root_pas
 
 @TestFeature
 @Requirements(
+    RQ_ClickHouse_Hybrid_AdditionalSegments("1.0"),
     RQ_ClickHouse_Hybrid_Segment_MergeTree("1.0"),
     RQ_ClickHouse_Hybrid_Segment_Iceberg("1.0"),
 )
 @Name("cluster MergeTree Iceberg")
 def feature(self, minio_root_user, minio_root_password):
-    """Hybrid over cluster(MergeTree) + IcebergS3."""
+    """Hybrid over cluster(MergeTree) + IcebergS3 (FQ table name as cold segment)."""
     self.context.catalog = "no"
 
     for scenario in (
