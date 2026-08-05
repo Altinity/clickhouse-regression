@@ -46,11 +46,11 @@ allow_create_index_without_type = r"""'{"default":"0"}'"""
 
 allow_custom_error_code_in_throwif = r"""'{"default":"0"}'"""
 
-allow_database_glue_catalog = r"""'{"default":"0"}'"""
+allow_database_glue_catalog = r"""'{"default":"1"}'"""
 
-allow_database_iceberg = r"""'{"default":"0"}'"""
+allow_database_iceberg = r"""'{"default":"1"}'"""
 
-allow_database_unity_catalog = r"""'{"default":"0"}'"""
+allow_database_unity_catalog = r"""'{"default":"1"}'"""
 
 allow_ddl = r"""'{"default":"1"}'"""
 
@@ -92,11 +92,11 @@ allow_experimental_correlated_subqueries = r"""'{"default":"1"}'"""
 
 allow_experimental_database_atomic = r"""'{"default":"1"}'"""
 
-allow_experimental_database_glue_catalog = r"""'{"default":"0"}'"""
+allow_experimental_database_glue_catalog = r"""'{"default":"1"}'"""
 
 allow_experimental_database_hms_catalog = r"""'{"default":"0"}'"""
 
-allow_experimental_database_iceberg = r"""'{"default":"0"}'"""
+allow_experimental_database_iceberg = r"""'{"default":"1"}'"""
 
 allow_experimental_database_materialized_mysql = r"""'{"default":"0"}'"""
 
@@ -108,7 +108,7 @@ allow_experimental_database_replicated = r"""'{"default":"1"}'"""
 
 allow_experimental_database_s3_tables = r"""'{"default":"0"}'"""
 
-allow_experimental_database_unity_catalog = r"""'{"default":"0"}'"""
+allow_experimental_database_unity_catalog = r"""'{"default":"1"}'"""
 
 allow_experimental_delta_kernel_rs = r"""'{"default":"1"}'"""
 
