@@ -1835,6 +1835,29 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
     assert rows == actual_count, error()
 
 
+@TestStep(When)
+def wait_for_all_mutations_to_complete(
+    self, node=None, table_name=None, timeout=30, delay=1
+):
+    """Wait for all mutations to complete on a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT count() FROM system.mutations WHERE is_done = 0"
+    else:
+        query = f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
+
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            pending_mutations = node.query(
+                query,
+                exitcode=0,
+                steps=True,
+            ).output.strip()
+            assert int(pending_mutations) == 0, error()
+
+
 @TestStep(Then)
 def check_consistency(self, nodes, table_name, sync_timeout=10):
     """SYNC the given nodes and check that they agree about the given table"""
