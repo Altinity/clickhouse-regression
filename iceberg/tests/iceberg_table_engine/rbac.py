@@ -85,6 +85,7 @@ def drop_table(self, minio_root_user, minio_root_password, node=None):
 
 
 @TestFeature
+@Name("rbac")
 def feature(self, minio_root_user, minio_root_password):
     """Test RBAC for Iceberg tables."""
     Scenario(test=drop_table)(

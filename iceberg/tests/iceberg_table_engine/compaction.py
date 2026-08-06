@@ -65,6 +65,7 @@ def compaction_smoke(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Name("compaction")
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=compaction_smoke)(
         minio_root_user=minio_root_user,
