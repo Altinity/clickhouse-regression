@@ -206,6 +206,20 @@ def sanitize_docker_tag(tag):
     return re.sub(r"[^a-zA-Z0-9_.-]", "_", unquote(tag))
 
 
+def chime_option():
+    """Silence the client query-completion chime, on by default since 26.6.
+
+    ClickHouse/ClickHouse#104545 made the client write ASCII BEL (\\x07) to stderr
+    when a query takes at least 5s and stderr is a tty. Our bash sessions run under
+    a pty (docker exec -it), so stderr is a tty, and the commands merge stderr into
+    stdout with 2>&1 -- the BEL ends up inside the captured query output. Empty for
+    older clients, which do not have the option and would fail to start with it.
+    """
+    if check_clickhouse_version(">=26.6")(current()):
+        return " --chime 0"
+    return ""
+
+
 class Shell(ShellBase):
     def __exit__(self, type, value, traceback):
         # send exit and Ctrl-D repeatedly
@@ -929,6 +943,8 @@ class ClickHouseNode(Node):
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
 
+        client += chime_option()
+
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
                 query.write(sql)
@@ -1012,6 +1028,8 @@ class ClickHouseNode(Node):
             client += (
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
+
+        client += chime_option()
 
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
@@ -1147,6 +1165,8 @@ class ClickHouseNode(Node):
             client += (
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
+
+        client += chime_option()
 
         if progress:
             client += " --progress"
