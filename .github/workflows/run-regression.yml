@@ -110,6 +110,7 @@ on:
           - tiered_storage_gcs
           - tiered_storage_local
           - tiered_storage_minio
+          - tiered_storage_cas
           - version
           - window_functions
           - hive_partitioning
@@ -1419,6 +1420,26 @@ jobs:
       storage_path: /minio
       regression_args: '--with-minio'
       artifact_name: tiered_storage-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_cas:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_cas' || inputs.suite == 'tiered_storage_all' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_cas
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--with-cas'
+      artifact_name: tiered_storage-cas-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
