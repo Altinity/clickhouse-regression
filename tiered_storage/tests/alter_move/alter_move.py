@@ -9,6 +9,7 @@ import time
 from tiered_storage.tests.common import get_used_disks_for_table
 from tiered_storage.tests.common import get_path_for_part_from_part_log
 from tiered_storage.tests.common import get_paths_for_partition_from_part_log
+from tiered_storage.tests.common import external_path_on_disk_prefix
 from helpers.common import check_clickhouse_version
 from testflows.core import *
 from testflows.asserts import error
@@ -83,13 +84,8 @@ def scenario(self, engine):
             )
             with Then(f"the disk name should be '{expected_disk}'"):
                 assert disk == expected_disk, error()
-            with And("path should start with '/external'"):
-                expected = "/external"
-                if cluster.with_cas or cluster.with_minio or (
-                    (cluster.with_s3amazon or cluster.with_s3gcs)
-                    and check_clickhouse_version(">=22.3")(self)
-                ):
-                    expected = "/var/lib/clickhouse/disks/external"
+            with And("path should start with the external tier prefix"):
+                expected = external_path_on_disk_prefix(cluster, self)
                 assert get_path_for_part_from_part_log(
                     node, table_name, first_part
                 ).startswith(expected), error()
@@ -141,13 +137,8 @@ def scenario(self, engine):
             )
             with And(f"all disks should be '{expected_disk}'"):
                 assert all(d == expected_disk for d in disks), error()
-            with And("all paths should start with '/external'"):
-                expected = "/external"
-                if cluster.with_cas or cluster.with_minio or (
-                    (cluster.with_s3amazon or cluster.with_s3gcs)
-                    and check_clickhouse_version(">=22.3")(self)
-                ):
-                    expected = "/var/lib/clickhouse/disks/external"
+            with And("all paths should start with the external tier prefix"):
+                expected = external_path_on_disk_prefix(cluster, self)
                 assert all(
                     path.startswith(expected)
                     for path in get_paths_for_partition_from_part_log(

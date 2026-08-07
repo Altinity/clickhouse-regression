@@ -62,6 +62,7 @@ on:
           - tiered_storage_gcs
           - tiered_storage_local
           - tiered_storage_minio
+          - tiered_storage_cas
           - window_functions
       arch:
         description: "Architecture to run tests on (default: x86)"

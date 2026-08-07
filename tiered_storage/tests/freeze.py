@@ -8,7 +8,7 @@
 from tiered_storage.tests.common import get_random_string
 from tiered_storage.tests.common import get_used_disks_for_table
 from testflows.core import TestScenario, Name
-from testflows.core import Given, When, Then, And, Finally, current
+from testflows.core import Given, When, Then, And, Finally
 from testflows.asserts import error
 
 
@@ -77,7 +77,27 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with Then("shadow files (backups) should exist"):
                 node.command("find /jbod1/shadow -name '*mrk2' | grep '.*'", exitcode=0)
-                if cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas:
+                if cluster.with_cas:
+                    # CAS FREEZE publishes shadow-namespace refs in the pool; there
+                    # is no local /var/lib/clickhouse/disks/external/shadow tree.
+                    # Disk-API paths are rooted at "shadow/..." (not ".../shadow/..."),
+                    # so LIKE '%/shadow/%' never matches — use startsWith instead.
+                    shadow_files = node.query(
+                        """
+                        SELECT count()
+                        FROM system.remote_data_paths
+                        WHERE startsWith(local_path, 'shadow/')
+                          AND local_path LIKE '%mrk2%'
+                        SETTINGS traverse_shadow_remote_data_paths = 1
+                        FORMAT TabSeparated
+                        """
+                    ).output.strip()
+                    assert int(shadow_files) > 0, error()
+                elif (
+                    cluster.with_minio
+                    or cluster.with_s3amazon
+                    or cluster.with_s3gcs
+                ):
                     node.command(
                         "find /var/lib/clickhouse/disks/external/shadow -name '*mrk2' | grep '.*'",
                         exitcode=0,
@@ -89,9 +109,10 @@ def scenario(self, cluster, node="clickhouse1"):
     finally:
         with Finally("I remove any shadow files if any"):
             node.command("rm -rf /jbod1/shadow")
-            if cluster.with_minio or cluster.with_cas:
+            # CAS shadows are pool refs with no local shadow directory to remove.
+            if cluster.with_minio:
                 node.command("rm -rf /var/lib/clickhouse/disks/external/shadow")
-            else:
+            elif not cluster.with_cas:
                 node.command("rm -rf /external/shadow")
 
         with Finally("I drop the table"):

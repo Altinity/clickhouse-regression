@@ -9,7 +9,11 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import (
+    check_clickhouse_version,
+    check_if_not_antalya_build,
+    experimental_analyzer,
+)
 from s3.tests.common import temporary_bucket_path
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
@@ -150,6 +154,12 @@ xfails = {
 ffails = {
     ":/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
     "with s3amazon/alter table policy": (XFail, "Investigating"),
+    "/tiered storage/with cas": (
+        Skip,
+        "CAS is only supported on Antalya builds >= 26.6",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.6")(test),
+    ),
 }
 
 
