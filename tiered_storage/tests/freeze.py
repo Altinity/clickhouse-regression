@@ -80,13 +80,13 @@ def scenario(self, cluster, node="clickhouse1"):
                 if cluster.with_cas:
                     # CAS FREEZE publishes shadow-namespace refs in the pool; there
                     # is no local /var/lib/clickhouse/disks/external/shadow tree.
-                    # Walk the disk API via system.remote_data_paths instead.
+                    # Disk-API paths are rooted at "shadow/..." (not ".../shadow/..."),
+                    # so LIKE '%/shadow/%' never matches — use startsWith instead.
                     shadow_files = node.query(
                         """
                         SELECT count()
                         FROM system.remote_data_paths
-                        WHERE disk_name IN ('external', 'external_cache')
-                          AND local_path LIKE '%/shadow/%'
+                        WHERE startsWith(local_path, 'shadow/')
                           AND local_path LIKE '%mrk2%'
                         SETTINGS traverse_shadow_remote_data_paths = 1
                         FORMAT TabSeparated
