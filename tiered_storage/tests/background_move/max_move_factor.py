@@ -86,7 +86,7 @@ def scenario(self, engine):
 
         with And("path_on_disk for all parts should have path to the external"):
             for p in path:
-                if cluster.with_minio or (
+                if cluster.with_cas or cluster.with_minio or (
                     (cluster.with_s3amazon or cluster.with_s3gcs)
                     and check_clickhouse_version(">=22.3")(self)
                 ):
