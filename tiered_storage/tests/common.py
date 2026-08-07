@@ -125,9 +125,18 @@ def produce_alter_move(
 
 @contextmanager
 def add_storage_config(
-    with_minio=False, with_aws_s3=False, with_gcs_s3=False, environ=None
+    with_minio=False,
+    with_aws_s3=False,
+    with_gcs_s3=False,
+    with_cas=False,
+    environ=None,
 ):
-    """Add the minio storage config to storage_configuration.xml."""
+    """Add the minio storage config to storage_configuration.xml.
+
+    When ``with_cas`` is set the external/slow tier disk is replaced with a
+    content-addressed (CAS) object_storage disk instead of a local or plain S3
+    disk, so the tiered storage tests exercise CAS as the slow tier.
+    """
     disks = {
         "default": {"keep_free_space_bytes": "1024"},
         "jbod1": {"path": "/jbod1/"},
@@ -146,9 +155,19 @@ def add_storage_config(
     external_disk_name = "external_cache"
 
     if check_clickhouse_version(">=22.8")(current()) and any(
-        (with_minio, with_aws_s3, with_gcs_s3)
+        (with_minio, with_aws_s3, with_gcs_s3, with_cas)
     ):
-        if with_minio:
+        if with_cas:
+            disks["external"] = {
+                "type": "object_storage",
+                "object_storage_type": "s3",
+                "metadata_type": "cas",
+                "server_root_id": "tiered-cas-{replica}",
+                "endpoint": "http://minio:9001/cas/data/",
+                "access_key_id": "minio",
+                "secret_access_key": "minio123",
+            }
+        elif with_minio:
             disks["external"] = {
                 "type": "s3",
                 "endpoint": "http://minio:9001/root/data/",

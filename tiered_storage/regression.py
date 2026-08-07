@@ -41,6 +41,13 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--with-cas",
+        action="store_true",
+        help="use content-addressed (CAS) storage for the external/slow tier disk",
+        default=False,
+    )
+
+    parser.add_argument(
         "--aws-s3-access-key",
         action="store",
         help="S3 Amazon access key",
@@ -157,6 +164,7 @@ def feature(
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
+    with_cas=False,
     environ=None,
     base_uri=None,
 ):
@@ -195,7 +203,7 @@ def feature(
             )
             environ["GCS_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}"
 
-    with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
+    with add_storage_config(with_minio, with_s3amazon, with_s3gcs, with_cas, environ):
         Scenario(
             run=load("tiered_storage.tests.startup_and_queries", "scenario"),
             **common_args,
@@ -348,6 +356,7 @@ def regression(
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
+    with_cas=False,
     aws_s3_access_key=None,
     aws_s3_key_id=None,
     aws_s3_uri=None,
@@ -406,6 +415,7 @@ def regression(
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon
         cluster.with_s3gcs = with_s3gcs
+        cluster.with_cas = with_cas
         self.context.cluster = cluster
 
         with Given("I enable or disable experimental analyzer if needed"):
@@ -415,7 +425,9 @@ def regression(
                 )
 
         name = "normal"
-        if with_minio:
+        if with_cas:
+            name = "with cas"
+        elif with_minio:
             name = "with minio"
         elif with_s3amazon:
             name = "with s3amazon"
@@ -427,6 +439,7 @@ def regression(
             with_minio=with_minio,
             with_s3amazon=with_s3amazon,
             with_s3gcs=with_s3gcs,
+            with_cas=with_cas,
             environ=environ,
             base_uri=base_uri,
         )
