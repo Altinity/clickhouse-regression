@@ -266,6 +266,11 @@ ffails = {
         "FREEZE/UNFREEZE hard-link backups are unsupported on content-addressed disks",
         check_cas_mode,
     ),
+    "/alter/attach partition/part 1/temporary table": (
+        Skip,
+        "crashes the server https://github.com/Altinity/ClickHouse/issues/2173",
+        check_cas_mode,
+    ),
 }
 
 

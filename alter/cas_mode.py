@@ -11,7 +11,7 @@ CAS_CONFIG = """\
             <cas_disk>
                 <type>object_storage</type>
                 <object_storage_type>s3</object_storage_type>
-                <metadata_type>content_addressed</metadata_type>
+                <metadata_type>cas</metadata_type>
                 <server_root_id>alter-cas-{replica}</server_root_id>
                 <endpoint>http://minio:9001/cas/data/</endpoint>
                 <access_key_id>minio</access_key_id>
@@ -41,12 +41,12 @@ CAS_CONFIG = """\
 CAS_CONFIG_PLACEHOLDER = """\
 <clickhouse>
     <!--
-    Placeholder for the content-addressed storage configuration.
+    Placeholder for the CAS storage configuration.
 
-    Content-addressed metadata storage only exists in Antalya builds, and disk
-    definitions are parsed at server startup, so a `content_addressed` disk in a
-    config that is always mounted makes every older server fail to start with
-    `MetadataStorageFactory: unknown metadata storage type: content_addressed`.
+    CAS metadata storage only exists in Antalya builds, and disk definitions are
+    parsed at server startup, so a `cas` disk in a config that is always mounted
+    makes every older server fail to start with
+    `MetadataStorageFactory: unknown metadata storage type: cas`.
 
     This file is filled in by alter/cas_mode.py when the suite is started with
     the `cas` option and reset back to this placeholder afterwards.
