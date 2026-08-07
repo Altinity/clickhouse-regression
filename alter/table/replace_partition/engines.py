@@ -6,12 +6,11 @@ from alter.table.replace_partition.common import (
 )
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition
+from helpers import create
 from helpers.create import (
     partitioned_merge_tree_table,
     partitioned_replacing_merge_tree_table,
     partitioned_summing_merge_tree_table,
-    partitioned_collapsing_merge_tree_table,
-    partitioned_versioned_collapsing_merge_tree_table,
     partitioned_graphite_merge_tree_table,
     partitioned_aggregating_merge_tree_table,
     create_replicated_merge_tree_table,
@@ -21,7 +20,7 @@ from helpers.create import (
 @TestStep(Given)
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"))
 def partitioned_replicated_merge_tree_table(
-    self, table_name, partition_by, columns=None, order_by="tuple()"
+    self, table_name, partition_by, columns=None, order_by="tuple()", extra_columns=None
 ):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
@@ -35,7 +34,37 @@ def partitioned_replicated_merge_tree_table(
         )
 
     with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
+        create_partitions_with_random_uint64(
+            table_name=table_name, extra_columns=extra_columns
+        )
+
+
+@TestStep(Given)
+def partitioned_collapsing_merge_tree_table(self, table_name, partition_by, **kwargs):
+    """Create a CollapsingMergeTree table with a dedicated sign column, so that the
+    partition column is free to hold the same partitions as the other engines."""
+    return create.partitioned_collapsing_merge_tree_table(
+        table_name=table_name,
+        partition_by=partition_by,
+        sign="Sign",
+        number_of_partitions=5,
+        **kwargs,
+    )
+
+
+@TestStep(Given)
+def partitioned_versioned_collapsing_merge_tree_table(
+    self, table_name, partition_by, **kwargs
+):
+    """Create a VersionedCollapsingMergeTree table with a dedicated sign column, so that
+    the partition column is free to hold the same partitions as the other engines."""
+    return create.partitioned_versioned_collapsing_merge_tree_table(
+        table_name=table_name,
+        partition_by=partition_by,
+        sign="Sign",
+        number_of_partitions=5,
+        **kwargs,
+    )
 
 
 def columns():
@@ -46,9 +75,16 @@ def columns():
         {"name": "Time", "type": "DateTime"},
         {"name": "Value", "type": "Float64"},
         {"name": "Timestamp", "type": "Int64"},
+        {"name": "Sign", "type": "Int8"},
     ]
 
     return partition_columns
+
+
+def extra_columns():
+    """Columns the insert must set explicitly: `Value` keeps SummingMergeTree from
+    dropping all-zero rows and `Sign` is required by the collapsing engines."""
+    return {"Value": "rand64()", "Sign": "if(rand() % 2 = 0, 1, -1)"}
 
 
 @TestCheck
@@ -70,12 +106,14 @@ def check_replace_partition(self, destination_table, source_table):
             partition_by="p",
             columns=columns(),
             order_by="i",
+            extra_columns=extra_columns(),
         )
         source_table(
             table_name=source_table_name,
             partition_by="p",
             columns=columns(),
             order_by="i",
+            extra_columns=extra_columns(),
         )
 
     with When("I replace partition from the source table to the destination table"):

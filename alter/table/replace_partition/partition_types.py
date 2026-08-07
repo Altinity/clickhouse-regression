@@ -1,3 +1,4 @@
+from testflows.asserts import *
 from testflows.core import *
 
 from alter.table.replace_partition.common import (
@@ -122,17 +123,45 @@ def check_replace_partition(self, destination_table, source_table):
         destination_table(table_name=destination_table_name)
         source_table(table_name=source_table_name)
 
-    with When("I replace partition from the source table into the destination table"):
-        replace_partition(
-            destination_table=destination_table_name,
-            source_table=source_table_name,
-            partition=1,
+    source_partition_is_empty = source_table is partition_with_no_parts
+
+    if source_partition_is_empty and check_clickhouse_version(">=26.6")(self):
+        select_destination = (
+            f"SELECT i FROM {destination_table_name} WHERE p = 1 "
+            "ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
-    with Then("I check that the partition on the destination table was replaced"):
-        check_partition_was_replaced(
-            destination_table=destination_table_name, source_table=source_table_name
-        )
+        with And("I save the data of the partition on the destination table"):
+            data_before = node.query(select_destination).output
+
+        with When(
+            "replace partition is refused because the source partition has no parts"
+        ):
+            replace_partition(
+                destination_table=destination_table_name,
+                source_table=source_table_name,
+                partition=1,
+                exitcode=36,
+                message="has no parts in partition",
+            )
+
+        with Then("I check that the data of the destination table is kept"):
+            assert node.query(select_destination).output == data_before, error()
+    else:
+        with When(
+            "I replace partition from the source table into the destination table"
+        ):
+            replace_partition(
+                destination_table=destination_table_name,
+                source_table=source_table_name,
+                partition=1,
+            )
+
+        with Then("I check that the partition on the destination table was replaced"):
+            check_partition_was_replaced(
+                destination_table=destination_table_name,
+                source_table=source_table_name,
+            )
 
 
 @TestSketch(Scenario)

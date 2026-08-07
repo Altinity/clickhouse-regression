@@ -10,26 +10,6 @@ from helpers.tables import create_table_partitioned_by_column, create_table, Col
 
 
 @TestStep(Given)
-def create_partitions_for_collapsing_merge_tree(
-    self,
-    table_name,
-    number_of_values=3,
-    number_of_partitions=5,
-    number_of_parts=1,
-    node=None,
-):
-    """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
-    if node is None:
-        node = self.context.node
-
-    with By("Inserting random values into a column with uint64 datatype"):
-        for i in range(1, number_of_partitions + 1):
-            for parts in range(1, number_of_parts + 1):
-                node.query(
-                    f"INSERT INTO {table_name} (p, i) SELECT {random.choice([-1, 1])}, rand64() FROM numbers({number_of_values})"
-                )
-
-@TestStep(Given)
 def create_partitions_with_random_uint64(
     self,
     table_name,
@@ -37,17 +17,21 @@ def create_partitions_with_random_uint64(
     number_of_partitions=5,
     number_of_parts=1,
     node=None,
-    from_partition=1
+    from_partition=1,
+    extra_columns=None,
 ):
     """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
     if node is None:
         node = self.context.node
 
+    names = ", " + ", ".join(extra_columns) if extra_columns else ""
+    values = ", " + ", ".join(extra_columns.values()) if extra_columns else ""
+
     with By("Inserting random values into a column with uint64 datatype"):
         for i in range(from_partition, from_partition + number_of_partitions):
             for parts in range(1, number_of_parts + 1):
                 node.query(
-                    f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
+                    f"INSERT INTO {table_name} (p, i{names}) SELECT {i}, rand64(){values} FROM numbers({number_of_values})"
                 )
 
 
