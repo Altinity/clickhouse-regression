@@ -6,8 +6,11 @@
 #  prior written permission is obtained from Altinity LTD.
 #
 import time
-from tiered_storage.tests.common import get_used_disks_for_table, get_random_string
-from helpers.common import check_clickhouse_version
+from tiered_storage.tests.common import (
+    get_used_disks_for_table,
+    get_random_string,
+    external_path_on_disk_prefix,
+)
 from testflows.core import *
 from testflows.asserts import error
 
@@ -91,13 +94,8 @@ def scenario(self, engine):
         with Then(
             "the first (oldest) part path_on_disk should have path to the external"
         ):
-            if cluster.with_cas or cluster.with_minio or (
-                (cluster.with_s3amazon or cluster.with_s3gcs)
-                and check_clickhouse_version(">=22.3")(self)
-            ):
-                assert path.startswith("/var/lib/clickhouse/disks/external/"), error()
-            else:
-                assert path.startswith("/external"), error()
+            expected = external_path_on_disk_prefix(cluster, self)
+            assert path.startswith(expected), error()
 
         with When("I check if parts were eventually deleted jbod1"):
             for attempt in retries(timeout=60, delay=5):

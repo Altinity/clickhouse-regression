@@ -49,6 +49,25 @@ def get_used_disks_for_table(node, name, step=When, steps=True):
             return get_used_disks()
 
 
+def external_path_on_disk_prefix(cluster, test=None):
+    """Return the ``path_on_disk`` prefix for parts on the external tier.
+
+    Plain local disk uses ``/external``. Plain S3/minio keeps local object-storage
+    metadata under ``/var/lib/clickhouse/disks/external``. CAS has no local
+    metadata tree: ``system.disks.path`` / ``path_on_disk`` report the object
+    prefix from the endpoint (``.../cas/data/`` → ``data/``).
+    """
+    if getattr(cluster, "with_cas", False):
+        return "data/"
+    if cluster.with_minio or (
+        test is not None
+        and (cluster.with_s3amazon or cluster.with_s3gcs)
+        and check_clickhouse_version(">=22.3")(test)
+    ):
+        return "/var/lib/clickhouse/disks/external"
+    return "/external"
+
+
 def get_path_for_part_from_part_log(node, table, part_name, step=When):
     with step("I flush logs"):
         node.query("SYSTEM FLUSH LOGS")
