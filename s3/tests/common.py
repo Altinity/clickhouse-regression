@@ -1,5 +1,6 @@
 import os
 import base64
+import platform
 import tempfile
 from contextlib import contextmanager
 
@@ -68,10 +69,13 @@ def add_config(
                 node.stop_clickhouse(safe=False)
 
             with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
+                logfile = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log"
+                # `stat` uses different flags on GNU/Linux (-c %s) and BSD/macOS (-f %z)
+                if platform.system() == "Darwin":
+                    stat_cmd = f"stat -f %z {logfile}"
+                else:
+                    stat_cmd = f"stat -c %s {logfile}"
+                cmd = node.cluster.command(None, stat_cmd)
                 logsize = cmd.output.split(" ")[0].strip()
 
             with And("I start ClickHouse back up"):
