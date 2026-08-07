@@ -74,7 +74,7 @@ def non_existent_partition(
                 source_table=source_table,
                 partition=partition_to_replace,
                 exitcode=36,
-                message="has no parts in partition",
+                message="DB::Exception: Source table",
             )
 
         with And("the data of the destination table is kept"):

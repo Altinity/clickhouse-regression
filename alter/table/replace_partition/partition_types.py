@@ -142,7 +142,7 @@ def check_replace_partition(self, destination_table, source_table):
                 source_table=source_table_name,
                 partition=1,
                 exitcode=36,
-                message="has no parts in partition",
+                message="DB::Exception: Source table",
             )
 
         with Then("I check that the data of the destination table is kept"):
