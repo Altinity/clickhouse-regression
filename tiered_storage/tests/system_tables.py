@@ -48,6 +48,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     if (
                         cluster.with_minio
                         or (cluster.with_s3gcs)
+                        or cluster.with_cas
                         or (
                             check_clickhouse_version(">=22.3")(self)
                             and cluster.with_s3amazon
@@ -80,6 +81,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     if (
                         cluster.with_minio
                         or (cluster.with_s3gcs)
+                        or cluster.with_cas
                         or (
                             check_clickhouse_version(">=22.3")(self)
                             and cluster.with_s3amazon

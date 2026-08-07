@@ -39,7 +39,7 @@ def scenario(self, cluster, node="clickhouse1"):
         node = cluster.node(node)
 
     external_dir = "/external"
-    if cluster.with_minio:
+    if cluster.with_minio or cluster.with_cas:
         external_dir = "/var/lib/clickhouse/disks/external"
 
     for example in self.examples:

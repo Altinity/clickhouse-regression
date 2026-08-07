@@ -172,6 +172,7 @@ class Cluster(object):
         with_minio=False,
         with_s3amazon=False,
         with_s3gcs=False,
+        with_cas=False,
     ):
         self._bash = {}
         self.clickhouse_path = clickhouse_path
@@ -181,6 +182,7 @@ class Cluster(object):
         self.with_minio = with_minio
         self.with_s3amazon = with_s3amazon
         self.with_s3gcs = with_s3gcs
+        self.with_cas = with_cas
         self.lock = threading.Lock()
 
     def delete_bash(self, node):

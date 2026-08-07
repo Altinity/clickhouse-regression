@@ -118,7 +118,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     fill_up_disk(name, 5)
                     fill_up_disk(name, 9)
 
-                if cluster.with_s3amazon or cluster.with_s3gcs:
+                if cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas:
                     with And("I check external is being used"):
                         output = node.query(
                             f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
@@ -131,6 +131,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     cluster.with_minio
                                     or cluster.with_s3amazon
                                     or cluster.with_s3gcs
+                                    or cluster.with_cas
                                 )
                             )
                             else "external"
@@ -157,7 +158,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 with And("I keep adding data to the table above 300%% of the original"):
                     fill_up_disk(name, 20)
 
-                if cluster.with_s3amazon or cluster.with_s3gcs:
+                if cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas:
                     output = node.query(
                         f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                     ).output
@@ -169,6 +170,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 cluster.with_minio
                                 or cluster.with_s3amazon
                                 or cluster.with_s3gcs
+                                or cluster.with_cas
                             )
                         )
                         else "external"
