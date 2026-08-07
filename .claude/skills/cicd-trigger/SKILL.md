@@ -91,7 +91,7 @@ python3 cicd-trigger.py [options]
 `s3_all`, `s3_aws`, `s3_azure`, `s3_gcs`, `s3_minio`, `export_part`, `export_partition`
 
 **Tiered storage:**
-`tiered_storage_all`, `tiered_storage_aws`, `tiered_storage_gcs`, `tiered_storage_local`, `tiered_storage_minio`
+`tiered_storage_all`, `tiered_storage_aws`, `tiered_storage_gcs`, `tiered_storage_local`, `tiered_storage_minio`, `tiered_storage_cas`
 
 **Parquet:**
 `parquet_all`, `parquet`, `parquet_minio`, `parquet_s3`, `parquet_native_v3`, `parquet_minio_native_v3`, `parquet_s3_native_v3`

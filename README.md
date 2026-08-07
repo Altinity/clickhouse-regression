@@ -163,11 +163,12 @@ Specify `suite` variable to select running only specific suites
 | `suite`  | `selects`                       | Selects suite                                           |
 | `suite`  | `session_timezone`              | Session Timezone suite                                  |
 | `suite`  | `ssl_server`                    | SSL Server suite                                        |
-| `suite`  | `tiered_storage_all`            | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
+| `suite`  | `tiered_storage_all`            | All Tiered Storage (Local Disk, MinIO, AWS, GCS, CAS) suites |
 | `suite`  | `tiered_storage_aws`            | Tiered Storage AWS suite                                |
 | `suite`  | `tiered_storage_gcs`            | Tiered Storage GCS suite                                |
 | `suite`  | `tiered_storage_local`          | Tiered Storage Local suite                              |
 | `suite`  | `tiered_storage_minio`          | Tiered Storage MinIO suite                              |
+| `suite`  | `tiered_storage_cas`            | Tiered Storage CAS (content-addressed) suite            |
 | `suite`  | `vfs_all`                       | Full VFS (MinIO, AWS, GCS) suite                        |
 | `suite`  | `vfs_aws`                       | VFS AWS suite                                           |
 | `suite`  | `vfs_gcs`                       | VFS GCS suite                                           |

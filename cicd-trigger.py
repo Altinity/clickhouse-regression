@@ -144,6 +144,7 @@ CHOICES = {
         "tiered_storage_gcs",
         "tiered_storage_local",
         "tiered_storage_minio",
+        "tiered_storage_cas",
         "version",
         "window_functions",
         "hive_partitioning",
