@@ -6,7 +6,11 @@ from testflows.asserts import error
 from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
-from s3.tests.common import temporary_bucket_path, s3_storage
+from s3.tests.common import (
+    temporary_bucket_path,
+    s3_storage,
+    wait_for_all_mutations_to_complete,
+)
 from helpers.alter import *
 from helpers.cluster import MESSAGES_TO_RETRY
 from platform import processor
@@ -340,27 +344,6 @@ def get_random_part(self, table_name, node=None, partition=None):
         steps=True,
     )
     return result.output.strip()
-
-
-@TestStep(When)
-def wait_for_all_mutations_to_complete(self, node=None, table_name=None):
-    """Wait for all mutations to complete on a given node."""
-    if node is None:
-        node = self.context.node
-
-    if table_name is None:
-        query = "SELECT count() FROM system.mutations WHERE is_done = 0"
-    else:
-        query = f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
-
-    for attempt in retries(timeout=30, delay=1):
-        with attempt:
-            pending_mutations = node.query(
-                query,
-                exitcode=0,
-                steps=True,
-            ).output.strip()
-            assert int(pending_mutations) == 0, error()
 
 
 @TestStep(When)

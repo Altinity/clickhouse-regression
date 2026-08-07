@@ -1,11 +1,8 @@
 from testflows.core import *
 from helpers.common import check_clickhouse_version, check_if_antalya_build
-from helpers.feature_support import validate_feature_support
+from helpers.feature_support import validate_feature_support, setting_supported
 from s3.requirements.export_partition import *
-from s3.tests.common import (
-    enable_export_partition,
-    export_merge_tree_partition_supported,
-)
+from s3.tests.common import enable_export_partition
 
 
 @TestFeature
@@ -22,7 +19,7 @@ def minio(self, uri, bucket_prefix):
     if check_if_antalya_build(self) and not validate_feature_support(
         self,
         feature="Export merge tree partition",
-        check=export_merge_tree_partition_supported,
+        check=setting_supported("export_merge_tree_partition_force_export"),
     ):
         return
 

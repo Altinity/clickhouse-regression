@@ -1,6 +1,10 @@
 import os
 from testflows.core import *
 
+from iceberg.tests.hybrid.hybrid_alias.requirements.requirements import (
+    SRS_Hybrid_Table_ALIAS_Columns,
+)
+
 
 def discover_test_features(current_dir=None, subdirectory=None):
     """Discover all test feature modules in the hybrid_alias/tests directory.
@@ -42,7 +46,8 @@ def run_tests(test_features, minio_root_user=None, minio_root_password=None):
 
 
 @TestFeature
-@Name("hybrid_alias")
+@Specifications(SRS_Hybrid_Table_ALIAS_Columns)
+@Name("hybrid alias")
 def feature(self, minio_root_user, minio_root_password):
     """Test hybrid alias support."""
     test_features = discover_test_features()

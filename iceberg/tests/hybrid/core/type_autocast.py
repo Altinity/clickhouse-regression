@@ -5,6 +5,11 @@ from helpers.common import getuid
 from helpers.tables import Column, create_table
 from helpers.datatypes import UInt64, Int64, Int32, Date
 
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_AutoCast,
+    RQ_ClickHouse_Hybrid_TypeSeams,
+)
+
 from iceberg.tests.hybrid.core.common import (
     LEFT_PREDICATE,
     RIGHT_PREDICATE,
@@ -189,6 +194,10 @@ def uint64_vs_int64_auto_cast_off(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_AutoCast("1.0"),
+    RQ_ClickHouse_Hybrid_TypeSeams("1.0"),
+)
 @Name("type autocast")
 def feature(self):
     """Type mismatch across segments with hybrid_table_auto_cast_columns on/off."""

@@ -161,34 +161,6 @@ def add_config(
                             wait_for_config_to_be_loaded()
 
 
-def export_merge_tree_part_supported(test):
-    """Return True if the build supports the export merge tree part feature.
-
-    Checks the setting's presence (``name`` column), not its ``value``.
-    """
-    with Then("I check whether the export merge tree part setting exists"):
-        name = get_settings_value(
-            "allow_experimental_export_merge_tree_part",
-            node=test.context.node,
-            column="name",
-        )
-    return name.strip() != ""
-
-
-def export_merge_tree_partition_supported(test):
-    """Return True if the build supports the export merge tree partition feature.
-
-    Checks the setting's presence (``name`` column), not its ``value``.
-    """
-    with Then("I check whether the export merge tree partition setting exists"):
-        name = get_settings_value(
-            "export_merge_tree_partition_force_export",
-            node=test.context.node,
-            column="name",
-        )
-    return name.strip() != ""
-
-
 def _export_partition_setting_name():
     """Return the right ``EXPORT PARTITION`` server-config flag name for the
     running ClickHouse build.
@@ -1865,6 +1837,29 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
 
     actual_count = get_row_count(node=node, table_name=table_name)
     assert rows == actual_count, error()
+
+
+@TestStep(When)
+def wait_for_all_mutations_to_complete(
+    self, node=None, table_name=None, timeout=30, delay=1
+):
+    """Wait for all mutations to complete on a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT count() FROM system.mutations WHERE is_done = 0"
+    else:
+        query = f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
+
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            pending_mutations = node.query(
+                query,
+                exitcode=0,
+                steps=True,
+            ).output.strip()
+            assert int(pending_mutations) == 0, error()
 
 
 @TestStep(Then)

@@ -1,5 +1,10 @@
 from testflows.core import *
 
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_QueryShapes,
+    RQ_ClickHouse_Hybrid_CorrectnessVsUnion,
+)
+
 from iceberg.tests.hybrid.core.common import (
     PREFER_LOCALHOST,
     FORCE_REMOTE,
@@ -87,6 +92,10 @@ def select_where_group_by_force_remote(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_QueryShapes("1.0"),
+    RQ_ClickHouse_Hybrid_CorrectnessVsUnion("1.0"),
+)
 @Name("queries")
 def feature(self):
     """Basic Hybrid queries vs UNION ALL reference."""

@@ -4,6 +4,12 @@ from testflows.asserts import error
 from helpers.common import getuid
 from helpers.tables import create_table
 
+from iceberg.requirements.hybrid import (
+    RQ_ClickHouse_Hybrid_Watermark_Exclusive,
+    RQ_ClickHouse_Hybrid_Watermark_Overlap,
+    RQ_ClickHouse_Hybrid_Watermark_Replace,
+)
+
 from iceberg.tests.hybrid.core.common import (
     ALL_ROWS,
     COLUMNS,
@@ -148,6 +154,11 @@ def create_or_replace_watermark(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_ClickHouse_Hybrid_Watermark_Exclusive("1.0"),
+    RQ_ClickHouse_Hybrid_Watermark_Overlap("1.0"),
+    RQ_ClickHouse_Hybrid_Watermark_Replace("1.0"),
+)
 @Name("watermarks")
 def feature(self):
     """Static watermark exclusivity, overlap, and CREATE OR REPLACE."""

@@ -15,3 +15,7 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
+    Feature(test=load("iceberg.tests.hybrid.core.topology", "feature"))(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )

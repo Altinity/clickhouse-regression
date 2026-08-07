@@ -45,6 +45,7 @@ xfails = {
     "/iceberg/export partition/: catalog/*/manifest integrity/external iceberg reader round-trips exported data": [
         (
             Fail,
+            "https://github.com/Altinity/ClickHouse/issues/2161 — "
             "PyIceberg cannot scan EXPORT PARTITION data files: Parquet "
             "written by ClickHouse lacks Iceberg field-ids and IcebergS3 "
             "tables have no schema.name-mapping.default, so strict readers "
@@ -56,6 +57,7 @@ xfails = {
     "/iceberg/export partition/: catalog/*/catalogs/catalog: external reader round-trips exported data": [
         (
             Fail,
+            "https://github.com/Altinity/ClickHouse/issues/2161 — "
             "Same Parquet field-id / name-mapping gap as the no_catalog "
             "external-reader scenario: catalog-backed tables get a proper "
             "Iceberg schema from PyIceberg at CREATE time, but EXPORT "
@@ -116,31 +118,31 @@ xfails = {
             "entry once the manifest carries format settings end-to-end.",
         )
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery alias/subquery select alias": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery alias/subquery select alias": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with alias": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with alias": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with group by": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with group by": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with order by": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with limit": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with limit": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/subquery nested/cte with order by and limit": [
+    "/iceberg/hybrid/hybrid alias/query context/subquery nested/cte with order by and limit": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/union alias/union all with alias": [
+    "/iceberg/hybrid/hybrid alias/query context/union alias/union all with alias": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/query context/set operations alias/intersect except with alias/*": [
+    "/iceberg/hybrid/hybrid alias/query context/set operations alias/intersect except with alias/*": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1424"),
     ],
-    "/iceberg/hybrid/hybrid_alias/constants/default json/*": [
+    "/iceberg/hybrid/hybrid alias/constants/default json/*": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/2122"),
     ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
@@ -166,6 +168,13 @@ xfails = {
     ],
     "/iceberg/icebergS3 table function/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
+    ],
+    "/iceberg/iceberg table engine/compaction/compaction smoke": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/113745",
+            check_clickhouse_version(">=26.6"),
+        ),
     ],
     "/iceberg/iceberg engine/* catalog/swarm/*": [
         (Fail, "Only works with antalya build", check_if_not_antalya_build),

@@ -14,7 +14,7 @@ the end-to-end Antalya cold-tier story into one implementable matrix.
 
 | Source | What it contributes |
 |--------|---------------------|
-| `iceberg/requirements/hybrid.md` | Engine contract: DDL, INSERT routing, watermarks, auto-cast, Distributed-path testing notes |
+| `iceberg/requirements/hybrid.md` | **SRS-048** — Hybrid engine semantics as `RQ.ClickHouse.Hybrid.*` SHALL requirements (paired with `hybrid.py` + `@Requirements` on suite Features) |
 | [Altinity blog — Hybrid Tables](https://altinity.com/blog/introducing-hybrid-tables-transparent-query-on-clickhouse-mergetree-and-iceberg-data) | Why Hybrid exists; VIEW/Merge failures; hot/cold + EXPORT PART; type seams; swarm; Antalya-only |
 | [RFC gist — Hybrid MergeTree ↔ Iceberg E2E](https://gist.github.com/filimonov/a2bf4f2758de421c569ba8af898b656e) | Full pipeline design context; failure modes; schema validation track. **Ignore TTL EXPORT and named-scalar pieces for now** (not implemented) |
 | [`hybrid_additional_notes.md`](./hybrid_additional_notes.md) | Distributed path branches; suite relocation; extend query fuzzing with upstream queries |
@@ -66,11 +66,10 @@ Iceberg/Parquet, with INSERT always hitting the first segment.
 | ALIAS columns on `remote(MT)` + `remote(MT)` | **Large** (~276 modules) | Expression matrix; date / alias watermarks; some query_context |
 | Smoke create + SELECT | **Done (Phase 0)** | `smoke.py` — `remote()` first segment |
 | Dropped segment + restart | **Disabled** | `hybrid_dropped_segment_repro.py` (#1347); commented out in `feature.py` |
-| MergeTree + `icebergCluster` query fuzzing | **Draft / disabled** | Keep `hybrid_query_fuzzing.py` + `hybrid_query_fuzzing_queries.sql` (~120 SQL); harden (drop `pause()`, wire into suite) |
-| Data-driven alias runner | **Disabled** | `alias_test_runner.py` + JSON |
-| Distributed path matrix | **Not covered** | `prefer_localhost_replica`, `serialize_query_plan`, stage modes |
-| MT + Iceberg type auto-cast | **Not covered** as Hybrid suite | Partial related work in `export_partition/casting` |
-| Watermark lifecycle / CREATE OR REPLACE | **Not covered** systematically | Static watermark via OR REPLACE |
+| MergeTree + `icebergCluster` query fuzzing | **Phase 4** | `fuzzing/hybrid_queries.py` + SQL; upstream-derived additive |
+| EXPORT → watermark / Distributed replace | **Phase 3** | `lifecycle/export_then_watermark.py`, `lifecycle/replace_distributed_head.py` |
+| Topology DoD (remoteSecure / 3-seg / Dist²) | **Phase 4** | `core/topology.py` |
+| Schema variety / ops / PyIceberg interop | **Phase 5** | `schema/variety.py`, `operational.py`, `external_reader.py` |
 | Named-scalar dynamic watermark | **Out of scope** | Planned in RFC only — **not implemented**; ignore for now |
 | TTL `EXPORT TO` | **Out of scope** | Pretend it does not exist; do not sketch or scaffold |
 | Upstream query fuzzing | **Not started** | **Additional** fuzz coverage from upstream stateless/stateful/integration; does not replace existing Hybrid fuzz SQL |
@@ -86,7 +85,7 @@ L1  Hybrid engine core (Distributed fan-out + predicates)
       segments, DDL, INSERT routing, static watermarks, query shapes,
       Distributed execution branches
 
-L2  Heterogeneous storage (MT ↔ Iceberg / S3 / swarm)
+L2  Heterogeneous storage (MT ↔ Iceberg / S3 / icebergCluster)
       type alignment, auto-cast, object_storage_cluster, catalogs
 
 L3  Operational watermark lifecycle
@@ -116,7 +115,7 @@ L3  Operational watermark lifecycle
 | Setting | Value | Notes |
 |---------|-------|-------|
 | `allow_experimental_hybrid_table` | `1` | CREATE TABLE gate |
-| `enable_analyzer` | `1` | **Only** supported analyzer mode for Hybrid |
+| `enable_analyzer` | `1` | Required suite config (RQ.ClickHouse.Hybrid.AnalyzerRequired) |
 
 Also enable as needed by segment type:
 
@@ -134,7 +133,7 @@ vs remote results (notes + `hybrid.md`).
 | Setting | Values | Effect |
 |---------|--------|--------|
 | `prefer_localhost_replica` | `1` (default), `0` | `0` forces local shard through remote path |
-| `serialize_query_plan` | `0` (default), `1` | SQL subquery vs JSON plan fragment to remotes; `1` likely future default |
+| `serialize_query_plan` | `0` (default), `1` | SQL subquery vs JSON plan fragment to remotes; `1` needs server `process_query_plan_packet` |
 | `hybrid_table_auto_cast_columns` | `0` (default), `1` | Auto CAST at segment boundary; needs analyzer |
 | `skip_unused_shards` | on / off | Predicate pruning / unused segment skip |
 | `object_storage_cluster_join_mode` | default / `'local'` | JOINs involving object-storage segments |
@@ -167,8 +166,8 @@ Run the **core query pack** (§7) under each row:
 | G | 1 | 1 | 1 | P2 |
 | H | 0 | 1 | 1 | P2 |
 
-`enable_analyzer=0` is **negative-only**: expect clear failure / unsupported;
-do not expand functional coverage there.
+`enable_analyzer=0` is **out of scope**. The suite enables `enable_analyzer=1`
+(profile + query settings); see RQ.ClickHouse.Hybrid.AnalyzerRequired.
 
 ---
 
@@ -482,15 +481,26 @@ hybrid/
     mergetree_mergetree.py
     mergetree_iceberg.py     # catalogs parametrized
     mergetree_s3.py
-    mergetree_iceberg_swarm.py
+    mergetree_iceberg_cluster.py
     type_autocast.py
   lifecycle/                 # L3
     export_then_watermark.py
     replace_distributed_head.py
+    common.py
+    feature.py
   fuzzing/                   # §11 — Hybrid fuzz SQL + upstream-derived queries
-    hybrid_query_fuzzing.py
+    hybrid_queries.py
     hybrid_query_fuzzing_queries.sql
-    upstream/                  # additive upstream-derived fuzz inputs
+    upstream_queries.py
+    upstream_queries.sql
+    common.py
+    feature.py
+  schema/                    # Phase 5 — variety / ops / PyIceberg interop
+    variety.py
+    operational.py
+    external_reader.py
+    common.py
+    feature.py
   alias/                       # moved hybrid_alias — separate Feature
   edge/
     dropped_segment_restart.py
@@ -498,6 +508,9 @@ hybrid/
 
 Parametrize catalogs (`no` / `ice` / `glue`) and source engines
 (`MergeTree` / `ReplicatedMergeTree`) the same way `export_partition` does.
+
+Core topology DoD (Phase 4): `core/topology.py` — secure cluster,
+`clusterAllReplicas`, three-segment Hybrid, Distributed-over-Distributed.
 
 ---
 
@@ -525,36 +538,58 @@ Modules under `iceberg/tests/hybrid/core/`:
 - [x] Predicate pruning with hard result assertions (`predicate_pruning.py`)
 - [x] `cluster(MT)+IcebergS3` correctness (`mergetree_iceberg.py`) — settings A/B
 
-### Phase 2 — Storage matrix + auto-cast (P0/P1)
+### Phase 2 — Storage matrix + auto-cast (P0/P1) ✅ implemented
 
-- Catalog-param Iceberg destinations; `icebergCluster` + join mode.
-- S3 / s3Cluster Parquet segment.
-- Type mismatch table (§8) with auto-cast on/off.
-- Aggregate-state compatibility cases.
-- Schema evolution refresh (DETACH/ATTACH / OR REPLACE).
+Modules under `iceberg/tests/hybrid/storage/`:
 
-### Phase 3 — Lifecycle with EXPORT (P1)
+- [x] Catalog-param Iceberg destinations (`no` / `ice` / `glue`) — `mergetree_iceberg_catalog.py`
+- [x] `icebergCluster` + `object_storage_cluster_join_mode` — `mergetree_iceberg_cluster.py`
+- [x] S3 / s3Cluster Parquet segment — `mergetree_s3.py`
+- [x] Type mismatch on MT↔Iceberg (UInt64/Int64, UInt32/Int32) + `uniq` — `type_autocast_iceberg.py`
+- [x] Schema header refresh (ADD COLUMN + CREATE OR REPLACE) — `schema_refresh.py`
 
-- Export partition(s) → advance **static** watermark via OR REPLACE → verify.
-- Hybrid replaces Distributed recipe.
-- Overlap window discipline (export before manual delete of hot range).
-- Dropped-segment / restart hardening beyond single repro.
+Still deferred (later / Phase 3+):
 
-### Phase 4 — Fuzzing + DoD (P1/P2)
+- [ ] Full §8 type table (FixedString, Decimal, DateTime64, Enum, LowCardinality, nested)
+  — partial: Phase 5 `schema/variety.py` covers PR-scale shapes; Iceberg rejects
+  FixedString/Decimal/Enum/LC natively (MT+MT + FixedString↔String seam covered)
+- [ ] DETACH/ATTACH Hybrid persistence; dropped-segment hardening (#1347)
 
-- Harden and enable existing `hybrid_query_fuzzing` (no `pause()`, wired).
-- Add upstream-derived queries under the same fuzzing Feature.
-- Distributed-over-Distributed with existing multi-shard / multi-replica layout.
-- Three-segment / nested Hybrid as supported.
-- remoteSecure / clusterAllReplicas smoke.
+### Phase 3 — Lifecycle with EXPORT (P1) ✅ implemented
 
-### Phase 5 — Schema variety + soak (P2/P3)
+Modules under `iceberg/tests/hybrid/lifecycle/`:
 
-- Schema variety track; optional large soak job.
-- External reader interop on exported Iceberg (where env allows).
-- Operational drills around EXPORT lag / Iceberg unreachable (static W).
+- [x] Export partition(s) → advance **static** watermark via OR REPLACE → verify —
+  `export_then_watermark.py`
+- [x] Hybrid replaces Distributed recipe — `replace_distributed_head.py`
+- [x] Overlap window discipline (export before manual delete / gap if W advances
+  without export) — `export_then_watermark.py`
+- [ ] Dropped-segment / restart hardening beyond single repro — still deferred
+  (`hybrid_dropped_segment_repro.py`, #1347)
 
----
+### Phase 4 — Fuzzing + DoD (P1/P2) ✅ implemented
+
+- [x] Harden and enable existing Hybrid query fuzzing (no `pause()`, wired) —
+  `fuzzing/hybrid_queries.py` + `fuzzing/hybrid_query_fuzzing_queries.sql`
+- [x] Upstream-derived queries under the same fuzzing Feature —
+  `fuzzing/upstream_queries.py` + `fuzzing/upstream_queries.sql`
+- [x] Distributed-over-Distributed — `core/topology.py`
+- [x] Three-segment Hybrid — `core/topology.py`
+- [x] remoteSecure / clusterAllReplicas smoke — `core/topology.py`
+
+### Phase 5 — Schema variety + soak (P2/P3) ✅ PR-scale implemented
+
+Modules under `iceberg/tests/hybrid/schema/`:
+
+- [x] Schema variety track (reduced scale) — `variety.py`
+  (financial / telemetry / logs MT+MT; Iceberg-compatible nested; FixedString↔String seam)
+- [x] Operational drills (EXPORT lag / Iceberg unreachable, static W) — `operational.py`
+- [x] External PyIceberg read of exported cold tier — `external_reader.py`
+  (catalog destination + `schema.name-mapping.default`; EXPORT Parquet has no field-ids)
+- [ ] Large soak (100M+ / multi-TB) nightly — deferred (optional job, not PR)
+- [ ] Spark/DuckDB parity job — deferred (PyIceberg covered for PR)
+
+### Phase notes
 
 ## 15. Priority checklist (quick view)
 
@@ -568,34 +603,40 @@ Modules under `iceberg/tests/hybrid/core/`:
 - [x] Settings: `prefer_localhost_replica` 0/1; auto-cast with UInt/Int seam
 - [x] CREATE / DROP / CREATE OR REPLACE watermark move
 - [x] Hash/count correctness vs reference
-- [x] Analyzer required (`enable_analyzer=1`)
+- [x] Analyzer enabled for suite — `enable_analyzer=1` (RQ.ClickHouse.Hybrid.AnalyzerRequired)
 
 ### P1 — Should have next
 
-- [ ] `serialize_query_plan` 0/1 × localhost preference
-- [ ] All four remote aggregation stages
+- [x] `serialize_query_plan` 0/1 × localhost preference (Phase 1 `execution_paths.py`)
+- [x] All four remote aggregation stages (Phase 1 `execution_paths.py`)
 - [ ] JOINs, subqueries, CTE, UNION, window (subset)
-- [ ] icebergCluster / swarm path
-- [ ] EXPORT PARTITION then static watermark advance E2E
-- [ ] Hybrid replaces Distributed
-- [ ] Catalog modes for Iceberg segment
-- [ ] Existing hybrid query fuzzing enabled (non-interactive)
-- [ ] Upstream-derived fuzz queries v1 (additive; under same fuzzing Feature)
+- [x] icebergCluster path (Phase 2 `mergetree_iceberg_cluster.py`)
+- [x] EXPORT PARTITION then static watermark advance E2E
+- [x] Hybrid replaces Distributed
+- [x] Catalog modes for Iceberg segment (Phase 2 `mergetree_iceberg_catalog.py`)
+- [x] S3 / s3Cluster Parquet cold segment (Phase 2 `mergetree_s3.py`)
+- [x] Existing hybrid query fuzzing enabled (non-interactive)
+- [x] Upstream-derived fuzz queries v1 (additive; under same fuzzing Feature)
+- [ ] Dropped-segment / restart hardening (#1347)
 
 ### P2 — Expand
 
-- [ ] S3 Parquet segments; remoteSecure; clusterAllReplicas
-- [ ] Distributed-over-Distributed (multi-shard + replicas; not customer-specific)
+- [x] S3 Parquet segments; secure cluster / clusterAllReplicas (`core/topology.py`)
+- [x] Distributed-over-Distributed (multi-shard + replicas; not customer-specific)
 - [ ] Overlapping predicates / dupes; pruning with hard result assertions
-- [ ] ROLLUP/CUBE/TOTALS; three segments; nested Hybrid
+- [ ] ROLLUP/CUBE/TOTALS; nested Hybrid
+- [x] Three-segment Hybrid (`core/topology.py`)
 - [ ] Concurrent OR REPLACE; schema evolution cases
-- [ ] Schema-variety validation job (reduced scale)
+- [x] Schema-variety validation job (reduced scale) — `schema/variety.py`
+- [x] Operational drills EXPORT lag / Iceberg unreachable — `schema/operational.py`
+- [x] PyIceberg external read of exported cold tier — `schema/external_reader.py`
 
 ### P3 — Optional soak / interop
 
 - [ ] Large soak (100M+ / multi-TB) nightly
 - [ ] External Spark/DuckDB parity job
 - [ ] Perf budgets vs Distributed baseline
+- [x] PyIceberg cold-tier interop (Phase 5 `schema/external_reader.py`)
 
 ---
 
@@ -604,7 +645,7 @@ Modules under `iceberg/tests/hybrid/core/`:
 - Re-testing full EXPORT PARTITION internals (owned by `export_partition`).
 - Two-way Iceberg → MergeTree sync; import-parts-from-Iceberg (RFC future).
 - Hybrid-side merge-on-read / cross-segment dedup.
-- Making Hybrid work with `enable_analyzer=0`.
+- Expanding Hybrid coverage under `enable_analyzer=0` (currently out of scope).
 - Upstream ClickHouse builds without Antalya Hybrid (skip / ffail suite).
 - **`SHARED NAMED SCALAR` / dynamic watermarks** — planned only, not implemented.
 - **`TTL … EXPORT TO`** — pretend it does not exist; no tests or stubs.

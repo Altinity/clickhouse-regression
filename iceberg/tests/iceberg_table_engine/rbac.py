@@ -78,13 +78,14 @@ def drop_table(self, minio_root_user, minio_root_password, node=None):
         )
 
     with And("check that table is dropped"):
-        res = node.query(f"SHOW TABLES")
         for retry in retries(count=10, delay=1):
             with retry:
-                assert res.output == "", error()
+                res = node.query(f"SHOW TABLES")
+                assert iceberg_table_name not in res.output, error()
 
 
 @TestFeature
+@Name("rbac")
 def feature(self, minio_root_user, minio_root_password):
     """Test RBAC for Iceberg tables."""
     Scenario(test=drop_table)(
