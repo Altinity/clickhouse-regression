@@ -77,6 +77,7 @@ Dispatch with at least:
 
 - All scenarios `:valid? true` **and** `passed == --test-count` **and** Lein exit 0 → success
 - Any `:valid? false` or `:valid? :unknown`, fewer results than expected, or non-zero Lein → failure
+- Validity is from the **set** checker only (not `checker/perf` / gnuplot plots)
 - Artifacts: `cas/jepsen/jepsen_run.log`, `cas/jepsen/jepsen.clickhouse/store/`
 - `store/` is wiped at the start of each `run.py` invocation so stale results cannot mask failures
 
@@ -90,3 +91,4 @@ Dispatch with at least:
 - Concurrent runs must use distinct `COMPOSE_PROJECT_NAME` (CI sets `jepsen-${{ github.run_id }}-${{ github.run_attempt }}`; local `bringup.sh` defaults to `jepsen-local-<pid>` and records it in `.compose_project` for teardown).
 - `run.py` clears `jepsen.clickhouse/store/` before each run and requires `passed == --test-count` with Lein exit 0.
 - Inserts use `insert_quorum = 2` and `async_insert = 0`; the final read does `SYSTEM SYNC REPLICA` after a post-heal sleep.
+- CI installs `gnuplot` so optional Jepsen perf plots can be re-enabled without another runner gap.

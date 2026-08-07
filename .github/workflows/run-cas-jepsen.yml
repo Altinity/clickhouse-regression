@@ -71,13 +71,17 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Install JVM and Leiningen
+      - name: Install JVM, Leiningen, and gnuplot
         run: |
           set -euo pipefail
+          sudo apt-get update -qq
+          # gnuplot is required by Jepsen checker/perf; install even if we only use set
+          # checker for pass/fail so local/debug runs can render latency graphs.
+          pkgs=(gnuplot)
           if ! command -v java >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq openjdk-21-jdk-headless
+            pkgs+=(openjdk-21-jdk-headless)
           fi
+          sudo apt-get install -y -qq "${pkgs[@]}"
           # Pin Leiningen and install into the job workspace (no sudo, no shared /usr/local).
           LEIN_VERSION=2.11.2
           mkdir -p "$HOME/.local/bin"
@@ -88,6 +92,7 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           java -version
           lein version
+          gnuplot --version
 
       - name: Run CAS Jepsen
         env:

@@ -3,7 +3,6 @@
             [clojure.pprint :refer [pprint]]
             [clojure.string :as str]
             [jepsen
-             [checker :as checker]
              [cli :as cli]
              [generator :as gen]
              [tests :as tests]
@@ -16,7 +15,6 @@
             [jepsen.clickhouse.utils :as chu]
             [jepsen.control.util :as cu]
             [jepsen.os.ubuntu :as ubuntu]
-            [jepsen.checker.timeline :as timeline]
             [clojure.java.io :as io])
   (:import (ch.qos.logback.classic Level)
            (org.slf4j Logger LoggerFactory)))
@@ -62,9 +60,9 @@
             :pure-generators true
             :nemesis (:nemesis current-nemesis)
             :client (:client workload)
-            :checker (checker/compose
-                      {:perf     (checker/perf)
-                       :workload (:checker workload)})
+            ;; Pass/fail is the workload checker only. Jepsen checker/perf needs gnuplot;
+            ;; a missing binary marks the whole run :unknown even when the set is fine.
+            :checker (:checker workload)
             :generator (gen/phases
                         (->> (:generator workload)
                              (gen/stagger (/ (:rate opts)))

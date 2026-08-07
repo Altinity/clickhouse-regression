@@ -50,9 +50,9 @@
   "A generator, client, and checker for a set test."
   [opts]
   {:client    (SetClient. (atom false) nil)
-   :checker   (checker/compose
-                {:set (checker/set)
-                 :perf (checker/perf)})
+   ;; Set checker only — do not compose checker/perf here (needs gnuplot; failure
+   ;; would make :valid? :unknown despite lost-count 0).
+   :checker   (checker/set)
    :generator (->> (range)
                    (map (fn [x] {:type :invoke, :f :add, :value x})))
    :final-generator (gen/once {:type :invoke, :f :read, :value nil})})
