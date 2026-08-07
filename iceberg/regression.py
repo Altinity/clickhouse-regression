@@ -169,6 +169,13 @@ xfails = {
     "/iceberg/icebergS3 table function/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
     ],
+    "/iceberg/iceberg table engine/compaction/compaction smoke": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/113745",
+            check_clickhouse_version(">=26.6"),
+        ),
+    ],
     "/iceberg/iceberg engine/* catalog/swarm/*": [
         (Fail, "Only works with antalya build", check_if_not_antalya_build),
         (
