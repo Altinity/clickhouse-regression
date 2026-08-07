@@ -1,0 +1,67 @@
+# Privileged SSH nodes for Jepsen control (lein on host) + RustFS for CAS.
+# Service name jepsen-rustfs must match content_addressed_storage.xml endpoint DNS.
+# Do not set container_name / fixed network name: COMPOSE_PROJECT_NAME isolates concurrent runs.
+services:
+  jepsen-n1:
+    image: ubuntu:24.04
+    hostname: n1
+    privileged: true
+    networks: [jepsen-net]
+    volumes:
+      - ./id_rsa.pub:/tmp/jepsen_authorized_keys:ro
+      - ./scripts/node-entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+
+  jepsen-n2:
+    image: ubuntu:24.04
+    hostname: n2
+    privileged: true
+    networks: [jepsen-net]
+    volumes:
+      - ./id_rsa.pub:/tmp/jepsen_authorized_keys:ro
+      - ./scripts/node-entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+
+  jepsen-n3:
+    image: ubuntu:24.04
+    hostname: n3
+    privileged: true
+    networks: [jepsen-net]
+    volumes:
+      - ./id_rsa.pub:/tmp/jepsen_authorized_keys:ro
+      - ./scripts/node-entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+
+  jepsen-keeper:
+    image: ubuntu:24.04
+    hostname: keeper
+    privileged: true
+    networks: [jepsen-net]
+    volumes:
+      - ./id_rsa.pub:/tmp/jepsen_authorized_keys:ro
+      - ./scripts/node-entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+
+  jepsen-rustfs:
+    image: rustfs/rustfs:1.0.0-beta.8
+    hostname: jepsen-rustfs
+    networks: [jepsen-net]
+    environment:
+      RUSTFS_ACCESS_KEY: clickhouse
+      RUSTFS_SECRET_KEY: clickhouse
+      RUSTFS_ADDRESS: ":11121"
+      RUSTFS_CONSOLE_ENABLE: "false"
+    command: ["/data"]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --silent --show-error http://127.0.0.1:11121/health || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+networks:
+  jepsen-net:
+    driver: bridge

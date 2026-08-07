@@ -1,0 +1,123 @@
+name: CAS Jepsen
+run-name: CAS Jepsen | ${{ inputs.custom_run_name || format('{0} | {1}m × {2}', inputs.version || inputs.package, inputs.minutes, inputs.test_count) }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package. Either 'docker://' or 'https://'. Example: 'docker://altinity/clickhouse-server:…' or 'https://…/clickhouse'"
+        required: true
+        type: string
+      minutes:
+        description: "Per-scenario Jepsen time-limit in minutes"
+        required: true
+        type: number
+        default: 5
+      version:
+        description: "Expected version label (optional)"
+        required: false
+        type: string
+        default: ""
+      arch:
+        description: "Runner architecture"
+        type: choice
+        options:
+          - x86
+          - arm64
+        required: true
+        default: x86
+      test_count:
+        description: "Number of scenarios (test-all count; 8 = all server nemeses)"
+        required: true
+        type: number
+        default: 8
+      concurrency:
+        description: "Jepsen client concurrency"
+        required: true
+        type: number
+        default: 12
+      rate:
+        description: "Approximate ops per second per thread"
+        required: true
+        type: number
+        default: 10
+      timeout_minutes:
+        description: "Job timeout in minutes. Should be >= (minutes * test_count) + setup/teardown overhead (~60)."
+        required: true
+        type: number
+        default: 180
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      custom_run_name:
+        description: "Custom run name (optional)"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  cas_jepsen:
+    name: cas/jepsen
+    runs-on: ${{ inputs.arch == 'arm64' && fromJSON('["self-hosted","arm64","type-cax31-cax41","image-arm64-app-docker-ce"]') || fromJSON('["self-hosted","x86","type-cx43-cx53-cpx42","image-x86-app-docker-ce"]') }}
+    timeout-minutes: ${{ fromJSON(inputs.timeout_minutes) }}
+    env:
+      PYTHONIOENCODING: utf-8
+      DEBIAN_FRONTEND: noninteractive
+      COMPOSE_PROJECT_NAME: jepsen-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Install JVM, Leiningen, and gnuplot
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          # gnuplot is required by Jepsen checker/perf; install even if we only use set
+          # checker for pass/fail so local/debug runs can render latency graphs.
+          pkgs=(gnuplot)
+          if ! command -v java >/dev/null 2>&1; then
+            pkgs+=(openjdk-21-jdk-headless)
+          fi
+          sudo apt-get install -y -qq "${pkgs[@]}"
+          # Pin Leiningen and install into the job workspace (no sudo, no shared /usr/local).
+          LEIN_VERSION=2.11.2
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o "$HOME/.local/bin/lein" \
+            "https://raw.githubusercontent.com/technomancy/leiningen/${LEIN_VERSION}/bin/lein"
+          chmod 0755 "$HOME/.local/bin/lein"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/bin:$PATH"
+          java -version
+          lein version
+          gnuplot --version
+
+      - name: Run CAS Jepsen
+        env:
+          PACKAGE: ${{ inputs.package }}
+          MINUTES: ${{ inputs.minutes }}
+          TEST_COUNT: ${{ inputs.test_count }}
+          CONCURRENCY: ${{ inputs.concurrency }}
+          RATE: ${{ inputs.rate }}
+        run: |
+          set -euo pipefail
+          python3 -u cas/jepsen/run.py \
+            --package "$PACKAGE" \
+            --minutes "$MINUTES" \
+            --test-count "$TEST_COUNT" \
+            --concurrency "$CONCURRENCY" \
+            --rate "$RATE"
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cas-jepsen-artifacts-${{ inputs.arch }}-${{ github.run_id }}
+          path: |
+            cas/jepsen/jepsen_run.log
+            cas/jepsen/jepsen.clickhouse/store/
+            cas/jepsen/nodes.txt
+            cas/jepsen/keeper.txt
+          if-no-files-found: warn

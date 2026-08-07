@@ -1,0 +1,13 @@
+store/
+target/
+.lein-*
+pkg/
+nodes.txt
+keeper.txt
+.compose_project
+id_rsa
+id_rsa.pub
+*.log
+http.pid
+smoke_local.log
+jepsen.clickhouse/store/
