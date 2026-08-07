@@ -45,10 +45,14 @@ def scenario(self, cluster, node="clickhouse1"):
             with Then("result should match the expected"):
                 with values() as that:
                     name = "disk_data"
-                    if (
+                    if cluster.with_cas:
+                        # CAS reports object-storage path prefix (e.g. data/)
+                        # instead of a local metadata path under
+                        # /var/lib/clickhouse/disks/...
+                        name += "_with_cas"
+                    elif (
                         cluster.with_minio
                         or (cluster.with_s3gcs)
-                        or cluster.with_cas
                         or (
                             check_clickhouse_version(">=22.3")(self)
                             and cluster.with_s3amazon
