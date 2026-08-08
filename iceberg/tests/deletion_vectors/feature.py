@@ -49,14 +49,18 @@ MODULES = (
 @TestStep(Finally)
 def cleanup_created_tables(self):
     """Batch-drop every table the suite created: unregister from the REST
-    catalog via pyiceberg (fast, no Spark JVM) and delete the S3 objects.
-    Best-effort — corruption scenarios leave tables whose metadata a
-    catalog may refuse to touch, and cleanup must never fail the suite."""
+    catalog via pyiceberg (fast, no Spark JVM), then delete the S3
+    objects. Best-effort — cleanup must never fail the suite — but the S3
+    prefix of a table is only deleted once the table is confirmed gone
+    from the catalog (dropped, or already absent): deleting the objects
+    under a still-registered table would turn a retriable leftover into a
+    permanently broken catalog entry."""
     tables = getattr(self.context, "spark_created_tables", [])
     if not tables:
         return
 
     from pyiceberg.catalog import load_catalog
+    from pyiceberg.exceptions import NoSuchTableError
 
     catalog = None
     try:
@@ -71,29 +75,47 @@ def cleanup_created_tables(self):
             },
         )
     except Exception as exc:
-        note(f"REST catalog unavailable for cleanup: {exc}")
+        note(
+            f"REST catalog unavailable for cleanup, retaining all "
+            f"{len(tables)} table(s) for a later attempt: {exc}"
+        )
 
+    dropped = 0
+    retained = []
     deleted_objects = 0
     for namespace, table_name in tables:
+        identifier = f"{namespace}.{table_name}"
+
+        unregistered = False
         if catalog is not None:
-            for drop in (
-                lambda: catalog.drop_table(f"{namespace}.{table_name}"),
-                lambda: catalog.drop_namespace(namespace),
-            ):
-                try:
-                    drop()
-                except Exception:
-                    pass
+            try:
+                catalog.drop_table(identifier)
+                unregistered = True
+            except NoSuchTableError:
+                unregistered = True  # confirmed absent
+            except Exception as exc:
+                note(f"failed to drop {identifier} from the catalog: {exc}")
+            try:
+                catalog.drop_namespace(namespace)
+            except Exception:
+                pass  # non-empty or already gone — harmless either way
+
+        if not unregistered:
+            retained.append(identifier)
+            continue
+
+        dropped += 1
         try:
             deleted_objects += s3_objects.delete_prefix(
                 s3_objects.table_prefix(namespace, table_name)
             )
         except Exception as exc:
-            note(f"failed to delete objects of {namespace}.{table_name}: {exc}")
+            note(f"failed to delete objects of {identifier}: {exc}")
 
     note(
-        f"dropped {len(tables)} suite-created table(s), "
+        f"cleanup: {dropped}/{len(tables)} table(s) dropped, "
         f"{deleted_objects} object(s) removed"
+        + (f", retained for later cleanup: {retained}" if retained else "")
     )
 
 

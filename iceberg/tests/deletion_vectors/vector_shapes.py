@@ -190,23 +190,36 @@ def row_group_boundaries(self):
         for size in sizes[:-1]:
             cumulative += size
             boundaries.append(cumulative)  # first row of the next row group
-        deleted = sorted(
+        positions = sorted(
             {position for b in boundaries[:3] for position in (b - 1, b)}
             | {0, rows - 1}
         )
-        note(f"row group sizes {sizes[:5]}..., deleting positions {deleted}")
+
+    with And("the ids physically stored at those positions are read back"):
+        # positions address physical rows, so the expected id set must come
+        # from the file itself, not from assuming rows are stored in id
+        # order
+        ids_in_order = common.parquet_column_values(table=table, column="id")
+        assert len(ids_in_order) == rows, error(
+            f"data file holds {len(ids_in_order)} rows, expected {rows}"
+        )
+        deleted_ids = {ids_in_order[position] for position in positions}
+        note(
+            f"row group sizes {sizes[:5]}..., deleting positions "
+            f"{positions} holding ids {sorted(deleted_ids)}"
+        )
 
     with When("the vector is replaced to delete exactly those positions"):
         manifest.replace_deletion_vector(
             namespace=table.namespace,
             table_name=table.table_name,
-            payload=puffin.build_dv_payload(positions=deleted),
-            declared_cardinality=len(deleted),
+            payload=puffin.build_dv_payload(positions=positions),
+            declared_cardinality=len(positions),
         )
         common.drop_iceberg_metadata_cache()
         common.drop_puffin_cache()
 
-    expected = common.expected_ids(rows, deleted)
+    expected = sorted(set(ids_in_order) - deleted_ids)
     fresh = [("use_iceberg_metadata_files_cache", "0")]
 
     with Check("full single-threaded read"):
@@ -220,18 +233,19 @@ def row_group_boundaries(self):
         )
 
     with Check("predicate read pruning some row groups"):
-        boundary = boundaries[0]
-        window = range(boundary - 10, boundary + 11)
+        boundary_id = ids_in_order[boundaries[0]]
+        low, high = boundary_id - 10, boundary_id + 10
         result = common.read_result(
             table=table,
             columns="id",
-            where_clause=f"id BETWEEN {window.start} AND {window.stop - 1}",
+            where_clause=f"id BETWEEN {low} AND {high}",
             order_by="id",
             settings=fresh + [("input_format_parquet_filter_push_down", "1")],
         )
         ids = [int(line) for line in result.output.split() if line.strip()]
-        assert ids == [i for i in window if i not in deleted], error(
-            f"predicate read around boundary {boundary} returned {ids}"
+        assert ids == [i for i in expected if low <= i <= high], error(
+            f"predicate read around the boundary id {boundary_id} "
+            f"returned {ids}"
         )
 
     with Check("count() agrees"):

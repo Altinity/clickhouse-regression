@@ -179,19 +179,35 @@ def assert_min_row_groups(self, table, min_row_groups):
         )
 
 
+def _single_live_data_file(table):
+    files = manifest_steps.live_data_files(table.namespace, table.table_name)
+    assert len(files) == 1, (
+        f"expected exactly one live data file, found {len(files)}"
+    )
+    return files[0]
+
+
 @TestStep(Then)
 def parquet_row_group_sizes(self, table):
     """Row counts of every row group of the table's single live data file —
     for deriving the actual absolute positions of row-group boundaries."""
-    files = manifest_steps.live_data_files(table.namespace, table.table_name)
-    assert len(files) == 1, error(
-        f"expected exactly one live data file, found {len(files)}"
-    )
-    metadata = _parquet_metadata(files[0])
+    metadata = _parquet_metadata(_single_live_data_file(table))
     return [
         metadata.row_group(index).num_rows
         for index in range(metadata.num_row_groups)
     ]
+
+
+@TestStep(Then)
+def parquet_column_values(self, table, column="id"):
+    """Values of *column* of the table's single live data file in physical
+    row order — maps deletion-vector positions to the actual row values,
+    without assuming the writer stored rows in any particular order."""
+    data_file = _single_live_data_file(table)
+    parquet = pq.ParquetFile(
+        io.BytesIO(s3_objects.get_object_bytes(data_file["file_path"]))
+    )
+    return parquet.read(columns=[column]).column(column).to_pylist()
 
 
 @TestStep(Then)
