@@ -1,0 +1,118 @@
+"""Distributed reads: *Cluster table functions return identical results,
+old-protocol workers fail closed, and split data files apply vectors to the
+correct absolute positions."""
+
+from testflows.core import *
+from testflows.asserts import error
+
+from iceberg.requirements.deletion_vectors import *
+
+import iceberg.tests.deletion_vectors.steps.common as common
+import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Distributed_ClusterFunctions("1.0"))
+def cluster_functions(self):
+    """icebergS3Cluster returns exactly the single-node result for
+    representative deletion-vector reads."""
+    with Given(
+        "a table with two data files, one fully deleted, one with a "
+        "partial vector"
+    ):
+        table = common.table_with_deletion_vectors(
+            rows=0,
+            setup_statements=[
+                common.insert_range_statement(100),
+                "INSERT INTO {table} SELECT id + 100, "
+                "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
+                "DELETE FROM {table} WHERE id < 100 AND id % 10 = 0",
+                "DELETE FROM {table} WHERE id >= 140",
+            ],
+        )
+        snapshots = s3_objects.get_snapshots(table.namespace, table.table_name)
+
+    read_variants = {
+        "full read": dict(columns="id, data", order_by="id"),
+        "filtered read": dict(columns="id", where_clause="id % 3 = 0", order_by="id"),
+        "count": dict(columns="count()"),
+        "aggregate": dict(columns="sum(id), uniqExact(data)"),
+        "time travel to the first snapshot": dict(
+            columns="id",
+            order_by="id",
+            settings=[("iceberg_snapshot_id", str(snapshots[0]["snapshot-id"]))],
+        ),
+    }
+
+    for name, kwargs in read_variants.items():
+        with Check(name):
+            single = common.read_result(table=table, **kwargs)
+            clustered = common.read_result(table=table, cluster=True, **kwargs)
+            assert single.output == clustered.output, error(
+                f"cluster read of '{name}' differs from single-node read"
+            )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Distributed_ProtocolFailClosed("1.0"))
+def protocol_fail_closed(self):
+    """A worker whose protocol version cannot carry the deletion state must
+    fail with UNKNOWN_PROTOCOL rather than silently return deleted rows."""
+    skip(
+        "requires a cluster worker running an older ClickHouse whose "
+        "protocol lacks excluded_rows / iceberg_info / file_bucket_info "
+        "support; all nodes in this environment run the same build"
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Distributed_SplitDataFile("1.0"))
+def split_data_file(self):
+    """A single Parquet file split by row group across threads or nodes
+    applies the vector at correct absolute positions for any max_threads
+    value."""
+    rows = 10000
+    deleted = {i for i in range(rows) if i % 500 < 3}  # deletions in every region
+    expected = [i for i in range(rows) if i not in deleted]
+
+    with Given(
+        "a single-file table with many row groups and deletions in every "
+        "row group"
+    ):
+        table = common.table_with_deletion_vectors(
+            rows=rows,
+            delete_condition="id % 500 < 3",
+            extra_properties={
+                "write.parquet.row-group-size-bytes": "4096",
+                "write.parquet.page-size-bytes": "1024",
+            },
+        )
+
+    results = {}
+
+    for threads in ("1", "4", "16"):
+        with Check(f"single node read with max_threads={threads}"):
+            ids = common.select_ids(
+                table=table, settings=[("max_threads", threads)]
+            )
+            assert ids == expected, error(
+                f"max_threads={threads} returned {len(ids)} rows"
+            )
+            results[f"threads_{threads}"] = ids
+
+    with Check("cluster read"):
+        ids = common.select_ids(table=table, cluster=True)
+        assert ids == expected, error(f"cluster read returned {len(ids)} rows")
+
+    with Check("count() agrees with all reads"):
+        assert common.count_rows(table=table) == len(expected), error()
+        assert common.count_rows(table=table, cluster=True) == len(expected), error()
+
+
+@TestFeature
+@Name("distributed")
+def feature(self, minio_root_user, minio_root_password):
+    """Distributed deletion-vector reads."""
+    Scenario(test=cluster_functions, flags=TE)()
+    Scenario(test=protocol_fail_closed, flags=TE)()
+    Scenario(test=split_data_file, flags=TE)()

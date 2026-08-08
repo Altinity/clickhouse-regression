@@ -387,3 +387,49 @@ def get_query_duration(self, log_comment, node=None, format="TabSeparated"):
         """
     )
     return result
+
+
+@TestStep(Then)
+def get_profile_event(self, event, log_comment, node=None, wait=True):
+    """Get the summed value of an arbitrary profile event from
+    system.query_log for all QueryFinish entries with the given log_comment.
+
+    Returns the value as an int (0 when the event was not recorded).
+    """
+    if node is None:
+        node = self.context.node
+
+    if wait:
+        with By("wait for metrics to be collected"):
+            wait_for_metrics(log_comment, node)
+    else:
+        node.query("SYSTEM FLUSH LOGS")
+
+    result = node.query(
+        f"""
+            SELECT sum(ProfileEvents['{event}'])
+            FROM system.query_log
+            WHERE log_comment = '{log_comment}'
+            AND type = 'QueryFinish'
+            FORMAT TabSeparated
+        """
+    )
+    return int(result.output.strip() or 0)
+
+
+@TestStep(Then)
+def get_asynchronous_metric(self, metric, node=None):
+    """Get the current value of an asynchronous metric as a float
+    (0.0 when the metric is absent)."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+            SELECT value FROM system.asynchronous_metrics
+            WHERE metric = '{metric}'
+            FORMAT TabSeparated
+        """
+    )
+    output = result.output.strip()
+    return float(output) if output else 0.0
