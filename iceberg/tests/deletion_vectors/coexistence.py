@@ -122,6 +122,9 @@ def supersedes_position_deletes(self):
         table = common.table_with_deletion_vectors(
             rows=rows, delete_condition="id % 10 = 0"
         )
+        # the crafted positions below equal row ids only for one data file
+        # written in insertion order
+        common.assert_data_file_count(table=table, count=1)
 
     with When(
         "a position-delete file for the same data file marks position 0 "

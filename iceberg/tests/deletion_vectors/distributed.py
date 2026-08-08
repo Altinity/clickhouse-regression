@@ -88,6 +88,10 @@ def split_data_file(self):
             },
         )
 
+    with And("the writer really produced one file with many row groups"):
+        common.assert_data_file_count(table=table, count=1)
+        common.assert_min_row_groups(table=table, min_row_groups=2)
+
     results = {}
 
     for threads in ("1", "4", "16"):

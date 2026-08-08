@@ -75,15 +75,8 @@ def all_rows_deleted(self):
             ],
         )
 
-    with And("the fully-deleted data file was not physically removed"):
-        data_keys = [
-            key
-            for key in s3_objects.list_keys(f"{table.prefix}/data/")
-            if key.endswith(".parquet")
-        ]
-        assert len(data_keys) >= 2, error(
-            f"expected both data files to remain, found {data_keys}"
-        )
+    with And("both data files are still live in the current snapshot"):
+        common.assert_data_file_count(table=table, count=2)
 
     expected = list(range(100, 150))
 
@@ -186,6 +179,10 @@ def row_group_boundaries(self):
             },
         )
 
+    with And("the writer really produced one file with many row groups"):
+        common.assert_data_file_count(table=table, count=1)
+        common.assert_min_row_groups(table=table, min_row_groups=2)
+
     with Check("full single-threaded read"):
         common.assert_visible_ids(
             table=table, ids=expected, settings=[("max_threads", "1")]
@@ -235,7 +232,8 @@ def shared_puffin_file(self):
     deleted = list(range(0, 200, 10))
     expected = common.expected_ids(200, deleted)
 
-    with And("both vectors live in one shared Puffin file"):
+    with And("both data files are live and share one Puffin file"):
+        common.assert_data_file_count(table=table, count=2)
         puffin_keys = s3_objects.find_puffin_keys(
             namespace=table.namespace, table_name=table.table_name
         )

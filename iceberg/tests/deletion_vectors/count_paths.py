@@ -108,6 +108,7 @@ def count_only_fast_path(self):
                 "write.parquet.page-size-bytes": "1024",
             },
         )
+        common.assert_min_row_groups(table=table, min_row_groups=2)
         engine_table = common.engine_table(table=table)
 
     node = self.context.node

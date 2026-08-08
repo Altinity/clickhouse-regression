@@ -87,6 +87,7 @@ def _append_delete_entry(namespace, table_name, data_file_overrides):
         table_name=table_name,
         mutator=mutator,
         content=manifest.MANIFEST_LIST_DELETES,
+        only_manifest_key=template_key,
     )
 
 
@@ -153,10 +154,13 @@ def add_position_delete(self, namespace, table_name, data_file_path, positions):
 
 
 def first_data_file_path(namespace, table_name):
-    """Full URI of the referenced data file of the (first) deletion-vector
-    entry — the file both delete formats must target in coexistence tests."""
+    """Full URI of the referenced data file of the single deletion-vector
+    entry — the file both delete formats must target in coexistence tests.
+    Asserts there is exactly one entry so the target is unambiguous."""
     dv_entries = manifest.find_dv_entries(
         namespace=namespace, table_name=table_name
     )
-    assert dv_entries, "no deletion-vector entries found"
+    assert len(dv_entries) == 1, (
+        f"expected exactly one deletion-vector entry, found {len(dv_entries)}"
+    )
     return dv_entries[0]["entry"]["data_file"]["referenced_data_file"]

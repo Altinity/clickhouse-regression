@@ -74,6 +74,22 @@ def object_size(key):
     return response["ContentLength"]
 
 
+def delete_prefix(prefix):
+    """Delete every object under *prefix* (suite teardown of generated
+    tables)."""
+    keys = list_keys(prefix)
+    client = s3_client()
+    for start in range(0, len(keys), 1000):
+        client.delete_objects(
+            Bucket=WAREHOUSE_BUCKET,
+            Delete={
+                "Objects": [{"Key": key} for key in keys[start : start + 1000]],
+                "Quiet": True,
+            },
+        )
+    return len(keys)
+
+
 def object_inventory(prefix):
     """{key: etag} of every object under *prefix* — used to prove a set of
     ClickHouse operations modified nothing (read-only requirement)."""

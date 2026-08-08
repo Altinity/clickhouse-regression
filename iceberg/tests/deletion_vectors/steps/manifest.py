@@ -98,30 +98,53 @@ def find_dv_entries(namespace, table_name):
     return found
 
 
+def live_data_files(namespace, table_name):
+    """``data_file`` records of every live data entry in the current
+    snapshot — for asserting the physical layout that position-based
+    expectations depend on."""
+    files = []
+    for key in manifest_keys(namespace, table_name, content=MANIFEST_LIST_DATA):
+        records, _, _, _ = read_avro(key)
+        for entry in records:
+            if entry["status"] != 2:  # 2 = DELETED
+                files.append(entry["data_file"])
+    return files
+
+
 @TestStep(When)
-def mutate_manifest_entries(self, namespace, table_name, mutator, content=None):
+def mutate_manifest_entries(
+    self, namespace, table_name, mutator, content=None, only_manifest_key=None
+):
     """Rewrite manifest entries of the current snapshot in place.
+
+    Only manifests whose entries actually changed are re-uploaded, keeping
+    the mutation surface limited to the defect under test.
 
     Args:
         mutator: function(entry) → entry | list of entries | None (drop).
-            Applied to every entry of every matching manifest.
+            Applied to every entry of every matching manifest. Mutating the
+            entry dict in place and returning it is supported.
         content: restrict to data (0) or delete (1) manifests; None = all.
+        only_manifest_key: restrict the rewrite to this one manifest.
     """
     for key in manifest_keys(namespace, table_name, content=content):
+        if only_manifest_key is not None and key != only_manifest_key:
+            continue
         records, schema, metadata, codec = read_avro(key)
+        # mutators may modify entries in place, so change detection must
+        # compare against a snapshot taken before they run
+        originals = copy.deepcopy(records)
         new_records = []
-        changed = False
         for entry in records:
             result = mutator(entry)
             if result is None:
-                changed = True
                 continue
             if isinstance(result, list):
-                changed = True
                 new_records.extend(result)
             else:
-                changed = changed or result is not entry
                 new_records.append(result)
+        if new_records == originals:
+            continue
         new_length = write_avro(key, new_records, schema, metadata, codec)
         _sync_manifest_length(namespace, table_name, key, new_length)
 

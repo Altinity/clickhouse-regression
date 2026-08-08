@@ -27,6 +27,7 @@ import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 from iceberg.tests.deletion_vectors.steps import s3_objects
+from iceberg.tests.deletion_vectors.steps import manifest as manifest_steps
 
 CLUSTER_NAME = "replicated_cluster"
 
@@ -126,9 +127,51 @@ def table_with_deletion_vectors(
     )
 
     if verify_puffin:
-        s3_objects.assert_puffin_exists(namespace=namespace, table_name=table_name)
+        with By("verifying a Puffin file exists under the table location"):
+            s3_objects.assert_puffin_exists(
+                namespace=namespace, table_name=table_name
+            )
+        with And("verifying the current snapshot has a live vector entry"):
+            # object existence alone can be historical (older snapshots
+            # retain their files) — the current snapshot must reference one
+            dv_entries = manifest_steps.find_dv_entries(namespace, table_name)
+            assert dv_entries, (
+                "no live deletion-vector entry in the current snapshot"
+            )
 
     return DVTable(namespace, table_name)
+
+
+@TestStep(Then)
+def assert_data_file_count(self, table, count):
+    """The current snapshot holds exactly *count* live data files —
+    guards position-based expectations against writer layout changes."""
+    files = manifest_steps.live_data_files(table.namespace, table.table_name)
+    assert len(files) == count, error(
+        f"expected {count} live data file(s), found {len(files)}: "
+        f"{[f['file_path'] for f in files]}"
+    )
+    return files
+
+
+@TestStep(Then)
+def assert_min_row_groups(self, table, min_row_groups):
+    """Every live Parquet data file of the table has at least
+    *min_row_groups* row groups — so row-group-boundary scenarios really
+    exercise multi-row-group files."""
+    import io
+
+    import pyarrow.parquet as pq
+
+    files = manifest_steps.live_data_files(table.namespace, table.table_name)
+    for data_file in files:
+        parquet = pq.ParquetFile(
+            io.BytesIO(s3_objects.get_object_bytes(data_file["file_path"]))
+        )
+        assert parquet.metadata.num_row_groups >= min_row_groups, error(
+            f"{data_file['file_path']} has {parquet.metadata.num_row_groups} "
+            f"row group(s), expected at least {min_row_groups}"
+        )
 
 
 @TestStep(Then)

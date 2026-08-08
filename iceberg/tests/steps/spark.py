@@ -167,6 +167,15 @@ def create_table(
 
     try:
         run_spark_sql(statements)
+
+        # suite-level teardown: a feature that initializes
+        # ``context.spark_created_tables`` gets every table registered so
+        # it can batch-drop them once at the end instead of paying one
+        # spark-sql JVM start per table
+        registry = getattr(self.context, "spark_created_tables", None)
+        if registry is not None:
+            registry.append((namespace, table_name))
+
         yield namespace, table_name
 
     finally:

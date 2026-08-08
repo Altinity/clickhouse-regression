@@ -6,6 +6,8 @@ concurrent activity cannot perturb the counts. Cache requirements are
 verified on S3 (MinIO) storage; local files have no etag and bypass the
 cache (EtagBypass)."""
 
+import threading
+
 from testflows.core import *
 from testflows.asserts import error
 
@@ -198,6 +200,9 @@ def invalidation(self):
         replaced = common.table_with_deletion_vectors(
             rows=rows, delete_condition="id % 10 = 0"
         )
+        # the crafted replacement positions equal row ids only for a
+        # single data file written in insertion order
+        common.assert_data_file_count(table=replaced, count=1)
         common.assert_visible_ids(
             table=replaced, ids=common.expected_ids(rows, range(0, rows, 10))
         )
@@ -453,13 +458,21 @@ def concurrency(self):
     log_comments = [common.unique_log_comment(f"conc{i}") for i in range(2)]
 
     @TestStep(When)
-    def read_with_comment(self, log_comment):
+    def read_with_comment(self, log_comment, barrier=None):
+        # the barrier aligns the query starts so both are as close to the
+        # same cold load as an external test can force; the scheduler may
+        # still serialize them, in which case the assertion degrades to
+        # "the second query was served from cache" — both satisfy the
+        # single-load requirement
+        if barrier is not None:
+            barrier.wait(timeout=60)
         count = common.count_rows(
             table=table, settings=[("log_comment", log_comment)]
         )
         assert count == expected_count, error(f"count = {count}")
 
     with When("two queries read the cold vector concurrently"):
+        barrier = threading.Barrier(2)
         with Pool(2) as pool:
             for log_comment in log_comments:
                 When(
@@ -467,7 +480,7 @@ def concurrency(self):
                     test=read_with_comment,
                     parallel=True,
                     executor=pool,
-                )(log_comment=log_comment)
+                )(log_comment=log_comment, barrier=barrier)
             join()
 
     with Then("the vector was loaded exactly once across both queries"):
@@ -480,26 +493,36 @@ def concurrency(self):
             f"expected 1"
         )
 
-    with When("a cache drop races an in-flight load"):
-        common.drop_puffin_cache()
-        race_comment = common.unique_log_comment("race")
+    with When("a cache drop repeatedly races an in-flight load"):
 
         @TestStep(When)
-        def racing_drop(self):
+        def racing_drop(self, barrier):
+            barrier.wait(timeout=60)
             common.drop_puffin_cache()
 
-        with Pool(2) as pool:
-            When(
-                "read during drop",
-                test=read_with_comment,
-                parallel=True,
-                executor=pool,
-            )(log_comment=race_comment)
-            When("drop during read", test=racing_drop, parallel=True, executor=pool)()
-            join()
+        # a single attempt may not overlap; repeating the race makes an
+        # actual drop-during-load overlap likely
+        for attempt in range(3):
+            common.drop_puffin_cache()
+            race_comment = common.unique_log_comment(f"race{attempt}")
+            race_barrier = threading.Barrier(2)
+            with Pool(2) as pool:
+                When(
+                    f"read during drop, attempt {attempt}",
+                    test=read_with_comment,
+                    parallel=True,
+                    executor=pool,
+                )(log_comment=race_comment, barrier=race_barrier)
+                When(
+                    f"drop during read, attempt {attempt}",
+                    test=racing_drop,
+                    parallel=True,
+                    executor=pool,
+                )(barrier=race_barrier)
+                join()
 
-    with Then("the racing query still returned the correct result"):
-        # correctness was asserted inside the read; verify once more cold
+    with Then("the racing queries all returned the correct result"):
+        # correctness was asserted inside every read; verify once more cold
         assert common.count_rows(table=table) == expected_count, error()
 
 

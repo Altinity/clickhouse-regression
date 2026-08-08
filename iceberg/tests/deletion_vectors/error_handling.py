@@ -521,28 +521,49 @@ def resource_limits(self):
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_NonParquetDataFiles("1.0"))
 def non_parquet_data_files(self):
     """A deletion vector attached to a non-Parquet data file fails with
-    NOT_IMPLEMENTED naming the feature and the actual format."""
-    with Given("a v3 merge-on-read table with ORC data files"):
-        table = common.table_with_deletion_vectors(
-            rows=0,
-            extra_properties={"write.format.default": "orc"},
-            setup_statements=[common.insert_range_statement(50)],
-            verify_puffin=False,
-        )
+    NOT_IMPLEMENTED naming the feature and the actual format.
 
-    with When("Spark deletes rows, producing a vector over an ORC file"):
-        spark.delete_rows(
-            namespace=table.namespace,
-            table_name=table.table_name,
-            condition="id < 5",
-        )
+    Covered from two distinct angles: a real ORC data file whose vector the
+    writer produced (integration; skipped explicitly if the Spark version
+    refuses to attach vectors to ORC), and a manifest that declares a
+    Parquet file's format as ORC (pure metadata-level check, always runs)."""
+    fragment = "only supported for data files of Parquet format"
 
-    if not s3_objects.find_puffin_keys(table.namespace, table.table_name):
-        with When(
-            "the writer did not produce a vector for ORC — falling back to "
-            "declaring a Parquet file's format as ORC in the manifest"
-        ):
+    with Check("deletion vector over a real ORC data file"):
+        with Given("a v3 merge-on-read table with ORC data files"):
+            table = common.table_with_deletion_vectors(
+                rows=0,
+                extra_properties={"write.format.default": "orc"},
+                setup_statements=[common.insert_range_statement(50)],
+                verify_puffin=False,
+            )
+
+        with When("Spark deletes rows over the ORC file"):
+            spark.delete_rows(
+                namespace=table.namespace,
+                table_name=table.table_name,
+                condition="id < 5",
+            )
+
+        if not s3_objects.find_puffin_keys(table.namespace, table.table_name):
+            skip(
+                "this Spark/Iceberg version does not produce deletion "
+                "vectors for ORC data files (no Puffin file after the "
+                "DELETE), so the real-ORC integration case cannot run"
+            )
+
+        with Then("the read fails with NOT_IMPLEMENTED naming both sides"):
+            common.assert_table_read_fails(
+                table=table,
+                error_name="NOT_IMPLEMENTED",
+                message_fragment=fragment,
+            )
+
+    with Check("manifest declares a Parquet data file as ORC"):
+        with Given("a Parquet table with a deletion vector"):
             table = common.table_with_deletion_vectors(rows=50)
+
+        with When("the data manifest declares the file's format as ORC"):
 
             def orc_format(entry):
                 entry["data_file"]["file_format"] = "ORC"
@@ -555,12 +576,14 @@ def non_parquet_data_files(self):
                 content=manifest.MANIFEST_LIST_DATA,
             )
 
-    with Then("the read fails with NOT_IMPLEMENTED naming both sides"):
-        common.assert_table_read_fails(
-            table=table,
-            error_name="NOT_IMPLEMENTED",
-            message_fragment="only supported for data files of Parquet format",
-        )
+        with Then(
+            "the read fails with NOT_IMPLEMENTED before touching the file"
+        ):
+            common.assert_table_read_fails(
+                table=table,
+                error_name="NOT_IMPLEMENTED",
+                message_fragment=fragment,
+            )
 
 
 @TestFeature
