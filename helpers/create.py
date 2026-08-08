@@ -659,6 +659,7 @@ def partitioned_collapsing_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
                 extra_columns=extra_columns,
+                partition_values=[-1, 1] if sign == partition_by else None,
             )
 
     return table_name
@@ -702,6 +703,7 @@ def partitioned_versioned_collapsing_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
                 extra_columns=extra_columns,
+                partition_values=[-1, 1] if sign == partition_by else None,
             )
 
     return table_name
