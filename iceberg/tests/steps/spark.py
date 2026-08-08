@@ -165,17 +165,18 @@ def create_table(
     for statement in setup_statements or []:
         statements.append(statement.format(table=full_name))
 
+    # suite-level teardown: a feature that initializes
+    # ``context.spark_created_tables`` gets every table registered so it
+    # can batch-drop them once at the end instead of paying one spark-sql
+    # JVM start per table. Registered before the batch runs: CREATE may
+    # succeed and a later setup statement fail, and cleanup tolerates
+    # tables that were never created.
+    registry = getattr(self.context, "spark_created_tables", None)
+    if registry is not None:
+        registry.append((namespace, table_name))
+
     try:
         run_spark_sql(statements)
-
-        # suite-level teardown: a feature that initializes
-        # ``context.spark_created_tables`` gets every table registered so
-        # it can batch-drop them once at the end instead of paying one
-        # spark-sql JVM start per table
-        registry = getattr(self.context, "spark_created_tables", None)
-        if registry is not None:
-            registry.append((namespace, table_name))
-
         yield namespace, table_name
 
     finally:

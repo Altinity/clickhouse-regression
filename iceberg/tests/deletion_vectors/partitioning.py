@@ -8,6 +8,7 @@ from iceberg.requirements.deletion_vectors import *
 
 import iceberg.tests.steps.metrics as metrics
 import iceberg.tests.deletion_vectors.steps.common as common
+import iceberg.tests.deletion_vectors.steps.manifest as manifest
 
 # partition transforms exercised against the same logical (id, category)
 # data set: category = str(id % 4)
@@ -17,26 +18,31 @@ PARTITION_TRANSFORMS = {
     "truncate": "truncate(1, category)",
 }
 
-
-DELETE_CONDITION = "id % 10 < 4"  # hits every id % 4 partition
+CATEGORIES = 4
 
 
 def deleted_ids(rows):
+    """Union of the per-category deletes: id % 10 < 4 across the table."""
     return {i for i in range(rows) if i % 10 < 4}
 
 
 @TestStep(Given)
 def partitioned_table_with_vectors(self, transform, rows=100):
-    """Partitioned v3 table where a DELETE produced deletion vectors in
-    every partition: (id, category=str(id % 4)), deleting id % 10 < 4."""
+    """Partitioned v3 table with (id, category=str(id % 4)) where deletion
+    vectors were produced by one DELETE commit **per category** — under
+    identity partitioning each commit therefore writes its own Puffin file
+    for its own partition, which the pruning scenario depends on."""
     return common.table_with_deletion_vectors(
         columns="id BIGINT, category STRING",
         partitioned_by=transform,
         rows=0,
         setup_statements=[
             "INSERT INTO {table} SELECT id, CAST(id % 4 AS STRING) "
-            f"FROM range({rows})",
-            f"DELETE FROM {{table}} WHERE {DELETE_CONDITION}",
+            f"FROM range({rows})"
+        ]
+        + [
+            f"DELETE FROM {{table}} WHERE category = '{k}' AND id % 10 < 4"
+            for k in range(CATEGORIES)
         ],
     )
 
@@ -82,6 +88,31 @@ def pruning_skips_vector_load(self):
 
     with Given("an identity-partitioned table with a vector per partition"):
         table = partitioned_table_with_vectors(transform="category", rows=rows)
+
+    with And(
+        "each partition's vector really lives in its own Puffin file — "
+        "with a single shared file, PuffinFilesRead could not distinguish "
+        "pruned vector loads from unpruned ones"
+    ):
+        dv_entries = manifest.find_dv_entries(table.namespace, table.table_name)
+        puffin_paths = {
+            entry["entry"]["data_file"]["file_path"] for entry in dv_entries
+        }
+        referenced = {
+            entry["entry"]["data_file"]["referenced_data_file"]
+            for entry in dv_entries
+        }
+        assert len(dv_entries) == CATEGORIES, error(
+            f"expected {CATEGORIES} vector entries, found {len(dv_entries)}"
+        )
+        assert len(puffin_paths) == CATEGORIES, error(
+            f"expected {CATEGORIES} distinct Puffin files, found "
+            f"{len(puffin_paths)}: {sorted(puffin_paths)}"
+        )
+        assert len(referenced) == CATEGORIES, error(
+            f"expected each vector to reference its own data file, got "
+            f"{len(referenced)} distinct references"
+        )
 
     with And("the Puffin cache is cold"):
         common.drop_puffin_cache()

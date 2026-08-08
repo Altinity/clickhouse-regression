@@ -161,53 +161,83 @@ def boundary_positions(self):
 @Requirements(RQ_Iceberg_DeletionVectors_RowGroupBoundaries("1.0"))
 def row_group_boundaries(self):
     """Vector positions are absolute file row numbers, not row-group
-    relative — under full reads, predicate pruning, and parallel readers."""
-    rows = 10000
-    deleted = [99, 100, 4999, 5000, 9998, 9999]
-    expected = common.expected_ids(rows, deleted)
+    relative — under full reads, predicate pruning, and parallel readers.
 
-    with Given(
-        "a table whose single data file has many small row groups and a "
-        "vector deleting rows straddling row-group boundaries"
-    ):
+    The straddling positions are not guessed: the actual row-group sizes
+    are read from the Parquet footer and the vector is crafted to delete
+    the last row of one row group and the first row of the next, for the
+    first few real boundaries plus the file edges."""
+    rows = 10000
+
+    with Given("a table whose single data file has many small row groups"):
         table = common.table_with_deletion_vectors(
             rows=rows,
-            delete_condition=f"id IN ({', '.join(str(i) for i in deleted)})",
+            delete_condition="id = 0",  # any delete, to obtain a vector entry
             extra_properties={
                 "write.parquet.row-group-size-bytes": "4096",
                 "write.parquet.page-size-bytes": "1024",
             },
         )
-
-    with And("the writer really produced one file with many row groups"):
         common.assert_data_file_count(table=table, count=1)
-        common.assert_min_row_groups(table=table, min_row_groups=2)
+
+    with And("the actual row-group boundary positions are derived"):
+        sizes = common.parquet_row_group_sizes(table=table)
+        assert len(sizes) >= 2, error(
+            f"expected multiple row groups, got sizes {sizes}"
+        )
+        boundaries = []
+        cumulative = 0
+        for size in sizes[:-1]:
+            cumulative += size
+            boundaries.append(cumulative)  # first row of the next row group
+        deleted = sorted(
+            {position for b in boundaries[:3] for position in (b - 1, b)}
+            | {0, rows - 1}
+        )
+        note(f"row group sizes {sizes[:5]}..., deleting positions {deleted}")
+
+    with When("the vector is replaced to delete exactly those positions"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=deleted),
+            declared_cardinality=len(deleted),
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
+    expected = common.expected_ids(rows, deleted)
+    fresh = [("use_iceberg_metadata_files_cache", "0")]
 
     with Check("full single-threaded read"):
         common.assert_visible_ids(
-            table=table, ids=expected, settings=[("max_threads", "1")]
+            table=table, ids=expected, settings=fresh + [("max_threads", "1")]
         )
 
     with Check("full multi-threaded read"):
         common.assert_visible_ids(
-            table=table, ids=expected, settings=[("max_threads", "8")]
+            table=table, ids=expected, settings=fresh + [("max_threads", "8")]
         )
 
     with Check("predicate read pruning some row groups"):
+        boundary = boundaries[0]
+        window = range(boundary - 10, boundary + 11)
         result = common.read_result(
             table=table,
             columns="id",
-            where_clause="id BETWEEN 90 AND 110",
+            where_clause=f"id BETWEEN {window.start} AND {window.stop - 1}",
             order_by="id",
-            settings=[("input_format_parquet_filter_push_down", "1")],
+            settings=fresh + [("input_format_parquet_filter_push_down", "1")],
         )
         ids = [int(line) for line in result.output.split() if line.strip()]
-        assert ids == [i for i in range(90, 111) if i not in (99, 100)], error(
-            f"predicate read returned {ids}"
+        assert ids == [i for i in window if i not in deleted], error(
+            f"predicate read around boundary {boundary} returned {ids}"
         )
 
     with Check("count() agrees"):
-        assert common.count_rows(table=table) == len(expected), error()
+        assert common.count_rows(table=table, settings=fresh) == len(
+            expected
+        ), error()
 
 
 @TestScenario

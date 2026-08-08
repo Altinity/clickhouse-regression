@@ -15,6 +15,10 @@ ClickHouse then reads the same table through any access form:
   through (``catalog_database``).
 """
 
+import io
+
+import pyarrow.parquet as pq
+
 from testflows.core import *
 from testflows.asserts import error
 
@@ -154,24 +158,40 @@ def assert_data_file_count(self, table, count):
     return files
 
 
+def _parquet_metadata(data_file):
+    """Parquet footer metadata of one live data file."""
+    return pq.ParquetFile(
+        io.BytesIO(s3_objects.get_object_bytes(data_file["file_path"]))
+    ).metadata
+
+
 @TestStep(Then)
 def assert_min_row_groups(self, table, min_row_groups):
     """Every live Parquet data file of the table has at least
     *min_row_groups* row groups — so row-group-boundary scenarios really
     exercise multi-row-group files."""
-    import io
-
-    import pyarrow.parquet as pq
-
     files = manifest_steps.live_data_files(table.namespace, table.table_name)
     for data_file in files:
-        parquet = pq.ParquetFile(
-            io.BytesIO(s3_objects.get_object_bytes(data_file["file_path"]))
-        )
-        assert parquet.metadata.num_row_groups >= min_row_groups, error(
-            f"{data_file['file_path']} has {parquet.metadata.num_row_groups} "
+        metadata = _parquet_metadata(data_file)
+        assert metadata.num_row_groups >= min_row_groups, error(
+            f"{data_file['file_path']} has {metadata.num_row_groups} "
             f"row group(s), expected at least {min_row_groups}"
         )
+
+
+@TestStep(Then)
+def parquet_row_group_sizes(self, table):
+    """Row counts of every row group of the table's single live data file —
+    for deriving the actual absolute positions of row-group boundaries."""
+    files = manifest_steps.live_data_files(table.namespace, table.table_name)
+    assert len(files) == 1, error(
+        f"expected exactly one live data file, found {len(files)}"
+    )
+    metadata = _parquet_metadata(files[0])
+    return [
+        metadata.row_group(index).num_rows
+        for index in range(metadata.num_row_groups)
+    ]
 
 
 @TestStep(Then)
