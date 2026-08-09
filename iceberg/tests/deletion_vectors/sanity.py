@@ -135,6 +135,6 @@ def writer_operations(self):
 @Name("sanity")
 def feature(self, minio_root_user, minio_root_password):
     """Basic deletion-vector read support."""
-    Scenario(test=read_deletion_vectors, flags=TE)()
-    Scenario(test=read_only, flags=TE)()
-    Scenario(test=writer_operations, flags=TE)()
+    Scenario(run=read_deletion_vectors)
+    Scenario(run=read_only)
+    Scenario(run=writer_operations)

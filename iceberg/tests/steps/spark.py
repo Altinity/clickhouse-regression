@@ -68,7 +68,21 @@ def run_spark_sql(statements, timeout=SPARK_SQL_TIMEOUT, container=SPARK_CONTAIN
     if not isinstance(statements, str):
         statements = ";\n".join(statements)
 
-    cmd = ["docker", "exec", container, "spark-sql", "-S", "-e", statements]
+    cmd = [
+        "docker",
+        "exec",
+        container,
+        "spark-sql",
+        "-S",
+        # the storage backend (RustFS behind the ``minio`` alias) rejects
+        # virtual-hosted-style requests (bucket-as-subdomain) with
+        # InvalidBucketName, and the image's spark-defaults.conf does not
+        # force path-style
+        "--conf",
+        f"spark.sql.catalog.{SPARK_CATALOG}.s3.path-style-access=true",
+        "-e",
+        statements,
+    ]
 
     with By("executing spark-sql", description=statements):
         result = subprocess.run(

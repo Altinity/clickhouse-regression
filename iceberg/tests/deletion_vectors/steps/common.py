@@ -83,8 +83,15 @@ def expected_ids(rows, deleted_ids):
 
 
 def insert_range_statement(rows, data_expr="concat('row-', CAST(id AS STRING))"):
-    """Spark INSERT of rows ``(id, data)`` for id in ``0..rows-1``."""
-    return f"INSERT INTO {{table}} SELECT id, {data_expr} FROM range({rows})"
+    """Spark INSERT of rows ``(id, data)`` for id in ``0..rows-1``.
+
+    COALESCE(1) keeps the whole INSERT in one write task so it produces
+    exactly one data file — scenarios assert data-file counts and craft
+    vectors against a single file's row order."""
+    return (
+        f"INSERT INTO {{table}} SELECT /*+ COALESCE(1) */ id, {data_expr} "
+        f"FROM range({rows})"
+    )
 
 
 @TestStep(Given)

@@ -130,7 +130,7 @@ def projection_independence(self):
             rows=0,
             columns="id BIGINT, customer_id BIGINT, amount BIGINT",
             setup_statements=[
-                "INSERT INTO {table} SELECT id, 100 + id % 10, id * 2 "
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id, 100 + id % 10, id * 2 "
                 "FROM range(100)",
                 "DELETE FROM {table} WHERE customer_id = 100",
             ],
@@ -261,7 +261,7 @@ def schema_evolution(self):
 @Name("query semantics")
 def feature(self, minio_root_user, minio_root_password):
     """Query semantics over deletion vectors."""
-    Scenario(test=operator_independence, flags=TE)()
-    Scenario(test=projection_independence, flags=TE)()
-    Scenario(test=combined_filters, flags=TE)()
-    Scenario(test=schema_evolution, flags=TE)()
+    Scenario(run=operator_independence)
+    Scenario(run=projection_independence)
+    Scenario(run=combined_filters)
+    Scenario(run=schema_evolution)

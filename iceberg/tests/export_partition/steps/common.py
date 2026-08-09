@@ -95,9 +95,7 @@ def create_export_source_table(
     else:
         if zk_path is None:
             zk_path = f"/clickhouse/tables/{table_name}"
-        engine_clause = (
-            f"ENGINE = ReplicatedMergeTree('{zk_path}', '{replica_name}')"
-        )
+        engine_clause = f"ENGINE = ReplicatedMergeTree('{zk_path}', '{replica_name}')"
 
     query = f"""
         CREATE TABLE {table_name} {cluster_clause}({columns})

@@ -162,7 +162,7 @@ def sequence_numbers(self):
                 rows=0,
                 setup_statements=[
                     common.insert_range_statement(100),
-                    "INSERT INTO {table} SELECT id + 100, "
+                    "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
                     "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
                     "DELETE FROM {table} WHERE id < 100 AND id % 10 = 0",
                 ],
@@ -229,8 +229,8 @@ def compaction(self):
 @Name("time travel")
 def feature(self, minio_root_user, minio_root_password):
     """Snapshots and time travel with deletion vectors."""
-    Scenario(test=time_travel, flags=TE)()
-    Scenario(test=multiple_generations, flags=TE)()
-    Scenario(test=snapshot_refresh, flags=TE)()
-    Scenario(test=sequence_numbers, flags=TE)()
-    Scenario(test=compaction, flags=TE)()
+    Scenario(run=time_travel)
+    Scenario(run=multiple_generations)
+    Scenario(run=snapshot_refresh)
+    Scenario(run=sequence_numbers)
+    Scenario(run=compaction)

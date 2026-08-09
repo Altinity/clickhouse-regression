@@ -43,6 +43,7 @@ SOURCE_ENGINE_MODES = ("replicated", "plain")
 MODULES = (
     "sanity",
     "partition_compatibility",
+    "partition_key_compatibility",
     "datatypes",
     "manifest_integrity",
     "catalogs",

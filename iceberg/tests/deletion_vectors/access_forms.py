@@ -93,5 +93,5 @@ def storage_backends(self):
 @Name("access forms")
 def feature(self, minio_root_user, minio_root_password):
     """Access-form and storage-backend independence of deletion vectors."""
-    Scenario(test=access_forms, flags=TE)()
-    Scenario(test=storage_backends, flags=TE)()
+    Scenario(run=access_forms)
+    Scenario(run=storage_backends)

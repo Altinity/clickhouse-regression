@@ -24,7 +24,7 @@ def cluster_functions(self):
             rows=0,
             setup_statements=[
                 common.insert_range_statement(100),
-                "INSERT INTO {table} SELECT id + 100, "
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
                 "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
                 "DELETE FROM {table} WHERE id < 100 AND id % 10 = 0",
                 "DELETE FROM {table} WHERE id >= 140",
@@ -117,6 +117,6 @@ def split_data_file(self):
 @Name("distributed")
 def feature(self, minio_root_user, minio_root_password):
     """Distributed deletion-vector reads."""
-    Scenario(test=cluster_functions, flags=TE)()
-    Scenario(test=protocol_fail_closed, flags=TE)()
-    Scenario(test=split_data_file, flags=TE)()
+    Scenario(run=cluster_functions)
+    Scenario(run=protocol_fail_closed)
+    Scenario(run=split_data_file)

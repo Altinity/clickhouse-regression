@@ -209,6 +209,6 @@ def count_from_files_cache(self):
 @Name("count paths")
 def feature(self, minio_root_user, minio_root_password):
     """Count paths with deletion vectors."""
-    Scenario(test=trivial_count_optimization, flags=TE)()
-    Scenario(test=count_only_fast_path, flags=TE)()
-    Scenario(test=count_from_files_cache, flags=TE)()
+    Scenario(run=trivial_count_optimization)
+    Scenario(run=count_only_fast_path)
+    Scenario(run=count_from_files_cache)

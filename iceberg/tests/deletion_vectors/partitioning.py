@@ -37,7 +37,7 @@ def partitioned_table_with_vectors(self, transform, rows=100):
         partitioned_by=transform,
         rows=0,
         setup_statements=[
-            "INSERT INTO {table} SELECT id, CAST(id % 4 AS STRING) "
+            "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id, CAST(id % 4 AS STRING) "
             f"FROM range({rows})"
         ]
         + [
@@ -155,5 +155,5 @@ def pruning_skips_vector_load(self):
 @Name("partitioning")
 def feature(self, minio_root_user, minio_root_password):
     """Partitioning and pruning with deletion vectors."""
-    Scenario(test=partitioning, flags=TE)()
-    Scenario(test=pruning_skips_vector_load, flags=TE)()
+    Scenario(run=partitioning)
+    Scenario(run=pruning_skips_vector_load)

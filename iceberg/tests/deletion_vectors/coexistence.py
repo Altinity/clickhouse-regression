@@ -66,7 +66,7 @@ def across_data_files(self):
             namespace=table.namespace,
             table_name=table.table_name,
             statements=[
-                "INSERT INTO {table} SELECT id + 100, "
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
                 "concat('row-', CAST(id + 100 AS STRING)) FROM range(100)",
                 "DELETE FROM {table} WHERE id >= 100 AND id % 10 = 0",
             ],
@@ -80,7 +80,7 @@ def across_data_files(self):
             namespace=table.namespace,
             table_name=table.table_name,
             statements=[
-                "INSERT INTO {table} SELECT id + 200, "
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 200, "
                 "concat('row-', CAST(id + 200 AS STRING)) FROM range(50)",
             ],
         )
@@ -262,8 +262,8 @@ def format_version_upgrade(self):
 @Name("coexistence")
 def feature(self, minio_root_user, minio_root_password):
     """Coexistence with other delete formats."""
-    Scenario(test=across_data_files, flags=TE)()
-    Scenario(test=supersedes_position_deletes, flags=TE)()
-    Scenario(test=equality_deletes, flags=TE)()
-    Scenario(test=multiple_vectors_error, flags=TE)()
-    Scenario(test=format_version_upgrade, flags=TE)()
+    Scenario(run=across_data_files)
+    Scenario(run=supersedes_position_deletes)
+    Scenario(run=equality_deletes)
+    Scenario(run=multiple_vectors_error)
+    Scenario(run=format_version_upgrade)

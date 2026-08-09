@@ -135,7 +135,6 @@ def feature(self, minio_root_user, minio_root_password):
         for module in MODULES:
             Feature(
                 test=load(f"iceberg.tests.deletion_vectors.{module}", "feature"),
-                flags=TE,
             )(
                 minio_root_user=minio_root_user,
                 minio_root_password=minio_root_password,

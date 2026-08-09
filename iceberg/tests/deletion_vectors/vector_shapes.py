@@ -69,7 +69,7 @@ def all_rows_deleted(self):
             rows=0,
             setup_statements=[
                 common.insert_range_statement(100),
-                "INSERT INTO {table} SELECT id + 100, "
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
                 "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
                 "DELETE FROM {table} WHERE id < 100",
             ],
@@ -267,7 +267,7 @@ def shared_puffin_file(self):
             rows=0,
             setup_statements=[
                 common.insert_range_statement(100),
-                "INSERT INTO {table} SELECT id + 100, "
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
                 "concat('row-', CAST(id + 100 AS STRING)) FROM range(100)",
                 "DELETE FROM {table} WHERE id % 10 = 0",
             ],
@@ -312,8 +312,8 @@ def shared_puffin_file(self):
 @Name("vector shapes")
 def feature(self, minio_root_user, minio_root_password):
     """Deletion-vector content shapes."""
-    Scenario(test=empty_vector, flags=TE)()
-    Scenario(test=all_rows_deleted, flags=TE)()
-    Scenario(test=boundary_positions, flags=TE)()
-    Scenario(test=row_group_boundaries, flags=TE)()
-    Scenario(test=shared_puffin_file, flags=TE)()
+    Scenario(run=empty_vector)
+    Scenario(run=all_rows_deleted)
+    Scenario(run=boundary_positions)
+    Scenario(run=row_group_boundaries)
+    Scenario(run=shared_puffin_file)

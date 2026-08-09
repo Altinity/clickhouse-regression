@@ -590,9 +590,9 @@ def non_parquet_data_files(self):
 @Name("error handling")
 def feature(self, minio_root_user, minio_root_password):
     """Error handling for corrupt Puffin files and inconsistent metadata."""
-    Scenario(test=malformed_blob, flags=TE)()
-    Scenario(test=blob_metadata, flags=TE)()
-    Scenario(test=blob_bounds, flags=TE)()
-    Scenario(test=manifest_consistency, flags=TE)()
-    Scenario(test=resource_limits, flags=TE)()
-    Scenario(test=non_parquet_data_files, flags=TE)()
+    Scenario(run=malformed_blob)
+    Scenario(run=blob_metadata)
+    Scenario(run=blob_bounds)
+    Scenario(run=manifest_consistency)
+    Scenario(run=resource_limits)
+    Scenario(run=non_parquet_data_files)

@@ -374,9 +374,7 @@ def run_cast_parity_case(
     )
 
     if case.expect_rejection:
-        rejection_exitcode, rejection_message = _lossy_cast_rejection_expectation(
-            self
-        )
+        rejection_exitcode, rejection_message = _lossy_cast_rejection_expectation(self)
         with When("EXPORT PARTITION is rejected for lossy cast without setting"):
             export_partition(
                 source_table=source_table,
