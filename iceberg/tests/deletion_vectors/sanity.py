@@ -88,47 +88,52 @@ WRITER_OPERATIONS = {
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_WriterOperations("1.0"))
+def writer_operation(self, operation, statements):
+    """ClickHouse returns exactly the writer engine's own result for one
+    vector-producing writer operation."""
+    with Given("a v3 merge-on-read table with 100 rows and no deletes yet"):
+        table = common.table_with_deletion_vectors(
+            rows=100, delete_condition=None, verify_puffin=False
+        )
+
+    with When(f"Spark commits the {operation}"):
+        spark.execute(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            statements=statements,
+        )
+
+    with And("the operation produced at least one deletion vector"):
+        s3_objects.assert_puffin_exists(
+            namespace=table.namespace, table_name=table.table_name
+        )
+
+    with Then("ClickHouse rows equal the writer engine's own rows"):
+        spark_rows = spark.select_rows(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            columns="id, data",
+            order_by="id",
+        )
+        result = common.read_result(table=table, columns="id, data", order_by="id")
+        clickhouse_rows = [
+            line.split("\t") for line in result.output.splitlines() if line.strip()
+        ]
+        assert clickhouse_rows == spark_rows, error(
+            f"ClickHouse returned {len(clickhouse_rows)} rows, "
+            f"Spark returned {len(spark_rows)}"
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_WriterOperations("1.0"))
 def writer_operations(self):
-    """ClickHouse returns exactly the writer engine's own result whether the
-    deletion vector came from DELETE, UPDATE, MERGE, or a combination."""
+    """ClickHouse matches the writer's own result whether the deletion
+    vector came from DELETE, UPDATE, MERGE, or a combination."""
     for operation, statements in WRITER_OPERATIONS.items():
-        with Check(operation):
-            with Given("a v3 merge-on-read table with 100 rows and no deletes yet"):
-                table = common.table_with_deletion_vectors(
-                    rows=100, delete_condition=None, verify_puffin=False
-                )
-
-            with When(f"Spark commits the {operation}"):
-                spark.execute(
-                    namespace=table.namespace,
-                    table_name=table.table_name,
-                    statements=statements,
-                )
-
-            with And("the operation produced at least one deletion vector"):
-                s3_objects.assert_puffin_exists(
-                    namespace=table.namespace, table_name=table.table_name
-                )
-
-            with Then("ClickHouse rows equal the writer engine's own rows"):
-                spark_rows = spark.select_rows(
-                    namespace=table.namespace,
-                    table_name=table.table_name,
-                    columns="id, data",
-                    order_by="id",
-                )
-                result = common.read_result(
-                    table=table, columns="id, data", order_by="id"
-                )
-                clickhouse_rows = [
-                    line.split("\t")
-                    for line in result.output.splitlines()
-                    if line.strip()
-                ]
-                assert clickhouse_rows == spark_rows, error(
-                    f"ClickHouse returned {len(clickhouse_rows)} rows, "
-                    f"Spark returned {len(spark_rows)}"
-                )
+        Scenario(test=writer_operation, name=operation)(
+            operation=operation, statements=statements
+        )
 
 
 @TestFeature
@@ -137,4 +142,4 @@ def feature(self, minio_root_user, minio_root_password):
     """Basic deletion-vector read support."""
     Scenario(run=read_deletion_vectors)
     Scenario(run=read_only)
-    Scenario(run=writer_operations)
+    Suite(run=writer_operations)

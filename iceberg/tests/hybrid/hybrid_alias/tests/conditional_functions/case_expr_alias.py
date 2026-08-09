@@ -21,7 +21,10 @@ def case_expr_alias(self):
             "hybrid_type": "String",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -64,7 +67,10 @@ def case_expr_alias_in_watermark(self):
         },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(case_expr) >= 3", "right_predicate": "length(case_expr) < 3"}
+    watermark = {
+        "left_predicate": "length(case_expr) >= 3",
+        "right_predicate": "length(case_expr) < 3",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -16,9 +16,16 @@ def is_active_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_active", "expression": "status = 'active'", "hybrid_type": "UInt8"},
+        {
+            "name": "is_active",
+            "expression": "status = 'active'",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,7 +62,11 @@ def is_active_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_active", "expression": "status = 'active'", "hybrid_type": "UInt8"},
+        {
+            "name": "is_active",
+            "expression": "status = 'active'",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "is_active = 1", "right_predicate": "is_active = 0"}

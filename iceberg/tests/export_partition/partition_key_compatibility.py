@@ -188,7 +188,9 @@ def _run_accept(
     dest_query_settings = None
     if manifest_expected is not None:
         dest_query_settings = [_FULL_PATHS_SETTING]
-        export_extra_settings = list(export_extra_settings or []) + [_FULL_PATHS_SETTING]
+        export_extra_settings = list(export_extra_settings or []) + [
+            _FULL_PATHS_SETTING
+        ]
 
     with Given("create source ReplicatedMergeTree with the partition key"):
         create_replicated_mergetree(

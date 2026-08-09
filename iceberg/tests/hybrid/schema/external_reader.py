@@ -121,9 +121,7 @@ def pyiceberg_reads_exported_cold(self, minio_root_user, minio_root_password):
 
     with And("Hybrid full scan matches the full dataset"):
         hybrid_count = int(
-            node.query(
-                f"SELECT count() FROM {ctx['hybrid']} {clause}"
-            ).output.strip()
+            node.query(f"SELECT count() FROM {ctx['hybrid']} {clause}").output.strip()
         )
         assert hybrid_count == len(ALL_ROWS), error()
 

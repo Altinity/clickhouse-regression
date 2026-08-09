@@ -2,10 +2,10 @@
 blob, or the surrounding manifest metadata fails the query with an explicit
 error code and a distinguishing message — never a silent partial result.
 
-Payload- and footer-level defects reuse one fixture table per scenario:
+Payload- and footer-level defect suites reuse one fixture table:
 :func:`manifest.replace_deletion_vector` rewrites the whole Puffin file and
-re-synchronizes the manifest entry on every cycle, so each defect starts
-from a consistent chain with exactly the injected fault."""
+re-synchronizes the manifest entry on every cycle, so each defect scenario
+starts from a consistent chain with exactly the injected fault."""
 
 from testflows.core import *
 from testflows.asserts import error
@@ -86,7 +86,12 @@ MALFORMED_BLOBS = {
         puffin.build_dv_payload(
             vector=puffin.build_roaring64(
                 buckets=[
-                    (0, puffin.build_bitmap32(POSITIONS, cardinality_overrides={0: 1000}))
+                    (
+                        0,
+                        puffin.build_bitmap32(
+                            POSITIONS, cardinality_overrides={0: 1000}
+                        ),
+                    )
                 ]
             )
         ),
@@ -161,32 +166,65 @@ MALFORMED_BLOBS = {
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_MalformedBlob("1.0"))
+def blob_defect(self, name, payload, cardinality, fragment):
+    """One structurally invalid blob payload fails with BAD_ARGUMENTS and
+    its specific message."""
+    table = self.context.table
+
+    with When(f"the vector is replaced with one whose {name}"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=payload,
+            declared_cardinality=cardinality,
+        )
+
+    with Then(f"the read fails with BAD_ARGUMENTS: {fragment!r}"):
+        common.assert_table_read_fails(
+            table=table, error_name="BAD_ARGUMENTS", message_fragment=fragment
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_MalformedBlob("1.0"))
 def malformed_blob(self):
     """Every structurally invalid blob payload fails with BAD_ARGUMENTS and
     its specific message."""
     with Given("a table with a deletion vector"):
-        table = common.table_with_deletion_vectors(
+        self.context.table = common.table_with_deletion_vectors(
             rows=ROWS, delete_condition="id % 10 = 0"
         )
 
     for name, (payload, cardinality, fragment) in MALFORMED_BLOBS.items():
-        with Check(name):
-            with When(f"the vector is replaced with one whose {name}"):
-                manifest.replace_deletion_vector(
-                    namespace=table.namespace,
-                    table_name=table.table_name,
-                    payload=payload,
-                    declared_cardinality=cardinality,
-                )
-            with Then(f"the read fails with BAD_ARGUMENTS: {fragment!r}"):
-                common.assert_table_read_fails(
-                    table=table,
-                    error_name="BAD_ARGUMENTS",
-                    message_fragment=fragment,
-                )
+        Scenario(test=blob_defect, name=name)(
+            name=name, payload=payload, cardinality=cardinality, fragment=fragment
+        )
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_BlobMetadata("1.0"))
+def metadata_defect(self, name, overrides, blobs_mutator, fragment):
+    """One invalid Puffin footer metadata defect is rejected with
+    BAD_ARGUMENTS and a specific message."""
+    table = self.context.table
+
+    with When(f"the Puffin footer is rebuilt with {name}"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=self.context.valid_payload,
+            declared_cardinality=CARDINALITY,
+            blob_overrides=overrides,
+            footer_blobs_mutator=blobs_mutator,
+        )
+
+    with Then(f"the read fails with BAD_ARGUMENTS: {fragment!r}"):
+        common.assert_table_read_fails(
+            table=table, error_name="BAD_ARGUMENTS", message_fragment=fragment
+        )
+
+
+@TestSuite
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_BlobMetadata("1.0"))
 def blob_metadata(self):
     """Invalid Puffin footer metadata of a deletion-vector blob is rejected
@@ -195,11 +233,11 @@ def blob_metadata(self):
         table = common.table_with_deletion_vectors(
             rows=ROWS, delete_condition="id % 10 = 0"
         )
+        self.context.table = table
+        self.context.valid_payload = puffin.build_dv_payload(positions=POSITIONS)
         referenced = manifest.find_dv_entries(table.namespace, table.table_name)[0][
             "entry"
         ]["data_file"]["referenced_data_file"]
-
-    valid_payload = puffin.build_dv_payload(positions=POSITIONS)
 
     # name → (blob descriptor overrides, footer blobs mutator, fragment)
     defects = {
@@ -266,25 +304,35 @@ def blob_metadata(self):
     }
 
     for name, (overrides, blobs_mutator, fragment) in defects.items():
-        with Check(name):
-            with When(f"the Puffin footer is rebuilt with {name}"):
-                manifest.replace_deletion_vector(
-                    namespace=table.namespace,
-                    table_name=table.table_name,
-                    payload=valid_payload,
-                    declared_cardinality=CARDINALITY,
-                    blob_overrides=overrides,
-                    footer_blobs_mutator=blobs_mutator,
-                )
-            with Then(f"the read fails with BAD_ARGUMENTS: {fragment!r}"):
-                common.assert_table_read_fails(
-                    table=table,
-                    error_name="BAD_ARGUMENTS",
-                    message_fragment=fragment,
-                )
+        Scenario(test=metadata_defect, name=name)(
+            name=name,
+            overrides=overrides,
+            blobs_mutator=blobs_mutator,
+            fragment=fragment,
+        )
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_BlobBounds("1.0"))
+def bounds_defect(self, name, entry_mutator):
+    """One manifest-declared blob location that does not fit in the Puffin
+    file is rejected with BAD_ARGUMENTS."""
+    table = self.context.table
+
+    with When(f"the manifest declares a blob location with {name}"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=self.context.valid_payload,
+            declared_cardinality=CARDINALITY,
+            entry_mutator=entry_mutator,
+        )
+
+    with Then("the read fails with BAD_ARGUMENTS"):
+        common.assert_table_read_fails(table=table, error_name="BAD_ARGUMENTS")
+
+
+@TestSuite
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_BlobBounds("1.0"))
 def blob_bounds(self):
     """A manifest-declared blob location that does not fit in the Puffin
@@ -293,12 +341,10 @@ def blob_bounds(self):
         table = common.table_with_deletion_vectors(
             rows=ROWS, delete_condition="id % 10 = 0"
         )
-        puffin_key = s3_objects.find_puffin_keys(
-            table.namespace, table.table_name
-        )[0]
+        self.context.table = table
+        self.context.valid_payload = puffin.build_dv_payload(positions=POSITIONS)
+        puffin_key = s3_objects.find_puffin_keys(table.namespace, table.table_name)[0]
         file_size = s3_objects.object_size(puffin_key)
-
-    valid_payload = puffin.build_dv_payload(positions=POSITIONS)
 
     def set_fields(**fields):
         def mutator(entry):
@@ -319,280 +365,331 @@ def blob_bounds(self):
     }
 
     for name, entry_mutator in defects.items():
-        with Check(name):
-            with When(f"the manifest declares a blob location with {name}"):
-                manifest.replace_deletion_vector(
-                    namespace=table.namespace,
-                    table_name=table.table_name,
-                    payload=valid_payload,
-                    declared_cardinality=CARDINALITY,
-                    entry_mutator=entry_mutator,
-                )
-            with Then("the read fails with BAD_ARGUMENTS"):
-                common.assert_table_read_fails(
-                    table=table, error_name="BAD_ARGUMENTS"
-                )
+        Scenario(test=bounds_defect, name=name)(name=name, entry_mutator=entry_mutator)
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
+def missing_referenced_data_file(self):
+    """A deletion-vector entry without referenced_data_file is rejected."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the entry's referenced_data_file is removed"):
+
+        def clear_reference(entry):
+            entry["data_file"]["referenced_data_file"] = None
+
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            entry_mutator=clear_reference,
+        )
+
+    with Then("the read fails"):
+        common.assert_table_read_fails(
+            table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
+def negative_vector_record_count(self):
+    """A deletion-vector entry with a negative record_count is rejected."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the entry's record_count is made negative"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            declared_cardinality=-5,
+        )
+
+    with Then("the read fails"):
+        common.assert_table_read_fails(
+            table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
+def missing_data_record_count(self):
+    """A data-file entry missing record_count is rejected."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the data file's record_count is removed"):
+
+        def clear_record_count(entry):
+            entry["data_file"]["record_count"] = None
+
+        manifest.mutate_manifest_entries_with_nullable_field(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            field_name="record_count",
+            mutator=clear_record_count,
+            content=manifest.MANIFEST_LIST_DATA,
+        )
+
+    with Then("the read fails"):
+        common.assert_table_read_fails(
+            table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
+def negative_data_record_count(self):
+    """A data-file entry with a negative record_count is rejected."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the data file's record_count is made negative"):
+
+        def negative_record_count(entry):
+            entry["data_file"]["record_count"] = -1
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=negative_record_count,
+            content=manifest.MANIFEST_LIST_DATA,
+        )
+
+    with Then("the read fails"):
+        common.assert_table_read_fails(
+            table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
+def vector_record_count_above_data_file(self):
+    """A vector record_count above the data file's record count is rejected
+    before any Puffin I/O."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the vector's record_count exceeds the data file's"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            declared_cardinality=ROWS + 50,
+        )
+
+    with Then("the read fails before any Puffin I/O"):
+        log_comment = common.unique_log_comment("mc_card")
+        common.assert_table_read_fails(
+            table=table,
+            error_name="ICEBERG_SPECIFICATION_VIOLATION",
+            log_comment=log_comment,
+        )
+        reads = common.get_profile_event_of_failed_query(
+            event="PuffinFilesRead", log_comment=log_comment
+        )
+        assert reads == 0, error(f"PuffinFilesRead = {reads}")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
+def duplicate_vector_entries(self):
+    """Two deletion vectors referencing the same data file fail the query."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the vector's manifest entry is duplicated"):
+        manifest.duplicate_dv_entry(
+            namespace=table.namespace, table_name=table.table_name
+        )
+
+    with Then("the read fails"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="ICEBERG_SPECIFICATION_VIOLATION",
+            message_fragment="Multiple deletion vectors match data file",
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ManifestConsistency("1.0"))
 def manifest_consistency(self):
     """Internally inconsistent Iceberg metadata is rejected with
     ICEBERG_SPECIFICATION_VIOLATION."""
-
-    with Check("deletion-vector entry without referenced_data_file"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the entry's referenced_data_file is removed"):
-
-            def clear_reference(entry):
-                entry["data_file"]["referenced_data_file"] = None
-
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                entry_mutator=clear_reference,
-            )
-        with Then("the read fails"):
-            common.assert_table_read_fails(
-                table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
-            )
-
-    with Check("deletion-vector entry with negative record_count"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the entry's record_count is made negative"):
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                declared_cardinality=-5,
-            )
-        with Then("the read fails"):
-            common.assert_table_read_fails(
-                table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
-            )
-
-    with Check("data-file entry missing record_count"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the data file's record_count is removed"):
-
-            def clear_record_count(entry):
-                entry["data_file"]["record_count"] = None
-
-            manifest.mutate_manifest_entries_with_nullable_field(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                field_name="record_count",
-                mutator=clear_record_count,
-                content=manifest.MANIFEST_LIST_DATA,
-            )
-        with Then("the read fails"):
-            common.assert_table_read_fails(
-                table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
-            )
-
-    with Check("data-file entry with negative record_count"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the data file's record_count is made negative"):
-
-            def negative_record_count(entry):
-                entry["data_file"]["record_count"] = -1
-                return entry
-
-            manifest.mutate_manifest_entries(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                mutator=negative_record_count,
-                content=manifest.MANIFEST_LIST_DATA,
-            )
-        with Then("the read fails"):
-            common.assert_table_read_fails(
-                table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
-            )
-
-    with Check("vector record_count above the data file's record_count"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the vector's record_count exceeds the data file's"):
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                declared_cardinality=ROWS + 50,
-            )
-        with Then("the read fails before any Puffin I/O"):
-            log_comment = common.unique_log_comment("mc_card")
-            common.assert_table_read_fails(
-                table=table,
-                error_name="ICEBERG_SPECIFICATION_VIOLATION",
-                log_comment=log_comment,
-            )
-            reads = common.get_profile_event_of_failed_query(
-                event="PuffinFilesRead", log_comment=log_comment
-            )
-            assert reads == 0, error(f"PuffinFilesRead = {reads}")
-
-    with Check("two deletion vectors referencing the same data file"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the vector's manifest entry is duplicated"):
-            manifest.duplicate_dv_entry(
-                namespace=table.namespace, table_name=table.table_name
-            )
-        with Then("the read fails"):
-            common.assert_table_read_fails(
-                table=table,
-                error_name="ICEBERG_SPECIFICATION_VIOLATION",
-                message_fragment="Multiple deletion vectors match data file",
-            )
+    Scenario(run=missing_referenced_data_file)
+    Scenario(run=negative_vector_record_count)
+    Scenario(run=missing_data_record_count)
+    Scenario(run=negative_data_record_count)
+    Scenario(run=vector_record_count_above_data_file)
+    Scenario(run=duplicate_vector_entries)
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits("1.0"))
+def blob_length_limit(self):
+    """A blob length above 2 GiB fails with BAD_ARGUMENTS."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+    with When("the manifest declares a blob length above 2 GiB"):
+
+        def huge_length(entry):
+            entry["data_file"]["content_size_in_bytes"] = 3 * 2**30
+
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            entry_mutator=huge_length,
+        )
+
+    with Then("the read fails with BAD_ARGUMENTS: exceeds absolute limit"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="BAD_ARGUMENTS",
+            message_fragment="exceeds absolute limit",
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits("1.0"))
+def cardinality_materialization_limit(self):
+    """A declared cardinality above 100,000,000 fails with BAD_ARGUMENTS
+    before the Puffin file is even opened."""
+    with Given(
+        "a table whose data file pretends to be large enough for a "
+        "vector of 100,000,001 positions"
+    ):
+        table = common.table_with_deletion_vectors(rows=ROWS)
+
+        def inflate_record_count(entry):
+            entry["data_file"]["record_count"] = 200_000_000
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=inflate_record_count,
+            content=manifest.MANIFEST_LIST_DATA,
+        )
+
+    with When("the vector declares cardinality above 100,000,000"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            declared_cardinality=100_000_001,
+        )
+
+    with Then("the read fails before the Puffin file is opened"):
+        log_comment = common.unique_log_comment("rl_card")
+        common.assert_table_read_fails(
+            table=table,
+            error_name="BAD_ARGUMENTS",
+            message_fragment="exceeds materialization limit",
+            log_comment=log_comment,
+        )
+        reads = common.get_profile_event_of_failed_query(
+            event="PuffinFilesRead", log_comment=log_comment
+        )
+        assert reads == 0, error(
+            f"PuffinFilesRead = {reads}: the hostile manifest forced Puffin I/O"
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits("1.0"))
 def resource_limits(self):
     """Hard resource limits: blob length above 2 GiB and cardinality above
-    100,000,000 fail with BAD_ARGUMENTS, the latter before the Puffin file
-    is even opened."""
+    100,000,000 fail with BAD_ARGUMENTS."""
+    Scenario(run=blob_length_limit)
+    Scenario(run=cardinality_materialization_limit)
 
-    with Check("blob length above the absolute limit"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-        with When("the manifest declares a blob length above 2 GiB"):
 
-            def huge_length(entry):
-                entry["data_file"]["content_size_in_bytes"] = 3 * 2**30
-
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                entry_mutator=huge_length,
-            )
-        with Then("the read fails with BAD_ARGUMENTS: exceeds absolute limit"):
-            common.assert_table_read_fails(
-                table=table,
-                error_name="BAD_ARGUMENTS",
-                message_fragment="exceeds absolute limit",
-            )
-
-    with Check("declared cardinality above the materialization limit"):
-        with Given(
-            "a table whose data file pretends to be large enough for a "
-            "vector of 100,000,001 positions"
-        ):
-            table = common.table_with_deletion_vectors(rows=ROWS)
-
-            def inflate_record_count(entry):
-                entry["data_file"]["record_count"] = 200_000_000
-                return entry
-
-            manifest.mutate_manifest_entries(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                mutator=inflate_record_count,
-                content=manifest.MANIFEST_LIST_DATA,
-            )
-
-        with When("the vector declares cardinality above 100,000,000"):
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                declared_cardinality=100_000_001,
-            )
-
-        with Then("the read fails before the Puffin file is opened"):
-            log_comment = common.unique_log_comment("rl_card")
-            common.assert_table_read_fails(
-                table=table,
-                error_name="BAD_ARGUMENTS",
-                message_fragment="exceeds materialization limit",
-                log_comment=log_comment,
-            )
-            reads = common.get_profile_event_of_failed_query(
-                event="PuffinFilesRead", log_comment=log_comment
-            )
-            assert reads == 0, error(
-                f"PuffinFilesRead = {reads}: the hostile manifest forced "
-                f"Puffin I/O"
-            )
+NON_PARQUET_FRAGMENT = "only supported for data files of Parquet format"
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_NonParquetDataFiles("1.0"))
+def real_orc_data_file(self):
+    """A deletion vector the writer produced over a real ORC data file
+    fails with NOT_IMPLEMENTED (skipped explicitly if the Spark version
+    refuses to attach vectors to ORC)."""
+    with Given("a v3 merge-on-read table with ORC data files"):
+        table = common.table_with_deletion_vectors(
+            rows=0,
+            extra_properties={"write.format.default": "orc"},
+            setup_statements=[common.insert_range_statement(50)],
+            verify_puffin=False,
+        )
+
+    with When("Spark deletes rows over the ORC file"):
+        spark.delete_rows(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            condition="id < 5",
+        )
+
+    if not s3_objects.find_puffin_keys(table.namespace, table.table_name):
+        skip(
+            "this Spark/Iceberg version does not produce deletion "
+            "vectors for ORC data files (no Puffin file after the "
+            "DELETE), so the real-ORC integration case cannot run"
+        )
+
+    with Then("the read fails with NOT_IMPLEMENTED naming both sides"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="NOT_IMPLEMENTED",
+            message_fragment=NON_PARQUET_FRAGMENT,
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_NonParquetDataFiles("1.0"))
+def manifest_declares_orc(self):
+    """A manifest that declares a Parquet data file's format as ORC fails
+    with NOT_IMPLEMENTED before touching the file (pure metadata-level
+    check, always runs)."""
+    with Given("a Parquet table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=50)
+
+    with When("the data manifest declares the file's format as ORC"):
+
+        def orc_format(entry):
+            entry["data_file"]["file_format"] = "ORC"
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=orc_format,
+            content=manifest.MANIFEST_LIST_DATA,
+        )
+
+    with Then("the read fails with NOT_IMPLEMENTED before touching the file"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="NOT_IMPLEMENTED",
+            message_fragment=NON_PARQUET_FRAGMENT,
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_NonParquetDataFiles("1.0"))
 def non_parquet_data_files(self):
     """A deletion vector attached to a non-Parquet data file fails with
-    NOT_IMPLEMENTED naming the feature and the actual format.
-
-    Covered from two distinct angles: a real ORC data file whose vector the
-    writer produced (integration; skipped explicitly if the Spark version
-    refuses to attach vectors to ORC), and a manifest that declares a
-    Parquet file's format as ORC (pure metadata-level check, always runs)."""
-    fragment = "only supported for data files of Parquet format"
-
-    with Check("deletion vector over a real ORC data file"):
-        with Given("a v3 merge-on-read table with ORC data files"):
-            table = common.table_with_deletion_vectors(
-                rows=0,
-                extra_properties={"write.format.default": "orc"},
-                setup_statements=[common.insert_range_statement(50)],
-                verify_puffin=False,
-            )
-
-        with When("Spark deletes rows over the ORC file"):
-            spark.delete_rows(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                condition="id < 5",
-            )
-
-        if not s3_objects.find_puffin_keys(table.namespace, table.table_name):
-            skip(
-                "this Spark/Iceberg version does not produce deletion "
-                "vectors for ORC data files (no Puffin file after the "
-                "DELETE), so the real-ORC integration case cannot run"
-            )
-
-        with Then("the read fails with NOT_IMPLEMENTED naming both sides"):
-            common.assert_table_read_fails(
-                table=table,
-                error_name="NOT_IMPLEMENTED",
-                message_fragment=fragment,
-            )
-
-    with Check("manifest declares a Parquet data file as ORC"):
-        with Given("a Parquet table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=50)
-
-        with When("the data manifest declares the file's format as ORC"):
-
-            def orc_format(entry):
-                entry["data_file"]["file_format"] = "ORC"
-                return entry
-
-            manifest.mutate_manifest_entries(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                mutator=orc_format,
-                content=manifest.MANIFEST_LIST_DATA,
-            )
-
-        with Then(
-            "the read fails with NOT_IMPLEMENTED before touching the file"
-        ):
-            common.assert_table_read_fails(
-                table=table,
-                error_name="NOT_IMPLEMENTED",
-                message_fragment=fragment,
-            )
+    NOT_IMPLEMENTED naming the feature and the actual format."""
+    Scenario(run=real_orc_data_file)
+    Scenario(run=manifest_declares_orc)
 
 
 @TestFeature
 @Name("error handling")
 def feature(self, minio_root_user, minio_root_password):
     """Error handling for corrupt Puffin files and inconsistent metadata."""
-    Scenario(run=malformed_blob)
-    Scenario(run=blob_metadata)
-    Scenario(run=blob_bounds)
-    Scenario(run=manifest_consistency)
-    Scenario(run=resource_limits)
-    Scenario(run=non_parquet_data_files)
+    Suite(run=malformed_blob)
+    Suite(run=blob_metadata)
+    Suite(run=blob_bounds)
+    Suite(run=manifest_consistency)
+    Suite(run=resource_limits)
+    Suite(run=non_parquet_data_files)

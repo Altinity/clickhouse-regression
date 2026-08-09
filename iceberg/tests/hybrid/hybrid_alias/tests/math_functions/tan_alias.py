@@ -17,7 +17,10 @@ def tan_alias(self):
     alias_columns = [
         {"name": "tan_value", "expression": "tan(value)", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

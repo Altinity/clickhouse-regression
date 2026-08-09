@@ -16,9 +16,16 @@ def assumeNotNull_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "assumed_not_null", "expression": "assumeNotNull(nullable_value)", "hybrid_type": "Int32"},
+        {
+            "name": "assumed_not_null",
+            "expression": "assumeNotNull(nullable_value)",
+            "hybrid_type": "Int32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, nullable_value, date_col FROM {hybrid_table} ORDER BY id",
@@ -54,10 +61,17 @@ def assumeNotNull_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "assumed_not_null", "expression": "assumeNotNull(nullable_value)", "hybrid_type": "Int32"},
+        {
+            "name": "assumed_not_null",
+            "expression": "assumeNotNull(nullable_value)",
+            "hybrid_type": "Int32",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "assumed_not_null >= 100", "right_predicate": "assumed_not_null < 100"}
+    watermark = {
+        "left_predicate": "assumed_not_null >= 100",
+        "right_predicate": "assumed_not_null < 100",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, nullable_value, date_col FROM {hybrid_table} ORDER BY id",

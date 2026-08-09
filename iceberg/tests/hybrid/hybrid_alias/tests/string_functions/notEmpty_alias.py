@@ -16,9 +16,16 @@ def notEmpty_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_not_empty", "expression": "notEmpty(name)", "hybrid_type": "UInt8"},
+        {
+            "name": "is_not_empty",
+            "expression": "notEmpty(name)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

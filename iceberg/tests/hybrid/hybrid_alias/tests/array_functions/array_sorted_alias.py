@@ -17,9 +17,16 @@ def array_sorted_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_sorted", "expression": "arraySort(array_col)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_sorted",
+            "expression": "arraySort(array_col)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_sorted_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_sorted", "expression": "arraySort(array_col)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_sorted",
+            "expression": "arraySort(array_col)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare arrays directly)
-    watermark = {"left_predicate": "length(array_sorted) >= 5", "right_predicate": "length(array_sorted) < 5"}
+    watermark = {
+        "left_predicate": "length(array_sorted) >= 5",
+        "right_predicate": "length(array_sorted) < 5",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

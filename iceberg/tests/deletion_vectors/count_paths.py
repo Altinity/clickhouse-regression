@@ -17,10 +17,9 @@ import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_Count_TrivialCountOptimization("1.0"))
-def trivial_count_optimization(self):
-    """The metadata count shortcut fails closed with live delete entries,
-    and a lying snapshot summary loses to the manifest sum on a table
-    without deletes."""
+def fails_closed_with_deletes(self):
+    """The metadata count shortcut fails closed with live delete entries:
+    counts agree with the shortcut on, off, and over a full scan."""
     rows = 100
     expected_count = 90
 
@@ -59,38 +58,65 @@ def trivial_count_optimization(self):
             counts["1"] == counts["0"] == counts["subquery"] == expected_count
         ), error(f"counts disagree: {counts}")
 
-    with Check("manifest sum wins over a lying snapshot summary"):
-        with Given("a table without deletes"):
-            plain = common.table_with_deletion_vectors(
-                rows=50, delete_condition=None, verify_puffin=False
-            )
 
-        with When("the snapshot summary's total-records is corrupted"):
-            metadata_key = s3_objects.latest_metadata_key(
-                plain.namespace, plain.table_name
-            )
-            metadata = json.loads(s3_objects.get_object_bytes(metadata_key))
-            for snapshot in metadata["snapshots"]:
-                snapshot["summary"]["total-records"] = "999999"
-            s3_objects.put_object_bytes(
-                metadata_key, json.dumps(metadata).encode("utf-8")
-            )
-            common.drop_iceberg_metadata_cache()
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Count_TrivialCountOptimization("1.0"))
+def manifest_sum_wins(self):
+    """On a table without deletes, a lying snapshot summary loses to the
+    manifest sum."""
+    with Given("a table without deletes"):
+        plain = common.table_with_deletion_vectors(
+            rows=50, delete_condition=None, verify_puffin=False
+        )
 
-        with Then("count() returns the manifest sum, not the summary"):
-            count = common.count_rows(
-                table=plain,
-                settings=[
-                    ("optimize_trivial_count_query", "1"),
-                    ("use_iceberg_metadata_files_cache", "0"),
-                ],
-            )
-            assert count == 50, error(
-                f"count() = {count}, expected the manifest sum 50"
-            )
+    with When("the snapshot summary's total-records is corrupted"):
+        metadata_key = s3_objects.latest_metadata_key(plain.namespace, plain.table_name)
+        metadata = json.loads(s3_objects.get_object_bytes(metadata_key))
+        for snapshot in metadata["snapshots"]:
+            snapshot["summary"]["total-records"] = "999999"
+        s3_objects.put_object_bytes(metadata_key, json.dumps(metadata).encode("utf-8"))
+        common.drop_iceberg_metadata_cache()
+
+    with Then("count() returns the manifest sum, not the summary"):
+        count = common.count_rows(
+            table=plain,
+            settings=[
+                ("optimize_trivial_count_query", "1"),
+                ("use_iceberg_metadata_files_cache", "0"),
+            ],
+        )
+        assert count == 50, error(f"count() = {count}, expected the manifest sum 50")
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_Count_TrivialCountOptimization("1.0"))
+def trivial_count_optimization(self):
+    """The metadata count shortcut fails closed with live delete entries,
+    and a lying snapshot summary loses to the manifest sum."""
+    Scenario(run=fails_closed_with_deletes)
+    Scenario(run=manifest_sum_wins)
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Count_CountOnlyFastPath("1.0"))
+def count_query(self, name, query, expected_value):
+    """One count query returns the post-vector count with the count-only
+    fast path both off and on."""
+    node = self.context.node
+    for optimize_count in ("0", "1"):
+        with Then(
+            f"the count is exact with optimize_count_from_files={optimize_count}"
+        ):
+            result = node.query(
+                query,
+                settings=[("optimize_count_from_files", optimize_count)],
+            )
+            assert int(result.output.strip()) == expected_value, error(
+                f"{name}: got {result.output.strip()}, expected {expected_value}"
+            )
+
+
+@TestSuite
 @Requirements(RQ_Iceberg_DeletionVectors_Count_CountOnlyFastPath("1.0"))
 def count_only_fast_path(self):
     """Counts are identical with and without PREWHERE, with and without a
@@ -109,13 +135,12 @@ def count_only_fast_path(self):
             },
         )
         common.assert_min_row_groups(table=table, min_row_groups=2)
+
+    with And("an Iceberg engine table over it"):
         engine_table = common.engine_table(table=table)
 
-    node = self.context.node
     predicate = "id % 2 = 1"
-    expected_filtered = len(
-        [i for i in range(rows) if i not in deleted and i % 2 == 1]
-    )
+    expected_filtered = len([i for i in range(rows) if i not in deleted and i % 2 == 1])
 
     count_queries = {
         "plain count": (
@@ -133,16 +158,9 @@ def count_only_fast_path(self):
     }
 
     for name, (query, expected_value) in count_queries.items():
-        for optimize_count in ("0", "1"):
-            with Check(f"{name} with optimize_count_from_files={optimize_count}"):
-                result = node.query(
-                    query,
-                    settings=[("optimize_count_from_files", optimize_count)],
-                )
-                assert int(result.output.strip()) == expected_value, error(
-                    f"{name}: got {result.output.strip()}, "
-                    f"expected {expected_value}"
-                )
+        Scenario(test=count_query, name=name)(
+            name=name, query=query, expected_value=expected_value
+        )
 
 
 @TestScenario
@@ -174,8 +192,7 @@ def count_from_files_cache(self):
     with Then("the next count() is N - deleted, not the cached N"):
         count = common.count_rows(table=table, settings=cache_setting)
         assert count == rows - 10, error(
-            f"count() = {count}: stale count served from the "
-            f"count-from-files cache"
+            f"count() = {count}: stale count served from the " f"count-from-files cache"
         )
 
     with When(
@@ -209,6 +226,6 @@ def count_from_files_cache(self):
 @Name("count paths")
 def feature(self, minio_root_user, minio_root_password):
     """Count paths with deletion vectors."""
-    Scenario(run=trivial_count_optimization)
-    Scenario(run=count_only_fast_path)
+    Suite(run=trivial_count_optimization)
+    Suite(run=count_only_fast_path)
     Scenario(run=count_from_files_cache)

@@ -16,7 +16,10 @@ def window_row_number_on_alias(self):
     alias_columns = [
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, computed FROM {hybrid_table} ORDER BY id",
@@ -51,9 +54,16 @@ def window_aggregate_on_alias(self):
     ]
     alias_columns = [
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
-        {"name": "year_month", "expression": "toYYYYMM(date_col)", "hybrid_type": "UInt32"},
+        {
+            "name": "year_month",
+            "expression": "toYYYYMM(date_col)",
+            "hybrid_type": "UInt32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, computed, year_month FROM {hybrid_table} ORDER BY id",
@@ -90,7 +100,10 @@ def window_lead_lag_on_alias(self):
     alias_columns = [
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, computed FROM {hybrid_table} ORDER BY id",

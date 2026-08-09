@@ -24,7 +24,10 @@ def weighted_sum(self):
             "hybrid_type": "Float64",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, value3, date_col FROM {hybrid_table} ORDER BY id",
@@ -68,7 +71,10 @@ def weighted_sum_in_watermark(self):
         },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "weighted_sum >= 1000.0", "right_predicate": "weighted_sum < 1000.0"}
+    watermark = {
+        "left_predicate": "weighted_sum >= 1000.0",
+        "right_predicate": "weighted_sum < 1000.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, value3, date_col FROM {hybrid_table} ORDER BY id",

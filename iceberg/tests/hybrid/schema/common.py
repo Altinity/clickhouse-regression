@@ -22,9 +22,7 @@ def fingerprint_expr(from_expr, hash_list="*"):
     the same transforms in a subquery without aliases.
     """
     return (
-        "SELECT count(), "
-        f"groupBitXor(cityHash64({hash_list})) "
-        f"FROM {from_expr}"
+        "SELECT count(), " f"groupBitXor(cityHash64({hash_list})) " f"FROM {from_expr}"
     )
 
 
@@ -44,7 +42,9 @@ def assert_fingerprints_equal(self, hybrid_sql, reference_sql, node=None, label=
     clause = settings_clause(PREFER_LOCALHOST)
     hybrid_out = node.query(hybrid_sql + f" {clause}").output.strip()
     ref_out = node.query(reference_sql + f" {clause}").output.strip()
-    with By(f"compare{(' ' + label) if label else ''} Hybrid={hybrid_out!r} vs ref={ref_out!r}"):
+    with By(
+        f"compare{(' ' + label) if label else ''} Hybrid={hybrid_out!r} vs ref={ref_out!r}"
+    ):
         assert hybrid_out == ref_out, error()
 
 

@@ -18,7 +18,10 @@ def string_equality_watermark(self):
     alias_columns = [
         {"name": "upper_name", "expression": "upper(name)", "hybrid_type": "String"},
     ]
-    watermark = {"left_predicate": "name LIKE 'A%'", "right_predicate": "name NOT LIKE 'A%'"}
+    watermark = {
+        "left_predicate": "name LIKE 'A%'",
+        "right_predicate": "name NOT LIKE 'A%'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, name, date_col FROM {hybrid_table} ORDER BY id",

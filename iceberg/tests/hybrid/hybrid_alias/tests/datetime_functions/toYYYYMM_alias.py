@@ -15,9 +15,16 @@ def toYYYYMM_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "year_month", "expression": "toYYYYMM(date_col)", "hybrid_type": "UInt32"},
+        {
+            "name": "year_month",
+            "expression": "toYYYYMM(date_col)",
+            "hybrid_type": "UInt32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toYYYYMM_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "year_month", "expression": "toYYYYMM(date_col)", "hybrid_type": "UInt32"},
+        {
+            "name": "year_month",
+            "expression": "toYYYYMM(date_col)",
+            "hybrid_type": "UInt32",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "year_month >= 201001", "right_predicate": "year_month < 201001"}
+    watermark = {
+        "left_predicate": "year_month >= 201001",
+        "right_predicate": "year_month < 201001",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

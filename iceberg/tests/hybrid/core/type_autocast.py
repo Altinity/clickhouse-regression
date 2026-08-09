@@ -98,9 +98,7 @@ def uint64_vs_int64_auto_cast_on(self):
         assert count == "4", error()
 
     with And("sum(id) matches exclusive reference with casts"):
-        hybrid_sum = node.query(
-            f"SELECT sum(id) FROM {hybrid} {clause}"
-        ).output.strip()
+        hybrid_sum = node.query(f"SELECT sum(id) FROM {hybrid} {clause}").output.strip()
         ref_sum = node.query(
             f"SELECT sum(id) FROM ("
             f"SELECT toInt64(id) AS id FROM {left} WHERE {LEFT_PREDICATE} "
@@ -176,7 +174,9 @@ def uint64_vs_int64_auto_cast_off(self):
             no_checks=True,
         )
 
-    with Then("either errors or does not return the auto-cast success count alone as proof"):
+    with Then(
+        "either errors or does not return the auto-cast success count alone as proof"
+    ):
         # Prefer error; if the engine coerces somehow, still require exitcode or note.
         if r.exitcode == 0:
             # Document unexpected success for triage; still compare to casted reference.

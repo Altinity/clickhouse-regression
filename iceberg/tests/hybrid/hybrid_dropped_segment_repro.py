@@ -47,7 +47,9 @@ def hybrid_dropped_segment_repro(self):
 
         left_table_func = f"remote('localhost', currentDatabase(), '{left_table_name}')"
         left_predicate = "id < 10000"
-        right_table_func = f"remote('localhost', currentDatabase(), '{right_table_name}')"
+        right_table_func = (
+            f"remote('localhost', currentDatabase(), '{right_table_name}')"
+        )
         right_predicate = "id >= 1000"
         hybrid_engine = f"Hybrid({left_table_func}, {left_predicate}, {right_table_func}, {right_predicate})"
 

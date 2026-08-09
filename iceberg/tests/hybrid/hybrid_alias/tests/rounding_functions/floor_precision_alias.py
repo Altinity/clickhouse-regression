@@ -15,9 +15,16 @@ def floor_precision_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "floored_precision", "expression": "floor(value, 2)", "hybrid_type": "Int16"},
+        {
+            "name": "floored_precision",
+            "expression": "floor(value, 2)",
+            "hybrid_type": "Int16",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

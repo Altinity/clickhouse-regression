@@ -15,9 +15,16 @@ def toUInt32_fromUInt64_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_uint32", "expression": "toUInt32(big_value)", "hybrid_type": "UInt32"},
+        {
+            "name": "value_uint32",
+            "expression": "toUInt32(big_value)",
+            "hybrid_type": "UInt32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
+    watermark = {
+        "left_predicate": "date_col >= '2004-04-16'",
+        "right_predicate": "date_col < '2004-04-16'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, big_value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toUInt32_fromUInt64_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_uint32", "expression": "toUInt32(big_value)", "hybrid_type": "UInt32"},
+        {
+            "name": "value_uint32",
+            "expression": "toUInt32(big_value)",
+            "hybrid_type": "UInt32",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "value_uint32 >= 5000", "right_predicate": "value_uint32 < 5000"}
+    watermark = {
+        "left_predicate": "value_uint32 >= 5000",
+        "right_predicate": "value_uint32 < 5000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, big_value, date_col FROM {hybrid_table} ORDER BY id",

@@ -38,9 +38,12 @@ import iceberg.tests.steps.s3 as s3_steps
 
 
 @TestScenario
-def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_password):
+def all_datatypes_with_dot_separated_columns(
+    self, minio_root_user, minio_root_password
+):
     """Test that ClickHouse correctly reads all Iceberg data types with
-    dot-separated column names using Iceberg engine, icebergS3 table function and S3 table function."""
+    dot-separated column names using Iceberg engine, icebergS3 table function and S3 table function.
+    """
     namespace = f"namespace_{getuid()}"
     table_name = f"table_{getuid()}"
     database_name = f"iceberg_database_{getuid()}"
@@ -74,7 +77,9 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
 
     with And("create iceberg table with all datatypes and dot-separated column names"):
         fields = [
-            NestedField(field_id=i + 1, name=col_name, field_type=col_type, required=False)
+            NestedField(
+                field_id=i + 1, name=col_name, field_type=col_type, required=False
+            )
             for i, (col_name, col_type) in enumerate(dot_separated_columns)
         ]
         schema = Schema(*fields)
@@ -224,7 +229,10 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
             s3_secret_access_key=minio_root_password,
             columns="*",
             order_by="tuple(*)",
-            settings=[("use_hive_partitioning", "0"), ("input_format_parquet_use_native_reader_v3", "1")],
+            settings=[
+                ("use_hive_partitioning", "0"),
+                ("input_format_parquet_use_native_reader_v3", "1"),
+            ],
         )
         assert result.output == expected_result_s3_table_function, error()
 
@@ -252,12 +260,21 @@ def sanity_dot_separated_column_names(self, minio_root_user, minio_root_password
             location="s3://warehouse/data",
             partition_spec=PartitionSpec(),
             sort_order=SortOrder(),
-            schema=Schema(NestedField(field_id=1, name="name.column", field_type=StringType(), required=False)),
+            schema=Schema(
+                NestedField(
+                    field_id=1,
+                    name="name.column",
+                    field_type=StringType(),
+                    required=False,
+                )
+            ),
         )
 
     with And("insert one row into iceberg table"):
         test_data = [{"name.column": "test"}]
-        df = pa.Table.from_pylist(test_data, schema=pa.schema([("name.column", pa.string())]))
+        df = pa.Table.from_pylist(
+            test_data, schema=pa.schema([("name.column", pa.string())])
+        )
         table.append(df)
 
     with And("create database with DataLakeCatalog engine"):
@@ -268,9 +285,14 @@ def sanity_dot_separated_column_names(self, minio_root_user, minio_root_password
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("read data using Iceberg engine and verify specific columns are accessible"):
+    with And(
+        "read data using Iceberg engine and verify specific columns are accessible"
+    ):
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name, namespace=namespace, table_name=table_name, columns="name.column"
+            database_name=database_name,
+            namespace=namespace,
+            table_name=table_name,
+            columns="name.column",
         )
         assert result.output == "test", error()
 
@@ -279,7 +301,8 @@ def sanity_dot_separated_column_names(self, minio_root_user, minio_root_password
 @Name("dot separated column names")
 def feature(self, minio_root_user, minio_root_password):
     """Check that ClickHouse correctly handles dot-separated column names
-    with all Iceberg data types using Iceberg engine, icebergS3 table function and S3 table function."""
+    with all Iceberg data types using Iceberg engine, icebergS3 table function and S3 table function.
+    """
     Scenario(test=sanity_dot_separated_column_names)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

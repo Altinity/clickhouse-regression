@@ -17,7 +17,10 @@ def modulo_alias(self):
     alias_columns = [
         {"name": "modulo", "expression": "value % 3", "hybrid_type": "Int16"},
     ]
-    watermark = {"left_predicate": "date_col >= '2012-04-28'", "right_predicate": "date_col < '2012-04-28'"}
+    watermark = {
+        "left_predicate": "date_col >= '2012-04-28'",
+        "right_predicate": "date_col < '2012-04-28'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

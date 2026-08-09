@@ -45,7 +45,10 @@ STATS_FIELDS = (
 
 def _field(name, pa_type, field_id):
     return pa.field(
-        name, pa_type, nullable=False, metadata={b"PARQUET:field_id": str(field_id).encode()}
+        name,
+        pa_type,
+        nullable=False,
+        metadata={b"PARQUET:field_id": str(field_id).encode()},
     )
 
 
@@ -58,9 +61,7 @@ def _write_parquet(schema, columns):
 def _append_delete_entry(namespace, table_name, data_file_overrides):
     """Append a delete-file entry cloned from the live deletion-vector entry
     with ``data_file`` fields replaced by *data_file_overrides*."""
-    dv_entries = manifest.find_dv_entries(
-        namespace=namespace, table_name=table_name
-    )
+    dv_entries = manifest.find_dv_entries(namespace=namespace, table_name=table_name)
     assert dv_entries, "fixture must already have a deletion vector"
     template_key = dv_entries[0]["manifest_key"]
     template = copy.deepcopy(dv_entries[0]["entry"])
@@ -92,9 +93,7 @@ def _append_delete_entry(namespace, table_name, data_file_overrides):
 
 
 @TestStep(When)
-def add_equality_delete(
-    self, namespace, table_name, ids, column="id", field_id=1
-):
+def add_equality_delete(self, namespace, table_name, ids, column="id", field_id=1):
     """Add an equality-delete file removing rows whose *column* value is in
     *ids* (applies to data files with a lower data sequence number)."""
     schema = pa.schema([_field(column, pa.int64(), field_id)])
@@ -157,10 +156,8 @@ def first_data_file_path(namespace, table_name):
     """Full URI of the referenced data file of the single deletion-vector
     entry — the file both delete formats must target in coexistence tests.
     Asserts there is exactly one entry so the target is unambiguous."""
-    dv_entries = manifest.find_dv_entries(
-        namespace=namespace, table_name=table_name
-    )
-    assert len(dv_entries) == 1, (
-        f"expected exactly one deletion-vector entry, found {len(dv_entries)}"
-    )
+    dv_entries = manifest.find_dv_entries(namespace=namespace, table_name=table_name)
+    assert (
+        len(dv_entries) == 1
+    ), f"expected exactly one deletion-vector entry, found {len(dv_entries)}"
     return dv_entries[0]["entry"]["data_file"]["referenced_data_file"]

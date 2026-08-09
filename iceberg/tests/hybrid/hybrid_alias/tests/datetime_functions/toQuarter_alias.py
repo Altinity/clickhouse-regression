@@ -15,9 +15,16 @@ def toQuarter_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "quarter", "expression": "toQuarter(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "quarter",
+            "expression": "toQuarter(date_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +60,11 @@ def toQuarter_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "quarter", "expression": "toQuarter(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "quarter",
+            "expression": "toQuarter(date_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "quarter >= 3", "right_predicate": "quarter < 3"}

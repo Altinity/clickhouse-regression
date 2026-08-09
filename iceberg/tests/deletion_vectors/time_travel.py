@@ -63,6 +63,22 @@ def time_travel(self):
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_TimeTravel_MultipleGenerations("1.0"))
+def query_order(self, order):
+    """Each snapshot exposes its own deletion-vector state when queried in
+    one specific order."""
+    ctx = self.context
+    for generation in order:
+        snapshot, expected = ctx.generations[generation]
+        with Then(f"snapshot {generation} returns its own row set"):
+            common.assert_visible_ids(
+                table=ctx.table,
+                ids=expected,
+                settings=snapshot_settings(snapshot),
+            )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_TimeTravel_MultipleGenerations("1.0"))
 def multiple_generations(self):
     """Each snapshot exposes its own deletion-vector state regardless of
     query order and caching."""
@@ -81,19 +97,15 @@ def multiple_generations(self):
         assert len(snapshots) == 3, error(f"expected 3 snapshots, got {len(snapshots)}")
         snapshot_a, snapshot_b, snapshot_c = snapshots
 
-    generations = {
+    self.context.table = table
+    self.context.generations = {
         "A": (snapshot_a, list(range(rows))),
         "B": (snapshot_b, [i for i in range(rows) if i not in (1, 5)]),
         "C": (snapshot_c, [i for i in range(rows) if i not in (1, 5, 9)]),
     }
 
     for order in (("C", "A", "B"), ("B", "C", "A"), ("A", "B", "C")):
-        with Check(f"query order {'-'.join(order)}"):
-            for generation in order:
-                snapshot, expected = generations[generation]
-                common.assert_visible_ids(
-                    table=table, ids=expected, settings=snapshot_settings(snapshot)
-                )
+        Scenario(test=query_order, name=f"query order {'-'.join(order)}")(order=order)
 
 
 @TestScenario
@@ -138,60 +150,73 @@ def snapshot_refresh(self):
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_SequenceNumbers("1.0"))
+def newer_files_unaffected(self):
+    """A vector does not apply to data files added after it, even when the
+    newer file holds equal values."""
+    with Given("a table where ids 5 and 6 were deleted via a vector"):
+        table = common.table_with_deletion_vectors(
+            rows=0,
+            setup_statements=[
+                common.insert_range_statement(100),
+                "DELETE FROM {table} WHERE id IN (5, 6)",
+                # same values, committed after the vector
+                "INSERT INTO {table} VALUES (5, 'row-5'), (6, 'row-6')",
+            ],
+        )
+
+    with Then("the re-inserted rows are visible exactly once"):
+        common.assert_visible_ids(table=table, ids=list(range(100)))
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_SequenceNumbers("1.0"))
+def missing_data_file_ignored(self):
+    """A vector whose data file left the snapshot is ignored rather than
+    an error."""
+    with Given("a table with files A (with vector) and B (without)"):
+        table = common.table_with_deletion_vectors(
+            rows=0,
+            setup_statements=[
+                common.insert_range_statement(100),
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
+                "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
+                "DELETE FROM {table} WHERE id < 100 AND id % 10 = 0",
+            ],
+        )
+
+    with When("file A's entry is removed from the data manifests"):
+        dv_entries = manifest.find_dv_entries(table.namespace, table.table_name)
+        assert len(dv_entries) == 1, error()
+        target = dv_entries[0]["entry"]["data_file"]["referenced_data_file"]
+
+        def drop_target(entry):
+            if entry["data_file"]["file_path"] == target:
+                return None
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=drop_target,
+            content=manifest.MANIFEST_LIST_DATA,
+        )
+        common.drop_iceberg_metadata_cache()
+
+    with Then("the read succeeds with only file B's rows"):
+        common.assert_visible_ids(
+            table=table,
+            ids=list(range(100, 150)),
+            settings=[("use_iceberg_metadata_files_cache", "0")],
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_SequenceNumbers("1.0"))
 def sequence_numbers(self):
     """A vector does not affect data files added after it, and a vector
     whose data file left the snapshot is ignored rather than an error."""
-    with Check("vector does not apply to newer files with equal values"):
-        with Given("a table where ids 5 and 6 were deleted via a vector"):
-            table = common.table_with_deletion_vectors(
-                rows=0,
-                setup_statements=[
-                    common.insert_range_statement(100),
-                    "DELETE FROM {table} WHERE id IN (5, 6)",
-                    # same values, committed after the vector
-                    "INSERT INTO {table} VALUES (5, 'row-5'), (6, 'row-6')",
-                ],
-            )
-
-        with Then("the re-inserted rows are visible exactly once"):
-            common.assert_visible_ids(table=table, ids=list(range(100)))
-
-    with Check("vector referencing a data file not in the snapshot is ignored"):
-        with Given("a table with files A (with vector) and B (without)"):
-            table = common.table_with_deletion_vectors(
-                rows=0,
-                setup_statements=[
-                    common.insert_range_statement(100),
-                    "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
-                    "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
-                    "DELETE FROM {table} WHERE id < 100 AND id % 10 = 0",
-                ],
-            )
-
-        with When("file A's entry is removed from the data manifests"):
-            dv_entries = manifest.find_dv_entries(table.namespace, table.table_name)
-            assert len(dv_entries) == 1, error()
-            target = dv_entries[0]["entry"]["data_file"]["referenced_data_file"]
-
-            def drop_target(entry):
-                if entry["data_file"]["file_path"] == target:
-                    return None
-                return entry
-
-            manifest.mutate_manifest_entries(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                mutator=drop_target,
-                content=manifest.MANIFEST_LIST_DATA,
-            )
-            common.drop_iceberg_metadata_cache()
-
-        with Then("the read succeeds with only file B's rows"):
-            common.assert_visible_ids(
-                table=table,
-                ids=list(range(100, 150)),
-                settings=[("use_iceberg_metadata_files_cache", "0")],
-            )
+    Scenario(run=newer_files_unaffected)
+    Scenario(run=missing_data_file_ignored)
 
 
 @TestScenario
@@ -230,7 +255,7 @@ def compaction(self):
 def feature(self, minio_root_user, minio_root_password):
     """Snapshots and time travel with deletion vectors."""
     Scenario(run=time_travel)
-    Scenario(run=multiple_generations)
+    Suite(run=multiple_generations)
     Scenario(run=snapshot_refresh)
-    Scenario(run=sequence_numbers)
+    Suite(run=sequence_numbers)
     Scenario(run=compaction)

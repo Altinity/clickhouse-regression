@@ -15,7 +15,9 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
     create_iceberg_destination,
 )
-from iceberg.tests.export_partition.steps.verification import assert_destination_row_count
+from iceberg.tests.export_partition.steps.verification import (
+    assert_destination_row_count,
+)
 
 from iceberg.tests.hybrid.core.common import (
     ALL_ROWS,
@@ -217,9 +219,7 @@ def create_local_and_distributed(
         cluster=cluster,
     )
 
-    insert = (
-        f"INSERT INTO {local_name} (id, value, date_col) VALUES {values_sql(rows)}"
-    )
+    insert = f"INSERT INTO {local_name} (id, value, date_col) VALUES {values_sql(rows)}"
     if seed_all_replicas:
         for n in self.context.nodes:
             n.query(insert)

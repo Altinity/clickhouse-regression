@@ -25,13 +25,19 @@ def left_alias_right_normal_type_mismatch(self):
         {"name": "id", "datatype": "Int32"},
         {"name": "value", "datatype": "Int32"},
         {"name": "date_col", "datatype": "Date"},
-        {"name": "computed", "datatype": "Float64"},  # Regular column in right with mismatced type
+        {
+            "name": "computed",
+            "datatype": "Float64",
+        },  # Regular column in right with mismatced type
     ]
     left_alias_columns = [
         {"name": "computed", "expression": "value * 2"},  # Alias in left
     ]
     right_alias_columns = []
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -112,7 +112,10 @@ def server_settings(self):
     restart."""
     node = self.context.node
 
-    with Check("documented defaults"):
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors()
+
+    with Then("the cache server settings exist with documented defaults"):
         for name, expected in DEFAULT_SERVER_SETTINGS.items():
             result = node.query(
                 f"SELECT value FROM system.server_settings "
@@ -121,9 +124,6 @@ def server_settings(self):
             assert result.output.strip() == expected, error(
                 f"{name} = {result.output.strip()!r}, expected {expected!r}"
             )
-
-    with Given("a table with a deletion vector"):
-        table = common.table_with_deletion_vectors()
 
     with When("the cache is disabled by server setting without a restart"):
         config_d.create_and_add(
@@ -134,9 +134,7 @@ def server_settings(self):
         )
         node.query("SYSTEM RELOAD CONFIG")
 
-    with Then(
-        "results remain correct even with use_puffin_files_cache = 1"
-    ):
+    with Then("results remain correct even with use_puffin_files_cache = 1"):
         count = common.count_rows(
             table=table, settings=[("use_puffin_files_cache", "1")], node=node
         )
@@ -256,9 +254,9 @@ def etag_bypass(self):
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_Cache_Eviction("1.0"))
-def eviction(self):
+def eviction_under_pressure(self):
     """A cache smaller than the working set evicts entries while results
-    remain correct; empty vectors are cached as explicit entries."""
+    remain correct."""
     node = self.context.node
 
     with Given("the cache is limited to a single entry"):
@@ -294,31 +292,46 @@ def eviction(self):
             f"PuffinFilesCacheWeightLost = {weight_lost}, expected evictions"
         )
 
-    with Check("empty vectors are cached as explicit entries"):
-        with Given("a table whose vector is replaced with an empty one"):
-            table = common.table_with_deletion_vectors(rows=50)
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                payload=puffin.build_dv_payload(positions=[]),
-                declared_cardinality=0,
-            )
-            common.drop_iceberg_metadata_cache()
-            common.drop_puffin_cache(node=node)
 
-        with When("the empty vector is read twice"):
-            settings = [("use_iceberg_metadata_files_cache", "0")]
-            first = warm_read(table=table, node=node, extra_settings=settings)
-            second = warm_read(table=table, node=node, extra_settings=settings)
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_Eviction("1.0"))
+def empty_vector_cached(self):
+    """Empty vectors are cached as explicit entries."""
+    node = self.context.node
 
-        with Then("the second read hits the cached empty entry"):
-            events = common.get_puffin_events(log_comment=second, node=node)
-            assert events["PuffinFilesCacheHits"] > 0, error(
-                f"empty vector was not cached: {events}"
-            )
-            assert events["PuffinFilesRead"] == 0, error(
-                f"empty vector was re-read: {events}"
-            )
+    with Given("a table whose vector is replaced with an empty one"):
+        table = common.table_with_deletion_vectors(rows=50)
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=[]),
+            declared_cardinality=0,
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache(node=node)
+
+    with When("the empty vector is read twice"):
+        settings = [("use_iceberg_metadata_files_cache", "0")]
+        first = warm_read(table=table, node=node, extra_settings=settings)
+        second = warm_read(table=table, node=node, extra_settings=settings)
+
+    with Then("the second read hits the cached empty entry"):
+        events = common.get_puffin_events(log_comment=second, node=node)
+        assert events["PuffinFilesCacheHits"] > 0, error(
+            f"empty vector was not cached: {events}"
+        )
+        assert events["PuffinFilesRead"] == 0, error(
+            f"empty vector was re-read: {events}"
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_Eviction("1.0"))
+def eviction(self):
+    """Eviction under a small cache and explicit caching of empty
+    vectors."""
+    Scenario(run=eviction_under_pressure)
+    Scenario(run=empty_vector_cached)
 
 
 @TestScenario
@@ -371,18 +384,14 @@ def rbac(self):
             node.query(f"GRANT SYSTEM DROP PUFFIN FILES CACHE ON *.* TO {user}")
 
         with Then("the drop statement is allowed"):
-            node.query(
-                "SYSTEM DROP PUFFIN FILES CACHE", settings=[("user", user)]
-            )
+            node.query("SYSTEM DROP PUFFIN FILES CACHE", settings=[("user", user)])
 
         with When("the specific privilege is replaced by the parent one"):
             node.query(f"REVOKE SYSTEM DROP PUFFIN FILES CACHE ON *.* FROM {user}")
             node.query(f"GRANT SYSTEM DROP CACHE ON *.* TO {user}")
 
         with Then("the parent SYSTEM DROP CACHE privilege suffices"):
-            node.query(
-                "SYSTEM DROP PUFFIN FILES CACHE", settings=[("user", user)]
-            )
+            node.query("SYSTEM DROP PUFFIN FILES CACHE", settings=[("user", user)])
 
         with And("SHOW PRIVILEGES lists the privilege with its parent"):
             result = node.query(
@@ -466,9 +475,7 @@ def concurrency(self):
         # single-load requirement
         if barrier is not None:
             barrier.wait(timeout=60)
-        count = common.count_rows(
-            table=table, settings=[("log_comment", log_comment)]
-        )
+        count = common.count_rows(table=table, settings=[("log_comment", log_comment)])
         assert count == expected_count, error(f"count = {count}")
 
     with When("two queries read the cold vector concurrently"):
@@ -489,8 +496,7 @@ def concurrency(self):
             for lc in log_comments
         )
         assert total_reads == 1, error(
-            f"PuffinFilesRead totals {total_reads} across both queries, "
-            f"expected 1"
+            f"PuffinFilesRead totals {total_reads} across both queries, " f"expected 1"
         )
 
     with When("a cache drop repeatedly races an in-flight load"):
@@ -574,7 +580,7 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(run=server_settings)
     Scenario(run=invalidation)
     Scenario(run=etag_bypass)
-    Scenario(run=eviction)
+    Suite(run=eviction)
     Scenario(run=drop_statement)
     Scenario(run=rbac)
     Scenario(run=observability)

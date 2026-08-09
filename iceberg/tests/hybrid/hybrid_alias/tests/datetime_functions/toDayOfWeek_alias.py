@@ -15,9 +15,16 @@ def toDayOfWeek_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "day_of_week", "expression": "toDayOfWeek(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "day_of_week",
+            "expression": "toDayOfWeek(date_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toDayOfWeek_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "day_of_week", "expression": "toDayOfWeek(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "day_of_week",
+            "expression": "toDayOfWeek(date_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "day_of_week >= 4", "right_predicate": "day_of_week < 4"}
+    watermark = {
+        "left_predicate": "day_of_week >= 4",
+        "right_predicate": "day_of_week < 4",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

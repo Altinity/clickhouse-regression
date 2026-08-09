@@ -18,7 +18,10 @@ def quotient_alias(self):
     alias_columns = [
         {"name": "quotient", "expression": "value1 / value2", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
+    watermark = {
+        "left_predicate": "date_col >= '2004-04-16'",
+        "right_predicate": "date_col < '2004-04-16'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",
@@ -58,7 +61,10 @@ def quotient_alias_in_watermark(self):
         {"name": "quotient", "expression": "value1 / value2", "hybrid_type": "Float64"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "quotient >= 10.0", "right_predicate": "quotient < 10.0"}
+    watermark = {
+        "left_predicate": "quotient >= 10.0",
+        "right_predicate": "quotient < 10.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",

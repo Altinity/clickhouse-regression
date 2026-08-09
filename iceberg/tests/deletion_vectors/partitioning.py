@@ -49,33 +49,40 @@ def partitioned_table_with_vectors(self, transform, rows=100):
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_Partitioning("1.0"))
-def partitioning(self):
-    """Vectors apply correctly under identity, bucket, and truncate
-    partitioning, including queries touching only a vector-bearing
-    partition."""
-    rows = 100
+def partition_transform(self, transform, rows=100):
+    """Vectors apply correctly under one partition transform, including
+    queries touching only a vector-bearing partition."""
     deleted = deleted_ids(rows)
     expected = [i for i in range(rows) if i not in deleted]
 
+    with Given(f"a table partitioned by {transform} with vectors"):
+        table = partitioned_table_with_vectors(transform=transform, rows=rows)
+
+    with Then("the full read applies every partition's vector"):
+        common.assert_visible_ids(table=table, ids=expected)
+
+    with And("a query touching one vector-bearing partition applies it"):
+        result = common.read_result(
+            table=table,
+            columns="id",
+            where_clause="category = '0'",
+            order_by="id",
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == [i for i in expected if i % 4 == 0], error(
+            f"partition read returned {len(ids)} rows"
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_Partitioning("1.0"))
+def partitioning(self):
+    """Vectors apply correctly under identity, bucket, and truncate
+    partitioning."""
     for name, transform in PARTITION_TRANSFORMS.items():
-        with Check(f"{name} partitioning"):
-            with Given(f"a table partitioned by {transform} with vectors"):
-                table = partitioned_table_with_vectors(transform=transform, rows=rows)
-
-            with Then("the full read applies every partition's vector"):
-                common.assert_visible_ids(table=table, ids=expected)
-
-            with And("a query touching one vector-bearing partition applies it"):
-                result = common.read_result(
-                    table=table,
-                    columns="id",
-                    where_clause="category = '0'",
-                    order_by="id",
-                )
-                ids = [int(line) for line in result.output.split() if line.strip()]
-                assert ids == [
-                    i for i in expected if i % 4 == 0
-                ], error(f"partition read returned {len(ids)} rows")
+        Scenario(test=partition_transform, name=f"{name} partitioning")(
+            transform=transform
+        )
 
 
 @TestScenario
@@ -99,8 +106,7 @@ def pruning_skips_vector_load(self):
             entry["entry"]["data_file"]["file_path"] for entry in dv_entries
         }
         referenced = {
-            entry["entry"]["data_file"]["referenced_data_file"]
-            for entry in dv_entries
+            entry["entry"]["data_file"]["referenced_data_file"] for entry in dv_entries
         }
         assert len(dv_entries) == CATEGORIES, error(
             f"expected {CATEGORIES} vector entries, found {len(dv_entries)}"
@@ -155,5 +161,5 @@ def pruning_skips_vector_load(self):
 @Name("partitioning")
 def feature(self, minio_root_user, minio_root_password):
     """Partitioning and pruning with deletion vectors."""
-    Scenario(run=partitioning)
+    Suite(run=partitioning)
     Scenario(run=pruning_skips_vector_load)

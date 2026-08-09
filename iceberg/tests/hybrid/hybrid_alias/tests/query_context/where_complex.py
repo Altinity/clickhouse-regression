@@ -17,7 +17,10 @@ def complex_where_with_aliases(self):
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "sum_alias", "expression": "id + value", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, computed, sum_alias FROM {hybrid_table} ORDER BY id",

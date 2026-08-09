@@ -15,9 +15,16 @@ def rounddown_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "rounded_down", "expression": "roundDown(value, [10, 20, 30, 50])", "hybrid_type": "Int32"},
+        {
+            "name": "rounded_down",
+            "expression": "roundDown(value, [10, 20, 30, 50])",
+            "hybrid_type": "Int32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -21,7 +21,10 @@ def multiIf_grade_alias(self):
             "hybrid_type": "String",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, score, date_col FROM {hybrid_table} ORDER BY id",
@@ -64,7 +67,10 @@ def multiIf_grade_alias_in_watermark(self):
         },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(grade) = 1", "right_predicate": "length(grade) != 1"}
+    watermark = {
+        "left_predicate": "length(grade) = 1",
+        "right_predicate": "length(grade) != 1",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, score, date_col FROM {hybrid_table} ORDER BY id",

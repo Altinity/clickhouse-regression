@@ -126,9 +126,7 @@ def table_with_deletion_vectors(
         if rows:
             setup_statements.append(insert_range_statement(rows))
         if delete_condition is not None:
-            setup_statements.append(
-                f"DELETE FROM {{table}} WHERE {delete_condition}"
-            )
+            setup_statements.append(f"DELETE FROM {{table}} WHERE {delete_condition}")
 
     namespace, table_name = spark.create_table(
         columns=columns,
@@ -139,16 +137,12 @@ def table_with_deletion_vectors(
 
     if verify_puffin:
         with By("verifying a Puffin file exists under the table location"):
-            s3_objects.assert_puffin_exists(
-                namespace=namespace, table_name=table_name
-            )
+            s3_objects.assert_puffin_exists(namespace=namespace, table_name=table_name)
         with And("verifying the current snapshot has a live vector entry"):
             # object existence alone can be historical (older snapshots
             # retain their files) — the current snapshot must reference one
             dv_entries = manifest_steps.find_dv_entries(namespace, table_name)
-            assert dv_entries, (
-                "no live deletion-vector entry in the current snapshot"
-            )
+            assert dv_entries, "no live deletion-vector entry in the current snapshot"
 
     return DVTable(namespace, table_name)
 
@@ -188,9 +182,7 @@ def assert_min_row_groups(self, table, min_row_groups):
 
 def _single_live_data_file(table):
     files = manifest_steps.live_data_files(table.namespace, table.table_name)
-    assert len(files) == 1, (
-        f"expected exactly one live data file, found {len(files)}"
-    )
+    assert len(files) == 1, f"expected exactly one live data file, found {len(files)}"
     return files[0]
 
 
@@ -200,8 +192,7 @@ def parquet_row_group_sizes(self, table):
     for deriving the actual absolute positions of row-group boundaries."""
     metadata = _parquet_metadata(_single_live_data_file(table))
     return [
-        metadata.row_group(index).num_rows
-        for index in range(metadata.num_row_groups)
+        metadata.row_group(index).num_rows for index in range(metadata.num_row_groups)
     ]
 
 
@@ -291,9 +282,7 @@ def count_rows(self, table, node=None, settings=None, cluster=False, log_comment
 @TestStep(Then)
 def assert_visible_ids(self, table, ids, node=None, settings=None, cluster=False):
     """The table exposes exactly *ids* (as an ordered set of id values)."""
-    actual = select_ids(
-        table=table, node=node, settings=settings, cluster=cluster
-    )
+    actual = select_ids(table=table, node=node, settings=settings, cluster=cluster)
     assert actual == sorted(ids), error(
         f"visible ids mismatch: expected {len(ids)} rows, got {len(actual)}; "
         f"missing={sorted(set(ids) - set(actual))[:20]}, "
@@ -330,8 +319,10 @@ def catalog_database(self, node=None):
 
 def catalog_table_expr(database_name, table):
     """FROM-clause name of the fixture table inside a DataLakeCatalog
-    database."""
-    return f"{database_name}.`{table.namespace}.{table.table_name}`"
+    database. The backticks are backslash-escaped because ``node.query``
+    pipes the query through bash, where bare backticks are command
+    substitution."""
+    return f"{database_name}.\\`{table.namespace}.{table.table_name}\\`"
 
 
 @TestStep(Given)

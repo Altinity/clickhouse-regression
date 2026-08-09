@@ -16,9 +16,16 @@ def toFloat64_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_float64", "expression": "toFloat64(value)", "hybrid_type": "Float64"},
+        {
+            "name": "value_float64",
+            "expression": "toFloat64(value)",
+            "hybrid_type": "Float64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
+    watermark = {
+        "left_predicate": "date_col >= '2004-04-16'",
+        "right_predicate": "date_col < '2004-04-16'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def toFloat64_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_float64", "expression": "toFloat64(value)", "hybrid_type": "Float64"},
+        {
+            "name": "value_float64",
+            "expression": "toFloat64(value)",
+            "hybrid_type": "Float64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "value_float64 >= 5000.0", "right_predicate": "value_float64 < 5000.0"}
+    watermark = {
+        "left_predicate": "value_float64 >= 5000.0",
+        "right_predicate": "value_float64 < 5000.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

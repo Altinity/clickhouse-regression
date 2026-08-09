@@ -19,7 +19,10 @@ def single_level_dependency(self):
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "computed_2", "expression": "computed + 10", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -58,7 +61,10 @@ def single_level_dependency_in_watermark(self):
         {"name": "computed_2", "expression": "computed + 10", "hybrid_type": "Int64"},
     ]
     # Use final alias column in watermark predicates
-    watermark = {"left_predicate": "computed_2 >= 100", "right_predicate": "computed_2 < 100"}
+    watermark = {
+        "left_predicate": "computed_2 >= 100",
+        "right_predicate": "computed_2 < 100",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

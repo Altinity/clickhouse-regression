@@ -85,9 +85,7 @@ def run_spark_sql(statements, timeout=SPARK_SQL_TIMEOUT, container=SPARK_CONTAIN
     ]
 
     with By("executing spark-sql", description=statements):
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=timeout
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         if result.returncode != 0:
             fail(
                 f"spark-sql failed (exit code {result.returncode}):\n"
@@ -122,9 +120,7 @@ def wait_for_spark(self, timeout=300, delay=10):
             result = subprocess.run(
                 cmd, capture_output=True, text=True, timeout=SPARK_SQL_TIMEOUT
             )
-            assert result.returncode == 0, (
-                f"spark not ready: {result.stderr[-1000:]}"
-            )
+            assert result.returncode == 0, f"spark not ready: {result.stderr[-1000:]}"
 
 
 @TestStep(Given)

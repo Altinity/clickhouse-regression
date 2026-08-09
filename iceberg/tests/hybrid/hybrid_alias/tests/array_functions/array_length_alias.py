@@ -17,9 +17,16 @@ def array_length_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_length", "expression": "length(array_col)", "hybrid_type": "UInt64"},
+        {
+            "name": "array_length",
+            "expression": "length(array_col)",
+            "hybrid_type": "UInt64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_length_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_length", "expression": "length(array_col)", "hybrid_type": "UInt64"},
+        {
+            "name": "array_length",
+            "expression": "length(array_col)",
+            "hybrid_type": "UInt64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "array_length >= 5", "right_predicate": "array_length < 5"}
+    watermark = {
+        "left_predicate": "array_length >= 5",
+        "right_predicate": "array_length < 5",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

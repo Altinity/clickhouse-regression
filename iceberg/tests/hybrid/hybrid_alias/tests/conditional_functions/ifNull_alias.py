@@ -15,9 +15,16 @@ def ifNull_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "if_null_result", "expression": "ifNull(value, 0)", "hybrid_type": "Int32"},
+        {
+            "name": "if_null_result",
+            "expression": "ifNull(value, 0)",
+            "hybrid_type": "Int32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def ifNull_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "if_null_result", "expression": "ifNull(value, 0)", "hybrid_type": "Int32"},
+        {
+            "name": "if_null_result",
+            "expression": "ifNull(value, 0)",
+            "hybrid_type": "Int32",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "if_null_result >= 100", "right_predicate": "if_null_result < 100"}
+    watermark = {
+        "left_predicate": "if_null_result >= 100",
+        "right_predicate": "if_null_result < 100",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

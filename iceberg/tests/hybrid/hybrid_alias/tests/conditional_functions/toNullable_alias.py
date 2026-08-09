@@ -15,9 +15,16 @@ def toNullable_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "nullable_value", "expression": "toNullable(value)", "hybrid_type": "Nullable(Int32)"},
+        {
+            "name": "nullable_value",
+            "expression": "toNullable(value)",
+            "hybrid_type": "Nullable(Int32)",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toNullable_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "nullable_value", "expression": "toNullable(value)", "hybrid_type": "Nullable(Int32)"},
+        {
+            "name": "nullable_value",
+            "expression": "toNullable(value)",
+            "hybrid_type": "Nullable(Int32)",
+        },
     ]
     # Use alias column null check in watermark predicates
-    watermark = {"left_predicate": "isNull(nullable_value) = 0", "right_predicate": "isNull(nullable_value) = 1"}
+    watermark = {
+        "left_predicate": "isNull(nullable_value) = 0",
+        "right_predicate": "isNull(nullable_value) = 1",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

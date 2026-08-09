@@ -15,9 +15,16 @@ def is_valid_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_valid", "expression": "value > 0 AND value < 100", "hybrid_type": "UInt8"},
+        {
+            "name": "is_valid",
+            "expression": "value > 0 AND value < 100",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +60,11 @@ def is_valid_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_valid", "expression": "value > 0 AND value < 100", "hybrid_type": "UInt8"},
+        {
+            "name": "is_valid",
+            "expression": "value > 0 AND value < 100",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "is_valid = 1", "right_predicate": "is_valid = 0"}

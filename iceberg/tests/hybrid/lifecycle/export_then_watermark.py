@@ -150,9 +150,7 @@ def export_then_advance_watermark(self, minio_root_user, minio_root_password):
 
 @TestScenario
 @Name("overlap discipline export before delete")
-def overlap_discipline_export_before_delete(
-    self, minio_root_user, minio_root_password
-):
+def overlap_discipline_export_before_delete(self, minio_root_user, minio_root_password):
     """Deleting the cold range from hot before advancing W leaves a Hybrid gap."""
     node = self.context.node
     clause = settings_clause(PREFER_LOCALHOST)

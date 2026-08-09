@@ -19,9 +19,16 @@ def greatest_four_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "greatest_four", "expression": "greatest(val1, val2, val3, val4)", "hybrid_type": "Int32"},
+        {
+            "name": "greatest_four",
+            "expression": "greatest(val1, val2, val3, val4)",
+            "hybrid_type": "Int32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, val1, val2, val3, val4, date_col FROM {hybrid_table} ORDER BY id",

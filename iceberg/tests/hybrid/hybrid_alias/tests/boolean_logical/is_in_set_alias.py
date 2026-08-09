@@ -15,9 +15,16 @@ def is_in_set_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_in_set", "expression": "value IN (1, 2, 3, 4, 5)", "hybrid_type": "UInt8"},
+        {
+            "name": "is_in_set",
+            "expression": "value IN (1, 2, 3, 4, 5)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +60,11 @@ def is_in_set_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_in_set", "expression": "value IN (1, 2, 3, 4, 5)", "hybrid_type": "UInt8"},
+        {
+            "name": "is_in_set",
+            "expression": "value IN (1, 2, 3, 4, 5)",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "is_in_set = 1", "right_predicate": "is_in_set = 0"}

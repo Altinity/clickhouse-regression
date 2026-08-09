@@ -22,7 +22,9 @@ MOR_V2_PROPERTIES = {
 
 
 @TestStep(Given)
-def v2_table_with_position_deletes(self, rows=100, delete_condition="id < 20 AND id % 2 = 0"):
+def v2_table_with_position_deletes(
+    self, rows=100, delete_condition="id < 20 AND id % 2 = 0"
+):
     """A format-version 2 merge-on-read table where Spark's DELETE produced
     a Parquet position-delete file (not a deletion vector)."""
     table = common.table_with_deletion_vectors(
@@ -251,9 +253,7 @@ def format_version_upgrade(self):
             namespace=table.namespace, table_name=table.table_name
         )
 
-    with Then(
-        "pre-upgrade deletes stay absent and newly deleted rows disappear"
-    ):
+    with Then("pre-upgrade deletes stay absent and newly deleted rows disappear"):
         expected_after = [i for i in expected_before if i not in (50, 51)]
         common.assert_visible_ids(table=table, ids=expected_after)
 

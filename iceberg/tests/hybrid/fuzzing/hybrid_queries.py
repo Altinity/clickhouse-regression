@@ -24,7 +24,9 @@ def hybrid_curated_query_fuzz(self, minio_root_user, minio_root_password):
         )
 
     with When("load curated Hybrid fuzz SQL"):
-        queries = load_queries_from_sql_file(sql_path("hybrid_query_fuzzing_queries.sql"))
+        queries = load_queries_from_sql_file(
+            sql_path("hybrid_query_fuzzing_queries.sql")
+        )
         assert queries, "curated fuzz SQL file is empty"
 
     substitutions = {

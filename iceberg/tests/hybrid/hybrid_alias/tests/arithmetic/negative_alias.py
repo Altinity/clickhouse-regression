@@ -15,9 +15,16 @@ def negative_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "negative", "expression": "abs(value) - abs(value * 2)", "hybrid_type": "Int64"},
+        {
+            "name": "negative",
+            "expression": "abs(value) - abs(value * 2)",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
+    watermark = {
+        "left_predicate": "date_col >= '2004-04-16'",
+        "right_predicate": "date_col < '2004-04-16'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +60,11 @@ def negative_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "negative", "expression": "abs(value) - abs(value * 2)", "hybrid_type": "Int64"},
+        {
+            "name": "negative",
+            "expression": "abs(value) - abs(value * 2)",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "negative < 0", "right_predicate": "negative >= 0"}

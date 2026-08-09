@@ -18,9 +18,16 @@ def multiple_dependencies_sum(self):
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "quadrupled", "expression": "doubled * 2", "hybrid_type": "Int64"},
-        {"name": "sum_all", "expression": "id + value + doubled + quadrupled", "hybrid_type": "Int64"},
+        {
+            "name": "sum_all",
+            "expression": "id + value + doubled + quadrupled",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -57,7 +64,11 @@ def multiple_dependencies_sum_in_watermark(self):
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "quadrupled", "expression": "doubled * 2", "hybrid_type": "Int64"},
-        {"name": "sum_all", "expression": "id + value + doubled + quadrupled", "hybrid_type": "Int64"},
+        {
+            "name": "sum_all",
+            "expression": "id + value + doubled + quadrupled",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use final alias column in watermark predicates
     watermark = {"left_predicate": "sum_all >= 500", "right_predicate": "sum_all < 500"}

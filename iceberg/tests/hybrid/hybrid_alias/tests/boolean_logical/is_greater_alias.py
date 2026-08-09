@@ -17,7 +17,10 @@ def is_greater_alias(self):
     alias_columns = [
         {"name": "is_greater", "expression": "value > 0", "hybrid_type": "UInt8"},
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -56,7 +59,10 @@ def is_greater_alias_in_watermark(self):
         {"name": "is_greater", "expression": "value > 0", "hybrid_type": "UInt8"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "is_greater = 1", "right_predicate": "is_greater = 0"}
+    watermark = {
+        "left_predicate": "is_greater = 1",
+        "right_predicate": "is_greater = 0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

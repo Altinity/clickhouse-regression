@@ -17,7 +17,10 @@ def is_less_alias(self):
     alias_columns = [
         {"name": "is_less", "expression": "value < 100", "hybrid_type": "UInt8"},
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

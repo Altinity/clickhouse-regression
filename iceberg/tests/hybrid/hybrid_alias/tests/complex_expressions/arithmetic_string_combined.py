@@ -17,9 +17,16 @@ def arithmetic_string_combined(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "score", "expression": "(value * 2) + (id % 10) - length(name)", "hybrid_type": "Int64"},
+        {
+            "name": "score",
+            "expression": "(value * 2) + (id % 10) - length(name)",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, name, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,7 +62,11 @@ def arithmetic_string_combined_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "score", "expression": "(value * 2) + (id % 10) - length(name)", "hybrid_type": "Int64"},
+        {
+            "name": "score",
+            "expression": "(value * 2) + (id % 10) - length(name)",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "score >= 100", "right_predicate": "score < 100"}

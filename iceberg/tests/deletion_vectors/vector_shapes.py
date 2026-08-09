@@ -103,61 +103,148 @@ def all_rows_deleted(self):
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_BoundaryPositions("1.0"))
-def boundary_positions(self):
-    """Positions 0 and N-1 apply; a position >= N and a declared
-    cardinality > N are rejected as specification violations."""
+def first_and_last_positions(self):
+    """Positions 0 and N-1 apply to the first and last rows exactly."""
     rows = 100
 
-    with Check("first and last row positions apply"):
-        with Given("a table where Spark deleted the first and last rows"):
-            table = common.table_with_deletion_vectors(
-                rows=rows, delete_condition="id IN (0, 99)"
-            )
-        with Then("only positions 0 and 99 disappeared"):
-            common.assert_visible_ids(table=table, ids=list(range(1, 99)))
+    with Given("a table where Spark deleted the first and last rows"):
+        table = common.table_with_deletion_vectors(
+            rows=rows, delete_condition="id IN (0, 99)"
+        )
 
-    with Check("position >= record_count is rejected"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=rows)
-        with When(f"the vector is replaced with one deleting position {rows}"):
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                payload=puffin.build_dv_payload(positions=[rows]),
-                declared_cardinality=1,
-            )
-        with Then("the read fails with ICEBERG_SPECIFICATION_VIOLATION"):
-            common.assert_table_read_fails(
-                table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
-            )
-
-    with Check("cardinality > record_count is rejected before Puffin I/O"):
-        with Given("a table with a deletion vector"):
-            table = common.table_with_deletion_vectors(rows=rows)
-        with When(
-            "the manifest declares a vector cardinality above the data "
-            "file's record count"
-        ):
-            manifest.replace_deletion_vector(
-                namespace=table.namespace,
-                table_name=table.table_name,
-                declared_cardinality=rows + 1,
-            )
-        with Then("the read fails with ICEBERG_SPECIFICATION_VIOLATION"):
-            log_comment = common.unique_log_comment("card_gt_n")
-            common.assert_table_read_fails(
-                table=table,
-                error_name="ICEBERG_SPECIFICATION_VIOLATION",
-                log_comment=log_comment,
-            )
-        with And("no Puffin file was read"):
-            reads = common.get_profile_event_of_failed_query(
-                event="PuffinFilesRead", log_comment=log_comment
-            )
-            assert reads == 0, error(f"PuffinFilesRead = {reads}, expected 0")
+    with Then("only positions 0 and 99 disappeared"):
+        common.assert_visible_ids(table=table, ids=list(range(1, 99)))
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_BoundaryPositions("1.0"))
+def position_at_record_count(self):
+    """A position >= the data file's record count is rejected as a
+    specification violation."""
+    rows = 100
+
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=rows)
+
+    with When(f"the vector is replaced with one deleting position {rows}"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=[rows]),
+            declared_cardinality=1,
+        )
+
+    with Then("the read fails with ICEBERG_SPECIFICATION_VIOLATION"):
+        common.assert_table_read_fails(
+            table=table, error_name="ICEBERG_SPECIFICATION_VIOLATION"
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_BoundaryPositions("1.0"))
+def cardinality_above_record_count(self):
+    """A declared cardinality above the data file's record count is
+    rejected before any Puffin I/O."""
+    rows = 100
+
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors(rows=rows)
+
+    with When(
+        "the manifest declares a vector cardinality above the data "
+        "file's record count"
+    ):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            declared_cardinality=rows + 1,
+        )
+
+    with Then("the read fails with ICEBERG_SPECIFICATION_VIOLATION"):
+        log_comment = common.unique_log_comment("card_gt_n")
+        common.assert_table_read_fails(
+            table=table,
+            error_name="ICEBERG_SPECIFICATION_VIOLATION",
+            log_comment=log_comment,
+        )
+
+    with And("no Puffin file was read"):
+        reads = common.get_profile_event_of_failed_query(
+            event="PuffinFilesRead", log_comment=log_comment
+        )
+        assert reads == 0, error(f"PuffinFilesRead = {reads}, expected 0")
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_BoundaryPositions("1.0"))
+def boundary_positions(self):
+    """Positions 0 and N-1 apply; a position >= N and a declared
+    cardinality > N are rejected as specification violations."""
+    Scenario(run=first_and_last_positions)
+    Scenario(run=position_at_record_count)
+    Scenario(run=cardinality_above_record_count)
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RowGroupBoundaries("1.0"))
+def single_threaded_read(self):
+    """Full single-threaded read applies boundary-straddling positions."""
+    ctx = self.context
+    with Then("the visible row set matches"):
+        common.assert_visible_ids(
+            table=ctx.table,
+            ids=ctx.expected,
+            settings=ctx.fresh + [("max_threads", "1")],
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RowGroupBoundaries("1.0"))
+def multi_threaded_read(self):
+    """Full multi-threaded read applies boundary-straddling positions."""
+    ctx = self.context
+    with Then("the visible row set matches"):
+        common.assert_visible_ids(
+            table=ctx.table,
+            ids=ctx.expected,
+            settings=ctx.fresh + [("max_threads", "8")],
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RowGroupBoundaries("1.0"))
+def predicate_read(self):
+    """A predicate read pruning some row groups still applies the vector
+    at absolute positions."""
+    ctx = self.context
+    with Then("rows around the first boundary match"):
+        boundary_id = ctx.ids_in_order[ctx.boundaries[0]]
+        low, high = boundary_id - 10, boundary_id + 10
+        result = common.read_result(
+            table=ctx.table,
+            columns="id",
+            where_clause=f"id BETWEEN {low} AND {high}",
+            order_by="id",
+            settings=ctx.fresh + [("input_format_parquet_filter_push_down", "1")],
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == [i for i in ctx.expected if low <= i <= high], error(
+            f"predicate read around the boundary id {boundary_id} returned {ids}"
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RowGroupBoundaries("1.0"))
+def count_agrees(self):
+    """count() agrees with the boundary-straddling row set."""
+    ctx = self.context
+    with Then("the count matches the expected row set"):
+        assert common.count_rows(table=ctx.table, settings=ctx.fresh) == len(
+            ctx.expected
+        ), error()
+
+
+@TestSuite
 @Requirements(RQ_Iceberg_DeletionVectors_RowGroupBoundaries("1.0"))
 def row_group_boundaries(self):
     """Vector positions are absolute file row numbers, not row-group
@@ -219,39 +306,16 @@ def row_group_boundaries(self):
         common.drop_iceberg_metadata_cache()
         common.drop_puffin_cache()
 
-    expected = sorted(set(ids_in_order) - deleted_ids)
-    fresh = [("use_iceberg_metadata_files_cache", "0")]
+    self.context.table = table
+    self.context.boundaries = boundaries
+    self.context.ids_in_order = ids_in_order
+    self.context.expected = sorted(set(ids_in_order) - deleted_ids)
+    self.context.fresh = [("use_iceberg_metadata_files_cache", "0")]
 
-    with Check("full single-threaded read"):
-        common.assert_visible_ids(
-            table=table, ids=expected, settings=fresh + [("max_threads", "1")]
-        )
-
-    with Check("full multi-threaded read"):
-        common.assert_visible_ids(
-            table=table, ids=expected, settings=fresh + [("max_threads", "8")]
-        )
-
-    with Check("predicate read pruning some row groups"):
-        boundary_id = ids_in_order[boundaries[0]]
-        low, high = boundary_id - 10, boundary_id + 10
-        result = common.read_result(
-            table=table,
-            columns="id",
-            where_clause=f"id BETWEEN {low} AND {high}",
-            order_by="id",
-            settings=fresh + [("input_format_parquet_filter_push_down", "1")],
-        )
-        ids = [int(line) for line in result.output.split() if line.strip()]
-        assert ids == [i for i in expected if low <= i <= high], error(
-            f"predicate read around the boundary id {boundary_id} "
-            f"returned {ids}"
-        )
-
-    with Check("count() agrees"):
-        assert common.count_rows(table=table, settings=fresh) == len(
-            expected
-        ), error()
+    Scenario(run=single_threaded_read)
+    Scenario(run=multi_threaded_read)
+    Scenario(run=predicate_read)
+    Scenario(run=count_agrees)
 
 
 @TestScenario
@@ -288,8 +352,7 @@ def shared_puffin_file(self):
             namespace=table.namespace, table_name=table.table_name
         )
         referenced = {
-            entry["entry"]["data_file"]["referenced_data_file"]
-            for entry in dv_entries
+            entry["entry"]["data_file"]["referenced_data_file"] for entry in dv_entries
         }
         assert len(referenced) == 2, error(
             f"expected vectors for two data files, got {referenced}"
@@ -314,6 +377,6 @@ def feature(self, minio_root_user, minio_root_password):
     """Deletion-vector content shapes."""
     Scenario(run=empty_vector)
     Scenario(run=all_rows_deleted)
-    Scenario(run=boundary_positions)
-    Scenario(run=row_group_boundaries)
+    Suite(run=boundary_positions)
+    Suite(run=row_group_boundaries)
     Scenario(run=shared_puffin_file)

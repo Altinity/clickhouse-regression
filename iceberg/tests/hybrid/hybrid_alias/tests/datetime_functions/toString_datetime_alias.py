@@ -16,9 +16,16 @@ def toString_datetime_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "datetime_string", "expression": "toString(datetime_col)", "hybrid_type": "String"},
+        {
+            "name": "datetime_string",
+            "expression": "toString(datetime_col)",
+            "hybrid_type": "String",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def toString_datetime_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "datetime_string", "expression": "toString(datetime_col)", "hybrid_type": "String"},
+        {
+            "name": "datetime_string",
+            "expression": "toString(datetime_col)",
+            "hybrid_type": "String",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(datetime_string) >= 19", "right_predicate": "length(datetime_string) < 19"}
+    watermark = {
+        "left_predicate": "length(datetime_string) >= 19",
+        "right_predicate": "length(datetime_string) < 19",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

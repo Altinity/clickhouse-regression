@@ -78,7 +78,9 @@ def latest_metadata_location(
     )
     prefix = f"{table_prefix(namespace, table_name)}/metadata/"
     candidates = []
-    for page in s3.get_paginator("list_objects_v2").paginate(Bucket=bucket, Prefix=prefix):
+    for page in s3.get_paginator("list_objects_v2").paginate(
+        Bucket=bucket, Prefix=prefix
+    ):
         for obj in page.get("Contents", []) or []:
             if obj["Key"].endswith(".metadata.json"):
                 candidates.append(obj)

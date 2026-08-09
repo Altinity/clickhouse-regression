@@ -18,9 +18,16 @@ def default_json(self):
     # Escape double quotes for bash: " becomes \"
     json_str_escaped = json_str.replace('"', '\\"')
     alias_columns = [
-        {"name": "default_json", "expression": f"\\$\\${json_str_escaped}\\$\\$::JSON", "hybrid_type": "JSON"},
+        {
+            "name": "default_json",
+            "expression": f"\\$\\${json_str_escaped}\\$\\$::JSON",
+            "hybrid_type": "JSON",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-09-14'", "right_predicate": "date_col < '2014-09-14'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-09-14'",
+        "right_predicate": "date_col < '2014-09-14'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

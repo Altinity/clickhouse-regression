@@ -16,9 +16,16 @@ def toSecond_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "second", "expression": "toSecond(datetime_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "second",
+            "expression": "toSecond(datetime_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,7 +62,11 @@ def toSecond_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "second", "expression": "toSecond(datetime_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "second",
+            "expression": "toSecond(datetime_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "second >= 30", "right_predicate": "second < 30"}

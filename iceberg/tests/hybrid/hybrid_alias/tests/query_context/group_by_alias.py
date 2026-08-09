@@ -14,10 +14,17 @@ def group_by_single_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "year_month", "expression": "toYYYYMM(date_col)", "hybrid_type": "UInt32"},
+        {
+            "name": "year_month",
+            "expression": "toYYYYMM(date_col)",
+            "hybrid_type": "UInt32",
+        },
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, computed, year_month FROM {hybrid_table} ORDER BY id",
@@ -52,10 +59,17 @@ def group_by_multiple_aliases(self):
     ]
     alias_columns = [
         {"name": "year_val", "expression": "toYear(date_col)", "hybrid_type": "UInt16"},
-        {"name": "month_val", "expression": "toMonth(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "month_val",
+            "expression": "toMonth(date_col)",
+            "hybrid_type": "UInt8",
+        },
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, computed, year_val, month_val FROM {hybrid_table} ORDER BY id",

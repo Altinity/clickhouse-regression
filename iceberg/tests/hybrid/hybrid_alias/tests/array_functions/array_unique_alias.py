@@ -17,9 +17,16 @@ def array_unique_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_unique", "expression": "arrayDistinct(array_col)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_unique",
+            "expression": "arrayDistinct(array_col)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_unique_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_unique", "expression": "arrayDistinct(array_col)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_unique",
+            "expression": "arrayDistinct(array_col)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare arrays directly)
-    watermark = {"left_predicate": "length(array_unique) >= 3", "right_predicate": "length(array_unique) < 3"}
+    watermark = {
+        "left_predicate": "length(array_unique) >= 3",
+        "right_predicate": "length(array_unique) < 3",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

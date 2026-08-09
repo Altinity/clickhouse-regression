@@ -73,9 +73,7 @@ def hybrid_replaces_distributed_head(self, minio_root_user, minio_root_password)
     clause = settings_clause(PREFER_LOCALHOST)
 
     with When("capture Distributed baseline fingerprint"):
-        dist_fp = node.query(
-            fingerprint_sql(distributed) + f" {clause}"
-        ).output.strip()
+        dist_fp = node.query(fingerprint_sql(distributed) + f" {clause}").output.strip()
 
     head = f"head_{getuid()}"
 

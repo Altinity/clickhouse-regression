@@ -15,9 +15,16 @@ def toInt8_fromInt16_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_int8", "expression": "toInt8(small_value)", "hybrid_type": "Int8"},
+        {
+            "name": "value_int8",
+            "expression": "toInt8(small_value)",
+            "hybrid_type": "Int8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-09-14'", "right_predicate": "date_col < '2014-09-14'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-09-14'",
+        "right_predicate": "date_col < '2014-09-14'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, small_value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toInt8_fromInt16_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_int8", "expression": "toInt8(small_value)", "hybrid_type": "Int8"},
+        {
+            "name": "value_int8",
+            "expression": "toInt8(small_value)",
+            "hybrid_type": "Int8",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "value_int8 >= 50", "right_predicate": "value_int8 < 50"}
+    watermark = {
+        "left_predicate": "value_int8 >= 50",
+        "right_predicate": "value_int8 < 50",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, small_value, date_col FROM {hybrid_table} ORDER BY id",

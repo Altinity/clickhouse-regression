@@ -15,9 +15,16 @@ def toDayOfMonth_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "day_of_month", "expression": "toDayOfMonth(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "day_of_month",
+            "expression": "toDayOfMonth(date_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toDayOfMonth_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "day_of_month", "expression": "toDayOfMonth(date_col)", "hybrid_type": "UInt8"},
+        {
+            "name": "day_of_month",
+            "expression": "toDayOfMonth(date_col)",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "day_of_month >= 15", "right_predicate": "day_of_month < 15"}
+    watermark = {
+        "left_predicate": "day_of_month >= 15",
+        "right_predicate": "day_of_month < 15",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -22,7 +22,10 @@ def string_math_combined(self):
             "hybrid_type": "UInt64",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -64,7 +67,10 @@ def string_math_combined_in_watermark(self):
         },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "string_math >= 10", "right_predicate": "string_math < 10"}
+    watermark = {
+        "left_predicate": "string_math >= 10",
+        "right_predicate": "string_math < 10",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

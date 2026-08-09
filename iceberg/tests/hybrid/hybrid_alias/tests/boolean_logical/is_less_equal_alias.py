@@ -17,7 +17,10 @@ def is_less_equal_alias(self):
     alias_columns = [
         {"name": "is_less_equal", "expression": "value <= 100", "hybrid_type": "UInt8"},
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -56,7 +59,10 @@ def is_less_equal_alias_in_watermark(self):
         {"name": "is_less_equal", "expression": "value <= 100", "hybrid_type": "UInt8"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "is_less_equal = 1", "right_predicate": "is_less_equal = 0"}
+    watermark = {
+        "left_predicate": "is_less_equal = 1",
+        "right_predicate": "is_less_equal = 0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -75,8 +75,7 @@ def iceberg_unreachable_hot_only(self, minio_root_user, minio_root_password):
 
     with Then("hot-only WHERE still returns hot rows"):
         count = node.query(
-            f"SELECT count() FROM {hybrid} "
-            f"WHERE date_col >= '{WATERMARK}' {clause}"
+            f"SELECT count() FROM {hybrid} " f"WHERE date_col >= '{WATERMARK}' {clause}"
         ).output.strip()
         expected = str(sum(1 for _, _, d in ALL_ROWS if d >= WATERMARK))
         assert count == expected, error()

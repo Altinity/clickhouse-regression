@@ -222,9 +222,9 @@ def replace_deletion_vector(
     Returns the manifest entry dict as written.
     """
     dv_entries = find_dv_entries(namespace, table_name)
-    assert len(dv_entries) == 1, (
-        f"expected exactly one deletion-vector entry, found {len(dv_entries)}"
-    )
+    assert (
+        len(dv_entries) == 1
+    ), f"expected exactly one deletion-vector entry, found {len(dv_entries)}"
     manifest_key = dv_entries[0]["manifest_key"]
     target_path = dv_entries[0]["entry"]["data_file"]["file_path"]
 
