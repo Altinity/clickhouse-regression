@@ -33,9 +33,7 @@ def read_variant(self, name, kwargs):
 def cluster_functions(self):
     """icebergS3Cluster returns exactly the single-node result for
     representative deletion-vector reads."""
-    with Given(
-        "a table with two data files, one fully deleted, one with a partial vector"
-    ):
+    with Given("a table with two data files, each carrying its own partial vector"):
         table = common.table_with_deletion_vectors(
             rows=0,
             setup_statements=[

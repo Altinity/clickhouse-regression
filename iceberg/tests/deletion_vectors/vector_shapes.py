@@ -60,10 +60,16 @@ def empty_vector(self):
 @Requirements(RQ_Iceberg_DeletionVectors_AllRowsDeleted("1.0"))
 def all_rows_deleted(self):
     """A vector deleting every row of its file makes the file contribute
-    zero rows while the file stays present and the query stays valid."""
+    zero rows while the file stays present and the query stays valid.
+
+    The full vector is crafted: a writer-issued DELETE whose predicate
+    covers a whole data file becomes a metadata-only file drop (the file
+    leaves the snapshot, no vector is written), so the fixture's partial
+    vector on file A is replaced with one deleting all of its positions —
+    which needs no assumption about physical row order."""
     with Given(
-        "a table with file A (ids 0..99) and file B (ids 100..149), "
-        "where Spark deleted all of file A"
+        "a table with file A (ids 0..99, partial vector) and file B "
+        "(ids 100..149, no deletes)"
     ):
         table = common.table_with_deletion_vectors(
             rows=0,
@@ -71,23 +77,36 @@ def all_rows_deleted(self):
                 common.insert_range_statement(100),
                 "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
                 "concat('row-', CAST(id + 100 AS STRING)) FROM range(50)",
-                "DELETE FROM {table} WHERE id < 100",
+                "DELETE FROM {table} WHERE id < 100 AND id % 10 = 0",
             ],
         )
 
-    with And("both data files are still live in the current snapshot"):
+    with And("both data files are live in the current snapshot"):
         common.assert_data_file_count(table=table, count=2)
 
+    with When("file A's vector is replaced with one deleting every position"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=list(range(100))),
+            declared_cardinality=100,
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
     expected = list(range(100, 150))
+    fresh = [("use_iceberg_metadata_files_cache", "0")]
 
     with Then("SELECT * reflects the empty contribution"):
-        common.assert_visible_ids(table=table, ids=expected)
+        common.assert_visible_ids(table=table, ids=expected, settings=fresh)
 
     with And("count() reflects it"):
-        assert common.count_rows(table=table) == 50, error()
+        assert common.count_rows(table=table, settings=fresh) == 50, error()
 
     with And("aggregates reflect it"):
-        result = common.read_result(table=table, columns="sum(id), min(id), max(id)")
+        result = common.read_result(
+            table=table, columns="sum(id), min(id), max(id)", settings=fresh
+        )
         assert result.output.split() == [
             str(sum(expected)),
             "100",
@@ -96,7 +115,7 @@ def all_rows_deleted(self):
 
     with And("filtered reads reflect it"):
         result = common.read_result(
-            table=table, columns="count()", where_clause="id < 120"
+            table=table, columns="count()", where_clause="id < 120", settings=fresh
         )
         assert int(result.output.strip()) == 20, error(result.output)
 

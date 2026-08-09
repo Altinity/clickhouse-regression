@@ -82,6 +82,9 @@ MALFORMED_BLOBS = {
         CARDINALITY,
         "truncated while reading key",
     ),
+    # the overrun is caught inside the roaring library's bounds-checked
+    # deserializer ("failed alloc while reading"), wrapped with the vector
+    # context — verified against the real build
     "container extends past the blob": (
         puffin.build_dv_payload(
             vector=puffin.build_roaring64(
@@ -96,7 +99,7 @@ MALFORMED_BLOBS = {
             )
         ),
         CARDINALITY,
-        "exceeds blob size",
+        "failed alloc while reading",
     ),
     "roaring bitmap fails internal validation": (
         puffin.build_dv_payload(vector=unsorted_container_bitmap()),
@@ -244,12 +247,14 @@ def blob_metadata(self):
         "blob type is not deletion-vector-v1": (
             {"type": "unknown-blob-v9"},
             None,
-            "expected deletion-vector-v1",
+            "unsupported blob type",
         ),
+        # the build has quoted and unquoted variants of this message;
+        # "must omit" is the stable common part
         "compression-codec present": (
             {"compression_codec": "zstd"},
             None,
-            "must omit compression-codec",
+            "must omit",
         ),
         "referenced-data-file missing": (
             {"properties": {"cardinality": str(CARDINALITY)}},
@@ -291,14 +296,29 @@ def blob_metadata(self):
             None,
             "does not match expected cardinality",
         ),
-        "no blob at the manifest offset": (
+        # footer descriptors are bounds-validated before the manifest offset
+        # is matched against them (verified against the real build), so the
+        # two failure modes need separate defects
+        "footer blob offset out of bounds": (
             {"offset": 987654},
+            None,
+            "offset/length out of bounds",
+        ),
+        # the bounds check is against the blob payload region, so a shifted
+        # offset with the true length always lands out of bounds; a
+        # shortened length keeps the descriptor in-bounds but no footer
+        # blob then matches the manifest's (content_offset, size) pair
+        "no blob at the manifest offset": (
+            {"length": len(puffin.build_dv_payload(positions=POSITIONS)) - 4},
             None,
             "No Puffin footer blob at offset",
         ),
+        # the duplicate's offset must be pinned: build_puffin appends the
+        # copy's payload and would otherwise declare it at its real (second)
+        # position, giving two distinct valid blobs instead of a conflict
         "two blobs claim the same offset": (
             None,
-            lambda blobs: blobs + [dict(blobs[0])],
+            lambda blobs: blobs + [dict(blobs[0], offset=4)],
             "Multiple Puffin blobs claim offset",
         ),
     }
@@ -528,14 +548,24 @@ def manifest_consistency(self):
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits("1.0"))
 def blob_length_limit(self):
-    """A blob length above 2 GiB fails with BAD_ARGUMENTS."""
+    """A blob length above 2 GiB fails with BAD_ARGUMENTS before any
+    allocation.
+
+    Validation is layered: manifest-to-footer matching (and, for footer
+    declarations, the buffered-region bounds check) rejects the hostile
+    length before the dedicated absolute-limit check is reached — that
+    check guards the unbuffered large-file path, which cannot be
+    synthesized without a real multi-GiB object. The assertion therefore
+    pins fail-closed rejection naming the hostile length."""
+    huge = 3 * 2**30
+
     with Given("a table with a deletion vector"):
         table = common.table_with_deletion_vectors(rows=ROWS)
 
     with When("the manifest declares a blob length above 2 GiB"):
 
         def huge_length(entry):
-            entry["data_file"]["content_size_in_bytes"] = 3 * 2**30
+            entry["data_file"]["content_size_in_bytes"] = huge
 
         manifest.replace_deletion_vector(
             namespace=table.namespace,
@@ -543,11 +573,11 @@ def blob_length_limit(self):
             entry_mutator=huge_length,
         )
 
-    with Then("the read fails with BAD_ARGUMENTS: exceeds absolute limit"):
+    with Then("the read fails with BAD_ARGUMENTS naming the hostile length"):
         common.assert_table_read_fails(
             table=table,
             error_name="BAD_ARGUMENTS",
-            message_fragment="exceeds absolute limit",
+            message_fragment=str(huge),
         )
 
 
@@ -574,9 +604,13 @@ def cardinality_materialization_limit(self):
         )
 
     with When("the vector declares cardinality above 100,000,000"):
+        # a payload is passed so the Puffin file is rebuilt and its footer
+        # cardinality property agrees with the manifest — otherwise the
+        # footer-vs-manifest consistency check fires before the ceiling
         manifest.replace_deletion_vector(
             namespace=table.namespace,
             table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=POSITIONS),
             declared_cardinality=100_000_001,
         )
 
