@@ -23,10 +23,7 @@ MOR_TABLE_PROPERTIES = {
 }
 
 ICEBERG_INSERT_SETTINGS = [("allow_experimental_insert_into_iceberg", 1)]
-ICEBERG_MUTATION_SETTINGS = [
-    ("allow_insert_into_iceberg", 1),
-    ("allow_experimental_insert_into_iceberg", 1),
-]
+ICEBERG_MUTATION_SETTINGS = [("allow_experimental_insert_into_iceberg", 1)]
 ICEBERG_COMPACTION_SETTINGS = [("allow_experimental_iceberg_compaction", 1)]
 
 HOST_MINIO_ENDPOINT = "http://localhost:9002"

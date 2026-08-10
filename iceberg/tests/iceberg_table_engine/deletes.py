@@ -45,6 +45,7 @@ def position_delete_smoke(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Name("deletes")
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=position_delete_smoke)(
         minio_root_user=minio_root_user,

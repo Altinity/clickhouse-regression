@@ -169,7 +169,24 @@ xfails = {
     "/iceberg/icebergS3 table function/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
     ],
+    "/iceberg/iceberg table engine/deletes/position delete smoke": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/114183",
+        ),
+    ],
+    "/iceberg/iceberg engine/* catalog/position delete reads/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/114183",
+        ),
+    ],
     "/iceberg/iceberg table engine/compaction/compaction smoke": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/114183",
+            check_clickhouse_version("<26.6"),
+        ),
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/113745",
