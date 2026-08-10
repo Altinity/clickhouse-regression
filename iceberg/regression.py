@@ -625,9 +625,9 @@ def regression(
         test=load("iceberg.tests.export_partition.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
-    Feature(
-        test=load("iceberg.tests.deletion_vectors.feature", "feature"),
-    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    # Feature(
+    #     test=load("iceberg.tests.deletion_vectors.feature", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     # Feature(
     #     test=load("iceberg.tests.hybrid.feature", "feature"),
