@@ -191,6 +191,11 @@ RQ_Iceberg_DeletionVectors_AllRowsDeleted = Requirement(
         "`SELECT *`, `SELECT count()`, aggregates, and filtered reads SHALL all reflect the empty\n"
         "contribution.\n"
         "\n"
+        "Note: writers turn a `DELETE` whose predicate provably covers a whole data file into a\n"
+        "metadata-only file drop (the file leaves the snapshot and no vector is written), so a\n"
+        "full-file vector arises from position-level writes rather than from a file-aligned writer\n"
+        "`DELETE`.\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -770,7 +775,7 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_MalformedBlob = Requirement(
         "| blob shorter than 12 bytes | `Deletion vector blob is too small` |\n"
         "| bitmap header shorter than 8 bytes | `Deletion vector bitmap is too small` |\n"
         "| bitmap truncated mid-key | `truncated while reading key` |\n"
-        "| roaring container extends past the blob | `exceeds blob size` |\n"
+        "| roaring container extends past the blob | `failed alloc while reading` (bounds-checked roaring deserializer, wrapped as `Failed to deserialize deletion vector roaring bitmap`) |\n"
         "| roaring bitmap fails internal validation | `failed internal validation` |\n"
         "| bitmap keys not strictly ascending | `must be sorted in ascending order` |\n"
         "| bitmap key negative or `> INT32_MAX - 1` | `Invalid deletion vector bitmap key` |\n"
@@ -799,15 +804,21 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_BlobMetadata = Requirement(
         "\n"
         "| Defect | Expected message fragment |\n"
         "|---|---|\n"
-        "| blob `type` is not `deletion-vector-v1` | `expected deletion-vector-v1` |\n"
-        "| `compression-codec` present and non-empty | `must omit compression-codec` |\n"
+        "| blob `type` is not `deletion-vector-v1` | `unsupported blob type` |\n"
+        "| `compression-codec` present and non-empty | `must omit 'compression-codec'` |\n"
         "| `referenced-data-file` missing or empty | `missing required property 'referenced-data-file'` |\n"
         "| `referenced-data-file` ≠ the data file being read | `does not match expected data file` |\n"
         "| `cardinality` missing or empty | `missing required property 'cardinality'` |\n"
         "| `cardinality` not an unsigned integer | `must be an unsigned integer` |\n"
         "| `cardinality` ≠ the manifest `record_count` | `does not match expected cardinality` |\n"
-        "| no blob at the manifest's `(offset, length)` | `No Puffin footer blob at offset` |\n"
+        "| footer-declared `offset`/`length` outside the blob payload region | `offset/length out of bounds` |\n"
+        "| no in-bounds blob at the manifest's `(offset, length)` | `No Puffin footer blob at offset` |\n"
         "| two blobs at the same `(offset, length)` | `Multiple Puffin blobs claim offset` |\n"
+        "\n"
+        "Footer blob descriptors are bounds-validated against the blob payload region before the\n"
+        "manifest's `(content_offset, content_size_in_bytes)` pair is matched against them, so an\n"
+        "out-of-bounds footer declaration fails as `offset/length out of bounds` and never reaches the\n"
+        "matching step.\n"
         "\n"
     ),
     link=None,
@@ -876,8 +887,14 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits = Requirement(
         'declared cardinality > 100,000,000 → "exceeds materialization limit"\n'
         "```\n"
         "\n"
-        "The cardinality limit SHALL be checked before the `Puffin` file is opened, so a hostile or\n"
-        "corrupt manifest cannot force a large allocation — `PuffinFilesRead` SHALL NOT increase for such\n"
+        "Validation is layered: for a fully buffered `Puffin` file, a hostile manifest length above\n"
+        "2 GiB is rejected earlier, by the footer bounds/matching checks (the error names the hostile\n"
+        "length, e.g. `No Puffin footer blob at offset 4 length 3221225472`) — the dedicated\n"
+        "`exceeds absolute limit` message guards the unbuffered large-file path.\n"
+        "\n"
+        "The cardinality ceiling compares against the footer's `cardinality` property, so one `Puffin`\n"
+        "read (the footer) is inherent; the ceiling SHALL reject before the vector payload is\n"
+        "deserialized or allocated — `PuffinFilesRead` SHALL NOT exceed the single footer read for such\n"
         "a query.\n"
         "\n"
     ),
@@ -1044,9 +1061,11 @@ RQ_Iceberg_DeletionVectors_Cache_EtagBypass = Requirement(
     type=None,
     uid=None,
     description=(
-        "When the storage object has no etag (for example local filesystem), [ClickHouse] SHALL bypass the\n"
-        "cache and read the vector fresh on every query. Results SHALL remain correct and\n"
-        "`PuffinFilesCacheHits` SHALL stay at 0.\n"
+        "The absence of an etag SHALL NOT break the cache. When the storage object has no etag (for\n"
+        "example local filesystem), [ClickHouse] SHALL build the cache key from the remaining components\n"
+        "(storage identity, object path, blob offset and length, referenced data file, cardinalities):\n"
+        "repeated reads of the same local table are served from the cache (`PuffinFilesCacheHits`\n"
+        "increases) and results SHALL remain correct.\n"
         "\n"
     ),
     link=None,
@@ -1134,7 +1153,8 @@ RQ_Iceberg_DeletionVectors_Cache_Observability = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL expose cache state via the asynchronous metrics `PuffinFilesCacheBytes` and\n"
+        "[ClickHouse] SHALL expose cache state via the `system.metrics` current metrics\n"
+        "`PuffinFilesCacheBytes` and\n"
         "`PuffinFilesCacheFiles`, and per-query activity via the profile events `PuffinFilesRead`,\n"
         "`PuffinFileReadMicroseconds`, `PuffinFilesCacheHits`, `PuffinFilesCacheMisses`, and\n"
         "`PuffinFilesCacheWeightLost`. After a cold read of a table with deletion vectors: misses and\n"
@@ -1667,6 +1687,11 @@ table  → 50 rows visible
 `SELECT *`, `SELECT count()`, aggregates, and filtered reads SHALL all reflect the empty
 contribution.
 
+Note: writers turn a `DELETE` whose predicate provably covers a whole data file into a
+metadata-only file drop (the file leaves the snapshot and no vector is written), so a
+full-file vector arises from position-level writes rather than from a file-aligned writer
+`DELETE`.
+
 ### RQ.Iceberg.DeletionVectors.BoundaryPositions
 version: 1.0
 
@@ -2019,7 +2044,7 @@ version: 1.0
 | blob shorter than 12 bytes | `Deletion vector blob is too small` |
 | bitmap header shorter than 8 bytes | `Deletion vector bitmap is too small` |
 | bitmap truncated mid-key | `truncated while reading key` |
-| roaring container extends past the blob | `exceeds blob size` |
+| roaring container extends past the blob | `failed alloc while reading` (bounds-checked roaring deserializer, wrapped as `Failed to deserialize deletion vector roaring bitmap`) |
 | roaring bitmap fails internal validation | `failed internal validation` |
 | bitmap keys not strictly ascending | `must be sorted in ascending order` |
 | bitmap key negative or `> INT32_MAX - 1` | `Invalid deletion vector bitmap key` |
@@ -2037,15 +2062,21 @@ invalid metadata with `BAD_ARGUMENTS`, including at least:
 
 | Defect | Expected message fragment |
 |---|---|
-| blob `type` is not `deletion-vector-v1` | `expected deletion-vector-v1` |
-| `compression-codec` present and non-empty | `must omit compression-codec` |
+| blob `type` is not `deletion-vector-v1` | `unsupported blob type` |
+| `compression-codec` present and non-empty | `must omit 'compression-codec'` |
 | `referenced-data-file` missing or empty | `missing required property 'referenced-data-file'` |
 | `referenced-data-file` ≠ the data file being read | `does not match expected data file` |
 | `cardinality` missing or empty | `missing required property 'cardinality'` |
 | `cardinality` not an unsigned integer | `must be an unsigned integer` |
 | `cardinality` ≠ the manifest `record_count` | `does not match expected cardinality` |
-| no blob at the manifest's `(offset, length)` | `No Puffin footer blob at offset` |
+| footer-declared `offset`/`length` outside the blob payload region | `offset/length out of bounds` |
+| no in-bounds blob at the manifest's `(offset, length)` | `No Puffin footer blob at offset` |
 | two blobs at the same `(offset, length)` | `Multiple Puffin blobs claim offset` |
+
+Footer blob descriptors are bounds-validated against the blob payload region before the
+manifest's `(content_offset, content_size_in_bytes)` pair is matched against them, so an
+out-of-bounds footer declaration fails as `offset/length out of bounds` and never reaches the
+matching step.
 
 ### RQ.Iceberg.DeletionVectors.ErrorHandling.BlobBounds
 version: 1.0
@@ -2081,8 +2112,14 @@ blob length > 2 GiB                → "exceeds absolute limit"
 declared cardinality > 100,000,000 → "exceeds materialization limit"
 ```
 
-The cardinality limit SHALL be checked before the `Puffin` file is opened, so a hostile or
-corrupt manifest cannot force a large allocation — `PuffinFilesRead` SHALL NOT increase for such
+Validation is layered: for a fully buffered `Puffin` file, a hostile manifest length above
+2 GiB is rejected earlier, by the footer bounds/matching checks (the error names the hostile
+length, e.g. `No Puffin footer blob at offset 4 length 3221225472`) — the dedicated
+`exceeds absolute limit` message guards the unbuffered large-file path.
+
+The cardinality ceiling compares against the footer's `cardinality` property, so one `Puffin`
+read (the footer) is inherent; the ceiling SHALL reject before the vector payload is
+deserialized or allocated — `PuffinFilesRead` SHALL NOT exceed the single footer read for such
 a query.
 
 ### RQ.Iceberg.DeletionVectors.ErrorHandling.NonParquetDataFiles
@@ -2132,13 +2169,14 @@ size.
 ## Puffin Files Cache
 
 Parsed deletion vectors are cached in memory so repeated queries do not re-fetch and re-decode
-`Puffin` blobs. The cache entry key includes the `Puffin` object path and etag, the blob offset
-and length, the referenced data file, and the expected cardinalities — so a new Iceberg commit
-(new `Puffin` path) or replaced object content (new etag) can never be served a stale vector.
+`Puffin` blobs. The cache entry key includes the storage identity, the `Puffin` object path and
+etag (when the storage provides one), the blob offset and length, the referenced data file, and
+the expected cardinalities — so a new Iceberg commit (new `Puffin` path) or replaced object
+content (new etag) can never be served a stale vector. Objects without an etag (for example
+local filesystem) are cached as well, keyed by the remaining components.
 
-Cache requirements SHALL be verified on S3 or Azure storage (local files have no etag and bypass
-the cache), and profile events SHALL be read from `system.query_log` per `query_id` so
-concurrent tests cannot perturb the counts.
+Cache requirements SHALL be verified on S3 or Azure storage, and profile events SHALL be read
+from `system.query_log` per `query_id` so concurrent tests cannot perturb the counts.
 
 ### RQ.Iceberg.DeletionVectors.Cache.Setting
 version: 1.0
@@ -2174,9 +2212,11 @@ The cache SHALL never serve a stale deletion vector across Iceberg commits:
 ### RQ.Iceberg.DeletionVectors.Cache.EtagBypass
 version: 1.0
 
-When the storage object has no etag (for example local filesystem), [ClickHouse] SHALL bypass the
-cache and read the vector fresh on every query. Results SHALL remain correct and
-`PuffinFilesCacheHits` SHALL stay at 0.
+The absence of an etag SHALL NOT break the cache. When the storage object has no etag (for
+example local filesystem), [ClickHouse] SHALL build the cache key from the remaining components
+(storage identity, object path, blob offset and length, referenced data file, cardinalities):
+repeated reads of the same local table are served from the cache (`PuffinFilesCacheHits`
+increases) and results SHALL remain correct.
 
 ### RQ.Iceberg.DeletionVectors.Cache.Eviction
 version: 1.0
@@ -2220,7 +2260,8 @@ GRANT SYSTEM DROP PUFFIN FILES CACHE ON *.* TO cache_operator
 ### RQ.Iceberg.DeletionVectors.Cache.Observability
 version: 1.0
 
-[ClickHouse] SHALL expose cache state via the asynchronous metrics `PuffinFilesCacheBytes` and
+[ClickHouse] SHALL expose cache state via the `system.metrics` current metrics
+`PuffinFilesCacheBytes` and
 `PuffinFilesCacheFiles`, and per-query activity via the profile events `PuffinFilesRead`,
 `PuffinFileReadMicroseconds`, `PuffinFilesCacheHits`, `PuffinFilesCacheMisses`, and
 `PuffinFilesCacheWeightLost`. After a cold read of a table with deletion vectors: misses and
