@@ -64,6 +64,22 @@ RQ_Iceberg_DeletionVectors_AccessForms = Requirement(
         "\n"
         "The same table read through any form SHALL return the same logical row set.\n"
         "\n"
+        "For example, if the writer inserted ids `1..5` and deleted ids `2` and `4`, each access form can\n"
+        "be compared using the same projection and ordering:\n"
+        "\n"
+        "```sql\n"
+        "SELECT id FROM icebergS3('http://minio:9000/warehouse/t/', 'minio', 'minio123') ORDER BY id;\n"
+        "SELECT id FROM iceberg_engine_table ORDER BY id;\n"
+        "SELECT id FROM rest_catalog_db.t ORDER BY id;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "id\n"
+        "1\n"
+        "3\n"
+        "5\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -103,6 +119,32 @@ RQ_Iceberg_DeletionVectors_WriterOperations = Requirement(
         "Once a snapshot with valid metadata is committed, the producing operation is irrelevant to the\n"
         "read path: row counts, exact surviving rows, updated values, and inserted rows SHALL match the\n"
         "writer engine's own result.\n"
+        "\n"
+        "For example, given `(1, 'old')`, `(2, 'remove')`, and `(3, 'keep')`, an external writer could\n"
+        "produce deletion vectors through operations such as:\n"
+        "\n"
+        "```sql\n"
+        "DELETE FROM t WHERE id = 2;\n"
+        "UPDATE t SET value = 'new' WHERE id = 1;\n"
+        "MERGE INTO t USING changes c ON t.id = c.id\n"
+        "WHEN MATCHED AND c.action = 'delete' THEN DELETE\n"
+        "WHEN MATCHED THEN UPDATE SET value = c.value\n"
+        "WHEN NOT MATCHED THEN INSERT (id, value) VALUES (c.id, c.value);\n"
+        "```\n"
+        "\n"
+        "After an update of id `1`, deletion of id `2`, and insertion of id `4`, an illustrative\n"
+        "ClickHouse read is:\n"
+        "\n"
+        "```sql\n"
+        "SELECT id, value FROM iceberg_table ORDER BY id;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "id  value\n"
+        "1   new\n"
+        "3   keep\n"
+        "4   inserted\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -170,6 +212,20 @@ RQ_Iceberg_DeletionVectors_BoundaryPositions = Requirement(
         "* reject a position `>= N` with `ICEBERG_SPECIFICATION_VIOLATION`;\n"
         "* reject a declared cardinality `> N` with `ICEBERG_SPECIFICATION_VIOLATION`, before any\n"
         "  `Puffin` I/O is performed.\n"
+        "\n"
+        "For example, for rows with ids `10`, `20`, and `30` stored in that physical order, a vector\n"
+        "containing positions `{0, 2}` produces:\n"
+        "\n"
+        "```sql\n"
+        "SELECT id FROM iceberg_table ORDER BY id;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "id\n"
+        "20\n"
+        "```\n"
+        "\n"
+        "A vector containing position `3` for the same three-row file fails instead of returning rows.\n"
         "\n"
     ),
     link=None,
@@ -269,6 +325,19 @@ RQ_Iceberg_DeletionVectors_Coexistence_EqualityDeletes = Requirement(
         "data file. The final result SHALL be as if the deletion-vector filter ran first (on absolute row\n"
         "positions) and the equality-delete predicate ran on the surviving rows.\n"
         "\n"
+        "For example, given physical rows `(1, 'keep')`, `(2, 'dv')`, `(3, 'eq')`, and `(4, 'keep')`, a\n"
+        "deletion vector for position `1` plus an equality delete for `id = 3` produces:\n"
+        "\n"
+        "```sql\n"
+        "SELECT id, value FROM iceberg_table ORDER BY id;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "id  value\n"
+        "1   keep\n"
+        "4   keep\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -338,6 +407,16 @@ RQ_Iceberg_DeletionVectors_QuerySemantics_OperatorIndependence = Requirement(
         "* `PREWHERE` (rows filtered before the deletion-vector transform must still map back to correct\n"
         "  absolute file row positions)\n"
         "\n"
+        "For example, if id `3` is deleted from ids `1..5`, all of these queries observe the same visible\n"
+        "row set before applying their own operators:\n"
+        "\n"
+        "```sql\n"
+        "SELECT id FROM iceberg_table ORDER BY id LIMIT 3;       -- 1, 2, 4\n"
+        "SELECT count() FROM iceberg_table PREWHERE id >= 3;     -- 2\n"
+        "SELECT id FROM iceberg_table WHERE id IN (2, 3, 4)\n"
+        "ORDER BY id;                                             -- 2, 4\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -357,6 +436,16 @@ RQ_Iceberg_DeletionVectors_QuerySemantics_ProjectionIndependence = Requirement(
         "`DELETE FROM t WHERE customer_id = 100`, a ClickHouse query selecting only other columns\n"
         "(`SELECT amount FROM ...`) SHALL still exclude the deleted rows without re-evaluating the\n"
         "original predicate.\n"
+        "\n"
+        "For example, if the writer deleted the physical row `(100, 42.50, 'paid')`, neither of these\n"
+        "projections may expose it:\n"
+        "\n"
+        "```sql\n"
+        "SELECT customer_id, amount, status FROM iceberg_table ORDER BY customer_id;\n"
+        "SELECT amount FROM iceberg_table ORDER BY amount;\n"
+        "```\n"
+        "\n"
+        "The second query does not need to project `customer_id` to apply the deletion vector.\n"
         "\n"
     ),
     link=None,
@@ -402,6 +491,19 @@ RQ_Iceberg_DeletionVectors_QuerySemantics_SchemaEvolution = Requirement(
         "Row visibility SHALL be identical for any projection over old or new columns, and values of a\n"
         "column added after the data file was written SHALL follow normal Iceberg schema-evolution\n"
         "semantics (`NULL` unless a default is defined) for the surviving rows.\n"
+        "\n"
+        "For example, after deleting id `2`, renaming `value` to `description`, and adding nullable column\n"
+        "`category`, an old data file can be read as:\n"
+        "\n"
+        "```sql\n"
+        "SELECT id, description, category FROM iceberg_table ORDER BY id;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "id  description  category\n"
+        "1   alpha        NULL\n"
+        "3   gamma        NULL\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -546,6 +648,26 @@ RQ_Iceberg_DeletionVectors_Partitioning_PruningSkipsVectorLoad = Requirement(
         "`PuffinFilesRead` profile event). Min/max pruning of delete files SHALL never prune a delete file\n"
         "that is actually needed for a data file being read.\n"
         "\n"
+        "For example, if only partition `p = 2026` has a deletion vector, execute a query restricted to\n"
+        "`p = 2025` with the client-supplied query id `dv_partition_pruning`, then check that query id:\n"
+        "\n"
+        "```sql\n"
+        "SELECT count()\n"
+        "FROM iceberg_table\n"
+        "WHERE p = 2025\n"
+        "SETTINGS log_profile_events = 1;\n"
+        "\n"
+        "SYSTEM FLUSH LOGS;\n"
+        "\n"
+        "SELECT ProfileEvents['PuffinFilesRead']\n"
+        "FROM system.query_log\n"
+        "WHERE type = 'QueryFinish' AND query_id = 'dv_partition_pruning';\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "0\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -565,6 +687,14 @@ RQ_Iceberg_DeletionVectors_Count_TrivialCountOptimization = Requirement(
         "scan rather than answering from manifest sums. `SELECT count()` SHALL return the same value with\n"
         "`optimize_trivial_count_query = 1` and `= 0`, and both SHALL equal\n"
         "`SELECT count() FROM (SELECT * FROM table)`.\n"
+        "\n"
+        "For example, after 5 of 100 rows are deleted, the comparison is:\n"
+        "\n"
+        "```sql\n"
+        "SELECT count() FROM iceberg_table SETTINGS optimize_trivial_count_query = 1; -- 95\n"
+        "SELECT count() FROM iceberg_table SETTINGS optimize_trivial_count_query = 0; -- 95\n"
+        "SELECT count() FROM (SELECT * FROM iceberg_table);                            -- 95\n"
+        "```\n"
         "\n"
         "When the snapshot summary's `total-records` disagrees with the manifest sum on a table without\n"
         "deletes, the manifest sum SHALL win and a warning SHALL be logged.\n"
@@ -978,6 +1108,18 @@ RQ_Iceberg_DeletionVectors_Cache_RBAC = Requirement(
         "the parent `SYSTEM DROP CACHE` privilege SHALL be allowed; `SHOW PRIVILEGES` SHALL list the\n"
         "privilege.\n"
         "\n"
+        "An illustrative privilege check is:\n"
+        "\n"
+        "```sql\n"
+        "CREATE USER cache_operator;\n"
+        "GRANT SYSTEM DROP PUFFIN FILES CACHE ON *.* TO cache_operator;\n"
+        "SHOW GRANTS FOR cache_operator;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "GRANT SYSTEM DROP PUFFIN FILES CACHE ON *.* TO cache_operator\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=2,
@@ -1003,6 +1145,13 @@ RQ_Iceberg_DeletionVectors_Cache_Observability = Requirement(
         "SELECT ProfileEvents['PuffinFilesCacheHits'], ProfileEvents['PuffinFilesRead']\n"
         "FROM system.query_log\n"
         "WHERE type = 'QueryFinish' AND query_id = '...';\n"
+        "```\n"
+        "\n"
+        "For a warm read, an illustrative result is:\n"
+        "\n"
+        "```text\n"
+        "ProfileEvents['PuffinFilesCacheHits']  ProfileEvents['PuffinFilesRead']\n"
+        "1                                      0\n"
         "```\n"
         "\n"
     ),
@@ -1431,6 +1580,22 @@ version: 1.0
 
 The same table read through any form SHALL return the same logical row set.
 
+For example, if the writer inserted ids `1..5` and deleted ids `2` and `4`, each access form can
+be compared using the same projection and ordering:
+
+```sql
+SELECT id FROM icebergS3('http://minio:9000/warehouse/t/', 'minio', 'minio123') ORDER BY id;
+SELECT id FROM iceberg_engine_table ORDER BY id;
+SELECT id FROM rest_catalog_db.t ORDER BY id;
+```
+
+```text
+id
+1
+3
+5
+```
+
 ### RQ.Iceberg.DeletionVectors.StorageBackends
 version: 1.0
 
@@ -1450,6 +1615,32 @@ produced them: `DELETE`, `UPDATE`, or `MERGE` (including `MERGE` statements comb
 Once a snapshot with valid metadata is committed, the producing operation is irrelevant to the
 read path: row counts, exact surviving rows, updated values, and inserted rows SHALL match the
 writer engine's own result.
+
+For example, given `(1, 'old')`, `(2, 'remove')`, and `(3, 'keep')`, an external writer could
+produce deletion vectors through operations such as:
+
+```sql
+DELETE FROM t WHERE id = 2;
+UPDATE t SET value = 'new' WHERE id = 1;
+MERGE INTO t USING changes c ON t.id = c.id
+WHEN MATCHED AND c.action = 'delete' THEN DELETE
+WHEN MATCHED THEN UPDATE SET value = c.value
+WHEN NOT MATCHED THEN INSERT (id, value) VALUES (c.id, c.value);
+```
+
+After an update of id `1`, deletion of id `2`, and insertion of id `4`, an illustrative
+ClickHouse read is:
+
+```sql
+SELECT id, value FROM iceberg_table ORDER BY id;
+```
+
+```text
+id  value
+1   new
+3   keep
+4   inserted
+```
 
 ## Vector Content Shapes
 
@@ -1486,6 +1677,20 @@ Deletion-vector positions are zero-based within the referenced data file. For a 
 * reject a position `>= N` with `ICEBERG_SPECIFICATION_VIOLATION`;
 * reject a declared cardinality `> N` with `ICEBERG_SPECIFICATION_VIOLATION`, before any
   `Puffin` I/O is performed.
+
+For example, for rows with ids `10`, `20`, and `30` stored in that physical order, a vector
+containing positions `{0, 2}` produces:
+
+```sql
+SELECT id FROM iceberg_table ORDER BY id;
+```
+
+```text
+id
+20
+```
+
+A vector containing position `3` for the same three-row file fails instead of returning rows.
 
 ### RQ.Iceberg.DeletionVectors.RowGroupBoundaries
 version: 1.0
@@ -1536,6 +1741,19 @@ Equality deletes SHALL apply independently of, and in addition to, a deletion ve
 data file. The final result SHALL be as if the deletion-vector filter ran first (on absolute row
 positions) and the equality-delete predicate ran on the surviving rows.
 
+For example, given physical rows `(1, 'keep')`, `(2, 'dv')`, `(3, 'eq')`, and `(4, 'keep')`, a
+deletion vector for position `1` plus an equality delete for `id = 3` produces:
+
+```sql
+SELECT id, value FROM iceberg_table ORDER BY id;
+```
+
+```text
+id  value
+1   keep
+4   keep
+```
+
 ### RQ.Iceberg.DeletionVectors.Coexistence.MultipleVectorsError
 version: 1.0
 
@@ -1574,6 +1792,16 @@ including:
 * `PREWHERE` (rows filtered before the deletion-vector transform must still map back to correct
   absolute file row positions)
 
+For example, if id `3` is deleted from ids `1..5`, all of these queries observe the same visible
+row set before applying their own operators:
+
+```sql
+SELECT id FROM iceberg_table ORDER BY id LIMIT 3;       -- 1, 2, 4
+SELECT count() FROM iceberg_table PREWHERE id >= 3;     -- 2
+SELECT id FROM iceberg_table WHERE id IN (2, 3, 4)
+ORDER BY id;                                             -- 2, 4
+```
+
 ### RQ.Iceberg.DeletionVectors.QuerySemantics.ProjectionIndependence
 version: 1.0
 
@@ -1582,6 +1810,16 @@ addresses physical row positions, not predicate values. When the writer executed
 `DELETE FROM t WHERE customer_id = 100`, a ClickHouse query selecting only other columns
 (`SELECT amount FROM ...`) SHALL still exclude the deleted rows without re-evaluating the
 original predicate.
+
+For example, if the writer deleted the physical row `(100, 42.50, 'paid')`, neither of these
+projections may expose it:
+
+```sql
+SELECT customer_id, amount, status FROM iceberg_table ORDER BY customer_id;
+SELECT amount FROM iceberg_table ORDER BY amount;
+```
+
+The second query does not need to project `customer_id` to apply the deletion vector.
 
 ### RQ.Iceberg.DeletionVectors.QuerySemantics.CombinedFilters
 version: 1.0
@@ -1605,6 +1843,19 @@ including `ADD COLUMN`, column rename, and column drop (both resolved by field i
 Row visibility SHALL be identical for any projection over old or new columns, and values of a
 column added after the data file was written SHALL follow normal Iceberg schema-evolution
 semantics (`NULL` unless a default is defined) for the surviving rows.
+
+For example, after deleting id `2`, renaming `value` to `description`, and adding nullable column
+`category`, an old data file can be read as:
+
+```sql
+SELECT id, description, category FROM iceberg_table ORDER BY id;
+```
+
+```text
+id  description  category
+1   alpha        NULL
+3   gamma        NULL
+```
 
 ## Snapshots and Time Travel
 
@@ -1676,6 +1927,26 @@ that file's deletion vector — no `Puffin` read SHALL occur for a pruned file (
 `PuffinFilesRead` profile event). Min/max pruning of delete files SHALL never prune a delete file
 that is actually needed for a data file being read.
 
+For example, if only partition `p = 2026` has a deletion vector, execute a query restricted to
+`p = 2025` with the client-supplied query id `dv_partition_pruning`, then check that query id:
+
+```sql
+SELECT count()
+FROM iceberg_table
+WHERE p = 2025
+SETTINGS log_profile_events = 1;
+
+SYSTEM FLUSH LOGS;
+
+SELECT ProfileEvents['PuffinFilesRead']
+FROM system.query_log
+WHERE type = 'QueryFinish' AND query_id = 'dv_partition_pruning';
+```
+
+```text
+0
+```
+
 ## Count Paths
 
 `SELECT count()` on an Iceberg table can be answered three ways: a metadata shortcut that sums
@@ -1690,6 +1961,14 @@ The metadata count shortcut SHALL fail closed in the presence of any live delete
 scan rather than answering from manifest sums. `SELECT count()` SHALL return the same value with
 `optimize_trivial_count_query = 1` and `= 0`, and both SHALL equal
 `SELECT count() FROM (SELECT * FROM table)`.
+
+For example, after 5 of 100 rows are deleted, the comparison is:
+
+```sql
+SELECT count() FROM iceberg_table SETTINGS optimize_trivial_count_query = 1; -- 95
+SELECT count() FROM iceberg_table SETTINGS optimize_trivial_count_query = 0; -- 95
+SELECT count() FROM (SELECT * FROM iceberg_table);                            -- 95
+```
 
 When the snapshot summary's `total-records` disagrees with the manifest sum on a table without
 deletes, the manifest sum SHALL win and a warning SHALL be logged.
@@ -1926,6 +2205,18 @@ version: 1.0
 the parent `SYSTEM DROP CACHE` privilege SHALL be allowed; `SHOW PRIVILEGES` SHALL list the
 privilege.
 
+An illustrative privilege check is:
+
+```sql
+CREATE USER cache_operator;
+GRANT SYSTEM DROP PUFFIN FILES CACHE ON *.* TO cache_operator;
+SHOW GRANTS FOR cache_operator;
+```
+
+```text
+GRANT SYSTEM DROP PUFFIN FILES CACHE ON *.* TO cache_operator
+```
+
 ### RQ.Iceberg.DeletionVectors.Cache.Observability
 version: 1.0
 
@@ -1940,6 +2231,13 @@ read: hits increase and `PuffinFilesRead` stays at 0.
 SELECT ProfileEvents['PuffinFilesCacheHits'], ProfileEvents['PuffinFilesRead']
 FROM system.query_log
 WHERE type = 'QueryFinish' AND query_id = '...';
+```
+
+For a warm read, an illustrative result is:
+
+```text
+ProfileEvents['PuffinFilesCacheHits']  ProfileEvents['PuffinFilesRead']
+1                                      0
 ```
 
 ### RQ.Iceberg.DeletionVectors.Cache.Concurrency
