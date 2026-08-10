@@ -1,9 +1,6 @@
 from testflows.core import *
 
-from alter.table.replace_partition.common import (
-    create_partitions_with_random_uint64,
-    create_partitions_for_collapsing_merge_tree,
-)
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
 
 
 @TestStep(Given)
@@ -435,6 +432,7 @@ def partitioned_merge_tree_table(
     number_of_values=3,
     if_not_exists=False,
     query_settings=None,
+    extra_columns=None,
 ):
     """Create a MergeTree table partitioned by a specific column."""
     with By(f"creating a partitioned {table_name} table with a MergeTree engine"):
@@ -456,6 +454,7 @@ def partitioned_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
                 number_of_values=number_of_values,
+                extra_columns=extra_columns,
             )
 
     return table_name
@@ -475,6 +474,7 @@ def partitioned_replicated_merge_tree_table(
     number_of_parts=10,
     query_settings=None,
     sharded=False,
+    extra_columns=None,
 ):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
@@ -497,6 +497,7 @@ def partitioned_replicated_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
             )
 
     return table_name
@@ -556,6 +557,7 @@ def partitioned_replacing_merge_tree_table(
     populate=True,
     number_of_partitions=5,
     number_of_parts=1,
+    extra_columns=None,
 ):
     """Create a ReplacingMergeTree table partitioned by a specific column."""
     with By(
@@ -576,6 +578,7 @@ def partitioned_replacing_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
             )
 
     return table_name
@@ -593,12 +596,13 @@ def partitioned_summing_merge_tree_table(
     populate=True,
     number_of_partitions=5,
     number_of_parts=1,
+    extra_columns=None,
 ):
     """Create a SummingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a SummingMergeTree engine"
     ):
-        create_aggregating_merge_tree_table(
+        create_summing_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
@@ -613,6 +617,7 @@ def partitioned_summing_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
             )
 
     return table_name
@@ -630,6 +635,8 @@ def partitioned_collapsing_merge_tree_table(
     populate=True,
     number_of_partitions=1,
     number_of_parts=1,
+    extra_columns=None,
+    sign="p",
 ):
     """Create a CollapsingMergeTree table partitioned by a specific column."""
     with By(
@@ -639,7 +646,7 @@ def partitioned_collapsing_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
-            sign="p",
+            sign=sign,
             order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
@@ -647,10 +654,12 @@ def partitioned_collapsing_merge_tree_table(
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_for_collapsing_merge_tree(
+            create_partitions_with_random_uint64(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
+                partition_values=[-1, 1] if sign == partition_by else None,
             )
 
     return table_name
@@ -668,6 +677,9 @@ def partitioned_versioned_collapsing_merge_tree_table(
     populate=True,
     number_of_partitions=1,
     number_of_parts=1,
+    extra_columns=None,
+    sign="p",
+    version="i",
 ):
     """Create a VersionedCollapsingMergeTree table partitioned by a specific column."""
     with By(
@@ -677,8 +689,8 @@ def partitioned_versioned_collapsing_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
-            sign="p",
-            version="i",
+            sign=sign,
+            version=version,
             order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
@@ -690,6 +702,8 @@ def partitioned_versioned_collapsing_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
+                partition_values=[-1, 1] if sign == partition_by else None,
             )
 
     return table_name
@@ -707,12 +721,13 @@ def partitioned_aggregating_merge_tree_table(
     populate=True,
     number_of_partitions=5,
     number_of_parts=1,
+    extra_columns=None,
 ):
     """Create a AggregatingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a AggregatingMergeTree engine"
     ):
-        create_summing_merge_tree_table(
+        create_aggregating_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
@@ -727,6 +742,7 @@ def partitioned_aggregating_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
             )
 
     return table_name
@@ -744,6 +760,7 @@ def partitioned_graphite_merge_tree_table(
     populate=True,
     number_of_partitions=5,
     number_of_parts=1,
+    extra_columns=None,
 ):
     """Create a GraphiteMergeTree table partitioned by a specific column."""
     with By(
@@ -765,6 +782,7 @@ def partitioned_graphite_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                extra_columns=extra_columns,
             )
 
     return table_name
