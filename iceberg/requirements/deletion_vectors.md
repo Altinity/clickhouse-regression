@@ -28,12 +28,15 @@
     * 6.2 [RQ.Iceberg.DeletionVectors.QuerySemantics.ProjectionIndependence](#rqicebergdeletionvectorsquerysemanticsprojectionindependence)
     * 6.3 [RQ.Iceberg.DeletionVectors.QuerySemantics.CombinedFilters](#rqicebergdeletionvectorsquerysemanticscombinedfilters)
     * 6.4 [RQ.Iceberg.DeletionVectors.QuerySemantics.SchemaEvolution](#rqicebergdeletionvectorsquerysemanticsschemaevolution)
+    * 6.5 [RQ.Iceberg.DeletionVectors.QuerySemantics.IOReductionOptimizations](#rqicebergdeletionvectorsquerysemanticsioreductionoptimizations)
+    * 6.6 [RQ.Iceberg.DeletionVectors.QuerySemantics.ComplexSchemas](#rqicebergdeletionvectorsquerysemanticscomplexschemas)
 * 7 [Snapshots and Time Travel](#snapshots-and-time-travel)
     * 7.1 [RQ.Iceberg.DeletionVectors.TimeTravel](#rqicebergdeletionvectorstimetravel)
     * 7.2 [RQ.Iceberg.DeletionVectors.TimeTravel.MultipleGenerations](#rqicebergdeletionvectorstimetravelmultiplegenerations)
     * 7.3 [RQ.Iceberg.DeletionVectors.SnapshotRefresh](#rqicebergdeletionvectorssnapshotrefresh)
-    * 7.4 [RQ.Iceberg.DeletionVectors.SequenceNumbers](#rqicebergdeletionvectorssequencenumbers)
-    * 7.5 [RQ.Iceberg.DeletionVectors.Compaction](#rqicebergdeletionvectorscompaction)
+    * 7.4 [RQ.Iceberg.DeletionVectors.SnapshotRefresh.QueryCache](#rqicebergdeletionvectorssnapshotrefreshquerycache)
+    * 7.5 [RQ.Iceberg.DeletionVectors.SequenceNumbers](#rqicebergdeletionvectorssequencenumbers)
+    * 7.6 [RQ.Iceberg.DeletionVectors.Compaction](#rqicebergdeletionvectorscompaction)
 * 8 [Partitioning and Pruning](#partitioning-and-pruning)
     * 8.1 [RQ.Iceberg.DeletionVectors.Partitioning](#rqicebergdeletionvectorspartitioning)
     * 8.2 [RQ.Iceberg.DeletionVectors.Partitioning.PruningSkipsVectorLoad](#rqicebergdeletionvectorspartitioningpruningskipsvectorload)
@@ -52,6 +55,7 @@
     * 11.1 [RQ.Iceberg.DeletionVectors.Distributed.ClusterFunctions](#rqicebergdeletionvectorsdistributedclusterfunctions)
     * 11.2 [RQ.Iceberg.DeletionVectors.Distributed.ProtocolFailClosed](#rqicebergdeletionvectorsdistributedprotocolfailclosed)
     * 11.3 [RQ.Iceberg.DeletionVectors.Distributed.SplitDataFile](#rqicebergdeletionvectorsdistributedsplitdatafile)
+    * 11.4 [RQ.Iceberg.DeletionVectors.Distributed.SnapshotRefresh](#rqicebergdeletionvectorsdistributedsnapshotrefresh)
 * 12 [Puffin Files Cache](#puffin-files-cache)
     * 12.1 [RQ.Iceberg.DeletionVectors.Cache.Setting](#rqicebergdeletionvectorscachesetting)
     * 12.2 [RQ.Iceberg.DeletionVectors.Cache.ServerSettings](#rqicebergdeletionvectorscacheserversettings)
@@ -425,6 +429,81 @@ id  description  category
 3   gamma        NULL
 ```
 
+### RQ.Iceberg.DeletionVectors.QuerySemantics.IOReductionOptimizations
+version: 1.0
+
+[ClickHouse] SHALL return an identical post-vector row set with any Parquet I/O-reducing read
+optimization enabled or disabled — including predicate push-down into the Parquet reader,
+page- and row-group-level pruning, and constant-value column detection that elides reads of
+column data whose value is identical across the file (derivable from column statistics).
+Deletion-vector positions are absolute row numbers of the data file; an optimization that
+skips reading part of the file SHALL NOT shift, drop, or resurrect rows, and counts and
+aggregates over a column whose read was elided SHALL still reflect only surviving rows.
+
+For example, for a table with a constant column `label = 'batch-1'` in every row and a
+deletion vector hiding 10 of 100 rows, both of the following SHALL return `90`:
+
+```sql
+SELECT count() FROM iceberg_table WHERE label = 'batch-1'
+SETTINGS input_format_parquet_filter_push_down = 0;
+
+SELECT count() FROM iceberg_table WHERE label = 'batch-1'
+SETTINGS input_format_parquet_filter_push_down = 1;
+```
+
+```text
+count()
+90
+```
+
+The same holds for any pairing of such optimizations, and for projections that read only the
+constant column:
+
+```sql
+SELECT label, count() FROM iceberg_table GROUP BY label;
+```
+
+```text
+label    count()
+batch-1  90
+```
+
+### RQ.Iceberg.DeletionVectors.QuerySemantics.ComplexSchemas
+version: 1.0
+
+Deletion vectors delete whole rows by position, independently of the schema's shape.
+[ClickHouse] SHALL apply deletion vectors correctly on tables with nested and complex column
+types — Iceberg `struct` (Tuple), `list` (Array), and `map` (Map), including nested
+combinations and `Nullable` fields — and on wide schemas. Reading any subset of nested
+fields SHALL exclude deleted rows, and counts and aggregates over nested fields SHALL
+reflect only surviving rows.
+
+For example, for an Iceberg schema
+
+```text
+id      BIGINT
+payload STRUCT<a: INT, tags: ARRAY<STRING>>
+attrs   MAP<STRING, STRING>
+```
+
+with rows `1`, `2`, `3` and a deletion vector hiding the row with `id = 2`:
+
+```sql
+SELECT id, payload.a, attrs['k'] FROM iceberg_table ORDER BY id;
+```
+
+```text
+id  payload.a  attrs['k']
+1   10         v1
+3   30         v3
+```
+
+```sql
+SELECT sum(length(payload.tags)) FROM iceberg_table;
+```
+
+returns the sum over rows `1` and `3` only.
+
 ## Snapshots and Time Travel
 
 ### RQ.Iceberg.DeletionVectors.TimeTravel
@@ -459,6 +538,45 @@ query SHALL observe the new snapshot without a server restart, without
 `SYSTEM DROP PUFFIN FILES CACHE`, and without dropping any other cache — with all caches at
 their default settings. This SHALL hold for both the table function and the `Iceberg` table
 engine.
+
+### RQ.Iceberg.DeletionVectors.SnapshotRefresh.QueryCache
+version: 1.0
+
+With the query result cache enabled (`use_query_cache = 1`), staleness across external
+Iceberg commits SHALL be bounded by the cache's own entry lifetime and never extended by
+deletion-vector state:
+
+* a cached result SHALL correspond to one committed snapshot — never a mix of pre- and
+  post-commit deletion-vector state;
+* after the cache entry expires (`query_cache_ttl`) or `SYSTEM DROP QUERY CACHE` is issued,
+  the next execution SHALL observe the current snapshot, including deletion vectors committed
+  since the entry was cached;
+* rows deleted by a committed deletion vector SHALL NOT be served from the query cache beyond
+  the entry lifetime.
+
+For example, for a 100-row table where an external `DELETE` later hides 10 rows:
+
+```sql
+SELECT count() FROM iceberg_table
+SETTINGS use_query_cache = 1, query_cache_ttl = 1;
+```
+
+```text
+count()
+100
+```
+
+```sql
+-- external writer commits a DELETE producing a deletion vector;
+-- after the 1-second entry lifetime has passed:
+SELECT count() FROM iceberg_table
+SETTINGS use_query_cache = 1, query_cache_ttl = 1;
+```
+
+```text
+count()
+90
+```
 
 ### RQ.Iceberg.DeletionVectors.SequenceNumbers
 version: 1.0
@@ -708,6 +826,37 @@ single-threaded read == multi-threaded read == cluster read == count()
 
 and all of them SHALL equal the writer-engine result, for any `max_threads` value and cluster
 size.
+
+### RQ.Iceberg.DeletionVectors.Distributed.SnapshotRefresh
+version: 1.0
+
+After an external engine commits a `DELETE` producing a deletion vector, the next cluster
+read SHALL observe the new snapshot on **every** worker — without restarts and without
+dropping any cache — even though each node holds its own `Puffin` files cache and Iceberg
+metadata cache, including nodes whose caches were warmed on the previous snapshot. The
+cluster result SHALL equal the single-node result taken after the same commit.
+
+For example, for a 100-row table read through the cluster function, warmed on all nodes,
+where an external `DELETE` then hides 10 rows:
+
+```sql
+SELECT count() FROM icebergS3Cluster('cluster', 'http://minio:9000/warehouse/ns/tbl', ...);
+```
+
+```text
+count()   -- before the commit, caches warmed on every node
+100
+```
+
+```sql
+-- external writer commits the DELETE; very next cluster query:
+SELECT count() FROM icebergS3Cluster('cluster', 'http://minio:9000/warehouse/ns/tbl', ...);
+```
+
+```text
+count()
+90
+```
 
 ## Puffin Files Cache
 
