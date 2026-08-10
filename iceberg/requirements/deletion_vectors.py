@@ -1423,6 +1423,7 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
     children=None,
     headings=(
         Heading(name="Introduction", level=1, num="1"),
+        Heading(name="Terminology", level=2, num="1.1"),
         Heading(name="Feature Scope", level=1, num="2"),
         Heading(name="RQ.Iceberg.DeletionVectors.Read", level=2, num="2.1"),
         Heading(name="RQ.Iceberg.DeletionVectors.ReadOnly", level=2, num="2.2"),
@@ -1674,6 +1675,7 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
+    * 1.1 [Terminology](#terminology)
 * 2 [Feature Scope](#feature-scope)
     * 2.1 [RQ.Iceberg.DeletionVectors.Read](#rqicebergdeletionvectorsread)
     * 2.2 [RQ.Iceberg.DeletionVectors.ReadOnly](#rqicebergdeletionvectorsreadonly)
@@ -1783,6 +1785,31 @@ paths are distinguishable only by their code:
 Out of scope: writing deletion vectors from ClickHouse, blob types other than
 `deletion-vector-v1`, and the standalone `Puffin` input format (`SELECT ... FROM file(...,
 Puffin)`), which belongs to format-level requirements rather than Iceberg table reads.
+
+### Terminology
+
+Terms used throughout this specification:
+
+| Term                 | Meaning                                                                                                                                                                                                                                       |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| writer               | The external engine (Spark in our tests) that changes the table: inserts, deletes, updates, compaction. ClickHouse is never the writer.                                                                                                       |
+| reader               | ClickHouse, reading the table and applying deletion vectors.                                                                                                                                                                                  |
+| data file            | A Parquet file holding table rows. Data files are never edited in place.                                                                                                                                                                      |
+| position             | The row number of a row inside one data file, counted from 0.                                                                                                                                                                                 |
+| deletion vector (DV) | A compressed bitmap listing the deleted row positions of one data file. At most one vector per data file per snapshot.                                                                                                                        |
+| `Puffin` file        | The container file (`*.puffin`) that stores deletion vectors as blobs.                                                                                                                                                                        |
+| blob                 | One stored item inside a `Puffin` file — here always a `deletion-vector-v1` bitmap.                                                                                                                                                           |
+| footer               | The index at the end of a `Puffin` file. It lists every blob with its offset, length, and properties.                                                                                                                                         |
+| snapshot             | One committed version of the table. Every query reads exactly one snapshot.                                                                                                                                                                   |
+| manifest             | An Avro metadata file listing the data files and delete files of a snapshot. A deletion vector's manifest entry records which `Puffin` file holds it, where inside that file (offset, length), and how many rows it deletes (`record_count`). |
+| sequence number      | A commit-order number. A deletion vector applies only to data files committed at or before its own sequence number.                                                                                                                           |
+| merge-on-read (MoR)  | The write mode where deletes are recorded in small side files (such as deletion vectors) instead of rewriting data files. The reader merges them at query time.                                                                               |
+| position delete file | The older (v2) way to record deleted rows: a Parquet file listing (data file, position) pairs. Replaced by deletion vectors in v3.                                                                                                            |
+| cardinality          | The number of deleted rows a vector declares.                                                                                                                                                                                                 |
+| etag                 | A fingerprint that object storage (S3, Azure) assigns to an object's content; it changes whenever the object's content changes. Local files have none.                                                                                        |
+| access form          | The way ClickHouse reaches the table: a table function (`icebergS3`), the `Iceberg` table engine, or a database connected to a REST catalog.                                                                                                  |
+| cold / warm read     | A cold read fetches and parses the `Puffin` file from storage; a warm read is served from the `Puffin` files cache.                                                                                                                           |
+| fail closed          | When correctness cannot be guaranteed, return an error — never a possibly wrong row set.                                                                                                                                                      |
 
 [ClickHouse]: https://clickhouse.com
 
