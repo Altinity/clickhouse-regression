@@ -505,7 +505,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/clickhouse keeper/part ${{ matrix.part }}/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/clickhouse keeper/part ${{ matrix.part }}/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -522,14 +523,14 @@ jobs:
       part: ${{ matrix.part }}
       timeout_minutes: 180
       storage_path: /ssl
-      regression_args: '--ssl'
+      regression_args: '--ssl --only "/clickhouse keeper/part ${{ matrix.part }}/*"'
       artifact_name: clickhouse_keeper-ssl-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/clickhouse keeper/part ${{ matrix.part }}/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1024,7 +1025,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/rbac/part 1/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/rbac/part 1/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1042,7 +1044,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/rbac/part 2/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/rbac/part 2/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1060,7 +1063,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/rbac/part 3/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/rbac/part 3/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1074,7 +1078,7 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /aws
-      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/s3/aws s3/part 1/*"'
       artifact_name: s3-aws-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
@@ -1082,7 +1086,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/aws s3/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1096,7 +1100,7 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /aws
-      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/s3/aws s3/part 2/*"'
       artifact_name: s3-aws-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1104,7 +1108,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/aws s3/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1118,7 +1122,7 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /azure
-      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}} --only "/s3/azure/part 1/*"'
       artifact_name: s3-azure-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1126,7 +1130,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/azure/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1141,7 +1145,7 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /azure
-      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}} --only "/s3/azure/part 2/*"'
       artifact_name: s3-azure-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1149,7 +1153,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/azure/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1163,7 +1167,7 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /gcs
-      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}} --only "/s3/gcs/part 1/*"'
       artifact_name: s3-gcs-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
@@ -1171,7 +1175,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/gcs/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1185,7 +1189,7 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /gcs
-      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}} --only "/s3/gcs/part 2/*"'
       artifact_name: s3-gcs-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1193,7 +1197,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/gcs/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1206,7 +1210,7 @@ jobs:
       job_name: s3_minio_export_part
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/export tests/export part/*" --as-binary'
       artifact_name: s3-minio-export-part-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1214,7 +1218,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/export tests/export part/*" --as-binary ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1227,7 +1231,7 @@ jobs:
       job_name: s3_minio_export_partition
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/export tests/export partition/*" --as-binary'
       artifact_name: s3-minio-export-partition-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1235,7 +1239,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/export tests/export partition/*" --as-binary ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1249,7 +1253,7 @@ jobs:
       part: 1
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/part 1/*"'
       artifact_name: s3-minio-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
@@ -1257,7 +1261,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1271,7 +1275,7 @@ jobs:
       part: 2
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/part 2/*"'
       artifact_name: s3-minio-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1279,7 +1283,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1293,7 +1297,7 @@ jobs:
       part: 3
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/part 3/*"'
       artifact_name: s3-minio-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1301,7 +1305,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 3/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1367,7 +1371,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/ssl server/part 1/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/ssl server/part 1/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1385,7 +1390,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/ssl server/part 2/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/ssl server/part 2/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1403,7 +1409,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/ssl server/part 3/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/ssl server/part 3/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit 
