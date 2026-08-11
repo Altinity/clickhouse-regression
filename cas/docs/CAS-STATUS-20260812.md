@@ -1,4 +1,4 @@
-# CAS Testing Status — 12 August 2026
+# CAS Testing Status — 11 August 2026
 
 ---
 
