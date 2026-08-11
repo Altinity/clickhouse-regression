@@ -364,7 +364,7 @@ xfails = {
         (
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1906",
-            check_clickhouse_version("<=26.3.13.20001"),
+            check_clickhouse_version("<=26.3.17"),
         )
     ],
     "/iceberg/export partition/: catalog/*/disaster recovery/KILL EXPORT PARTITION during commit transitions to KILLED": [
