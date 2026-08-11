@@ -364,7 +364,7 @@ xfails = {
         (
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1906",
-            check_clickhouse_version("<=26.3.18"),
+            check_clickhouse_version("<=26.3.17.20001"),
         )
     ],
     "/iceberg/export partition/: catalog/*/disaster recovery/KILL EXPORT PARTITION during commit transitions to KILLED": [
@@ -506,7 +506,7 @@ ffails = {
         Skip,
         "Plain MergeTree EXPORT PARTITION requires antalya > 26.3.18 "
         "(Altinity/ClickHouse#2032)",
-        check_clickhouse_version("<=26.3.18"),
+        check_clickhouse_version("<=26.3.17.20001"),
     ),
     "/iceberg/export partition/: catalog/*/casting": (
         Skip,
