@@ -140,9 +140,7 @@ def system_table_columns_populated_on_success(
             destination=destination,
             columns=columns,
         )
-        assert row is not None, error(
-            f"Export row missing from {status_table}"
-        )
+        assert row is not None, error(f"Export row missing from {status_table}")
         fields = row.split("\t")
         expected_field_count = 8 if source_engine() == SOURCE_ENGINE_PLAIN else 9
         assert len(fields) == expected_field_count, error(

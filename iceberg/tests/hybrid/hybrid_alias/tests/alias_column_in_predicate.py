@@ -59,7 +59,10 @@ def alias_column_in_predicate_overlapping_segments(self):
     alias_columns = [
         {"name": "computed", "expression": "date_col", "hybrid_type": "Date"},
     ]
-    watermark = {"left_predicate": "date_col >= '2013-08-05'", "right_predicate": "date_col < '2025-08-05'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-08-05'",
+        "right_predicate": "date_col < '2025-08-05'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

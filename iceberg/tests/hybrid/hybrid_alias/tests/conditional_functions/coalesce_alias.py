@@ -16,9 +16,16 @@ def coalesce_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "coalesced", "expression": "coalesce(value1, value2, 0)", "hybrid_type": "Int32"},
+        {
+            "name": "coalesced",
+            "expression": "coalesce(value1, value2, 0)",
+            "hybrid_type": "Int32",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def coalesce_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "coalesced", "expression": "coalesce(value1, value2, 0)", "hybrid_type": "Int32"},
+        {
+            "name": "coalesced",
+            "expression": "coalesce(value1, value2, 0)",
+            "hybrid_type": "Int32",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "coalesced >= 100", "right_predicate": "coalesced < 100"}
+    watermark = {
+        "left_predicate": "coalesced >= 100",
+        "right_predicate": "coalesced < 100",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",

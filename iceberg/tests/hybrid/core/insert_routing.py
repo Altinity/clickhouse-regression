@@ -89,7 +89,9 @@ def insert_matching_right_predicate_still_left(self):
 
     with Then("left segment has the row"):
         assert (
-            node.query(f"SELECT count() FROM {ctx['left']} WHERE id = 98").output.strip()
+            node.query(
+                f"SELECT count() FROM {ctx['left']} WHERE id = 98"
+            ).output.strip()
             == "1"
         ), error()
 

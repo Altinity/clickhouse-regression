@@ -18,9 +18,16 @@ def complex_arithmetic_aliases(self):
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "quadrupled", "expression": "doubled * 2", "hybrid_type": "Int64"},
-        {"name": "nested_math", "expression": "(doubled + quadrupled) * 2", "hybrid_type": "Int64"},
+        {
+            "name": "nested_math",
+            "expression": "(doubled + quadrupled) * 2",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -57,10 +64,17 @@ def complex_arithmetic_aliases_in_watermark(self):
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "quadrupled", "expression": "doubled * 2", "hybrid_type": "Int64"},
-        {"name": "nested_math", "expression": "(doubled + quadrupled) * 2", "hybrid_type": "Int64"},
+        {
+            "name": "nested_math",
+            "expression": "(doubled + quadrupled) * 2",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use final alias column in watermark predicates
-    watermark = {"left_predicate": "nested_math >= 1000", "right_predicate": "nested_math < 1000"}
+    watermark = {
+        "left_predicate": "nested_math >= 1000",
+        "right_predicate": "nested_math < 1000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

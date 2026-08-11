@@ -17,7 +17,10 @@ def toInt32_alias(self):
     alias_columns = [
         {"name": "value_int32", "expression": "toInt32(value)", "hybrid_type": "Int32"},
     ]
-    watermark = {"left_predicate": "date_col >= '2014-09-14'", "right_predicate": "date_col < '2014-09-14'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-09-14'",
+        "right_predicate": "date_col < '2014-09-14'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -56,7 +59,10 @@ def toInt32_alias_in_watermark(self):
         {"name": "value_int32", "expression": "toInt32(value)", "hybrid_type": "Int32"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "value_int32 >= 5000", "right_predicate": "value_int32 < 5000"}
+    watermark = {
+        "left_predicate": "value_int32 >= 5000",
+        "right_predicate": "value_int32 < 5000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

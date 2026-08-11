@@ -52,7 +52,9 @@ def create_columns_from_config(base_columns, alias_columns):
     columns = []
 
     for col in base_columns:
-        columns.append(Column(name=col["name"], datatype=datatype_from_string(col["datatype"])))
+        columns.append(
+            Column(name=col["name"], datatype=datatype_from_string(col["datatype"]))
+        )
 
     for col in alias_columns:
         columns.append(Column(name=col["name"], alias=col["expression"]))
@@ -68,7 +70,9 @@ def create_hybrid_columns_from_config(test_case):
     columns = []
 
     for col in test_case["base_columns"]:
-        columns.append(Column(name=col["name"], datatype=datatype_from_string(col["datatype"])))
+        columns.append(
+            Column(name=col["name"], datatype=datatype_from_string(col["datatype"]))
+        )
 
     # Prefer alias_columns_definition_for_hybrid_table if it exists, otherwise use alias_columns
     if "alias_columns_definition_for_hybrid_table" in test_case:
@@ -82,8 +86,12 @@ def create_hybrid_columns_from_config(test_case):
 
     for col in alias_columns:
         if "hybrid_type" not in col:
-            raise ValueError(f"hybrid_type is required for alias column '{col['name']}'")
-        columns.append(Column(name=col["name"], datatype=datatype_from_string(col["hybrid_type"])))
+            raise ValueError(
+                f"hybrid_type is required for alias column '{col['name']}'"
+            )
+        columns.append(
+            Column(name=col["name"], datatype=datatype_from_string(col["hybrid_type"]))
+        )
 
     return columns
 
@@ -98,11 +106,17 @@ def run_test_case(self, test_case, node=None):
         left_table_name = f"left_{getuid()}"
         right_table_name = f"right_{getuid()}"
 
-        with By("Get alias columns for each segment (default to shared alias_columns if not specified)"):
-            left_alias_columns = test_case.get("left_alias_columns", test_case.get("alias_columns", []))
+        with By(
+            "Get alias columns for each segment (default to shared alias_columns if not specified)"
+        ):
+            left_alias_columns = test_case.get(
+                "left_alias_columns", test_case.get("alias_columns", [])
+            )
 
         with And("get left segment columns"):
-            left_segment_columns = create_columns_from_config(test_case["base_columns"], left_alias_columns)
+            left_segment_columns = create_columns_from_config(
+                test_case["base_columns"], left_alias_columns
+            )
 
         with And("create left table"):
             create_table_params = {
@@ -110,7 +124,9 @@ def run_test_case(self, test_case, node=None):
                 "engine": "MergeTree",
                 "columns": left_segment_columns,
                 "order_by": test_case["order_by"] if "order_by" in test_case else None,
-                "partition_by": test_case["partition_by"] if "partition_by" in test_case else None,
+                "partition_by": (
+                    test_case["partition_by"] if "partition_by" in test_case else None
+                ),
             }
 
             left_table = create_table(**create_table_params)
@@ -119,11 +135,17 @@ def run_test_case(self, test_case, node=None):
             left_table.insert_test_data(cardinality=1, shuffle_values=False)
 
     with And("create right table and populate it with test data"):
-        with By("get alias columns for right table (default to shared alias_columns if not specified)"):
-            right_alias_columns = test_case.get("right_alias_columns", test_case.get("alias_columns", []))
+        with By(
+            "get alias columns for right table (default to shared alias_columns if not specified)"
+        ):
+            right_alias_columns = test_case.get(
+                "right_alias_columns", test_case.get("alias_columns", [])
+            )
 
         with And("get right segment columns"):
-            right_segment_columns = create_columns_from_config(test_case["base_columns"], right_alias_columns)
+            right_segment_columns = create_columns_from_config(
+                test_case["base_columns"], right_alias_columns
+            )
 
         with And("create right table"):
             create_table_params = {
@@ -131,7 +153,9 @@ def run_test_case(self, test_case, node=None):
                 "engine": "MergeTree",
                 "columns": right_segment_columns,
                 "order_by": test_case["order_by"] if "order_by" in test_case else None,
-                "partition_by": test_case["partition_by"] if "partition_by" in test_case else None,
+                "partition_by": (
+                    test_case["partition_by"] if "partition_by" in test_case else None
+                ),
             }
 
             right_table = create_table(**create_table_params)
@@ -145,7 +169,9 @@ def run_test_case(self, test_case, node=None):
 
         left_table_func = f"remote('localhost', currentDatabase(), '{left_table_name}')"
         left_predicate = test_case["watermark"]["left_predicate"]
-        right_table_func = f"remote('localhost', currentDatabase(), '{right_table_name}')"
+        right_table_func = (
+            f"remote('localhost', currentDatabase(), '{right_table_name}')"
+        )
         right_predicate = test_case["watermark"]["right_predicate"]
         hybrid_engine = f"Hybrid({left_table_func}, {left_predicate}, {right_table_func}, {right_predicate})"
 
@@ -163,9 +189,13 @@ def run_test_case(self, test_case, node=None):
     if test_queries:
         with And("create reference MergeTree table with same structure as left table"):
             merge_tree_reference_table = f"reference_merge_tree_{getuid()}"
-            create_table_as(reference_table=left_table_name, table_name=merge_tree_reference_table)
+            create_table_as(
+                reference_table=left_table_name, table_name=merge_tree_reference_table
+            )
 
-        with And("populate reference table from left and right segment tables using watermark predicates"):
+        with And(
+            "populate reference table from left and right segment tables using watermark predicates"
+        ):
             base_column_names = [col["name"] for col in test_case["base_columns"]]
             base_columns_str = ", ".join(base_column_names)
 
@@ -181,8 +211,12 @@ def run_test_case(self, test_case, node=None):
                 if test_query_template is None:
                     continue
                 with By(f"query {i}/{len(test_queries)}"):
-                    test_query = test_query_template.format(hybrid_table=hybrid_table_name)
-                    reference_query = test_query_template.format(hybrid_table=merge_tree_reference_table)
+                    test_query = test_query_template.format(
+                        hybrid_table=hybrid_table_name
+                    )
+                    reference_query = test_query_template.format(
+                        hybrid_table=merge_tree_reference_table
+                    )
 
                     hybrid_result = node.query(test_query).output
                     reference_result = node.query(reference_query).output

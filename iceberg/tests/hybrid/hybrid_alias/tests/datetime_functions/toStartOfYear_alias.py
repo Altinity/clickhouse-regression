@@ -16,9 +16,16 @@ def toStartOfYear_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "start_of_year", "expression": "toStartOfYear(datetime_col)", "hybrid_type": "Date"},
+        {
+            "name": "start_of_year",
+            "expression": "toStartOfYear(datetime_col)",
+            "hybrid_type": "Date",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def toStartOfYear_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "start_of_year", "expression": "toStartOfYear(datetime_col)", "hybrid_type": "Date"},
+        {
+            "name": "start_of_year",
+            "expression": "toStartOfYear(datetime_col)",
+            "hybrid_type": "Date",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "start_of_year >= '2010-01-01'", "right_predicate": "start_of_year < '2010-01-01'"}
+    watermark = {
+        "left_predicate": "start_of_year >= '2010-01-01'",
+        "right_predicate": "start_of_year < '2010-01-01'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

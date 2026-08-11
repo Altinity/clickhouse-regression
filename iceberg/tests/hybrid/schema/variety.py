@@ -121,9 +121,7 @@ def telemetry_types_mt_mt(self):
 @Name("logs types MT+MT")
 def logs_types_mt_mt(self):
     """String / Array on both MergeTree segments."""
-    columns = (
-        "id Int32, message String, tags Array(String), date_col Date"
-    )
+    columns = "id Int32, message String, tags Array(String), date_col Date"
     values = (
         f"(1, 'ok', ['a','b'], '{HOT_ROW_DATE}'), "
         f"(2, 'warn', ['b'], '{HOT_ROW_DATE}'), "

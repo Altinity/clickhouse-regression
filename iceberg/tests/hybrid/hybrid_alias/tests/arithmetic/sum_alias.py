@@ -17,7 +17,10 @@ def sum_alias(self):
     alias_columns = [
         {"name": "sum_alias", "expression": "id + value", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
+    watermark = {
+        "left_predicate": "date_col >= '2004-04-16'",
+        "right_predicate": "date_col < '2004-04-16'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -56,7 +59,10 @@ def sum_alias_in_watermark(self):
         {"name": "sum_alias", "expression": "id + value", "hybrid_type": "Int64"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "sum_alias >= 10000", "right_predicate": "sum_alias < 10000"}
+    watermark = {
+        "left_predicate": "sum_alias >= 10000",
+        "right_predicate": "sum_alias < 10000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

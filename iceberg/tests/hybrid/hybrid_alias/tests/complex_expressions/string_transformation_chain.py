@@ -23,7 +23,10 @@ def string_transformation_chain(self):
             "hybrid_type": "String",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, name, date_col FROM {hybrid_table} ORDER BY id",
@@ -66,7 +69,10 @@ def string_transformation_chain_in_watermark(self):
         },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(formatted_string) >= 5", "right_predicate": "length(formatted_string) < 5"}
+    watermark = {
+        "left_predicate": "length(formatted_string) >= 5",
+        "right_predicate": "length(formatted_string) < 5",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, name, date_col FROM {hybrid_table} ORDER BY id",

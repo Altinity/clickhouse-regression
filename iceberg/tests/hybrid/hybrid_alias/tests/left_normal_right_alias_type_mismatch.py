@@ -20,7 +20,10 @@ def left_normal_right_alias_type_mismatch(self):
         {"name": "id", "datatype": "Int32"},
         {"name": "value", "datatype": "Int32"},
         {"name": "date_col", "datatype": "Date"},
-        {"name": "computed", "datatype": "Int32"},  # Regular column in left with mismatced type
+        {
+            "name": "computed",
+            "datatype": "Int32",
+        },  # Regular column in left with mismatced type
     ]
     right_base_columns = [
         {"name": "id", "datatype": "Int32"},
@@ -31,10 +34,17 @@ def left_normal_right_alias_type_mismatch(self):
     right_alias_columns = [
         {"name": "computed", "expression": "value * 2"},  # Alias in right
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
-        {"query": "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id", "exitcode": 0, "message": None},
+        {
+            "query": "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+            "exitcode": 0,
+            "message": None,
+        },
         {
             "query": "SELECT computed FROM {hybrid_table} ORDER BY id",
             "exitcode": 179,

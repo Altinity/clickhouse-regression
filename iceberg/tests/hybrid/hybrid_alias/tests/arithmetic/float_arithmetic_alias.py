@@ -17,7 +17,10 @@ def float32_multiply(self):
     alias_columns = [
         {"name": "scaled", "expression": "price * 1.5", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2012-04-28'", "right_predicate": "date_col < '2012-04-28'"}
+    watermark = {
+        "left_predicate": "date_col >= '2012-04-28'",
+        "right_predicate": "date_col < '2012-04-28'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, price, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,7 +58,10 @@ def float64_sum(self):
     alias_columns = [
         {"name": "total", "expression": "amount1 + amount2", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2013-08-05'", "right_predicate": "date_col < '2013-08-05'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-08-05'",
+        "right_predicate": "date_col < '2013-08-05'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, amount1, amount2, date_col FROM {hybrid_table} ORDER BY id",
@@ -93,7 +99,10 @@ def float64_division(self):
     alias_columns = [
         {"name": "ratio", "expression": "amount1 / amount2", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2008-11-06'", "right_predicate": "date_col < '2008-11-06'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-11-06'",
+        "right_predicate": "date_col < '2008-11-06'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, amount1, amount2, date_col FROM {hybrid_table} ORDER BY id",
@@ -131,7 +140,10 @@ def float_arithmetic_in_watermark(self):
     alias_columns = [
         {"name": "scaled", "expression": "price * 1.5", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "scaled >= 500.0", "right_predicate": "scaled < 500.0"}
+    watermark = {
+        "left_predicate": "scaled >= 500.0",
+        "right_predicate": "scaled < 500.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, price, date_col FROM {hybrid_table} ORDER BY id",

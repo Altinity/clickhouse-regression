@@ -755,6 +755,54 @@ def add_invalid_config(
         assert exitcode == 0, error()
 
 
+def restart_clickhouse_and_tail_log(node, bash, cluster, user=None, wait_healthy=True):
+    """Restart ClickHouse and tail the server log from the restart point, reading
+    the rotated archive if the log rotated during the restart."""
+    log_file = "/var/log/clickhouse-server/clickhouse-server.log"
+    logs_dir = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs"
+
+    with When("I close terminal to the node to be restarted"):
+        bash.close()
+
+    with And("I stop ClickHouse to apply the config changes"):
+        node.stop_clickhouse(safe=False)
+
+    with And("I get the current log size"):
+        cmd = node.cluster.command(None, f"stat -c %s {logs_dir}/clickhouse-server.log")
+        logsize = cmd.output.split(" ")[0].strip()
+
+    with And("I start ClickHouse back up"):
+        node.start_clickhouse(user=user, wait_healthy=wait_healthy)
+
+    with And("I detect if the log file was rotated during restart"):
+        cmd = node.cluster.command(None, f"stat -c %s {logs_dir}/clickhouse-server.log")
+        current_logsize = cmd.output.split(" ")[0].strip()
+        rotated = int(current_logsize) < int(logsize)
+
+    archive = None
+    if rotated:
+        with And("I locate the most recently archived log file"):
+            cmd = node.cluster.command(
+                None,
+                f"ls -t {logs_dir}/clickhouse-server.log.[0-9]* 2>/dev/null | head -1",
+                no_checks=True,
+            )
+            name = os.path.basename(cmd.output.strip())
+            archive = f"/var/log/clickhouse-server/{name}" if name else None
+
+    with Then("I tail the log file from using previous log size as the offset"):
+        bash.prompt = bash.__class__.prompt
+        bash.open()
+        if archive:
+            bash.send(
+                f"{{ zcat -f {archive} | tail -c +{logsize}; tail -c +1 -f {log_file}; }}"
+            )
+        elif rotated:
+            bash.send(f"tail -c +1 -f {log_file}")
+        else:
+            bash.send(f"tail -c +{logsize} -f {log_file}")
+
+
 def add_config(
     config,
     timeout=300,
@@ -805,40 +853,13 @@ def add_config(
     def wait_for_config_to_be_loaded(user=None):
         """Wait for config to be loaded."""
         if restart:
-            with When("I close terminal to the node to be restarted"):
-                bash.close()
-
-            with And("I stop ClickHouse to apply the config changes"):
-                node.stop_clickhouse(safe=False)
-
-            with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                logsize = cmd.output.split(" ")[0].strip()
-
-            with And("I start ClickHouse back up"):
-                node.start_clickhouse(user=user, wait_healthy=wait_healthy)
-
-            with And("I detect if the log file was rotated during restart"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                current_logsize = cmd.output.split(" ")[0].strip()
-                if int(current_logsize) < int(logsize):
-                    # Log rotated while server was restarting: captured offset is
-                    # past the new file's EOF. Reset to byte 1 so tail reads from
-                    # the start of the new file.
-                    logsize = "1"
-
-            with Then("I tail the log file from using previous log size as the offset"):
-                bash.prompt = bash.__class__.prompt
-                bash.open()
-                bash.send(
-                    f"tail -c +{logsize} -f /var/log/clickhouse-server/clickhouse-server.log"
-                )
+            restart_clickhouse_and_tail_log(
+                node=node,
+                bash=bash,
+                cluster=cluster,
+                user=user,
+                wait_healthy=wait_healthy,
+            )
 
         with Then("I wait for config reload message in the log file"):
             if restart:
@@ -973,40 +994,13 @@ def remove_config(
     def wait_for_config_to_be_loaded(user=None):
         """Wait for config to be loaded."""
         if restart:
-            with When("I close terminal to the node to be restarted"):
-                bash.close()
-
-            with And("I stop ClickHouse to apply the config changes"):
-                node.stop_clickhouse(safe=False)
-
-            with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                logsize = cmd.output.split(" ")[0].strip()
-
-            with And("I start ClickHouse back up"):
-                node.start_clickhouse(user=user, wait_healthy=wait_healthy)
-
-            with And("I detect if the log file was rotated during restart"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                current_logsize = cmd.output.split(" ")[0].strip()
-                if int(current_logsize) < int(logsize):
-                    # Log rotated while server was restarting: captured offset is
-                    # past the new file's EOF. Reset to byte 1 so tail reads from
-                    # the start of the new file.
-                    logsize = "1"
-
-            with Then("I tail the log file from using previous log size as the offset"):
-                bash.prompt = bash.__class__.prompt
-                bash.open()
-                bash.send(
-                    f"tail -c +{logsize} -f /var/log/clickhouse-server/clickhouse-server.log"
-                )
+            restart_clickhouse_and_tail_log(
+                node=node,
+                bash=bash,
+                cluster=cluster,
+                user=user,
+                wait_healthy=wait_healthy,
+            )
 
         with Then("I wait for config reload message in the log file"):
             if restart:

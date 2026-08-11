@@ -50,9 +50,7 @@ def secure_cluster_tf(table_name, cluster="replicated_cluster_secure"):
 
 
 def cluster_all_replicas_tf(table_name, cluster="replicated_cluster"):
-    return (
-        f"clusterAllReplicas('{cluster}', currentDatabase(), '{table_name}')"
-    )
+    return f"clusterAllReplicas('{cluster}', currentDatabase(), '{table_name}')"
 
 
 @TestScenario
@@ -78,9 +76,7 @@ def secure_cluster_smoke(self):
         )
 
     with And("SHOW CREATE mentions the secure cluster"):
-        show = self.context.node.query(
-            f"SHOW CREATE TABLE {ctx['hybrid']}"
-        ).output
+        show = self.context.node.query(f"SHOW CREATE TABLE {ctx['hybrid']}").output
         assert "replicated_cluster_secure" in show, error()
 
 

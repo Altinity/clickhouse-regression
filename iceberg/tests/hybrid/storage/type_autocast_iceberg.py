@@ -29,7 +29,6 @@ from iceberg.tests.hybrid.core.common import (
 )
 
 
-
 MISMATCH_ROWS = (
     (1, 100, "2025-02-01"),
     (2, 200, "2025-06-15"),

@@ -18,9 +18,16 @@ def array_concat_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_concat", "expression": "arrayConcat(array1, array2)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_concat",
+            "expression": "arrayConcat(array1, array2)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -57,10 +64,17 @@ def array_concat_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_concat", "expression": "arrayConcat(array1, array2)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_concat",
+            "expression": "arrayConcat(array1, array2)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare arrays directly)
-    watermark = {"left_predicate": "length(array_concat) >= 6", "right_predicate": "length(array_concat) < 6"}
+    watermark = {
+        "left_predicate": "length(array_concat) >= 6",
+        "right_predicate": "length(array_concat) < 6",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

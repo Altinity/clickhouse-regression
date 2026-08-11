@@ -179,9 +179,9 @@ def drop_table_privilege(self, minio_root_user, minio_root_password):
                 f"DB::Exception: Unknown table expression identifier '{database_name}.{namespace}.{table_name}'",
                 f"DB::Exception: Table {table_ref} does not exist",
             )
-            assert any(message in result.output for message in expected_messages), error(
-                result.output
-            )
+            assert any(
+                message in result.output for message in expected_messages
+            ), error(result.output)
 
 
 @TestScenario

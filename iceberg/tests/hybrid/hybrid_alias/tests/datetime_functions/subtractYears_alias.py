@@ -15,9 +15,16 @@ def subtractYears_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "date_minus_years", "expression": "subtractYears(date_col, 1)", "hybrid_type": "Date"},
+        {
+            "name": "date_minus_years",
+            "expression": "subtractYears(date_col, 1)",
+            "hybrid_type": "Date",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +60,11 @@ def subtractYears_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "date_minus_years", "expression": "subtractYears(date_col, 1)", "hybrid_type": "Date"},
+        {
+            "name": "date_minus_years",
+            "expression": "subtractYears(date_col, 1)",
+            "hybrid_type": "Date",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {

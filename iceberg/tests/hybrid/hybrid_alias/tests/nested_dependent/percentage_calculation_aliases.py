@@ -17,9 +17,16 @@ def percentage_calculation_aliases(self):
     ]
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
-        {"name": "percentage", "expression": "(doubled * 100) / (value + doubled)", "hybrid_type": "Float64"},
+        {
+            "name": "percentage",
+            "expression": "(doubled * 100) / (value + doubled)",
+            "hybrid_type": "Float64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def percentage_calculation_aliases_in_watermark(self):
     ]
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
-        {"name": "percentage", "expression": "(doubled * 100) / (value + doubled)", "hybrid_type": "Float64"},
+        {
+            "name": "percentage",
+            "expression": "(doubled * 100) / (value + doubled)",
+            "hybrid_type": "Float64",
+        },
     ]
     # Use final alias column in watermark predicates
-    watermark = {"left_predicate": "percentage >= 50.0", "right_predicate": "percentage < 50.0"}
+    watermark = {
+        "left_predicate": "percentage >= 50.0",
+        "right_predicate": "percentage < 50.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

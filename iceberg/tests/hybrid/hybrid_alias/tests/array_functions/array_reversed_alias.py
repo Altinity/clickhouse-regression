@@ -17,9 +17,16 @@ def array_reversed_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_reversed", "expression": "arrayReverse(array_col)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_reversed",
+            "expression": "arrayReverse(array_col)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_reversed_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_reversed", "expression": "arrayReverse(array_col)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_reversed",
+            "expression": "arrayReverse(array_col)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare arrays directly)
-    watermark = {"left_predicate": "length(array_reversed) >= 5", "right_predicate": "length(array_reversed) < 5"}
+    watermark = {
+        "left_predicate": "length(array_reversed) >= 5",
+        "right_predicate": "length(array_reversed) < 5",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

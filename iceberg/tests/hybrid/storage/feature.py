@@ -5,11 +5,15 @@ from testflows.core import *
 @Name("storage")
 def feature(self, minio_root_user, minio_root_password):
     """Catalog Iceberg / icebergCluster / S3 Parquet segments, type auto-cast, schema refresh."""
-    Feature(test=load("iceberg.tests.hybrid.storage.mergetree_iceberg_catalog", "feature"))(
+    Feature(
+        test=load("iceberg.tests.hybrid.storage.mergetree_iceberg_catalog", "feature")
+    )(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
-    Feature(test=load("iceberg.tests.hybrid.storage.mergetree_iceberg_cluster", "feature"))(
+    Feature(
+        test=load("iceberg.tests.hybrid.storage.mergetree_iceberg_cluster", "feature")
+    )(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )

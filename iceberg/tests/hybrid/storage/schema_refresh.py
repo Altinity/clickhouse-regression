@@ -113,9 +113,7 @@ def add_column_then_create_or_replace(self, minio_root_user, minio_root_password
     )
 
     with Then("fingerprint including score matches reference"):
-        h = node.query(
-            fingerprint_with_score(hybrid) + f" {clause}"
-        ).output.strip()
+        h = node.query(fingerprint_with_score(hybrid) + f" {clause}").output.strip()
         r = node.query(fingerprint_with_score(ref) + f" {clause}").output.strip()
         assert h == r, error()
 

@@ -56,7 +56,9 @@ def create_experimental_iceberg_database_with_rest_catalog(
     if database_name is None:
         database_name = "iceberg_database_" + getuid()
 
-    database_engine_name = "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+    database_engine_name = (
+        "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+    )
     settings = {}
     if catalog_type:
         settings["catalog_type"] = catalog_type
@@ -70,7 +72,9 @@ def create_experimental_iceberg_database_with_rest_catalog(
         settings["namespaces"] = namespaces
 
     if settings:
-        settings_str = ",".join([f"{key} = '{value}'" for key, value in settings.items()])
+        settings_str = ",".join(
+            [f"{key} = '{value}'" for key, value in settings.items()]
+        )
         settings_str = f"SETTINGS {settings_str}"
 
     query = f"SET allow_experimental_database_iceberg=true; "
@@ -133,7 +137,9 @@ def create_experimental_iceberg_database_with_glue_catalog(
     if database_name is None:
         database_name = "iceberg_database_" + getuid()
 
-    database_engine_name = "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+    database_engine_name = (
+        "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+    )
     if catalog_type:
         settings["catalog_type"] = catalog_type
     if storage_endpoint:
@@ -148,7 +154,9 @@ def create_experimental_iceberg_database_with_glue_catalog(
         settings["namespaces"] = namespaces
 
     if settings:
-        settings_str = ",".join([f"{key} = '{value}'" for key, value in settings.items()])
+        settings_str = ",".join(
+            [f"{key} = '{value}'" for key, value in settings.items()]
+        )
         settings_str = f"SETTINGS {settings_str}"
 
     query = f"SET allow_experimental_database_glue_catalog=1; "
@@ -263,7 +271,9 @@ def read_data_from_clickhouse_iceberg_table(
         settings.append(("input_format_parquet_filter_push_down", "1"))
 
     if use_iceberg_partition_pruning:
-        settings.append(("use_iceberg_partition_pruning", use_iceberg_partition_pruning))
+        settings.append(
+            ("use_iceberg_partition_pruning", use_iceberg_partition_pruning)
+        )
 
     if input_format_parquet_bloom_filter_push_down:
         settings.append(
@@ -308,7 +318,9 @@ def read_data_from_clickhouse_iceberg_table(
     if iceberg_partition_timezone is not None:
         settings.append(("iceberg_partition_timezone", iceberg_partition_timezone))
 
-    if use_iceberg_metadata_files_cache and (check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)):
+    if use_iceberg_metadata_files_cache and (
+        check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)
+    ):
         settings.append(
             (
                 "use_iceberg_metadata_files_cache",
@@ -352,7 +364,9 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    result = node.query(f"SHOW CREATE TABLE {database_name}.\\`{namespace}.{table_name}\\`")
+    result = node.query(
+        f"SHOW CREATE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
+    )
     return result
 
 
@@ -388,7 +402,9 @@ def get_iceberg_table_name(
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(catalog=catalog, namespace=namespace, table_name=table_name)
+        catalog_steps.drop_iceberg_table(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
 
     with And(f"define schema and create {namespace}.{table_name} table"):
         catalog_steps.create_iceberg_table_with_five_columns(
@@ -412,21 +428,30 @@ def check_values_in_system_tables(self, table_name, database):
     node = self.context.node
 
     with By("check that database is correct"):
-        database_name = node.query(f"SELECT database FROM system.tables WHERE name = '{table_name}'").output.strip()
+        database_name = node.query(
+            f"SELECT database FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
         assert database_name == database, error()
 
     with By("check that engine is correct"):
-        engine = node.query(f"SELECT engine FROM system.tables WHERE name = '{table_name}'").output.strip()
+        engine = node.query(
+            f"SELECT engine FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
         assert engine == "IcebergS3", error()
 
     with By("check that full engine is correct"):
-        full_engine = node.query(f"SELECT engine_full FROM system.tables WHERE name = '{table_name}'").output.strip()
+        full_engine = node.query(
+            f"SELECT engine_full FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
         if self.context.catalog == "rest":
             assert (
-                full_engine == "Iceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')"
+                full_engine
+                == "Iceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')"
             ), error()
         elif self.context.catalog == "glue":
-            assert full_engine == "Iceberg(\\'http://minio:9000/warehouse/data/\\')", error()
+            assert (
+                full_engine == "Iceberg(\\'http://minio:9000/warehouse/data/\\')"
+            ), error()
         else:
             assert False, f"Unsupported catalog type: {self.context.catalog}"
 
@@ -437,11 +462,15 @@ def check_values_in_system_tables(self, table_name, database):
         assert metadata_path == "", error()
 
     with By("check that total rows is correct"):
-        total_rows = node.query(f"SELECT total_rows FROM system.tables WHERE name = '{table_name}'").output.strip()
+        total_rows = node.query(
+            f"SELECT total_rows FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
         if check_clickhouse_version(">=25.5")(self):
             assert total_rows == "10", error()
 
     with By("check that total bytes is correct"):
-        total_bytes = node.query(f"SELECT total_bytes FROM system.tables WHERE name = '{table_name}'").output.strip()
+        total_bytes = node.query(
+            f"SELECT total_bytes FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
         if check_clickhouse_version(">=25.6")(self):
             assert total_bytes == "12990", error()

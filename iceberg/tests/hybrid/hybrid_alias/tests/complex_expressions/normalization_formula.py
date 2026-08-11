@@ -24,7 +24,10 @@ def normalization_formula(self):
             "hybrid_type": "Float64",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, min_value, max_value, date_col FROM {hybrid_table} ORDER BY id",
@@ -68,7 +71,10 @@ def normalization_formula_in_watermark(self):
         },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "normalized_value >= 0.5", "right_predicate": "normalized_value < 0.5"}
+    watermark = {
+        "left_predicate": "normalized_value >= 0.5",
+        "right_predicate": "normalized_value < 0.5",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, min_value, max_value, date_col FROM {hybrid_table} ORDER BY id",

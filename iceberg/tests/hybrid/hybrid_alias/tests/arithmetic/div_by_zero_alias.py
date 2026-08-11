@@ -18,7 +18,10 @@ def div_by_zero_alias(self):
     alias_columns = [
         {"name": "div_by_zero", "expression": "value / 0", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2012-04-28'", "right_predicate": "date_col < '2012-04-28'"}
+    watermark = {
+        "left_predicate": "date_col >= '2012-04-28'",
+        "right_predicate": "date_col < '2012-04-28'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -58,7 +61,10 @@ def div_by_zero_alias_in_watermark(self):
         {"name": "div_by_zero", "expression": "value / 0", "hybrid_type": "Float64"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "isFinite(div_by_zero) = 0", "right_predicate": "isFinite(div_by_zero) = 1"}
+    watermark = {
+        "left_predicate": "isFinite(div_by_zero) = 0",
+        "right_predicate": "isFinite(div_by_zero) = 1",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

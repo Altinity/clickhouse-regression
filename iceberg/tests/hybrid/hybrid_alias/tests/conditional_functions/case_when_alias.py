@@ -15,9 +15,16 @@ def case_when_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "case_when", "expression": "CASE WHEN value > 50 THEN 'high' ELSE 'low' END", "hybrid_type": "String"},
+        {
+            "name": "case_when",
+            "expression": "CASE WHEN value > 50 THEN 'high' ELSE 'low' END",
+            "hybrid_type": "String",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def case_when_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "case_when", "expression": "CASE WHEN value > 50 THEN 'high' ELSE 'low' END", "hybrid_type": "String"},
+        {
+            "name": "case_when",
+            "expression": "CASE WHEN value > 50 THEN 'high' ELSE 'low' END",
+            "hybrid_type": "String",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(case_when) >= 4", "right_predicate": "length(case_when) < 4"}
+    watermark = {
+        "left_predicate": "length(case_when) >= 4",
+        "right_predicate": "length(case_when) < 4",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -15,9 +15,16 @@ def if_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "category", "expression": "if(value > 50, 'high', 'low')", "hybrid_type": "String"},
+        {
+            "name": "category",
+            "expression": "if(value > 50, 'high', 'low')",
+            "hybrid_type": "String",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def if_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "category", "expression": "if(value > 50, 'high', 'low')", "hybrid_type": "String"},
+        {
+            "name": "category",
+            "expression": "if(value > 50, 'high', 'low')",
+            "hybrid_type": "String",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(category) >= 4", "right_predicate": "length(category) < 4"}
+    watermark = {
+        "left_predicate": "length(category) >= 4",
+        "right_predicate": "length(category) < 4",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

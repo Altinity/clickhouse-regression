@@ -17,9 +17,16 @@ def array_slice_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_slice", "expression": "arraySlice(array_col, 1, 3)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_slice",
+            "expression": "arraySlice(array_col, 1, 3)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_slice_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_slice", "expression": "arraySlice(array_col, 1, 3)", "hybrid_type": "Array(Int32)"},
+        {
+            "name": "array_slice",
+            "expression": "arraySlice(array_col, 1, 3)",
+            "hybrid_type": "Array(Int32)",
+        },
     ]
     # Use alias column length in watermark predicates (can't compare arrays directly)
-    watermark = {"left_predicate": "length(array_slice) >= 2", "right_predicate": "length(array_slice) < 2"}
+    watermark = {
+        "left_predicate": "length(array_slice) >= 2",
+        "right_predicate": "length(array_slice) < 2",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

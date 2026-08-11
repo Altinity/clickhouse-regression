@@ -53,7 +53,9 @@ def values_sql(rows=ALL_ROWS):
 
 def settings_clause(*rows, extra=None):
     """Build a trailing SETTINGS clause for SELECT-like queries; always enable_analyzer=1."""
-    return "SETTINGS " + ", ".join(f"{k} = {v}" for k, v in settings_list(*rows, extra=extra))
+    return "SETTINGS " + ", ".join(
+        f"{k} = {v}" for k, v in settings_list(*rows, extra=extra)
+    )
 
 
 def settings_list(*rows, extra=None):

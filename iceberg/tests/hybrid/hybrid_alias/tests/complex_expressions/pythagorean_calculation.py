@@ -16,9 +16,16 @@ def pythagorean_calculation(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "complex_math", "expression": "sqrt(pow(value, 2) + pow(id, 2))", "hybrid_type": "Float64"},
+        {
+            "name": "complex_math",
+            "expression": "sqrt(pow(value, 2) + pow(id, 2))",
+            "hybrid_type": "Float64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def pythagorean_calculation_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "complex_math", "expression": "sqrt(pow(value, 2) + pow(id, 2))", "hybrid_type": "Float64"},
+        {
+            "name": "complex_math",
+            "expression": "sqrt(pow(value, 2) + pow(id, 2))",
+            "hybrid_type": "Float64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "complex_math >= 1000.0", "right_predicate": "complex_math < 1000.0"}
+    watermark = {
+        "left_predicate": "complex_math >= 1000.0",
+        "right_predicate": "complex_math < 1000.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

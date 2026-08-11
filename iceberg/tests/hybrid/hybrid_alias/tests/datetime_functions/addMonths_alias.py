@@ -15,9 +15,16 @@ def addMonths_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "date_plus_months", "expression": "addMonths(date_col, 1)", "hybrid_type": "Date"},
+        {
+            "name": "date_plus_months",
+            "expression": "addMonths(date_col, 1)",
+            "hybrid_type": "Date",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def addMonths_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "date_plus_months", "expression": "addMonths(date_col, 1)", "hybrid_type": "Date"},
+        {
+            "name": "date_plus_months",
+            "expression": "addMonths(date_col, 1)",
+            "hybrid_type": "Date",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "date_plus_months >= '2010-01-01'", "right_predicate": "date_plus_months < '2010-01-01'"}
+    watermark = {
+        "left_predicate": "date_plus_months >= '2010-01-01'",
+        "right_predicate": "date_plus_months < '2010-01-01'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

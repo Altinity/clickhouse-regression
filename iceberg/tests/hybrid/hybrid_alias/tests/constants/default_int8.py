@@ -17,7 +17,10 @@ def default_int8(self):
     alias_columns = [
         {"name": "default_int8", "expression": "-50", "hybrid_type": "Int8"},
     ]
-    watermark = {"left_predicate": "date_col >= '2008-11-06'", "right_predicate": "date_col < '2008-11-06'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-11-06'",
+        "right_predicate": "date_col < '2008-11-06'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

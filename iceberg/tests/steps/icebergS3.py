@@ -30,12 +30,18 @@ def read_data_with_icebergS3_table_function(
     object_storage_cluster=None,
     iceberg_metadata_table_uuid=None,
     iceberg_metadata_file_path=None,
+    settings=None,
 ):
-    """Read Iceberg tables from S3 using the icebergS3(iceberg) table function."""
+    """Read Iceberg tables from S3 using the icebergS3(iceberg) table function.
+
+    Args:
+        settings: extra query settings as a list of (name, value) tuples,
+            e.g. [("iceberg_snapshot_id", "123")].
+    """
     if node is None:
         node = self.context.node
 
-    settings = []
+    settings = list(settings or [])
 
     if user:
         settings.append(("user", user))
@@ -157,12 +163,17 @@ def read_data_with_icebergS3Cluster_table_function(
     input_format_parquet_bloom_filter_push_down=None,
     format="TabSeparated",
     iceberg_metadata_table_uuid=None,
+    settings=None,
 ):
-    """Read Iceberg tables from S3 using the icebergS3 table function."""
+    """Read Iceberg tables from S3 using the icebergS3 table function.
+
+    Args:
+        settings: extra query settings as a list of (name, value) tuples.
+    """
     if node is None:
         node = self.context.node
 
-    settings = []
+    settings = list(settings or [])
 
     if user:
         settings.append(("user", user))

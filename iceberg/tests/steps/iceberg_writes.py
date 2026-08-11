@@ -23,10 +23,7 @@ MOR_TABLE_PROPERTIES = {
 }
 
 ICEBERG_INSERT_SETTINGS = [("allow_experimental_insert_into_iceberg", 1)]
-ICEBERG_MUTATION_SETTINGS = [
-    ("allow_insert_into_iceberg", 1),
-    ("allow_experimental_insert_into_iceberg", 1),
-]
+ICEBERG_MUTATION_SETTINGS = [("allow_experimental_insert_into_iceberg", 1)]
 ICEBERG_COMPACTION_SETTINGS = [("allow_experimental_iceberg_compaction", 1)]
 
 HOST_MINIO_ENDPOINT = "http://localhost:9002"
@@ -78,7 +75,9 @@ def latest_metadata_location(
     )
     prefix = f"{table_prefix(namespace, table_name)}/metadata/"
     candidates = []
-    for page in s3.get_paginator("list_objects_v2").paginate(Bucket=bucket, Prefix=prefix):
+    for page in s3.get_paginator("list_objects_v2").paginate(
+        Bucket=bucket, Prefix=prefix
+    ):
         for obj in page.get("Contents", []) or []:
             if obj["Key"].endswith(".metadata.json"):
                 candidates.append(obj)

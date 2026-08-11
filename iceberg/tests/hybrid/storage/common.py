@@ -45,7 +45,9 @@ def iceberg_s3_url(table_name, location_prefix=HYBRID_P2_LOCATION_PREFIX):
     return f"{DEFAULT_S3_ENDPOINT_HOST}/{location_prefix}/{table_name}/"
 
 
-def iceberg_cluster_tf(url, minio_root_user, minio_root_password, cluster="replicated_cluster"):
+def iceberg_cluster_tf(
+    url, minio_root_user, minio_root_password, cluster="replicated_cluster"
+):
     return (
         f"icebergCluster('{cluster}', '{url}', "
         f"'{minio_root_user}', '{minio_root_password}')"

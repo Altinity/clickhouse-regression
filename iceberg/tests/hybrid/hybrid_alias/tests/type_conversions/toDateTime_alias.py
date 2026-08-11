@@ -15,9 +15,16 @@ def toDateTime_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_datetime", "expression": "toDateTime(toString(date_col))", "hybrid_type": "DateTime"},
+        {
+            "name": "value_datetime",
+            "expression": "toDateTime(toString(date_col))",
+            "hybrid_type": "DateTime",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
+    watermark = {
+        "left_predicate": "date_col >= '2007-05-01'",
+        "right_predicate": "date_col < '2007-05-01'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +60,11 @@ def toDateTime_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_datetime", "expression": "toDateTime(toString(date_col))", "hybrid_type": "DateTime"},
+        {
+            "name": "value_datetime",
+            "expression": "toDateTime(toString(date_col))",
+            "hybrid_type": "DateTime",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {

@@ -15,9 +15,16 @@ def default_string(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "default_string", "expression": "'hello world'", "hybrid_type": "String"},
+        {
+            "name": "default_string",
+            "expression": "'hello world'",
+            "hybrid_type": "String",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-11-06'", "right_predicate": "date_col < '2008-11-06'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-11-06'",
+        "right_predicate": "date_col < '2008-11-06'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

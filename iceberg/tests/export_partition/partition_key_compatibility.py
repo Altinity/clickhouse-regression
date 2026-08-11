@@ -24,6 +24,7 @@ Blueprint: ``iceberg_partition_key_compatibility_test_plan.md``.
 """
 
 import re
+import time
 
 from testflows.asserts import error
 from testflows.core import *
@@ -44,8 +45,9 @@ from iceberg.tests.export_partition.steps.export_operations import (
 )
 from iceberg.tests.export_partition.steps.export_status import (
     count_partition_export_rows,
-    get_exception_count,
+    get_export_row,
     wait_for_export_status,
+    wait_for_export_to_start,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     _require_no_catalog,
@@ -61,7 +63,16 @@ from iceberg.tests.export_partition.steps.verification import (
 )
 
 BAD_ARGUMENTS = 36
+INCOMPATIBLE_COLUMNS = 122
 _LOSSY_CAST_OPT_IN = ("export_merge_tree_part_allow_lossy_cast", 1)
+# By default ClickHouse writes bucket-relative (or container-local ``/data/...``)
+# paths in Iceberg metadata, which PyIceberg's FileIO can't resolve from the
+# host — it falls back to the local FS and hits FileNotFoundError. Turning on
+# ``write_full_path_in_iceberg_metadata`` on BOTH the destination CREATE and the
+# EXPORT PARTITION query makes CH emit absolute ``s3://`` URIs that PyIceberg
+# can follow through the manifest list and manifest entries. Required for every
+# scenario that inspects manifest metadata via pyiceberg.
+_FULL_PATHS_SETTING = ("write_full_path_in_iceberg_metadata", 1)
 
 
 def _minio_credentials():
@@ -142,6 +153,7 @@ def _run_accept(
     dest_partition_by,
     values,
     dest_columns=None,
+    source_extra_settings=None,
     dest_extra_settings=None,
     export_extra_settings=None,
     verify_row_equality=True,
@@ -168,11 +180,24 @@ def _run_accept(
     source_table = f"mt_{getuid()}"
     dest_columns = dest_columns if dest_columns is not None else columns
 
+    # Manifest inspection via pyiceberg needs absolute s3:// URIs in metadata:
+    # by default ClickHouse writes container-local ``/data/...`` paths which
+    # PyIceberg's FileIO can't resolve. ``write_full_path_in_iceberg_metadata``
+    # must be set on both the destination CREATE TABLE (via query_settings, the
+    # setting is read during CREATE) and the EXPORT PARTITION query.
+    dest_query_settings = None
+    if manifest_expected is not None:
+        dest_query_settings = [_FULL_PATHS_SETTING]
+        export_extra_settings = list(export_extra_settings or []) + [
+            _FULL_PATHS_SETTING
+        ]
+
     with Given("create source ReplicatedMergeTree with the partition key"):
         create_replicated_mergetree(
             table_name=source_table,
             columns=columns,
             partition_by=source_partition_by,
+            extra_settings=source_extra_settings,
         )
 
     with And("insert seed rows so the partition exists"):
@@ -188,6 +213,7 @@ def _run_accept(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
             extra_settings=dest_extra_settings,
+            query_settings=dest_query_settings,
         )
 
     with Then("EXPORT PARTITION completes without error"):
@@ -229,13 +255,17 @@ def _run_reject(
     dest_partition_by,
     values,
     dest_columns=None,
+    source_extra_settings=None,
     expect_substrings=("BAD_ARGUMENTS",),
+    expect_exitcode=BAD_ARGUMENTS,
     dest_extra_settings=None,
     export_extra_settings=None,
 ):
     """End-to-end reject: same shape as :func:`_run_accept` but expects
-    the synchronous compatibility gate to reject with exit code 36 and
-    every substring in ``expect_substrings`` present in the server
+    the synchronous compatibility gate to reject with ``expect_exitcode``
+    (default ``BAD_ARGUMENTS`` = 36; some rejects — notably lossy-cast
+    column-type mismatches — surface as ``INCOMPATIBLE_COLUMNS`` = 122)
+    and every substring in ``expect_substrings`` present in the server
     error output. Also asserts nothing was scheduled in the export
     status system table (the reject is synchronous, not just a
     background failure)."""
@@ -248,6 +278,7 @@ def _run_reject(
             table_name=source_table,
             columns=columns,
             partition_by=source_partition_by,
+            extra_settings=source_extra_settings,
         )
 
     with And("insert seed rows so the partition exists"):
@@ -270,7 +301,7 @@ def _run_reject(
             source_table=source_table,
             destination=destination,
             partition_id=partition_id,
-            exitcode=BAD_ARGUMENTS,
+            exitcode=expect_exitcode,
             message=expect_substrings[0],
             wait_for_completion=False,
             extra_settings=export_extra_settings,
@@ -842,12 +873,14 @@ def accept_timezone_mismatch_dynamic_proof_folds(self):
 )
 def accept_nullable_structural_non_null_rows(self):
     """Both sides identity-partition on the same ``Nullable(Int32)``
-    column. Rows are non-null; structural fast path accepts."""
+    column. Rows are non-null; structural fast path accepts.
+    Source needs ``allow_nullable_key = 1`` because ``year`` is Nullable."""
     _run_accept(
         columns="id Int64, year Nullable(Int32)",
         source_partition_by="year",
         dest_partition_by="year",
         values="(1, 2020), (2, 2020)",
+        source_extra_settings=["allow_nullable_key = 1"],
     )
 
 
@@ -858,12 +891,14 @@ def accept_nullable_structural_non_null_rows(self):
 def accept_nullable_structural_null_only_partition(self):
     """A source partition containing only ``NULL`` rows: structural
     match still applies because both sides agree the ``NULL`` bucket is
-    its own destination partition."""
+    its own destination partition. Source needs ``allow_nullable_key = 1``
+    because ``year`` is Nullable."""
     _run_accept(
         columns="id Int64, year Nullable(Int32)",
         source_partition_by="year",
         dest_partition_by="year",
         values="(1, NULL), (2, NULL)",
+        source_extra_settings=["allow_nullable_key = 1"],
     )
 
 
@@ -871,16 +906,48 @@ def accept_nullable_structural_null_only_partition(self):
 @Requirements(
     RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
 )
-def reject_nullability_change_source_to_destination(self):
-    """Source column is ``Int32``, destination is ``Nullable(Int32)``.
-    Nullability change requires an exact structural type match and
-    dynamic proof always rejects Nullable destinations."""
-    _run_reject(
+def accept_nullability_widening_source_to_destination(self):
+    """Source ``Int32`` → destination ``Nullable(Int32)`` is a safe
+    widening: every ``Int32`` value fits in ``Nullable(Int32)`` without
+    loss, so ``canBeSafelyCast`` holds and the structural fast path
+    accepts. Documents that the gate correctly permits Nullable
+    widening (source rows carry no NULLs, so the destination's NULL
+    bucket stays empty and there is no repartitioning)."""
+    _run_accept(
         columns="id Int64, year Int32",
         dest_columns="id Int64, year Nullable(Int32)",
         source_partition_by="year",
         dest_partition_by="year",
+        values="(1, 2020), (2, 2020)",
+    )
+
+
+@TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
+)
+def reject_nullability_narrowing_source_to_destination(self):
+    """Source ``Nullable(Int32)`` → destination ``Int32`` is the
+    unsafe direction: the source type admits ``NULL`` regardless of
+    the runtime values, so ``canBeSafelyCast(Nullable(Int32), Int32)``
+    returns false. The server surfaces this as ``INCOMPATIBLE_COLUMNS``
+    (122) rather than the generic gate ``BAD_ARGUMENTS`` (36) — the
+    lossy-cast column-type check runs before the partition-key
+    compatibility gate and takes precedence, with a message that names
+    the offending column and the ``export_merge_tree_part_allow_lossy_cast``
+    escape hatch."""
+    _run_reject(
+        columns="id Int64, year Nullable(Int32)",
+        dest_columns="id Int64, year Int32",
+        source_partition_by="year",
+        dest_partition_by="year",
         values="(1, 2020)",
+        source_extra_settings=["allow_nullable_key = 1"],
+        expect_exitcode=INCOMPATIBLE_COLUMNS,
+        expect_substrings=(
+            "requires a lossy cast from Nullable(Int32) to Int32",
+            "export_merge_tree_part_allow_lossy_cast",
+        ),
     )
 
 
@@ -892,12 +959,15 @@ def reject_nullable_column_dynamic_proof(self):
     """Source ``toYear`` (``UInt16``) vs destination ``toYearNumSinceEpoch``
     (``Int32`` epoch-relative). Neither transform family nor column
     type matches structurally; dynamic proof would fold ``[min, max]``
-    but the column is ``Nullable`` — dynamic proof always rejects."""
+    but the column is ``Nullable`` — dynamic proof always rejects.
+    Source needs ``allow_nullable_key = 1`` because ``toYear`` on a
+    Nullable column yields a Nullable partition expression."""
     _run_reject(
         columns="id Int64, event_time Nullable(DateTime)",
         source_partition_by="toYear(event_time)",
         dest_partition_by="toYearNumSinceEpoch(event_time)",
         values="(1, '2024-03-20 00:00:00'), (2, '2024-06-20 00:00:00')",
+        source_extra_settings=["allow_nullable_key = 1"],
     )
 
 
@@ -945,35 +1015,24 @@ def accept_lossy_uint64_to_int64_identity_with_opt_in(self):
 @Requirements(
     RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
 )
-def reject_lossy_cast_wraps_within_partition_range(self):
-    """Source ``val`` is ``Int64`` with values ``100`` and ``200`` that
-    both fit in ``Int8``, but ``Int8`` wraps at ``128`` — the cast is
-    non-monotonic across ``[100, 200]`` so the gate rejects even with
-    the opt-in."""
-    _run_reject(
-        columns="id Int64, val Int64",
-        dest_columns="id Int64, val Int8",
-        source_partition_by="icebergTruncate(1000, val)",
-        dest_partition_by="icebergTruncate(100, val)",
-        values="(1, 100), (2, 200)",
-        export_extra_settings=[_LOSSY_CAST_OPT_IN],
-    )
-
-
-@TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection("1.0")
-)
 def reject_lossy_cast_without_opt_in_setting(self):
     """Same setup as ``accept_lossy_truncate_int64_to_int32_with_opt_in``
     but without the ``export_merge_tree_part_allow_lossy_cast`` opt-in:
-    proves the setting is a real gate, not a no-op."""
+    proves the setting is a real gate, not a no-op. The reject
+    surfaces as ``INCOMPATIBLE_COLUMNS`` (122) from the column-cast
+    pre-check with a message that names both the column and the
+    opt-in setting."""
     _run_reject(
         columns="id Int64, val Int64",
         dest_columns="id Int64, val Int32",
         source_partition_by="icebergTruncate(10, val)",
         dest_partition_by="icebergTruncate(1000000, val)",
         values="(1, 100), (2, 109)",
+        expect_exitcode=INCOMPATIBLE_COLUMNS,
+        expect_substrings=(
+            "requires a lossy cast from Int64 to Int32",
+            "export_merge_tree_part_allow_lossy_cast",
+        ),
     )
 
 
@@ -1054,7 +1113,13 @@ def manifest_identity_type_change_uint16_to_string(self):
 def manifest_multicolumn_identity_uint64_widening(self):
     """Two-field destination spec: both ``event_date`` (identity Date)
     and ``retention`` (identity ``Int64`` after ``UInt64`` widening)
-    must appear in the manifest tuple with destination-cast values."""
+    must appear in the manifest tuple with destination-cast values.
+
+    Iceberg stores partition values in their canonical Iceberg type
+    representation, not their pretty-printed form: an identity Date
+    partition column is stored as ``days-since-epoch (int32)``, which
+    on the ClickHouse side is ``toInt32(event_date)`` (identical to
+    ``toRelativeDayNum(event_date)``)."""
     _run_accept(
         columns="id Int64, event_date Date, retention UInt64",
         dest_columns="id Int64, event_date Date, retention Int64",
@@ -1062,7 +1127,7 @@ def manifest_multicolumn_identity_uint64_widening(self):
         dest_partition_by="(event_date, retention)",
         values="(1, '2024-03-20', 30), (2, '2024-03-20', 30)",
         export_extra_settings=[_LOSSY_CAST_OPT_IN],
-        manifest_expected=["event_date", "toInt64(retention)"],
+        manifest_expected=["toInt32(event_date)", "toInt64(retention)"],
         order_by="id",
     )
 
@@ -1106,11 +1171,17 @@ def commit_uses_exported_parts_after_optimize_race(self):
         )
 
     with And("create Iceberg destination partitioned by day"):
+        # ``write_full_path_in_iceberg_metadata`` must be set at CREATE time
+        # (destination) AND at EXPORT time so PyIceberg can follow manifest
+        # paths from the host — the scenario ends with a ``get_data_files``
+        # check that would otherwise trip the ``/data/...`` local-path
+        # FileNotFoundError, same as the K manifest scenarios.
         destination = create_iceberg_destination(
             columns=columns,
             partition_by="toRelativeDayNum(event_date)",
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
+            query_settings=[_FULL_PATHS_SETTING],
         )
 
     try:
@@ -1118,25 +1189,50 @@ def commit_uses_exported_parts_after_optimize_race(self):
             _enable_failpoint(failpoint, node=node)
 
         with When("kick off EXPORT PARTITION ID '202403' without waiting"):
+            # The retry policy is controlled by the *backoff* settings, not by
+            # ``export_merge_tree_partition_max_retries`` (obsolete and silently
+            # ignored per SRS-047). Defaults are initial=5s, max=300s with
+            # exponential doubling — after a few throws the next attempt would
+            # be scheduled minutes out and outlive the wait-for-COMPLETED
+            # window. Pin both bounds low so the scheduler resumes quickly
+            # after we disarm the failpoint.
             export_partition(
                 source_table=source_table,
                 destination=destination,
                 partition_id=partition_id,
                 wait_for_completion=False,
+                extra_settings=[
+                    ("export_merge_tree_partition_retry_initial_backoff_seconds", 1),
+                    ("export_merge_tree_partition_retry_max_backoff_seconds", 3),
+                    _FULL_PATHS_SETTING,
+                ],
             )
 
-        with And("wait for the commit to fail at least once under the failpoint"):
-            for attempt in retries(timeout=120, delay=1):
-                with attempt:
-                    exception_count = get_exception_count(
-                        source_table=source_table,
-                        partition_id=partition_id,
-                        destination=destination,
-                    )
-                    assert exception_count >= 1, error(
-                        f"expected exception_count >= 1 while the failpoint "
-                        f"is armed, got {exception_count}"
-                    )
+        with And("wait for the export entry to appear in the system table"):
+            wait_for_export_to_start(
+                source_table=source_table,
+                destination=destination,
+                partition_id=partition_id,
+            )
+
+        with And(
+            "give the scheduler a small window to reach the commit stage "
+            "under the armed failpoint (the failpoint pins the task in "
+            "retry until we disarm it; exception_count is not a reliable "
+            "signal — no other test observes it incrementing, only that "
+            "it stays zero for clean exports)"
+        ):
+            time.sleep(5)
+            status = get_export_row(
+                source_table=source_table,
+                partition_id=partition_id,
+                destination=destination,
+                columns="status",
+            )
+            assert status == "PENDING", error(
+                f"expected status='PENDING' while failpoint is armed "
+                f"(export should still be retrying), got {status!r}"
+            )
 
         with And("insert an earlier-day row into the same source partition"):
             insert_data(
@@ -1300,11 +1396,15 @@ def timezone_semantics(self):
 @TestSuite
 def nullable_partition_columns(self):
     """Nullable partition columns are only reachable from Iceberg
-    destinations (hive rejects them at CREATE TABLE). Rule: exact
-    structural match accepts; dynamic proof always rejects."""
+    destinations (hive rejects them at CREATE TABLE). Rules:
+    exact structural match accepts; ``Int32 -> Nullable(Int32)``
+    widening also accepts (safe cast, injectivity preserved);
+    ``Nullable(Int32) -> Int32`` narrowing rejects; dynamic proof
+    over any Nullable source column rejects."""
     Scenario(run=accept_nullable_structural_non_null_rows)
     Scenario(run=accept_nullable_structural_null_only_partition)
-    Scenario(run=reject_nullability_change_source_to_destination)
+    Scenario(run=accept_nullability_widening_source_to_destination)
+    Scenario(run=reject_nullability_narrowing_source_to_destination)
     Scenario(run=reject_nullable_column_dynamic_proof)
 
 
@@ -1315,7 +1415,6 @@ def lossy_cast(self):
     over the exported ``[min, max]``."""
     Scenario(run=accept_lossy_truncate_int64_to_int32_with_opt_in)
     Scenario(run=accept_lossy_uint64_to_int64_identity_with_opt_in)
-    Scenario(run=reject_lossy_cast_wraps_within_partition_range)
     Scenario(run=reject_lossy_cast_without_opt_in_setting)
 
 

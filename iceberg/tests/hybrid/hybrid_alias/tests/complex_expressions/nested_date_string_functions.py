@@ -22,7 +22,10 @@ def nested_date_string_functions(self):
             "hybrid_type": "String",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -64,7 +67,10 @@ def nested_date_string_functions_in_watermark(self):
         },
     ]
     # Use alias column length in watermark predicates (can't compare strings directly)
-    watermark = {"left_predicate": "length(formatted_date) >= 7", "right_predicate": "length(formatted_date) < 7"}
+    watermark = {
+        "left_predicate": "length(formatted_date) >= 7",
+        "right_predicate": "length(formatted_date) < 7",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

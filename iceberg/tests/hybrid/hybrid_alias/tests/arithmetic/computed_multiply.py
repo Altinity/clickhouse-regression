@@ -17,7 +17,10 @@ def computed_multiply(self):
     alias_columns = [
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2012-04-28'", "right_predicate": "date_col < '2012-04-28'"}
+    watermark = {
+        "left_predicate": "date_col >= '2012-04-28'",
+        "right_predicate": "date_col < '2012-04-28'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -56,7 +59,10 @@ def computed_multiply_in_watermark(self):
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "computed >= 10000", "right_predicate": "computed < 10000"}
+    watermark = {
+        "left_predicate": "computed >= 10000",
+        "right_predicate": "computed < 10000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

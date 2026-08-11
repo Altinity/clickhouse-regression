@@ -88,27 +88,37 @@ def create_columns_from_config(base_columns, alias_columns):
     columns = []
 
     for col in base_columns:
-        columns.append(Column(name=col["name"], datatype=datatype_from_string(col["datatype"])))
+        columns.append(
+            Column(name=col["name"], datatype=datatype_from_string(col["datatype"]))
+        )
 
     for col in alias_columns:
         if "expression" in col:
             columns.append(Column(name=col["name"], alias=col["expression"]))
         elif "datatype" in col:
-            columns.append(Column(name=col["name"], datatype=datatype_from_string(col["datatype"])))
+            columns.append(
+                Column(name=col["name"], datatype=datatype_from_string(col["datatype"]))
+            )
         else:
-            raise ValueError(f"Alias column '{col['name']}' must have either 'expression' or 'datatype'")
+            raise ValueError(
+                f"Alias column '{col['name']}' must have either 'expression' or 'datatype'"
+            )
 
     return columns
 
 
-def create_hybrid_columns_from_config(base_columns, alias_columns, alias_columns_definition_for_hybrid_table=None):
+def create_hybrid_columns_from_config(
+    base_columns, alias_columns, alias_columns_definition_for_hybrid_table=None
+):
     """Create Column objects for hybrid table definition. Uses
     alias_columns_definition_for_hybrid_table if it exists, otherwise uses alias_columns.
     """
     columns = []
 
     for col in base_columns:
-        columns.append(Column(name=col["name"], datatype=datatype_from_string(col["datatype"])))
+        columns.append(
+            Column(name=col["name"], datatype=datatype_from_string(col["datatype"]))
+        )
 
     if alias_columns_definition_for_hybrid_table is not None:
         alias_columns_to_use = alias_columns_definition_for_hybrid_table
@@ -117,8 +127,12 @@ def create_hybrid_columns_from_config(base_columns, alias_columns, alias_columns
 
     for col in alias_columns_to_use:
         if "hybrid_type" not in col:
-            raise ValueError(f"hybrid_type is required for alias column '{col['name']}'")
-        columns.append(Column(name=col["name"], datatype=datatype_from_string(col["hybrid_type"])))
+            raise ValueError(
+                f"hybrid_type is required for alias column '{col['name']}'"
+            )
+        columns.append(
+            Column(name=col["name"], datatype=datatype_from_string(col["hybrid_type"]))
+        )
 
     return columns
 
@@ -143,7 +157,9 @@ def outline(
     if node is None:
         node = self.context.node
 
-    with Given(f"Get base columns for each segment (default to shared base_columns if not specified)"):
+    with Given(
+        f"Get base columns for each segment (default to shared base_columns if not specified)"
+    ):
         if left_base_columns is None:
             if base_columns:
                 left_base_columns = base_columns
@@ -155,7 +171,9 @@ def outline(
             else:
                 assert False, f"base_columns or right_base_columns should be specified"
 
-    with And(f"Get alias columns for each segment (default to shared alias_columns if not specified)"):
+    with And(
+        f"Get alias columns for each segment (default to shared alias_columns if not specified)"
+    ):
         if left_alias_columns is None:
             left_alias_columns = alias_columns
         if right_alias_columns is None:
@@ -165,7 +183,9 @@ def outline(
         left_table_name = f"left_{getuid()}"
 
         with By("get left segment columns"):
-            left_segment_columns = create_columns_from_config(left_base_columns, left_alias_columns)
+            left_segment_columns = create_columns_from_config(
+                left_base_columns, left_alias_columns
+            )
 
         with And("create left table"):
             left_table = create_table(
@@ -183,7 +203,9 @@ def outline(
         right_table_name = f"right_{getuid()}"
 
         with By("get right segment columns"):
-            right_segment_columns = create_columns_from_config(right_base_columns, right_alias_columns)
+            right_segment_columns = create_columns_from_config(
+                right_base_columns, right_alias_columns
+            )
 
         with And("create right table"):
             right_table = create_table(
@@ -205,7 +227,9 @@ def outline(
 
         left_table_func = f"remote('localhost', currentDatabase(), '{left_table_name}')"
         left_predicate = watermark["left_predicate"]
-        right_table_func = f"remote('localhost', currentDatabase(), '{right_table_name}')"
+        right_table_func = (
+            f"remote('localhost', currentDatabase(), '{right_table_name}')"
+        )
         right_predicate = watermark["right_predicate"]
         hybrid_engine = f"Hybrid({left_table_func}, {left_predicate}, {right_table_func}, {right_predicate})"
 
@@ -225,7 +249,9 @@ def outline(
         return
 
     if test_queries:
-        with And("create reference MergeTree table (uses same column definition as hybrid)"):
+        with And(
+            "create reference MergeTree table (uses same column definition as hybrid)"
+        ):
             merge_tree_reference_table = f"reference_merge_tree_{getuid()}"
             merge_tree_reference_table_columns = create_hybrid_columns_from_config(
                 base_columns, alias_columns, alias_columns_definition_for_hybrid_table
@@ -238,9 +264,13 @@ def outline(
                 partition_by=partition_by,
             )
 
-        with And("populate reference table from left and right segment tables using watermark predicates"):
+        with And(
+            "populate reference table from left and right segment tables using watermark predicates"
+        ):
             # Get base column names for each segment (columns that can be inserted)
-            left_column_names = [col["name"] for col in left_base_columns] + [col["name"] for col in left_alias_columns]
+            left_column_names = [col["name"] for col in left_base_columns] + [
+                col["name"] for col in left_alias_columns
+            ]
             right_column_names = [col["name"] for col in right_base_columns] + [
                 col["name"] for col in right_alias_columns
             ]
@@ -273,8 +303,12 @@ def outline(
                     continue
 
                 with By(f"query {i}/{len(test_queries)}"):
-                    reference_query = test_query_template.format(hybrid_table=merge_tree_reference_table)
-                    test_query = test_query_template.format(hybrid_table=hybrid_table_name)
+                    reference_query = test_query_template.format(
+                        hybrid_table=merge_tree_reference_table
+                    )
+                    test_query = test_query_template.format(
+                        hybrid_table=hybrid_table_name
+                    )
 
                     query_kwargs = {}
                     if expected_exitcode is not None:

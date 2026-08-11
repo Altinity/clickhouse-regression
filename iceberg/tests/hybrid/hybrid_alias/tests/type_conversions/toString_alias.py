@@ -17,7 +17,10 @@ def toString_alias(self):
     alias_columns = [
         {"name": "value_str", "expression": "toString(value)", "hybrid_type": "String"},
     ]
-    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
+    watermark = {
+        "left_predicate": "date_col >= '2004-04-16'",
+        "right_predicate": "date_col < '2004-04-16'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -56,7 +59,10 @@ def toString_alias_in_watermark(self):
         {"name": "value_str", "expression": "toString(value)", "hybrid_type": "String"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "value_str >= '1000'", "right_predicate": "value_str < '1000'"}
+    watermark = {
+        "left_predicate": "value_str >= '1000'",
+        "right_predicate": "value_str < '1000'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

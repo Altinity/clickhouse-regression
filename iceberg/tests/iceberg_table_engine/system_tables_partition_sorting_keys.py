@@ -17,15 +17,15 @@ import iceberg.tests.steps.common as common
 EXPECTED_PARTITION_KEY = "name"
 EXPECTED_SORTING_KEY = "name asc"
 
+
 def _assert_on_antalya_26_1_plus(test):
     return check_if_antalya_build(test) and check_clickhouse_version(">=26.1")(test)
 
 
 def _keys_from_metadata_without_snapshot(test):
     """PR 1874: keys readable from table metadata before any data snapshot."""
-    return (
-        check_if_antalya_build(test)
-        and check_clickhouse_version(">26.3.10.20001")(test)
+    return check_if_antalya_build(test) and check_clickhouse_version(">26.3.10.20001")(
+        test
     )
 
 
@@ -86,7 +86,9 @@ def system_tables_partition_sorting_keys(self, minio_root_user, minio_root_passw
     ):
         return
 
-    with Then("check partition_key and sorting_key in system.tables before first insert"):
+    with Then(
+        "check partition_key and sorting_key in system.tables before first insert"
+    ):
         if _assert_on_antalya_26_1_plus(self):
             if keys_from_metadata:
                 assert_system_table_keys(

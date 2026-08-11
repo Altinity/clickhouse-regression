@@ -17,9 +17,16 @@ def array_product_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_product", "expression": "arrayProduct(array_col)", "hybrid_type": "Float64"},
+        {
+            "name": "array_product",
+            "expression": "arrayProduct(array_col)",
+            "hybrid_type": "Float64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_product_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_product", "expression": "arrayProduct(array_col)", "hybrid_type": "Float64"},
+        {
+            "name": "array_product",
+            "expression": "arrayProduct(array_col)",
+            "hybrid_type": "Float64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "array_product >= 1000.0", "right_predicate": "array_product < 1000.0"}
+    watermark = {
+        "left_predicate": "array_product >= 1000.0",
+        "right_predicate": "array_product < 1000.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

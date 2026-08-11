@@ -15,9 +15,16 @@ def default_int64(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "default_int64", "expression": "toInt64(1000000000)", "hybrid_type": "Int64"},
+        {
+            "name": "default_int64",
+            "expression": "toInt64(1000000000)",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
+    watermark = {
+        "left_predicate": "date_col >= '2007-05-01'",
+        "right_predicate": "date_col < '2007-05-01'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

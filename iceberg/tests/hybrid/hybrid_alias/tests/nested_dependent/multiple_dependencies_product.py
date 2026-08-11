@@ -18,9 +18,16 @@ def multiple_dependencies_product(self):
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "quadrupled", "expression": "doubled * 2", "hybrid_type": "Int64"},
-        {"name": "product_all", "expression": "doubled * quadrupled", "hybrid_type": "Int64"},
+        {
+            "name": "product_all",
+            "expression": "doubled * quadrupled",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2014-08-18'", "right_predicate": "date_col < '2014-08-18'"}
+    watermark = {
+        "left_predicate": "date_col >= '2014-08-18'",
+        "right_predicate": "date_col < '2014-08-18'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -57,10 +64,17 @@ def multiple_dependencies_product_in_watermark(self):
     alias_columns = [
         {"name": "doubled", "expression": "value * 2", "hybrid_type": "Int64"},
         {"name": "quadrupled", "expression": "doubled * 2", "hybrid_type": "Int64"},
-        {"name": "product_all", "expression": "doubled * quadrupled", "hybrid_type": "Int64"},
+        {
+            "name": "product_all",
+            "expression": "doubled * quadrupled",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use final alias column in watermark predicates
-    watermark = {"left_predicate": "product_all >= 10000", "right_predicate": "product_all < 10000"}
+    watermark = {
+        "left_predicate": "product_all >= 10000",
+        "right_predicate": "product_all < 10000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

@@ -32,7 +32,10 @@ def alias_in_left_missing_in_right(self):
         {"name": "computed", "expression": "value * 2"},
     ]
     right_alias_columns = []
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 36, "error_message": "DB::Exception: Hybrid segment"}
     test_queries = []
     order_by = "(date_col, id)"
@@ -83,7 +86,10 @@ def alias_in_right_missing_in_left(self):
     right_alias_columns = [
         {"name": "computed", "expression": "value * 2"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 36, "error_message": "DB::Exception: Hybrid segment"}
     test_queries = []
     order_by = "(date_col, id)"

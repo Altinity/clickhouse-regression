@@ -17,9 +17,16 @@ def multiple_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "multiple", "expression": "(value1 * value2 - value3) % (value2 + 1)", "hybrid_type": "Int64"},
+        {
+            "name": "multiple",
+            "expression": "(value1 * value2 - value3) % (value2 + 1)",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2013-08-05'", "right_predicate": "date_col < '2013-08-05'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-08-05'",
+        "right_predicate": "date_col < '2013-08-05'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, value3, date_col FROM {hybrid_table} ORDER BY id",
@@ -57,7 +64,11 @@ def multiple_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "multiple", "expression": "(value1 * value2 - value3) % (value2 + 1)", "hybrid_type": "Int64"},
+        {
+            "name": "multiple",
+            "expression": "(value1 * value2 - value3) % (value2 + 1)",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use alias column in watermark predicates
     watermark = {"left_predicate": "multiple >= 5", "right_predicate": "multiple < 5"}

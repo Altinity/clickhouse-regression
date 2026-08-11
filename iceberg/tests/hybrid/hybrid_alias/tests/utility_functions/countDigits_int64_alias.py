@@ -16,9 +16,16 @@ def countDigits_int64_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "digit_count_int64", "expression": "countDigits(big_value)", "hybrid_type": "UInt8"},
+        {
+            "name": "digit_count_int64",
+            "expression": "countDigits(big_value)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {
+        "left_predicate": "date_col >= '2025-01-15'",
+        "right_predicate": "date_col < '2025-01-15'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, big_value, date_col FROM {hybrid_table} ORDER BY id",

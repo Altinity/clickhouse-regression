@@ -17,9 +17,16 @@ def array_sum_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_sum", "expression": "arraySum(array_col)", "hybrid_type": "Int64"},
+        {
+            "name": "array_sum",
+            "expression": "arraySum(array_col)",
+            "hybrid_type": "Int64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -55,10 +62,17 @@ def array_sum_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "array_sum", "expression": "arraySum(array_col)", "hybrid_type": "Int64"},
+        {
+            "name": "array_sum",
+            "expression": "arraySum(array_col)",
+            "hybrid_type": "Int64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "array_sum >= 100", "right_predicate": "array_sum < 100"}
+    watermark = {
+        "left_predicate": "array_sum >= 100",
+        "right_predicate": "array_sum < 100",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

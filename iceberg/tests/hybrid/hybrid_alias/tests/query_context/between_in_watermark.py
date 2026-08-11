@@ -17,7 +17,10 @@ def between_watermark(self):
     alias_columns = [
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "id BETWEEN 10 AND 15", "right_predicate": "NOT (id BETWEEN 10 AND 15)"}
+    watermark = {
+        "left_predicate": "id BETWEEN 10 AND 15",
+        "right_predicate": "NOT (id BETWEEN 10 AND 15)",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,7 +56,10 @@ def in_watermark(self):
     alias_columns = [
         {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "value IN (10, 20, 30)", "right_predicate": "value NOT IN (10, 20, 30)"}
+    watermark = {
+        "left_predicate": "value IN (10, 20, 30)",
+        "right_predicate": "value NOT IN (10, 20, 30)",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

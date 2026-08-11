@@ -15,9 +15,16 @@ def is_not_in_set_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_not_in_set", "expression": "value NOT IN (1, 2, 3, 4, 5)", "hybrid_type": "UInt8"},
+        {
+            "name": "is_not_in_set",
+            "expression": "value NOT IN (1, 2, 3, 4, 5)",
+            "hybrid_type": "UInt8",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2008-04-25'", "right_predicate": "date_col < '2008-04-25'"}
+    watermark = {
+        "left_predicate": "date_col >= '2008-04-25'",
+        "right_predicate": "date_col < '2008-04-25'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def is_not_in_set_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "is_not_in_set", "expression": "value NOT IN (1, 2, 3, 4, 5)", "hybrid_type": "UInt8"},
+        {
+            "name": "is_not_in_set",
+            "expression": "value NOT IN (1, 2, 3, 4, 5)",
+            "hybrid_type": "UInt8",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "is_not_in_set = 1", "right_predicate": "is_not_in_set = 0"}
+    watermark = {
+        "left_predicate": "is_not_in_set = 1",
+        "right_predicate": "is_not_in_set = 0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

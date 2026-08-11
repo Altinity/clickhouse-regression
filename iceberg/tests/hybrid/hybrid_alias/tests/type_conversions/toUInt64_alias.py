@@ -15,9 +15,16 @@ def toUInt64_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_uint64", "expression": "toUInt64(value)", "hybrid_type": "UInt64"},
+        {
+            "name": "value_uint64",
+            "expression": "toUInt64(value)",
+            "hybrid_type": "UInt64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
+    watermark = {
+        "left_predicate": "date_col >= '2007-05-01'",
+        "right_predicate": "date_col < '2007-05-01'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def toUInt64_alias_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "value_uint64", "expression": "toUInt64(value)", "hybrid_type": "UInt64"},
+        {
+            "name": "value_uint64",
+            "expression": "toUInt64(value)",
+            "hybrid_type": "UInt64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "value_uint64 >= 5000", "right_predicate": "value_uint64 < 5000"}
+    watermark = {
+        "left_predicate": "value_uint64 >= 5000",
+        "right_predicate": "value_uint64 < 5000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

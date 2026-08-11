@@ -18,7 +18,10 @@ def product_alias(self):
     alias_columns = [
         {"name": "product", "expression": "value1 * value2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2013-08-05'", "right_predicate": "date_col < '2013-08-05'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-08-05'",
+        "right_predicate": "date_col < '2013-08-05'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",
@@ -58,7 +61,10 @@ def product_alias_in_watermark(self):
         {"name": "product", "expression": "value1 * value2", "hybrid_type": "Int64"},
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "product >= 1000000", "right_predicate": "product < 1000000"}
+    watermark = {
+        "left_predicate": "product >= 1000000",
+        "right_predicate": "product < 1000000",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",

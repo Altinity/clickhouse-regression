@@ -63,12 +63,14 @@ def create_mt_iceberg_cluster_fuzz_hybrid(
     url = f"http://minio:9000/warehouse/data_hybrid_{location_suffix}"
 
     with By("create Iceberg table with basic types"):
-        _, table_name, namespace = swarm_steps.performance_iceberg_table_with_all_basic_data_types(
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
-            s3_endpoint="http://localhost:9002",
-            location=location,
-            row_count=row_count,
+        _, table_name, namespace = (
+            swarm_steps.performance_iceberg_table_with_all_basic_data_types(
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+                s3_endpoint="http://localhost:9002",
+                location=location,
+                row_count=row_count,
+            )
         )
 
     with By("create DataLakeCatalog database"):
@@ -79,7 +81,9 @@ def create_mt_iceberg_cluster_fuzz_hybrid(
         )
 
     with By("create MergeTree mirror from Iceberg catalog table"):
-        clickhouse_iceberg_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
+        clickhouse_iceberg_table_name = (
+            f"{database_name}.\\`{namespace}.{table_name}\\`"
+        )
         merge_tree_table_name = f"merge_tree_table_{getuid()}"
         create_table_as_select(
             as_select_from=clickhouse_iceberg_table_name,

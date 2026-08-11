@@ -16,9 +16,16 @@ def arithmetic_with_rounding(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "complex_round", "expression": "round((value * 1.5) / 3.0, 2)", "hybrid_type": "Float64"},
+        {
+            "name": "complex_round",
+            "expression": "round((value * 1.5) / 3.0, 2)",
+            "hybrid_type": "Float64",
+        },
     ]
-    watermark = {"left_predicate": "date_col >= '2020-08-26'", "right_predicate": "date_col < '2020-08-26'"}
+    watermark = {
+        "left_predicate": "date_col >= '2020-08-26'",
+        "right_predicate": "date_col < '2020-08-26'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -53,10 +60,17 @@ def arithmetic_with_rounding_in_watermark(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "complex_round", "expression": "round((value * 1.5) / 3.0, 2)", "hybrid_type": "Float64"},
+        {
+            "name": "complex_round",
+            "expression": "round((value * 1.5) / 3.0, 2)",
+            "hybrid_type": "Float64",
+        },
     ]
     # Use alias column in watermark predicates
-    watermark = {"left_predicate": "complex_round >= 1000.0", "right_predicate": "complex_round < 1000.0"}
+    watermark = {
+        "left_predicate": "complex_round >= 1000.0",
+        "right_predicate": "complex_round < 1000.0",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

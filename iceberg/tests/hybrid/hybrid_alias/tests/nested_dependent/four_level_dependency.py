@@ -21,7 +21,10 @@ def four_level_dependency(self):
         {"name": "octupled", "expression": "quadrupled * 2", "hybrid_type": "Int64"},
         {"name": "hexadecupled", "expression": "octupled * 2", "hybrid_type": "Int64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2013-05-12'", "right_predicate": "date_col < '2013-05-12'"}
+    watermark = {
+        "left_predicate": "date_col >= '2013-05-12'",
+        "right_predicate": "date_col < '2013-05-12'",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
@@ -62,7 +65,10 @@ def four_level_dependency_in_watermark(self):
         {"name": "hexadecupled", "expression": "octupled * 2", "hybrid_type": "Int64"},
     ]
     # Use final alias column in watermark predicates
-    watermark = {"left_predicate": "hexadecupled >= 400", "right_predicate": "hexadecupled < 400"}
+    watermark = {
+        "left_predicate": "hexadecupled >= 400",
+        "right_predicate": "hexadecupled < 400",
+    }
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
