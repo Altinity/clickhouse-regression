@@ -111,11 +111,8 @@ Low ack rate under hard faults is expected with quorum 2/3. Harsh-case logs: onl
 
 ---
 
-## 7. Coverage & next steps
+## 7. Next steps
 
-| Done | Not yet |
-|---|---|
-| Dedicated suite (mostly), agg/alter/tiered in CI, Jepsen 8/8, SRS-048 | Per-table disks, soak in CI, stress, lightweight_delete / atomic_insert / selects on CAS, S3 listing audit, Jepsen fsck + S3 faults |
 
 | # | Action |
 |---|---|
