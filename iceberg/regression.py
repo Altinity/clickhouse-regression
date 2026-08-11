@@ -414,6 +414,15 @@ xfails = {
             "semantics (https://github.com/Altinity/ClickHouse/issues/2123)",
         )
     ],
+    "/iceberg/export partition/: catalog/*/settings/schema mismatch mode/*": [
+        (
+            Fail,
+            "export_merge_tree_part_schema_mismatch_mode "
+            "(Altinity/ClickHouse#2111) is not available on "
+            "<=26.3.17.20001",
+            check_clickhouse_version("<=26.3.17.20001"),
+        )
+    ],
 }
 
 ffails = {
