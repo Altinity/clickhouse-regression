@@ -364,7 +364,7 @@ xfails = {
         (
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1906",
-            check_clickhouse_version("<=26.3.13.20001"),
+            check_clickhouse_version("<=26.3.17.20001"),
         )
     ],
     "/iceberg/export partition/: catalog/*/disaster recovery/KILL EXPORT PARTITION during commit transitions to KILLED": [
@@ -412,6 +412,15 @@ xfails = {
             "positionally (like INSERT SELECT *), so permuted destination "
             "column order mis-assigns values and can break partition "
             "semantics (https://github.com/Altinity/ClickHouse/issues/2123)",
+        )
+    ],
+    "/iceberg/export partition/: catalog/*/settings/schema mismatch mode/*": [
+        (
+            Fail,
+            "export_merge_tree_part_schema_mismatch_mode "
+            "(Altinity/ClickHouse#2111) is not available on "
+            "<=26.3.17.20001",
+            check_clickhouse_version("<=26.3.17.20001"),
         )
     ],
 }
@@ -504,9 +513,9 @@ ffails = {
     ),
     "/iceberg/export partition/: catalog/plain merge tree/*": (
         Skip,
-        "Plain MergeTree EXPORT PARTITION requires antalya >= 26.3.13.20001 "
+        "Plain MergeTree EXPORT PARTITION requires antalya > 26.3.18 "
         "(Altinity/ClickHouse#2032)",
-        check_clickhouse_version("<26.3.13.20001"),
+        check_clickhouse_version("<=26.3.17.20001"),
     ),
     "/iceberg/export partition/: catalog/*/casting": (
         Skip,
