@@ -113,7 +113,6 @@ Low ack rate under hard faults is expected with quorum 2/3. Harsh-case logs: onl
 
 ## 7. Next steps
 
-
 | # | Action |
 |---|---|
 | 1 | Relink: count object-store PUTs on replica catch-up (§5) |
@@ -126,6 +125,7 @@ Low ack rate under hard faults is expected with quorum 2/3. Harsh-case logs: onl
 | 8 | Jepsen: S3 fault injection via soak fault proxy |
 | 9 | Start `lightweight_delete`, `atomic_insert`, `selects` on CAS |
 | 10 | File encrypted-over-CAS unsupported (4.3); decide fail-fast vs support (decision 3) |
+| 11 | Soak (`cas/soak`): improve + wire into CI (ported; manual `run-cas-soak.yml`) |
 
 Planned suites briefly: **lightweight_delete** (high — mutations/reclaim), **atomic_insert** (medium — abort/rollback leftovers), **selects** (low — mostly query semantics; concurrent sub-feature matters most). All need `--cas` / default-policy override.
 
