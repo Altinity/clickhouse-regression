@@ -38,10 +38,10 @@ Skipped under CAS (`alter/regression.py`):
 |---|---|
 | attach/replace `corrupted partitions` | Needs local part files |
 | attach `part level/too high level`, `part levels user example` | Renames detached parts on local FS |
-| attach `operations…/multiple operations` | FREEZE/UNFREEZE hardlinks unsupported on CAS |
+| attach `operations…/multiple operations` | attach→move chains; skipped under CAS (code comment wrongly cites FREEZE hardlinks) |
 | attach `temporary table` | [#2173](https://github.com/Altinity/ClickHouse/issues/2173) |
 
-**Tiered storage** — cold on CAS, hot local; green. FREEZE works; CAS reports disk-relative paths (`shadow/...`) instead of a local `…/shadow/` tree — test adjusted, not a functional bug.
+**Tiered storage** — cold on CAS, hot local; green. FREEZE works; CAS exposes disk-relative `shadow/...` paths (no local `…/shadow/` tree) — test adjusted accordingly.
 
 ---
 
@@ -78,7 +78,14 @@ CREATE ok; INSERT → Code 48 `NOT_IMPLEMENTED` (autocommit). Owner: maybe later
 
 ## 5. Relink — open question
 
-Claim: replicas adopt shared manifests instead of re-uploading. `system.events` on catch-up / FETCH still show receiver uploads ≫ 0 (expected ≈ 0). Either relink is not kicking in, or the counters are the wrong signal. Audit also noted no relink coverage. **Next:** count real object-store PUTs during catch-up.
+Claim: replicas adopt shared manifests instead of re-uploading. Measured `system.events` before/after fetch disagree:
+
+| Scenario | Writer uploads | Receiver uploads | Receiver adoptions | Receiver dedup |
+|---|---:|---:|---:|---|
+| Lagging follower catch-up | 8 | 10 | 4 | none |
+| FETCH PART / FETCH PARTITION into detached | 10 | 12 | 4 | none |
+
+Expected receiver uploads ≈ 0. Either relink is not kicking in, or these counters are the wrong signal (audit also noted no relink coverage). **Next:** count real object-store PUTs during catch-up.
 
 ---
 
@@ -108,42 +115,29 @@ Low ack rate under hard faults is expected with quorum 2/3. Harsh-case logs: onl
 
 | Done | Not yet |
 |---|---|
-| Dedicated suite (mostly), agg/alter/tiered in CI, Jepsen 8/8, SRS-048 | Per-table disks, soak in CI, stress, LWD / atomic_insert / selects on CAS, S3 listing audit, Jepsen fsck + S3 faults |
+| Dedicated suite (mostly), agg/alter/tiered in CI, Jepsen 8/8, SRS-048 | Per-table disks, soak in CI, stress, lightweight_delete / atomic_insert / selects on CAS, S3 listing audit, Jepsen fsck + S3 faults |
 
-| # | Next |
+| # | Action |
 |---|---|
-| 1 | Relink: count object-store PUTs on catch-up (§5) |
-| 2 | File §4.1; link to #2173 (draft ready) |
-| 3 | Temp tables: un-skip alter path; fix skip reason if wrong |
-| 4 | Confirm alter FREEZE path under `--cas` |
-| 5 | FORGET PARTITION Code 716 after drop — likely test/Keeper |
-| 6 | Jepsen: post-run `ca-fsck` + blob/ref counts |
-| 7 | S3 listing-safety audit |
-| 8 | Jepsen: S3 fault injection (soak fault proxy) |
-| 9 | Run `lightweight_delete`, `atomic_insert`, `selects` on CAS |
-| 10 | File encrypted-over-CAS unsupported; decide fail-fast vs later support |
+| 1 | Relink: count object-store PUTs on replica catch-up (§5) |
+| 2 | File 4.1; link to #2173 (draft ready) |
+| 3 | Temp tables on CAS: un-skip alter path; fix wrong #2173 skip reason |
+| 4 | Fix CAS skip for `multiple operations` (wrong FREEZE reason in `alter/regression.py`) |
+| 5 | FORGET PARTITION Code 716 after drop — likely test/Keeper; verify |
+| 6 | Jepsen: post-scenario `ca-fsck` + blob/ref counts |
+| 7 | S3 listing-safety audit; record model/method on every report |
+| 8 | Jepsen: S3 fault injection via soak fault proxy |
+| 9 | Start `lightweight_delete`, `atomic_insert`, `selects` on CAS |
+| 10 | File encrypted-over-CAS unsupported (4.3); decide fail-fast vs support (decision 3) |
 
-Planned suites briefly: **LWD** (high — mutations/reclaim), **atomic_insert** (medium — abort/rollback leftovers), **selects** (low — mostly query semantics; concurrent sub-feature matters most). All need `--cas` / default-policy override.
+Planned suites briefly: **lightweight_delete** (high — mutations/reclaim), **atomic_insert** (medium — abort/rollback leftovers), **selects** (low — mostly query semantics; concurrent sub-feature matters most). All need `--cas` / default-policy override.
 
 ---
 
 ## 8. Decisions needed
 
-| # | Question | If yes / no |
+| # | Question | Consequence |
 |---|---|---|
-| 1 | Import partitions into CAS from another disk/pool? | Fix §4.1–4.2 / clean reject + document |
-| 2 | Temporary tables on CAS? | Un-skip / document unsupported |
-| 3 | `encrypted` over CAS, or S3 SSE only? | Implement / fail-fast at create |
-
----
-
-## Sources
-
-| | |
-|---|---|
-| Suite | `cas/tests/` |
-| Jepsen | `cas/docs/CAS-JEPSEN-REPORT-20260811.md` |
-| Issue drafts | `ISSUE-DRAFT-cas-cross-pool-attach.md`, `ISSUE-DRAFT-cas020-cross-disk-attach.md`, `ISSUE-DRAFT-encrypted-over-cas.md` |
-| Audit | `cas/docs/cas-audit-rerun-20260811/reports/`, [#2031](https://github.com/Altinity/ClickHouse/issues/2031) |
-| Requirements | `cas/requirements/requirements.md` (SRS-048) |
-| Reports index | https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/cas_testing_reports/ |
+| 1 | Is importing partitions into CAS from another disk or pool in scope? | Yes → fix §4.1–4.2. No → clean reject + document |
+| 2 | Are temporary tables in scope on CAS? | Un-skip or document unsupported (§7 #3) |
+| 3 | Is `type=encrypted` wrapping CAS in scope, or S3 SSE only? | Implement / fail-fast at create (4.3) |
