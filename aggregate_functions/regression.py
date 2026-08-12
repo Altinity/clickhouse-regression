@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.tables import *
-from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.cluster import create_cluster
 from helpers.common import *
 
@@ -17,6 +17,23 @@ from aggregate_functions.tests.steps import (
     funcs_to_run_with_extra_data,
 )
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
+from aggregate_functions.cas_mode import (
+    enable_cas_storage,
+    reset_cas_config,
+)
+
+
+def argparser(parser):
+    """Custom argparser that adds aggregate-functions-specific options."""
+    base_argparser(parser)
+
+    parser.add_argument(
+        "--cas",
+        action="store_true",
+        default=False,
+        dest="use_cas",
+        help="store suite MergeTree tables on a content-addressed disk",
+    )
 
 issue_41057 = "https://github.com/ClickHouse/ClickHouse/issues/41057"
 issue_41176 = "https://github.com/ClickHouse/ClickHouse/issues/41176"
@@ -836,15 +853,24 @@ def regression(
     clickhouse_version,
     stress=None,
     with_analyzer=False,
+    use_cas=False,
 ):
     """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
     self.context.clickhouse_path = cluster_args.get("clickhouse_path", "")
+    self.context.default_storage_policy = None
 
     if stress is not None:
         self.context.stress = stress
+
+    if use_cas:
+        with Given("content-addressed storage for suite MergeTree tables"):
+            enable_cas_storage()
+    else:
+        with Given("no content-addressed storage configuration"):
+            reset_cas_config()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(

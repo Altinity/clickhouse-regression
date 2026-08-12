@@ -6,3 +6,5 @@ _instances/
 .idea
 integration/docker/dockerd_volume_dir/*
 binaries/
+alter/configs/clickhouse/config.d/zz_cas_default_policy.xml
+aggregate_functions/configs/clickhouse/config.d/cas.xml

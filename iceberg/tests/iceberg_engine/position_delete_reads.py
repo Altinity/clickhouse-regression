@@ -52,6 +52,16 @@ def read_position_deletes(self, minio_root_user, minio_root_password):
             condition="id <= 2",
         )
 
+    with And("ENGINE=Iceberg table reflects the deletes"):
+        iceberg_writes.assert_table_count(
+            table_name=ch_table_name,
+            expected_count=3,
+        )
+        iceberg_writes.assert_table_ids(
+            table_name=ch_table_name,
+            expected_ids=[3, 4, 5],
+        )
+
     with And("point REST catalog at metadata written by ENGINE=Iceberg"):
         iceberg_writes.sync_catalog_to_latest_metadata(
             catalog=catalog,

@@ -5,6 +5,29 @@ from testflows.core import current, Given, Finally, TestStep, By
 from helpers.common import getuid, check_clickhouse_version
 from helpers.datatypes import *
 from testflows.core import *
+import re
+
+
+def apply_default_storage_policy(query_settings):
+    """If context.default_storage_policy is set, apply it when unset or 'default'."""
+    policy = getattr(current().context, "default_storage_policy", None)
+    if not policy:
+        return query_settings
+
+    setting = f"storage_policy = '{policy}'"
+    if query_settings is None or str(query_settings).strip() == "":
+        return setting
+
+    query_settings = str(query_settings)
+    if re.search(r"storage_policy\s*=\s*'default'", query_settings):
+        return re.sub(
+            r"storage_policy\s*=\s*'default'",
+            setting,
+            query_settings,
+        )
+    if re.search(r"storage_policy\s*=", query_settings):
+        return query_settings
+    return f"{query_settings}, {setting}"
 
 
 class Column:
@@ -498,6 +521,8 @@ def create_table(
 
             if as_select is not None:
                 query += f"\nAS SELECT {as_select}"
+
+            query_settings = apply_default_storage_policy(query_settings)
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
 
