@@ -337,6 +337,135 @@ def row_group_boundaries(self):
     Scenario(run=count_agrees)
 
 
+# Iceberg Java RoaringPositionBitmap.MAX_POSITION: key INT32_MAX - 1,
+# sub-position 2^31 — ClickHouse enforces the same cap
+MAX_SUPPORTED_POSITION = 0x7FFFFFFE80000000
+
+
+@TestStep(When)
+def admit_high_positions(self, table, record_count):
+    """Inflate the data file's manifest record_count so vector positions
+    above the physical row count pass the position bound check — a valid
+    position must be below record_count, and a real data file with more
+    than 2^32 rows is impractical to write."""
+
+    def inflate(entry):
+        entry["data_file"]["record_count"] = record_count
+        return entry
+
+    manifest.mutate_manifest_entries(
+        namespace=table.namespace,
+        table_name=table.table_name,
+        mutator=inflate,
+        content=manifest.MANIFEST_LIST_DATA,
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_SupportedPositionRange("1.0"))
+def high_key_positions(self):
+    """A vector position above 2^32 (high bitmap key >= 1) parses and is
+    applied with 64-bit arithmetic throughout: the high position must not be
+    truncated to its low 32 bits (which would wrongly delete the row at that
+    low position), and low-key positions in the same vector still apply."""
+    rows = 100
+    low_position = 2
+    high_position = (1 << 32) + 7  # 32-bit truncation would give position 7
+
+    with Given("a table with a deletion vector over a single data file"):
+        table = common.table_with_deletion_vectors(rows=rows)
+        common.assert_data_file_count(table=table, count=1)
+        ids_in_order = common.parquet_column_values(table=table)
+
+    with When("the manifest admits positions above 2^32"):
+        admit_high_positions(table=table, record_count=1 << 33)
+
+    with And(f"the vector deletes positions {{{low_position}, 2^32 + 7}}"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=[low_position, high_position]),
+            declared_cardinality=2,
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
+    with Then(
+        "only the physical row at position 2 is hidden — the row at "
+        "position 7 stays visible, proving no 32-bit truncation"
+    ):
+        expected = [
+            value
+            for position, value in enumerate(ids_in_order)
+            if position != low_position
+        ]
+        common.assert_visible_ids(
+            table=table,
+            ids=expected,
+            settings=[("use_iceberg_metadata_files_cache", "0")],
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_SupportedPositionRange("1.0"))
+def position_range_boundary(self):
+    """The maximum supported position (key INT32_MAX - 1, sub-position 2^31
+    — the Iceberg Java RoaringPositionBitmap.MAX_POSITION) is accepted, and
+    the next position is rejected with BAD_ARGUMENTS."""
+    rows = 100
+
+    with Given("a table with a deletion vector over a single data file"):
+        table = common.table_with_deletion_vectors(rows=rows)
+
+    with When("the manifest admits positions up to past the supported maximum"):
+        admit_high_positions(table=table, record_count=MAX_SUPPORTED_POSITION + 2)
+
+    with And("the vector deletes exactly the maximum supported position"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=[MAX_SUPPORTED_POSITION]),
+            declared_cardinality=1,
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
+    with Then(
+        "the read succeeds and every physical row stays visible — the "
+        "position addresses a row far beyond the physical file, so "
+        "acceptance of the boundary value is the point"
+    ):
+        common.assert_visible_ids(
+            table=table,
+            ids=list(range(rows)),
+            settings=[("use_iceberg_metadata_files_cache", "0")],
+        )
+
+    with When("the vector deletes one position above the maximum"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=[MAX_SUPPORTED_POSITION + 1]),
+            declared_cardinality=1,
+        )
+
+    with Then("the read fails with BAD_ARGUMENTS naming the range"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="BAD_ARGUMENTS",
+            message_fragment="is out of supported range",
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_SupportedPositionRange("1.0"))
+def supported_position_range(self):
+    """64-bit positions: high-key vectors apply without 32-bit truncation
+    and the supported position range boundary is enforced exactly."""
+    Scenario(run=high_key_positions)
+    Scenario(run=position_range_boundary)
+
+
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_SharedPuffinFile("1.0"))
 def shared_puffin_file(self):
@@ -398,4 +527,5 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(run=all_rows_deleted)
     Suite(run=boundary_positions)
     Suite(run=row_group_boundaries)
+    Suite(run=supported_position_range)
     Scenario(run=shared_puffin_file)

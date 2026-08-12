@@ -1,5 +1,8 @@
 """Partitioning: vectors apply on partitioned tables under any transform,
-and partition pruning also skips loading the pruned files' vectors."""
+partition pruning also skips loading the pruned files' vectors, and a
+vector is matched to a data file only when the partition matches too."""
+
+import copy
 
 from testflows.core import *
 from testflows.asserts import error
@@ -157,9 +160,96 @@ def pruning_skips_vector_load(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Partitioning_PartitionMatching("1.0"))
+def partition_mismatch_not_applied(self):
+    """A vector is matched to a data file only when the partition (spec and
+    values) matches, in addition to the referenced_data_file path and the
+    sequence-number rule — the Iceberg scan-planning scope rules. An entry
+    whose partition tuple is rewritten to another partition stops applying
+    to its referenced data file (its deleted rows become visible again),
+    while every other partition keeps its own vector."""
+    rows = 100
+    deleted = deleted_ids(rows)
+
+    with Given("an identity-partitioned table with a vector per partition"):
+        table = partitioned_table_with_vectors(transform="category", rows=rows)
+
+    with And("each vector entry's partition equals its data file's partition"):
+        data_partitions = {
+            data_file["file_path"]: data_file["partition"]
+            for data_file in manifest.live_data_files(table.namespace, table.table_name)
+        }
+        dv_entries = manifest.find_dv_entries(table.namespace, table.table_name)
+        assert len(dv_entries) == CATEGORIES, error(
+            f"expected {CATEGORIES} vector entries, found {len(dv_entries)}"
+        )
+        partitions_by_category = {}
+        for dv in dv_entries:
+            data_file = dv["entry"]["data_file"]
+            referenced_partition = data_partitions[data_file["referenced_data_file"]]
+            assert data_file["partition"] == referenced_partition, error(
+                f"vector entry partition {data_file['partition']} does not "
+                f"match its data file's partition {referenced_partition}"
+            )
+            partitions_by_category[data_file["partition"]["category"]] = dv
+
+    with And("the baseline read applies every partition's vector"):
+        common.assert_visible_ids(
+            table=table, ids=[i for i in range(rows) if i not in deleted]
+        )
+
+    with When("the partition '1' vector entry is rewritten to claim partition '2'"):
+        target_reference = partitions_by_category["1"]["entry"]["data_file"][
+            "referenced_data_file"
+        ]
+        donor_partition = partitions_by_category["2"]["entry"]["data_file"]["partition"]
+
+        def mispartition(entry):
+            if (
+                manifest.is_dv_entry(entry)
+                and entry["data_file"]["referenced_data_file"] == target_reference
+            ):
+                entry["data_file"]["partition"] = copy.deepcopy(donor_partition)
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=mispartition,
+            content=manifest.MANIFEST_LIST_DELETES,
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
+    fresh = [("use_iceberg_metadata_files_cache", "0")]
+    expected = [i for i in range(rows) if i % 4 == 1 or i not in deleted]
+
+    with Then(
+        "the mismatched vector no longer applies: partition '1' deleted "
+        "rows are visible again while every other partition stays deleted"
+    ):
+        common.assert_visible_ids(table=table, ids=expected, settings=fresh)
+
+    with And("a pruned read of partition '1' agrees"):
+        result = common.read_result(
+            table=table,
+            columns="id",
+            where_clause="category = '1'",
+            order_by="id",
+            use_iceberg_partition_pruning="1",
+            settings=fresh,
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == [i for i in range(rows) if i % 4 == 1], error(
+            f"pruned read of the mismatched partition returned {len(ids)} rows"
+        )
+
+
 @TestFeature
 @Name("partitioning")
 def feature(self, minio_root_user, minio_root_password):
     """Partitioning and pruning with deletion vectors."""
     Suite(run=partitioning)
     Scenario(run=pruning_skips_vector_load)
+    Scenario(run=partition_mismatch_not_applied)

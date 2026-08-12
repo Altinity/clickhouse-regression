@@ -142,7 +142,13 @@ def build_dv_payload(
     return struct.pack(">I", combined_length) + combined + struct.pack(">I", crc)
 
 
-def build_puffin(blobs, file_properties=None):
+def build_puffin(
+    blobs,
+    file_properties=None,
+    compress_footer=False,
+    store_content_size=True,
+    flags=None,
+):
     """Build a complete Puffin file.
 
     Args:
@@ -154,6 +160,11 @@ def build_puffin(blobs, file_properties=None):
             ``compression_codec`` (added to metadata only when set),
             ``offset`` / ``length`` (override the footer-declared location).
         file_properties: optional file-level properties dict.
+        compress_footer: LZ4-compress the FooterPayload (a single frame)
+            and set the footer compression flag bit.
+        store_content_size: whether the LZ4 frame declares its content size
+            (the Puffin spec requires it; False builds the defect).
+        flags: override the 4 footer flag bytes (unknown-flags defects).
 
     Returns:
         (file_bytes, blob_metadata_list) where each metadata entry carries
@@ -184,10 +195,20 @@ def build_puffin(blobs, file_properties=None):
         {"blobs": footer_blobs, "properties": file_properties or {}}
     ).encode("utf-8")
 
+    if compress_footer:
+        import lz4.frame
+
+        footer_payload = lz4.frame.compress(
+            footer_payload, store_size=store_content_size
+        )
+    if flags is None:
+        # byte 0 bit 0: whether the footer payload is compressed
+        flags = b"\x01\x00\x00\x00" if compress_footer else b"\x00\x00\x00\x00"
+
     data += PUFFIN_MAGIC
     data += footer_payload
     data += struct.pack("<I", len(footer_payload))
-    data += b"\x00\x00\x00\x00"  # flags: footer payload not compressed
+    data += flags
     data += PUFFIN_MAGIC
 
     return bytes(data), footer_blobs

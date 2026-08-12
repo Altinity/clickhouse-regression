@@ -197,6 +197,7 @@ def replace_deletion_vector(
     blob_overrides=None,
     footer_blobs_mutator=None,
     entry_mutator=None,
+    puffin_kwargs=None,
 ):
     """Replace the (single) deletion vector of a table with a synthetic one
     and keep the metadata chain consistent — except for the injected defect.
@@ -218,6 +219,8 @@ def replace_deletion_vector(
             before the Puffin file is built (duplicate/drop footer entries).
         entry_mutator: function(entry) applied to the manifest entry last —
             may corrupt any field after the consistent values were set.
+        puffin_kwargs: extra keyword arguments for ``puffin.build_puffin``
+            (e.g. ``compress_footer`` / ``flags`` for footer-level defects).
 
     Returns the manifest entry dict as written.
     """
@@ -252,7 +255,7 @@ def replace_deletion_vector(
             blobs = [blob]
             if footer_blobs_mutator is not None:
                 blobs = footer_blobs_mutator(blobs)
-            file_bytes, _ = puffin.build_puffin(blobs)
+            file_bytes, _ = puffin.build_puffin(blobs, **(puffin_kwargs or {}))
             s3_objects.put_object_bytes(data_file["file_path"], file_bytes)
             data_file["content_offset"] = 4
             data_file["content_size_in_bytes"] = len(payload)

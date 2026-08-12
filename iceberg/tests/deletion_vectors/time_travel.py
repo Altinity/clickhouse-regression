@@ -2,6 +2,8 @@
 committed them — earlier snapshots, newer commits, sequence numbers and
 compaction all resolve vectors per snapshot."""
 
+import time
+
 from testflows.core import *
 from testflows.asserts import error
 
@@ -149,6 +151,75 @@ def snapshot_refresh(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_SnapshotRefresh_QueryCache("1.0"))
+def query_cache(self):
+    """With the query result cache enabled, staleness across external
+    commits is bounded by the entry TTL: a cached result corresponds to one
+    committed snapshot, and once the entry expires or the cache is dropped
+    the next execution observes the current snapshot's deletion vectors.
+
+    The engine table is used because the query cache keys on the query
+    text; whether a given query is admitted to the cache is up to the
+    server — every assertion below holds either way (an uncached query is
+    simply always fresh)."""
+    node = self.context.node
+    rows = 100
+
+    def engine_ids(ttl):
+        result = node.query(
+            f"SELECT id FROM {self.context.engine_table} ORDER BY id "
+            f"FORMAT TabSeparated",
+            settings=[("use_query_cache", "1"), ("query_cache_ttl", str(ttl))],
+        )
+        return [int(line) for line in result.output.split() if line.strip()]
+
+    with Given("a table without deletes and an Iceberg engine table over it"):
+        table = common.table_with_deletion_vectors(
+            rows=rows, delete_condition=None, verify_puffin=False
+        )
+        self.context.engine_table = common.engine_table(table=table)
+
+    with When("the query result is cached with a short TTL"):
+        assert engine_ids(ttl=1) == list(range(rows)), error()
+
+    with And("an external DELETE commits a deletion vector"):
+        spark.delete_rows(
+            namespace=table.namespace, table_name=table.table_name, condition="id < 10"
+        )
+        s3_objects.assert_puffin_exists(
+            namespace=table.namespace, table_name=table.table_name
+        )
+
+    old = list(range(rows))
+    new = list(range(10, rows))
+
+    with Then("a read within the TTL returns exactly one committed snapshot"):
+        ids = engine_ids(ttl=1)
+        assert ids in (old, new), error(
+            f"read within TTL returned {len(ids)} rows matching neither the "
+            f"pre-commit nor the post-commit snapshot"
+        )
+
+    with And("a read after the TTL expired observes the new vector"):
+        time.sleep(2)
+        assert engine_ids(ttl=1) == new, error(
+            "post-TTL read did not observe the new snapshot"
+        )
+
+    with When("the new result is cached with a long TTL and a second DELETE lands"):
+        assert engine_ids(ttl=300) == new, error()
+        spark.delete_rows(
+            namespace=table.namespace, table_name=table.table_name, condition="id >= 90"
+        )
+
+    with Then("after SYSTEM DROP QUERY CACHE the next read observes it"):
+        node.query("SYSTEM DROP QUERY CACHE")
+        assert engine_ids(ttl=300) == list(range(10, 90)), error(
+            "read after dropping the query cache did not observe the " "latest snapshot"
+        )
+
+
+@TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_SequenceNumbers("1.0"))
 def newer_files_unaffected(self):
     """A vector does not apply to data files added after it, even when the
@@ -210,13 +281,65 @@ def missing_data_file_ignored(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_SequenceNumbers_SameCommit("1.0"))
+def same_commit_applies(self):
+    """A vector whose data sequence number equals the data file's still
+    applies — the Iceberg same-commit rule: rows added and deleted in one
+    commit stay deleted. Writers rarely produce this shape directly, so the
+    data file's sequence number is raised in the manifest to equal the
+    vector's."""
+    rows = 100
+    deleted = list(range(0, rows, 10))
+
+    with Given("a table where the vector's commit follows the data commit"):
+        table = common.table_with_deletion_vectors(
+            rows=rows, delete_condition="id % 10 = 0"
+        )
+
+    with When("the data file's sequence number is raised to the vector's"):
+        # the vector was added by the current (DELETE) snapshot, so its
+        # entries inherit that snapshot's sequence number
+        vector_sequence_number = s3_objects.current_snapshot(
+            table.namespace, table.table_name
+        )["sequence-number"]
+        assert vector_sequence_number > 0, error(
+            f"unexpected sequence number {vector_sequence_number}"
+        )
+
+        def raise_sequence_number(entry):
+            entry["sequence_number"] = vector_sequence_number
+            if "file_sequence_number" in entry:
+                entry["file_sequence_number"] = vector_sequence_number
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=raise_sequence_number,
+            content=manifest.MANIFEST_LIST_DATA,
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
+    with Then("the vector still hides its rows at equal sequence numbers"):
+        common.assert_visible_ids(
+            table=table,
+            ids=common.expected_ids(rows, deleted),
+            settings=[("use_iceberg_metadata_files_cache", "0")],
+        )
+
+
 @TestSuite
 @Requirements(RQ_Iceberg_DeletionVectors_SequenceNumbers("1.0"))
 def sequence_numbers(self):
-    """A vector does not affect data files added after it, and a vector
-    whose data file left the snapshot is ignored rather than an error."""
+    """A vector does not affect data files added after it, a vector whose
+    data file left the snapshot is ignored rather than an error, and a
+    vector applies to data files from its own commit (equal sequence
+    numbers)."""
     Scenario(run=newer_files_unaffected)
     Scenario(run=missing_data_file_ignored)
+    Scenario(run=same_commit_applies)
 
 
 @TestScenario
@@ -257,5 +380,6 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(run=time_travel)
     Suite(run=multiple_generations)
     Scenario(run=snapshot_refresh)
+    Scenario(run=query_cache)
     Suite(run=sequence_numbers)
     Scenario(run=compaction)

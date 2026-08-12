@@ -9,6 +9,8 @@ from iceberg.requirements.deletion_vectors import *
 import iceberg.tests.steps.spark as spark
 import iceberg.tests.deletion_vectors.steps.common as common
 import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
+import iceberg.tests.deletion_vectors.steps.puffin as puffin
+import iceberg.tests.deletion_vectors.steps.manifest as manifest
 
 
 @TestScenario
@@ -60,6 +62,92 @@ def read_only(self):
             f"added={set(inventory_after) - set(inventory_before)}, "
             f"removed={set(inventory_before) - set(inventory_after)}"
         )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Read("1.0"))
+def puffin_metadata_structure(self):
+    """The writer-produced deletion-vector metadata chain carries every
+    kind of information the reader depends on — checked structurally (field
+    presence and types), not by value: the Puffin file framing, the footer
+    blob descriptors, and the deletion-vector manifest entry."""
+    with Given("a table with a deletion vector"):
+        table = common.table_with_deletion_vectors()
+
+    with When("the Puffin file and its manifest entry are fetched"):
+        dv_entries = manifest.find_dv_entries(table.namespace, table.table_name)
+        assert dv_entries, error("no live deletion-vector manifest entry")
+        data_file = dv_entries[0]["entry"]["data_file"]
+        puffin_bytes = s3_objects.get_object_bytes(
+            s3_objects.key_from_uri(data_file["file_path"])
+        )
+
+    with Then("the Puffin file is framed by the format magic"):
+        assert puffin_bytes[:4] == puffin.PUFFIN_MAGIC, error(
+            f"leading magic {puffin_bytes[:4]!r}"
+        )
+        assert puffin_bytes[-4:] == puffin.PUFFIN_MAGIC, error(
+            f"trailing magic {puffin_bytes[-4:]!r}"
+        )
+
+    with And("every footer blob descriptor carries the required fields"):
+        footer = puffin.parse_puffin_footer(puffin_bytes)
+        assert isinstance(footer.get("blobs"), list) and footer["blobs"], error(
+            f"footer has no blobs list: {footer}"
+        )
+        for index, blob in enumerate(footer["blobs"]):
+            for field, kinds in {
+                "type": str,
+                "fields": list,
+                "snapshot-id": int,
+                "sequence-number": int,
+                "offset": int,
+                "length": int,
+                "properties": dict,
+            }.items():
+                assert isinstance(blob.get(field), kinds), error(
+                    f"blob {index}: field {field!r} missing or not "
+                    f"{kinds.__name__}: {blob}"
+                )
+            assert blob["type"] == "deletion-vector-v1", error(
+                f"blob {index}: type {blob['type']!r}"
+            )
+            assert blob["offset"] >= 4 and blob["length"] > 0, error(
+                f"blob {index}: implausible location "
+                f"({blob['offset']}, {blob['length']})"
+            )
+            properties = blob["properties"]
+            referenced = properties.get("referenced-data-file")
+            assert isinstance(referenced, str) and referenced, error(
+                f"blob {index}: missing referenced-data-file: {properties}"
+            )
+            cardinality = properties.get("cardinality")
+            assert isinstance(cardinality, str) and cardinality.isdigit(), error(
+                f"blob {index}: cardinality is not an unsigned integer "
+                f"string: {properties}"
+            )
+
+    with And("the deletion-vector manifest entry carries the required fields"):
+        assert data_file["content"] == 1, error(
+            f"content = {data_file['content']}, expected 1 (deletes)"
+        )
+        assert str(data_file["file_format"]).upper() == "PUFFIN", error(
+            f"file_format = {data_file['file_format']!r}"
+        )
+        assert str(data_file["file_path"]).endswith(".puffin"), error(
+            f"file_path = {data_file['file_path']!r}"
+        )
+        referenced = data_file.get("referenced_data_file")
+        assert isinstance(referenced, str) and referenced, error(
+            f"referenced_data_file = {referenced!r}"
+        )
+        for field in ("content_offset", "content_size_in_bytes", "record_count"):
+            assert (
+                isinstance(data_file.get(field), int) and data_file[field] > 0
+            ), error(f"{field} = {data_file.get(field)!r}, expected a positive integer")
+        assert data_file["content_offset"] + data_file["content_size_in_bytes"] <= len(
+            puffin_bytes
+        ), error("manifest-declared blob location exceeds the Puffin file size")
 
 
 WRITER_OPERATIONS = {
@@ -142,4 +230,5 @@ def feature(self, minio_root_user, minio_root_password):
     """Basic deletion-vector read support."""
     Scenario(run=read_deletion_vectors)
     Scenario(run=read_only)
+    Scenario(run=puffin_metadata_structure)
     Suite(run=writer_operations)

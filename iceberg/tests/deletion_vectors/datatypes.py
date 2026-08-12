@@ -127,7 +127,9 @@ def nested_projection(self):
             columns="id, st.a, m['k']",
             order_by="id",
         )
-        lines = [line.split("\t") for line in result.output.splitlines() if line.strip()]
+        lines = [
+            line.split("\t") for line in result.output.splitlines() if line.strip()
+        ]
         assert [int(line[0]) for line in lines] == SURVIVORS, error(
             f"nested projection returned {len(lines)} rows"
         )
