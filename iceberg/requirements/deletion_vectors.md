@@ -18,6 +18,7 @@
     * 4.3 [RQ.Iceberg.DeletionVectors.BoundaryPositions](#rqicebergdeletionvectorsboundarypositions)
     * 4.4 [RQ.Iceberg.DeletionVectors.RowGroupBoundaries](#rqicebergdeletionvectorsrowgroupboundaries)
     * 4.5 [RQ.Iceberg.DeletionVectors.SharedPuffinFile](#rqicebergdeletionvectorssharedpuffinfile)
+    * 4.6 [RQ.Iceberg.DeletionVectors.SupportedPositionRange](#rqicebergdeletionvectorssupportedpositionrange)
 * 5 [Coexistence With Other Delete Formats](#coexistence-with-other-delete-formats)
     * 5.1 [RQ.Iceberg.DeletionVectors.Coexistence.AcrossDataFiles](#rqicebergdeletionvectorscoexistenceacrossdatafiles)
     * 5.2 [RQ.Iceberg.DeletionVectors.Coexistence.SupersedesPositionDeletes](#rqicebergdeletionvectorscoexistencesupersedespositiondeletes)
@@ -37,10 +38,12 @@
     * 7.3 [RQ.Iceberg.DeletionVectors.SnapshotRefresh](#rqicebergdeletionvectorssnapshotrefresh)
     * 7.4 [RQ.Iceberg.DeletionVectors.SnapshotRefresh.QueryCache](#rqicebergdeletionvectorssnapshotrefreshquerycache)
     * 7.5 [RQ.Iceberg.DeletionVectors.SequenceNumbers](#rqicebergdeletionvectorssequencenumbers)
-    * 7.6 [RQ.Iceberg.DeletionVectors.Compaction](#rqicebergdeletionvectorscompaction)
+    * 7.6 [RQ.Iceberg.DeletionVectors.SequenceNumbers.SameCommit](#rqicebergdeletionvectorssequencenumberssamecommit)
+    * 7.7 [RQ.Iceberg.DeletionVectors.Compaction](#rqicebergdeletionvectorscompaction)
 * 8 [Partitioning and Pruning](#partitioning-and-pruning)
     * 8.1 [RQ.Iceberg.DeletionVectors.Partitioning](#rqicebergdeletionvectorspartitioning)
     * 8.2 [RQ.Iceberg.DeletionVectors.Partitioning.PruningSkipsVectorLoad](#rqicebergdeletionvectorspartitioningpruningskipsvectorload)
+    * 8.3 [RQ.Iceberg.DeletionVectors.Partitioning.PartitionMatching](#rqicebergdeletionvectorspartitioningpartitionmatching)
 * 9 [Count Paths](#count-paths)
     * 9.1 [RQ.Iceberg.DeletionVectors.Count.TrivialCountOptimization](#rqicebergdeletionvectorscounttrivialcountoptimization)
     * 9.2 [RQ.Iceberg.DeletionVectors.Count.CountOnlyFastPath](#rqicebergdeletionvectorscountcountonlyfastpath)
@@ -52,6 +55,7 @@
     * 10.4 [RQ.Iceberg.DeletionVectors.ErrorHandling.ManifestConsistency](#rqicebergdeletionvectorserrorhandlingmanifestconsistency)
     * 10.5 [RQ.Iceberg.DeletionVectors.ErrorHandling.ResourceLimits](#rqicebergdeletionvectorserrorhandlingresourcelimits)
     * 10.6 [RQ.Iceberg.DeletionVectors.ErrorHandling.NonParquetDataFiles](#rqicebergdeletionvectorserrorhandlingnonparquetdatafiles)
+    * 10.7 [RQ.Iceberg.DeletionVectors.ErrorHandling.CompressedFooter](#rqicebergdeletionvectorserrorhandlingcompressedfooter)
 * 11 [Distributed Reads](#distributed-reads)
     * 11.1 [RQ.Iceberg.DeletionVectors.Distributed.ClusterFunctions](#rqicebergdeletionvectorsdistributedclusterfunctions)
     * 11.2 [RQ.Iceberg.DeletionVectors.Distributed.ProtocolFailClosed](#rqicebergdeletionvectorsdistributedprotocolfailclosed)
@@ -290,6 +294,9 @@ id
 
 A vector containing position `3` for the same three-row file fails instead of returning rows.
 
+Note: rejecting out-of-bounds positions and cardinalities is a [ClickHouse] fail-closed
+contract; the Iceberg specification does not define reader behavior for such metadata.
+
 ### RQ.Iceberg.DeletionVectors.RowGroupBoundaries
 version: 1.0
 
@@ -307,6 +314,36 @@ One `Puffin` file may hold several `deletion-vector-v1` blobs, each bound by its
 `referenced-data-file` property. [ClickHouse] SHALL apply to each data file only its own blob —
 no union and no cross-file contamination — both when all referenced files are read together and
 when a filter causes only one of them to be read.
+
+### RQ.Iceberg.DeletionVectors.SupportedPositionRange
+version: 1.0
+
+The `deletion-vector-v1` format supports positive 64-bit row positions (the most significant
+bit must be 0): a position is split into a 32-bit key (the most significant 4 bytes) and a
+32-bit sub-position (the least significant 4 bytes), with one 32-bit roaring bitmap per key,
+bitmaps ordered by unsigned comparison of their keys.
+
+[ClickHouse] SHALL parse and apply valid vectors with bitmap keys in `[0, INT32_MAX - 1]` and
+positions up to the maximum supported position `(INT32_MAX - 1) * 2^32 + 2^31`
+(`0x7FFFFFFE80000000` — the Iceberg Java `RoaringPositionBitmap.MAX_POSITION`). A bitmap key
+or position beyond these limits SHALL be rejected with `BAD_ARGUMENTS`
+(`Invalid deletion vector bitmap key` / `is out of supported range`, see
+RQ.Iceberg.DeletionVectors.ErrorHandling.MalformedBlob).
+
+Note: the supported range is narrower than the literal `Puffin` spec, which allows any
+positive 64-bit position (most significant bit 0); both caps mirror the Iceberg Java
+reference implementation and are a deliberate [ClickHouse] contract.
+
+Position arithmetic SHALL be 64-bit throughout: a position in a high-key bucket SHALL NOT be
+truncated to its low 32 bits. For example, for a vector containing position `2^32 + 2`
+(key `1`, sub-position `2`) over a data file whose manifest `record_count` admits that
+position, the physical row at position `2` SHALL remain visible — a reader that truncates
+positions to 32 bits would wrongly delete it.
+
+Because a valid position must be below the data file's `record_count`
+(RQ.Iceberg.DeletionVectors.BoundaryPositions), a vector with a key `>= 1` can only reference
+a data file with more than `2^32` rows; this requirement is therefore verified with crafted
+vectors and manifest metadata rather than a multi-billion-row data file.
 
 ## Coexistence With Other Delete Formats
 
@@ -360,6 +397,10 @@ snapshot, [ClickHouse] SHALL fail the query with `ICEBERG_SPECIFICATION_VIOLATIO
 ("Multiple deletion vectors match data file ..."). It SHALL NOT pick one of them and SHALL NOT
 union them.
 
+Note: the Iceberg specification only constrains writers ("at most one deletion vector is
+allowed per data file in a snapshot") and leaves reader behavior on a violation undefined;
+failing the query is a [ClickHouse] fail-closed contract.
+
 ### RQ.Iceberg.DeletionVectors.Coexistence.FormatVersionUpgrade
 version: 1.0
 
@@ -369,9 +410,11 @@ For an Iceberg v2 table with Parquet position deletes that is upgraded to format
   deleted rows SHALL NOT resurface;
 * after the first v3 delete produces a deletion vector, rows deleted before the upgrade SHALL
   remain absent and newly deleted rows SHALL become absent, regardless of whether the writer
-  folded the old position deletes into the vector or kept both (the supersession rule of
-  RQ.Iceberg.DeletionVectors.Coexistence.SupersedesPositionDeletes guarantees no double
-  application either way).
+  removed the superseded position-delete files or kept them alongside the vector. Writers are
+  required by the Iceberg spec to fold existing position deletes into a new vector, and the
+  supersession rule of RQ.Iceberg.DeletionVectors.Coexistence.SupersedesPositionDeletes
+  guarantees the folded vector is applied instead of the old files — so rows are neither
+  resurfaced nor double-deleted either way.
 
 ## Query Semantics
 
@@ -615,6 +658,35 @@ files:
 * a deletion vector referencing a data file no longer present in the snapshot SHALL be ignored,
   not treated as an error.
 
+Note: writers are required to remove a vector when removing its data file, so an orphan entry
+indicates a non-compliant writer; ignoring it mirrors the Iceberg scan-planning rules (the
+vector matches no data file in the snapshot) and is a deliberate leniency, not an oversight.
+
+### RQ.Iceberg.DeletionVectors.SequenceNumbers.SameCommit
+version: 1.0
+
+Position deletes — deletion vectors included — apply to data files from the same commit: per
+the Iceberg scan-planning rules, a deletion vector SHALL be applied to a data file whose data
+sequence number is *equal* to the vector's own data sequence number, so that rows added and
+deleted in a single commit stay deleted. [ClickHouse] SHALL hide such rows exactly as it does
+when the vector's sequence number is strictly greater than the data file's.
+
+(Equality deletes differ: they apply only to data files with a *strictly older* data sequence
+number and never to files from their own commit.)
+
+For example, a single writer commit that adds a data file with ids `1..10` and, in the same
+commit, a deletion vector for positions `{0, 1}` of that file (as a `MERGE` rewriting and
+deleting rows it just inserted can produce) reads as:
+
+```sql
+SELECT count() FROM iceberg_table;
+```
+
+```text
+count()
+8
+```
+
 ### RQ.Iceberg.DeletionVectors.Compaction
 version: 1.0
 
@@ -658,6 +730,25 @@ WHERE type = 'QueryFinish' AND query_id = 'dv_partition_pruning';
 ```text
 0
 ```
+
+### RQ.Iceberg.DeletionVectors.Partitioning.PartitionMatching
+version: 1.0
+
+Per the Iceberg scan-planning rules, a deletion vector SHALL be matched to a data file only
+when all of the following hold:
+
+* the data file's `file_path` equals the vector's `referenced_data_file`;
+* the data file's data sequence number is less than or equal to the vector's data sequence
+  number (RQ.Iceberg.DeletionVectors.SequenceNumbers,
+  RQ.Iceberg.DeletionVectors.SequenceNumbers.SameCommit);
+* the data file's partition — both the partition spec and the partition values — is equal to
+  the deletion vector's partition.
+
+A deletion vector SHALL never be applied to a data file in a different partition. In
+particular, a vector manifest entry whose partition tuple does not match the partition of the
+data file named by its `referenced_data_file` — possible only through corrupted or
+hand-crafted metadata, since writers record a vector under the partition of the file it
+references — SHALL NOT be applied to that data file.
 
 ## Count Paths
 
@@ -816,6 +907,25 @@ Deletion vectors require file-relative row numbers, which only the Parquet reade
 deletion vector attached to a data file in any other format (ORC, Avro) SHALL fail with
 `NOT_IMPLEMENTED` and a message naming both the feature and the actual format: "Deletion vectors
 are only supported for data files of Parquet format in Iceberg, but got <format>".
+
+### RQ.Iceberg.DeletionVectors.ErrorHandling.CompressedFooter
+version: 1.0
+
+The `Puffin` format allows the footer payload to be LZ4-compressed (footer `Flags`, byte 0,
+bit 0; a single LZ4 frame with the content size present). Iceberg reference writers emit
+uncompressed footers, but a compressed footer is spec-legal.
+
+[ClickHouse] SHALL decompress an LZ4-compressed footer payload and return exactly the same
+result as for an equivalent file with an uncompressed footer. It SHALL fail closed on any
+footer flag construct it cannot interpret:
+
+* a compressed footer frame that does not declare its content size SHALL be rejected
+  (`LZ4_DECODER_FAILED`, `must declare content size`);
+* reserved footer flag bits set SHALL be rejected with `BAD_ARGUMENTS`
+  (`Unknown Puffin footer flags`).
+
+It SHALL NOT parse the compressed bytes as plain JSON, silently skip the deletion vectors, or
+return rows as if no vector existed.
 
 ## Distributed Reads
 
