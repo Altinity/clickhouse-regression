@@ -3,10 +3,8 @@ DROP statement, RBAC, observability, concurrency, and entry isolation.
 
 All profile events are read from system.query_log per log_comment so
 concurrent activity cannot perturb the counts. Cache requirements are
-verified on S3 (MinIO) storage; local files have no etag and bypass the
-cache (EtagBypass)."""
-
-import threading
+verified on S3 (MinIO) storage; local files have no etag and are cached
+by the remaining key components (EtagBypass)."""
 
 from testflows.core import *
 from testflows.asserts import error
@@ -30,6 +28,12 @@ DEFAULT_SERVER_SETTINGS = {
     "puffin_files_cache_max_entries": "5000",
     "puffin_files_cache_size_ratio": "0.5",
 }
+
+
+def expected_count(rows=100, step=10):
+    """Surviving row count of the fixture default: *rows* rows with every
+    *step*-th id deleted."""
+    return len(common.expected_ids(rows, range(0, rows, step)))
 
 
 @TestStep(When)
@@ -101,7 +105,7 @@ def setting(self):
         count = common.count_rows(
             table=table, settings=[("use_puffin_files_cache", "0")]
         )
-        assert count == 90, error(f"count = {count}")
+        assert count == expected_count(), error(f"count = {count}")
 
 
 @TestScenario
@@ -138,7 +142,7 @@ def server_settings(self):
         count = common.count_rows(
             table=table, settings=[("use_puffin_files_cache", "1")], node=node
         )
-        assert count == 90, error(f"count = {count}")
+        assert count == expected_count(), error(f"count = {count}")
 
     with And("the live value is reported without a restart"):
         result = node.query(
@@ -214,17 +218,21 @@ def invalidation(self):
         common.assert_visible_ids(
             table=replaced,
             ids=[i for i in range(rows) if i % 10 != 3],
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_Cache_EtagBypass("1.0"))
 def etag_bypass(self):
-    """Objects without an etag (local filesystem) bypass the cache: results
-    stay correct and PuffinFilesCacheHits stays 0."""
+    """The absence of an etag does not break the cache: local-filesystem
+    objects are cached keyed by the remaining components (storage identity,
+    path, blob offset and length, referenced data file, cardinalities), so
+    a repeated read of the same local table is a warm hit with the same
+    correct result."""
     rows = 60
     deleted = list(range(0, rows, 4))
+    expected = common.expected_ids(rows, deleted)
 
     with Given("a local-filesystem clone of a table with a deletion vector"):
         table = common.table_with_deletion_vectors(
@@ -232,24 +240,25 @@ def etag_bypass(self):
         )
         local_dir = local_clone.clone_table_to_local(table=table)
 
-    expected = common.expected_ids(rows, deleted)
+    with When("the local table is read from a cold cache"):
+        common.drop_puffin_cache()
+        cold_comment = common.unique_log_comment("local_cold")
+        ids = local_clone.read_local_ids(local_dir=local_dir, log_comment=cold_comment)
+        assert ids == expected, error(f"cold local read returned {len(ids)} rows")
 
-    with When("the local table is read twice"):
-        log_comments = []
-        for _ in range(2):
-            log_comment = common.unique_log_comment("local")
-            ids = local_clone.read_local_ids(
-                local_dir=local_dir, log_comment=log_comment
-            )
-            assert ids == expected, error(f"local read returned {len(ids)} rows")
-            log_comments.append(log_comment)
+    with Then("the cold read fetched the Puffin file"):
+        events = common.get_puffin_events(log_comment=cold_comment)
+        assert events["PuffinFilesRead"] > 0, error(f"cold local read: {events}")
 
-    with Then("no read was served from the Puffin cache"):
-        for log_comment in log_comments:
-            events = common.get_puffin_events(log_comment=log_comment)
-            assert events["PuffinFilesCacheHits"] == 0, error(
-                f"local read hit the cache: {events}"
-            )
+    with When("the local table is read again"):
+        warm_comment = common.unique_log_comment("local_warm")
+        ids = local_clone.read_local_ids(local_dir=local_dir, log_comment=warm_comment)
+        assert ids == expected, error(f"warm local read returned {len(ids)} rows")
+
+    with Then("the warm read is served from the cache despite the missing etag"):
+        events = common.get_puffin_events(log_comment=warm_comment)
+        assert events["PuffinFilesCacheHits"] > 0, error(f"warm local read: {events}")
+        assert events["PuffinFilesRead"] == 0, error(f"warm local read: {events}")
 
 
 @TestScenario
@@ -268,9 +277,11 @@ def eviction_under_pressure(self):
         )
         node.query("SYSTEM RELOAD CONFIG")
 
+    rows = 50
+
     with And("two tables with deletion vectors"):
-        table1 = common.table_with_deletion_vectors(rows=50)
-        table2 = common.table_with_deletion_vectors(rows=50)
+        table1 = common.table_with_deletion_vectors(rows=rows)
+        table2 = common.table_with_deletion_vectors(rows=rows)
 
     with When("both vectors are read alternately from a cold cache"):
         common.drop_puffin_cache(node=node)
@@ -282,7 +293,7 @@ def eviction_under_pressure(self):
                     node=node,
                     settings=[("log_comment", log_comment)],
                 )
-                assert count == 45, error(f"count = {count}")
+                assert count == expected_count(rows), error(f"count = {count}")
 
     with Then("entries were evicted while results stayed correct"):
         weight_lost = metrics.get_profile_event(
@@ -311,7 +322,7 @@ def empty_vector_cached(self):
         common.drop_puffin_cache(node=node)
 
     with When("the empty vector is read twice"):
-        settings = [("use_iceberg_metadata_files_cache", "0")]
+        settings = common.FRESH_READ_SETTINGS
         first = warm_read(table=table, node=node, extra_settings=settings)
         second = warm_read(table=table, node=node, extra_settings=settings)
 
@@ -358,7 +369,7 @@ def drop_statement(self):
         assert events["PuffinFilesRead"] > 0, error(f"events: {events}")
 
     with And("the logical result is unchanged"):
-        assert common.count_rows(table=table) == 90, error()
+        assert common.count_rows(table=table) == expected_count(), error()
 
 
 @TestScenario
@@ -458,9 +469,15 @@ def observability(self):
 def concurrency(self):
     """Two concurrent queries over the same cold vector both return correct
     results with a single load, and a racing cache drop never produces a
-    wrong result."""
+    wrong result.
+
+    Concurrency comes from background clickhouse-client processes
+    (common.run_queries_in_parallel), not a TestFlows Pool — executor
+    teardown deterministically segfaults the stock python 3.12.3
+    interpreter. The scheduler may still serialize the two queries, in
+    which case the assertion degrades to "the second query was served from
+    cache" — both orderings satisfy the single-load requirement."""
     rows = 100
-    expected_count = 90
 
     with Given("a table with a cold deletion vector"):
         table = common.table_with_deletion_vectors(rows=rows)
@@ -468,72 +485,49 @@ def concurrency(self):
 
     log_comments = [common.unique_log_comment(f"conc{i}") for i in range(2)]
 
-    @TestStep(When)
-    def read_with_comment(self, log_comment, barrier=None):
-        # the barrier aligns the query starts so both are as close to the
-        # same cold load as an external test can force; the scheduler may
-        # still serialize them, in which case the assertion degrades to
-        # "the second query was served from cache" — both satisfy the
-        # single-load requirement
-        if barrier is not None:
-            barrier.wait(timeout=60)
-        count = common.count_rows(table=table, settings=[("log_comment", log_comment)])
-        assert count == expected_count, error(f"count = {count}")
+    def count_query(log_comment):
+        return (
+            f"SELECT count() FROM {table.sql_expr()} "
+            f"SETTINGS log_comment = '{log_comment}'"
+        )
 
-    @TestStep(When)
-    def racing_drop(self, barrier):
-        barrier.wait(timeout=60)
-        common.drop_puffin_cache()
+    with When("two queries read the cold vector concurrently"):
+        outputs = common.run_queries_in_parallel(
+            queries=[count_query(log_comment) for log_comment in log_comments]
+        )
 
-    # one Pool for every parallel phase: repeatedly creating and tearing
-    # down executors deterministically segfaults the stock python 3.12.3
-    # interpreter (thread/GC bug, identical crash address on every run)
-    with Pool(2) as pool:
-        with When("two queries read the cold vector concurrently"):
-            barrier = threading.Barrier(2)
-            for log_comment in log_comments:
-                When(
-                    f"concurrent read {log_comment}",
-                    test=read_with_comment,
-                    parallel=True,
-                    executor=pool,
-                )(log_comment=log_comment, barrier=barrier)
-            join()
+    with Then("both returned the correct result"):
+        assert outputs == [str(expected_count(rows))] * 2, error(
+            f"concurrent outputs: {outputs}"
+        )
 
-        with Then("the vector was loaded exactly once across both queries"):
-            total_reads = sum(
-                metrics.get_profile_event(event="PuffinFilesRead", log_comment=lc)
-                for lc in log_comments
+    with And("the vector was loaded exactly once across both queries"):
+        total_reads = sum(
+            metrics.get_profile_event(event="PuffinFilesRead", log_comment=lc)
+            for lc in log_comments
+        )
+        assert total_reads == 1, error(
+            f"PuffinFilesRead totals {total_reads} across both queries, " f"expected 1"
+        )
+
+    with When("a cache drop repeatedly races an in-flight cold load"):
+        # a single attempt may not overlap; repeating the race makes an
+        # actual drop-during-load overlap likely
+        for attempt in range(3):
+            common.drop_puffin_cache()
+            race_comment = common.unique_log_comment(f"race{attempt}")
+            outputs = common.run_queries_in_parallel(
+                queries=[
+                    count_query(race_comment),
+                    "SYSTEM DROP PUFFIN FILES CACHE",
+                ]
             )
-            assert total_reads == 1, error(
-                f"PuffinFilesRead totals {total_reads} across both queries, "
-                f"expected 1"
+            assert outputs[0] == str(expected_count(rows)), error(
+                f"attempt {attempt}: read racing a drop returned {outputs[0]!r}"
             )
 
-        with When("a cache drop repeatedly races an in-flight load"):
-            # a single attempt may not overlap; repeating the race makes an
-            # actual drop-during-load overlap likely
-            for attempt in range(3):
-                common.drop_puffin_cache()
-                race_comment = common.unique_log_comment(f"race{attempt}")
-                race_barrier = threading.Barrier(2)
-                When(
-                    f"read during drop, attempt {attempt}",
-                    test=read_with_comment,
-                    parallel=True,
-                    executor=pool,
-                )(log_comment=race_comment, barrier=race_barrier)
-                When(
-                    f"drop during read, attempt {attempt}",
-                    test=racing_drop,
-                    parallel=True,
-                    executor=pool,
-                )(barrier=race_barrier)
-                join()
-
-    with Then("the racing queries all returned the correct result"):
-        # correctness was asserted inside every read; verify once more cold
-        assert common.count_rows(table=table) == expected_count, error()
+    with Then("a final cold read still returns the correct result"):
+        assert common.count_rows(table=table) == expected_count(rows), error()
 
 
 @TestScenario
@@ -556,24 +550,22 @@ def entry_isolation(self):
         "id >= 50": [i for i in range(rows) if i not in deleted and i >= 50],
     }
 
-    @TestStep(When)
-    def filtered_read(self, where_clause, expected):
-        ids = common.select_ids(table=table, where_clause=where_clause)
-        assert ids == expected, error(
-            f"filter {where_clause!r} returned {len(ids)} rows, "
-            f"expected {len(expected)}"
+    with When("many concurrent filtered queries share the cached vector"):
+        outputs = common.run_queries_in_parallel(
+            queries=[
+                f"SELECT id FROM {table.sql_expr()} "
+                f"WHERE {where_clause} ORDER BY id"
+                for where_clause in filters
+            ]
         )
 
-    with When("many concurrent filtered queries share the cached vector"):
-        with Pool(4) as pool:
-            for where_clause, expected in filters.items():
-                When(
-                    f"filtered read {where_clause}",
-                    test=filtered_read,
-                    parallel=True,
-                    executor=pool,
-                )(where_clause=where_clause, expected=expected)
-            join()
+    with Then("each returns the same rows as the equivalent single query"):
+        for (where_clause, expected), output in zip(filters.items(), outputs):
+            ids = [int(line) for line in output.split() if line.strip()]
+            assert ids == expected, error(
+                f"filter {where_clause!r} returned {len(ids)} rows, "
+                f"expected {len(expected)}"
+            )
 
 
 @TestFeature
@@ -588,8 +580,5 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(run=drop_statement)
     Scenario(run=rbac)
     Scenario(run=observability)
-    # concurrency runs last: its executor teardown deterministically
-    # segfaults stock python 3.12.3, and last place ensures every other
-    # scenario has already run if the interpreter dies after it
-    # Scenario(run=entry_isolation)
-    # Scenario(run=concurrency)
+    Scenario(run=entry_isolation)
+    Scenario(run=concurrency)

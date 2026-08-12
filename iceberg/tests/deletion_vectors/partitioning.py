@@ -222,7 +222,7 @@ def partition_mismatch_not_applied(self):
         common.drop_iceberg_metadata_cache()
         common.drop_puffin_cache()
 
-    fresh = [("use_iceberg_metadata_files_cache", "0")]
+    fresh = common.FRESH_READ_SETTINGS
     expected = [i for i in range(rows) if i % 4 == 1 or i not in deleted]
 
     with Then(

@@ -749,7 +749,7 @@ def lz4_compressed_footer(self):
         common.assert_visible_ids(
             table=table,
             ids=expected,
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 

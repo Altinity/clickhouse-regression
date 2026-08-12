@@ -277,7 +277,7 @@ def missing_data_file_ignored(self):
         common.assert_visible_ids(
             table=table,
             ids=list(range(100, 150)),
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 
@@ -326,7 +326,7 @@ def same_commit_applies(self):
         common.assert_visible_ids(
             table=table,
             ids=common.expected_ids(rows, deleted),
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 

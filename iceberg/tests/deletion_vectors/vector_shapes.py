@@ -37,7 +37,7 @@ def empty_vector(self):
         common.assert_visible_ids(
             table=table,
             ids=list(range(rows)),
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
     with And("a repeated read neither fails nor re-fetches the Puffin file"):
@@ -45,10 +45,7 @@ def empty_vector(self):
         common.assert_visible_ids(
             table=table,
             ids=list(range(rows)),
-            settings=[
-                ("use_iceberg_metadata_files_cache", "0"),
-                ("log_comment", log_comment),
-            ],
+            settings=common.FRESH_READ_SETTINGS + [("log_comment", log_comment)],
         )
         events = common.get_puffin_events(log_comment=log_comment)
         assert events["PuffinFilesRead"] == 0, error(
@@ -95,7 +92,7 @@ def all_rows_deleted(self):
         common.drop_puffin_cache()
 
     expected = list(range(100, 150))
-    fresh = [("use_iceberg_metadata_files_cache", "0")]
+    fresh = common.FRESH_READ_SETTINGS
 
     with Then("SELECT * reflects the empty contribution"):
         common.assert_visible_ids(table=table, ids=expected, settings=fresh)
@@ -123,16 +120,24 @@ def all_rows_deleted(self):
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_BoundaryPositions("1.0"))
 def first_and_last_positions(self):
-    """Positions 0 and N-1 apply to the first and last rows exactly."""
+    """Positions 0 and N-1 apply to the physically first and last rows —
+    the vector is crafted against the actual file layout, so the check
+    holds even if the writer stores rows out of insertion order."""
     rows = 100
+    positions = [0, rows - 1]
 
-    with Given("a table where Spark deleted the first and last rows"):
-        table = common.table_with_deletion_vectors(
-            rows=rows, delete_condition="id IN (0, 99)"
+    with Given("a table with a deletion vector over a single data file"):
+        table = common.table_with_deletion_vectors(rows=rows)
+        common.assert_data_file_count(table=table, count=1)
+        ids_in_order = common.parquet_column_values(table=table)
+
+    with When("the vector is replaced to delete the first and last positions"):
+        common.replace_vector_with_positions(table=table, positions=positions)
+
+    with Then("exactly the physically first and last rows disappeared"):
+        common.assert_visible_positions(
+            table=table, ids_in_order=ids_in_order, deleted_positions=positions
         )
-
-    with Then("only positions 0 and 99 disappeared"):
-        common.assert_visible_ids(table=table, ids=list(range(1, 99)))
 
 
 @TestScenario
@@ -329,7 +334,7 @@ def row_group_boundaries(self):
     self.context.boundaries = boundaries
     self.context.ids_in_order = ids_in_order
     self.context.expected = sorted(set(ids_in_order) - deleted_ids)
-    self.context.fresh = [("use_iceberg_metadata_files_cache", "0")]
+    self.context.fresh = common.FRESH_READ_SETTINGS
 
     Scenario(run=single_threaded_read)
     Scenario(run=multi_threaded_read)
@@ -402,7 +407,7 @@ def high_key_positions(self):
         common.assert_visible_ids(
             table=table,
             ids=expected,
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 
@@ -438,7 +443,7 @@ def position_range_boundary(self):
         common.assert_visible_ids(
             table=table,
             ids=list(range(rows)),
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
     with When("the vector deletes one position above the maximum"):
@@ -464,6 +469,179 @@ def supported_position_range(self):
     and the supported position range boundary is enforced exactly."""
     Scenario(run=high_key_positions)
     Scenario(run=position_range_boundary)
+
+
+DENSE_ROWS = 10_000
+CHUNK = 1 << 16  # positions per 16-bit roaring container
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RoaringContainerTypes("1.0"))
+def crafted_bitset_containers(self):
+    """A dense vector (90% of the rows) exceeds the array-container
+    cardinality limit, so its chunk serializes as a bitset container."""
+    ctx = self.context
+    positions = [position for position in range(DENSE_ROWS) if position % 10 != 0]
+
+    with When("a dense vector is crafted and round-trips through a bitset body"):
+        payload = puffin.build_dv_payload(positions=positions)
+        assert puffin.dv_positions_of_payload(payload) == positions, error()
+
+    with And("the table's vector is replaced with it"):
+        common.replace_vector_with_positions(
+            table=ctx.table, positions=positions, payload=payload
+        )
+
+    with Then("exactly the undeleted positions survive"):
+        common.assert_visible_positions(
+            table=ctx.table,
+            ids_in_order=ctx.ids_in_order,
+            deleted_positions=positions,
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RoaringContainerTypes("1.0"))
+def crafted_run_containers(self):
+    """A contiguous range serializes as a run container (run-format cookie,
+    below the offset-header threshold)."""
+    ctx = self.context
+    positions = list(range(5_000))
+
+    with When("a run-format vector is crafted and round-trips"):
+        payload = puffin.build_dv_payload(
+            vector=puffin.build_roaring64(
+                buckets=[(0, puffin.build_bitmap32_with_runs(positions))]
+            )
+        )
+        assert puffin.dv_positions_of_payload(payload) == positions, error()
+
+    with And("the table's vector is replaced with it"):
+        common.replace_vector_with_positions(
+            table=ctx.table, positions=positions, payload=payload
+        )
+
+    with Then("exactly the second half of the file survives"):
+        common.assert_visible_positions(
+            table=ctx.table,
+            ids_in_order=ctx.ids_in_order,
+            deleted_positions=positions,
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RoaringContainerTypes("1.0"))
+def crafted_mixed_containers(self):
+    """One vector mixing all three container types — run, array, and bitset
+    chunks, with enough containers for the run-format offset header."""
+    rows = 300_000
+    positions = sorted(
+        list(range(10_000))  # chunk 0: one contiguous range → run
+        + [CHUNK + i * 100 for i in range(100)]  # chunk 1: sparse → array
+        + [2 * CHUNK + 2 * i for i in range(20_000)]  # chunk 2: alternating → bitset
+        + list(range(3 * CHUNK, 3 * CHUNK + 5_000))  # chunk 3: range → run
+    )
+
+    with Given("a table whose single data file has rows in every chunk"):
+        table = common.table_with_deletion_vectors(
+            rows=0,
+            setup_statements=[
+                common.insert_range_statement(rows),
+                "DELETE FROM {table} WHERE id = 0",
+            ],
+        )
+        common.assert_data_file_count(table=table, count=1)
+        ids_in_order = common.parquet_column_values(table=table)
+
+    with When("a mixed-container vector is crafted and round-trips"):
+        payload = puffin.build_dv_payload(
+            vector=puffin.build_roaring64(
+                buckets=[(0, puffin.build_bitmap32_with_runs(positions))]
+            )
+        )
+        assert puffin.dv_positions_of_payload(payload) == positions, error()
+
+    with And("the table's vector is replaced with it"):
+        common.replace_vector_with_positions(
+            table=table, positions=positions, payload=payload
+        )
+
+    with Then("exactly the rows outside all three container shapes survive"):
+        common.assert_visible_positions(
+            table=table, ids_in_order=ids_in_order, deleted_positions=positions
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RoaringContainerTypes("1.0"))
+def spark_dense_delete(self):
+    """A writer-produced dense delete (90% of the rows): whatever container
+    types Spark chose, the blob decodes to the deleted positions and the
+    read hides exactly those rows."""
+    with Given("a table where Spark deleted 90% of the rows"):
+        table = common.table_with_deletion_vectors(
+            rows=DENSE_ROWS, delete_condition="id % 10 != 0"
+        )
+        ids_in_order = common.parquet_column_values(table=table)
+
+    with And("the writer-produced blob decodes to the deleted positions"):
+        payload = manifest.read_dv_payload(table.namespace, table.table_name)
+        deleted_positions = sorted(
+            position for position, value in enumerate(ids_in_order) if value % 10 != 0
+        )
+        assert (
+            sorted(puffin.dv_positions_of_payload(payload)) == deleted_positions
+        ), error("writer blob does not decode to the deleted positions")
+
+    with Then("only every tenth row survives"):
+        common.assert_visible_ids(
+            table=table, ids=[i for i in range(DENSE_ROWS) if i % 10 == 0]
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_RoaringContainerTypes("1.0"))
+def spark_range_delete(self):
+    """A writer-produced contiguous-range delete (the natural producer of
+    run containers): the blob decodes and the read hides exactly the
+    range."""
+    with Given("a table where Spark deleted the first half of the rows"):
+        table = common.table_with_deletion_vectors(
+            rows=DENSE_ROWS, delete_condition="id < 5000"
+        )
+        ids_in_order = common.parquet_column_values(table=table)
+
+    with And("the writer-produced blob decodes to the deleted positions"):
+        payload = manifest.read_dv_payload(table.namespace, table.table_name)
+        deleted_positions = sorted(
+            position for position, value in enumerate(ids_in_order) if value < 5000
+        )
+        assert (
+            sorted(puffin.dv_positions_of_payload(payload)) == deleted_positions
+        ), error("writer blob does not decode to the deleted positions")
+
+    with Then("only the second half survives"):
+        common.assert_visible_ids(table=table, ids=list(range(5000, DENSE_ROWS)))
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_RoaringContainerTypes("1.0"))
+def roaring_containers(self):
+    """Array, bitset, and run containers — crafted and writer-produced —
+    yield identical row visibility for equivalent vectors."""
+    with Given("a table with a vector over a single 10,000-row data file"):
+        table = common.table_with_deletion_vectors(
+            rows=DENSE_ROWS, delete_condition="id = 0"
+        )
+        common.assert_data_file_count(table=table, count=1)
+        self.context.table = table
+        self.context.ids_in_order = common.parquet_column_values(table=table)
+
+    Scenario(run=crafted_bitset_containers)
+    Scenario(run=crafted_run_containers)
+    Scenario(run=crafted_mixed_containers)
+    Scenario(run=spark_dense_delete)
+    Scenario(run=spark_range_delete)
 
 
 @TestScenario
@@ -528,4 +706,5 @@ def feature(self, minio_root_user, minio_root_password):
     Suite(run=boundary_positions)
     Suite(run=row_group_boundaries)
     Suite(run=supported_position_range)
+    Suite(run=roaring_containers)
     Scenario(run=shared_puffin_file)

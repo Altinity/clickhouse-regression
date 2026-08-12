@@ -275,6 +275,22 @@ def replace_deletion_vector(
     return written_entry
 
 
+def read_dv_payload(namespace, table_name):
+    """Bytes of the single deletion-vector blob of the current snapshot,
+    sliced out of its Puffin file by the manifest-declared
+    ``content_offset`` / ``content_size_in_bytes`` — for inspecting what
+    the writer actually serialized."""
+    entries = find_dv_entries(namespace, table_name)
+    assert (
+        len(entries) == 1
+    ), f"expected exactly one deletion-vector entry, found {len(entries)}"
+    data_file = entries[0]["entry"]["data_file"]
+    blob = s3_objects.get_object_bytes(data_file["file_path"])
+    offset = data_file["content_offset"]
+    size = data_file["content_size_in_bytes"]
+    return blob[offset : offset + size]
+
+
 @TestStep(When)
 def duplicate_dv_entry(self, namespace, table_name):
     """Duplicate the deletion-vector manifest entry so two live entries

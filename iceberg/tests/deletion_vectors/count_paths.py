@@ -80,10 +80,8 @@ def manifest_sum_wins(self):
     with Then("count() returns the manifest sum, not the summary"):
         count = common.count_rows(
             table=plain,
-            settings=[
-                ("optimize_trivial_count_query", "1"),
-                ("use_iceberg_metadata_files_cache", "0"),
-            ],
+            settings=[("optimize_trivial_count_query", "1")]
+            + common.FRESH_READ_SETTINGS,
         )
         assert count == 50, error(f"count() = {count}, expected the manifest sum 50")
 

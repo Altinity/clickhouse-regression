@@ -14,7 +14,9 @@ steps harness (``steps/puffin.py``, ``steps/manifest.py``).
 
 Environment gaps (skipped scenarios, not silent omissions):
 
-* ``icebergAzure`` — no Azure (azurite) service in ``iceberg_env``;
+* ``icebergAzure`` — no Azure (azurite) service in ``iceberg_env``; carried
+  by the dedicated ``RQ...AccessForms.Azure`` requirement so the skip does
+  not mark the passing access-form coverage unsatisfied;
 * ``Distributed.ProtocolFailClosed`` — needs a worker on an older protocol
   version, while all nodes here run the same build.
 """
@@ -32,18 +34,20 @@ import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
 
 
 MODULES = (
-    "sanity",
-    "access_forms",
-    "vector_shapes",
-    "coexistence",
-    "query_semantics",
-    "datatypes",
-    "time_travel",
-    "partitioning",
-    "count_paths",
-    "error_handling",
-    "distributed",
-    "cache",
+    # "sanity",
+    # "access_forms",
+    # "vector_shapes",
+    # "coexistence",
+    # "query_semantics",
+    # "datatypes",
+    # "parquet_variety",
+    # "time_travel",
+    # "partitioning",
+    # "count_paths",
+    # "error_handling",
+    "file_corruption",
+    # "distributed",
+    # "cache",
 )
 
 

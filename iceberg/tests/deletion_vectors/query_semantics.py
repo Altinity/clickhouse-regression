@@ -214,7 +214,7 @@ def predicate_as_where(self):
             columns="id",
             where_clause=ctx.predicate,
             order_by="id",
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
         ids = [int(line) for line in result.output.split() if line.strip()]
         assert ids == ctx.expected, error(
@@ -232,7 +232,7 @@ def predicate_as_prewhere(self):
         result = ctx.node.query(
             f"SELECT id FROM {ctx.engine_table} PREWHERE {ctx.predicate} "
             f"ORDER BY id FORMAT TabSeparated",
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
         ids = [int(line) for line in result.output.split() if line.strip()]
         assert ids == ctx.expected, error(f"PREWHERE returned {len(ids)} rows")
