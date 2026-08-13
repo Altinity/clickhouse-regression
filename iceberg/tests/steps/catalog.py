@@ -220,6 +220,11 @@ def create_namespace(self, catalog, namespace):
         raise
 
 
+def table_s3_location(namespace, table_name=None):
+    """Default S3 table root used by ice-rest-catalog / Glue."""
+    return "s3://warehouse/data"
+
+
 @TestStep(Given)
 def drop_iceberg_table(self, catalog, namespace, table_name):
     try:
