@@ -30,6 +30,8 @@ def validate_feature_support(self, feature, check):
     Plain function (not a scenario) so the flag lands on the module context and
     is visible to the module and sibling tests. Returns the support bool.
     """
+    self.context.feature_supported = False
+
     with Given(f"checking that the build supports {feature}"):
         self.context.feature_supported = bool(check(self))
 
