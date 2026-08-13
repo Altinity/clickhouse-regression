@@ -60,19 +60,42 @@ def run_clickhouse_local(binary, query):
     )
 
 
-def setting_supported(setting_name):
-    """Return a post-cluster check that is True when ``setting_name`` exists.
+def setting_supported(setting_name, table="system.settings"):
+    """Post-cluster check: True when ``setting_name`` exists in ``table``.
 
-    Checks the setting's presence (``name`` column), not its ``value``: some
-    settings default to an empty string, so a value-based check would wrongly
-    report them as unsupported on builds that do have them.
+    Checks presence (``name`` column), not ``value``, which can be empty.
     """
 
     def check(test):
         with Then(f"I check whether the {setting_name} setting exists"):
             name = get_settings_value(
-                setting_name, node=test.context.node, column="name"
+                setting_name, node=test.context.node, table=table, column="name"
             )
         return name.strip() != ""
+
+    return check
+
+
+def setting_supported_in_binary(setting_name, table="system.settings"):
+    """Same as :func:`setting_supported`, but probed from the binary with
+    ``clickhouse local``, for features whose absence stops the server starting.
+    """
+
+    def check(test):
+        with Given("I get the ClickHouse binary for the build under test"):
+            binary = get_clickhouse_binary(test.context.clickhouse_path)
+
+        with Then(f"I check whether the {setting_name} setting exists"):
+            probe = run_clickhouse_local(
+                binary,
+                f"SELECT count() FROM {table} WHERE name = '{setting_name}'",
+            )
+            if probe.returncode != 0:
+                raise RuntimeError(
+                    f"could not probe {setting_name} in {table} with "
+                    f"clickhouse local: {(probe.stdout + probe.stderr).strip()}"
+                )
+
+        return probe.stdout.strip() == "1"
 
     return check
