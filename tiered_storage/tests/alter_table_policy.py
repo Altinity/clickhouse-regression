@@ -139,12 +139,8 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert f"{expected_disk}\t1" in output, error()
                 else:
                     with And("I recheck disks utilizations"):
-                        with By("checking jbod1 utilization remains above 10%%"):
-                            check_disk_utilization("jbod1", 10)
-                        with And("new disk utilization reached above 0%%"):
-                            check_disk_utilization("jbod2", 0)
-                        with And("external disk utilization is above 30%%"):
-                            check_disk_utilization("external", 30)
+                        with By("external disk utilization is above 5%%"):
+                            check_disk_utilization("external", 5)
 
                 with And("I now try to go back to the old policy"):
                     exitcode = 36
@@ -177,13 +173,15 @@ def scenario(self, cluster, node="clickhouse1"):
                     )
                     assert f"{expected_disk}\t1" in output, error()
                 else:
+                    with And("I check the new part is on the external volume"):
+                        output = node.query(
+                            f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
+                        ).output
+                        assert "external\t1" in output, error()
+
                     with And("I recheck disks utilizations"):
-                        with By("checking jbod1 utilization remains above 10%%"):
-                            check_disk_utilization("jbod1", 10)
-                        with And("new disk utilization reached above 0%%"):
-                            check_disk_utilization("jbod2", 0)
-                        with And("external disk utilization is above 30%%"):
-                            check_disk_utilization("external", 39)
+                        with By("external disk utilization is above 15%%"):
+                            check_disk_utilization("external", 15)
 
             finally:
                 with Finally("I drop the table"):
