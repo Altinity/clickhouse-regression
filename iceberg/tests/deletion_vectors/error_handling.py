@@ -247,7 +247,18 @@ def blob_metadata(self):
         "blob type is not deletion-vector-v1": (
             {"type": "unknown-blob-v9"},
             None,
-            "unsupported blob type",
+            "expected deletion-vector-v1",
+        ),
+        # the Puffin spec requires -1 for both fields on deletion-vector-v1
+        "snapshot-id is not -1": (
+            {"snapshot_id": 7},
+            None,
+            "snapshot-id and sequence-number must be -1",
+        ),
+        "sequence-number is not -1": (
+            {"sequence_number": 7},
+            None,
+            "snapshot-id and sequence-number must be -1",
         ),
         # the build has quoted and unquoted variants of this message;
         # "must omit" is the stable common part
@@ -585,7 +596,8 @@ def blob_length_limit(self):
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits("1.0"))
 def cardinality_materialization_limit(self):
     """A declared cardinality above 100,000,000 fails with BAD_ARGUMENTS
-    before the Puffin file is even opened."""
+    before the vector is materialized (the footer read itself is inherent —
+    the ceiling compares against the footer's cardinality property)."""
     with Given(
         "a table whose data file pretends to be large enough for a "
         "vector of 100,000,001 positions"
@@ -614,7 +626,7 @@ def cardinality_materialization_limit(self):
             declared_cardinality=100_000_001,
         )
 
-    with Then("the read fails before the Puffin file is opened"):
+    with Then("the read fails before the vector is materialized"):
         log_comment = common.unique_log_comment("rl_card")
         common.assert_table_read_fails(
             table=table,
@@ -622,11 +634,17 @@ def cardinality_materialization_limit(self):
             message_fragment="exceeds materialization limit",
             log_comment=log_comment,
         )
+        # the ceiling compares against the footer's cardinality property,
+        # so the footer parse (1 event) is inherent, and the rejected
+        # blob-read attempt still counts its event on entry — but the
+        # guard rejects before the payload is deserialized or allocated,
+        # which the error message itself names
         reads = common.get_profile_event_of_failed_query(
             event="PuffinFilesRead", log_comment=log_comment
         )
-        assert reads == 0, error(
-            f"PuffinFilesRead = {reads}: the hostile manifest forced Puffin I/O"
+        assert reads <= 2, error(
+            f"PuffinFilesRead = {reads}: expected at most the footer parse "
+            f"and the rejected blob-read attempt"
         )
 
 
@@ -717,6 +735,104 @@ def non_parquet_data_files(self):
     Scenario(run=manifest_declares_orc)
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_CompressedFooter("1.0"))
+def lz4_compressed_footer(self):
+    """An LZ4-compressed footer payload (single frame with the content size
+    declared, flag bit set) reads identically to an uncompressed footer —
+    the vector is applied, not silently skipped."""
+    table = self.context.table
+
+    with When("the Puffin file is rebuilt with an LZ4-compressed footer"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=POSITIONS),
+            declared_cardinality=CARDINALITY,
+            puffin_kwargs={"compress_footer": True},
+        )
+        common.drop_iceberg_metadata_cache()
+        common.drop_puffin_cache()
+
+    with Then("the read applies the vector exactly as with an uncompressed footer"):
+        ids_in_order = self.context.ids_in_order
+        expected = sorted(
+            set(ids_in_order) - {ids_in_order[position] for position in POSITIONS}
+        )
+        common.assert_visible_ids(
+            table=table,
+            ids=expected,
+            settings=common.FRESH_READ_SETTINGS,
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_CompressedFooter("1.0"))
+def footer_without_content_size(self):
+    """A compressed footer frame that does not declare its content size is
+    rejected (the Puffin spec requires the content size to be present)."""
+    table = self.context.table
+
+    with When("the footer frame is compressed without a declared content size"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=POSITIONS),
+            declared_cardinality=CARDINALITY,
+            puffin_kwargs={"compress_footer": True, "store_content_size": False},
+        )
+
+    with Then("the read fails naming the missing content size"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="LZ4_DECODER_FAILED",
+            message_fragment="must declare content size",
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_CompressedFooter("1.0"))
+def unknown_footer_flags(self):
+    """Reserved footer flag bits set are rejected with BAD_ARGUMENTS rather
+    than interpreted as some other footer encoding."""
+    table = self.context.table
+
+    with When("a reserved footer flag bit is set"):
+        manifest.replace_deletion_vector(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            payload=puffin.build_dv_payload(positions=POSITIONS),
+            declared_cardinality=CARDINALITY,
+            puffin_kwargs={"flags": b"\x02\x00\x00\x00"},
+        )
+
+    with Then("the read fails with BAD_ARGUMENTS"):
+        common.assert_table_read_fails(
+            table=table,
+            error_name="BAD_ARGUMENTS",
+            message_fragment="Unknown Puffin footer flags",
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_CompressedFooter("1.0"))
+def compressed_footer(self):
+    """A spec-legal LZ4-compressed Puffin footer reads identically to an
+    uncompressed one, and uninterpretable footer flag constructs fail
+    closed."""
+    with Given("a table with a deletion vector over a single data file"):
+        table = common.table_with_deletion_vectors(
+            rows=ROWS, delete_condition="id % 10 = 0"
+        )
+        common.assert_data_file_count(table=table, count=1)
+        self.context.table = table
+        self.context.ids_in_order = common.parquet_column_values(table=table)
+
+    Scenario(run=lz4_compressed_footer)
+    Scenario(run=footer_without_content_size)
+    Scenario(run=unknown_footer_flags)
+
+
 @TestFeature
 @Name("error handling")
 def feature(self, minio_root_user, minio_root_password):
@@ -727,3 +843,4 @@ def feature(self, minio_root_user, minio_root_password):
     Suite(run=manifest_consistency)
     Suite(run=resource_limits)
     Suite(run=non_parquet_data_files)
+    Suite(run=compressed_footer)

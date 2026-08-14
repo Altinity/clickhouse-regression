@@ -41,7 +41,6 @@ def alter_column_in_sequence(self, minio_root_user, minio_root_password):
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             storage_endpoint="http://minio:9000/warehouse",
-            namespaces=namespace,
         )
 
     with And("create MergeTree and Iceberg catalog tables with the same schema"):
@@ -60,7 +59,7 @@ def alter_column_in_sequence(self, minio_root_user, minio_root_password):
             namespace=namespace,
             table_name=iceberg_table_name,
             schema=alter_steps.alter_support_iceberg_schema(),
-            location="s3://warehouse/data",
+            location=catalog_steps.table_s3_location(namespace, iceberg_table_name),
             partition_spec=PartitionSpec(),
             sort_order=SortOrder(),
         )
@@ -112,7 +111,7 @@ def alter_add_add_drop_column(self, minio_root_user, minio_root_password):
             schema=Schema(
                 NestedField(1, "name", StringType(), required=False),
             ),
-            location="s3://warehouse/data",
+            location=catalog_steps.table_s3_location(namespace, table_name),
             partition_spec=PartitionSpec(),
             sort_order=SortOrder(),
         )
@@ -206,7 +205,7 @@ def alter_drop_partition_column(self, minio_root_user, minio_root_password):
             namespace=namespace,
             table_name=table_name,
             schema=schema,
-            location="s3://warehouse/data",
+            location=catalog_steps.table_s3_location(namespace, table_name),
             partition_spec=partition_spec,
             sort_order=SortOrder(),
         )
@@ -243,7 +242,7 @@ def alter_drop_partition_column(self, minio_root_user, minio_root_password):
 
 @TestScenario
 def alter_drop_sorting_column(self, minio_root_user, minio_root_password):
-    """Check that dropping a sort column resets the current order to unsorted."""
+    """Check that Iceberg rejects dropping a column used by its active sort order."""
     namespace = f"namespace_{getuid()}"
     table_name = f"table_{getuid()}"
     database_name = f"datalake_db_{getuid()}"
@@ -257,7 +256,7 @@ def alter_drop_sorting_column(self, minio_root_user, minio_root_password):
         )
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with And("define schema partitioned by name and sorted by double"):
+    with And("define schema sorted by double"):
         schema = Schema(
             NestedField(1, "name", StringType(), required=False),
             NestedField(2, "double", DoubleType(), required=False),
@@ -269,7 +268,7 @@ def alter_drop_sorting_column(self, minio_root_user, minio_root_password):
             namespace=namespace,
             table_name=table_name,
             schema=schema,
-            location="s3://warehouse/data",
+            location=catalog_steps.table_s3_location(namespace, table_name),
             partition_spec=PartitionSpec(),
             sort_order=sort_order,
         )
@@ -287,39 +286,22 @@ def alter_drop_sorting_column(self, minio_root_user, minio_root_password):
             pa.Table.from_pylist([{"name": "Alice", "double": 195.23, "integer": 20}])
         )
 
-    with When("drop the current sort-order source column"):
-        alter_steps.drop_column(
+    with When("try to drop the sort-order source column, expecting rejection"):
+        alter_steps.drop_column_expecting_rejection(
             table_name=clickhouse_table_name,
             column_name="double",
         )
 
-    with Then("the column is dropped and existing data remains readable"):
+    with Then("check that the sort column and table data remain unchanged"):
         result = self.context.node.query(
-            f"SELECT * FROM {clickhouse_table_name} FORMAT TabSeparated"
+            f"SELECT name, double, integer FROM {clickhouse_table_name} "
+            "FORMAT TabSeparated"
         )
-        assert result.output == "Alice\t20", error()
-
-    with And("run SHOW CREATE TABLE"):
-        result = self.context.node.query(f"SHOW CREATE TABLE {clickhouse_table_name}")
-        assert "`double` Double" not in result.output, error()
-        assert "`integer` Int64" in result.output, error()
-
-    with And("the current sort order is reset to unsorted"):
+        assert result.output == "Alice\t195.23\t20", error()
         refreshed_table = catalog.load_table(f"{namespace}.{table_name}")
-        field_names = [field.name for field in refreshed_table.schema().fields]
-        assert field_names == ["name", "integer"], error()
-        assert refreshed_table.metadata.default_sort_order_id == 0, error()
-        assert refreshed_table.sort_order().order_id == 0, error()
-        assert not refreshed_table.sort_order().fields, error()
-
-    with And("the old sort order and snapshot schema remain available historically"):
-        old_sort_order = next(
-            order
-            for order in refreshed_table.metadata.sort_orders
-            if order.order_id == 1
-        )
-        assert old_sort_order.fields[0].source_id == 2, error()
-        assert refreshed_table.current_snapshot().schema_id == 0, error()
+        assert refreshed_table.schema().find_field("double").field_id == 2, error()
+        assert refreshed_table.metadata.default_sort_order_id == 1, error()
+        assert refreshed_table.sort_order().fields[0].source_id == 2, error()
 
 
 @TestFeature

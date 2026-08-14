@@ -17,52 +17,11 @@ from testflows.asserts import error
 from iceberg.requirements.deletion_vectors import *
 
 import iceberg.tests.deletion_vectors.steps.common as common
+import iceberg.tests.deletion_vectors.steps.schemas as schemas
 
 ROWS = 100
 DELETED = [i for i in range(ROWS) if i % 10 == 0]
 SURVIVORS = [i for i in range(ROWS) if i % 10 != 0]
-
-COLUMNS = """
-    id BIGINT,
-    flag BOOLEAN,
-    i32 INT,
-    i64 BIGINT,
-    f32 FLOAT,
-    f64 DOUBLE,
-    dec DECIMAL(18,2),
-    d DATE,
-    ts TIMESTAMP,
-    ts_ntz TIMESTAMP_NTZ,
-    s STRING,
-    bin BINARY,
-    arr ARRAY<STRING>,
-    m MAP<STRING, INT>,
-    st STRUCT<a: INT, tags: ARRAY<STRING>>,
-    nested MAP<STRING, ARRAY<INT>>,
-    nl INT
-""".strip()
-
-INSERT_STATEMENT = """
-INSERT INTO {table} SELECT /*+ COALESCE(1) */
-    id,
-    id % 2 = 0,
-    CAST(id * 2 AS INT),
-    id * 1000000,
-    CAST(id * 0.5 AS FLOAT),
-    CAST(id * 0.25 AS DOUBLE),
-    CAST(id AS DECIMAL(18,2)) + 0.25,
-    date_add(DATE'2024-01-01', CAST(id AS INT)),
-    timestampadd(SECOND, CAST(id AS INT), TIMESTAMP'2024-01-01 00:00:00'),
-    timestampadd(SECOND, CAST(id AS INT), TIMESTAMP_NTZ'2024-01-01 00:00:00'),
-    concat('s-', CAST(id AS STRING)),
-    CAST(concat('b-', CAST(id AS STRING)) AS BINARY),
-    array(concat('a-', CAST(id AS STRING)), 'x'),
-    map('k', CAST(id AS INT)),
-    named_struct('a', CAST(id AS INT), 'tags', array(concat('t-', CAST(id AS STRING)))),
-    map('k', array(CAST(id AS INT))),
-    IF(id % 3 = 0, NULL, CAST(id AS INT))
-FROM range({rows})
-""".strip()
 
 
 def _expected_checks():
@@ -99,7 +58,14 @@ def _expected_checks():
         ("map", "sum(m['k'])", str(ssum)),
         ("struct", "sum(st.a)", str(ssum)),
         ("struct nested array", "sum(length(st.tags))", str(n)),
-        ("map of arrays", "sum(arraySum(nested['k']))", str(ssum)),
+        # Spark ARRAY<INT> elements are nullable, and arraySum rejects
+        # Nullable element types — strip the (never actually NULL)
+        # nullability before aggregating
+        (
+            "map of arrays",
+            "sum(arraySum(arrayMap(x -> assumeNotNull(x), nested['k'])))",
+            str(ssum),
+        ),
         ("nullable nulls", "countIf(isNull(nl))", str(nulls)),
         ("nullable values", "sum(nl)", str(not_null_sum)),
     ]
@@ -127,7 +93,9 @@ def nested_projection(self):
             columns="id, st.a, m['k']",
             order_by="id",
         )
-        lines = [line.split("\t") for line in result.output.splitlines() if line.strip()]
+        lines = [
+            line.split("\t") for line in result.output.splitlines() if line.strip()
+        ]
         assert [int(line[0]) for line in lines] == SURVIVORS, error(
             f"nested projection returned {len(lines)} rows"
         )
@@ -142,11 +110,12 @@ def datatypes(self):
     """Every supported Iceberg datatype on one wide table with a deletion
     vector."""
     with Given("a wide table with every supported datatype and a vector"):
+        columns, insert = schemas.columns_and_insert("wide", ROWS)
         table = common.table_with_deletion_vectors(
             rows=0,
-            columns=COLUMNS,
+            columns=columns,
             setup_statements=[
-                INSERT_STATEMENT.format(table="{table}", rows=ROWS),
+                insert,
                 "DELETE FROM {table} WHERE id % 10 = 0",
             ],
         )

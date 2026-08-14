@@ -107,7 +107,7 @@ def across_data_files(self):
         common.assert_visible_ids(
             table=table,
             ids=expected,
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 
@@ -124,13 +124,18 @@ def supersedes_position_deletes(self):
         table = common.table_with_deletion_vectors(
             rows=rows, delete_condition="id % 10 = 0"
         )
-        # the crafted positions below equal row ids only for one data file
-        # written in insertion order
         common.assert_data_file_count(table=table, count=1)
+        # positions are derived from the file's physical row order, so the
+        # scenario holds even if the writer stores rows out of insertion
+        # order
+        position_of = {
+            value: position
+            for position, value in enumerate(common.parquet_column_values(table=table))
+        }
 
     with When(
-        "a position-delete file for the same data file marks position 0 "
-        "(also in the vector) and position 5 (not in the vector)"
+        "a position-delete file for the same data file marks the position "
+        "of id 0 (also in the vector) and of id 5 (not in the vector)"
     ):
         delete_files.add_position_delete(
             namespace=table.namespace,
@@ -138,7 +143,7 @@ def supersedes_position_deletes(self):
             data_file_path=delete_files.first_data_file_path(
                 table.namespace, table.table_name
             ),
-            positions=[0, 5],
+            positions=[position_of[0], position_of[5]],
         )
         common.drop_iceberg_metadata_cache()
 
@@ -151,7 +156,7 @@ def supersedes_position_deletes(self):
         common.assert_visible_ids(
             table=table,
             ids=expected,
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
 
 
@@ -186,11 +191,11 @@ def equality_deletes(self):
         common.assert_visible_ids(
             table=table,
             ids=expected,
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
         assert common.count_rows(
             table=table,
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         ) == len(expected), error()
 
 

@@ -18,8 +18,10 @@ from oauth.tests.steps.clikhouse import (
     change_user_directories_config,
 )
 from helpers.cluster import create_cluster
-from helpers.feature_support import validate_feature_support
-from oauth.tests.feature_support import jwt_authentication_supported
+from helpers.feature_support import (
+    setting_supported_in_binary,
+    validate_feature_support,
+)
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
@@ -248,7 +250,11 @@ def regression(
     provider_module = _load_provider_module(identity_provider_lower)
 
     if not validate_feature_support(
-        self, feature="OAuth/JWT authentication", check=jwt_authentication_supported
+        self,
+        feature="OAuth/JWT authentication",
+        check=setting_supported_in_binary(
+            "enable_token_auth", table="system.server_settings"
+        ),
     ):
         return
 

@@ -214,7 +214,7 @@ def predicate_as_where(self):
             columns="id",
             where_clause=ctx.predicate,
             order_by="id",
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
         ids = [int(line) for line in result.output.split() if line.strip()]
         assert ids == ctx.expected, error(
@@ -232,7 +232,7 @@ def predicate_as_prewhere(self):
         result = ctx.node.query(
             f"SELECT id FROM {ctx.engine_table} PREWHERE {ctx.predicate} "
             f"ORDER BY id FORMAT TabSeparated",
-            settings=[("use_iceberg_metadata_files_cache", "0")],
+            settings=common.FRESH_READ_SETTINGS,
         )
         ids = [int(line) for line in result.output.split() if line.strip()]
         assert ids == ctx.expected, error(f"PREWHERE returned {len(ids)} rows")
@@ -271,6 +271,95 @@ def combined_filters(self):
 
     Scenario(run=predicate_as_where)
     Scenario(run=predicate_as_prewhere)
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_QuerySemantics_IOReductionOptimizations("1.0"))
+def filter_push_down_parity(self, setting_value):
+    """The post-vector row set is identical with Parquet predicate
+    push-down enabled or disabled."""
+    ctx = self.context
+    with Then("the filtered row set matches the expected survivors"):
+        ids = common.select_ids(
+            table=ctx.table,
+            where_clause="label = 'batch-1'",
+            settings=[("input_format_parquet_filter_push_down", setting_value)],
+        )
+        assert ids == ctx.expected, error(
+            f"push_down={setting_value} returned {len(ids)} rows, "
+            f"expected {len(ctx.expected)}"
+        )
+
+    with And("the count agrees"):
+        count = common.count_rows(
+            table=ctx.table,
+            settings=[("input_format_parquet_filter_push_down", setting_value)],
+        )
+        assert count == len(ctx.expected), error(f"count = {count}")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_QuerySemantics_IOReductionOptimizations("1.0"))
+def constant_column_reads(self):
+    """Queries projecting or filtering a constant-value column (min = max
+    in the file statistics, eligible for read elision) still reflect only
+    surviving rows."""
+    ctx = self.context
+
+    with Then("an aggregation grouped by the constant column is exact"):
+        result = common.read_result(
+            table=ctx.table, columns="label, count()", group_by="label"
+        )
+        assert result.output.split() == ["batch-1", str(len(ctx.expected))], error(
+            result.output
+        )
+
+    with And("a projection of only the constant column has one row per survivor"):
+        result = common.read_result(table=ctx.table, columns="label")
+        lines = [line for line in result.output.splitlines() if line.strip()]
+        assert len(lines) == len(ctx.expected) and set(lines) == {"batch-1"}, error(
+            f"constant-column projection returned {len(lines)} rows"
+        )
+
+    with And("a filter on the constant column composed with an id filter is exact"):
+        ids = common.select_ids(
+            table=ctx.table, where_clause="label = 'batch-1' AND id < 50"
+        )
+        assert ids == [i for i in ctx.expected if i < 50], error(
+            f"combined filter returned {len(ids)} rows"
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_QuerySemantics_IOReductionOptimizations("1.0"))
+def io_reduction_optimizations(self):
+    """Parquet I/O-reducing optimizations (predicate push-down, constant-
+    value column detection) do not shift, drop, or resurrect rows filtered
+    by a deletion vector."""
+    rows = 100
+
+    with Given(
+        "a table with a constant-value column (min = max in file "
+        "statistics) and a deletion vector"
+    ):
+        self.context.table = common.table_with_deletion_vectors(
+            rows=0,
+            columns="id BIGINT, label STRING, data STRING",
+            setup_statements=[
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id, 'batch-1', "
+                f"concat('row-', CAST(id AS STRING)) FROM range({rows})",
+                "DELETE FROM {table} WHERE id % 10 = 0",
+            ],
+        )
+        self.context.expected = [i for i in range(rows) if i % 10 != 0]
+
+    for setting_value in ("0", "1"):
+        Scenario(
+            test=filter_push_down_parity,
+            name=f"filter push-down {setting_value}",
+        )(setting_value=setting_value)
+
+    Scenario(run=constant_column_reads)
 
 
 @TestScenario
@@ -330,4 +419,5 @@ def feature(self, minio_root_user, minio_root_password):
     Suite(run=operator_independence)
     Suite(run=projection_independence)
     Suite(run=combined_filters)
+    Suite(run=io_reduction_optimizations)
     Scenario(run=schema_evolution)

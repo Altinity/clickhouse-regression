@@ -13,6 +13,7 @@ import iceberg.tests.steps.spark as spark
 import iceberg.tests.steps.metrics as metrics
 import iceberg.tests.deletion_vectors.steps.common as common
 import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
+import iceberg.tests.deletion_vectors.steps.manifest as manifest
 
 
 @TestScenario
@@ -80,12 +81,81 @@ def manifest_sum_wins(self):
     with Then("count() returns the manifest sum, not the summary"):
         count = common.count_rows(
             table=plain,
-            settings=[
-                ("optimize_trivial_count_query", "1"),
-                ("use_iceberg_metadata_files_cache", "0"),
-            ],
+            settings=[("optimize_trivial_count_query", "1")]
+            + common.FRESH_READ_SETTINGS,
         )
         assert count == 50, error(f"count() = {count}, expected the manifest sum 50")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Count_OverflowSafety("1.0"))
+def overflow_safety(self):
+    """Crafted manifest row counts whose total does not fit in 64 bits
+    never produce a wrapped-around count(): the shortcut either falls back
+    to a real scan or fails with an explicit error. Each manifest's own sum
+    is overflow-guarded, so the wrap can only happen when the per-manifest
+    totals are added together — that needs at least three manifests near
+    Int64 max."""
+    int64_max = 2**63 - 1
+    rows = 50
+
+    with Given("a table without deletes and at least three data manifests"):
+        table = common.table_with_deletion_vectors(
+            rows=rows, delete_condition=None, verify_puffin=False
+        )
+        spark.insert_rows(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            values="(1000, 'late'), (1001, 'late')",
+        )
+        spark.insert_rows(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            values="(1002, 'late'), (1003, 'late')",
+        )
+        real_count = rows + 4
+        keys = manifest.manifest_keys(table.namespace, table.table_name, content=0)
+        assert len(keys) >= 3, error(
+            f"expected at least 3 data manifests, found {len(keys)}"
+        )
+
+    with When("every data manifest entry declares Int64-max rows"):
+
+        def declare_int64_max(entry):
+            entry["data_file"]["record_count"] = int64_max
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=declare_int64_max,
+            content=0,
+        )
+        common.drop_iceberg_metadata_cache()
+
+    with Then("count() never returns the wrapped-around sum"):
+        result = self.context.node.query(
+            f"SELECT count() FROM {table.sql_expr()}",
+            settings=[("optimize_trivial_count_query", "1")]
+            + common.FRESH_READ_SETTINGS,
+            no_checks=True,
+        )
+        if result.exitcode == 0:
+            count = int(result.output.strip())
+            wrapped = (len(keys) * int64_max) % 2**64
+            assert count != wrapped, error(
+                f"count() = {count} is the wrapped-around 64-bit sum of "
+                f"{len(keys)} manifests declaring {int64_max} rows each"
+            )
+            assert count == real_count, error(
+                f"count() = {count}, expected the real scanned row count "
+                f"{real_count}"
+            )
+        else:
+            note(
+                "the read was rejected instead of falling back — acceptable: "
+                f"{result.output[:500]}"
+            )
 
 
 @TestSuite
@@ -227,5 +297,6 @@ def count_from_files_cache(self):
 def feature(self, minio_root_user, minio_root_password):
     """Count paths with deletion vectors."""
     Suite(run=trivial_count_optimization)
+    Scenario(run=overflow_safety)
     Suite(run=count_only_fast_path)
     Scenario(run=count_from_files_cache)
