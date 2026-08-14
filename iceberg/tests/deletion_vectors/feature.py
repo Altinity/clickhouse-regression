@@ -34,20 +34,20 @@ import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
 
 
 MODULES = (
-    # "sanity",
-    # "access_forms",
-    # "vector_shapes",
-    # "coexistence",
-    # "query_semantics",
-    # "datatypes",
-    # "parquet_variety",
-    # "time_travel",
-    # "partitioning",
-    # "count_paths",
-    # "error_handling",
+    "sanity",
+    "access_forms",
+    "vector_shapes",
+    "coexistence",
+    "query_semantics",
+    "datatypes",
+    "parquet_variety",
+    "time_travel",
+    "partitioning",
+    "count_paths",
+    "error_handling",
     "file_corruption",
-    # "distributed",
-    # "cache",
+    "distributed",
+    "cache",
 )
 
 

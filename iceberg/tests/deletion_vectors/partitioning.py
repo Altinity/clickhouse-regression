@@ -151,12 +151,15 @@ def pruning_skips_vector_load(self):
         )
 
     with And("no Puffin read happened for pruned files"):
+        # one loaded Puffin file counts 2: the footer parse and the blob
+        # read each increment PuffinFilesRead (upstream pins this in
+        # 04263_iceberg_puffin_files_cache)
         reads = metrics.get_profile_event(
             event="PuffinFilesRead", log_comment=log_comment
         )
-        assert reads == 1, error(
-            f"expected exactly the surviving partition's vector to be read, "
-            f"PuffinFilesRead = {reads}"
+        assert reads == 2, error(
+            f"expected exactly the surviving partition's vector to be read "
+            f"(2 events for one file), PuffinFilesRead = {reads}"
         )
 
 

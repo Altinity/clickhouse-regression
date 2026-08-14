@@ -30,6 +30,9 @@ import zlib
 PUFFIN_MAGIC = b"PFA1"
 DV_MAGIC = bytes([0xD1, 0xD3, 0x39, 0x64])
 DV_BLOB_TYPE = "deletion-vector-v1"
+# Iceberg's reserved _pos field id — compliant writers declare a DV blob as
+# computed over the row-position column
+DV_POSITION_FIELD_ID = 2147483645
 
 SERIAL_COOKIE_NO_RUNCONTAINER = 12346
 SERIAL_COOKIE = 12347  # run-container format
@@ -263,9 +266,10 @@ def build_puffin(
         data += payload
         metadata = {
             "type": blob.get("type", DV_BLOB_TYPE),
-            "fields": blob.get("fields", []),
-            "snapshot-id": blob.get("snapshot_id", 1),
-            "sequence-number": blob.get("sequence_number", 1),
+            "fields": blob.get("fields", [DV_POSITION_FIELD_ID]),
+            # the Puffin spec requires -1 for deletion-vector-v1 blobs
+            "snapshot-id": blob.get("snapshot_id", -1),
+            "sequence-number": blob.get("sequence_number", -1),
             "offset": blob.get("offset", offset),
             "length": blob.get("length", len(payload)),
         }

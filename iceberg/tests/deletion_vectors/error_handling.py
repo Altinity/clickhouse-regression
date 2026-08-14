@@ -247,7 +247,18 @@ def blob_metadata(self):
         "blob type is not deletion-vector-v1": (
             {"type": "unknown-blob-v9"},
             None,
-            "unsupported blob type",
+            "expected deletion-vector-v1",
+        ),
+        # the Puffin spec requires -1 for both fields on deletion-vector-v1
+        "snapshot-id is not -1": (
+            {"snapshot_id": 7},
+            None,
+            "snapshot-id and sequence-number must be -1",
+        ),
+        "sequence-number is not -1": (
+            {"sequence_number": 7},
+            None,
+            "snapshot-id and sequence-number must be -1",
         ),
         # the build has quoted and unquoted variants of this message;
         # "must omit" is the stable common part
@@ -624,14 +635,16 @@ def cardinality_materialization_limit(self):
             log_comment=log_comment,
         )
         # the ceiling compares against the footer's cardinality property,
-        # so exactly one Puffin read (the footer) is inherent — the guard
-        # rejects before the payload is deserialized or allocated, which
-        # the error message itself names
+        # so the footer parse (1 event) is inherent, and the rejected
+        # blob-read attempt still counts its event on entry — but the
+        # guard rejects before the payload is deserialized or allocated,
+        # which the error message itself names
         reads = common.get_profile_event_of_failed_query(
             event="PuffinFilesRead", log_comment=log_comment
         )
-        assert reads <= 1, error(
-            f"PuffinFilesRead = {reads}: expected at most the footer read"
+        assert reads <= 2, error(
+            f"PuffinFilesRead = {reads}: expected at most the footer parse "
+            f"and the rejected blob-read attempt"
         )
 
 

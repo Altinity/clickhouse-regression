@@ -404,6 +404,14 @@ def rbac(self):
         with Then("the parent SYSTEM DROP CACHE privilege suffices"):
             node.query("SYSTEM DROP PUFFIN FILES CACHE", settings=[("user", user)])
 
+        with When("the parent privilege is replaced by the underscore spelling"):
+            node.query(f"REVOKE SYSTEM DROP CACHE ON *.* FROM {user}")
+            node.query(f"GRANT SYSTEM DROP PUFFIN_FILES_CACHE ON *.* TO {user}")
+
+        with Then("both statement spellings are allowed under it"):
+            node.query("SYSTEM DROP PUFFIN FILES CACHE", settings=[("user", user)])
+            node.query("SYSTEM DROP PUFFIN_FILES_CACHE", settings=[("user", user)])
+
         with And("SHOW PRIVILEGES lists the privilege with its parent"):
             result = node.query(
                 "SELECT parent_group FROM system.privileges "
@@ -502,12 +510,15 @@ def concurrency(self):
         )
 
     with And("the vector was loaded exactly once across both queries"):
+        # a single load counts 2 PuffinFilesRead events (footer parse +
+        # blob read), so exactly one load across both queries totals 2
         total_reads = sum(
             metrics.get_profile_event(event="PuffinFilesRead", log_comment=lc)
             for lc in log_comments
         )
-        assert total_reads == 1, error(
-            f"PuffinFilesRead totals {total_reads} across both queries, " f"expected 1"
+        assert total_reads == 2, error(
+            f"PuffinFilesRead totals {total_reads} across both queries, "
+            f"expected 2 (one load)"
         )
 
     with When("a cache drop repeatedly races an in-flight cold load"):
@@ -568,15 +579,270 @@ def entry_isolation(self):
             )
 
 
+def snapshot_settings(snapshot):
+    return [("iceberg_snapshot_id", str(snapshot["snapshot-id"]))]
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries("1.0"))
+def time_travel_between_snapshots(self):
+    """Time travel with a warm cache: the cached vector of one snapshot is
+    never applied to another snapshot's read, and revisiting an
+    already-read snapshot is served from the cache — an entry of an
+    immutable snapshot never needs invalidation."""
+    rows = 100
+    deleted = list(range(0, rows, 10))
+    expected_b = common.expected_ids(rows, deleted)
+
+    with Given("snapshot A inserts 100 rows, snapshot B deletes 10 via a vector"):
+        table = common.table_with_deletion_vectors(
+            rows=rows, delete_condition="id % 10 = 0"
+        )
+        snapshots = s3_objects.get_snapshots(table.namespace, table.table_name)
+        assert len(snapshots) == 2, error(f"expected 2 snapshots, got {len(snapshots)}")
+        snapshot_a, snapshot_b = snapshots
+
+    with When("a cold read of snapshot B caches its vector"):
+        common.drop_puffin_cache()
+        cold_comment = common.unique_log_comment("ttw_cold")
+        result = common.read_result(
+            table=table, columns="id", order_by="id", log_comment=cold_comment
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == expected_b, error(f"snapshot B returned {len(ids)} rows")
+        events = common.get_puffin_events(log_comment=cold_comment)
+        assert events["PuffinFilesRead"] > 0, error(f"cold read: {events}")
+
+    with Then("a warm time travel to snapshot A does not apply the cached vector"):
+        a_comment = common.unique_log_comment("ttw_a")
+        result = common.read_result(
+            table=table,
+            columns="id",
+            order_by="id",
+            log_comment=a_comment,
+            settings=snapshot_settings(snapshot_a),
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == list(range(rows)), error(
+            f"snapshot A returned {len(ids)} rows — a warm vector from "
+            f"snapshot B leaked into an earlier snapshot's read"
+        )
+
+    with And("snapshot A's read touched no Puffin file at all"):
+        events = common.get_puffin_events(log_comment=a_comment)
+        assert events["PuffinFilesRead"] == 0, error(f"snapshot A read: {events}")
+
+    with And("revisiting snapshot B is served from the cache"):
+        b_comment = common.unique_log_comment("ttw_b")
+        result = common.read_result(
+            table=table,
+            columns="id",
+            order_by="id",
+            log_comment=b_comment,
+            settings=snapshot_settings(snapshot_b),
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == expected_b, error(f"snapshot B revisit returned {len(ids)} rows")
+        events = common.get_puffin_events(log_comment=b_comment)
+        assert events["PuffinFilesCacheHits"] > 0, error(f"B revisit: {events}")
+        assert events["PuffinFilesRead"] == 0, error(f"B revisit: {events}")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries("1.0"))
+def shared_file_blob_entries(self):
+    """Two blobs of the same Puffin file are independent cache entries: a
+    warm read applies each cached vector only to its own data file. If the
+    entry key ignored the blob offset, the second blob's load would be
+    served the first blob's vector and the row set would be wrong."""
+    with Given(
+        "a table with two data files and one DELETE producing vectors "
+        "for both in a single commit"
+    ):
+        table = common.table_with_deletion_vectors(
+            rows=0,
+            setup_statements=[
+                common.insert_range_statement(100),
+                "INSERT INTO {table} SELECT /*+ COALESCE(1) */ id + 100, "
+                "concat('row-', CAST(id + 100 AS STRING)) FROM range(100)",
+                "DELETE FROM {table} WHERE id % 10 = 0",
+            ],
+        )
+
+    deleted = list(range(0, 200, 10))
+    expected = common.expected_ids(200, deleted)
+
+    with And("both vectors live at distinct offsets of one Puffin file"):
+        puffin_keys = s3_objects.find_puffin_keys(
+            namespace=table.namespace, table_name=table.table_name
+        )
+        assert len(puffin_keys) == 1, error(
+            f"expected one shared Puffin file, found {puffin_keys}"
+        )
+        dv_entries = manifest.find_dv_entries(table.namespace, table.table_name)
+        offsets = {
+            entry["entry"]["data_file"]["content_offset"] for entry in dv_entries
+        }
+        assert len(offsets) == 2, error(
+            f"expected 2 distinct blob offsets, found {sorted(offsets)}"
+        )
+
+    with When("a cold read loads and caches both blobs"):
+        common.drop_puffin_cache()
+        common.assert_visible_ids(table=table, ids=expected)
+
+    with Then("a warm read applies each cached blob to its own file only"):
+        warm_comment = common.unique_log_comment("shared_warm")
+        result = common.read_result(
+            table=table, columns="id", order_by="id", log_comment=warm_comment
+        )
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == expected, error(
+            f"warm read returned {len(ids)} rows — cached blobs of the same "
+            f"Puffin file cross-contaminated"
+        )
+        events = common.get_puffin_events(log_comment=warm_comment)
+        assert events["PuffinFilesCacheHits"] >= 2, error(f"warm read: {events}")
+        assert events["PuffinFilesRead"] == 0, error(f"warm read: {events}")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries("1.0"))
+def unrelated_commit_keeps_entries(self):
+    """A commit that does not change existing vectors (an insert of new
+    rows) keeps them warm: the next read of the new snapshot is served from
+    the existing entries without re-fetching the unchanged Puffin file."""
+    rows = 100
+
+    with Given("a table with a warm deletion vector"):
+        table = common.table_with_deletion_vectors(rows=rows)
+        cold_read(table=table)
+
+    with When("Spark commits an insert that touches no vector"):
+        spark.insert_rows(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            values="(1000, 'late'), (1001, 'late')",
+        )
+
+    with Then("the next read sees the new snapshot from the warm entries"):
+        after_comment = common.unique_log_comment("keep_warm")
+        result = common.read_result(
+            table=table, columns="count()", log_comment=after_comment
+        )
+        count = int(result.output.strip())
+        assert count == expected_count(rows) + 2, error(f"count = {count}")
+        events = common.get_puffin_events(log_comment=after_comment)
+        assert events["PuffinFilesCacheHits"] > 0, error(f"post-insert: {events}")
+        assert events["PuffinFilesRead"] == 0, error(
+            f"post-insert read re-fetched an unchanged Puffin file: {events}"
+        )
+
+
+@TestSuite
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries("1.0"))
+def snapshot_scoped_entries(self):
+    """Snapshot immutability makes cached vectors snapshot-scoped: warm
+    time travel, independent blob entries, and entries surviving unrelated
+    commits."""
+    Scenario(run=time_travel_between_snapshots)
+    Scenario(run=shared_file_blob_entries)
+    Scenario(run=unrelated_commit_keeps_entries)
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_RevalidationNotBypassed("1.0"))
+def revalidation_not_bypassed(self):
+    """A warm cache never lets a read skip metadata validation: when the
+    manifest declares a different cardinality for the same blob, the next
+    read fails with the validation error a cold read produces — it is not
+    served the previously cached vector. The Puffin cache is deliberately
+    NOT dropped after the corruption."""
+    rows = 100
+
+    with Given("a table with a warm deletion vector"):
+        table = common.table_with_deletion_vectors(rows=rows)
+        cold_read(table=table)
+        warm_comment = warm_read(table=table)
+        events = common.get_puffin_events(log_comment=warm_comment)
+        assert events["PuffinFilesCacheHits"] > 0, error(
+            f"cache was not warm: {events}"
+        )
+
+    with When("the manifest declares a different cardinality for the same blob"):
+
+        def lower_record_count(entry):
+            entry["data_file"]["record_count"] = 7
+            return entry
+
+        manifest.mutate_manifest_entries(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            mutator=lower_record_count,
+            content=manifest.MANIFEST_LIST_DELETES,
+        )
+        common.drop_iceberg_metadata_cache()
+
+    with Then("the next read fails with the validation error, not a warm hit"):
+        common.assert_query_error(
+            query=f"SELECT * FROM {table.sql_expr()} FORMAT Null",
+            error_name="BAD_ARGUMENTS",
+            message_fragment="does not match expected cardinality",
+            settings=list(common.FRESH_READ_SETTINGS),
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Cache_ServerSettings("1.0"))
+def max_entries_unlimited(self):
+    """puffin_files_cache_max_entries = 0 means no limit on the number of
+    entries, not disabled: vectors are still cached and served warm."""
+    node = self.context.node
+    rows = 50
+
+    with Given("the entry limit is set to zero"):
+        config_d.create_and_add(
+            entries={"puffin_files_cache_max_entries": "0"},
+            config_file="puffin_cache_zero_entries.xml",
+            restart=False,
+            node=node,
+        )
+        node.query("SYSTEM RELOAD CONFIG")
+
+    with And("two tables with deletion vectors"):
+        table1 = common.table_with_deletion_vectors(rows=rows)
+        table2 = common.table_with_deletion_vectors(rows=rows)
+
+    with When("both tables are read from a cold cache"):
+        common.drop_puffin_cache(node=node)
+        for table in (table1, table2):
+            count = common.count_rows(table=table, node=node)
+            assert count == expected_count(rows), error(f"count = {count}")
+
+    with Then("both vectors are served warm — zero is unlimited, not disabled"):
+        for table in (table1, table2):
+            warm_comment = warm_read(table=table, node=node)
+            events = common.get_puffin_events(log_comment=warm_comment, node=node)
+            assert events["PuffinFilesCacheHits"] > 0, error(
+                f"vector was not cached with max_entries = 0: {events}"
+            )
+            assert events["PuffinFilesRead"] == 0, error(
+                f"vector was re-read with max_entries = 0: {events}"
+            )
+
+
 @TestFeature
 @Name("cache")
 def feature(self, minio_root_user, minio_root_password):
     """Puffin files cache."""
     Scenario(run=setting)
     Scenario(run=server_settings)
+    Scenario(run=max_entries_unlimited)
     Scenario(run=invalidation)
     Scenario(run=etag_bypass)
     Suite(run=eviction)
+    Suite(run=snapshot_scoped_entries)
+    Scenario(run=revalidation_not_bypassed)
     Scenario(run=drop_statement)
     Scenario(run=rbac)
     Scenario(run=observability)
