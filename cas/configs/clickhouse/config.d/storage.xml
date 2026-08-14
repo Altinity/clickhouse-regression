@@ -16,7 +16,7 @@
         <cas_disk>
             <type>object_storage</type>
             <object_storage_type>s3</object_storage_type>
-            <metadata_type>content_addressed</metadata_type>
+            <metadata_type>cas</metadata_type>
             <server_root_id>cas-{replica}</server_root_id>
             <endpoint>http://minio:9000/warehouse/data/cas/</endpoint>
             <access_key_id>admin</access_key_id>
