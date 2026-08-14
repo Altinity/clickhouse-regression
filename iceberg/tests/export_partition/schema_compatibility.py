@@ -392,9 +392,7 @@ def schema_compatibility_matrix(
 @TestFeature
 @Requirements(
     RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas("1.0"),
-    RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition(
-        "1.0"
-    ),
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition("1.0"),
 )
 @Name("schema compatibility")
 def feature(self, minio_root_user, minio_root_password):

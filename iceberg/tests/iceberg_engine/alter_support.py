@@ -427,7 +427,9 @@ def alter_add_nested_column_commit_unknown(self, minio_root_user, minio_root_pas
             "SET enable_nullable_tuple_type = 1; "
             f"DESCRIBE TABLE {clickhouse_table_name}"
         )
-        described = [line.split("\t")[0] for line in describe.output.strip().split("\n")]
+        described = [
+            line.split("\t")[0] for line in describe.output.strip().split("\n")
+        ]
         assert described.count("name") == 1, error(describe.output)
         for column_name, _ in NESTED_ADD_COLUMNS:
             assert described.count(column_name) == 1, error(describe.output)
