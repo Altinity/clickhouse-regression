@@ -12,7 +12,14 @@ from pyiceberg.partitioning import PartitionField, PartitionSpec
 from pyiceberg.schema import NestedField, Schema
 from pyiceberg.table.sorting import SortField, SortOrder
 from pyiceberg.transforms import IdentityTransform
-from pyiceberg.types import DoubleType, LongType, StringType
+from pyiceberg.types import (
+    DoubleType,
+    ListType,
+    LongType,
+    MapType,
+    StringType,
+    StructType,
+)
 
 
 @TestScenario
@@ -304,6 +311,148 @@ def alter_drop_sorting_column(self, minio_root_user, minio_root_password):
         assert refreshed_table.sort_order().fields[0].source_id == 2, error()
 
 
+COMMIT_UNKNOWN_FAILPOINT = "iceberg_alter_catalog_commit_reported_as_failed"
+
+NESTED_ADD_COLUMNS = (
+    # Iceberg ADD COLUMN must be optional, but ClickHouse forbids
+    # Nullable(Array) / Nullable(Map). Wrap those in a Tuple so the
+    # top-level type is Nullable while getIcebergType still allocates
+    # nested list/map field ids.
+    ("tuple_col", "Nullable(Tuple(Int32, String))"),
+    ("array_col", "Nullable(Tuple(Array(Int32)))"),
+    ("map_col", "Nullable(Tuple(Map(String, Int64)))"),
+)
+
+
+@TestScenario
+def alter_add_nested_column_commit_unknown(self, minio_root_user, minio_root_password):
+    """Commit-unknown recovery must treat an already-committed nested ADD COLUMN
+    as applied.
+
+    ``isAddColumnApplied`` rebuilds the expected Iceberg type via
+    ``getIcebergType`` from the current ``last-column-id``. For Array / Map /
+    Tuple that assigns fresh nested field ids, so a stringify comparison
+    against the committed type returns false and the retry hits
+    ``Column already exists``. Primitive ADD COLUMN is not enough to catch
+    this — see ``MetadataGenerator.cpp`` ``isAddColumnApplied``.
+
+    ClickHouse cannot put Array or Map inside ``Nullable``, and Iceberg ADD
+    COLUMN must be optional, so Array/Map are added as a single-field
+    ``Nullable(Tuple(...))`` with ``enable_nullable_tuple_type = 1``.
+    The nested field-id bug still applies.
+
+    Armed with RestCatalog failpoint
+    ``iceberg_alter_catalog_commit_reported_as_failed`` (ONCE): the catalog
+    commit succeeds, then CH observes a failure and retries.
+    """
+    if self.context.catalog not in ("rest", "ice"):
+        skip(
+            "commit-unknown recovery is injected via RestCatalog failpoint "
+            f"{COMMIT_UNKNOWN_FAILPOINT}"
+        )
+
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"datalake_db_{getuid()}"
+    clickhouse_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
+    node = self.context.node
+
+    with Given("create iceberg catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And("create an unpartitioned Iceberg table"):
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=Schema(
+                NestedField(1, "name", StringType(), required=False),
+            ),
+            location=catalog_steps.table_s3_location(namespace, table_name),
+            partition_spec=PartitionSpec(),
+            sort_order=SortOrder(),
+        )
+
+    with And("create database with DataLakeCatalog engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("insert one row"):
+        table.append(pa.Table.from_pylist([{"name": "Alice"}]))
+
+    with Given(f"arm {COMMIT_UNKNOWN_FAILPOINT} if this build registers it"):
+        enable = node.query(
+            f"SYSTEM ENABLE FAILPOINT {COMMIT_UNKNOWN_FAILPOINT}",
+            no_checks=True,
+        )
+        if enable.exitcode != 0:
+            skip(
+                f"Build does not register failpoint {COMMIT_UNKNOWN_FAILPOINT}: "
+                f"{enable.output}"
+            )
+
+    try:
+        for column_name, column_type in NESTED_ADD_COLUMNS:
+            with When(
+                f"ADD COLUMN {column_name} {column_type} with commit reported as failed"
+            ):
+                node.query(
+                    f"SYSTEM ENABLE FAILPOINT {COMMIT_UNKNOWN_FAILPOINT}",
+                    no_checks=True,
+                )
+                node.query(
+                    "SET allow_insert_into_iceberg = 1, "
+                    "enable_nullable_tuple_type = 1; "
+                    f"ALTER TABLE {clickhouse_table_name} "
+                    f"ADD COLUMN {column_name} {column_type}"
+                )
+    finally:
+        with Finally(f"disable {COMMIT_UNKNOWN_FAILPOINT}"):
+            node.query(
+                f"SYSTEM DISABLE FAILPOINT {COMMIT_UNKNOWN_FAILPOINT}",
+                no_checks=True,
+            )
+
+    with Then("each nested column is present once and existing data is readable"):
+        describe = node.query(
+            "SET enable_nullable_tuple_type = 1; "
+            f"DESCRIBE TABLE {clickhouse_table_name}"
+        )
+        described = [line.split("\t")[0] for line in describe.output.strip().split("\n")]
+        assert described.count("name") == 1, error(describe.output)
+        for column_name, _ in NESTED_ADD_COLUMNS:
+            assert described.count(column_name) == 1, error(describe.output)
+
+        result = node.query(
+            "SET enable_nullable_tuple_type = 1; "
+            f"SELECT name, tuple_col, array_col, map_col "
+            f"FROM {clickhouse_table_name} FORMAT TabSeparated"
+        )
+        assert result.output == "Alice\t\\N\t\\N\t\\N", error()
+
+        refreshed_table = catalog.load_table(f"{namespace}.{table_name}")
+        field_names = [field.name for field in refreshed_table.schema().fields]
+        assert field_names == ["name", "tuple_col", "array_col", "map_col"], error()
+
+        tuple_type = refreshed_table.schema().find_field("tuple_col").field_type
+        array_type = refreshed_table.schema().find_field("array_col").field_type
+        map_type = refreshed_table.schema().find_field("map_col").field_type
+        assert isinstance(tuple_type, StructType), error()
+        assert isinstance(array_type, StructType), error()
+        assert isinstance(array_type.fields[0].field_type, ListType), error()
+        assert isinstance(map_type, StructType), error()
+        assert isinstance(map_type.fields[0].field_type, MapType), error()
+
+
 @TestFeature
 @Name("alter support")
 def feature(self, minio_root_user, minio_root_password):
@@ -319,5 +468,8 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=alter_add_add_drop_column)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=alter_add_nested_column_commit_unknown)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

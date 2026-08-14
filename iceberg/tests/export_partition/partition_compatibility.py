@@ -11,6 +11,7 @@ from testflows.asserts import error
 from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms,
     RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection,
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition,
 )
 
 from helpers.common import getuid
@@ -411,7 +412,9 @@ def rejected_unpartitioned_destination(self, minio_root_user, minio_root_passwor
 
 @TestScenario
 @Requirements(
-    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0")
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition(
+        "1.0"
+    )
 )
 @Name("reversed destination column order maps values by name")
 def reversed_destination_column_order_maps_by_name(

@@ -16,6 +16,7 @@ from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
+    RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode,
 )
 
 from helpers.common import getuid
@@ -225,6 +226,7 @@ def parquet_compression_method_flows_to_data_files(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
 @Name("strict rejects extra source columns")
 def schema_mismatch_strict_rejects_extra_source(
     self, minio_root_user, minio_root_password
@@ -268,6 +270,7 @@ def schema_mismatch_strict_rejects_extra_source(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
 @Name("ignore extra source columns by position drops trailing columns")
 def schema_mismatch_ignore_extra_source_drops_trailing(
     self, minio_root_user, minio_root_password
@@ -314,6 +317,7 @@ def schema_mismatch_ignore_extra_source_drops_trailing(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
 @Name("strict rejects extra destination columns")
 def schema_mismatch_strict_rejects_extra_destination(
     self, minio_root_user, minio_root_password
@@ -353,6 +357,7 @@ def schema_mismatch_strict_rejects_extra_destination(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
 @Name("ignore extra source columns by position rejects extra destination columns")
 def schema_mismatch_ignore_extra_rejects_extra_destination(
     self, minio_root_user, minio_root_password
@@ -406,6 +411,7 @@ def schema_mismatch_ignore_extra_rejects_extra_destination(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
 @Name("ignore extra source columns by position still rejects type mismatch")
 def schema_mismatch_ignore_extra_rejects_type_mismatch(
     self, minio_root_user, minio_root_password
