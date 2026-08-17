@@ -415,16 +415,6 @@ xfails = {
             "semantics (https://github.com/Altinity/ClickHouse/issues/2123)",
         )
     ],
-    "/iceberg/export partition/: catalog/*/schema compatibility/*": [
-        (
-            Fail,
-            "Create-time schema compatibility matrix covers "
-            "partition-key name/position guards (Altinity/ClickHouse#2134) "
-            "and schema_mismatch_mode coupling (Altinity/ClickHouse#2111); "
-            "not available on <=26.3.17.20001",
-            check_clickhouse_version("<=26.3.17.20001"),
-        )
-    ],
 }
 
 ffails = {
@@ -523,6 +513,12 @@ ffails = {
         Skip,
         "export_merge_tree_part_schema_mismatch_mode is not merged yet "
         "(Altinity/ClickHouse#2111)",
+        lambda test: True,
+    ),
+    "/iceberg/export partition/: catalog/*/schema compatibility/*": (
+        Skip,
+        "create-time schema compatibility matrix is not merged yet "
+        "(Altinity/ClickHouse#2134, #2111)",
         lambda test: True,
     ),
     "/iceberg/export partition/: catalog/*/casting": (
