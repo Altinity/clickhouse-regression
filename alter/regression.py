@@ -261,11 +261,6 @@ ffails = {
         "renames detached parts on the local filesystem",
         check_cas_mode,
     ),
-    "/alter/attach partition/part 1/operations on attached partitions/multiple operations": (
-        Skip,
-        "FREEZE/UNFREEZE hard-link backups are unsupported on content-addressed disks",
-        check_cas_mode,
-    ),
     "/alter/attach partition/part 1/temporary table": (
         Skip,
         "crashes the server https://github.com/Altinity/ClickHouse/issues/2173",
