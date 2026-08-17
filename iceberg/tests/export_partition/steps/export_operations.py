@@ -49,17 +49,24 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
 )
 
-# ``EXPORT_PARTITION_ALREADY_EXPORTED`` (server error code 1006) when a
-# duplicate export key is still live in Keeper. Older builds surface the
-# same rejection as ``BAD_ARGUMENTS`` (client exit 36); newer builds map
-# ``1006 % 256`` to client exit 238. Requirements allow either:
-# ``EXPORT_PARTITION_ALREADY_EXPORTED``, historically ``BAD_ARGUMENTS``.
+# ``EXPORT_PARTITION_ALREADY_EXPORTED`` client exit codes. clickhouse-client
+# maps ``server_code % 256``, and the server code has moved:
+#
+# * older builds surfaced the same rejection as ``BAD_ARGUMENTS`` (exit 36)
+# * antalya ~26.3 used server code 1006 → client exit 238
+# * antalya 26.6 uses server code 1010 → client exit 242
+#
+# Requirements allow any of these as long as the message matches
+# ``Export with key`` (``EXPORT_PARTITION_ALREADY_EXPORTED``, historically
+# ``BAD_ARGUMENTS``).
 EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_LEGACY = 36
 EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE = 238
+EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_1010 = 242
 EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODES = frozenset(
     {
         EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_LEGACY,
         EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
+        EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_1010,
     }
 )
 DUPLICATE_EXPORT_REJECTION_MESSAGE = "Export with key"
@@ -70,7 +77,7 @@ def assert_duplicate_export_rejected(result, message=None):
     from testflows.asserts import error
 
     assert result.exitcode in EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODES, error(
-        "expected duplicate-export client exit 36 or 238, "
+        "expected duplicate-export client exit 36, 238, or 242, "
         f"got {result.exitcode}: {result.output}"
     )
     expected_message = message or DUPLICATE_EXPORT_REJECTION_MESSAGE
@@ -78,7 +85,7 @@ def assert_duplicate_export_rejected(result, message=None):
 
 
 def query_expecting_duplicate_export_rejection(node, sql, settings=None, message=None):
-    """Run ``sql`` and assert duplicate-export rejection (exit 36 or 238)."""
+    """Run ``sql`` and assert duplicate-export rejection (exit 36, 238, or 242)."""
     result = node.query(sql, settings=settings, ignore_exception=True)
     assert_duplicate_export_rejected(result, message=message)
     return result
