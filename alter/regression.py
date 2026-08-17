@@ -214,8 +214,9 @@ ffails = {
     ),
     "/alter/attach partition/part 1/temporary table": (
         Skip,
-        "Not implemented before 23.5",
-        check_clickhouse_version("<23.5"),
+        "Not implemented before 23.5; also crashes the server on CAS "
+        "https://github.com/Altinity/ClickHouse/issues/2173",
+        lambda test: check_clickhouse_version("<23.5")(test) or check_cas_mode(test),
     ),
     "/alter/attach partition/part 1/part level/part levels user example/*": (
         Skip,
@@ -259,11 +260,6 @@ ffails = {
     "/alter/attach partition/part 1/part level/part levels user example": (
         Skip,
         "renames detached parts on the local filesystem",
-        check_cas_mode,
-    ),
-    "/alter/attach partition/part 1/temporary table": (
-        Skip,
-        "crashes the server https://github.com/Altinity/ClickHouse/issues/2173",
         check_cas_mode,
     ),
 }

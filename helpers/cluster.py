@@ -354,7 +354,16 @@ class Node(object):
         def __exit__(self, exc_type, exc_val, exc_tb):
             if self.command_context:
                 self.command_context.app.send("exit")
-                self.command_context.__exit__(exc_type, exc_val, exc_tb)
+                try:
+                    self.command_context.__exit__(exc_type, exc_val, exc_tb)
+                except ValueError:
+                    # Tearing down the interactive clickhouse-client-tty is
+                    # racy: after "exit" the async command reads the shell exit
+                    # code via "echo $?", which can come back empty and make
+                    # int("") raise ValueError. The session is being closed
+                    # regardless, so a failed exit-code read must not error the
+                    # whole test.
+                    pass
 
         @staticmethod
         def _parse_error_code(message):

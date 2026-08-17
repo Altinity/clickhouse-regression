@@ -29,6 +29,10 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.combinatorics import product
 
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas,
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition,
+)
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.casting import (
@@ -386,6 +390,10 @@ def schema_compatibility_matrix(
 
 
 @TestFeature
+@Requirements(
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas("1.0"),
+    RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition("1.0"),
+)
 @Name("schema compatibility")
 def feature(self, minio_root_user, minio_root_password):
     """Create-time source/destination schema permutations for EXPORT PARTITION."""
