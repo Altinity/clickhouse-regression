@@ -61,6 +61,18 @@ def scenario(self, cluster, node="clickhouse1"):
     with Given("cluster node"):
         node = cluster.node(node)
 
+    object_storage = (
+        cluster.with_minio
+        or cluster.with_s3amazon
+        or cluster.with_s3gcs
+        or cluster.with_cas
+    )
+    external_disk = (
+        "external_cache"
+        if object_storage and check_clickhouse_version(">=26.3")(self)
+        else "external"
+    )
+
     for name, engine in self.examples:
         with When(f"for example table name='{name}', engine='{engine}'"):
             try:
@@ -118,25 +130,12 @@ def scenario(self, cluster, node="clickhouse1"):
                     fill_up_disk(name, 5)
                     fill_up_disk(name, 9)
 
-                if cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas:
+                if object_storage:
                     with And("I check external is being used"):
                         output = node.query(
                             f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                         ).output
-                        expected_disk = (
-                            "external_cache"
-                            if (
-                                check_clickhouse_version(">=26.3")(self)
-                                and (
-                                    cluster.with_minio
-                                    or cluster.with_s3amazon
-                                    or cluster.with_s3gcs
-                                    or cluster.with_cas
-                                )
-                            )
-                            else "external"
-                        )
-                        assert f"{expected_disk}\t1" in output, error()
+                        assert f"{external_disk}\t1" in output, error()
                 else:
                     with And("I recheck disks utilizations"):
                         with By("external disk utilization is above 5%%"):
@@ -154,24 +153,11 @@ def scenario(self, cluster, node="clickhouse1"):
                 with And("I keep adding data to the table above 300%% of the original"):
                     fill_up_disk(name, 20)
 
-                if cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas:
+                if object_storage:
                     output = node.query(
                         f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                     ).output
-                    expected_disk = (
-                        "external_cache"
-                        if (
-                            check_clickhouse_version(">=26.3")(self)
-                            and (
-                                cluster.with_minio
-                                or cluster.with_s3amazon
-                                or cluster.with_s3gcs
-                                or cluster.with_cas
-                            )
-                        )
-                        else "external"
-                    )
-                    assert f"{expected_disk}\t1" in output, error()
+                    assert f"{external_disk}\t1" in output, error()
                 else:
                     with And("I check the new part is on the external volume"):
                         output = node.query(
