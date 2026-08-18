@@ -14,6 +14,8 @@ aggregation_memory_efficient_merge_threads = r"""'{"default":"0"}'"""
 
 ai_function_credentials = r"""'{"default":""}'"""
 
+ai_function_embedding_default_credentials = r"""'{"default":""}'"""
+
 ai_function_embedding_max_batch_size = r"""'{"default":"100"}'"""
 
 ai_function_max_api_calls_per_query = r"""'{"default":"0"}'"""
@@ -27,6 +29,8 @@ ai_function_max_retries = r"""'{"default":"0"}'"""
 ai_function_request_timeout_sec = r"""'{"default":"60"}'"""
 
 ai_function_retry_initial_delay_ms = r"""'{"default":"1000"}'"""
+
+ai_function_text_default_credentials = r"""'{"default":""}'"""
 
 ai_function_throw_on_error = r"""'{"default":"1"}'"""
 
@@ -327,6 +331,8 @@ analyze_index_with_space_filling_curves = r"""'{"default":"1"}'"""
 analyzer_compatibility_allow_compound_identifiers_in_unflatten_nested = r"""'{"default":"1"}'"""
 
 analyzer_compatibility_allow_non_aggregate_in_having = r"""'{"default":"0"}'"""
+
+analyzer_compatibility_apply_final_to_all_joined_tables = r"""'{"default":"0"}'"""
 
 analyzer_compatibility_join_using_top_level_identifier = r"""'{"default":"0"}'"""
 
@@ -1029,6 +1035,10 @@ export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
 export_merge_tree_partition_manifest_ttl = r"""'{"default":"86400"}'"""
 
 export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
+
+export_merge_tree_partition_retry_initial_backoff_seconds = r"""'{"default":"5"}'"""
+
+export_merge_tree_partition_retry_max_backoff_seconds = r"""'{"default":"300"}'"""
 
 export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"86400"}'"""
 
