@@ -67,14 +67,25 @@ def run_long_query(
     sleep_each_row=1,
     exitcode=None,
     message=None,
+    expected_exitcodes=None,
+    expected_messages=None,
     delay_before_execution=None,
     expected_result=None,
     max_threads=1,
     lock_object_storage_task_distribution_ms=None,
 ):
-    """Run a long select from an iceberg table."""
+    """Run a long select from an iceberg table.
+
+    When ``expected_exitcodes`` is provided the query is run without the single
+    exit code / message assertions and the result is instead checked against an
+    allow-list of acceptable outcomes. This is used when the failure is
+    inherently racy: stopping a swarm node mid-query can surface either a
+    graceful cancellation or an abrupt connection drop, and both are valid.
+    """
     if delay_before_execution:
         time.sleep(delay_before_execution)
+
+    use_allow_list = expected_exitcodes is not None
 
     result = node.query(
         f"""
@@ -87,10 +98,20 @@ def run_long_query(
                 max_threads={max_threads}
                 {f", lock_object_storage_task_distribution_ms={lock_object_storage_task_distribution_ms}" if lock_object_storage_task_distribution_ms is not None else ""}
         """,
-        exitcode=exitcode,
-        message=message,
+        exitcode=None if use_allow_list else exitcode,
+        message=None if use_allow_list else message,
+        no_checks=use_allow_list,
     )
     note(f"RESULT: \n{result.output}\n")
+
+    if use_allow_list:
+        assert result.exitcode in expected_exitcodes, error(
+            f"Expected exit code in {expected_exitcodes}, but got: {result.exitcode}"
+        )
+        if expected_messages:
+            assert any(m in result.output for m in expected_messages), error(
+                f"Expected one of {expected_messages} in output, but got: {result.output}"
+            )
 
     if expected_result:
         assert result.output == expected_result, error(
@@ -123,12 +144,27 @@ def check_restart_swarm_node(
         )
 
     with Then("run long select from iceberg table and restart random swarm node"):
+        if check_clickhouse_version("<26.1")(self):
+            # Stopping the swarm node's container mid-query is racy: the
+            # initiator can either cancel the query gracefully
+            # (QUERY_WAS_CANCELLED, exit 138) or observe the connection drop
+            # abruptly (ATTEMPT_TO_READ_AFTER_EOF, exit 32). Both are valid
+            # node-loss failures, so accept either.
+            expected_exitcodes = [138, 32]
+            expected_messages = [
+                "DB::Exception: Query was cancelled.",
+                "DB::Exception: Attempt to read after eof",
+            ]
+        else:
+            expected_exitcodes = [138]
+            expected_messages = ["DB::Exception: Query was cancelled."]
+
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
                 clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-                exitcode=138,
-                message="DB::Exception: Query was cancelled.",
+                expected_exitcodes=expected_exitcodes,
+                expected_messages=expected_messages,
                 cluster_name=cluster_name,
             )
             Step(
