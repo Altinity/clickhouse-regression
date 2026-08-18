@@ -55,6 +55,8 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      minio-client:
+        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -68,6 +70,8 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      minio-client:
+        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -80,6 +84,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper1:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
@@ -98,4 +104,6 @@ services:
       keeper1:
         condition: service_healthy
       minio:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy
