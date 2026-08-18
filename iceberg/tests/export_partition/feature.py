@@ -49,6 +49,7 @@ MODULES = (
     "transactions",
     "concurrent_writes",
     "schema_evolution",
+    "schema_compatibility",  # Altinity/ClickHouse#2134 / #2111 matrix
     "partition_spec_evolution",
     "storage_paths",
     "disaster_recovery",

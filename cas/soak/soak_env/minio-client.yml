@@ -1,0 +1,19 @@
+services:
+  mc:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    init: true
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-}
+    entrypoint: >
+      /bin/sh -c "
+      until /usr/bin/mc alias set minio http://minio:9000 \"$${MINIO_ROOT_USER}\" \"$${MINIO_ROOT_PASSWORD}\"; do echo 'waiting for RustFS...' && sleep 1; done;
+      /usr/bin/mc rm -r --force minio/warehouse;
+      /usr/bin/mc mb minio/warehouse --ignore-existing;
+      exec tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

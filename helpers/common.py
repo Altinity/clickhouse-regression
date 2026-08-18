@@ -755,10 +755,52 @@ def add_invalid_config(
         assert exitcode == 0, error()
 
 
-def restart_clickhouse_and_tail_log(node, bash, cluster, user=None, wait_healthy=True):
+def last_line(output):
+    """Return the last non-empty line of a command output."""
+    lines = [line.strip() for line in (output or "").splitlines() if line.strip()]
+    return lines[-1] if lines else ""
+
+
+def wait_for_archived_log(node, logs_dir, logsize, timeout):
+    """Return the path of the newest rotated log once it holds at least logsize
+    bytes of readable content, or None.
+    """
+    started = time.time()
+    previous_size = None
+    while time.time() - started < timeout:
+        cmd = node.command(
+            f"ls -t {logs_dir}/clickhouse-server.log.[0-9]* 2>/dev/null | head -1",
+            no_checks=True,
+            steps=False,
+        )
+        name = os.path.basename(last_line(cmd.output))
+        if not name:
+            return None
+        if not name.endswith(".gz"):
+            return f"{logs_dir}/{name}"
+        cmd = node.command(
+            f"stat -c %s {logs_dir}/{name}", no_checks=True, steps=False
+        )
+        size = last_line(cmd.output)
+        if size == previous_size:
+            cmd = node.command(
+                f"zcat -f {logs_dir}/{name} | wc -c", no_checks=True, steps=False
+            )
+            readable = last_line(cmd.output)
+            if readable.isdigit() and int(readable) >= int(logsize):
+                return f"{logs_dir}/{name}"
+        previous_size = size
+        time.sleep(1)
+    return None
+
+
+def restart_clickhouse_and_tail_log(
+    node, bash, cluster, user=None, wait_healthy=True, archive_timeout=120
+):
     """Restart ClickHouse and tail the server log from the restart point, reading
-    the rotated archive if the log rotated during the restart."""
-    log_file = "/var/log/clickhouse-server/clickhouse-server.log"
+    the rotated archive once it is fully compressed if the log rotated."""
+    container_logs_dir = "/var/log/clickhouse-server"
+    log_file = f"{container_logs_dir}/clickhouse-server.log"
     logs_dir = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs"
 
     with When("I close terminal to the node to be restarted"):
@@ -782,13 +824,11 @@ def restart_clickhouse_and_tail_log(node, bash, cluster, user=None, wait_healthy
     archive = None
     if rotated:
         with And("I locate the most recently archived log file"):
-            cmd = node.cluster.command(
-                None,
-                f"ls -t {logs_dir}/clickhouse-server.log.[0-9]* 2>/dev/null | head -1",
-                no_checks=True,
+            archive = wait_for_archived_log(
+                node, container_logs_dir, logsize, archive_timeout
             )
-            name = os.path.basename(cmd.output.strip())
-            archive = f"/var/log/clickhouse-server/{name}" if name else None
+            if archive is None:
+                note("no complete archived log found, the reload message may be lost")
 
     with Then("I tail the log file from using previous log size as the offset"):
         bash.prompt = bash.__class__.prompt

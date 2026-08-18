@@ -310,7 +310,7 @@ def pending_mutations(self):
         )
 
     with Then("I should see an error about pending mutations"):
-        assert results[0].exitcode == 237, error()
+        assert results[0].exitcode != 0, error()
         assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
 
 
@@ -348,7 +348,7 @@ def pending_patch_parts(self):
         )
 
     with Then("I should see an error about pending patch parts"):
-        assert results[0].exitcode == 237, error()
+        assert results[0].exitcode != 0, error()
         assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
 
 

@@ -433,3 +433,21 @@ def get_asynchronous_metric(self, metric, node=None):
     )
     output = result.output.strip()
     return float(output) if output else 0.0
+
+
+@TestStep(Then)
+def get_current_metric(self, metric, node=None):
+    """Get the current value of a metric from system.metrics as a float
+    (0.0 when the metric is absent)."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+            SELECT value FROM system.metrics
+            WHERE metric = '{metric}'
+            FORMAT TabSeparated
+        """
+    )
+    output = result.output.strip()
+    return float(output) if output else 0.0

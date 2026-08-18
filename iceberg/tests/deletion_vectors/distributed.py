@@ -7,6 +7,7 @@ from testflows.asserts import error
 
 from iceberg.requirements.deletion_vectors import *
 
+import iceberg.tests.steps.spark as spark
 import iceberg.tests.deletion_vectors.steps.common as common
 import iceberg.tests.deletion_vectors.steps.s3_objects as s3_objects
 
@@ -147,6 +148,46 @@ def split_data_file(self):
     Scenario(run=counts_agree)
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_Distributed_SnapshotRefresh("1.0"))
+def cluster_snapshot_refresh(self):
+    """After an external DELETE, the next cluster read observes the new
+    snapshot on every worker — despite per-node Puffin and metadata caches
+    warmed on the previous snapshot — and equals the single-node result."""
+    rows = 100
+
+    with Given("a table without deletes"):
+        table = common.table_with_deletion_vectors(
+            rows=rows, delete_condition=None, verify_puffin=False
+        )
+
+    with And("a cluster read warms the caches on every participating node"):
+        ids = common.select_ids(table=table, cluster=True)
+        assert ids == list(range(rows)), error(
+            f"warm-up cluster read returned {len(ids)} rows"
+        )
+
+    with When("an external DELETE commits a deletion vector"):
+        spark.delete_rows(
+            namespace=table.namespace, table_name=table.table_name, condition="id < 10"
+        )
+        s3_objects.assert_puffin_exists(
+            namespace=table.namespace, table_name=table.table_name
+        )
+
+    expected = list(range(10, rows))
+
+    with Then("the very next cluster read observes the new vector"):
+        ids = common.select_ids(table=table, cluster=True)
+        assert ids == expected, error(
+            f"cluster read after the commit returned {len(ids)} rows"
+        )
+
+    with And("the cluster result equals the single-node result"):
+        assert common.select_ids(table=table) == expected, error()
+        assert common.count_rows(table=table, cluster=True) == len(expected), error()
+
+
 @TestFeature
 @Name("distributed")
 def feature(self, minio_root_user, minio_root_password):
@@ -154,3 +195,4 @@ def feature(self, minio_root_user, minio_root_password):
     Suite(run=cluster_functions)
     Scenario(run=protocol_fail_closed)
     Suite(run=split_data_file)
+    Scenario(run=cluster_snapshot_refresh)

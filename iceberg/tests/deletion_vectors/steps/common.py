@@ -32,8 +32,13 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 from iceberg.tests.deletion_vectors.steps import s3_objects
 from iceberg.tests.deletion_vectors.steps import manifest as manifest_steps
+from iceberg.tests.deletion_vectors.steps import puffin as puffin_steps
 
 CLUSTER_NAME = "replicated_cluster"
+
+# read settings that force the rewritten-in-place metadata chain to be
+# re-read from storage after a corruption-harness mutation
+FRESH_READ_SETTINGS = [("use_iceberg_metadata_files_cache", "0")]
 
 REST_CATALOG_URL = "http://rest:8181"
 REST_WAREHOUSE = "s3://warehouse"
@@ -403,7 +408,7 @@ def assert_table_read_fails(
     drop_iceberg_metadata_cache()
     drop_puffin_cache()
 
-    settings = [("use_iceberg_metadata_files_cache", "0")]
+    settings = list(FRESH_READ_SETTINGS)
     if log_comment:
         settings.append(("log_comment", log_comment))
 
@@ -413,6 +418,43 @@ def assert_table_read_fails(
         message_fragment=message_fragment,
         node=node,
         settings=settings,
+    )
+
+
+@TestStep(When)
+def replace_vector_with_positions(self, table, positions, payload=None):
+    """Replace the table's single deletion vector with a crafted one
+    deleting exactly *positions*, then drop the metadata and Puffin caches
+    so the next read re-resolves the rewritten chain.
+
+    Args:
+        payload: pre-built blob bytes to install instead of the default
+            array/bitset serialization of *positions* (e.g. a run-format
+            vector); *positions* still defines the declared cardinality.
+    """
+    if payload is None:
+        payload = puffin_steps.build_dv_payload(positions=positions)
+    manifest_steps.replace_deletion_vector(
+        namespace=table.namespace,
+        table_name=table.table_name,
+        payload=payload,
+        declared_cardinality=len(positions),
+    )
+    drop_iceberg_metadata_cache()
+    drop_puffin_cache()
+
+
+@TestStep(Then)
+def assert_visible_positions(self, table, ids_in_order, deleted_positions, node=None):
+    """Exactly the rows at *deleted_positions* (0-based physical positions
+    of the single data file, whose physical row order is *ids_in_order*)
+    are hidden; every other row is visible."""
+    deleted = set(deleted_positions)
+    expected = [
+        value for position, value in enumerate(ids_in_order) if position not in deleted
+    ]
+    assert_visible_ids(
+        table=table, ids=expected, node=node, settings=FRESH_READ_SETTINGS
     )
 
 
@@ -456,6 +498,132 @@ def get_profile_event_of_failed_query(self, event, log_comment, node=None):
         """
     )
     return int(result.output.strip() or 0)
+
+
+@TestStep(Then)
+def assert_server_alive(self, node=None):
+    """The server answers a trivial query — the crash-safety half of every
+    corrupted-input assertion."""
+    if node is None:
+        node = self.context.node
+    result = node.query("SELECT 1 FORMAT TabSeparated")
+    assert result.output.strip() == "1", error(
+        f"server did not answer SELECT 1: {result.output[:500]!r}"
+    )
+
+
+@TestStep(Then)
+def assert_fails_without_crash(self, table, node=None):
+    """Reading the table fails with an explicit DB::Exception — never a
+    silent (possibly wrong) row set — and the server stays responsive
+    afterwards. For byte-level corruption the exact error code varies with
+    where the damage lands, so only the fail-closed contract is pinned."""
+    if node is None:
+        node = self.context.node
+
+    drop_iceberg_metadata_cache()
+    drop_puffin_cache()
+
+    result = node.query(
+        f"SELECT * FROM {table.sql_expr()} FORMAT Null",
+        settings=list(FRESH_READ_SETTINGS),
+        no_checks=True,
+    )
+    assert result.exitcode != 0, error(
+        f"query over the corrupted file unexpectedly succeeded:\n"
+        f"{result.output[:2000]}"
+    )
+    assert "DB::Exception" in result.output, error(
+        f"query failed without an explicit exception:\n{result.output[:4000]}"
+    )
+
+    assert_server_alive(node=node)
+    return result
+
+
+@TestStep(Then)
+def assert_correct_or_explicit_error(self, table, expected_ids, node=None):
+    """The query either returns exactly *expected_ids* or fails with an
+    explicit DB::Exception — never a different row set — and the server
+    stays responsive. For corruption that may land in non-load-bearing
+    bytes (e.g. an informational footer property), where a byte-identical
+    result is a legitimate outcome."""
+    if node is None:
+        node = self.context.node
+
+    drop_iceberg_metadata_cache()
+    drop_puffin_cache()
+
+    result = node.query(
+        f"SELECT id FROM {table.sql_expr()} ORDER BY id FORMAT TabSeparated",
+        settings=list(FRESH_READ_SETTINGS),
+        no_checks=True,
+    )
+    if result.exitcode == 0:
+        ids = [int(line) for line in result.output.split() if line.strip()]
+        assert ids == sorted(expected_ids), error(
+            f"corrupted input silently changed the result: {len(ids)} rows, "
+            f"expected {len(expected_ids)}; "
+            f"missing={sorted(set(expected_ids) - set(ids))[:20]}, "
+            f"unexpected={sorted(set(ids) - set(expected_ids))[:20]}"
+        )
+    else:
+        assert "DB::Exception" in result.output, error(
+            f"query failed without an explicit exception:\n{result.output[:4000]}"
+        )
+
+    assert_server_alive(node=node)
+    return result
+
+
+@TestStep(When)
+def run_queries_in_parallel(self, queries, node=None):
+    """Run several queries concurrently on the node as background
+    clickhouse-client processes and return their outputs in order.
+
+    OS processes replace a TestFlows ``Pool`` here on purpose: repeatedly
+    creating and tearing down executors deterministically segfaults the
+    stock python 3.12.3 interpreter, while shell background jobs give real
+    concurrent query starts with nothing to tear down. Any client exiting
+    non-zero fails the step with its stderr."""
+    if node is None:
+        node = self.context.node
+
+    work_dir = f"/tmp/dv_parallel_{getuid()}"
+    try:
+        node.command(f"mkdir -p {work_dir}", exitcode=0)
+        for index, query in enumerate(queries):
+            node.command(
+                f"cat <<'DVEOF' > {work_dir}/query_{index}.sql\n{query}\nDVEOF",
+                exitcode=0,
+            )
+
+        launches = "\n".join(
+            f"clickhouse client --queries-file {work_dir}/query_{index}.sql "
+            f"> {work_dir}/out_{index} 2> {work_dir}/err_{index} &\n"
+            f"pids[{index}]=$!"
+            for index in range(len(queries))
+        )
+        script = (
+            f"{launches}\n"
+            "rc=0\n"
+            'for index in "${!pids[@]}"; do\n'
+            '    if ! wait "${pids[$index]}"; then\n'
+            "        rc=1\n"
+            f'        echo "query $index failed: $(cat {work_dir}/err_$index)"\n'
+            "    fi\n"
+            "done\n"
+            "exit $rc\n"
+        )
+        node.command(f"cat <<'DVEOF' > {work_dir}/run.sh\n{script}\nDVEOF", exitcode=0)
+        node.command(f"bash {work_dir}/run.sh", exitcode=0)
+
+        return [
+            node.command(f"cat {work_dir}/out_{index}", exitcode=0).output.strip()
+            for index in range(len(queries))
+        ]
+    finally:
+        node.command(f"rm -rf {work_dir}")
 
 
 @TestStep(When)

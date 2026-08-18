@@ -164,10 +164,7 @@ def icebergLocal_function(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_DeletionVectors_AccessForms("1.0"),
-    RQ_Iceberg_DeletionVectors_StorageBackends("1.0"),
-)
+@Requirements(RQ_Iceberg_DeletionVectors_AccessForms_Azure("1.0"))
 def azure_select(self):
     """Reads through the icebergAzure table function (Azure storage
     backend)."""
@@ -178,13 +175,12 @@ def azure_select(self):
 
 
 @TestSuite
-@Requirements(
-    RQ_Iceberg_DeletionVectors_AccessForms("1.0"),
-    RQ_Iceberg_DeletionVectors_StorageBackends("1.0"),
-)
+@Requirements(RQ_Iceberg_DeletionVectors_AccessForms_Azure("1.0"))
 def icebergAzure_function(self):
     """Reads through the icebergAzure table function (Azure storage
-    backend) — not testable in this environment."""
+    backend) — not testable in this environment, so linked only to the
+    dedicated Azure requirement: a skip here must not mark the passing
+    S3/local/engine/catalog coverage unsatisfied."""
     Scenario(run=azure_select)
 
 

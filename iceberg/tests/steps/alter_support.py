@@ -347,7 +347,18 @@ def drop_column(self, table_name, column_name):
 
 @TestStep(When)
 def drop_column_expecting_rejection(self, table_name, column_name):
-    """Try to drop a layout column and require Iceberg to reject the operation."""
+    """Try to drop a layout column and require Iceberg to reject the operation.
+
+    Preferred path (current builds): Code 36 ``BAD_ARGUMENTS`` — CH rejects
+    dropping a column referenced by the active partition/sort spec before
+    writing metadata.
+
+    Older alter builds surface catalog rejection as Code 736
+    (``DATALAKE_DATABASE_ERROR`` / catalog commit failed). Builds that retry
+    catalog commit failures (e.g. Antalya PR #2157) exhaust retries and
+    return Code 290 (``LIMIT_EXCEEDED``) instead — both mean the DROP did not
+    commit. See https://github.com/Altinity/ClickHouse/issues/2090.
+    """
     result = self.context.node.query(
         _alter_query(table_name, f"DROP COLUMN {column_name}"),
         no_checks=True,
@@ -355,14 +366,30 @@ def drop_column_expecting_rejection(self, table_name, column_name):
     assert result.exitcode != 0, error(
         f"Iceberg allowed dropping layout column {column_name!r}"
     )
-    assert "Code: 736." in result.output, error(result.output)
-    assert (
-        "Iceberg alter: catalog commit failed for "
+    rejected_via_layout_check = (
+        "Code: 36." in result.output
+        and f"Cannot drop column '{column_name}'" in result.output
+        and (
+            "referenced by the active partition spec" in result.output
+            or "referenced by the active sort order" in result.output
+        )
+        and "(BAD_ARGUMENTS)" in result.output
+    )
+    rejected_via_catalog_commit = (
+        "Code: 736." in result.output
+        and "Iceberg alter: catalog commit failed for "
         "'s3://warehouse/data/metadata/" in result.output
-    ), error(result.output)
-    assert (
-        "after metadata file was written successfully. "
+        and "after metadata file was written successfully. "
         "(DATALAKE_DATABASE_ERROR)" in result.output
+    )
+    rejected_via_retry_limit = (
+        "Code: 290." in result.output
+        and "Too many unsuccessed retries to alter iceberg table" in result.output
+    )
+    assert (
+        rejected_via_layout_check
+        or rejected_via_catalog_commit
+        or rejected_via_retry_limit
     ), error(result.output)
     return result
 

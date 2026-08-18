@@ -60,11 +60,18 @@ def _write_parquet(schema, columns):
 
 def _append_delete_entry(namespace, table_name, data_file_overrides):
     """Append a delete-file entry cloned from the live deletion-vector entry
-    with ``data_file`` fields replaced by *data_file_overrides*."""
+    with ``data_file`` fields replaced by *data_file_overrides*. The clone
+    is inserted immediately after the template entry itself, so unrelated
+    delete entries in the same manifest are never touched."""
     dv_entries = manifest.find_dv_entries(namespace=namespace, table_name=table_name)
     assert dv_entries, "fixture must already have a deletion vector"
     template_key = dv_entries[0]["manifest_key"]
     template = copy.deepcopy(dv_entries[0]["entry"])
+
+    # identify the template entry in the rewrite pass before its clone's
+    # data_file fields are replaced below
+    template_file_path = template["data_file"]["file_path"]
+    template_offset = template["data_file"]["content_offset"]
 
     data_file = template["data_file"]
     for field in STATS_FIELDS:
@@ -78,7 +85,12 @@ def _append_delete_entry(namespace, table_name, data_file_overrides):
     appended = []
 
     def mutator(entry):
-        if not appended and entry is not None:
+        if (
+            not appended
+            and manifest.is_dv_entry(entry)
+            and entry["data_file"]["file_path"] == template_file_path
+            and entry["data_file"]["content_offset"] == template_offset
+        ):
             appended.append(True)
             return [entry, template]
         return entry
@@ -90,6 +102,9 @@ def _append_delete_entry(namespace, table_name, data_file_overrides):
         content=manifest.MANIFEST_LIST_DELETES,
         only_manifest_key=template_key,
     )
+    # a silent no-append would make the supersession scenario pass without
+    # exercising anything (its expected rows are identical either way)
+    assert appended, "template deletion-vector entry not found during the rewrite"
 
 
 @TestStep(When)
