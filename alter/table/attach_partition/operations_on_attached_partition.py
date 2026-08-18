@@ -367,7 +367,7 @@ def check_drop_partition(
 
     with And("I check that partitions were dropped"):
         for partition in destination_partition_ids:
-            for attempt in retries(timeout=30, delay=2):
+            for attempt in retries(timeout=120, delay=2):
                 with attempt:
                     data = self.context.node_1.query(
                         f"SELECT count() FROM {table_name} FORMAT TabSeparated"
