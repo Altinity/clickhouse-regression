@@ -133,9 +133,11 @@ RQ_Iceberg_ExportPartition_DataTypes_Primitives = Requirement(
         "[ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:\n"
         "\n"
         "* Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.\n"
+        "* From 26.6 (Altinity/ClickHouse#2157): also `Int8`, `UInt8` (Iceberg `int`), and `Bool` (Iceberg `boolean`).\n"
         "* Floating-point types `Float32` and `Float64`.\n"
         "* Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.\n"
         "* `String` and `UUID`.\n"
+        "* From 26.6 (Altinity/ClickHouse#2157): `Decimal(p, s)` with precision `p <= 38` (Iceberg `decimal(p, s)`).\n"
         "\n"
         "**Regression module:** `iceberg.tests.export_partition.datatypes` (`datatypes.py`).\n"
         "\n"
@@ -197,10 +199,9 @@ RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection = Requirement(
     description=(
         "[ClickHouse] SHALL fail explicitly — and SHALL NOT silently coerce, downcast, or drop data — when an exported column has no supported Iceberg mapping in this release:\n"
         "\n"
-        "* Narrow integers `Int8` and `UInt8`.\n"
-        "* `Bool`.\n"
+        "* Before 26.6: narrow integers `Int8` and `UInt8`, `Bool`, and `Decimal(p, s)`.\n"
         "* `FixedString(N)`.\n"
-        "* `Decimal(p, s)`.\n"
+        "* From 26.6: `Decimal(p, s)` with precision `p > 38` (Iceberg decimal is limited to 38).\n"
         "* `Enum8` (and its variants).\n"
         "* `LowCardinality(T)` (including `Array(LowCardinality(String))`).\n"
         "\n"
@@ -1521,9 +1522,11 @@ version: 1.0
 [ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:
 
 * Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.
+* From 26.6 (Altinity/ClickHouse#2157): also `Int8`, `UInt8` (Iceberg `int`), and `Bool` (Iceberg `boolean`).
 * Floating-point types `Float32` and `Float64`.
 * Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.
 * `String` and `UUID`.
+* From 26.6 (Altinity/ClickHouse#2157): `Decimal(p, s)` with precision `p <= 38` (Iceberg `decimal(p, s)`).
 
 **Regression module:** `iceberg.tests.export_partition.datatypes` (`datatypes.py`).
 
@@ -1552,10 +1555,9 @@ version: 1.0
 
 [ClickHouse] SHALL fail explicitly — and SHALL NOT silently coerce, downcast, or drop data — when an exported column has no supported Iceberg mapping in this release:
 
-* Narrow integers `Int8` and `UInt8`.
-* `Bool`.
+* Before 26.6: narrow integers `Int8` and `UInt8`, `Bool`, and `Decimal(p, s)`.
 * `FixedString(N)`.
-* `Decimal(p, s)`.
+* From 26.6: `Decimal(p, s)` with precision `p > 38` (Iceberg decimal is limited to 38).
 * `Enum8` (and its variants).
 * `LowCardinality(T)` (including `Array(LowCardinality(String))`).
 
