@@ -1,0 +1,13 @@
+<clickhouse>
+    <!--
+    Placeholder for the CAS storage configuration.
+
+    CAS metadata storage only exists in Antalya builds, and disk definitions are
+    parsed at server startup, so a `cas` disk in a config that is always mounted
+    makes every older server fail to start with
+    `MetadataStorageFactory: unknown metadata storage type: cas`.
+
+    This file is filled in by engines/cas_mode.py when the suite is started with
+    the `cas` option and reset back to this placeholder afterwards.
+    -->
+</clickhouse>
