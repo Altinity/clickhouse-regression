@@ -218,6 +218,12 @@ ffails = {
         "https://github.com/Altinity/ClickHouse/issues/2173",
         lambda test: check_clickhouse_version("<23.5")(test) or check_cas_mode(test),
     ),
+    "/alter/replace partition/temporary table": (
+        Skip,
+        "temporary MergeTree parts are on local disk; REPLACE into cas_policy "
+        "fails with 'disk does not belong to storage policy'",
+        check_cas_mode,
+    ),
     "/alter/attach partition/part 1/part level/part levels user example/*": (
         Skip,
         "Crashes before 24.3",

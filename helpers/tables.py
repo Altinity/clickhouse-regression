@@ -522,7 +522,8 @@ def create_table(
             if as_select is not None:
                 query += f"\nAS SELECT {as_select}"
 
-            query_settings = apply_default_storage_policy(query_settings)
+            if "MergeTree" in engine:
+                query_settings = apply_default_storage_policy(query_settings)
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
 
