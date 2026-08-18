@@ -3,7 +3,7 @@ from helpers.alter import column, constraint, partition, skipping_index
 from helpers.create import *
 from helpers.queries import *
 from s3.tests.export_part.steps import *
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(When)
@@ -362,6 +362,15 @@ def alter_table_replace_partition(
 
     if partition_name is None:
         partition_name = get_random_partition(table_name=table_name)
+
+    # 26.6+ refuses REPLACE PARTITION when the source has no parts in that
+    # partition (ClickHouse #23727). This wrapper's helper table has a single
+    # partition, so a random destination partition is often empty on the
+    # source. Opt in to the pre-26.6 silent-drop behaviour.
+    if check_clickhouse_version(">=26.6")(self):
+        settings = list(query_kwargs.get("settings") or [])
+        settings.append(("allow_replace_partition_from_empty_source", 1))
+        query_kwargs["settings"] = settings
 
     with By("Replacing partition"):
         partition.alter_table_replace_partition(
