@@ -853,6 +853,7 @@ def add_config(
     wait_healthy=True,
     check_preprocessed=True,
     after_removal=True,
+    poll_preprocessed=True,
 ):
     """Add dynamic configuration file to ClickHouse.
 
@@ -860,6 +861,12 @@ def add_config(
     :param timeout: timeout, default: 300 sec
     :param restart: restart server, default: False
     :param modify: only modify configuration file, default: False
+    :param poll_preprocessed: poll the preprocessed config for the change before
+        confirming the reload, default: True. Set to False when the config is
+        applied via ``restart=True`` (the restart deterministically reloads the
+        config, making the passive poll redundant) or when the config relocates
+        ``<path>``/logging so that the polled preprocessed file is no longer the
+        one that reflects the applied state.
     """
     if node is None:
         node = current().context.node
@@ -945,11 +952,12 @@ def add_config(
                     node.command(command, steps=False, exitcode=0)
 
                 if check_preprocessed:
-                    with Then(
-                        f"{config.preprocessed_name} should be updated",
-                        description=f"timeout {timeout}",
-                    ):
-                        check_preprocessed_config_is_updated()
+                    if poll_preprocessed:
+                        with Then(
+                            f"{config.preprocessed_name} should be updated",
+                            description=f"timeout {timeout}",
+                        ):
+                            check_preprocessed_config_is_updated()
 
                     with And("I wait for config to be reloaded"):
                         wait_for_config_to_be_loaded(user=user)
@@ -973,13 +981,14 @@ def add_config(
                         node.command(f"rm -rf {config.path}", exitcode=0)
 
                     if check_preprocessed:
-                        with Then(
-                            f"{config.preprocessed_name} should be updated",
-                            description=f"timeout {timeout}",
-                        ):
-                            check_preprocessed_config_is_updated(
-                                after_removal=after_removal
-                            )
+                        if poll_preprocessed:
+                            with Then(
+                                f"{config.preprocessed_name} should be updated",
+                                description=f"timeout {timeout}",
+                            ):
+                                check_preprocessed_config_is_updated(
+                                    after_removal=after_removal
+                                )
 
                         with And("I wait for config to be reloaded"):
                             wait_for_config_to_be_loaded()
