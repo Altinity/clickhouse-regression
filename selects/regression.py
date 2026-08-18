@@ -7,10 +7,25 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import *
 
 from selects.requirements import *
+from selects.cas_mode import (
+    enable_cas_default_storage,
+    reset_cas_config,
+)
+
+
+def argparser(parser):
+    argparser_base(parser)
+    parser.add_argument(
+        "--cas",
+        action="store_true",
+        default=False,
+        dest="use_cas",
+        help="use content-addressed storage as the default MergeTree disk",
+    )
 
 xfails = {
     "final/force/general/without experimental analyzer/select join clause/*": [
@@ -172,14 +187,24 @@ def regression(
     clickhouse_version,
     stress=None,
     with_analyzer=False,
+    use_cas=False,
 ):
     """ClickHouse SELECT query regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.use_cas_storage = False
+    self.context.default_storage_policy = None
 
     if stress is not None:
         self.context.stress = stress
+
+    if use_cas:
+        with Given("content-addressed storage as the default MergeTree disk"):
+            enable_cas_default_storage()
+    else:
+        with Given("no content-addressed storage configuration"):
+            reset_cas_config()
 
     with Given("I have a clickhouse cluster"):
         cluster = create_cluster(
