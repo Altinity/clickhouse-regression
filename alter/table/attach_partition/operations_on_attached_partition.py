@@ -12,6 +12,7 @@ from helpers.common import (
     getuid,
 )
 from helpers.tables import *
+from helpers.queries import sync_replica
 
 
 def get_node(self, table):
@@ -100,8 +101,26 @@ def get_valid_partition_key(self, source_partition_key):
 
 def get_partition_ids(self, table_name, node):
     """Return list of partition ids for specified table."""
-    partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
+    partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' AND active ORDER BY partition_id FORMAT TabSeparated"
     return sorted(list(set(node.query(partition_list_query).output.split())))
+
+
+@TestStep(Given)
+def get_destination_partition_ids(self, table_name):
+    """Return list of partition ids of the destination table as seen by node_1.
+
+    All ALTERs in these scenarios are sent to node_1, so the partition list has to be
+    read from node_1 as well. A replicated destination is synced first because
+    `ATTACH PARTITION FROM` is only immediately visible on the replica that ran it, and
+    a partition missing from the list is silently never altered.
+    """
+    if "Replicated" in self.context.destination_engine:
+        for node in self.context.nodes:
+            sync_replica(
+                node=node, table_name=table_name, timeout=300, raise_on_timeout=True
+            )
+
+    return get_partition_ids(self, table_name=table_name, node=self.context.node_1)
 
 
 @TestStep
@@ -208,14 +227,11 @@ def attach_partition_from_table(
                 )
 
     with And("I get the list of partitions and validate partition keys pair"):
-        partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        get_node(self, "source").query(
-            f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT Values"
+        self.context.node_1.query(
+            f"SELECT partition FROM system.parts WHERE table='{source_table_name}' AND active ORDER BY partition_id FORMAT Values"
         )
-        partition_ids = sorted(
-            list(
-                set(get_node(self, "source").query(partition_list_query).output.split())
-            )
+        partition_ids = get_partition_ids(
+            self, table_name=source_table_name, node=self.context.node_1
         )
         valid, _ = valid_partition_key_pair(
             source_partition_key, destination_partition_key
@@ -284,16 +300,7 @@ def check_detach_attach_partition(
         skip("Table was not created")
 
     with And("I get the list of partitions"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        destination_partition_ids = sorted(
-            list(
-                set(
-                    get_node(self, "destination")
-                    .query(destination_partition_list_query)
-                    .output.split()
-                )
-            )
-        )
+        destination_partition_ids = get_destination_partition_ids(table_name=table_name)
 
     with And("I detach partition from the table"):
         partition = random.choice(destination_partition_ids)
@@ -348,16 +355,7 @@ def check_drop_partition(
         skip("Table was not created")
 
     with And("I get the list of partitions"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        destination_partition_ids = sorted(
-            list(
-                set(
-                    get_node(self, "destination")
-                    .query(destination_partition_list_query)
-                    .output.split()
-                )
-            )
-        )
+        destination_partition_ids = get_destination_partition_ids(table_name=table_name)
 
     with And("I drop all partitions from the table"):
         for partition in destination_partition_ids:
@@ -412,14 +410,10 @@ def check_replace_partition(
         )
 
     with And("I get the list of partitions"):
-        replace_partition_list = f"SELECT partition FROM system.parts WHERE table='{replace_table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        replace_partition_ids = sorted(
-            list(set(self.context.node_1.query(replace_partition_list).output.split()))
+        replace_partition_ids = get_destination_partition_ids(
+            table_name=replace_table_name
         )
-        source_partition_list = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        source_partition_ids = sorted(
-            list(set(self.context.node_1.query(source_partition_list).output.split()))
-        )
+        source_partition_ids = get_destination_partition_ids(table_name=table_name)
         intersection = list(set(replace_partition_ids) & set(source_partition_ids))
 
     with And("I replace partition in the destination table with the replace table"):
@@ -475,17 +469,8 @@ def check_freeze_partition(
     if table_name is None:
         skip("Table was not created")
 
-    with And("I get the list of partitions and validate partition keys pair"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        destination_partition_ids = sorted(
-            list(
-                set(
-                    get_node(self, "destination")
-                    .query(destination_partition_list_query)
-                    .output.split()
-                )
-            )
-        )
+    with And("I get the list of partitions"):
+        destination_partition_ids = get_destination_partition_ids(table_name=table_name)
 
     with And("I freeze/unfreeze random partition from the table"):
         partition = random.choice(destination_partition_ids)
@@ -520,17 +505,8 @@ def check_update_in_partition(
     if table_name is None:
         skip("Table was not created")
 
-    with And("I get the list of partitions and validate partition keys pair"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        destination_partition_ids = sorted(
-            list(
-                set(
-                    get_node(self, "destination")
-                    .query(destination_partition_list_query)
-                    .output.split()
-                )
-            )
-        )
+    with And("I get the list of partitions"):
+        destination_partition_ids = get_destination_partition_ids(table_name=table_name)
 
     if "a" not in destination_partition_key:
         update_column = "a"
@@ -600,16 +576,7 @@ def check_move_partition(
             )
 
     with And("I get the list of partitions"):
-        destination_partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        destination_partition_ids = sorted(
-            list(
-                set(
-                    get_node(self, "destination")
-                    .query(destination_partition_list_query)
-                    .output.split()
-                )
-            )
-        )
+        destination_partition_ids = get_destination_partition_ids(table_name=table_name)
 
     with And("I move partition to another table"):
         data_before = self.context.node_1.query(
