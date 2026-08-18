@@ -7,11 +7,26 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import CaptureClusterArgs, argparser
+from helpers.argparser import CaptureClusterArgs, argparser as argparser_base
 from helpers.common import check_clickhouse_version
 from atomic_insert.requirements import *
 
 from atomic_insert.tests.steps import *
+from atomic_insert.cas_mode import (
+    enable_cas_default_storage,
+    reset_cas_config,
+)
+
+
+def argparser(parser):
+    argparser_base(parser)
+    parser.add_argument(
+        "--cas",
+        action="store_true",
+        default=False,
+        dest="use_cas",
+        help="use content-addressed storage as the default MergeTree disk",
+    )
 
 ffails = {
     "/atomic insert/dependent_tables/Replicated*/table with materialized view engine mismatch/*": (
@@ -58,6 +73,7 @@ def regression(
     clickhouse_version,
     stress=None,
     with_analyzer=False,
+    use_cas=False,
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
@@ -66,11 +82,20 @@ def regression(
     }
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.use_cas_storage = False
+    self.context.default_storage_policy = None
 
     self.context.transaction_atomic_insert = True
 
     if stress is not None:
         self.context.stress = stress
+
+    if use_cas:
+        with Given("content-addressed storage as the default MergeTree disk"):
+            enable_cas_default_storage()
+    else:
+        with Given("no content-addressed storage configuration"):
+            reset_cas_config()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
