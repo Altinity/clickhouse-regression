@@ -139,7 +139,7 @@ jobs:
           path: ${{ env.artifact_paths }}
 
   cas_soak_arm:
-    runs-on: [self-hosted, arm64, type-cax31-cax41, image-arm-app-docker-ce]
+    runs-on: [self-hosted, arm64, type-cax31-cax41, image-arm-app-docker-ce, image-arm64-app-docker-ce]
     timeout-minutes: 10000
     env:
       SUITE: cas/soak
