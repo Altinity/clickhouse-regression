@@ -1,4 +1,6 @@
-from soak.chaos import generate_chaos_schedule, FaultAction, FaultTarget
+from soak.chaos import (
+    generate_chaos_schedule, FaultAction, FaultTarget, _ALIVE_PROBE, _PIDFILE,
+)
 
 def test_schedule_reproducible():
     a = generate_chaos_schedule(seed=9, duration_s=3600, mean_interval_s=300)
@@ -65,3 +67,13 @@ def test_ch_replicas_still_killed():
         if saw_ch_kill:
             break
     assert saw_ch_kill, "expected at least one ClickHouse-replica KILL across the seed sweep"
+
+
+def test_daemon_probe_is_aliveness_not_pidfile_existence():
+    # Regression: existence-only `test -f pidfile` no-ops after docker kill/restart because the
+    # writable layer (and the pidfile) survive, while SIGKILL does not unlink the pidfile.
+    # The helpers.cluster soak_env entrypoint is `tail -f /dev/null`, so the server must be
+    # re-exec'd; a stale pidfile must not skip that.
+    assert _PIDFILE == "/tmp/clickhouse-server.pid"
+    assert "kill -0" in _ALIVE_PROBE
+    assert "test -f" in _ALIVE_PROBE
