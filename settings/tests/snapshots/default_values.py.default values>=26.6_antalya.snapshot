@@ -2236,6 +2236,8 @@ object_storage_cluster_join_mode = r"""'{"default":"allow"}'"""
 
 object_storage_max_nodes = r"""'{"default":"0"}'"""
 
+object_storage_propagate_credentials_to_other_storages = r"""'{"default":"0"}'"""
+
 object_storage_remote_initiator = r"""'{"default":"0"}'"""
 
 object_storage_remote_initiator_cluster = r"""'{"default":""}'"""
