@@ -10,5 +10,6 @@ def feature(self):
     # Feature(run=load("cas.tests.concurrent_attach", "feature"))
     # Feature(run=load("cas.tests.pool_corruption", "feature"))
     Feature(run=load("cas.tests.ref_collision", "feature"))
+    Feature(run=load("cas.tests.export", "feature"))
     # Feature(run=load("cas.tests.server_root_id_unique", "feature"))
     # Feature(run=load("cas.tests.stress_create_drop", "feature"))
