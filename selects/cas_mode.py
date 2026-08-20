@@ -16,7 +16,6 @@ CAS_CONFIG = """\
                 <endpoint>http://minio:9001/cas/data/</endpoint>
                 <access_key_id>minio</access_key_id>
                 <secret_access_key>minio123</secret_access_key>
-                <http_keep_alive_timeout>60</http_keep_alive_timeout>
             </cas_disk>
         </disks>
         <policies>
