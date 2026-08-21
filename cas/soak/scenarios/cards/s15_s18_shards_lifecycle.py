@@ -254,11 +254,9 @@ class S15(Scenario):
         # --- final fsck + drain residual per variant ----------------------------------------
         for v, d in per_variant.items():
             fsck = d.get("fsck", {})
-            dangling = fsck.get("dangling")
-            result.add(Verdict.check(
-                f"no dangling after GC ({v})", "fsck dangling==0",
-                dangling, dangling == 0,
-                "" if dangling == 0 else f"variant {v} left dangling refs after forced GC"))
+            assertions_mod.assert_fsck_clean(
+                result, fsck, name=f"no dangling after GC ({v})",
+                fail_note=f"variant {v} left dangling refs after forced GC")
             # B2: classify the residual by prefix; "other" bookkeeping is not asserted to be 0.
             # S15 runs its own per-variant forced_gc_to_fixpoint (no standard_end per variant) so
             # we pass the variant's per-variant fsck for classification. fsck detail may be absent
@@ -474,12 +472,11 @@ class S17(Scenario):
         except Exception as e:
             fsck_detached = {"error": str(e)}
         result.observations["fsck_with_detached"] = fsck_detached
-        result.add(Verdict.check(
-            "detached parts reachable until dropped",
-            "fsck dangling==0 after a GC round while parts are detached",
-            fsck_detached.get("dangling"), fsck_detached.get("dangling") == 0,
-            "" if fsck_detached.get("dangling") == 0 else
-            "GC saw detached-part content as dangling/unreferenced — detached refs are not rooted"))
+        assertions_mod.assert_fsck_clean(
+            result, fsck_detached,
+            name="detached parts reachable until dropped",
+            expected="fsck dangling==0 after a GC round while parts are detached",
+            fail_note="GC saw detached-part content as dangling/unreferenced — detached refs are not rooted")
 
         # --- attach a subset back; drop-detached the rest ------------------------------------
         attach_ids = list(range(attach_back))
@@ -521,9 +518,8 @@ class S17(Scenario):
             et: _event_total(ca_events, et) for et in ("ref_publish", "ref_drop")}
 
         end = _common.standard_end(ctx, result, [table])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after detach lifecycle", "fsck dangling==0",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"), name="no dangling after detach lifecycle")
 
         # --- dropped-detached content reclaimable + deleted by GC ----------------------------
         # B1/B2: assert on the CONVERGED end-checkpoint residual (not a mid-run snapshot) and only
@@ -634,16 +630,13 @@ class S18(Scenario):
             fsck_after_drop = lifecycle.fsck_detail()
         except Exception as e:
             fsck_after_drop = {"error": str(e)}
-        dangling_after_drop = fsck_after_drop.get("dangling")
         result.observations["fsck_after_live_drop"] = {
             k: v for k, v in fsck_after_drop.items() if k not in ("stdout", "stderr", "detail")}
-        result.add(Verdict.check(
-            "frozen content survives a live-table drop",
-            "fsck dangling==0 after dropping the live table (shadow keeps blobs alive)",
-            dangling_after_drop, dangling_after_drop == 0,
-            "" if dangling_after_drop == 0 else
-            "dropping the live table made frozen-snapshot content dangling — the shadow namespace "
-            "did not keep the blobs rooted"))
+        assertions_mod.assert_fsck_clean(
+            result, fsck_after_drop,
+            name="frozen content survives a live-table drop",
+            expected="fsck dangling==0 after dropping the live table (shadow keeps blobs alive)",
+            fail_note="dropping the live table made frozen-snapshot content dangling — the shadow namespace did not keep the blobs rooted")
 
         # --- UNFREEZE releases shadow refs -> GC can reclaim ---------------------------------
         unfroze = False

@@ -2,8 +2,14 @@
 
 import time
 
-from ..framework import checkpoint, observe
+from ..framework import assertions, checkpoint, observe
 from ..framework.report import Verdict
+
+
+def assert_dangling_zero(result, fsck, name, expected="fsck dangling==0", fail_note=""):
+    """Card-level dangling==0 check that is inconclusive when fsck never produced a count."""
+    return assertions.assert_fsck_clean(
+        result, fsck, name=name, expected=expected, fail_note=fail_note)
 
 
 def standard_end(ctx, result, tables, *, table_filter=None, abandons=False,

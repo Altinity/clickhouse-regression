@@ -17,8 +17,9 @@ from .report import Verdict
 
 def end_checkpoint(ctx, cluster, result, tables, *, table_filter=None, abandons=False,
                    expect_exception=False, since_event_time=None, optimize=True,
-                   fsck_container=lifecycle.DEFAULT_FSCK_CONTAINER) -> dict:
+                   fsck_container=None) -> dict:
     """Run the quiesced end checkpoint and the common assertions; return the end-state dict."""
+    fsck_container = fsck_container or lifecycle.fsck_container()
     t0 = time.monotonic()
     ctx.log("end checkpoint: quiescing cluster")
     try:

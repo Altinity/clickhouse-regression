@@ -236,11 +236,9 @@ class S19(Scenario):
             dst_moved, int(dst_moved or 0) == ppp * rows))
 
         end = _common.standard_end(ctx, result, [src, dst])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after clone ops", "fsck dangling==0",
-                                 dangling, dangling == 0,
-                                 "" if dangling == 0 else
-                                 "clone/partition movement left a ref pointing at missing content"))
+        _common.assert_dangling_zero(
+            result, end.get("fsck_final"), name="no dangling after clone ops",
+            fail_note="clone/partition movement left a ref pointing at missing content")
 
 
 # ---------------------------------------------------------------------------
@@ -411,9 +409,8 @@ class S20(Scenario):
                                       name="S20 replica convergence")
 
         end = _common.standard_end(ctx, result, [table])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after fetch", "fsck dangling==0",
-                                 dangling, dangling == 0))
+        _common.assert_dangling_zero(
+            result, end.get("fsck_final"), name="no dangling after fetch")
 
 
 # ---------------------------------------------------------------------------

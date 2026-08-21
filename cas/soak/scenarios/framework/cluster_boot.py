@@ -11,6 +11,7 @@ same docker-compose project (`ca-soak`, pinned via `docker compose -p`), so cont
 become the compose project `soak` and break chaos/fsck defaults).
 """
 
+import contextlib
 import os
 import shutil
 import signal
@@ -111,6 +112,70 @@ _COMPOSE_PROJECT = {
 
 def compose_project(variant=None) -> str:
     return _COMPOSE_PROJECT.get(variant, "ca-soak")
+
+
+# Per-variant CA_SOAK_* so HTTP, docker exec, chaos, and fsck target the stack that was just brought
+# up. S41 publishes 18123 in project `ca-s41`; without this, wait_healthy pings :8123 (ARM 2026-08-21:
+# 0/1 replicas healthy after a perfectly good ca-s41 up).
+_S41_ENV = {
+    "CA_SOAK_NODE_COUNT": "1",
+    "CA_SOAK_NODE1_HOST": "localhost",
+    "CA_SOAK_NODE1_PORT": "18123",
+    "CA_SOAK_NODE1_CONTAINER": "ca-s41-ch1-1",
+    "CA_SOAK_RUSTFS_CONTAINER": "ca-s41-rustfs1-1",
+    "CA_SOAK_CH_CONTAINERS": "ca-s41-ch1-1",
+    "CA_SOAK_FSCK_CONTAINER": "ca-s41-ch1-1",
+    "PREDOWN_NODES": "ch1:18123",
+}
+
+_DEFAULT_ENV = {
+    "CA_SOAK_NODE_COUNT": "2",
+    "CA_SOAK_NODE1_HOST": "localhost",
+    "CA_SOAK_NODE1_PORT": "8123",
+    "CA_SOAK_NODE2_PORT": "8124",
+    "CA_SOAK_NODE1_CONTAINER": "ca-soak-ch1-1",
+    "CA_SOAK_NODE2_CONTAINER": "ca-soak-ch2-1",
+    "CA_SOAK_RUSTFS_CONTAINER": "ca-soak-rustfs1-1",
+    "CA_SOAK_CH_CONTAINERS": "ca-soak-ch1-1,ca-soak-ch2-1",
+    "CA_SOAK_FSCK_CONTAINER": "ca-soak-ch1-1",
+    "PREDOWN_NODES": "ch1:8123 ch2:8124",
+}
+
+
+def env_for_variant(variant=None) -> dict:
+    if variant == "s41":
+        return dict(_S41_ENV)
+    env = dict(_DEFAULT_ENV)
+    n = node_count_for(variant)
+    env["CA_SOAK_NODE_COUNT"] = str(n)
+    if n > 2:
+        env["CA_SOAK_CH_CONTAINERS"] = ",".join(f"ca-soak-ch{i}-1" for i in range(1, n + 1))
+        env["PREDOWN_NODES"] = " ".join(f"ch{i}:{8122 + i}" for i in range(1, n + 1))
+    return env
+
+
+def _refresh_env_consumers():
+    from . import lifecycle, observe
+    observe.reload_container_env()
+    lifecycle.reload_container_env()
+
+
+@contextlib.contextmanager
+def applied_variant_env(variant=None):
+    """Bind CA_SOAK_* for `variant` and restore the previous process env on exit."""
+    wanted = env_for_variant(variant)
+    saved = {k: os.environ.get(k) for k in wanted}
+    os.environ.update(wanted)
+    _refresh_env_consumers()
+    try:
+        yield wanted
+    finally:
+        for k, old in saved.items():
+            if old is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = old
+        _refresh_env_consumers()
 
 
 def compose_cmd(variant, *args):
@@ -300,9 +365,14 @@ def reset_cluster(variant=None, *, archive_tag=None, log_fn=print, timeout_s=300
     # So dump the specimen BEFORE `down`. Best-effort by design: a cluster that is already gone, or
     # never came up, must not stop a reset.
     predown_dump(archive_tag or "reset", log_fn=log_fn)
-    # Tear down regardless of which variant is currently up (same project/containers). Pass the
-    # tenreplicas file too so ch3..ch10 (defined only there) are torn down when switching away.
-    _run(compose_cmd("tenreplicas", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
+    # s41 is an isolated compose project on 18123 — never tear down ca-soak (8123/8124) for it.
+    # Other variants must still reap leftover s41 (ARM left ca-s41-* up after a failed S41 reset)
+    # and the ten-replica extras (ch3..ch10) when leaving that file.
+    if variant == "s41":
+        _run(compose_cmd("s41", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
+    else:
+        _run(compose_cmd("s41", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
+        _run(compose_cmd("tenreplicas", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
     _prep_log_dirs(node_count=n)
     if variant == "tuned" and overrides:
         render_tuned_config(overrides)

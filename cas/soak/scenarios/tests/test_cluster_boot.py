@@ -47,3 +47,31 @@ def test_predown_dump_timeout_does_not_raise(monkeypatch):
         lambda argv, timeout=600, log_fn=print: 124)
     rc = predown_dump("unit_test_label", log_fn=lambda *_: None, timeout=1)
     assert rc == 124
+
+
+def test_env_for_variant_s41_targets_published_port():
+    from scenarios.framework.cluster_boot import env_for_variant
+    env = env_for_variant("s41")
+    assert env["CA_SOAK_NODE1_PORT"] == "18123"
+    assert env["CA_SOAK_NODE1_CONTAINER"] == "ca-s41-ch1-1"
+    assert env["CA_SOAK_FSCK_CONTAINER"] == "ca-s41-ch1-1"
+    assert env["CA_SOAK_RUSTFS_CONTAINER"] == "ca-s41-rustfs1-1"
+    default = env_for_variant(None)
+    assert default["CA_SOAK_NODE1_PORT"] == "8123"
+    assert default["CA_SOAK_FSCK_CONTAINER"] == "ca-soak-ch1-1"
+
+
+def test_applied_variant_env_rebinds_fsck_and_restores(monkeypatch):
+    import os
+    from scenarios.framework import lifecycle, observe
+    from scenarios.framework.cluster_boot import applied_variant_env
+    monkeypatch.delenv("CA_SOAK_NODE1_PORT", raising=False)
+    monkeypatch.delenv("CA_SOAK_FSCK_CONTAINER", raising=False)
+    monkeypatch.delenv("CA_SOAK_RUSTFS_CONTAINER", raising=False)
+    with applied_variant_env("s41"):
+        assert os.environ["CA_SOAK_NODE1_PORT"] == "18123"
+        assert observe.RUSTFS_CONTAINER == "ca-s41-rustfs1-1"
+        assert lifecycle.fsck_container() == "ca-s41-ch1-1"
+    assert os.environ.get("CA_SOAK_NODE1_PORT") in (None, "8123")
+    assert observe.RUSTFS_CONTAINER == "ca-soak-rustfs1-1"
+    assert lifecycle.fsck_container() == "ca-soak-ch1-1"

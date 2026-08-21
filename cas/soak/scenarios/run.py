@@ -55,18 +55,19 @@ def run_one(cls, *, seed, duration_s, scale, overrides, no_reset, variant_overri
             ctx.snapshot_config(compose_variant=variant)
             scen.run_inconclusive(ctx, result)
         else:
-            if not no_reset:
-                ctx.log("resetting cluster to a fresh pool")
-                ok = cluster_boot.reset_cluster(variant, archive_tag=f"{scen.name}_{ctx.timestamp}",
-                                                log_fn=ctx.log)
-                if not ok:
-                    raise RuntimeError("cluster did not become healthy after reset")
-            else:
-                cluster_boot.ensure_up(variant, log_fn=ctx.log)
-            ctx.cluster = Cluster(node_count=cluster_boot.node_count_for(variant))
-            ctx.snapshot_config(compose_variant=variant)
-            ctx.extra["since_event_time"] = sql.server_now(ctx.cluster)
-            scen.run(ctx, result)
+            with cluster_boot.applied_variant_env(variant):
+                if not no_reset:
+                    ctx.log("resetting cluster to a fresh pool")
+                    ok = cluster_boot.reset_cluster(variant, archive_tag=f"{scen.name}_{ctx.timestamp}",
+                                                    log_fn=ctx.log)
+                    if not ok:
+                        raise RuntimeError("cluster did not become healthy after reset")
+                else:
+                    cluster_boot.ensure_up(variant, log_fn=ctx.log)
+                ctx.cluster = Cluster(node_count=cluster_boot.node_count_for(variant))
+                ctx.snapshot_config(compose_variant=variant)
+                ctx.extra["since_event_time"] = sql.server_now(ctx.cluster)
+                scen.run(ctx, result)
         if not result.status or result.status == INCONCLUSIVE and result.verdicts:
             result.finalize()
         elif not result.verdicts and not result.status:

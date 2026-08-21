@@ -136,6 +136,14 @@ class S43(Scenario):
     }
 
     def run(self, ctx, result):
+        try:
+            import zstandard  # noqa: F401
+        except ImportError:
+            result.add(Verdict.inconclusive(
+                "zstandard available", "installed",
+                "zstandard is not installed in this interpreter; "
+                "pip install -r cas/soak/requirements.txt"))
+            return
         cl = ctx.cluster
         p = ctx.params
         rows = int(p["rows"])

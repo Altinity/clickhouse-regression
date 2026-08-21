@@ -17,29 +17,57 @@ from . import observe
 from .report import Verdict
 
 
-def assert_fsck_clean(result, fsck: dict):
+def _fsck_count(fsck: dict | None, key: str):
+    """Return the integer fsck summary field, or None if the scan did not produce one.
+
+    A docker-exec miss (`No such container: ca-soak-ch1-1`) returns `{exit_code: 1, stderr: ...}`
+    with no `dangling`/`unreachable` keys. Treating that as `dangling == 0` (False) FAIL-closes every
+    card; treating a missing key as 0 PASS-closes prefill checks. Both are harness bugs (ARM 2026-08-21).
+    """
+    if not fsck or key not in fsck or fsck.get(key) is None:
+        return None
+    try:
+        return int(fsck[key])
+    except (TypeError, ValueError):
+        return None
+
+
+def assert_fsck_clean(result, fsck: dict, *, name="fsck dangling", expected="0", fail_note=""):
     """fsck dangling == 0. A missing/timed-out fsck is inconclusive.
 
     Non-vacuity review (2026-07-25 sweep): the subject here is a scalar count from an explicitly
     presence-checked summary dict, not a row set that silently shrinks to empty — `dangling == 0` is a
     real, meaningful fsck result on its own, so no additional guard is needed once `fsck` is confirmed
     present."""
-    if not fsck or "dangling" not in fsck:
+    dangling = _fsck_count(fsck, "dangling")
+    if dangling is None:
         return [result.add(Verdict.inconclusive(
-            "fsck dangling", "0", "fsck summary unavailable (timeout or parse failure)"))]
-    dangling = fsck.get("dangling")
+            name, expected,
+            "fsck summary unavailable (timeout, parse failure, or missing container)"))]
     # A PARTIAL scan (deadline hit, `--partial`) is a lower bound: dangling>0 is a real finding,
     # but dangling==0 proves nothing about the unwalked remainder — never let a partial clean pass.
     if fsck.get("partial") and dangling == 0:
         return [result.add(Verdict.inconclusive(
-            "fsck dangling", "0",
+            name, expected,
             f"fsck partial (deadline): walked subset clean, remainder unproven ({fsck.get('reason', '')})"))]
-    v = result.add(Verdict.check("fsck dangling", "0", dangling, dangling == 0))
-    result.observations["fsck_final"] = {
-        k: fsck.get(k) for k in ("reachable", "unreachable", "dangling", "physical_bytes",
-                                 "referenced_logical_bytes", "distinct_blobs", "total_blob_refs",
-                                 "dedup_ratio") if k in fsck}
+    note = "" if dangling == 0 else (fail_note or f"dangling={dangling}")
+    v = result.add(Verdict.check(name, expected, dangling, dangling == 0, note))
+    if name == "fsck dangling":
+        result.observations["fsck_final"] = {
+            k: fsck.get(k) for k in ("reachable", "unreachable", "dangling", "physical_bytes",
+                                     "referenced_logical_bytes", "distinct_blobs", "total_blob_refs",
+                                     "dedup_ratio") if k in fsck}
     return [v]
+
+
+def assert_fsck_count(result, fsck: dict, key: str, name: str, expected: str, ok_fn, fail_note=""):
+    """Assert a predicate on one fsck summary field. Missing field → inconclusive, never fail/pass."""
+    val = _fsck_count(fsck, key)
+    if val is None:
+        return [result.add(Verdict.inconclusive(
+            name, expected, f"fsck {key} unavailable (timeout, parse failure, or missing container)"))]
+    ok = bool(ok_fn(val))
+    return [result.add(Verdict.check(name, expected, val, ok, "" if ok else fail_note))]
 
 
 # fsck object classes that a `cas-gc-dryrun` candidate may legitimately fall into. `cas-gc-dryrun`

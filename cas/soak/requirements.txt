@@ -1,3 +1,4 @@
 clickhouse-connect>=0.7
 boto3>=1.34
 pytest>=8.0
+zstandard>=0.22

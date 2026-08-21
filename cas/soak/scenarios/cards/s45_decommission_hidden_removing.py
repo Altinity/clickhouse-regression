@@ -61,6 +61,7 @@ unconditionally. Final `fsck` showed `dangling=0` (some `unreachable` residue, w
 pre-GC state the warnings describe, not corruption).
 """
 
+import os
 import subprocess
 import time
 
@@ -72,10 +73,16 @@ from ..framework.base import Scenario, register
 from ..framework.report import Verdict
 from . import _common
 
-_VICTIM_CONTAINER = "ca-soak-ch2-1"
 _VICTIM_SRID = "ca_soak_ch2"
-_SURVIVOR_CONTAINER = "ca-soak-ch1-1"
 _TABLE_PREFIX = "s45_victim"
+
+
+def _victim_container() -> str:
+    return os.environ.get("CA_SOAK_NODE2_CONTAINER", "ca-soak-ch2-1")
+
+
+def _survivor_container() -> str:
+    return os.environ.get("CA_SOAK_NODE1_CONTAINER", "ca-soak-ch1-1")
 
 
 def _run_drop_member(container: str, srid: str, timeout_s: float = 300.0) -> dict:
@@ -169,10 +176,10 @@ class S45(Scenario):
             node.query(f"DROP TABLE IF EXISTS {t} SYNC", timeout=120)
             victim.query(f"DROP TABLE IF EXISTS {t} SYNC", timeout=120)
 
-        ctx.log(f"S45: killing victim {_VICTIM_CONTAINER} immediately after drop (before its own GC settles)")
-        subprocess.run(["docker", "kill", _VICTIM_CONTAINER], capture_output=True, check=True)
+        ctx.log(f"S45: killing victim {_victim_container()} immediately after drop (before its own GC settles)")
+        subprocess.run(["docker", "kill", _victim_container()], capture_output=True, check=True)
 
-        report = _run_drop_member_after_lease_lapses(_SURVIVOR_CONTAINER, _VICTIM_SRID)
+        report = _run_drop_member_after_lease_lapses(_survivor_container(), _VICTIM_SRID)
         ctx.write_json("s45_drop_member_report.json", report)
 
         result.add(Verdict.check(
@@ -191,7 +198,7 @@ class S45(Scenario):
         gc_mod.forced_gc_to_fixpoint(ctx.cluster, lambda: 0)
         try:
             from soak import fsck as fsck_mod
-            fsck = fsck_mod.run_fsck(_SURVIVOR_CONTAINER, disk="ca_ro", detail=False)
+            fsck = fsck_mod.run_fsck(_survivor_container(), disk="ca_ro", detail=False)
             assert_fsck_clean(result, fsck)
         except Exception as e:
             ctx.log(f"S45: final fsck raised: {e}")

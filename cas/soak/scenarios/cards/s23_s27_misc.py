@@ -239,11 +239,11 @@ class S23(Scenario):
         # assertions (quiesce_cluster([]) drains cluster-wide and skips per-table SYNC — which is
         # exactly right for an empty pool).
         end = _common.standard_end(ctx, result, [])
-        dangling = (end or {}).get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "idle pool fsck clean", "fsck dangling==0 on the empty pool",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "an idle empty pool reported dangling refs — should be impossible"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="idle pool fsck clean",
+            expected="fsck dangling==0 on the empty pool",
+            fail_note="an idle empty pool reported dangling refs — should be impossible")
 
 
 # ---------------------------------------------------------------------------
@@ -548,12 +548,11 @@ class S25(Scenario):
 
         # After dropping everything, the fixpoint must reclaim to a clean pool (NOT abandoning).
         end = _common.standard_end(ctx, result, [])
-        dangling = (end or {}).get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "non-Atomic path cleanup fsck clean", "fsck dangling==0 after the non-Atomic lifecycle",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "dangling refs survived the non-Atomic-db lifecycle — a path was "
-                                     "misclassified or a ref was not dropped"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="non-Atomic path cleanup fsck clean",
+            expected="fsck dangling==0 after the non-Atomic lifecycle",
+            fail_note="dangling refs survived the non-Atomic-db lifecycle — a path was misclassified or a ref was not dropped")
 
 
 # ---------------------------------------------------------------------------
@@ -717,12 +716,11 @@ class S26(Scenario):
 
         # standard_end with no surviving tables: fixpoint reclaim + clean fsck.
         end = _common.standard_end(ctx, result, [])
-        dangling = (end or {}).get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "verbatim churn fsck clean", "fsck dangling==0 after verbatim file churn + drop",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "dangling refs after verbatim-file churn — a table-level file "
-                                     "was mis-tracked"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="verbatim churn fsck clean",
+            expected="fsck dangling==0 after verbatim file churn + drop",
+            fail_note="dangling refs after verbatim-file churn — a table-level file was mis-tracked")
 
 
 # ---------------------------------------------------------------------------
