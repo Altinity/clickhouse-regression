@@ -16,7 +16,7 @@ import traceback
 
 from soak.cluster import Cluster
 
-from .framework import base, cluster_boot, history
+from .framework import base, cluster_boot, history, sql
 from .framework.report import ScenarioResult, FAIL, INCONCLUSIVE, PASS
 from .framework.runctx import RunContext
 from .framework import report as report_mod
@@ -35,16 +35,6 @@ def parse_duration(s) -> int:
         mult = {"s": 1, "m": 60, "h": 3600}[s[-1]]
         s = s[:-1]
     return int(float(s) * mult)
-
-
-def _now_str(cluster) -> str:
-    # toString(now()) yields the canonical 'YYYY-MM-DD HH:MM:SS' directly. (Do NOT use
-    # formatDateTime with '%M' — in ClickHouse '%M' is the MONTH NAME, not minutes, which silently
-    # corrupts the since-timestamp used to scope every card's GC/event-log queries.)
-    try:
-        return cluster.node1.scalar("SELECT toString(now())")
-    except Exception:
-        return ""
 
 
 def run_one(cls, *, seed, duration_s, scale, overrides, no_reset, variant_override, log) -> ScenarioResult:
@@ -75,7 +65,7 @@ def run_one(cls, *, seed, duration_s, scale, overrides, no_reset, variant_overri
                 cluster_boot.ensure_up(variant, log_fn=ctx.log)
             ctx.cluster = Cluster(node_count=cluster_boot.node_count_for(variant))
             ctx.snapshot_config(compose_variant=variant)
-            ctx.extra["since_event_time"] = _now_str(ctx.cluster)
+            ctx.extra["since_event_time"] = sql.server_now(ctx.cluster)
             scen.run(ctx, result)
         if not result.status or result.status == INCONCLUSIVE and result.verdicts:
             result.finalize()
@@ -164,7 +154,12 @@ def main(argv=None):
     # lost. The last cluster is still standing right here, so capture it now; if the batch already
     # tore it down, the dump reports QUERY-FAILED rather than inventing empty files.
     last = results[-1].scenario if results else "batch"
-    cluster_boot.predown_dump(f"{last}_end_of_batch", log_fn=print)
+    try:
+        cluster_boot.predown_dump(f"{last}_end_of_batch", log_fn=print)
+    except Exception as e:
+        # Best-effort: a dump timeout must not hang TestFlows after the cards are done (AMD 2026-08-21:
+        # uncaught TimeoutExpired left regression.py sleeping on a Shell prompt for hours).
+        print(f"end-of-batch predown_dump raised (ignored): {e}")
 
     print("\n=== SUITE SUMMARY ===")
     for r in results:

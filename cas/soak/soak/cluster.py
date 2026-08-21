@@ -451,8 +451,24 @@ def is_aborted(exc: BaseException) -> bool:
     return isinstance(exc, QueryError) and exc.is_aborted
 
 
+def is_socket_timeout(exc: BaseException) -> bool:
+    """True iff `exc` is a client-side recv/connect timeout (possibly wrapped in URLError).
+
+    Distinct from "the node is down": a query that already burned its own `timeout=` budget should
+    not be multiplied by `retry_on_transport`'s attempt count (S21 ci-scale INSERT: 5 x 1800s).
+    Chaos still retries timeouts by default (`retry_timeouts=True`) because a restart mid-op really
+    does surface as `socket.timeout`."""
+    if isinstance(exc, (TimeoutError, socket.timeout)):
+        return True
+    if isinstance(exc, urllib.error.URLError) and not isinstance(exc, urllib.error.HTTPError):
+        reason = getattr(exc, "reason", None)
+        if isinstance(reason, BaseException):
+            return is_socket_timeout(reason)
+    return False
+
+
 def retry_on_transport(fn, *, attempts: int, backoff_s: float = 0.5, max_backoff_s: float = 8.0,
-                       on_retry=None, sleep_fn=time.sleep):
+                       on_retry=None, sleep_fn=time.sleep, retry_timeouts: bool = True):
     """Call `fn` and retry it on a NODE-DOWN failure (`is_node_down`: a connection-level transport
     error OR a graceful-shutdown cancellation/network `QueryError`), a transient `is_readonly`/
     `is_mount_fenced`/`is_keeper_transient`/`is_s3_transient` `QueryError`, with bounded,
@@ -482,6 +498,8 @@ def retry_on_transport(fn, *, attempts: int, backoff_s: float = 0.5, max_backoff
         try:
             return fn()
         except Exception as e:
+            if is_socket_timeout(e) and not retry_timeouts:
+                raise
             if not (is_node_down(e) or is_readonly(e) or is_mount_fenced(e) or is_keeper_transient(e)
                     or is_s3_transient(e) or is_aborted(e)):
                 raise

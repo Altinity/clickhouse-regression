@@ -6,10 +6,14 @@ tearing it down wipes the pool) followed by `up -d`. Server logs are host-bind-m
 `logs/ch1` / `logs/ch2`, so they survive the reset and are archived per run.
 
 Two compose variants are supported: the default (`gc_shards=1`) and `gc_shards2`. Both target the
-same docker-compose project (directory name `ca-soak`), so container names are stable across variants.
+same docker-compose project (`ca-soak`, pinned via `docker compose -p`), so container names stay
+`ca-soak-chN-1` even when this tree lives under `cas/soak` (whose directory name would otherwise
+become the compose project `soak` and break chaos/fsck defaults).
 """
 
+import os
 import shutil
+import signal
 import subprocess
 import time
 import xml.etree.ElementTree as ET
@@ -97,8 +101,20 @@ def node_count_for(variant) -> int:
     return _VARIANT_NODES.get(variant, 2)
 
 
+# Upstream utils/ca-soak named the compose project after its directory. This port lives in
+# `cas/soak`, so an unpinned `docker compose` would name containers `soak-ch1-1` while chaos.py /
+# fsck / observe still default to `ca-soak-ch1-1`. Pin the project so those names stay stable.
+_COMPOSE_PROJECT = {
+    "s41": "ca-s41",  # isolated stack; must not share the ca-soak project
+}
+
+
+def compose_project(variant=None) -> str:
+    return _COMPOSE_PROJECT.get(variant, "ca-soak")
+
+
 def compose_cmd(variant, *args):
-    base = ["docker", "compose"]
+    base = ["docker", "compose", "-p", compose_project(variant)]
     f = _VARIANT_FILE.get(variant)
     if f:
         base += ["-f", f]
@@ -114,11 +130,37 @@ def compose_run(variant, *args, timeout=600, log_fn=print) -> int:
 
 
 def _run(argv, timeout=600, log_fn=print):
+    """Run argv, returning its exit code. Never raises on timeout.
+
+    `predown_dump` is best-effort: a wedged cluster must not block `docker compose down`.
+    `subprocess.run(..., timeout=)` raises `TimeoutExpired` and only kills the direct child, so a
+    dump script's `curl` grandchildren keep chewing ClickHouse and every later card then times out
+    the same way. Start a new session and SIGKILL the whole group; treat timeout as rc=124.
+    """
     log_fn(f"$ {' '.join(argv)}")
-    p = subprocess.run(argv, cwd=str(CA_SOAK_DIR), capture_output=True, text=True, timeout=timeout)
-    if p.returncode != 0:
-        log_fn(f"  rc={p.returncode} stderr={p.stderr.strip()[:400]}")
-    return p.returncode
+    try:
+        proc = subprocess.Popen(
+            argv, cwd=str(CA_SOAK_DIR), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, start_new_session=True)
+    except OSError as e:
+        log_fn(f"  exec failed: {e}")
+        return 127
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        try:
+            proc.communicate(timeout=5)
+        except Exception:
+            pass
+        log_fn(f"  timed out after {timeout}s (killed process group)")
+        return 124
+    if proc.returncode != 0:
+        log_fn(f"  rc={proc.returncode} stderr={(stderr or '').strip()[:400]}")
+    return proc.returncode
 
 
 def _prep_log_dirs(node_count=2):

@@ -196,8 +196,7 @@ class S15(Scenario):
                 continue
             # Rebuild the cluster handle + re-scope log queries to this fresh pool's server now().
             ctx.cluster = Cluster()
-            ctx.extra["since_event_time"] = ctx.cluster.node1.scalar(
-                "SELECT formatDateTime(now(),'%Y-%m-%d %H:%M:%S')")
+            ctx.extra["since_event_time"] = sql.server_now(ctx.cluster)
             last_variant = variant
             try:
                 per_variant[variant] = self._run_variant(ctx, result, variant, gc_shards)
@@ -276,8 +275,7 @@ class S15(Scenario):
                 "default", archive_tag=f"S15_final_default_{ctx.timestamp}", log_fn=ctx.log)
             if ok:
                 ctx.cluster = Cluster()
-                ctx.extra["since_event_time"] = ctx.cluster.node1.scalar(
-                    "SELECT formatDateTime(now(),'%Y-%m-%d %H:%M:%S')")
+                ctx.extra["since_event_time"] = sql.server_now(ctx.cluster)
             result.add(Verdict.check(
                 "cluster left on default variant", "healthy on default after final reset",
                 ok, ok))

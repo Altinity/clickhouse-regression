@@ -69,6 +69,19 @@ def drop_all_ca_tables(cluster, log_fn=print):
     return sorted(seen)
 
 
+def server_now(cluster) -> str:
+    """Canonical `YYYY-MM-DD HH:MM:SS` from the server clock, for scoping GC/event-log queries.
+
+    Do NOT use `formatDateTime(now(), '%Y-%m-%d %H:%M:%S')`: in ClickHouse `%M` is the month name,
+    which produces timestamps like `2026-08-21 05:August:25` and then `CANNOT_PARSE_DATETIME` on
+    every `event_time >= ...` filter (S15 AMD 2026-08-21). `toString(now())` is the safe form.
+    """
+    try:
+        return cluster.node1.scalar("SELECT toString(now())")
+    except Exception:
+        return ""
+
+
 def insert_random(node, table, *, rows, payload_bytes, extra_cols_select="", op_id=0,
                   settings=None, timeout=1200.0):
     """INSERT `rows` rows whose `payload` column is `payload_bytes` of incompressible random bytes.
@@ -86,14 +99,17 @@ def insert_random(node, table, *, rows, payload_bytes, extra_cols_select="", op_
 
     def one():
         node.command(sql, timeout=timeout, settings=s)
-    retry_on_transport(lambda: retry_on_aborted(one), attempts=5)
+    # retry_timeouts=False: a query that already burned `timeout` must not be multiplied (S21
+    # ci-scale INSERT timed out at 1800s x 5 transport retries = 2.5h, then left a huge trace_log
+    # that wedged every later predown dump). Connection refused/reset still retry.
+    retry_on_transport(lambda: retry_on_aborted(one), attempts=5, retry_timeouts=False)
 
 
 def insert_values(node, table, values_sql, *, timeout=600.0, settings=None):
     """INSERT ... VALUES / INSERT ... SELECT with caller-provided body, retry-wrapped."""
     def one():
         node.command(f"INSERT INTO {table} {values_sql}", timeout=timeout, settings=settings)
-    retry_on_transport(lambda: retry_on_aborted(one), attempts=5)
+    retry_on_transport(lambda: retry_on_aborted(one), attempts=5, retry_timeouts=False)
 
 
 # ---------------------------------------------------------------------------
