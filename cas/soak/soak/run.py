@@ -1574,6 +1574,10 @@ def run_phase3(args):
 
     def do_checkpoint(label, *, strict_unreachable=False):
         log(f"{label}")
+        # Hold chaos until EVERY checkpoint HTTP finishes (health gate, fsck, quiesce, signal
+        # reads, phase-summary). Clearing `checkpoint_active` before capture_checkpoint_signals
+        # let the next docker restart RST those unretried queries (AMD phase-2 after the pidfile
+        # fix: recovery checkpoint printed OK, then TRANSPORT FAILURE Connection reset).
         checkpoint_active.set()
         try:
             wait_for_healthy(cluster)
@@ -1585,21 +1589,21 @@ def run_phase3(args):
                 log(f"WARNING [B146/B154] {label}: entry-gate fsck timed out ({_e}); "
                     f"proceeding to checkpoint without pool-consistent gate — soak continues")
             now, exp, n1, n2, f, dr = checkpoint(driver, cluster, model, 2, strict_unreachable=strict_unreachable)
+            log(render_checkpoint_result(label, now, exp, f, dr))
+            # Record a checkpoint-tagged metrics tick carrying the fsck result (§2: include fsck at checkpoints).
+            checkpoint_ts = int(time.time())
+            ticker.tick_once(checkpoint_ts, fsck=f)
+            # The two signal families the driver could not see before 2026-07-26. Both are read here
+            # fail-closed (the cluster is quiesced and health-gated) and reported. One family inside them
+            # is also GATED: the late-PUT-loses violation counters fail the checkpoint (see
+            # `capture_checkpoint_signals`), because their benign rate is zero by construction.
+            capture_checkpoint_signals(cluster, label, tracker=signal_tracker, fencing=fencing)
+            capture_phase_summary(cluster, label, since_ts=phase_window_start["ts"],
+                                  coverage=phase_coverage, conn=conn, ts=checkpoint_ts)
+            phase_window_start["ts"] = checkpoint_ts
+            return now, exp, n1, n2, f, dr
         finally:
             checkpoint_active.clear()
-        log(render_checkpoint_result(label, now, exp, f, dr))
-        # Record a checkpoint-tagged metrics tick carrying the fsck result (§2: include fsck at checkpoints).
-        checkpoint_ts = int(time.time())
-        ticker.tick_once(checkpoint_ts, fsck=f)
-        # The two signal families the driver could not see before 2026-07-26. Both are read here
-        # fail-closed (the cluster is quiesced and health-gated) and reported. One family inside them
-        # is also GATED: the late-PUT-loses violation counters fail the checkpoint (see
-        # `capture_checkpoint_signals`), because their benign rate is zero by construction.
-        capture_checkpoint_signals(cluster, label, tracker=signal_tracker, fencing=fencing)
-        capture_phase_summary(cluster, label, since_ts=phase_window_start["ts"],
-                              coverage=phase_coverage, conn=conn, ts=checkpoint_ts)
-        phase_window_start["ts"] = checkpoint_ts
-        return now, exp, n1, n2, f, dr
 
     def drain_recovery_checkpoints():
         with recovery_lock:
@@ -1934,9 +1938,12 @@ def main(argv=None):
 
     def do_checkpoint(label, executed_count, op_id):
         log(f"{label} at executed={executed_count} (op_id={op_id})")
-        # Hold off chaos while the checkpoint quiesces (its raw queries assume reachable nodes). In
-        # phase 2 a fault may already be mid-window when we reach a periodic checkpoint, so wait for
-        # both nodes HTTP-healthy first (loud fail if a node never returns).
+        # Hold off chaos until EVERY checkpoint HTTP finishes (health gate, fsck, quiesce,
+        # signal reads, phase-summary). In phase 2 a fault may already be mid-window when we
+        # reach a periodic checkpoint, so wait for both nodes HTTP-healthy first (loud fail if a
+        # node never returns). Clearing `checkpoint_active` before capture_* used to let the
+        # next docker restart RST those queries (AMD phase-2 TRANSPORT FAILURE after a green
+        # recovery checkpoint).
         checkpoint_active.set()
         try:
             if phase2:
@@ -1953,16 +1960,16 @@ def main(argv=None):
                     log(f"WARNING [B146/B154] {label}: entry-gate fsck timed out ({_e}); "
                         f"proceeding to checkpoint without pool-consistent gate — soak continues")
             now, exp, n1, n2, f, dr = checkpoint(driver, cluster, model, args.phase)
+            log(render_checkpoint_result(label, now, exp, f, dr))
+            checkpoint_ts = int(time.time())
+            capture_checkpoint_signals(cluster, label, tracker=signal_tracker, fencing=fencing)
+            # Phase 1/2 has no metrics db, so the phase summary is logged only (conn=None).
+            capture_phase_summary(cluster, label, since_ts=phase_window_start["ts"],
+                                  coverage=phase_coverage, conn=None, ts=checkpoint_ts)
+            phase_window_start["ts"] = checkpoint_ts
+            return now, exp, n1, n2, f, dr
         finally:
             checkpoint_active.clear()
-        log(render_checkpoint_result(label, now, exp, f, dr))
-        checkpoint_ts = int(time.time())
-        capture_checkpoint_signals(cluster, label, tracker=signal_tracker, fencing=fencing)
-        # Phase 1/2 has no metrics db, so the phase summary is logged only (conn=None).
-        capture_phase_summary(cluster, label, since_ts=phase_window_start["ts"],
-                              coverage=phase_coverage, conn=None, ts=checkpoint_ts)
-        phase_window_start["ts"] = checkpoint_ts
-        return now, exp, n1, n2, f, dr
 
     def drain_recovery_checkpoints(executed_count, op_id):
         """If chaos completed any fault windows, run a RECOVERY checkpoint for them: wait for both
@@ -1989,6 +1996,11 @@ def main(argv=None):
         for op in effective:
             if args.until_op is not None and op.op_id > args.until_op:
                 break
+            # Phase 2: if a fault window finished while the previous op was in flight, wait for
+            # HTTP-healthy *before* submitting the next op. Otherwise the next INSERT/OPTIMIZE
+            # races docker restart (AMD: last_op=63 OPTIMIZE vs last_fault=ch1 restart t+529).
+            if phase2:
+                drain_recovery_checkpoints(executed, last_op.op_id if last_op else None)
             # A barrier op (mutation) implicitly drains inserts inside apply_barrier.
             driver.execute(op)
             last_op = op

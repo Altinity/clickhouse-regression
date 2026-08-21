@@ -521,10 +521,17 @@ def quiesce(cluster, table: str, timeout_s: int = 300, admin_timeout_s: float | 
 
 
 def query_aggregates(node, table: str) -> dict:
-    """Read the seven oracle aggregates from one replica (matching Model.aggregates keys/types)."""
-    row = node.query(
+    """Read the seven oracle aggregates from one replica (matching Model.aggregates keys/types).
+
+    Retries a transient transport error (connection reset/refused right after chaos restart):
+    `/ping` can already be 200 while the next real query still RSTs. Same budget as the
+    quiesce probe reads (`retry_on_transport` 10 attempts). A node that stays down fails loudly.
+    """
+    sql = (
         f"SELECT count(), toUInt64(sum(row_fp)), uniqExact((bucket,k)), sum(v), sum(version), "
-        f"min(op_id), max(op_id) FROM {table} FORMAT TabSeparated").strip().split("\t")
+        f"min(op_id), max(op_id) FROM {table} FORMAT TabSeparated"
+    )
+    row = retry_on_transport(lambda: node.query(sql), attempts=10).strip().split("\t")
     if int(row[0]) == 0:
         return {"count": 0, "sum_fp": 0, "uniq_keys": 0, "sum_v": 0, "sum_version": 0,
                 "min_op": None, "max_op": None}
