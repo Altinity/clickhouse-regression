@@ -511,11 +511,11 @@ class S11(Scenario):
     param_table = {
         # dev: many small parts across 16 buckets, a handful of delete rounds.
         "dev": {"buckets": 16, "parts": 16, "rows_per_part": 1000, "payload_bytes": 512,
-                "delete_rounds": 6, "optimize": True},
+                "delete_rounds": 6, "optimize": True, "gc_round_max_ms": 30_000},
         "ci": {"buckets": 64, "parts": 64, "rows_per_part": 4000, "payload_bytes": 1024,
-               "delete_rounds": 20, "optimize": True},
+               "delete_rounds": 20, "optimize": True, "gc_round_max_ms": 300_000},
         "full": {"buckets": 256, "parts": 256, "rows_per_part": 10000, "payload_bytes": 2048,
-                 "delete_rounds": 64, "optimize": True},
+                 "delete_rounds": 64, "optimize": True, "gc_round_max_ms": 900_000},
     }
 
     def run(self, ctx, result):
@@ -663,8 +663,8 @@ class S11(Scenario):
             end.get("residual_unreachable"),
             end.get("fsck_detail"))
 
-        # GC duration bound: forced GC to fixpoint should not run away. Report the max round duration
-        # from the GC log and assert it is bounded (dev-scale: generous 30s ceiling per round).
+        # GC duration bound: forced GC to fixpoint should not run away. Scale the ceiling with
+        # the profile — a 30s "dev" cap is not a ci/full reclaim budget (AMD ci 2026-08-21: 187s).
         gc_log = end.get("gc_all", {})
         max_round_ms = 0
         for rows in gc_log.get("per_node", {}).values():
@@ -674,14 +674,14 @@ class S11(Scenario):
                 except Exception:
                     pass
         result.observations["gc_max_round_ms"] = max_round_ms
-        forced_gc_s = result.timings.get("forced_gc_s")
+        bound_ms = int(p.get("gc_round_max_ms", 30_000))
         if max_round_ms:
-            ok = max_round_ms < 30000
+            ok = max_round_ms < bound_ms
             result.add(Verdict.check(
-                "GC round duration bounded", "< 30s per round at dev scale",
+                "GC round duration bounded", f"< {bound_ms} ms per round (scale={ctx.scale})",
                 f"{max_round_ms} ms", ok,
-                "" if ok else "a forced GC round exceeded 30s — investigate runaway reclaim cost"))
+                "" if ok else f"a forced GC round exceeded {bound_ms} ms — investigate runaway reclaim cost"))
         else:
             result.add(Verdict.inconclusive(
-                "GC round duration bounded", "< 30s per round",
+                "GC round duration bounded", f"< {bound_ms} ms per round",
                 "no GC finish rows with a duration were recorded for this run window"))

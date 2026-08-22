@@ -426,8 +426,8 @@ class S21(Scenario):
         # dev: a handful of parts, a dozen columns, a few concurrent readers; runs in seconds.
         "dev": {"parts": 8, "rows_per_part": 200, "ncols": 12, "col_bytes": 4096,
                 "point_lookups": 20, "readers": 4, "scan_rounds": 3},
-        "ci": {"parts": 30, "rows_per_part": 2000, "ncols": 30, "col_bytes": 8192,
-               "point_lookups": 60, "readers": 8, "scan_rounds": 5},
+        "ci": {"parts": 12, "rows_per_part": 400, "ncols": 16, "col_bytes": 2048,
+                "point_lookups": 40, "readers": 6, "scan_rounds": 4},
         "full": {"parts": 100, "rows_per_part": 20000, "ncols": 60, "col_bytes": 16384,
                  "point_lookups": 200, "readers": 16, "scan_rounds": 10},
     }

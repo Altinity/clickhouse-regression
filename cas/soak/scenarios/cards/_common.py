@@ -13,12 +13,13 @@ def assert_dangling_zero(result, fsck, name, expected="fsck dangling==0", fail_n
 
 
 def standard_end(ctx, result, tables, *, table_filter=None, abandons=False,
-                 expect_exception=False, optimize=True):
+                 expect_exception=False, optimize=True, allow_gc_failed=False):
     """Run the quiesced end checkpoint + common hard assertions for this run."""
     since = ctx.extra.get("since_event_time") or None
     return checkpoint.end_checkpoint(
         ctx, ctx.cluster, result, tables, table_filter=table_filter, abandons=abandons,
-        expect_exception=expect_exception, since_event_time=since, optimize=optimize)
+        expect_exception=expect_exception, since_event_time=since, optimize=optimize,
+        allow_gc_failed=allow_gc_failed)
 
 
 def record_peak_memory(result, sampler, *, budget_bytes=None, label="peak MemoryResident"):

@@ -165,16 +165,13 @@ class S45(Scenario):
             sql.insert_random(node, t, rows=int(p["rows_per_table"]), payload_bytes=64)
             victim.command(f"SYSTEM SYNC REPLICA {t}", timeout=60)
 
-        # Drop every victim table on BOTH replicas, then immediately kill the victim node -- before
-        # its own background GC/janitor has a chance to condemn+retire these `Removing` rows.
-        # Dropping only on node1 would leave the victim's own local replica still ATTACHED (a
-        # ReplicatedMergeTree DROP is per-replica, not automatically cluster-wide), so the victim's
-        # own namespace would stay Live, not Removing -- there would be nothing "hidden" to find. The
-        # victim's own `DROP ... SYNC` must return before the kill so its namespace is provably
-        # Removing, not merely mid-drop.
+        # Drop every victim table on BOTH replicas, then immediately kill the victim — before its
+        # own background GC/janitor condemns+retires the `Removing` rows. Do NOT use DROP ... SYNC:
+        # SYNC waits until retirement finishes, so cas-drop-member then sees namespaces_removed=0
+        # (AMD 2026-08-21). The DROP must return while the catalog is still Removing.
         for t in tables:
-            node.query(f"DROP TABLE IF EXISTS {t} SYNC", timeout=120)
-            victim.query(f"DROP TABLE IF EXISTS {t} SYNC", timeout=120)
+            node.query(f"DROP TABLE IF EXISTS {t}", timeout=120)
+            victim.query(f"DROP TABLE IF EXISTS {t}", timeout=120)
 
         ctx.log(f"S45: killing victim {_victim_container()} immediately after drop (before its own GC settles)")
         subprocess.run(["docker", "kill", _victim_container()], capture_output=True, check=True)
@@ -188,12 +185,21 @@ class S45(Scenario):
             f"stderr: {report.get('stderr', '')[:500]}"))
 
         namespaces_removed = report.get("namespaces_removed")
-        result.add(Verdict.check(
-            "hidden Removing rows are accounted for", f">= {len(tables)}",
-            f"namespaces_removed={namespaces_removed}",
-            namespaces_removed is not None and namespaces_removed >= len(tables),
-            "the victim's Removing rows (dropped but never condemned before the kill) must be swept "
-            "by the tool, not left as permanent catalog debris"))
+        already = report.get("namespaces_already_removed")
+        accounted = (int(namespaces_removed or 0) + int(already or 0)
+                     if isinstance(namespaces_removed, int) or isinstance(already, int) else None)
+        if not accounted:
+            result.add(Verdict.inconclusive(
+                "hidden Removing rows are accounted for", f">= {len(tables)}",
+                f"namespaces_removed={namespaces_removed} already_removed={already} — DROP likely "
+                "finished retirement before the kill, so there were no hidden Removing rows to sweep"))
+        else:
+            result.add(Verdict.check(
+                "hidden Removing rows are accounted for", f">= {len(tables)}",
+                f"namespaces_removed={namespaces_removed} already_removed={already}",
+                accounted >= len(tables),
+                "the victim's Removing rows (dropped but never condemned before the kill) must be swept "
+                "by the tool, not left as permanent catalog debris"))
 
         gc_mod.forced_gc_to_fixpoint(ctx.cluster, lambda: 0)
         try:

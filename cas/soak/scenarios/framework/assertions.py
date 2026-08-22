@@ -379,13 +379,21 @@ def assert_reclaimable_drained(result, verdict_name, residual, fsck_detail_res: 
 
 def run_common_assertions(result, *, fsck_final, fsck_detail_res, dryrun_res, ca_events,
                           gc_summary, abandons=False, expect_exception=False,
-                          residual_after_gc=None):
+                          residual_after_gc=None, allow_gc_failed=False):
     """Run all common positive-scenario assertions in one call. Returns the list of verdicts added."""
     out = []
     out += assert_fsck_clean(result, fsck_final)
     out += assert_dryrun_subset(result, fsck_detail_res, dryrun_res)
     out += assert_event_audit(result, ca_events, expect_exception=expect_exception)
-    out += assert_gc_no_failed(result, gc_summary)
+    if allow_gc_failed:
+        failed = (gc_summary or {}).get("failed", 0)
+        result.observations["gc_summary"] = gc_summary
+        out.append(result.add(Verdict.reported(
+            "GC Failed rounds (not asserted)",
+            "recorded only — injected store/process faults make Error finish rows expected",
+            failed)))
+    else:
+        out += assert_gc_no_failed(result, gc_summary)
     out += assert_no_leftovers(result, fsck_final, abandons=abandons,
                                residual_after_gc=residual_after_gc, fsck_detail_res=fsck_detail_res)
     return out
