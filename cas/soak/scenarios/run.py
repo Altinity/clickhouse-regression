@@ -17,7 +17,8 @@ import traceback
 from soak.cluster import Cluster
 
 from .framework import base, cluster_boot, history, sql
-from .framework.report import ScenarioResult, FAIL, INCONCLUSIVE, PASS
+from .framework import disk_cap
+from .framework.report import ScenarioResult, FAIL, INCONCLUSIVE, PASS, Verdict
 from .framework.runctx import RunContext
 from .framework import report as report_mod
 
@@ -37,7 +38,8 @@ def parse_duration(s) -> int:
     return int(float(s) * mult)
 
 
-def run_one(cls, *, seed, duration_s, scale, overrides, no_reset, variant_override, log) -> ScenarioResult:
+def run_one(cls, *, seed, duration_s, scale, overrides, no_reset, variant_override, log,
+            disk_guard=None) -> ScenarioResult:
     scen = cls()
     variant = variant_override if variant_override is not None else scen.compose_variant
     ctx = RunContext.create(scen.name, seed, duration_s, scale)
@@ -68,21 +70,39 @@ def run_one(cls, *, seed, duration_s, scale, overrides, no_reset, variant_overri
                 ctx.snapshot_config(compose_variant=variant)
                 ctx.extra["since_event_time"] = sql.server_now(ctx.cluster)
                 scen.run(ctx, result)
-        if not result.status or result.status == INCONCLUSIVE and result.verdicts:
+        cap_reason = disk_guard.consume_trip() if disk_guard else None
+        if cap_reason:
+            ctx.log(f"SCENARIO STOPPED by disk/pool cap: {cap_reason}")
+            result.add(Verdict.inconclusive(
+                "disk/pool cap",
+                "pool and host free space stayed under the suite budget",
+                cap_reason))
+            result.finalize(INCONCLUSIVE)
+        elif not result.status or result.status == INCONCLUSIVE and result.verdicts:
             result.finalize()
         elif not result.verdicts and not result.status:
             result.finalize(INCONCLUSIVE)
         else:
             result.finalize(result.status if result.status in (PASS, FAIL, INCONCLUSIVE) else None)
     except Exception as e:
+        cap_reason = disk_guard.consume_trip() if disk_guard else None
         tb = traceback.format_exc()
-        ctx.log(f"SCENARIO ERROR: {e}\n{tb}")
-        result.error = f"{e}\n{tb}"
-        result.note_anomaly(f"scenario raised: {e}")
-        result.status = FAIL
+        if cap_reason:
+            ctx.log(f"SCENARIO STOPPED by disk/pool cap: {cap_reason}")
+            result.add(Verdict.inconclusive(
+                "disk/pool cap",
+                "pool and host free space stayed under the suite budget",
+                cap_reason))
+            result.status = INCONCLUSIVE
+            result.error = ""
+        else:
+            ctx.log(f"SCENARIO ERROR: {e}\n{tb}")
+            result.error = f"{e}\n{tb}"
+            result.note_anomaly(f"scenario raised: {e}")
+            result.status = FAIL
         # Best-effort failure context dump.
         try:
-            ctx.write_text("failure.txt", tb)
+            ctx.write_text("failure.txt", tb if not cap_reason else cap_reason)
         except Exception:
             pass
     finally:
@@ -119,6 +139,10 @@ def main(argv=None):
     ap.add_argument("--no-reset", action="store_true", help="do not hard-reset the pool between runs")
     ap.add_argument("--variant", default=None, help="force compose variant (default|gc_shards2)")
     ap.add_argument("--list", action="store_true", help="list registered scenarios and exit")
+    ap.add_argument("--max-pool-gb", type=float, default=disk_cap.DEFAULT_MAX_POOL_GB,
+                    help="tear down the card (INCONCLUSIVE, continue suite) if the RustFS pool exceeds this")
+    ap.add_argument("--min-free-disk-gb", type=float, default=disk_cap.DEFAULT_MIN_FREE_DISK_GB,
+                    help="same, if host free space on / drops below this")
     args = ap.parse_args(argv)
 
     if args.list:
@@ -140,14 +164,21 @@ def main(argv=None):
 
     duration_s = parse_duration(args.duration)
     print(f"[scenarios] running {len(scenarios)}: {[c.name for c in scenarios]} "
-          f"scale={args.scale} seed={args.seed} duration={duration_s}s")
+          f"scale={args.scale} seed={args.seed} duration={duration_s}s "
+          f"max_pool_gb={args.max_pool_gb} min_free_disk_gb={args.min_free_disk_gb}")
 
+    guard = disk_cap.DiskGuard(
+        max_pool_gb=args.max_pool_gb, min_free_disk_gb=args.min_free_disk_gb, log_fn=print)
+    guard.start()
     results = []
-    for cls in scenarios:
-        r = run_one(cls, seed=args.seed, duration_s=duration_s, scale=args.scale,
-                    overrides=overrides, no_reset=args.no_reset,
-                    variant_override=args.variant, log=print)
-        results.append(r)
+    try:
+        for cls in scenarios:
+            r = run_one(cls, seed=args.seed, duration_s=duration_s, scale=args.scale,
+                        overrides=overrides, no_reset=args.no_reset,
+                        variant_override=args.variant, log=print, disk_guard=guard)
+            results.append(r)
+    finally:
+        guard.stop()
 
     # END-OF-BATCH DUMP. `reset_cluster` dumps the cluster it is about to tear down, which captures
     # every scenario EXCEPT the last one in a batch — nothing resets after it, so its cluster would

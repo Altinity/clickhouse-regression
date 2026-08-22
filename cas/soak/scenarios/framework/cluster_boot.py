@@ -357,26 +357,29 @@ def reset_cluster(variant=None, *, archive_tag=None, log_fn=print, timeout_s=300
     # The 10-replica compose serializes startup (ch2 waits ch1, ..., ch10 waits ch9) to avoid the CA
     # capability-probe race on the shared pool, so bring-up scales with node count — widen the bound.
     boot_timeout = max(timeout_s, 90 + 45 * n)
-    if archive_tag:
-        archive_server_logs(archive_tag, node_count=n, log_fn=log_fn)
-    # EVERY system table dies with the containers: the compose has no volume for /var/lib/clickhouse,
-    # only the binary, the configs and ./logs/chN are mounted. A GC performance audit lost its entire
-    # queryable specimen to exactly this on 2026-07-29 — the pool was gone before a single query ran.
-    # So dump the specimen BEFORE `down`. Best-effort by design: a cluster that is already gone, or
-    # never came up, must not stop a reset.
-    predown_dump(archive_tag or "reset", log_fn=log_fn)
-    # s41 is an isolated compose project on 18123 — never tear down ca-soak (8123/8124) for it.
-    # Other variants must still reap leftover s41 (ARM left ca-s41-* up after a failed S41 reset)
-    # and the ten-replica extras (ch3..ch10) when leaving that file.
-    if variant == "s41":
-        _run(compose_cmd("s41", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
-    else:
-        _run(compose_cmd("s41", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
-        _run(compose_cmd("tenreplicas", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
-    _prep_log_dirs(node_count=n)
-    if variant == "tuned" and overrides:
-        render_tuned_config(overrides)
-    _run(compose_cmd(variant, "up", "-d"), timeout=boot_timeout, log_fn=log_fn)
+    from . import disk_cap
+    with disk_cap.paused():
+        if archive_tag:
+            archive_server_logs(archive_tag, node_count=n, log_fn=log_fn)
+        disk_cap.prune_host_logs()
+        # EVERY system table dies with the containers: the compose has no volume for /var/lib/clickhouse,
+        # only the binary, the configs and ./logs/chN are mounted. A GC performance audit lost its entire
+        # queryable specimen to exactly this on 2026-07-29 — the pool was gone before a single query ran.
+        # So dump the specimen BEFORE `down`. Best-effort by design: a cluster that is already gone, or
+        # never came up, must not stop a reset.
+        predown_dump(archive_tag or "reset", log_fn=log_fn)
+        # s41 is an isolated compose project on 18123 — never tear down ca-soak (8123/8124) for it.
+        # Other variants must still reap leftover s41 (ARM left ca-s41-* up after a failed S41 reset)
+        # and the ten-replica extras (ch3..ch10) when leaving that file.
+        if variant == "s41":
+            _run(compose_cmd("s41", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
+        else:
+            _run(compose_cmd("s41", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
+            _run(compose_cmd("tenreplicas", "down", "-v", "--remove-orphans"), timeout=boot_timeout, log_fn=log_fn)
+        _prep_log_dirs(node_count=n)
+        if variant == "tuned" and overrides:
+            render_tuned_config(overrides)
+        _run(compose_cmd(variant, "up", "-d"), timeout=boot_timeout, log_fn=log_fn)
     ok = wait_healthy(variant=variant, timeout_s=boot_timeout, log_fn=log_fn)
     if not ok:
         log_fn("reset_cluster: cluster did NOT become healthy within timeout")
