@@ -15,6 +15,7 @@ from helpers.common import (
 )
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import allow_experimental_lightweight_delete
+from helpers.cas_storage import add_cas_arguments
 from lightweight_delete.cas_mode import (
     enable_cas_default_storage,
     check_cas_mode,
@@ -114,12 +115,9 @@ def argparser(parser):
         help="Force running of lightweight delete suite on any ClickHouse version.",
     )
 
-    parser.add_argument(
-        "--cas",
-        action="store_true",
-        default=False,
-        dest="use_cas",
-        help="use content-addressed storage as the default MergeTree disk "
+    add_cas_arguments(
+        parser,
+        cas_help="use content-addressed storage as the default MergeTree disk "
         "(skips tests that measure part sizes on the local filesystem)",
     )
 
@@ -146,6 +144,7 @@ def regression(
     parallel=None,
     with_analyzer=False,
     use_cas=False,
+    use_cas_s3_cache=False,
 ):
     """Lightweight Delete regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -155,9 +154,13 @@ def regression(
     self.context.use_cas_storage = False
     self.context.default_storage_policy = None
 
-    if use_cas:
-        with Given("content-addressed storage as the default MergeTree disk"):
-            enable_cas_default_storage()
+    if use_cas_s3_cache or use_cas:
+        with Given(
+            "content-addressed storage with an S3 cache disk as the default MergeTree disk"
+            if use_cas_s3_cache
+            else "content-addressed storage as the default MergeTree disk"
+        ):
+            enable_cas_default_storage(s3_cache=use_cas_s3_cache)
     else:
         with Given("no content-addressed storage configuration"):
             reset_cas_config()
