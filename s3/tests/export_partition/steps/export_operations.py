@@ -126,15 +126,18 @@ def export_partition_by_id(
     if settings is None:
         settings = self.context.default_settings
 
-    with By(f"exporting partition '{partition_id}' from {source_table}"):
-        result = node.query(
-            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
-            f"TO TABLE {destination_table}{query_settings_sql}",
-            settings=settings,
-            exitcode=exitcode,
-            ignore_exception=(exitcode != 0),
-            steps=True,
-        )
+    # Do not wrap this ``query`` in an extra ``By``: TestFlows can terminate
+    # a nested step after the command has already finished, which would leave
+    # ``result`` unassigned (``UnboundLocalError``). ``steps=True`` still
+    # records the command in the test tree.
+    result = node.query(
+        f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
+        f"TO TABLE {destination_table}{query_settings_sql}",
+        settings=settings,
+        exitcode=exitcode,
+        ignore_exception=(exitcode != 0),
+        steps=True,
+    )
     if exitcode == 0:
         wait_for_export_to_complete(
             partition_id=partition_id, source_table=source_table, node=node
@@ -315,11 +318,17 @@ def assert_export_rejected(
     expected_substrings=(),
     node=None,
     check_no_scheduled=True,
+    query_settings_sql="",
 ):
     """Attempt ``export_partition_by_id`` and assert it fails with the
     given ``exitcode`` and every substring in ``expected_substrings`` is
     present in the error output. Also asserts no task was scheduled
     unless ``check_no_scheduled=False``. Returns the raw result.
+
+    ``query_settings_sql`` is appended to the ALTER verbatim, for rejects
+    that are only reachable once an earlier guard has been opted past
+    (e.g. asserting a partition-key rejection on a schema pair that also
+    needs ``export_merge_tree_part_allow_lossy_cast``).
     """
     node = _current_node(node)
     with When(
@@ -331,6 +340,7 @@ def assert_export_rejected(
             partition_id=partition_id,
             node=node,
             exitcode=exitcode,
+            query_settings_sql=query_settings_sql,
         )
     for fragment in expected_substrings:
         assert fragment in result.output, error(
