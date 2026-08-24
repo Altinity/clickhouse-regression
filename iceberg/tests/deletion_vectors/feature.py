@@ -41,6 +41,7 @@ MODULES = (
     "query_semantics",
     "datatypes",
     "parquet_variety",
+    "many_data_files",
     "time_travel",
     "partitioning",
     "count_paths",
