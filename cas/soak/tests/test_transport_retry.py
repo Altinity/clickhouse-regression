@@ -18,6 +18,7 @@ from soak.cluster import (
     is_transport_error,
     is_node_down,
     is_keeper_transient,
+    is_socket_timeout,
     retry_on_transport,
     ABORTED_CODE,
     NODE_DOWN_CODES,
@@ -82,6 +83,10 @@ def test_connection_reset_is_transport():
 def test_socket_timeout_is_transport():
     assert is_transport_error(socket.timeout("timed out")) is True
     assert is_transport_error(urllib.error.URLError(socket.timeout("timed out"))) is True
+    assert is_socket_timeout(socket.timeout("timed out")) is True
+    assert is_socket_timeout(TimeoutError("timed out")) is True
+    assert is_socket_timeout(urllib.error.URLError(socket.timeout("timed out"))) is True
+    assert is_socket_timeout(ConnectionRefusedError(111, "Connection refused")) is False
 
 
 def test_bare_oserror_is_transport():
@@ -196,6 +201,43 @@ def test_retry_reroutes_across_replicas():
     with pytest.raises(urllib.error.URLError):
         retry_on_transport(attempt, attempts=4, sleep_fn=lambda s: None)
     assert seen == [0, 1, 0, 1]   # rerouted between the two replicas each retry
+
+
+def test_retry_timeouts_false_does_not_multiply_query_timeout():
+    """Scenario INSERTs pass retry_timeouts=False so a 1800s timeout is not retried 5x (S21)."""
+    calls = {"n": 0}
+
+    def attempt():
+        calls["n"] += 1
+        raise TimeoutError("timed out")
+
+    with pytest.raises(TimeoutError):
+        retry_on_transport(attempt, attempts=5, sleep_fn=lambda s: None, retry_timeouts=False)
+    assert calls["n"] == 1
+
+
+def test_retry_timeouts_false_unwraps_urlerror_timeout():
+    calls = {"n": 0}
+
+    def attempt():
+        calls["n"] += 1
+        raise urllib.error.URLError(socket.timeout("timed out"))
+
+    with pytest.raises(urllib.error.URLError):
+        retry_on_transport(attempt, attempts=5, sleep_fn=lambda s: None, retry_timeouts=False)
+    assert calls["n"] == 1
+
+
+def test_retry_timeouts_true_still_retries_timeout_for_chaos():
+    calls = {"n": 0}
+
+    def attempt():
+        calls["n"] += 1
+        raise TimeoutError("timed out")
+
+    with pytest.raises(TimeoutError):
+        retry_on_transport(attempt, attempts=3, sleep_fn=lambda s: None)
+    assert calls["n"] == 3
 
 
 def test_retry_exhaustion_raises_transport():

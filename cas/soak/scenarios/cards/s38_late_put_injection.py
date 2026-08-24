@@ -146,7 +146,11 @@ def _restamp_ref_log_txn(body: bytes, ref_sequence: int, writer_epoch: int | Non
 
 
 def _zstd_decompress(data: bytes) -> bytes:
-    import zstandard
+    try:
+        import zstandard
+    except ImportError as e:
+        raise RuntimeError(
+            "S38/S43 require the zstandard package (cas/soak/requirements.txt)") from e
     # `stream_reader`, not `decompress`: ClickHouse's frames need not carry the decompressed size, and
     # the one-shot API refuses those.
     import io
@@ -155,7 +159,11 @@ def _zstd_decompress(data: bytes) -> bytes:
 
 
 def _zstd_compress(data: bytes) -> bytes:
-    import zstandard
+    try:
+        import zstandard
+    except ImportError as e:
+        raise RuntimeError(
+            "S38/S43 require the zstandard package (cas/soak/requirements.txt)") from e
     return zstandard.ZstdCompressor().compress(data)
 
 
@@ -290,6 +298,14 @@ class S38(Scenario):
     }
 
     def run(self, ctx, result):
+        try:
+            import zstandard  # noqa: F401
+        except ImportError:
+            result.add(Verdict.inconclusive(
+                "zstandard available", "installed",
+                "zstandard is not installed in this interpreter; "
+                "pip install -r cas/soak/requirements.txt"))
+            return
         cl = ctx.cluster
         p = ctx.params
         storm_inserts = int(p["storm_inserts"])

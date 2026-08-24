@@ -174,10 +174,9 @@ class S01(Scenario):
 
         _common.assert_replicas_agree(result, cl, sql.table_checksum_query(table))
         _common.standard_end(ctx, result, [table])
-        # The in-flight/live blob must NOT have been deleted by GC: the part is live → reachable.
-        result.add(Verdict.check("live blob retained", "fsck dangling==0 & part live",
-                                 result.observations.get("fsck_final", {}).get("dangling"),
-                                 result.observations.get("fsck_final", {}).get("dangling") == 0))
+        _common.assert_dangling_zero(
+            result, result.observations.get("fsck_final"),
+            name="live blob retained", expected="fsck dangling==0 & part live")
 
 
 @register

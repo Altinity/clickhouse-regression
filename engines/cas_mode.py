@@ -4,39 +4,7 @@ from pathlib import Path
 
 from testflows.core import *
 
-CAS_CONFIG = """\
-<clickhouse>
-    <storage_configuration>
-        <disks>
-            <cas_disk>
-                <type>object_storage</type>
-                <object_storage_type>s3</object_storage_type>
-                <metadata_type>cas</metadata_type>
-                <server_root_id>engines-cas-{replica}</server_root_id>
-                <endpoint>http://minio:9001/cas/data/</endpoint>
-                <access_key_id>minio</access_key_id>
-                <secret_access_key>minio123</secret_access_key>
-            </cas_disk>
-        </disks>
-        <policies>
-            <cas_policy>
-                <volumes>
-                    <main>
-                        <disk>cas_disk</disk>
-                    </main>
-                </volumes>
-            </cas_policy>
-            <default>
-                <volumes>
-                    <default>
-                        <disk>cas_disk</disk>
-                    </default>
-                </volumes>
-            </default>
-        </policies>
-    </storage_configuration>
-</clickhouse>
-"""
+from helpers.cas_storage import apply_cas_context, cas_storage_config
 
 CAS_CONFIG_PLACEHOLDER = """\
 <clickhouse>
@@ -49,7 +17,7 @@ CAS_CONFIG_PLACEHOLDER = """\
     `MetadataStorageFactory: unknown metadata storage type: cas`.
 
     This file is filled in by engines/cas_mode.py when the suite is started with
-    the `cas` option and reset back to this placeholder afterwards.
+    the cas or cas-s3-cache option and reset back to this placeholder afterwards.
     -->
 </clickhouse>
 """
@@ -59,9 +27,10 @@ def cas_config_path():
     """Path of the config that defines the CAS disk and policies.
 
     Always mounted; only holds CAS definitions when the suite is started with
-    `--cas`. The `zz_` prefix keeps it last in the config.d merge order so the
-    `default` policy wins. The suite creates tables without an explicit
-    `storage_policy`, so overriding `default` is what puts them on CAS.
+    `--cas` or `--cas-s3-cache`. The `zz_` prefix keeps it last in the config.d
+    merge order so the `default` policy wins. The suite creates tables without
+    an explicit `storage_policy`, so overriding `default` is what puts them on
+    CAS.
     """
     return (
         Path(__file__).resolve().parent
@@ -78,15 +47,17 @@ def reset_cas_config():
 
 
 @TestStep(Given)
-def enable_cas_default_storage(self):
+def enable_cas_default_storage(self, s3_cache=False):
     """Define the CAS disk and make it the default storage policy for this run.
 
     Must be called before the cluster is created; the config is read at server
-    startup.
+    startup. When ``s3_cache`` is set, ``cas_policy`` / ``default`` point at a
+    ``type=cache`` disk in front of ``cas_disk``.
     """
-    cas_config_path().write_text(CAS_CONFIG)
-    self.context.use_cas_storage = True
-    self.context.default_storage_policy = "cas_policy"
+    cas_config_path().write_text(
+        cas_storage_config("engines-cas-{replica}", with_s3_cache=s3_cache)
+    )
+    apply_cas_context(self, s3_cache=s3_cache)
     try:
         yield
     finally:
@@ -95,5 +66,5 @@ def enable_cas_default_storage(self):
 
 
 def check_cas_mode(test):
-    """True when engines was started with --cas."""
+    """True when engines was started with ``--cas`` or ``--cas-s3-cache``."""
     return bool(getattr(test.context, "use_cas_storage", False))

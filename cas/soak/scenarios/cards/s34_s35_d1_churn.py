@@ -431,12 +431,10 @@ class S35(Scenario):
             end.get("fsck_detail"))
 
         # --- final fsck dangling==0 (explicit for clarity) ------------------------------------
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "no dangling after rapid same-name rotation",
-            "fsck dangling==0 after all rotation cycles + forced GC",
-            dangling, dangling == 0,
-            "" if dangling == 0 else
-            "dangling refs remain after rapid same-name rotation + forced GC — a live ref may "
-            "point at a missing object; possible incarnation collision or token-guarded delete "
-            "over-deleted a still-live object"))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"),
+            name="no dangling after rapid same-name rotation",
+            expected="fsck dangling==0 after all rotation cycles + forced GC",
+            fail_note="dangling refs remain after rapid same-name rotation + forced GC — a live ref may "
+                      "point at a missing object; possible incarnation collision or token-guarded delete "
+                      "over-deleted a still-live object")
