@@ -48,6 +48,43 @@ RQ_Iceberg_DeletionVectors_ReadOnly = Requirement(
     num="2.2",
 )
 
+RQ_Iceberg_DeletionVectors_MutationsRejected = Requirement(
+    name="RQ.Iceberg.DeletionVectors.MutationsRejected",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "ClickHouse can run mutations (`ALTER TABLE ... DELETE`, `ALTER TABLE ... UPDATE`) on some\n"
+        "Iceberg tables by writing v2 position delete files. On a format version 3 table this is unsafe:\n"
+        "the Iceberg v3 specification forbids new position delete files and requires readers to ignore\n"
+        "position deletes for any data file that has a deletion vector. Such a mutation would report\n"
+        "success while every compliant reader — including ClickHouse itself — keeps returning the\n"
+        '"deleted" rows.\n'
+        "\n"
+        "[ClickHouse] SHALL reject `ALTER TABLE ... DELETE` and `ALTER TABLE ... UPDATE` with an explicit\n"
+        "error on an Iceberg table whose format version is 3 or whose current snapshot contains deletion\n"
+        "vectors. The mutation SHALL NOT report success while the rows stay visible to later `SELECT`\n"
+        "queries.\n"
+        "\n"
+        "For example:\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE iceberg_engine_table DELETE WHERE id < 10;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "Expected on a format version 3 table: an exception, not a silent no-op.\n"
+        "DB::Exception: ... mutations are not supported for Iceberg format version 3 tables ...\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="2.3",
+)
+
 RQ_Iceberg_DeletionVectors_AccessForms = Requirement(
     name="RQ.Iceberg.DeletionVectors.AccessForms",
     version="1.0",
@@ -83,7 +120,7 @@ RQ_Iceberg_DeletionVectors_AccessForms = Requirement(
     ),
     link=None,
     level=2,
-    num="2.3",
+    num="2.4",
 )
 
 RQ_Iceberg_DeletionVectors_AccessForms_Azure = Requirement(
@@ -106,7 +143,7 @@ RQ_Iceberg_DeletionVectors_AccessForms_Azure = Requirement(
     ),
     link=None,
     level=2,
-    num="2.4",
+    num="2.5",
 )
 
 RQ_Iceberg_DeletionVectors_StorageBackends = Requirement(
@@ -127,7 +164,7 @@ RQ_Iceberg_DeletionVectors_StorageBackends = Requirement(
     ),
     link=None,
     level=2,
-    num="2.5",
+    num="2.6",
 )
 
 RQ_Iceberg_DeletionVectors_WriterOperations = Requirement(
@@ -634,13 +671,14 @@ RQ_Iceberg_DeletionVectors_QuerySemantics_IOReductionOptimizations = Requirement
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL return an identical post-vector row set with any Parquet I/O-reducing read\n"
-        "optimization enabled or disabled — including predicate push-down into the Parquet reader,\n"
-        "page- and row-group-level pruning, and constant-value column detection that elides reads of\n"
-        "column data whose value is identical across the file (derivable from column statistics).\n"
-        "Deletion-vector positions are absolute row numbers of the data file; an optimization that\n"
-        "skips reading part of the file SHALL NOT shift, drop, or resurrect rows, and counts and\n"
-        "aggregates over a column whose read was elided SHALL still reflect only surviving rows.\n"
+        "ClickHouse reads Parquet with several optimizations that avoid reading parts of a file:\n"
+        "predicate push-down, page and row-group pruning, and constant-column detection (when file\n"
+        "statistics show a column holds the same value in every row, the reader can skip reading that\n"
+        "column's data). Deletion vectors delete rows by their absolute row number in the data file.\n"
+        "\n"
+        "[ClickHouse] SHALL return the same post-delete result with any of these optimizations turned on\n"
+        "or off: no deleted row may reappear, no surviving row may be lost, and counts or aggregates over\n"
+        "a skipped column SHALL still count only surviving rows.\n"
         "\n"
         "For example, for a table with a constant column `label = 'batch-1'` in every row and a\n"
         "deletion vector hiding 10 of 100 rows, both of the following SHALL return `90`:\n"
@@ -684,12 +722,12 @@ RQ_Iceberg_DeletionVectors_QuerySemantics_ComplexSchemas = Requirement(
     type=None,
     uid=None,
     description=(
-        "Deletion vectors delete whole rows by position, independently of the schema's shape.\n"
-        "[ClickHouse] SHALL apply deletion vectors correctly on tables with nested and complex column\n"
-        "types — Iceberg `struct` (Tuple), `list` (Array), and `map` (Map), including nested\n"
-        "combinations and `Nullable` fields — and on wide schemas. Reading any subset of nested\n"
-        "fields SHALL exclude deleted rows, and counts and aggregates over nested fields SHALL\n"
-        "reflect only surviving rows.\n"
+        "A deletion vector hides whole rows by row number — the column types of the table do not\n"
+        "matter. [ClickHouse] SHALL apply deletion vectors correctly on tables with nested and complex\n"
+        "column types: Iceberg `struct` (Tuple), `list` (Array), `map` (Map), combinations of these,\n"
+        "and `Nullable` fields, as well as wide tables with many columns. Reading any subset of nested\n"
+        "fields SHALL skip deleted rows, and aggregates over nested fields SHALL include only surviving\n"
+        "rows.\n"
         "\n"
         "For example, for an Iceberg schema\n"
         "\n"
@@ -797,17 +835,17 @@ RQ_Iceberg_DeletionVectors_SnapshotRefresh_QueryCache = Requirement(
     type=None,
     uid=None,
     description=(
-        "With the query result cache enabled (`use_query_cache = 1`), staleness across external\n"
-        "Iceberg commits SHALL be bounded by the cache's own entry lifetime and never extended by\n"
-        "deletion-vector state:\n"
+        "The query result cache (`use_query_cache = 1`) stores finished query results and can serve\n"
+        "them without re-reading the table, so it can return a result that predates a newer Iceberg\n"
+        "commit. [ClickHouse] SHALL keep that staleness bounded by the cache entry's lifetime:\n"
         "\n"
-        "* a cached result SHALL correspond to one committed snapshot — never a mix of pre- and\n"
-        "  post-commit deletion-vector state;\n"
-        "* after the cache entry expires (`query_cache_ttl`) or `SYSTEM DROP QUERY CACHE` is issued,\n"
-        "  the next execution SHALL observe the current snapshot, including deletion vectors committed\n"
-        "  since the entry was cached;\n"
-        "* rows deleted by a committed deletion vector SHALL NOT be served from the query cache beyond\n"
-        "  the entry lifetime.\n"
+        "* a cached result SHALL belong to one committed snapshot — never a mix of pre- and post-commit\n"
+        "  deletion-vector state;\n"
+        "* after the entry expires (`query_cache_ttl`) or `SYSTEM DROP QUERY CACHE` is issued, the next\n"
+        "  run SHALL see the current snapshot, including deletion vectors committed since the entry was\n"
+        "  cached;\n"
+        "* rows deleted by a committed deletion vector SHALL NOT be served from the query cache after\n"
+        "  the entry lifetime has passed.\n"
         "\n"
         "For example, for a 100-row table where an external `DELETE` later hides 10 rows:\n"
         "\n"
@@ -1037,6 +1075,39 @@ RQ_Iceberg_DeletionVectors_Count_TrivialCountOptimization = Requirement(
     num="9.1",
 )
 
+RQ_Iceberg_DeletionVectors_Count_OverflowSafety = Requirement(
+    name="RQ.Iceberg.DeletionVectors.Count.OverflowSafety",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata count shortcut answers `SELECT count()` by adding up the row counts declared in the\n"
+        "manifests. Each manifest's own sum is checked, but the totals of several manifests still have to\n"
+        'be added together, and a 64-bit counter can silently wrap around ("overflow") when the numbers\n'
+        "are large enough.\n"
+        "\n"
+        "If corrupt or hostile metadata declares row counts so large that their total does not fit in\n"
+        "64 bits, [ClickHouse] SHALL NOT return the wrapped-around (small and wrong) number. It SHALL\n"
+        "either fall back to a real scan or fail with an explicit error.\n"
+        "\n"
+        "For example, with three manifests each declaring `9223372036854775807` rows (`2^63 - 1`):\n"
+        "\n"
+        "```sql\n"
+        "SELECT count() FROM iceberg_table SETTINGS optimize_trivial_count_query = 1;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "Expected: the real scanned row count, or an exception — never a small wrapped-around number.\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="9.2",
+)
+
 RQ_Iceberg_DeletionVectors_Count_CountOnlyFastPath = Requirement(
     name="RQ.Iceberg.DeletionVectors.Count.CountOnlyFastPath",
     version="1.0",
@@ -1052,7 +1123,7 @@ RQ_Iceberg_DeletionVectors_Count_CountOnlyFastPath = Requirement(
     ),
     link=None,
     level=2,
-    num="9.2",
+    num="9.3",
 )
 
 RQ_Iceberg_DeletionVectors_Count_CountFromFilesCache = Requirement(
@@ -1080,7 +1151,7 @@ RQ_Iceberg_DeletionVectors_Count_CountFromFilesCache = Requirement(
     ),
     link=None,
     level=2,
-    num="9.3",
+    num="9.4",
 )
 
 RQ_Iceberg_DeletionVectors_ErrorHandling_MalformedBlob = Requirement(
@@ -1131,7 +1202,8 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_BlobMetadata = Requirement(
         "\n"
         "| Defect | Expected message fragment |\n"
         "|---|---|\n"
-        "| blob `type` is not `deletion-vector-v1` | `unsupported blob type` |\n"
+        "| blob `type` is not `deletion-vector-v1` | `expected deletion-vector-v1` |\n"
+        "| `snapshot-id` or `sequence-number` is not `-1` | `snapshot-id and sequence-number must be -1` |\n"
         "| `compression-codec` present and non-empty | `must omit 'compression-codec'` |\n"
         "| `referenced-data-file` missing or empty | `missing required property 'referenced-data-file'` |\n"
         "| `referenced-data-file` ≠ the data file being read | `does not match expected data file` |\n"
@@ -1146,6 +1218,10 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_BlobMetadata = Requirement(
         "manifest's `(content_offset, content_size_in_bytes)` pair is matched against them, so an\n"
         "out-of-bounds footer declaration fails as `offset/length out of bounds` and never reaches the\n"
         "matching step.\n"
+        "\n"
+        "The `-1` rule comes from the `Puffin` specification: the snapshot and sequence number are not\n"
+        "known when the `Puffin` file is written, so `deletion-vector-v1` blob metadata must carry `-1`\n"
+        "in both fields. Compliant writers (such as Spark with Apache Iceberg) always write `-1`.\n"
         "\n"
     ),
     link=None,
@@ -1424,11 +1500,11 @@ RQ_Iceberg_DeletionVectors_Distributed_SnapshotRefresh = Requirement(
     type=None,
     uid=None,
     description=(
-        "After an external engine commits a `DELETE` producing a deletion vector, the next cluster\n"
-        "read SHALL observe the new snapshot on **every** worker — without restarts and without\n"
-        "dropping any cache — even though each node holds its own `Puffin` files cache and Iceberg\n"
-        "metadata cache, including nodes whose caches were warmed on the previous snapshot. The\n"
-        "cluster result SHALL equal the single-node result taken after the same commit.\n"
+        "Each node in a cluster keeps its own `Puffin` files cache and Iceberg metadata cache. After an\n"
+        "external engine commits a `DELETE` that produces a deletion vector, the very next cluster read\n"
+        "SHALL see the new snapshot on **every** worker — with no restart and no cache dropping — even\n"
+        "on nodes whose caches were filled while reading the previous snapshot. The cluster result SHALL\n"
+        "equal the single-node result after the same commit.\n"
         "\n"
         "For example, for a 100-row table read through the cluster function, warmed on all nodes,\n"
         "where an external `DELETE` then hides 10 rows:\n"
@@ -1487,11 +1563,12 @@ RQ_Iceberg_DeletionVectors_Cache_ServerSettings = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL provide the server settings `puffin_files_cache_policy` (default `SLRU`),\n"
-        "`puffin_files_cache_size` (default 512 MiB, `0` disables), `puffin_files_cache_max_entries`\n"
-        "(default 5000, `0` disables), and `puffin_files_cache_size_ratio` (default 0.5). Results SHALL\n"
-        "remain correct with the cache disabled by server setting even when `use_puffin_files_cache = 1`,\n"
-        "and `puffin_files_cache_size` SHALL be changeable without a restart with the live value\n"
-        "reported.\n"
+        "`puffin_files_cache_size` (default 512 MiB), `puffin_files_cache_max_entries` (default 5000),\n"
+        "and `puffin_files_cache_size_ratio` (default 0.5). Only `puffin_files_cache_size = 0` disables\n"
+        "the cache; `puffin_files_cache_max_entries = 0` means no limit on the number of entries, not\n"
+        "disabled. Results SHALL remain correct with the cache disabled by server setting even when\n"
+        "`use_puffin_files_cache = 1`, and `puffin_files_cache_size` SHALL be changeable without a\n"
+        "restart with the live value reported.\n"
         "\n"
     ),
     link=None,
@@ -1596,6 +1673,10 @@ RQ_Iceberg_DeletionVectors_Cache_RBAC = Requirement(
         "the parent `SYSTEM DROP CACHE` privilege SHALL be allowed; `SHOW PRIVILEGES` SHALL list the\n"
         "privilege.\n"
         "\n"
+        "The underscore spelling `SYSTEM DROP PUFFIN_FILES_CACHE` SHALL be accepted by both the `SYSTEM`\n"
+        "statement and `GRANT`, matching sibling cache privileges such as\n"
+        "`SYSTEM DROP PARQUET_METADATA_CACHE`.\n"
+        "\n"
         "An illustrative privilege check is:\n"
         "\n"
         "```sql\n"
@@ -1658,9 +1739,10 @@ RQ_Iceberg_DeletionVectors_Cache_Concurrency = Requirement(
     uid=None,
     description=(
         "Two concurrent queries over the same cold deletion vector SHALL both return correct results, and\n"
-        "the vector SHALL be loaded once (`PuffinFilesRead` totals 1 for that blob across both queries).\n"
-        "A `SYSTEM DROP PUFFIN FILES CACHE` racing with an in-flight load SHALL NOT produce a wrong\n"
-        "result — the load is discarded and recorded as a miss rather than being served stale.\n"
+        "the vector SHALL be loaded exactly once across both queries (a single load counts one footer\n"
+        "parse and one blob read, so `PuffinFilesRead` totals 2). A `SYSTEM DROP PUFFIN FILES CACHE`\n"
+        "racing with an in-flight load SHALL NOT produce a wrong result — the load is discarded and\n"
+        "recorded as a miss rather than being served stale.\n"
         "\n"
     ),
     link=None,
@@ -1684,6 +1766,81 @@ RQ_Iceberg_DeletionVectors_Cache_EntryIsolation = Requirement(
     link=None,
     level=2,
     num="12.10",
+)
+
+RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries = Requirement(
+    name="RQ.Iceberg.DeletionVectors.Cache.SnapshotScopedEntries",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Iceberg snapshots are immutable: a committed snapshot's manifests always point at the same\n"
+        "`Puffin` blobs, and those blobs never change. The cache SHALL therefore hold one independent\n"
+        "entry per blob (keyed by the object path, etag, offset, and length), which makes cached vectors\n"
+        "snapshot-scoped:\n"
+        "\n"
+        "* time travel between snapshots with a warm cache SHALL return each snapshot's exact row set —\n"
+        "  a vector cached while reading one snapshot SHALL never be applied to a read of another\n"
+        "  snapshot;\n"
+        "* revisiting an already-read snapshot SHALL be served from the cache (`PuffinFilesCacheHits`\n"
+        "  increases, `PuffinFilesRead` stays at 0) — an entry of an immutable snapshot never needs\n"
+        "  invalidation;\n"
+        "* two blobs of the same `Puffin` file SHALL be independent entries: a read that needs the\n"
+        "  vector at one offset SHALL NOT be served the vector cached at a different offset;\n"
+        "* a commit that does not change existing vectors (for example an insert of new rows) SHALL\n"
+        "  keep them warm: the next read of the new snapshot is served from the existing entries\n"
+        "  without re-fetching the unchanged `Puffin` files.\n"
+        "\n"
+        "For example, with snapshot A (100 rows, no deletes) and snapshot B (a vector hides 10 rows):\n"
+        "\n"
+        "```sql\n"
+        "SELECT count() FROM iceberg_table;                                      -- 90, caches B's vector\n"
+        "SELECT count() FROM iceberg_table SETTINGS iceberg_snapshot_id = <A>;   -- 100, warm vector not applied\n"
+        "SELECT count() FROM iceberg_table;                                      -- 90, served from cache\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "count()  ProfileEvents['PuffinFilesRead'] (third query)\n"
+        "90       0\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.11",
+)
+
+RQ_Iceberg_DeletionVectors_Cache_RevalidationNotBypassed = Requirement(
+    name="RQ.Iceberg.DeletionVectors.Cache.RevalidationNotBypassed",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The cache key includes the manifest-declared cardinality and the data file's row count, not\n"
+        "just the blob's location. A warm cache SHALL therefore never let a read skip metadata\n"
+        "validation: if the manifest is changed to declare a different cardinality or row count for the\n"
+        "same blob, the next read SHALL fail with the same validation error a cold read produces — it\n"
+        "SHALL NOT serve the previously cached vector as if the metadata still matched.\n"
+        "\n"
+        "For example, after a warm read of a vector with cardinality 10, corrupting the manifest to\n"
+        "declare cardinality 7 for the same blob:\n"
+        "\n"
+        "```sql\n"
+        "SELECT count() FROM iceberg_table;\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "DB::Exception: ... does not match expected cardinality ... (BAD_ARGUMENTS)\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.12",
 )
 
 RQ_Iceberg_DeletionVectors_ParquetVariety = Requirement(
@@ -1758,11 +1915,14 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
         Heading(name="Feature Scope", level=1, num="2"),
         Heading(name="RQ.Iceberg.DeletionVectors.Read", level=2, num="2.1"),
         Heading(name="RQ.Iceberg.DeletionVectors.ReadOnly", level=2, num="2.2"),
-        Heading(name="RQ.Iceberg.DeletionVectors.AccessForms", level=2, num="2.3"),
         Heading(
-            name="RQ.Iceberg.DeletionVectors.AccessForms.Azure", level=2, num="2.4"
+            name="RQ.Iceberg.DeletionVectors.MutationsRejected", level=2, num="2.3"
         ),
-        Heading(name="RQ.Iceberg.DeletionVectors.StorageBackends", level=2, num="2.5"),
+        Heading(name="RQ.Iceberg.DeletionVectors.AccessForms", level=2, num="2.4"),
+        Heading(
+            name="RQ.Iceberg.DeletionVectors.AccessForms.Azure", level=2, num="2.5"
+        ),
+        Heading(name="RQ.Iceberg.DeletionVectors.StorageBackends", level=2, num="2.6"),
         Heading(name="Producing Operations", level=1, num="3"),
         Heading(name="RQ.Iceberg.DeletionVectors.WriterOperations", level=2, num="3.1"),
         Heading(name="Vector Content Shapes", level=1, num="4"),
@@ -1877,14 +2037,17 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
             num="9.1",
         ),
         Heading(
+            name="RQ.Iceberg.DeletionVectors.Count.OverflowSafety", level=2, num="9.2"
+        ),
+        Heading(
             name="RQ.Iceberg.DeletionVectors.Count.CountOnlyFastPath",
             level=2,
-            num="9.2",
+            num="9.3",
         ),
         Heading(
             name="RQ.Iceberg.DeletionVectors.Count.CountFromFilesCache",
             level=2,
-            num="9.3",
+            num="9.4",
         ),
         Heading(name="Error Handling", level=1, num="10"),
         Heading(
@@ -1978,12 +2141,23 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
         Heading(
             name="RQ.Iceberg.DeletionVectors.Cache.EntryIsolation", level=2, num="12.10"
         ),
+        Heading(
+            name="RQ.Iceberg.DeletionVectors.Cache.SnapshotScopedEntries",
+            level=2,
+            num="12.11",
+        ),
+        Heading(
+            name="RQ.Iceberg.DeletionVectors.Cache.RevalidationNotBypassed",
+            level=2,
+            num="12.12",
+        ),
         Heading(name="Combinatorial Coverage", level=1, num="13"),
         Heading(name="RQ.Iceberg.DeletionVectors.ParquetVariety", level=2, num="13.1"),
     ),
     requirements=(
         RQ_Iceberg_DeletionVectors_Read,
         RQ_Iceberg_DeletionVectors_ReadOnly,
+        RQ_Iceberg_DeletionVectors_MutationsRejected,
         RQ_Iceberg_DeletionVectors_AccessForms,
         RQ_Iceberg_DeletionVectors_AccessForms_Azure,
         RQ_Iceberg_DeletionVectors_StorageBackends,
@@ -2017,6 +2191,7 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
         RQ_Iceberg_DeletionVectors_Partitioning_PruningSkipsVectorLoad,
         RQ_Iceberg_DeletionVectors_Partitioning_PartitionMatching,
         RQ_Iceberg_DeletionVectors_Count_TrivialCountOptimization,
+        RQ_Iceberg_DeletionVectors_Count_OverflowSafety,
         RQ_Iceberg_DeletionVectors_Count_CountOnlyFastPath,
         RQ_Iceberg_DeletionVectors_Count_CountFromFilesCache,
         RQ_Iceberg_DeletionVectors_ErrorHandling_MalformedBlob,
@@ -2042,6 +2217,8 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
         RQ_Iceberg_DeletionVectors_Cache_Observability,
         RQ_Iceberg_DeletionVectors_Cache_Concurrency,
         RQ_Iceberg_DeletionVectors_Cache_EntryIsolation,
+        RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries,
+        RQ_Iceberg_DeletionVectors_Cache_RevalidationNotBypassed,
         RQ_Iceberg_DeletionVectors_ParquetVariety,
     ),
     content=r"""
@@ -2055,9 +2232,10 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
 * 2 [Feature Scope](#feature-scope)
     * 2.1 [RQ.Iceberg.DeletionVectors.Read](#rqicebergdeletionvectorsread)
     * 2.2 [RQ.Iceberg.DeletionVectors.ReadOnly](#rqicebergdeletionvectorsreadonly)
-    * 2.3 [RQ.Iceberg.DeletionVectors.AccessForms](#rqicebergdeletionvectorsaccessforms)
-    * 2.4 [RQ.Iceberg.DeletionVectors.AccessForms.Azure](#rqicebergdeletionvectorsaccessformsazure)
-    * 2.5 [RQ.Iceberg.DeletionVectors.StorageBackends](#rqicebergdeletionvectorsstoragebackends)
+    * 2.3 [RQ.Iceberg.DeletionVectors.MutationsRejected](#rqicebergdeletionvectorsmutationsrejected)
+    * 2.4 [RQ.Iceberg.DeletionVectors.AccessForms](#rqicebergdeletionvectorsaccessforms)
+    * 2.5 [RQ.Iceberg.DeletionVectors.AccessForms.Azure](#rqicebergdeletionvectorsaccessformsazure)
+    * 2.6 [RQ.Iceberg.DeletionVectors.StorageBackends](#rqicebergdeletionvectorsstoragebackends)
 * 3 [Producing Operations](#producing-operations)
     * 3.1 [RQ.Iceberg.DeletionVectors.WriterOperations](#rqicebergdeletionvectorswriteroperations)
 * 4 [Vector Content Shapes](#vector-content-shapes)
@@ -2095,8 +2273,9 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
     * 8.3 [RQ.Iceberg.DeletionVectors.Partitioning.PartitionMatching](#rqicebergdeletionvectorspartitioningpartitionmatching)
 * 9 [Count Paths](#count-paths)
     * 9.1 [RQ.Iceberg.DeletionVectors.Count.TrivialCountOptimization](#rqicebergdeletionvectorscounttrivialcountoptimization)
-    * 9.2 [RQ.Iceberg.DeletionVectors.Count.CountOnlyFastPath](#rqicebergdeletionvectorscountcountonlyfastpath)
-    * 9.3 [RQ.Iceberg.DeletionVectors.Count.CountFromFilesCache](#rqicebergdeletionvectorscountcountfromfilescache)
+    * 9.2 [RQ.Iceberg.DeletionVectors.Count.OverflowSafety](#rqicebergdeletionvectorscountoverflowsafety)
+    * 9.3 [RQ.Iceberg.DeletionVectors.Count.CountOnlyFastPath](#rqicebergdeletionvectorscountcountonlyfastpath)
+    * 9.4 [RQ.Iceberg.DeletionVectors.Count.CountFromFilesCache](#rqicebergdeletionvectorscountcountfromfilescache)
 * 10 [Error Handling](#error-handling)
     * 10.1 [RQ.Iceberg.DeletionVectors.ErrorHandling.MalformedBlob](#rqicebergdeletionvectorserrorhandlingmalformedblob)
     * 10.2 [RQ.Iceberg.DeletionVectors.ErrorHandling.BlobMetadata](#rqicebergdeletionvectorserrorhandlingblobmetadata)
@@ -2123,6 +2302,8 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
     * 12.8 [RQ.Iceberg.DeletionVectors.Cache.Observability](#rqicebergdeletionvectorscacheobservability)
     * 12.9 [RQ.Iceberg.DeletionVectors.Cache.Concurrency](#rqicebergdeletionvectorscacheconcurrency)
     * 12.10 [RQ.Iceberg.DeletionVectors.Cache.EntryIsolation](#rqicebergdeletionvectorscacheentryisolation)
+    * 12.11 [RQ.Iceberg.DeletionVectors.Cache.SnapshotScopedEntries](#rqicebergdeletionvectorscachesnapshotscopedentries)
+    * 12.12 [RQ.Iceberg.DeletionVectors.Cache.RevalidationNotBypassed](#rqicebergdeletionvectorscacherevalidationnotbypassed)
 * 13 [Combinatorial Coverage](#combinatorial-coverage)
     * 13.1 [RQ.Iceberg.DeletionVectors.ParquetVariety](#rqicebergdeletionvectorsparquetvariety)
 
@@ -2218,6 +2399,32 @@ version: 1.0
 
 Deletion vector support SHALL be read-only. [ClickHouse] SHALL NOT produce, modify, or delete
 deletion vectors or `Puffin` files under any operation.
+
+### RQ.Iceberg.DeletionVectors.MutationsRejected
+version: 1.0
+
+ClickHouse can run mutations (`ALTER TABLE ... DELETE`, `ALTER TABLE ... UPDATE`) on some
+Iceberg tables by writing v2 position delete files. On a format version 3 table this is unsafe:
+the Iceberg v3 specification forbids new position delete files and requires readers to ignore
+position deletes for any data file that has a deletion vector. Such a mutation would report
+success while every compliant reader — including ClickHouse itself — keeps returning the
+"deleted" rows.
+
+[ClickHouse] SHALL reject `ALTER TABLE ... DELETE` and `ALTER TABLE ... UPDATE` with an explicit
+error on an Iceberg table whose format version is 3 or whose current snapshot contains deletion
+vectors. The mutation SHALL NOT report success while the rows stay visible to later `SELECT`
+queries.
+
+For example:
+
+```sql
+ALTER TABLE iceberg_engine_table DELETE WHERE id < 10;
+```
+
+```text
+Expected on a format version 3 table: an exception, not a silent no-op.
+DB::Exception: ... mutations are not supported for Iceberg format version 3 tables ...
+```
 
 ### RQ.Iceberg.DeletionVectors.AccessForms
 version: 1.0
@@ -2592,13 +2799,14 @@ id  description  category
 ### RQ.Iceberg.DeletionVectors.QuerySemantics.IOReductionOptimizations
 version: 1.0
 
-[ClickHouse] SHALL return an identical post-vector row set with any Parquet I/O-reducing read
-optimization enabled or disabled — including predicate push-down into the Parquet reader,
-page- and row-group-level pruning, and constant-value column detection that elides reads of
-column data whose value is identical across the file (derivable from column statistics).
-Deletion-vector positions are absolute row numbers of the data file; an optimization that
-skips reading part of the file SHALL NOT shift, drop, or resurrect rows, and counts and
-aggregates over a column whose read was elided SHALL still reflect only surviving rows.
+ClickHouse reads Parquet with several optimizations that avoid reading parts of a file:
+predicate push-down, page and row-group pruning, and constant-column detection (when file
+statistics show a column holds the same value in every row, the reader can skip reading that
+column's data). Deletion vectors delete rows by their absolute row number in the data file.
+
+[ClickHouse] SHALL return the same post-delete result with any of these optimizations turned on
+or off: no deleted row may reappear, no surviving row may be lost, and counts or aggregates over
+a skipped column SHALL still count only surviving rows.
 
 For example, for a table with a constant column `label = 'batch-1'` in every row and a
 deletion vector hiding 10 of 100 rows, both of the following SHALL return `90`:
@@ -2631,12 +2839,12 @@ batch-1  90
 ### RQ.Iceberg.DeletionVectors.QuerySemantics.ComplexSchemas
 version: 1.0
 
-Deletion vectors delete whole rows by position, independently of the schema's shape.
-[ClickHouse] SHALL apply deletion vectors correctly on tables with nested and complex column
-types — Iceberg `struct` (Tuple), `list` (Array), and `map` (Map), including nested
-combinations and `Nullable` fields — and on wide schemas. Reading any subset of nested
-fields SHALL exclude deleted rows, and counts and aggregates over nested fields SHALL
-reflect only surviving rows.
+A deletion vector hides whole rows by row number — the column types of the table do not
+matter. [ClickHouse] SHALL apply deletion vectors correctly on tables with nested and complex
+column types: Iceberg `struct` (Tuple), `list` (Array), `map` (Map), combinations of these,
+and `Nullable` fields, as well as wide tables with many columns. Reading any subset of nested
+fields SHALL skip deleted rows, and aggregates over nested fields SHALL include only surviving
+rows.
 
 For example, for an Iceberg schema
 
@@ -2702,17 +2910,17 @@ engine.
 ### RQ.Iceberg.DeletionVectors.SnapshotRefresh.QueryCache
 version: 1.0
 
-With the query result cache enabled (`use_query_cache = 1`), staleness across external
-Iceberg commits SHALL be bounded by the cache's own entry lifetime and never extended by
-deletion-vector state:
+The query result cache (`use_query_cache = 1`) stores finished query results and can serve
+them without re-reading the table, so it can return a result that predates a newer Iceberg
+commit. [ClickHouse] SHALL keep that staleness bounded by the cache entry's lifetime:
 
-* a cached result SHALL correspond to one committed snapshot — never a mix of pre- and
-  post-commit deletion-vector state;
-* after the cache entry expires (`query_cache_ttl`) or `SYSTEM DROP QUERY CACHE` is issued,
-  the next execution SHALL observe the current snapshot, including deletion vectors committed
-  since the entry was cached;
-* rows deleted by a committed deletion vector SHALL NOT be served from the query cache beyond
-  the entry lifetime.
+* a cached result SHALL belong to one committed snapshot — never a mix of pre- and post-commit
+  deletion-vector state;
+* after the entry expires (`query_cache_ttl`) or `SYSTEM DROP QUERY CACHE` is issued, the next
+  run SHALL see the current snapshot, including deletion vectors committed since the entry was
+  cached;
+* rows deleted by a committed deletion vector SHALL NOT be served from the query cache after
+  the entry lifetime has passed.
 
 For example, for a 100-row table where an external `DELETE` later hides 10 rows:
 
@@ -2867,6 +3075,28 @@ SELECT count() FROM (SELECT * FROM iceberg_table);                            --
 When the snapshot summary's `total-records` disagrees with the manifest sum on a table without
 deletes, the manifest sum SHALL win and a warning SHALL be logged.
 
+### RQ.Iceberg.DeletionVectors.Count.OverflowSafety
+version: 1.0
+
+The metadata count shortcut answers `SELECT count()` by adding up the row counts declared in the
+manifests. Each manifest's own sum is checked, but the totals of several manifests still have to
+be added together, and a 64-bit counter can silently wrap around ("overflow") when the numbers
+are large enough.
+
+If corrupt or hostile metadata declares row counts so large that their total does not fit in
+64 bits, [ClickHouse] SHALL NOT return the wrapped-around (small and wrong) number. It SHALL
+either fall back to a real scan or fail with an explicit error.
+
+For example, with three manifests each declaring `9223372036854775807` rows (`2^63 - 1`):
+
+```sql
+SELECT count() FROM iceberg_table SETTINGS optimize_trivial_count_query = 1;
+```
+
+```text
+Expected: the real scanned row count, or an exception — never a small wrapped-around number.
+```
+
 ### RQ.Iceberg.DeletionVectors.Count.CountOnlyFastPath
 version: 1.0
 
@@ -2931,7 +3161,8 @@ invalid metadata with `BAD_ARGUMENTS`, including at least:
 
 | Defect | Expected message fragment |
 |---|---|
-| blob `type` is not `deletion-vector-v1` | `unsupported blob type` |
+| blob `type` is not `deletion-vector-v1` | `expected deletion-vector-v1` |
+| `snapshot-id` or `sequence-number` is not `-1` | `snapshot-id and sequence-number must be -1` |
 | `compression-codec` present and non-empty | `must omit 'compression-codec'` |
 | `referenced-data-file` missing or empty | `missing required property 'referenced-data-file'` |
 | `referenced-data-file` ≠ the data file being read | `does not match expected data file` |
@@ -2946,6 +3177,10 @@ Footer blob descriptors are bounds-validated against the blob payload region bef
 manifest's `(content_offset, content_size_in_bytes)` pair is matched against them, so an
 out-of-bounds footer declaration fails as `offset/length out of bounds` and never reaches the
 matching step.
+
+The `-1` rule comes from the `Puffin` specification: the snapshot and sequence number are not
+known when the `Puffin` file is written, so `deletion-vector-v1` blob metadata must carry `-1`
+in both fields. Compliant writers (such as Spark with Apache Iceberg) always write `-1`.
 
 ### RQ.Iceberg.DeletionVectors.ErrorHandling.BlobBounds
 version: 1.0
@@ -3105,11 +3340,11 @@ size.
 ### RQ.Iceberg.DeletionVectors.Distributed.SnapshotRefresh
 version: 1.0
 
-After an external engine commits a `DELETE` producing a deletion vector, the next cluster
-read SHALL observe the new snapshot on **every** worker — without restarts and without
-dropping any cache — even though each node holds its own `Puffin` files cache and Iceberg
-metadata cache, including nodes whose caches were warmed on the previous snapshot. The
-cluster result SHALL equal the single-node result taken after the same commit.
+Each node in a cluster keeps its own `Puffin` files cache and Iceberg metadata cache. After an
+external engine commits a `DELETE` that produces a deletion vector, the very next cluster read
+SHALL see the new snapshot on **every** worker — with no restart and no cache dropping — even
+on nodes whose caches were filled while reading the previous snapshot. The cluster result SHALL
+equal the single-node result after the same commit.
 
 For example, for a 100-row table read through the cluster function, warmed on all nodes,
 where an external `DELETE` then hides 10 rows:
@@ -3158,11 +3393,12 @@ correct.
 version: 1.0
 
 [ClickHouse] SHALL provide the server settings `puffin_files_cache_policy` (default `SLRU`),
-`puffin_files_cache_size` (default 512 MiB, `0` disables), `puffin_files_cache_max_entries`
-(default 5000, `0` disables), and `puffin_files_cache_size_ratio` (default 0.5). Results SHALL
-remain correct with the cache disabled by server setting even when `use_puffin_files_cache = 1`,
-and `puffin_files_cache_size` SHALL be changeable without a restart with the live value
-reported.
+`puffin_files_cache_size` (default 512 MiB), `puffin_files_cache_max_entries` (default 5000),
+and `puffin_files_cache_size_ratio` (default 0.5). Only `puffin_files_cache_size = 0` disables
+the cache; `puffin_files_cache_max_entries = 0` means no limit on the number of entries, not
+disabled. Results SHALL remain correct with the cache disabled by server setting even when
+`use_puffin_files_cache = 1`, and `puffin_files_cache_size` SHALL be changeable without a
+restart with the live value reported.
 
 ### RQ.Iceberg.DeletionVectors.Cache.Invalidation
 version: 1.0
@@ -3212,6 +3448,10 @@ version: 1.0
 the parent `SYSTEM DROP CACHE` privilege SHALL be allowed; `SHOW PRIVILEGES` SHALL list the
 privilege.
 
+The underscore spelling `SYSTEM DROP PUFFIN_FILES_CACHE` SHALL be accepted by both the `SYSTEM`
+statement and `GRANT`, matching sibling cache privileges such as
+`SYSTEM DROP PARQUET_METADATA_CACHE`.
+
 An illustrative privilege check is:
 
 ```sql
@@ -3252,9 +3492,10 @@ ProfileEvents['PuffinFilesCacheHits']  ProfileEvents['PuffinFilesRead']
 version: 1.0
 
 Two concurrent queries over the same cold deletion vector SHALL both return correct results, and
-the vector SHALL be loaded once (`PuffinFilesRead` totals 1 for that blob across both queries).
-A `SYSTEM DROP PUFFIN FILES CACHE` racing with an in-flight load SHALL NOT produce a wrong
-result — the load is discarded and recorded as a miss rather than being served stale.
+the vector SHALL be loaded exactly once across both queries (a single load counts one footer
+parse and one blob read, so `PuffinFilesRead` totals 2). A `SYSTEM DROP PUFFIN FILES CACHE`
+racing with an in-flight load SHALL NOT produce a wrong result — the load is discarded and
+recorded as a miss rather than being served stale.
 
 ### RQ.Iceberg.DeletionVectors.Cache.EntryIsolation
 version: 1.0
@@ -3262,6 +3503,59 @@ version: 1.0
 A cache hit SHALL return a copy of the stored bitmap so that no query can mutate another query's
 cached state. Many concurrent queries with different filters over the same deletion vector SHALL
 each return the same result as the equivalent single query.
+
+### RQ.Iceberg.DeletionVectors.Cache.SnapshotScopedEntries
+version: 1.0
+
+Iceberg snapshots are immutable: a committed snapshot's manifests always point at the same
+`Puffin` blobs, and those blobs never change. The cache SHALL therefore hold one independent
+entry per blob (keyed by the object path, etag, offset, and length), which makes cached vectors
+snapshot-scoped:
+
+* time travel between snapshots with a warm cache SHALL return each snapshot's exact row set —
+  a vector cached while reading one snapshot SHALL never be applied to a read of another
+  snapshot;
+* revisiting an already-read snapshot SHALL be served from the cache (`PuffinFilesCacheHits`
+  increases, `PuffinFilesRead` stays at 0) — an entry of an immutable snapshot never needs
+  invalidation;
+* two blobs of the same `Puffin` file SHALL be independent entries: a read that needs the
+  vector at one offset SHALL NOT be served the vector cached at a different offset;
+* a commit that does not change existing vectors (for example an insert of new rows) SHALL
+  keep them warm: the next read of the new snapshot is served from the existing entries
+  without re-fetching the unchanged `Puffin` files.
+
+For example, with snapshot A (100 rows, no deletes) and snapshot B (a vector hides 10 rows):
+
+```sql
+SELECT count() FROM iceberg_table;                                      -- 90, caches B's vector
+SELECT count() FROM iceberg_table SETTINGS iceberg_snapshot_id = <A>;   -- 100, warm vector not applied
+SELECT count() FROM iceberg_table;                                      -- 90, served from cache
+```
+
+```text
+count()  ProfileEvents['PuffinFilesRead'] (third query)
+90       0
+```
+
+### RQ.Iceberg.DeletionVectors.Cache.RevalidationNotBypassed
+version: 1.0
+
+The cache key includes the manifest-declared cardinality and the data file's row count, not
+just the blob's location. A warm cache SHALL therefore never let a read skip metadata
+validation: if the manifest is changed to declare a different cardinality or row count for the
+same blob, the next read SHALL fail with the same validation error a cold read produces — it
+SHALL NOT serve the previously cached vector as if the metadata still matched.
+
+For example, after a warm read of a vector with cardinality 10, corrupting the manifest to
+declare cardinality 7 for the same blob:
+
+```sql
+SELECT count() FROM iceberg_table;
+```
+
+```text
+DB::Exception: ... does not match expected cardinality ... (BAD_ARGUMENTS)
+```
 
 ## Combinatorial Coverage
 
