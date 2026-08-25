@@ -8,6 +8,7 @@ from testflows.core import *
 from testflows.asserts import error
 
 from helpers.common import getuid
+from helpers.config import config_d
 
 
 CAS_EXPORT_REJECTION = "not supported on a CAS disk yet"
@@ -87,4 +88,5 @@ def export_partition_from_cas_disk_is_rejected(self):
 @Name("export")
 def feature(self):
     """EXPORT PARTITION behaviour for tables stored on a CAS disk."""
+    config_d.enable_export_partition()
     Scenario(run=export_partition_from_cas_disk_is_rejected)

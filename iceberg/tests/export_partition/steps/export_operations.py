@@ -13,8 +13,9 @@ EXPORT PARTITION needs two ClickHouse experimental flags enabled, and
 they live in different layers:
 
 * ``allow_experimental_export_merge_tree_partition`` is a *server*
-  setting (declared in ``ServerSettings.cpp``) and is enabled via
-  ``configs/clickhouse/config.d/export_partition.xml``.
+  setting (declared in ``ServerSettings.cpp``). It is pushed into
+  ``config.d`` at runtime on Antalya only, via
+  ``helpers.config.config_d.enable_export_partition``.
 * ``allow_experimental_insert_into_iceberg`` is a regular per-query
   ``Setting``. The commit/write phase runs on a background context
   that ClickHouse builds from the server context plus a small manifest
@@ -150,7 +151,7 @@ def prepare_export_partition_settings(context_catalog, settings):
     ``StorageReplicatedMergeTree::exportPartitionToTable`` / the
     ``IcebergMetadata::write`` path). The feature itself is enabled
     server-side via ``allow_experimental_export_merge_tree_partition``
-    from ``configs/clickhouse/config.d/export_partition.xml``, but that
+    (``config_d.enable_export_partition`` on Antalya), but that
     setting alone is no longer enough because the commit path is shared
     with INSERT/TRUNCATE.
 

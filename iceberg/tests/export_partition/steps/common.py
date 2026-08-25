@@ -7,8 +7,8 @@ The utilities here cover:
 * Cheap lookups against ``system.parts`` and the export status system tables
   (``system.replicated_partition_exports`` or ``system.partition_exports``).
 
-The experimental feature itself is enabled server-side via
-``configs/clickhouse/config.d/export_partition.xml``
+The experimental feature itself is enabled server-side on Antalya via
+``helpers.config.config_d.enable_export_partition``
 (``allow_experimental_export_merge_tree_partition``), so scenarios
 don't need to pass per-query settings to use EXPORT PARTITION.
 """

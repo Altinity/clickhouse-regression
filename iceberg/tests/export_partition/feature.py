@@ -27,7 +27,7 @@ Those modules internally skip scenarios that do not apply.
 
 from testflows.core import *
 
-from helpers.config import users_d
+from helpers.config import config_d, users_d
 from helpers.common import check_if_antalya_build
 from helpers.feature_support import validate_feature_support, setting_supported
 
@@ -87,6 +87,8 @@ def feature(self, minio_root_user, minio_root_password):
         check=setting_supported("export_merge_tree_partition_force_export"),
     ):
         return
+
+    config_d.enable_export_partition()
 
     with Given(
         "enable export-partition Iceberg and EXPORT PART gates in the default profile"
