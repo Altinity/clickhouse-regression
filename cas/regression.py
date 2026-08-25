@@ -6,24 +6,38 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import (
-    argparser_minio,
+    argparser_minio as base_argparser_minio,
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
 from helpers.common import (
     experimental_analyzer,
 )
+from cas.cas_mode import CAS_DISK, enable_cas_s3_cache, reset_cas_s3_cache_config
 
 
 xfails = {}
 ffails = {}
 
 
+def argparser(parser):
+    base_argparser_minio(parser)
+    parser.add_argument(
+        "--cas-s3-cache",
+        action="store_true",
+        default=False,
+        dest="use_cas_s3_cache",
+        help="layer a type=cache disk in front of cas_disk; cas_policy and "
+        "default use the cache disk (production-shaped S3 cache; tests need "
+        "no storage_policy change)",
+    )
+
+
 @TestModule
 @Name("cas")
 @FFails(ffails)
 @XFails(xfails)
-@ArgumentParser(argparser_minio)
+@ArgumentParser(argparser)
 @CaptureClusterArgs
 @CaptureMinioArgs
 def regression(
@@ -33,6 +47,7 @@ def regression(
     stress=None,
     with_analyzer=False,
     minio_args=None,
+    use_cas_s3_cache=False,
 ):
     """Run tests for content-addressed storage."""
     nodes = {
@@ -48,6 +63,15 @@ def regression(
     minio_root_password = minio_args["minio_root_password"].value
     self.context.minio_root_user = minio_root_user
     self.context.minio_root_password = minio_root_password
+    self.context.use_cas_s3_cache = False
+    self.context.cas_disk_name = CAS_DISK
+
+    if use_cas_s3_cache:
+        with Given("S3 cache disk in front of the CAS disk"):
+            enable_cas_s3_cache()
+    else:
+        with Given("no S3 cache in front of the CAS disk"):
+            reset_cas_s3_cache_config()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
