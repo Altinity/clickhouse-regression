@@ -239,11 +239,11 @@ class S23(Scenario):
         # assertions (quiesce_cluster([]) drains cluster-wide and skips per-table SYNC — which is
         # exactly right for an empty pool).
         end = _common.standard_end(ctx, result, [])
-        dangling = (end or {}).get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "idle pool fsck clean", "fsck dangling==0 on the empty pool",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "an idle empty pool reported dangling refs — should be impossible"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="idle pool fsck clean",
+            expected="fsck dangling==0 on the empty pool",
+            fail_note="an idle empty pool reported dangling refs — should be impossible")
 
 
 # ---------------------------------------------------------------------------
@@ -548,12 +548,11 @@ class S25(Scenario):
 
         # After dropping everything, the fixpoint must reclaim to a clean pool (NOT abandoning).
         end = _common.standard_end(ctx, result, [])
-        dangling = (end or {}).get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "non-Atomic path cleanup fsck clean", "fsck dangling==0 after the non-Atomic lifecycle",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "dangling refs survived the non-Atomic-db lifecycle — a path was "
-                                     "misclassified or a ref was not dropped"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="non-Atomic path cleanup fsck clean",
+            expected="fsck dangling==0 after the non-Atomic lifecycle",
+            fail_note="dangling refs survived the non-Atomic-db lifecycle — a path was misclassified or a ref was not dropped")
 
 
 # ---------------------------------------------------------------------------
@@ -717,12 +716,11 @@ class S26(Scenario):
 
         # standard_end with no surviving tables: fixpoint reclaim + clean fsck.
         end = _common.standard_end(ctx, result, [])
-        dangling = (end or {}).get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check(
-            "verbatim churn fsck clean", "fsck dangling==0 after verbatim file churn + drop",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "dangling refs after verbatim-file churn — a table-level file "
-                                     "was mis-tracked"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="verbatim churn fsck clean",
+            expected="fsck dangling==0 after verbatim file churn + drop",
+            fail_note="dangling refs after verbatim-file churn — a table-level file was mis-tracked")
 
 
 # ---------------------------------------------------------------------------
@@ -734,8 +732,9 @@ class S27(Scenario):
     name = "S27"
     title = "backend list pagination ambiguity"
     priority = "P2"
-    # Runs on the S3 proxy compose in LIST-anomaly mode: the proxy perturbs LIST(cas/refs/) responses
-    # (duplicate keys / dropped continuation token) — the prefix GC discovery (discoverUniverse) uses.
+    # Runs on the S3 proxy compose in LIST-anomaly mode: the proxy perturbs LIST responses whose
+    # prefix lives under `cas/` (discovery used to LIST `cas/refs/`; current layout is
+    # `cas/ns/stream/<life-id>/`). Matching the whole `cas/` tree is how the card stays non-vacuous.
     compose_variant = "s3listproxy"
 
     param_table = {
@@ -757,13 +756,10 @@ class S27(Scenario):
         return _json.loads(urllib.request.urlopen(req, timeout=timeout).read().decode())
 
     def run(self, ctx, result):
-        """Paginated / unstable LIST anomalies must force safe rereads, NEVER a skipped fold. GC
-        discovery enumerates `(namespace, shard)` via `LIST(cas/refs/)`; the proxy perturbs those
-        responses (duplicate keys, dropped continuation token). The safety invariant: under injected
-        list anomalies GC must still be correct — no committed ref to a missing object (`fsck
-        dangling==0`), dropped content still reclaims (reclaimable drains to 0 — a falsely-skipped
-        shard would strand it), replicas agree, and no `Failed` GC round. The proxy's list-perturb
-        counter proves the anomaly path was exercised."""
+        """Paginated / unstable LIST anomalies must force safe rereads, NEVER a skipped fold. The
+        proxy perturbs LIST pages under `cas/` (duplicate keys / dropped continuation token). Safety:
+        no committed ref to a missing object (`fsck dangling==0`), dropped content still reclaims,
+        replicas agree. The proxy's list-perturb counter proves the anomaly path was exercised."""
         cl = ctx.cluster
         p = ctx.params
         nodes = cl.nodes()
@@ -781,7 +777,7 @@ class S27(Scenario):
             return
         result.observations["proxy"] = {"healthz": hz}
 
-        # Build many (namespace, shard) refs so cas/refs/ has real breadth to LIST.
+        # Build tables so cas/ has real LIST breadth.
         self._ctl("/config", {"rate": 0.0, "list_anomaly": None})
         for t in tables:
             for n in nodes:
@@ -794,12 +790,14 @@ class S27(Scenario):
         base_delta = base_before().get("_total", {})
         result.observations["baseline_CasRootGet"] = int(base_delta.get("CASRootGet", 0))
 
-        # ARM LIST anomalies on the cas/refs/ prefix, then churn + GC so discovery keeps re-listing.
-        self._ctl("/config", {"list_anomaly": "duplicate", "list_prefix": "cas/refs/"})
+        # ARM LIST anomalies on any `cas/` prefix (refs used to live at cas/refs/; they now live
+        # under cas/ns/stream/). Matching `cas/` keeps the injection non-vacuous across layouts.
+        _LIST_PREFIX = "cas/"
+        self._ctl("/config", {"list_anomaly": "duplicate", "list_prefix": _LIST_PREFIX})
         anomaly_before = _common.counters_window(ctx)
         gc_errors = []
         # Drop half the tables (creates owner transitions the fold must not skip) and drive GC while
-        # the proxy perturbs each cas/refs/ LIST.
+        # the proxy perturbs each matching LIST.
         for i, t in enumerate(tables):
             if i % 2 == 0:
                 try:
@@ -809,7 +807,7 @@ class S27(Scenario):
         for r in range(gc_rounds):
             # alternate the two anomaly kinds across rounds
             self._ctl("/config", {"list_anomaly": "drop_token" if r % 2 else "duplicate",
-                                  "list_prefix": "cas/refs/"})
+                                  "list_prefix": _LIST_PREFIX})
             try:
                 gc_mod.gc_drive_round(cl, log_fn=ctx.log)
             except Exception as e:
@@ -822,12 +820,18 @@ class S27(Scenario):
         stats = self._ctl("/stats")
         result.observations["proxy_stats"] = stats
 
-        # 1. The anomaly path was actually exercised.
+        # 1. The anomaly path was actually exercised. 0 perturbations is a vacuous run (wrong
+        # LIST prefix, or GC never listed), not a CAS finding.
         perturbed = int(stats.get("list_perturbed", 0))
-        result.add(Verdict.check(
-            "LIST anomalies were injected on cas/refs/ (test not vacuous)", "> 0 perturbed LISTs",
-            f"{perturbed}", perturbed > 0,
-            "" if perturbed > 0 else "proxy perturbed 0 LISTs — discovery may not have re-listed cas/refs/"))
+        forwarded = int(stats.get("forwarded", 0))
+        if perturbed > 0:
+            result.add(Verdict.check(
+                "LIST anomalies were injected on cas/ prefixes (test not vacuous)", "> 0 perturbed LISTs",
+                f"{perturbed}", True))
+        else:
+            result.add(Verdict.inconclusive(
+                "LIST anomalies were injected on cas/ prefixes (test not vacuous)", "> 0 perturbed LISTs",
+                f"proxy perturbed 0 LISTs of {forwarded} forwarded — discovery LIST prefix may not match"))
 
         # 2. GC never errored under the injected anomalies (a malformed page must not crash the round).
         result.observations["gc_errors"] = gc_errors

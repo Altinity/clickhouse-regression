@@ -197,6 +197,9 @@ class S13(Scenario):
     # abandons=False to standard_end (we EXPECT a clean fixpoint) but classify any residual gracefully
     # rather than hard-failing — see the residual handling below.
     abandons = False
+    # Process-kill of the GC leader produces real Error finish rows; do not FAIL the common
+    # "0 Failed GC rounds" check for those. Safety is still asserted via fsck dangling==0.
+    allow_gc_failed = True
     param_table = {
         # dev: a handful of kill/restart rounds, small inserts, fast.
         "dev": {"kill_rounds": 4, "rows_per_insert": 400, "payload_bytes": 4096,
@@ -425,7 +428,8 @@ class S13(Scenario):
         # --- quiesce + common hard assertions (fsck dangling==0, GC no Failed rows, ...) --------
         # peak memory is informative under chaos (restarts reset counters); record it.
         _common.record_peak_memory(result, smp, label="peak MemoryResident during chaos")
-        _common.standard_end(ctx, result, tables, abandons=self.abandons)
+        _common.standard_end(ctx, result, tables, abandons=self.abandons,
+                             allow_gc_failed=self.allow_gc_failed)
 
         # --- bounded-residual handling: classify, do not crash ---------------------------------
         # standard_end ran forced GC to fixpoint and a final detailed fsck. A nonzero residual after

@@ -1,4 +1,5 @@
 import subprocess
+import time
 from dataclasses import dataclass
 from enum import Enum
 from soak.rng import splitmix64
@@ -108,24 +109,57 @@ def _is_running(container: str) -> bool:
     return r.returncode == 0 and r.stdout.strip() == "running"
 
 
+# helpers.cluster's start_clickhouse pidfile. Probe must be aliveness (`kill -0`), not existence:
+# docker restart/kill keeps the writable layer, and a SIGKILLed server does not unlink its pidfile.
+# An existence-only probe no-ops after every CH fault and leaves the container serverless
+# (see Altinity/ClickHouse#2233, clickhouse-regression port).
+_PIDFILE = "/tmp/clickhouse-server.pid"
+_ALIVE_PROBE = f"test -f {_PIDFILE} && kill -0 $(cat {_PIDFILE}) 2>/dev/null"
+
+
+def _server_alive(container: str) -> bool:
+    """True iff clickhouse-server's pidfile names a live process in `container`."""
+    probe = subprocess.run(
+        ["docker", "exec", container, "bash", "-c", _ALIVE_PROBE],
+        capture_output=True, timeout=30)
+    return probe.returncode == 0
+
+
 def _ensure_clickhouse_daemon(container: str):
     """After docker start/restart of a helpers.cluster node (entrypoint is `tail -f /dev/null`),
     bring clickhouse-server back with the same pidfile contract Cluster.start_clickhouse uses.
-    No-op when a server pidfile is already present (upstream compose entrypoint)."""
-    probe = subprocess.run(
-        ["docker", "exec", container, "bash", "-c", "test -f /tmp/clickhouse-server.pid"],
-        capture_output=True, timeout=30)
-    if probe.returncode == 0:
+
+    No-op when a *live* server is already present (upstream compose entrypoint starts it).
+    Must not treat a stale pidfile as alive — that is the regression-port phase-2 false pass
+    that left both replicas answering docker-proxy resets with no server behind them."""
+    if _server_alive(container):
         return
     subprocess.run(
+        ["docker", "exec", container, "bash", "-c", f"rm -f {_PIDFILE}"],
+        capture_output=True, timeout=30)
+    started = subprocess.run(
         [
             "docker", "exec", container, "bash", "-c",
             "clickhouse server --config-file=/etc/clickhouse-server/config.xml"
             " --log-file=/var/log/clickhouse-server/clickhouse-server.log"
             " --errorlog-file=/var/log/clickhouse-server/clickhouse-server.err.log"
-            " --pidfile=/tmp/clickhouse-server.pid --daemon",
+            f" --pidfile={_PIDFILE} --daemon",
         ],
         capture_output=True, timeout=60)
+    if started.returncode != 0:
+        err = (started.stderr or started.stdout or b"").decode("utf-8", "replace")
+        raise RuntimeError(
+            f"failed to start clickhouse-server in {container}: rc={started.returncode} {err}"
+        )
+    deadline = time.monotonic() + 30
+    while time.monotonic() < deadline:
+        if _server_alive(container):
+            return
+        time.sleep(0.5)
+    raise RuntimeError(
+        f"clickhouse-server in {container} did not become alive after daemon start "
+        f"(pidfile={_PIDFILE})"
+    )
 
 
 def apply_fault(fault: Fault):
@@ -134,7 +168,6 @@ def apply_fault(fault: Fault):
 
     After `docker start`, polls until the container is in 'running' state (up to 30s) so the caller's
     `wait_healthy` polling starts from a known container-running baseline."""
-    import time
     cs = _containers(fault.target)
     if fault.action == FaultAction.KILL:
         for c in cs:

@@ -195,7 +195,10 @@ def _predict_accept(source_terms, dest_terms, min_max):
             return False, (f"column '{col}'",)
         lo, hi = min_max[col]
         if lo != hi:
-            return False, ("multiple destination partitions", f"column '{col}'")
+            # Split-path reject names the destination *expression* (for a
+            # hive dest that is the bare column). The "not in source key"
+            # path above still names ``column '{col}'``.
+            return False, ("multiple destination partitions", f"expression '{col}'")
     return True, ()
 
 
@@ -237,7 +240,7 @@ def oracle_self_tests(self):
             ("a",),
             {"a": ("0", "4")},
             False,
-            ("multiple destination partitions", "column 'a'"),
+            ("multiple destination partitions", "expression 'a'"),
             "non-monotonic source and split range",
         ),
         (
@@ -261,7 +264,7 @@ def oracle_self_tests(self):
             ("dt",),
             {"dt": ("2024-03-05", "2024-03-20")},
             False,
-            ("multiple destination partitions", "column 'dt'"),
+            ("multiple destination partitions", "expression 'dt'"),
             "monthly source, bare dt destination, exported partition holds two days",
         ),
         (
@@ -269,7 +272,7 @@ def oracle_self_tests(self):
             ("ts",),
             {"ts": ("2024-03-05 12:00:00", "2024-03-05 12:30:00")},
             False,
-            ("multiple destination partitions", "column 'ts'"),
+            ("multiple destination partitions", "expression 'ts'"),
             "hourly source, bare ts destination, spread inside one hour",
         ),
         (
@@ -277,7 +280,7 @@ def oracle_self_tests(self):
             ("a",),
             {"a": ("-7", "-3")},
             False,
-            ("multiple destination partitions", "column 'a'"),
+            ("multiple destination partitions", "expression 'a'"),
             "negative same-residue range still splits",
         ),
         (
@@ -285,7 +288,7 @@ def oracle_self_tests(self):
             ("s",),
             {"s": ("banana", "berry")},
             False,
-            ("multiple destination partitions", "column 's'"),
+            ("multiple destination partitions", "expression 's'"),
             "prefix source key, bare s destination, two values behind one prefix",
         ),
     ]
@@ -426,7 +429,7 @@ def per_partition_acceptance(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
         )
     with When("I export the April partition (single day)"):
@@ -478,7 +481,7 @@ def multi_part_partition_reject(self):
         expected_substrings=(
             "BAD_ARGUMENTS",
             "multiple destination partitions",
-            "column 'dt'",
+            "expression 'dt'",
         ),
     )
 
@@ -490,7 +493,7 @@ def three_term_destination_mixed_decisions(self):
     Source ``(year, toYYYYMM(dt), country)`` -> destination
     ``(year, dt, country)``: ``year`` and ``country`` take the per-column
     fast path; ``dt`` must be proved single-valued dynamically. Single-day
-    US partition accepts, two-day FR partition rejects on ``column 'dt'``.
+    US partition accepts, two-day FR partition rejects on ``expression 'dt'``.
     """
     node = self.context.node
     columns = [
@@ -548,7 +551,7 @@ def three_term_destination_mixed_decisions(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
         )
 
@@ -591,7 +594,7 @@ def export_partition_all_gate_is_atomic(self):
             for fragment in (
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ):
                 assert fragment in result.output, error(result.output)
         with And(f"[{on_error}] nothing is scheduled and destination stays empty"):
@@ -798,21 +801,13 @@ def partition_key_timezone_drift(self):
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def swapped_same_type_columns_positional_cast(self):
-    """The partition-key gate matches destination terms by column **name**
-    while the payload CAST is **positional**, and this feature widens the
-    set of schema pairs that get through the gate -- so the two rules now
-    disagree on more shapes than before.
-
-    Source ``PARTITION BY (ts, x)`` into destination ``PARTITION BY ts``
-    is accepted only via the per-column fast path (identical-key
-    comparison rejects it). The two payload columns carry the same names
-    and types on both sides but swapped positions, so a positional CAST
-    would land source ``ts`` in destination ``x`` and vice versa. Compare
-    by explicit column name (``SELECT *`` would print identically under a
-    swap) and pin destination ``ts`` holding source ``ts`` values (2024),
-    not source ``x`` values (2020).
+    """Swapping two same-type payload columns used to be a silent
+    corruption hazard: the #2074 gate matches destination terms by
+    **name**, while payload CAST is **positional**, so source ``ts`` at
+    position 1 would land in destination ``x``. The name-and-position
+    layout check now rejects that shape first: source partition-key
+    column ``ts`` is at position 1, destination's column there is ``x``.
     """
-    node = self.context.node
     src_columns = [
         {"name": "id", "type": "Int64"},
         {"name": "ts", "type": "DateTime"},
@@ -830,60 +825,33 @@ def swapped_same_type_columns_positional_cast(self):
             src_partition_by="(ts, x)",
             dst_partition_by="ts",
         )
-    with And("rows whose ts (2024) and x (2020) values are distinguishable"):
+    with And("data inserted into source"):
         insert_values(
             table_name=source_table,
-            values=(
-                "(1, '2024-03-05 12:00:00', '2020-01-01 09:00:00'), "
-                "(2, '2024-03-05 12:00:00', '2020-01-01 09:00:00')"
-            ),
+            values="(1, '2024-03-05 12:00:00', '2020-01-01 09:00:00')",
         )
 
-    partition_id = get_first_partition_id(table_name=source_table)
-    export_partition_by_id(
+    assert_export_rejected(
         source_table=source_table,
         destination_table=destination_table,
-        partition_id=partition_id,
-        node=node,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=(
+            "BAD_ARGUMENTS",
+            "partition key column 'ts'",
+            "named 'x'",
+            "same position",
+        ),
     )
-
-    with Then("values stay with the column they came from (name-based compare)"):
-        src_rows = select_rows(
-            table_name=source_table, columns="id, ts, x", order_by="id"
-        )
-        dst_rows = select_rows(
-            table_name=destination_table, columns="id, ts, x", order_by="id"
-        )
-        assert src_rows == dst_rows, error(
-            f"schema-swap silently corrupted values:\nsrc={src_rows!r}\ndst={dst_rows!r}"
-        )
-    with And("destination ts holds 2024 (source ts), destination x holds 2020"):
-        dst_ts_years = select_rows(
-            table_name=destination_table,
-            columns="DISTINCT toYear(ts)",
-            order_by="1",
-        )
-        assert dst_ts_years == "2024", error(f"got dst ts years: {dst_ts_years!r}")
-        dst_x_years = select_rows(
-            table_name=destination_table,
-            columns="DISTINCT toYear(x)",
-            order_by="1",
-        )
-        assert dst_x_years == "2020", error(f"got dst x years: {dst_x_years!r}")
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def swap_under_multi_part_and_export_all(self):
-    """Combine the schema-swap hazard with the dynamic proof, multi-part
-    partitions and ``EXPORT PARTITION ALL``.
-
-    Source ``PARTITION BY toDate(ts)`` into destination ``PARTITION BY ts``
-    can only be accepted by proving each exported partition is
-    single-valued on ``ts``, and each partition here is spread over two
-    parts (merges stopped), so the proof has to fold min/max across both.
-    Every partition is scheduled by a single ``EXPORT PARTITION ALL``, and
-    the swap invariants must hold for all of them.
+    """The same layout check fires for ``EXPORT PARTITION ALL`` on a
+    dynamic-proof pair (source ``toDate(ts)``, dest ``ts``) whose parts
+    were kept unmerged. Scheduling is rejected before any partition is
+    queued; destination stays empty.
     """
     node = self.context.node
     src_columns = [
@@ -904,7 +872,7 @@ def swap_under_multi_part_and_export_all(self):
             dst_partition_by="ts",
             stop_merges=True,
         )
-    with And("two partitions, each spread over two parts with one ts value"):
+    with And("one partition spread over two parts"):
         insert_values(
             table_name=source_table,
             values="(1, '2024-03-05 12:00:00', '2020-01-01 09:00:00')",
@@ -913,64 +881,43 @@ def swap_under_multi_part_and_export_all(self):
             table_name=source_table,
             values="(2, '2024-03-05 12:00:00', '2020-01-02 09:00:00')",
         )
-        insert_values(
-            table_name=source_table,
-            values="(3, '2024-04-10 12:00:00', '2020-02-02 09:00:00')",
-        )
-        insert_values(
-            table_name=source_table,
-            values="(4, '2024-04-10 12:00:00', '2020-02-03 09:00:00')",
-        )
-    with And("every source partition really has two active parts"):
-        for partition_id in get_partitions(table_name=source_table, node=node):
-            parts = count_rows(
-                table_name="system.parts",
-                where=(
-                    f"table = '{source_table}' "
-                    f"AND partition_id = '{partition_id}' AND active"
-                ),
-            )
-            assert parts == 2, error(
-                f"partition {partition_id}: expected 2 active parts, got {parts}"
-            )
 
-    with When("I run EXPORT PARTITION ALL and wait for both to COMPLETE"):
-        node.query(
+    with When("I run EXPORT PARTITION ALL"):
+        result = node.query(
             f"ALTER TABLE {source_table} EXPORT PARTITION ALL "
             f"TO TABLE {destination_table}",
             settings=self.context.default_settings,
+            exitcode=BAD_ARGUMENTS,
+            ignore_exception=True,
         )
-        for partition_id in get_partitions(table_name=source_table, node=node):
-            wait_for_export_to_complete(
-                source_table=source_table, partition_id=partition_id, node=node
-            )
-
-    with Then("values stay with the column they came from on every row"):
-        src_rows = select_rows(
-            table_name=source_table, columns="id, ts, x", order_by="id"
+    with Then("the layout check rejects the whole ALTER"):
+        for fragment in (
+            "BAD_ARGUMENTS",
+            "partition key column 'ts'",
+            "named 'x'",
+            "same position",
+        ):
+            assert fragment in result.output, error(result.output)
+    with And("nothing is scheduled and destination stays empty"):
+        assert_no_scheduled_exports(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
         )
-        dst_rows = select_rows(
-            table_name=destination_table, columns="id, ts, x", order_by="id"
+        assert count_rows(table_name=destination_table) == 0, error(
+            "expected an empty destination after a rejected export"
         )
-        assert src_rows == dst_rows, error(
-            f"schema-swap corruption under EXPORT PARTITION ALL:\n"
-            f"src={src_rows!r}\ndst={dst_rows!r}"
-        )
-    with And("destination ts holds 2024 across both partitions"):
-        dst_ts_years = select_rows(
-            table_name=destination_table,
-            columns="DISTINCT toYear(ts)",
-            order_by="1",
-        )
-        assert dst_ts_years == "2024", error(f"got: {dst_ts_years!r}")
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def partition_key_case_sensitivity(self):
-    """Column names are case-sensitive: source column is ``Ts``,
-    destination is ``ts``. The name-based gate must reject with
-    ``column 'ts'`` (not found in source key).
+    """Column names are case-sensitive. Source partition-key column ``Ts``
+    sits at position 1; the destination's column at that position is
+    ``ts``. The partition-key name-and-position layout check (which runs
+    before the #2074 name-based gate) SHALL reject with ``BAD_ARGUMENTS``
+    naming both columns, so a case-only rename cannot slip through as a
+    positional CAST.
     """
     src_columns = [
         {"name": "id", "type": "Int64"},
@@ -997,17 +944,24 @@ def partition_key_case_sensitivity(self):
         destination_table=destination_table,
         partition_id=get_first_partition_id(table_name=source_table),
         exitcode=BAD_ARGUMENTS,
-        expected_substrings=("BAD_ARGUMENTS", "column 'ts'"),
+        expected_substrings=(
+            "BAD_ARGUMENTS",
+            "partition key column 'Ts'",
+            "named 'ts'",
+            "same position",
+        ),
     )
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def payload_column_name_mismatch(self):
-    """Realistic ETL shape: source names its date ``order_date``,
-    destination renames it to ``ship_date``. Positional CAST would
-    happily land the values, but the name-based gate must reject with
-    ``column 'ship_date'`` (not in source key columns).
+    """Realistic ETL shape: source names its partition-key date
+    ``order_date``, destination renames the same-position column to
+    ``ship_date``. Positional CAST would bind the values, but the
+    name-and-position layout check SHALL reject first with
+    ``BAD_ARGUMENTS`` naming both columns -- the #2074 "not in source
+    key" message is never reached.
     """
     src_columns = [
         {"name": "id", "type": "Int64"},
@@ -1032,7 +986,12 @@ def payload_column_name_mismatch(self):
         destination_table=destination_table,
         partition_id=get_first_partition_id(table_name=source_table),
         exitcode=BAD_ARGUMENTS,
-        expected_substrings=("BAD_ARGUMENTS", "column 'ship_date'"),
+        expected_substrings=(
+            "BAD_ARGUMENTS",
+            "partition key column 'order_date'",
+            "named 'ship_date'",
+            "same position",
+        ),
     )
 
 
@@ -1069,6 +1028,95 @@ def algebraically_equivalent_partition_expression(self):
                 "expression columns are a part of the storage columns"
             ),
         )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def constant_destination_partition_expression(self):
+    """A destination key that is a bare constant (``PARTITION BY 1``).
+
+    It is the one partition expression that is neither a storage column nor
+    a function of one, so it sits exactly on the boundary that
+    ``algebraically_equivalent_partition_expression`` establishes: hive
+    requires partition-by terms to be storage columns, and a literal is
+    not. But a constant also cannot repartition anything -- it puts every
+    row in one destination partition, which is the same guarantee the
+    gate's unpartitioned-destination fast path relies on. So either answer
+    is defensible and we do not know which one the server gives.
+
+    Both outcomes are safe; what would not be safe is a constant key that
+    creates and then splits data across partitions, or one that trips the
+    gate into rejecting a partition it should accept. Pin whichever
+    behaviour exists: reject at ``CREATE TABLE`` like any other non-column
+    term, or accept and export every source partition into the single
+    output partition without losing rows.
+    """
+    node = self.context.node
+    columns = [{"name": "id", "type": "Int64"}, {"name": "dt", "type": "Date"}]
+    table_name = f"dst_const_{getuid()}"
+
+    with Given("a temporary bucket path"):
+        create_temp_bucket()
+
+    with When("I create a hive S3 destination with a constant partition key"):
+        result = node.query(
+            f"CREATE TABLE {table_name} "
+            f"(id Int64, dt Date) "
+            f"ENGINE = S3('{self.context.uri}', "
+            f"'{self.context.access_key_id}', "
+            f"'{self.context.secret_access_key}', "
+            f"filename='{table_name}', format='Parquet', "
+            f"partition_strategy='hive') PARTITION BY 1",
+            no_checks=True,
+            settings=self.context.default_settings,
+        )
+
+    if result.exitcode != 0:
+        with Then("the constant is refused the same way any non-column term is"):
+            assert (
+                "Hive partitioning" in result.output
+                or "partition column" in result.output
+            ), error(
+                f"expected the hive partition-by restriction to explain the "
+                f"rejection, got: {result.output!r}"
+            )
+        return
+
+    try:
+        with And("the destination was created, so I build a source to export"):
+            source_table = f"src_{getuid()}"
+            create_replicated_merge_tree_table(
+                table_name=source_table,
+                columns=columns,
+                partition_by="toYYYYMM(dt)",
+                cluster="replicated_cluster",
+            )
+            insert_values(
+                table_name=source_table,
+                values="(1, '2024-03-05'), (2, '2024-03-20'), (3, '2024-04-10')",
+            )
+
+        with Then("every source partition exports into the single output partition"):
+            for partition_id in get_partitions(table_name=source_table, node=node):
+                export_partition_by_id(
+                    source_table=source_table,
+                    destination_table=table_name,
+                    partition_id=partition_id,
+                    node=node,
+                )
+        with And("no rows were lost or duplicated by the constant key"):
+            src_rows = select_rows(
+                table_name=source_table, columns="id, dt", order_by="id"
+            )
+            dst_rows = select_rows(
+                table_name=table_name, columns="id, dt", order_by="id"
+            )
+            assert src_rows == dst_rows, error(
+                f"a constant destination partition key must collect every row "
+                f"in one partition:\nsrc={src_rows!r}\ndst={dst_rows!r}"
+            )
+    finally:
+        node.query(f"DROP TABLE IF EXISTS {table_name}")
 
 
 @TestScenario
@@ -1137,10 +1185,23 @@ def widened_type_on_dynamically_proved_partition_column(self):
     reasons about: source ``PARTITION BY toYYYYMM(dt)`` with ``dt Date``
     into destination ``PARTITION BY dt`` with ``dt Date32``.
 
+    ``Date32`` covers 1900-2299 and ``Date`` only 1970-2149, so every
+    ``Date`` value is representable and no value can actually change. The
+    server classifies the pair as lossy anyway: ``canBeSafelyCasted``
+    (``src/DataTypes/Utils.cpp``) groups ``Date``/``Date32``/``DateTime``/
+    ``DateTime64`` together and calls a conversion safe only when the
+    target is ``String``, so no temporal-to-temporal cast is ever safe by
+    that rule -- not even a widening one. Both exports here therefore need
+    ``export_merge_tree_part_allow_lossy_cast``, and without it the payload
+    schema guard answers first (``INCOMPATIBLE_COLUMNS``) and the gate
+    never runs at all. That is the same hoisting
+    ``schema_guard_runs_before_the_gate`` pins; the opt-in is what makes
+    the gate reachable so this scenario can test it.
+
     ``dt`` is only in the source key under ``toYYYYMM``, so every decision
-    here goes through the proof. The widening cast must not change either
+    goes through the proof. The widening cast must not change either
     answer: a single-day partition still accepts and a two-day partition
-    still rejects on ``column 'dt'``.
+    still rejects on ``expression 'dt'``.
     """
     node = self.context.node
     src_columns = [
@@ -1167,12 +1228,15 @@ def widened_type_on_dynamically_proved_partition_column(self):
             ),
         )
 
+    lossy_cast_opt_in = " SETTINGS export_merge_tree_part_allow_lossy_cast = 1"
+
     with When("I export the single-day March partition"):
         export_partition_by_id(
             source_table=source_table,
             destination_table=destination_table,
             partition_id="202403",
             node=node,
+            query_settings_sql=lossy_cast_opt_in,
         )
     with Then("the rows land with the day preserved under the widened type"):
         rows = select_rows(
@@ -1181,7 +1245,7 @@ def widened_type_on_dynamically_proved_partition_column(self):
         assert rows == "1\t2024-03-05\n2\t2024-03-05", error(f"got: {rows!r}")
 
     with When("I export the two-day April partition"):
-        assert_export_rejected(
+        result = assert_export_rejected(
             source_table=source_table,
             destination_table=destination_table,
             partition_id="202404",
@@ -1189,8 +1253,15 @@ def widened_type_on_dynamically_proved_partition_column(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
+            query_settings_sql=lossy_cast_opt_in,
+        )
+    with And("the partition-key gate rejected it, not the payload schema guard"):
+        assert "INCOMPATIBLE_COLUMNS" not in result.output, error(
+            f"the lossy-cast opt-in should have carried this past the schema "
+            f"guard so the gate could judge the partition, but the schema guard "
+            f"answered instead: {result.output!r}"
         )
 
 
@@ -1264,15 +1335,182 @@ def lossy_cast_on_dynamically_proved_partition_column(self):
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def overflowing_narrowing_cast_on_partition_column(self):
+    """Companion to ``lossy_cast_on_dynamically_proved_partition_column``
+    with a value that does **not** fit the destination type.
+
+    ``n = 3000000000`` is above ``Int32`` max. The partition is still
+    single-valued, so the #2074 proof holds, and
+    ``export_merge_tree_part_allow_lossy_cast = 1`` opts past the payload
+    guard. The documented contract of that setting is a truncating cast:
+    both the stored column and the hive directory use the wrapped
+    ``Int32`` value (3000000000 - 2^32 = -1294967296), and the destination
+    stays readable -- the previous ``BAD_GET``-on-SELECT outcome is gone.
+    """
+    node = self.context.node
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "n", "type": "Int64"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "n", "type": "Int32"},
+    ]
+    overflowing = 3000000000
+    wrapped = overflowing - 2**32
+    with Given("Int64 source RMT and Int32 hive S3 destination"):
+        source_table, destination_table = setup_source_and_hive_destination(
+            src_columns=src_columns,
+            dst_columns=dst_columns,
+            src_partition_by="intDiv(n, 100)",
+            dst_partition_by="n",
+        )
+    with And("a partition single-valued on a value too large for Int32"):
+        insert_values(
+            table_name=source_table,
+            values=f"(1, {overflowing}), (2, {overflowing})",
+        )
+
+    with When("I export the partition with the lossy-cast opt-in"):
+        export_partition_by_id(
+            source_table=source_table,
+            destination_table=destination_table,
+            partition_id=get_first_partition_id(table_name=source_table),
+            node=node,
+            query_settings_sql=(
+                " SETTINGS export_merge_tree_part_allow_lossy_cast = 1"
+            ),
+        )
+
+    with Then("the destination is readable and holds the wrapped Int32 value"):
+        rows = select_rows(table_name=destination_table, columns="id, n", order_by="id")
+        assert rows == f"1\t{wrapped}\n2\t{wrapped}", error(f"got: {rows!r}")
+    with And("the hive directory is named after the wrapped value, not the source"):
+        dst_path = select_rows(table_name=destination_table, columns="DISTINCT _path")
+        assert f"/n={wrapped}/" in dst_path, error(
+            f"expected hive layout '/n={wrapped}/', got {dst_path!r}"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def nullable_source_partition_column(self):
+    """The gate carries a Nullable-specific rejection -- "partition column
+    is Nullable, so a NULL forms a separate destination partition" -- and
+    nothing in this suite reaches it.
+
+    It cannot be reached from the destination side: a ``Nullable`` hive
+    partition column is refused at ``CREATE TABLE``. The only way in is
+    from the source: ``PARTITION BY (k, b)`` with ``k Nullable(Int64)``
+    into a destination partitioned by a non-Nullable ``k``, which the
+    per-column fast path would otherwise accept on name alone.
+
+    Two guards stand between that ALTER and the data, and which one fires
+    is what this pins. The payload cast ``Nullable(Int64) -> Int64`` cannot
+    represent a NULL, and #2074 hoists ``verifyExportSchemaCastable`` ahead
+    of the gate -- so the schema guard may well answer first, leaving the
+    gate's Nullable branch dead code for hive destinations. Either way the
+    NULL partition must not be exported: a destination ``Int64`` would have
+    to invent a value for it.
+
+    The non-NULL partition is the informative half. If it exports, the
+    Nullable *type* alone is not disqualifying and only actual NULLs are;
+    if it is refused, the type is. Both are safe, and knowing which is what
+    tells an operator whether making a partition column Nullable costs them
+    export support outright.
+    """
+    node = self.context.node
+    src_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "k", "type": "Nullable(Int64)"},
+        {"name": "b", "type": "Int32"},
+    ]
+    dst_columns = [
+        {"name": "id", "type": "Int64"},
+        {"name": "k", "type": "Int64"},
+        {"name": "b", "type": "Int32"},
+    ]
+    source_table = f"src_{getuid()}"
+    with Given("source RMT PARTITION BY (k, b) with k Nullable"):
+        create_replicated_merge_tree_table(
+            table_name=source_table,
+            columns=src_columns,
+            partition_by="(k, b)",
+            cluster="replicated_cluster",
+            query_settings="allow_nullable_key = 1",
+        )
+    with And("hive S3 destination PARTITION BY k with k non-Nullable"):
+        destination_table = create_s3_table(
+            table_name="dst",
+            create_new_bucket=True,
+            columns=dst_columns,
+            partition_by="k",
+        )
+    with And("one partition holding NULL and one holding a real value"):
+        insert_values(table_name=source_table, values="(1, NULL, 7), (2, 42, 7)")
+
+    def _attempt_export(partition_id):
+        return node.query(
+            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition_id}' "
+            f"TO TABLE {destination_table}",
+            settings=self.context.default_settings,
+            no_checks=True,
+        )
+
+    with When("I export the partition whose partition column is NULL"):
+        null_partition = get_partition_id_where(
+            source_table=source_table, where="id = 1", node=node
+        )
+        null_result = _attempt_export(null_partition)
+    with Then("it is refused, because a non-Nullable destination cannot hold NULL"):
+        assert null_result.exitcode != 0, error(
+            "exporting a NULL partition column into a non-Nullable destination "
+            "column was accepted; the destination has no representation for "
+            "NULL, so some value would be invented for it"
+        )
+        note(f"NULL partition refused by: {null_result.output!r}")
+    with And("nothing was written"):
+        assert count_rows(table_name=destination_table) == 0, error(
+            "the NULL export was rejected but the destination is not empty"
+        )
+
+    with When("I export the partition holding a real value"):
+        value_partition = get_partition_id_where(
+            source_table=source_table, where="id = 2", node=node
+        )
+        value_result = _attempt_export(value_partition)
+
+    if value_result.exitcode != 0:
+        with Then("a Nullable source partition column is disqualifying by type"):
+            note(f"non-NULL partition also refused by: {value_result.output!r}")
+            assert count_rows(table_name=destination_table) == 0, error(
+                "the export was rejected but the destination is not empty"
+            )
+        return
+
+    with Then("the accepted export carries the value through faithfully"):
+        wait_for_export_to_complete(
+            source_table=source_table, partition_id=value_partition, node=node
+        )
+        rows = select_rows(
+            table_name=destination_table, columns="id, k, b", order_by="id"
+        )
+        assert rows == "2\t42\t7", error(
+            f"only the non-NULL row should have been exported, got {rows!r}"
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def two_dynamically_proved_columns(self):
     """Both destination terms are reachable only through the dynamic proof
     (each column appears in the source key strictly under a function), and
-    a reject must blame the column that actually splits.
+    a reject must blame the expression that actually splits.
 
     Source ``(toYYYYMM(dt), intDiv(a, 100))`` -> destination ``(dt, a)``:
     a single-day, single-bucket partition accepts; a partition split on
-    ``a`` rejects naming ``column 'a'`` and not ``dt``; a partition split
-    on ``dt`` rejects naming ``column 'dt'`` and not ``a``.
+    ``a`` rejects naming ``expression 'a'`` and not ``dt``; a partition split
+    on ``dt`` rejects naming ``expression 'dt'`` and not ``a``.
     ``three_term_destination_mixed_decisions`` mixes fast-path and dynamic
     terms; this is the dynamic+dynamic counterpart with error attribution.
     """
@@ -1331,11 +1569,11 @@ def two_dynamically_proved_columns(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'a'",
+                "expression 'a'",
             ),
         )
     with And("the error does not blame dt"):
-        assert "column 'dt'" not in result.output, error(result.output)
+        assert "expression 'dt'" not in result.output, error(result.output)
 
     with When("I export the partition that splits on dt"):
         result = assert_export_rejected(
@@ -1346,11 +1584,107 @@ def two_dynamically_proved_columns(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
         )
     with And("the error does not blame a"):
-        assert "column 'a'" not in result.output, error(result.output)
+        assert "expression 'a'" not in result.output, error(result.output)
+
+
+BOOL_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "flag", "type": "Bool"},
+    {"name": "grp", "type": "Int32"},
+]
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def bool_partition_column_subset_accepts(self):
+    """``Bool`` is a hive-supported partition column type and the smallest
+    domain one can have -- two values. Source ``PARTITION BY (flag, grp)``
+    into destination ``PARTITION BY flag`` takes the per-column fast path.
+    Both ``true`` and ``false`` must survive as hive path segments and come
+    back as themselves rather than as 0/1 or as strings.
+    """
+    node = self.context.node
+    with Given("(flag, grp) source RMT and flag-partitioned hive S3 destination"):
+        source_table, destination_table = setup_source_and_hive_destination(
+            src_columns=BOOL_COLUMNS,
+            src_partition_by="(flag, grp)",
+            dst_partition_by="flag",
+        )
+    with And("rows carrying both boolean values"):
+        insert_values(
+            table_name=source_table,
+            values="(1, true, 10), (2, true, 10), (3, false, 20)",
+        )
+
+    with When("I export every source partition"):
+        for partition_id in get_partitions(table_name=source_table, node=node):
+            export_partition_by_id(
+                source_table=source_table,
+                destination_table=destination_table,
+                partition_id=partition_id,
+                node=node,
+            )
+
+    with Then("the destination holds every source row unchanged"):
+        src_rows = select_rows(
+            table_name=source_table, columns="id, flag, grp", order_by="id"
+        )
+        dst_rows = select_rows(
+            table_name=destination_table, columns="id, flag, grp", order_by="id"
+        )
+        assert src_rows == dst_rows, error(
+            f"boolean partition values did not round trip:\n"
+            f"src={src_rows!r}\ndst={dst_rows!r}"
+        )
+    with And("both boolean values are reachable through a pruning predicate"):
+        true_ids = select_rows(
+            table_name=destination_table, columns="id", where="flag", order_by="id"
+        )
+        assert true_ids == "1\n2", error(f"got: {true_ids!r}")
+        false_ids = select_rows(
+            table_name=destination_table, columns="id", where="NOT flag", order_by="id"
+        )
+        assert false_ids == "3", error(f"got: {false_ids!r}")
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def bool_destination_column_not_in_source_key_rejects(self):
+    """A source partition that genuinely holds both boolean values, going
+    into a destination that partitions on them.
+
+    Source ``PARTITION BY grp`` into destination ``PARTITION BY (grp,
+    flag)``: one ``grp`` partition contains ``true`` and ``false``, so it
+    really does map to two destination partitions. The gate rejects it, but
+    on ``column 'flag'`` not being part of the source key rather than on
+    the range proof -- and that is the only way a ``Bool`` split can be
+    reported. A two-value domain admits no non-constant, non-injective
+    function, so any source term mentioning ``flag`` separates ``true``
+    from ``false`` into different source partitions; ``flag`` can never
+    both sit in the source key and span a single source partition. The
+    "spans multiple destination partitions" branch is therefore
+    unreachable for ``Bool``.
+    """
+    with Given("grp-partitioned source RMT and (grp, flag) hive S3 destination"):
+        source_table, destination_table = setup_source_and_hive_destination(
+            src_columns=BOOL_COLUMNS,
+            src_partition_by="grp",
+            dst_partition_by="(grp, flag)",
+        )
+    with And("one source partition holding both boolean values"):
+        insert_values(table_name=source_table, values="(1, true, 10), (2, false, 10)")
+
+    assert_export_rejected(
+        source_table=source_table,
+        destination_table=destination_table,
+        partition_id=get_first_partition_id(table_name=source_table),
+        exitcode=BAD_ARGUMENTS,
+        expected_substrings=("BAD_ARGUMENTS", "column 'flag'"),
+    )
 
 
 # Schemas for the small dynamic-proof edge scenarios below. The explicit
@@ -1368,6 +1702,23 @@ DATETIME_PROOF_COLUMNS = [
 STRING_PROOF_COLUMNS = [
     {"name": "id", "type": "Int64"},
     {"name": "s", "type": "String"},
+]
+# The three types whose stored representation differs from the ones above
+# in a way the min == max comparison could plausibly get wrong:
+# ``DateTime64`` carries sub-second precision, ``Date32`` stores days
+# before 1970 as negative numbers, and ``FixedString`` pads short values
+# out to its declared width.
+DATETIME64_PROOF_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "ts", "type": "DateTime64(3, 'UTC')"},
+]
+DATE32_PROOF_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "dt", "type": "Date32"},
+]
+FIXEDSTRING_PROOF_COLUMNS = [
+    {"name": "id", "type": "Int64"},
+    {"name": "code", "type": "FixedString(5)"},
 ]
 
 
@@ -1421,8 +1772,8 @@ def _check_split_partition_rejects(
 ):
     """Driver for the small dynamic-proof reject scenarios: a source table
     holding exactly one partition that spans several destination partition
-    values; the export must reject naming the offending column, schedule
-    nothing, and write nothing."""
+    values; the export must reject naming the offending destination
+    expression, schedule nothing, and write nothing."""
     with Given(
         f"source RMT PARTITION BY {src_partition_by} and "
         f"hive S3 destination PARTITION BY {dst_partition_by}"
@@ -1444,7 +1795,7 @@ def _check_split_partition_rejects(
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                f"column '{offending_column}'",
+                f"expression '{offending_column}'",
             ),
             node=node,
         )
@@ -1547,7 +1898,7 @@ def datetime_full_day_span_rejects(self):
     """Dynamic proof reject spanning an entire day at the epoch: the
     day partition holds 00:00:00 (stored value 0) and 23:59:59 -- both
     endpoints of the day boundary -- so it maps to two destination
-    partitions and must reject on ``column 'ts'``."""
+    partitions and must reject on ``expression 'ts'``."""
     _check_split_partition_rejects(
         columns=DATETIME_PROOF_COLUMNS,
         src_partition_by="toDate(ts)",
@@ -1600,7 +1951,7 @@ def string_split_behind_shared_prefix_rejects(self):
     """The String dynamic proof reject: two values behind the same
     source-key prefix ('banana', 'berry' under ``substring(s, 1, 1)``)
     land in one source partition but two destination partitions, so the
-    export must reject naming ``column 's'``."""
+    export must reject naming ``expression 's'``."""
     _check_split_partition_rejects(
         columns=STRING_PROOF_COLUMNS,
         src_partition_by="substring(s, 1, 1)",
@@ -1613,16 +1964,134 @@ def string_split_behind_shared_prefix_rejects(self):
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def datetime64_subsecond_single_valued_accepts(self):
+    """The dynamic proof over ``DateTime64``, whose stored value carries
+    sub-second precision the other temporal types do not have. A partition
+    whose rows share one instant down to the millisecond must accept, and
+    the milliseconds must survive the hive path and Parquet round trip."""
+    _check_single_valued_partition_accepts(
+        columns=DATETIME64_PROOF_COLUMNS,
+        src_partition_by="toDate(ts)",
+        dst_partition_by="ts",
+        values="(1, '2024-03-05 12:00:00.123'), (2, '2024-03-05 12:00:00.123')",
+        select_columns="id, ts",
+        expected_rows="1\t2024-03-05 12:00:00.123\n2\t2024-03-05 12:00:00.123",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def datetime64_subsecond_split_rejects(self):
+    """The smallest split ``DateTime64`` admits: two rows one millisecond
+    apart. They share a ``toDate(ts)`` source partition but are two
+    distinct destination partition values, so the proof must reject on
+    ``expression 'ts'``. If the min/max comparison were made at second
+    granularity these two rows would look identical and the export would
+    be wrongly accepted."""
+    _check_split_partition_rejects(
+        columns=DATETIME64_PROOF_COLUMNS,
+        src_partition_by="toDate(ts)",
+        dst_partition_by="ts",
+        values="(1, '2024-03-05 12:00:00.123'), (2, '2024-03-05 12:00:00.124')",
+        offending_column="ts",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def date32_negative_day_accepts(self):
+    """``Date32`` stores days before 1970 as negative numbers, a range
+    ``Date`` cannot represent at all -- ``date_epoch_day_accepts`` pins the
+    stored zero, this pins the other side of it. A partition holding one
+    pre-epoch day must accept and read back unchanged."""
+    _check_single_valued_partition_accepts(
+        columns=DATE32_PROOF_COLUMNS,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+        values="(1, '1950-06-15'), (2, '1950-06-15')",
+        select_columns="id, dt",
+        expected_rows="1\t1950-06-15\n2\t1950-06-15",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def date32_negative_day_split_rejects(self):
+    """The ``Date32`` reject with both endpoints negative: a pre-epoch
+    month spanning two days. ``min < max`` has to hold in the negative
+    range too, where a comparison done on the unsigned representation
+    would order the two days backwards."""
+    _check_split_partition_rejects(
+        columns=DATE32_PROOF_COLUMNS,
+        src_partition_by="toYYYYMM(dt)",
+        dst_partition_by="dt",
+        values="(1, '1950-06-05'), (2, '1950-06-20')",
+        offending_column="dt",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def fixedstring_single_valued_partition_accepts(self):
+    """The dynamic proof over ``FixedString``. Like ``String`` it only
+    reaches the destination key as a bare source term everywhere else in
+    this suite, so ``substring(code, 1, 1)`` forces the comparison to run.
+    The values here fill the declared width exactly, so no padding is
+    involved and the round trip is exact."""
+    _check_single_valued_partition_accepts(
+        columns=FIXEDSTRING_PROOF_COLUMNS,
+        src_partition_by="substring(code, 1, 1)",
+        dst_partition_by="code",
+        values="(1, 'apple'), (2, 'apple')",
+        select_columns="id, code",
+        expected_rows="1\tapple\n2\tapple",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
+def fixedstring_padding_split_rejects(self):
+    """``FixedString`` reject where the two values differ **only inside the
+    padding**: 'ab' and 'abc' are both stored padded out to 5 bytes, share
+    the ``substring(code, 1, 1)`` source partition, and differ from the
+    third byte on. A min/max comparison that stopped at the shorter value's
+    length would call these equal and wrongly accept the export."""
+    _check_split_partition_rejects(
+        columns=FIXEDSTRING_PROOF_COLUMNS,
+        src_partition_by="substring(code, 1, 1)",
+        dst_partition_by="code",
+        values="(1, 'ab'), (2, 'abc')",
+        offending_column="code",
+        node=self.context.node,
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("2.0"))
 def hostile_partition_values_round_trip(self):
     """Values that stress the hive path encoding, on a key pair only this
     feature accepts (subset fast path: source ``(a, s)`` -> destination
     ``s``, so the string value becomes a hive path segment written by the
-    export code): a space, unicode, dots/dashes, and an embedded ``=``
-    (ambiguous against hive's own ``key=value`` separator). Every value
-    must survive export, read back on a full scan, and be reachable
-    through a partition-pruning predicate."""
+    export code): a space, unicode, dots/dashes, an embedded ``=``
+    (ambiguous against hive's own ``key=value`` separator), and the empty
+    string. Every value must survive export, read back on a full scan, and
+    be reachable through a partition-pruning predicate.
+
+    The empty string is the one value with no natural path segment at all:
+    hive's convention is to substitute a sentinel directory name
+    (``__HIVE_DEFAULT_PARTITION__``) rather than emit ``s=/``. Whatever the
+    export writes, the round trip has to bring back ``''`` and not the
+    sentinel text, and ``WHERE s = ''`` has to prune to it -- otherwise an
+    empty partition value is silently readable as a literal
+    ``__HIVE_DEFAULT_PARTITION__`` string, or lost.
+    """
     node = self.context.node
-    hostile_values = ["plain", "has space", "año_2024", "v1.2-rc", "k=v"]
+    hostile_values = ["plain", "has space", "año_2024", "v1.2-rc", "k=v", ""]
     columns = [
         {"name": "id", "type": "Int64"},
         {"name": "a", "type": "Int32"},
@@ -1713,7 +2182,7 @@ def gate_is_replica_independent(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
             node=replica,
         )
@@ -1772,7 +2241,7 @@ def reject_recovered_by_dropping_offending_part(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
         )
 
@@ -1831,7 +2300,7 @@ def reject_recovered_by_delete_and_rewrite(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
         )
 
@@ -1849,7 +2318,7 @@ def reject_recovered_by_delete_and_rewrite(self):
             expected_substrings=(
                 "BAD_ARGUMENTS",
                 "multiple destination partitions",
-                "column 'dt'",
+                "expression 'dt'",
             ),
         )
 
@@ -2064,6 +2533,8 @@ def gate_decisions(self):
     Scenario(run=multi_part_partition_reject)
     Scenario(run=three_term_destination_mixed_decisions)
     Scenario(run=two_dynamically_proved_columns)
+    Scenario(run=bool_partition_column_subset_accepts)
+    Scenario(run=bool_destination_column_not_in_source_key_rejects)
     Scenario(run=export_partition_all_gate_is_atomic)
     Scenario(run=gate_is_replica_independent)
 
@@ -2072,11 +2543,11 @@ def gate_decisions(self):
 def dynamic_proof_value_edges(self):
     """Small targeted checks of the dynamic proof at the edges of the
     value domains it compares: ``Date`` and ``DateTime`` at their epoch
-    and type-maximum boundaries, and String -- a column type that
-    everywhere else in this suite only reaches the destination key
-    through the structural fast path. One scenario per value edge, each
-    with its own tables, so a failure at one edge does not mask the
-    others."""
+    and type-maximum boundaries, ``Date32`` below the epoch, ``DateTime64``
+    at millisecond granularity, and the two string types -- which
+    everywhere else in this suite only reach the destination key through
+    the structural fast path. One scenario per value edge, each with its
+    own tables, so a failure at one edge does not mask the others."""
     Scenario(run=date_epoch_day_accepts)
     Scenario(run=date_maximum_day_accepts)
     Scenario(run=date_split_partition_at_epoch_rejects)
@@ -2086,16 +2557,23 @@ def dynamic_proof_value_edges(self):
     Scenario(run=string_single_valued_partition_accepts)
     Scenario(run=string_unicode_partition_accepts)
     Scenario(run=string_split_behind_shared_prefix_rejects)
+    Scenario(run=datetime64_subsecond_single_valued_accepts)
+    Scenario(run=datetime64_subsecond_split_rejects)
+    Scenario(run=date32_negative_day_accepts)
+    Scenario(run=date32_negative_day_split_rejects)
+    Scenario(run=fixedstring_single_valued_partition_accepts)
+    Scenario(run=fixedstring_padding_split_rejects)
 
 
 @TestSuite
 def gate_rejects(self):
-    """Name-based gate corner cases and non-bare destination partition
-    keys: case sensitivity, renamed payload columns, and algebraically-
-    equivalent expressions."""
+    """Rejects that fire before or beside the #2074 name-based gate:
+    partition-key column rename/case mismatch (layout check), algebraically
+    equivalent expressions, and a constant destination key."""
     Scenario(run=partition_key_case_sensitivity)
     Scenario(run=payload_column_name_mismatch)
     Scenario(run=algebraically_equivalent_partition_expression)
+    Scenario(run=constant_destination_partition_expression)
 
 
 @TestSuite
@@ -2106,6 +2584,8 @@ def gate_and_schema_guard(self):
     Scenario(run=schema_guard_runs_before_the_gate)
     Scenario(run=widened_type_on_dynamically_proved_partition_column)
     Scenario(run=lossy_cast_on_dynamically_proved_partition_column)
+    Scenario(run=overflowing_narrowing_cast_on_partition_column)
+    Scenario(run=nullable_source_partition_column)
 
 
 @TestSuite
@@ -2122,9 +2602,10 @@ def data_integrity_round_trip(self):
 
 @TestSuite
 def positional_cast_hazards(self):
-    """Name-based partition-key gate + positional payload CAST can
-    silently corrupt data when schema positions disagree, on key pairs
-    that only this feature accepts."""
+    """A source partition-key column that has moved or been renamed relative
+    to the destination schema is rejected by the name-and-position layout
+    check, so positional payload CAST cannot silently bind the wrong
+    column."""
     Scenario(run=swapped_same_type_columns_positional_cast)
     Scenario(run=swap_under_multi_part_and_export_all)
 

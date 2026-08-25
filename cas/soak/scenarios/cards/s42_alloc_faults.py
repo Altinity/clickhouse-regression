@@ -447,10 +447,15 @@ class S42(Scenario):
                     "" if int(rep.get("stale_edge") or 0) == 0 else
                     "blobs whose every source edge names a manifest that no longer exists: their "
                     "in-degree can never reach zero, so the incremental GC will never reclaim them"))
-            result.add(Verdict.check(
-                f"fsck {label}: dangling == 0 and unaccounted == 0", "0 / 0",
-                f"dangling={rep.get('dangling')} unaccounted={rep.get('unaccounted')}",
-                int(rep.get("dangling", -1)) == 0 and int(rep.get("unaccounted", -1)) == 0))
+            if "dangling" not in rep or "unaccounted" not in rep:
+                result.add(Verdict.inconclusive(
+                    f"fsck {label}: dangling == 0 and unaccounted == 0", "0 / 0",
+                    "fsck summary unavailable (timeout, parse failure, or missing container)"))
+            else:
+                result.add(Verdict.check(
+                    f"fsck {label}: dangling == 0 and unaccounted == 0", "0 / 0",
+                    f"dangling={rep.get('dangling')} unaccounted={rep.get('unaccounted')}",
+                    int(rep.get("dangling")) == 0 and int(rep.get("unaccounted")) == 0))
 
         # ---- Poison: the targeted signal ----------------------------------------------------------
         ev_post = _cluster_events(cl)

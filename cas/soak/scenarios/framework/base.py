@@ -72,6 +72,7 @@ class Scenario:
     # Behavioral flags.
     abandons: bool = False             # deliberately leaves unreachable objects (relaxes leftover check)
     expect_exception: bool = False     # negative test: an `exception` CA-log row is allowed
+    allow_gc_failed: bool = False      # injected faults/chaos make GC Error finish rows expected
     requires_stack_attribution: bool = False   # enable trace_log etc. (advisory; config is static here)
     compose_variant = None             # None | "gc_shards2"
     needs_infra: str | None = None     # non-None => scenario cannot run with current infra (inconclusive)

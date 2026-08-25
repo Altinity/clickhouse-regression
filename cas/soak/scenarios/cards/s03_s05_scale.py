@@ -101,13 +101,12 @@ class S03(Scenario):
         try:
             pre = lifecycle.fsck_summary()
             result.observations["prefill_fsck"] = pre
-            ok = int(pre.get("dangling", 0)) == 0
-            result.add(Verdict.check("prefill pool valid", "fsck dangling==0 before measured phase",
-                                     pre.get("dangling"), ok))
         except Exception as e:
-            result.add(Verdict.inconclusive("prefill pool valid",
-                                            "fsck dangling==0 before measured phase",
-                                            f"prefill fsck failed: {e}"))
+            pre = {"error": str(e)}
+            result.observations["prefill_fsck"] = pre
+        assertions_mod.assert_fsck_clean(
+            result, pre, name="prefill pool valid",
+            expected="fsck dangling==0 before measured phase")
 
         pool_pre = observe.pool_shape(timeout_s=120)
         result.observations["pool_after_prefill"] = pool_pre.get("_total")
@@ -230,21 +229,28 @@ class S03(Scenario):
         _common.assert_replicas_agree(result, cl, sql.table_checksum_query(table),
                                       name="S03 replica agreement")
         end = _common.standard_end(ctx, result, [table])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("live pool retained after idle GC",
-                                 "fsck dangling==0 (live blobs not deleted by idle GC)",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"),
+            name="live pool retained after idle GC",
+            expected="fsck dangling==0 (live blobs not deleted by idle GC)")
+        dangling = assertions_mod._fsck_count(end.get("fsck_final"), "dangling")
 
         # Combine the isolated idle-round CASGCGet reading above with this checkpoint's fsck
         # dangling==0 into the Phase 4 Lever A ops-budget acceptance check (spec §9).
-        ok_idle_budget = idle_round_cas_gc_get < 50 and dangling == 0
-        result.add(Verdict.check(
-            "idle GC round ops budget (Phase 4 Lever A skip-unchanged)",
-            "CASGCGet < 50 for an idle round (pre-fix ~1362; BACKLOG S3-BUDGET) and fsck dangling == 0",
-            f"CASGCGet={idle_round_cas_gc_get} dangling={dangling}", ok_idle_budget,
-            "" if ok_idle_budget else
-            "idle round re-read the generation in full (CASGCGet not near-zero) or left dangling refs "
-            "— the DEFER short-circuit may have regressed (see BACKLOG S3-BUDGET — idle GC)"))
+        if dangling is None:
+            result.add(Verdict.inconclusive(
+                "idle GC round ops budget (Phase 4 Lever A skip-unchanged)",
+                "CASGCGet < 50 for an idle round (pre-fix ~1362; BACKLOG S3-BUDGET) and fsck dangling == 0",
+                "fsck dangling unavailable — cannot combine with CASGCGet"))
+        else:
+            ok_idle_budget = idle_round_cas_gc_get < 50 and dangling == 0
+            result.add(Verdict.check(
+                "idle GC round ops budget (Phase 4 Lever A skip-unchanged)",
+                "CASGCGet < 50 for an idle round (pre-fix ~1362; BACKLOG S3-BUDGET) and fsck dangling == 0",
+                f"CASGCGet={idle_round_cas_gc_get} dangling={dangling}", ok_idle_budget,
+                "" if ok_idle_budget else
+                "idle round re-read the generation in full (CASGCGet not near-zero) or left dangling refs "
+                "— the DEFER short-circuit may have regressed (see BACKLOG S3-BUDGET — idle GC)"))
 
 
 # ---------------------------------------------------------------------------
@@ -303,11 +309,11 @@ class S04(Scenario):
         try:
             pre = lifecycle.fsck_summary()
             result.observations["prefill_fsck"] = pre
-            result.add(Verdict.check("prefill pool valid", "fsck dangling==0 before drain",
-                                     pre.get("dangling"), int(pre.get("dangling", 0)) == 0))
         except Exception as e:
-            result.add(Verdict.inconclusive("prefill pool valid", "fsck dangling==0 before drain",
-                                            f"prefill fsck failed: {e}"))
+            pre = {"error": str(e)}
+            result.observations["prefill_fsck"] = pre
+        assertions_mod.assert_fsck_clean(
+            result, pre, name="prefill pool valid", expected="fsck dangling==0 before drain")
         pool_pre = observe.pool_shape(timeout_s=180)
         result.observations["pool_before_drain"] = pool_pre.get("_total")
 
@@ -321,14 +327,15 @@ class S04(Scenario):
         try:
             after_drop = lifecycle.fsck_summary()
             result.observations["fsck_after_drop"] = after_drop
-            result.add(Verdict.check("drop created unreachable backlog",
-                                     "unreachable > 0 after dropping tables",
-                                     after_drop.get("unreachable"),
-                                     int(after_drop.get("unreachable", 0)) > 0))
         except Exception as e:
-            result.add(Verdict.inconclusive("drop created unreachable backlog",
-                                            "unreachable > 0 after dropping tables",
-                                            f"post-drop fsck failed: {e}"))
+            after_drop = {"error": str(e)}
+            result.observations["fsck_after_drop"] = after_drop
+        assertions_mod.assert_fsck_count(
+            result, after_drop, "unreachable",
+            name="drop created unreachable backlog",
+            expected="unreachable > 0 after dropping tables",
+            ok_fn=lambda n: n > 0,
+            fail_note="drop did not produce an unreachable backlog")
 
         # --- drive explicit GC to fixpoint, sampling memory + per-round drain --------------
         smp = sampler_mod.MetricsSampler(sampler_mod.open_db(ctx.path("metrics.sqlite")), cl,
@@ -409,9 +416,8 @@ class S04(Scenario):
                                           sql.table_checksum_query(keep_tables[0]),
                                           name="S04 surviving-table replica agreement")
         end = _common.standard_end(ctx, result, keep_tables)
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after drain", "fsck dangling==0",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"), name="no dangling after drain")
 
         # Drain-to-zero: assert on the CONVERGED end-checkpoint residual (B1) and only
         # RECLAIMABLE prefixes (B2). The mid-run `drain_residual_unreachable` above is recorded as
@@ -480,12 +486,12 @@ class S05(Scenario):
         try:
             pre = lifecycle.fsck_summary()
             result.observations["prefill_fsck"] = pre
-            result.add(Verdict.check("prefill pool valid", "fsck dangling==0 before measured phase",
-                                     pre.get("dangling"), int(pre.get("dangling", 0)) == 0))
         except Exception as e:
-            result.add(Verdict.inconclusive("prefill pool valid",
-                                            "fsck dangling==0 before measured phase",
-                                            f"prefill fsck failed: {e}"))
+            pre = {"error": str(e)}
+            result.observations["prefill_fsck"] = pre
+        assertions_mod.assert_fsck_clean(
+            result, pre, name="prefill pool valid",
+            expected="fsck dangling==0 before measured phase")
 
         # --- measured phase: write only the active subset, GC each "minute" -----------------
         smp = sampler_mod.MetricsSampler(sampler_mod.open_db(ctx.path("metrics.sqlite")), cl,
@@ -591,9 +597,8 @@ class S05(Scenario):
         # Pass a SHORT tables list (active only) + table_filter so quiescence scopes to s05_* without
         # SYNC/OPTIMIZE'ing all 10000 tables individually.
         end = _common.standard_end(ctx, result, active, table_filter=table_filter)
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling with many tables", "fsck dangling==0",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"), name="no dangling with many tables")
 
         # Assert reclaimable content drained to 0 (B2/B3). Raw unreachable may include "other"
         # bookkeeping from the S30 monotone-registry growth (200+ create/drop create permanent root

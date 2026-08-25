@@ -1593,7 +1593,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending column.\n"
+        "[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending destination column or expression.\n"
         "\n"
         "For a plain (hive) object-storage destination, [ClickHouse] SHALL accept an export when any of the following holds for every destination partition term:\n"
         "\n"
@@ -1606,7 +1606,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey = Requirement(
         "\n"
         "* the offending destination column when it is not part of the source partition key,\n"
         "* the `Nullable` partition column when a `NULL` might form its own destination partition without a structural match,\n"
-        "* the column that spans multiple destination partitions when the dynamic proof fails.\n"
+        "* the destination expression that spans multiple destination partitions when the dynamic proof fails.\n"
         "\n"
         "The rejection SHALL be synchronous - `system.replicated_partition_exports` MUST NOT contain a row for the rejected `(source, destination, partition)` triple.\n"
         "\n"
@@ -3641,7 +3641,7 @@ SETTINGS allow_experimental_export_merge_tree_part = 1
 #### RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey
 version: 2.0
 
-[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending column.
+[ClickHouse] SHALL validate that each exported source partition maps to a single destination partition for the destination `PARTITION BY`, running the check synchronously while scheduling the export (before any data is written to object storage or the export is recorded in ZooKeeper), and rejecting incompatible cases with a `BAD_ARGUMENTS` exception (error code 36) whose message names the offending destination column or expression.
 
 For a plain (hive) object-storage destination, [ClickHouse] SHALL accept an export when any of the following holds for every destination partition term:
 
@@ -3654,7 +3654,7 @@ For a plain (hive) object-storage destination, [ClickHouse] SHALL accept an expo
 
 * the offending destination column when it is not part of the source partition key,
 * the `Nullable` partition column when a `NULL` might form its own destination partition without a structural match,
-* the column that spans multiple destination partitions when the dynamic proof fails.
+* the destination expression that spans multiple destination partitions when the dynamic proof fails.
 
 The rejection SHALL be synchronous - `system.replicated_partition_exports` MUST NOT contain a row for the rejected `(source, destination, partition)` triple.
 

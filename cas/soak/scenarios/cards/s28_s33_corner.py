@@ -532,11 +532,11 @@ class S31(Scenario):
         try:
             pre = lifecycle.fsck_summary()
             result.observations["prefill_fsck"] = pre
-            result.add(Verdict.check("prefill pool valid", "fsck dangling==0 before drop",
-                                     pre.get("dangling"), int(pre.get("dangling", 0)) == 0))
         except Exception as e:
-            result.add(Verdict.inconclusive("prefill pool valid", "fsck dangling==0 before drop",
-                                            f"prefill fsck failed: {e}"))
+            pre = {"error": str(e)}
+            result.observations["prefill_fsck"] = pre
+        assertions_mod.assert_fsck_clean(
+            result, pre, name="prefill pool valid", expected="fsck dangling==0 before drop")
 
         pool_before = observe.pool_shape(timeout_s=180)
         blobs_before = pool_before["blobs"]["objects"] if pool_before.get("_ok") else None
@@ -725,9 +725,8 @@ class S32(Scenario):
         result.observations["pool_after_ttl"] = pool_after.get("_total") if pool_after.get("_ok") else None
 
         end = _common.standard_end(ctx, result, [table])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after TTL reclaim", "fsck dangling==0",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"), name="no dangling after TTL reclaim")
 
         # Expired-content reclaim: assert on the CONVERGED end-checkpoint residual (B1) and only
         # RECLAIMABLE prefixes (B2). Mid-run snapshots can be transiently >0 under concurrent GC.
@@ -821,14 +820,15 @@ class S33(Scenario):
         try:
             after_drop = lifecycle.fsck_summary()
             result.observations["fsck_after_drop"] = after_drop
-            result.add(Verdict.check("drop created unreachable backlog",
-                                     "unreachable > 0 after dropping all tables",
-                                     after_drop.get("unreachable"),
-                                     int(after_drop.get("unreachable", 0)) > 0))
         except Exception as e:
-            result.add(Verdict.inconclusive("drop created unreachable backlog",
-                                            "unreachable > 0 after dropping all tables",
-                                            f"post-drop fsck failed: {e}"))
+            after_drop = {"error": str(e)}
+            result.observations["fsck_after_drop"] = after_drop
+        assertions_mod.assert_fsck_count(
+            result, after_drop, "unreachable",
+            name="drop created unreachable backlog",
+            expected="unreachable > 0 after dropping all tables",
+            ok_fn=lambda n: n > 0,
+            fail_note="drop did not produce an unreachable backlog")
 
         # --- DELIBERATELY drive concurrent explicit GC on BOTH replicas at once --------------
         # This is the one place in the suite where we manufacture the concurrent-leader collision

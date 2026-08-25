@@ -16,6 +16,33 @@ SOAK_ROOT = Path(__file__).resolve().parent
 SOAK_REQUIREMENTS = SOAK_ROOT / "requirements.txt"
 
 
+def _ensure_soak_requirements():
+    """Install cas/soak/requirements.txt (zstandard for S38/S43, boto3, pytest, …)."""
+    req = SOAK_REQUIREMENTS
+    if not req.is_file():
+        return
+    probe = subprocess.run(
+        [sys.executable, "-c", "import zstandard, boto3, pytest"],
+        capture_output=True, text=True,
+    )
+    if probe.returncode == 0:
+        return
+    with By("installing cas/soak requirements"):
+        last = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "-r", str(req)],
+            capture_output=True, text=True,
+        )
+        if last.returncode != 0:
+            last = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "--user", "--break-system-packages",
+                 "-r", str(req)],
+                capture_output=True, text=True,
+            )
+        assert last.returncode == 0, error(
+            f"pip install -r {req} failed:\n{last.stdout}\n{last.stderr}"
+        )
+
+
 def _ensure_pytest():
     """Install pytest if it is not importable in this interpreter."""
     probe = subprocess.run(
@@ -81,6 +108,7 @@ def _shell_cmd(argv, timeout):
 @TestStep(When)
 def run_pytest_unit_tests(self):
     """Run soak harness unit tests (no live cluster)."""
+    _ensure_soak_requirements()
     _ensure_pytest()
     _shell_cmd(
         [
@@ -116,6 +144,7 @@ def run_soak_phase(self, phase: int, seed: int, extra_args=None):
 @TestStep(When)
 def run_scenarios(self, scenario: str, seed: int, duration: str, scale: str, extra_args=None):
     """Run the adversarial scenario suite (may bring its own compose variants)."""
+    _ensure_soak_requirements()
     _shell_cmd(
         [
             sys.executable,

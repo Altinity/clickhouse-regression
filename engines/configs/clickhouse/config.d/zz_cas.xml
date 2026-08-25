@@ -8,6 +8,6 @@
     `MetadataStorageFactory: unknown metadata storage type: cas`.
 
     This file is filled in by engines/cas_mode.py when the suite is started with
-    the `cas` option and reset back to this placeholder afterwards.
+    the cas or cas-s3-cache option and reset back to this placeholder afterwards.
     -->
 </clickhouse>

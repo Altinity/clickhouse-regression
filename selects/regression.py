@@ -11,6 +11,7 @@ from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import *
 
 from selects.requirements import *
+from helpers.cas_storage import add_cas_arguments
 from selects.cas_mode import (
     enable_cas_default_storage,
     reset_cas_config,
@@ -19,12 +20,9 @@ from selects.cas_mode import (
 
 def argparser(parser):
     argparser_base(parser)
-    parser.add_argument(
-        "--cas",
-        action="store_true",
-        default=False,
-        dest="use_cas",
-        help="use content-addressed storage as the default MergeTree disk",
+    add_cas_arguments(
+        parser,
+        cas_help="use content-addressed storage as the default MergeTree disk",
     )
 
 xfails = {
@@ -188,6 +186,7 @@ def regression(
     stress=None,
     with_analyzer=False,
     use_cas=False,
+    use_cas_s3_cache=False,
 ):
     """ClickHouse SELECT query regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -199,9 +198,13 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    if use_cas:
-        with Given("content-addressed storage as the default MergeTree disk"):
-            enable_cas_default_storage()
+    if use_cas_s3_cache or use_cas:
+        with Given(
+            "content-addressed storage with an S3 cache disk as the default MergeTree disk"
+            if use_cas_s3_cache
+            else "content-addressed storage as the default MergeTree disk"
+        ):
+            enable_cas_default_storage(s3_cache=use_cas_s3_cache)
     else:
         with Given("no content-addressed storage configuration"):
             reset_cas_config()

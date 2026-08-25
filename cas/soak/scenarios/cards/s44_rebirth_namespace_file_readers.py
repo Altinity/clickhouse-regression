@@ -152,7 +152,8 @@ class S44(Scenario):
         fsck = None
         try:
             from soak import fsck as fsck_mod
-            fsck = fsck_mod.run_fsck("ca-soak-ch1-1", disk="ca_ro", detail=False)
+            from ..framework.lifecycle import fsck_container
+            fsck = fsck_mod.run_fsck(fsck_container(), disk="ca_ro", detail=False)
         except Exception as e:
             ctx.log(f"S44: final fsck raised: {e}")
         if fsck is not None:

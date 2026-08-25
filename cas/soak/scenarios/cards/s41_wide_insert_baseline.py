@@ -21,11 +21,8 @@ with % attribution from trace_log; (c) is single-threaded blob upload the domina
 the HEAD-before-PUT dedup-gate share; (e) the S3 op budget (PUT/HEAD/GET per part and per GiB).
 
 ISOLATION: this card runs on the isolated single-node `ca-s41` compose project (compose_variant
-"s41"). On a host where the shared `ca-soak` soak stack is running, it MUST be driven with
-`--no-reset` against a pre-brought-up `ca-s41` stack, with the framework pointed at it via env
-(CA_SOAK_NODE_COUNT=1, CA_SOAK_NODE1_PORT=18123, CA_SOAK_NODE1_CONTAINER=ca-s41-ch1-1,
-CA_SOAK_RUSTFS_CONTAINER=ca-s41-rustfs1-1, CA_SOAK_CH_CONTAINERS=ca-s41-ch1-1,
-CA_SOAK_FSCK_CONTAINER=ca-s41-ch1-1). See docker-compose-s41.yml / configs/storage_conf_s41.xml.
+"s41"). The runner binds CA_SOAK_* (port 18123, containers `ca-s41-*`) for the duration of the
+card and tears down only project `ca-s41`, so a live `ca-soak` stack on 8123/8124 is left alone.
 """
 
 import time
@@ -443,9 +440,8 @@ class S41(Scenario):
         except Exception as e:
             ctx.log(f"S41: drop s41_plain failed (non-fatal): {e}")
         end = _common.standard_end(ctx, result, ["s41_ca"])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after wide insert", "fsck dangling==0",
-                                 dangling, dangling == 0))
+        _common.assert_dangling_zero(
+            result, end.get("fsck_final"), name="no dangling after wide insert")
 
     # -- verdicts / diagnosis ----------------------------------------------------------------------
     def _verdicts(self, ctx, result, plain, ca, rows):

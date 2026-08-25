@@ -85,6 +85,18 @@ def argparser(parser):
         help="Scenario scale profile",
     )
     parser.add_argument(
+        "--max-pool-gb",
+        type=float,
+        default=40.0,
+        help="Scenario suite: INCONCLUSIVE+continue a card if the RustFS pool exceeds this many GB",
+    )
+    parser.add_argument(
+        "--min-free-disk-gb",
+        type=float,
+        default=25.0,
+        help="Scenario suite: INCONCLUSIVE+continue a card if host free space on / drops below this",
+    )
+    parser.add_argument(
         "--skip-cluster",
         action="store_true",
         help="Skip helpers.cluster bring-up (unit tests only, or external cluster via CA_SOAK_*)",
@@ -189,6 +201,8 @@ def regression(
     scenario_duration="15m",
     scenario_scale="ci",
     skip_cluster=False,
+    max_pool_gb=40.0,
+    min_free_disk_gb=25.0,
 ):
     """Run the CAS soak harness as a separate suite under cas/soak."""
     suites = _parse_suites(suite)
@@ -235,6 +249,10 @@ def regression(
             seed=seed,
             duration=scenario_duration,
             scale=scenario_scale,
+            extra_args=[
+                "--max-pool-gb", str(max_pool_gb),
+                "--min-free-disk-gb", str(min_free_disk_gb),
+            ],
         )
 
 

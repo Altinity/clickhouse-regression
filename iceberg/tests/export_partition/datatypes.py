@@ -14,10 +14,14 @@ ClickHouse -> Iceberg primitive mapping exercised here:
 ``timestamp``; ``Time`` -> ``time``; ``String`` -> ``string``; ``UUID``
 -> ``uuid``; ``Tuple`` -> ``struct``; ``Array(T)`` -> ``list``;
 ``Map(K, V)`` -> ``map``; ``Array(Array(T))`` -> nested Iceberg ``list``;
-``Nullable(T)`` -> required=false. Types
-absent from the switch (``Int8`` / ``UInt8`` / ``Bool`` /
-``FixedString`` / ``Decimal`` / ``Enum8`` / ``LowCardinality(String)``)
-power the ``rejected_*`` scenarios.
+``Nullable(T)`` -> required=false.
+
+From 26.6 (Altinity/ClickHouse#2157) the switch also maps ``Int8`` /
+``UInt8`` -> ``int``, ``Bool`` -> ``boolean``, and ``Decimal(p, s)`` with
+``p <= 38`` -> ``decimal(p, s)``. Those types remain rejected on older
+builds (gated in ``iceberg/regression.py``). Types still absent from the
+switch (``FixedString`` / ``Decimal`` with ``p > 38`` / ``Enum8`` /
+``LowCardinality(String)``) power the always-on ``rejected_*`` scenarios.
 """
 
 from testflows.core import *
@@ -253,6 +257,70 @@ def _run_rejected_type(
 # ---------------------------------------------------------------------------
 # Accepted primitives
 # ---------------------------------------------------------------------------
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
+@Name("accepted: Int8")
+def accepted_int8(self, minio_root_user, minio_root_password):
+    """ClickHouse Int8 -> Iceberg int (required). Added in
+    Altinity/ClickHouse#2157.
+    """
+    _run_accepted_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Int8",
+        values="(1, 2020, -128), (2, 2020, 0), (3, 2020, 127)",
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
+@Name("accepted: UInt8")
+def accepted_uint8(self, minio_root_user, minio_root_password):
+    """ClickHouse UInt8 -> Iceberg int (required). Added in
+    Altinity/ClickHouse#2157.
+    """
+    _run_accepted_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v UInt8",
+        values="(1, 2020, 0), (2, 2020, 1), (3, 2020, 255)",
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
+@Name("accepted: Bool")
+def accepted_bool(self, minio_root_user, minio_root_password):
+    """ClickHouse Bool -> Iceberg boolean (required). Added in
+    Altinity/ClickHouse#2157 (``UInt8`` + ``isBool``).
+    """
+    _run_accepted_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Bool",
+        values="(1, 2020, true), (2, 2020, false), (3, 2020, true)",
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
+@Name("accepted: Decimal(10, 2)")
+def accepted_decimal(self, minio_root_user, minio_root_password):
+    """ClickHouse Decimal(10, 2) -> Iceberg decimal(10, 2). Added in
+    Altinity/ClickHouse#2157.
+    """
+    _run_accepted_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Decimal(10, 2)",
+        values="(1, 2020, 1.23), (2, 2020, -4.56), (3, 2020, 9999.99)",
+    )
 
 
 @TestScenario
@@ -648,7 +716,9 @@ def accepted_tuple(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: Int8")
 def rejected_int8(self, minio_root_user, minio_root_password):
-    """``Int8`` is not handled by ``getIcebergType`` — must be rejected."""
+    """``Int8`` is not handled by ``getIcebergType`` before 26.6 — must be
+    rejected. Mapped to Iceberg ``int`` from 26.6 (Altinity/ClickHouse#2157).
+    """
     _run_rejected_type(
         self,
         minio_root_user=minio_root_user,
@@ -662,7 +732,9 @@ def rejected_int8(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: UInt8")
 def rejected_uint8(self, minio_root_user, minio_root_password):
-    """``UInt8`` is not handled by ``getIcebergType`` — must be rejected."""
+    """``UInt8`` is not handled by ``getIcebergType`` before 26.6 — must be
+    rejected. Mapped to Iceberg ``int`` from 26.6 (Altinity/ClickHouse#2157).
+    """
     _run_rejected_type(
         self,
         minio_root_user=minio_root_user,
@@ -676,8 +748,9 @@ def rejected_uint8(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: Bool")
 def rejected_bool(self, minio_root_user, minio_root_password):
-    """``Bool`` is not handled by ``getIcebergType`` — must be rejected
-    (Iceberg has ``boolean``, so this is a known mapping gap).
+    """``Bool`` is not handled by ``getIcebergType`` before 26.6 — must be
+    rejected. Mapped to Iceberg ``boolean`` from 26.6
+    (Altinity/ClickHouse#2157).
     """
     _run_rejected_type(
         self,
@@ -685,6 +758,23 @@ def rejected_bool(self, minio_root_user, minio_root_password):
         minio_root_password=minio_root_password,
         value_column="v Bool",
         values="(1, 2020, true), (2, 2020, false), (3, 2020, true)",
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
+@Name("rejected: Decimal(10, 2)")
+def rejected_decimal(self, minio_root_user, minio_root_password):
+    """``Decimal`` is not handled by ``getIcebergType`` before 26.6 — must
+    be rejected. Mapped to Iceberg ``decimal(p, s)`` from 26.6 when
+    ``p <= 38`` (Altinity/ClickHouse#2157).
+    """
+    _run_rejected_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Decimal(10, 2)",
+        values="(1, 2020, 1.23), (2, 2020, -4.56), (3, 2020, 9999.99)",
     )
 
 
@@ -708,16 +798,16 @@ def rejected_fixed_string(self, minio_root_user, minio_root_password):
 
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
-@Name("rejected: Decimal(10, 2)")
-def rejected_decimal(self, minio_root_user, minio_root_password):
-    """``Decimal`` is not handled by ``getIcebergType`` — must be rejected
-    (Iceberg has ``decimal``, so this is another known mapping gap).
+@Name("rejected: Decimal(39, 2)")
+def rejected_decimal_precision_over_38(self, minio_root_user, minio_root_password):
+    """Iceberg decimal only allows precision up to 38
+    (Altinity/ClickHouse#2157) — wider decimals must be rejected.
     """
     _run_rejected_type(
         self,
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
-        value_column="v Decimal(10, 2)",
+        value_column="v Decimal(39, 2)",
         values="(1, 2020, 1.23), (2, 2020, -4.56), (3, 2020, 9999.99)",
     )
 
@@ -774,6 +864,10 @@ def rejected_array_low_cardinality_string(self, minio_root_user, minio_root_pass
 
 
 ACCEPTED_SCENARIOS = (
+    accepted_int8,
+    accepted_uint8,
+    accepted_bool,
+    accepted_decimal,
     accepted_int16,
     accepted_int32,
     accepted_int64,
@@ -806,6 +900,7 @@ REJECTED_SCENARIOS = (
     rejected_bool,
     rejected_fixed_string,
     rejected_decimal,
+    rejected_decimal_precision_over_38,
     rejected_enum8,
     rejected_low_cardinality,
     rejected_array_low_cardinality_string,

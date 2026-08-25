@@ -256,8 +256,8 @@ class S36(Scenario):
 
         fsck_to_ca = lifecycle.fsck_summary()
         result.observations["fsck_after_to_ca"] = fsck_to_ca
-        result.add(Verdict.check("fsck clean after the TO-CA move", "dangling==0",
-                                 fsck_to_ca.get("dangling"), fsck_to_ca.get("dangling") == 0))
+        assertions_mod.assert_fsck_clean(
+            result, fsck_to_ca, name="fsck clean after the TO-CA move", expected="dangling==0")
 
         oracle_after_to_ca = cl.node1.query(sql.table_checksum_query(table)).strip()
         result.add(Verdict.check("data unchanged after the TO-CA move", oracle_before,
@@ -301,8 +301,8 @@ class S36(Scenario):
 
         fsck_off_ca = lifecycle.fsck_summary()
         result.observations["fsck_after_off_ca"] = fsck_off_ca
-        result.add(Verdict.check("fsck clean after the OFF-CA move", "dangling==0",
-                                 fsck_off_ca.get("dangling"), fsck_off_ca.get("dangling") == 0))
+        assertions_mod.assert_fsck_clean(
+            result, fsck_off_ca, name="fsck clean after the OFF-CA move", expected="dangling==0")
 
         # OFF-CA drops the CAS refs the two moved parts held; deferred GC must reclaim that content
         # (no permanent orphans). Mirrors checkpoint.end_checkpoint's two-step drive: a bounded
@@ -451,9 +451,9 @@ class S36(Scenario):
         _common.assert_replicas_agree(result, cl, sql.table_checksum_query(table),
                                       name="S36 replica agreement")
         end = _common.standard_end(ctx, result, [table])
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after the full MOVE lifecycle", "dangling==0",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"),
+            name="no dangling after the full MOVE lifecycle", expected="dangling==0")
         assertions_mod.assert_reclaimable_drained(
             result, "content vacated by every MOVE reclaimed",
             end.get("residual_unreachable"), end.get("fsck_detail"))
@@ -777,9 +777,9 @@ class S37(Scenario):
             _common.assert_replicas_agree(result, cl, sql.table_checksum_query(t),
                                           name=f"S37 replica agreement [{t}]")
         end = _common.standard_end(ctx, result, all_tables, table_filter="table LIKE 's37_%'")
-        dangling = end.get("fsck_final", {}).get("dangling")
-        result.add(Verdict.check("no dangling after the multi-disk policy lifecycle", "dangling==0",
-                                 dangling, dangling == 0))
+        assertions_mod.assert_fsck_clean(
+            result, end.get("fsck_final"),
+            name="no dangling after the multi-disk policy lifecycle", expected="dangling==0")
         assertions_mod.assert_reclaimable_drained(
             result, "content vacated by every policy move reclaimed",
             end.get("residual_unreachable"), end.get("fsck_detail"))

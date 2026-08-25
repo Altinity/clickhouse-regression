@@ -359,13 +359,11 @@ class S07(Scenario):
             _common.assert_replicas_agree(result, cl, sql.table_checksum_query(table))
 
         end = _common.standard_end(ctx, result, [table], expect_exception=True)
-        # Explicit restatement of the fail-closed property as its own verdict.
-        fsck = (end or {}).get("fsck_final", {})
-        dangling = fsck.get("dangling")
-        result.add(Verdict.check(
-            "no live ref on rejected manifest", "fsck dangling==0 after attempt",
-            dangling, dangling == 0,
-            "" if dangling == 0 else "a dangling ref survived the attempted oversize op"))
+        _common.assert_dangling_zero(
+            result, (end or {}).get("fsck_final"),
+            name="no live ref on rejected manifest",
+            expected="fsck dangling==0 after attempt",
+            fail_note="a dangling ref survived the attempted oversize op")
 
 
 @register

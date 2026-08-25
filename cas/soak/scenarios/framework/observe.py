@@ -35,11 +35,19 @@ from soak.cluster import QueryError, is_transport_error
 # compose stack (a distinct docker-compose project) without disturbing the default `ca-soak` project
 # — e.g. S41's `ca-s41` stack. Defaults are the standard `ca-soak` project, so nothing changes for
 # the normal path. `CA_SOAK_CH_CONTAINERS` is a comma-separated list.
-RUSTFS_CONTAINER = os.environ.get("CA_SOAK_RUSTFS_CONTAINER", "ca-soak-rustfs1-1")
-POOL_DIR = os.environ.get("CA_SOAK_POOL_DIR", "/data/test/soak_pool")
+def reload_container_env():
+    """Re-read CA_SOAK_* into the module-level names cards import as `observe.RUSTFS_CONTAINER`."""
+    global RUSTFS_CONTAINER, POOL_DIR, CH_CONTAINERS
+    RUSTFS_CONTAINER = os.environ.get("CA_SOAK_RUSTFS_CONTAINER", "ca-soak-rustfs1-1")
+    POOL_DIR = os.environ.get("CA_SOAK_POOL_DIR", "/data/test/soak_pool")
+    CH_CONTAINERS = tuple(
+        c for c in os.environ.get("CA_SOAK_CH_CONTAINERS", "ca-soak-ch1-1,ca-soak-ch2-1").split(",") if c)
 
-CH_CONTAINERS = tuple(
-    c for c in os.environ.get("CA_SOAK_CH_CONTAINERS", "ca-soak-ch1-1,ca-soak-ch2-1").split(",") if c)
+
+RUSTFS_CONTAINER = "ca-soak-rustfs1-1"
+POOL_DIR = "/data/test/soak_pool"
+CH_CONTAINERS = ("ca-soak-ch1-1", "ca-soak-ch2-1")
+reload_container_env()
 
 GC_LOG = "system.cas_gc_log"
 CA_LOG = "system.cas_log"
@@ -293,8 +301,8 @@ def container_sample(container: str) -> dict:
     return out
 
 
-def container_samples(containers=CH_CONTAINERS) -> list:
-    return [container_sample(c) for c in containers]
+def container_samples(containers=None) -> list:
+    return [container_sample(c) for c in (containers if containers is not None else CH_CONTAINERS)]
 
 
 # ---------------------------------------------------------------------------

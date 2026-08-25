@@ -3240,3 +3240,229 @@ than to an error.
 - **Run:** 20260803T112822_S45_seed3
 - **Observed:** scenario raised: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table default.s45_victim_0 does not exist. (UNKNOWN_TABLE) (version 26.6.1.20000.altinityantalya) | sql=SYSTEM SYNC REPLICA s45_victim_0
 
+## S01-20260821T030919-1: S01 peak RSS grew 1045 MiB during a 512 MiB blob upload — investigate Build::put
+
+- **Logged (UTC):** 2026-08-21T03:09:52
+- **Severity:** suspected-bug
+- **Run:** 20260821T030919_S01_seed1
+- **Observed:** S01 peak RSS grew 1045 MiB during a 512 MiB blob upload — investigate Build::putBlob materializing BlobSource into a String before putIfAbsentStream (README known first investigation target)
+
+## S07-20260821T032735-1: S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive 
+
+- **Logged (UTC):** 2026-08-21T03:32:15
+- **Severity:** suspected-bug
+- **Run:** 20260821T032735_S07_seed1
+- **Observed:** S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive for the direct cap trip; the indirect fail-closed property check still runs.
+
+## S13-20260821T045554-1: scenario raised: failed to start clickhouse-server in ca-soak-ch1-1: rc=1 Error 
+
+- **Logged (UTC):** 2026-08-21T04:57:11
+- **Severity:** suspected-bug
+- **Run:** 20260821T045554_S13_seed1
+- **Observed:** scenario raised: failed to start clickhouse-server in ca-soak-ch1-1: rc=1 Error response from daemon: No such container: ca-soak-ch1-1
+
+
+## S14-20260821T045711-1: scenario raised: failed to start clickhouse-server in ca-soak-ch1-1: rc=1 Error 
+
+- **Logged (UTC):** 2026-08-21T05:09:30
+- **Severity:** suspected-bug
+- **Run:** 20260821T045711_S14_seed1
+- **Observed:** scenario raised: failed to start clickhouse-server in ca-soak-ch1-1: rc=1 Error response from daemon: No such container: ca-soak-ch1-1
+
+
+## S15-20260821T050930-1: S15 variant default raised: Node(localhost:8123) HTTP 400: Code: 41. DB::Excepti
+
+- **Logged (UTC):** 2026-08-21T05:14:42
+- **Severity:** finding
+- **Run:** 20260821T050930_S15_seed1
+- **Observed:** S15 variant default raised: Node(localhost:8123) HTTP 400: Code: 41. DB::Exception: Cannot read DateTime: unexpected number of decimal digits after hour: 0: while converting '2026-08-21 05:August:25' to DateTime: while executing function greaterOrEquals on arguments __table1.event_time DateTime UInt32(size = 0), '2026-08-21 05:August:25'_String String Const(size = 0, String(size = 1)). (CANNOT_PARSE_DATETIME) (version 26.6.2.20000.altinityantalya) | sql=SELECT event_time, gc_id, trigger, round, outcome, candidates_marked, objects_deleted, objects_absent, objects_replaced, objects_spared, manifests_deleted, entries_condemned, entries_graduated, entrie...(187 more chars)
+
+## S15-20260821T050930-2: S15 variant gc_shards2 raised: Node(localhost:8123) HTTP 400: Code: 41. DB::Exce
+
+- **Logged (UTC):** 2026-08-21T05:14:42
+- **Severity:** finding
+- **Run:** 20260821T050930_S15_seed1
+- **Observed:** S15 variant gc_shards2 raised: Node(localhost:8123) HTTP 400: Code: 41. DB::Exception: Cannot read DateTime: unexpected number of decimal digits after hour: 0: while converting '2026-08-21 05:August:53' to DateTime: while executing function greaterOrEquals on arguments __table1.event_time DateTime UInt32(size = 0), '2026-08-21 05:August:53'_String String Const(size = 0, String(size = 1)). (CANNOT_PARSE_DATETIME) (version 26.6.2.20000.altinityantalya) | sql=SELECT event_time, gc_id, trigger, round, outcome, candidates_marked, objects_deleted, objects_absent, objects_replaced, objects_spared, manifests_deleted, entries_condemned, entries_graduated, entrie...(187 more chars)
+
+## S15-20260821T050930-3: S15 variant gc_shards8 raised: Node(localhost:8123) HTTP 400: Code: 41. DB::Exce
+
+- **Logged (UTC):** 2026-08-21T05:14:42
+- **Severity:** finding
+- **Run:** 20260821T050930_S15_seed1
+- **Observed:** S15 variant gc_shards8 raised: Node(localhost:8123) HTTP 400: Code: 41. DB::Exception: Cannot read DateTime: unexpected number of decimal digits after hour: 0: while converting '2026-08-21 05:August:17' to DateTime: while executing function greaterOrEquals on arguments __table1.event_time DateTime UInt32(size = 0), '2026-08-21 05:August:17'_String String Const(size = 0, String(size = 1)). (CANNOT_PARSE_DATETIME) (version 26.6.2.20000.altinityantalya) | sql=SELECT event_time, gc_id, trigger, round, outcome, candidates_marked, objects_deleted, objects_absent, objects_replaced, objects_spared, manifests_deleted, entries_condemned, entries_graduated, entrie...(187 more chars)
+
+## S21-20260821T051819-1: scenario raised: timed out
+
+- **Logged (UTC):** 2026-08-21T07:48:47
+- **Severity:** suspected-bug
+- **Run:** 20260821T051819_S21_seed1
+- **Observed:** scenario raised: timed out
+
+## S22-20260821T074847-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T07:58:47
+- **Severity:** suspected-bug
+- **Run:** 20260821T074847_S22_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S22_20260821T074847']' timed out after 600 seconds
+
+## S23-20260821T075847-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T08:08:48
+- **Severity:** suspected-bug
+- **Run:** 20260821T075847_S23_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S23_20260821T075847']' timed out after 600 seconds
+
+## S24-20260821T080848-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T08:18:48
+- **Severity:** suspected-bug
+- **Run:** 20260821T080848_S24_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S24_20260821T080848']' timed out after 600 seconds
+
+## S25-20260821T081848-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T08:28:48
+- **Severity:** suspected-bug
+- **Run:** 20260821T081848_S25_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S25_20260821T081848']' timed out after 600 seconds
+
+## S26-20260821T082848-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T08:38:49
+- **Severity:** suspected-bug
+- **Run:** 20260821T082848_S26_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S26_20260821T082848']' timed out after 600 seconds
+
+## S27-20260821T083849-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T08:48:49
+- **Severity:** suspected-bug
+- **Run:** 20260821T083849_S27_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S27_20260821T083849']' timed out after 600 seconds
+
+## S28-20260821T084849-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T08:58:50
+- **Severity:** suspected-bug
+- **Run:** 20260821T084849_S28_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S28_20260821T084849']' timed out after 600 seconds
+
+## S29-20260821T085850-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T09:08:50
+- **Severity:** suspected-bug
+- **Run:** 20260821T085850_S29_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S29_20260821T085850']' timed out after 600 seconds
+
+## S30-20260821T090850-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T09:18:50
+- **Severity:** suspected-bug
+- **Run:** 20260821T090850_S30_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S30_20260821T090850']' timed out after 600 seconds
+
+## S31-20260821T091850-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T09:28:50
+- **Severity:** suspected-bug
+- **Run:** 20260821T091850_S31_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S31_20260821T091850']' timed out after 600 seconds
+
+## S32-20260821T092850-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T09:38:51
+- **Severity:** suspected-bug
+- **Run:** 20260821T092850_S32_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S32_20260821T092850']' timed out after 600 seconds
+
+## S33-20260821T093851-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T09:48:51
+- **Severity:** suspected-bug
+- **Run:** 20260821T093851_S33_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S33_20260821T093851']' timed out after 600 seconds
+
+## S34-20260821T094851-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T09:58:52
+- **Severity:** suspected-bug
+- **Run:** 20260821T094851_S34_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S34_20260821T094851']' timed out after 600 seconds
+
+## S35-20260821T095852-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T10:08:52
+- **Severity:** suspected-bug
+- **Run:** 20260821T095852_S35_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S35_20260821T095852']' timed out after 600 seconds
+
+## S36-20260821T100852-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T10:18:52
+- **Severity:** suspected-bug
+- **Run:** 20260821T100852_S36_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S36_20260821T100852']' timed out after 600 seconds
+
+## S37-20260821T101852-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T10:28:53
+- **Severity:** suspected-bug
+- **Run:** 20260821T101852_S37_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S37_20260821T101852']' timed out after 600 seconds
+
+## S38-20260821T102853-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T10:38:54
+- **Severity:** suspected-bug
+- **Run:** 20260821T102853_S38_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S38_20260821T102853']' timed out after 600 seconds
+
+## S39-20260821T103854-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T10:48:54
+- **Severity:** suspected-bug
+- **Run:** 20260821T103854_S39_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S39_20260821T103854']' timed out after 600 seconds
+
+## S40-20260821T104854-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T10:58:56
+- **Severity:** suspected-bug
+- **Run:** 20260821T104854_S40_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S40_20260821T104854']' timed out after 600 seconds
+
+## S41-20260821T105856-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T11:08:56
+- **Severity:** suspected-bug
+- **Run:** 20260821T105856_S41_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S41_20260821T105856']' timed out after 600 seconds
+
+## S42-20260821T110856-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T11:18:57
+- **Severity:** suspected-bug
+- **Run:** 20260821T110856_S42_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S42_20260821T110856']' timed out after 600 seconds
+
+## S43-20260821T111857-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T11:28:57
+- **Severity:** suspected-bug
+- **Run:** 20260821T111857_S43_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S43_20260821T111857']' timed out after 600 seconds
+
+## S44-20260821T112857-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T11:38:58
+- **Severity:** suspected-bug
+- **Run:** 20260821T112857_S44_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S44_20260821T112857']' timed out after 600 seconds
+
+## S45-20260821T113858-1: scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak
+
+- **Logged (UTC):** 2026-08-21T11:49:00
+- **Severity:** suspected-bug
+- **Run:** 20260821T113858_S45_seed1
+- **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S45_20260821T113858']' timed out after 600 seconds
+

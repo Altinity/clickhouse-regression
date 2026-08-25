@@ -82,6 +82,9 @@ class S39(Scenario):
     title = "mount-lease resilience under a degraded-but-alive S3 (fix #37)"
     priority = "P1"
     compose_variant = "s3faultproxy"
+    # Leg B holds PUT/POST 503s past the mount-lease TTL; GC Error finish rows during that window
+    # are expected. Lease/fence assertions above are the card; do not FAIL the common 0-Failed check.
+    allow_gc_failed = True
     # INVARIANT (every scale row must keep this, see `_MOUNT_LEASE_TTL_S`/`_MOUNT_RENEW_PERIOD_S`
     # above and the leg-A/leg-B asserts below): short_fault_s < _MOUNT_RENEW_PERIOD_S (10) and
     # << _MOUNT_LEASE_TTL_S (30), so the short leg overlaps AT MOST one renewal beat and can never
@@ -262,4 +265,4 @@ class S39(Scenario):
                 ctx.log(f"S39 SYNC REPLICA on a node before agreement check (best-effort): {e}")
         _common.assert_replicas_agree(result, cl, sql.table_checksum_query(_TABLE),
                                       name="S39 replica agreement")
-        _common.standard_end(ctx, result, [_TABLE])
+        _common.standard_end(ctx, result, [_TABLE], allow_gc_failed=self.allow_gc_failed)

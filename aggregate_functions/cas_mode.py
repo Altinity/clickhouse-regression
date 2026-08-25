@@ -4,35 +4,10 @@ from pathlib import Path
 
 from testflows.core import *
 
-CAS_CONFIG = """\
-<clickhouse>
-    <storage_configuration>
-        <disks>
-            <cas_disk>
-                <type>object_storage</type>
-                <object_storage_type>s3</object_storage_type>
-                <metadata_type>cas</metadata_type>
-                <server_root_id>aggregate-functions-cas-{replica}</server_root_id>
-                <endpoint>http://minio:9001/cas/data/</endpoint>
-                <access_key_id>minio</access_key_id>
-                <secret_access_key>minio123</secret_access_key>
-            </cas_disk>
-        </disks>
-        <policies>
-            <cas_policy>
-                <volumes>
-                    <main>
-                        <disk>cas_disk</disk>
-                    </main>
-                </volumes>
-            </cas_policy>
-        </policies>
-    </storage_configuration>
-</clickhouse>
-"""
+from helpers.cas_storage import apply_cas_context, cas_storage_config
 
-# Always mounted, but empty unless --cas is set. A real cas disk in a
-# permanently-mounted config breaks non-Antalya builds at startup
+# Always mounted, but empty unless --cas / --cas-s3-cache is set. A real cas
+# disk in a permanently-mounted config breaks non-Antalya builds at startup
 # (unknown metadata storage type: cas).
 CAS_CONFIG_PLACEHOLDER = """\
 <clickhouse>
@@ -55,13 +30,21 @@ def reset_cas_config():
 
 
 @TestStep(Given)
-def enable_cas_storage(self):
+def enable_cas_storage(self, s3_cache=False):
     """Write the CAS disk/policy config and route create_table onto it.
 
     Must run before the cluster starts; disk config is read at server startup.
+    When ``s3_cache`` is set, ``cas_policy`` points at a ``type=cache`` disk in
+    front of ``cas_disk``.
     """
-    cas_config_path().write_text(CAS_CONFIG)
-    self.context.default_storage_policy = "cas_policy"
+    cas_config_path().write_text(
+        cas_storage_config(
+            "aggregate-functions-cas-{replica}",
+            with_s3_cache=s3_cache,
+            override_default_policy=False,
+        )
+    )
+    apply_cas_context(self, s3_cache=s3_cache)
     try:
         yield
     finally:

@@ -521,6 +521,48 @@ ffails = {
         "(Altinity/ClickHouse#2134, #2111)",
         lambda test: True,
     ),
+    # Altinity/ClickHouse#2157: getIcebergType gained Int8/UInt8/Bool/Decimal
+    # on 26.6. Older builds still reject those types.
+    "/iceberg/export partition/: catalog/*/datatypes/*/accepted/* Int8": (
+        Skip,
+        "Int8 -> Iceberg int requires 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version("<26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/accepted/* UInt8": (
+        Skip,
+        "UInt8 -> Iceberg int requires 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version("<26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/accepted/* Bool": (
+        Skip,
+        "Bool -> Iceberg boolean requires 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version("<26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/accepted/* Decimal*": (
+        Skip,
+        "Decimal -> Iceberg decimal requires 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version("<26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/rejected/* Int8": (
+        Skip,
+        "Int8 is accepted from 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version(">=26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/rejected/* UInt8": (
+        Skip,
+        "UInt8 is accepted from 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version(">=26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/rejected/* Bool": (
+        Skip,
+        "Bool is accepted from 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version(">=26.6"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/rejected/* Decimal*10*": (
+        Skip,
+        "Decimal(p<=38) is accepted from 26.6 (Altinity/ClickHouse#2157)",
+        check_clickhouse_version(">=26.6"),
+    ),
     "/iceberg/export partition/: catalog/*/casting": (
         Skip,
         "Altinity/ClickHouse#1779 export auto-cast requires > 26.3.10.20001",
