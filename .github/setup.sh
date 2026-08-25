@@ -124,6 +124,17 @@ else
   keeper_or_zookeeper="zookeeper"
 fi
 
+# CAS runs (--cas / --with-cas) must not upload to the same S3 report path as
+# their non-CAS counterpart, otherwise they overwrite each other's report.html,
+# raw.log and *-fails.log.txt. Append a "/cas" segment unless the job already
+# encodes it via storage_path (e.g. tiered_storage_cas sets STORAGE=/cas).
+# The CAS flag can arrive via args (flags/extra_args) or regression_args.
+cas_suffix=""
+all_regression_args="$args $regression_args"
+if [[ $all_regression_args == *'--cas'* || $all_regression_args == *'--with-cas'* ]] && [[ $STORAGE != *cas* ]]; then
+  cas_suffix="/cas"
+fi
+
 
 if [[ -z "$S3_ENDPOINT" ]]; then 
   JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
@@ -139,13 +150,13 @@ echo "JOB_REPORT_INDEX=$JOB_REPORT_INDEX" >>$GITHUB_ENV
 JOB_S3_ROOT=s3://$artifact_s3_bucket_path/$artifact_s3_dir
 echo "JOB_S3_ROOT=$JOB_S3_ROOT" >>$GITHUB_ENV
 
-SUITE_REPORT_INDEX_URL=$JOB_REPORT_INDEX$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$PART$STORAGE/
+SUITE_REPORT_INDEX_URL=$JOB_REPORT_INDEX$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$PART$STORAGE$cas_suffix/
 echo "SUITE_REPORT_INDEX_URL=$SUITE_REPORT_INDEX_URL" >>$GITHUB_ENV
 
-SUITE_LOG_FILE_PREFIX_URL=$JOB_BUCKET_URL/$artifact_s3_dir/$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$PART$STORAGE
+SUITE_LOG_FILE_PREFIX_URL=$JOB_BUCKET_URL/$artifact_s3_dir/$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$PART$STORAGE$cas_suffix
 echo "SUITE_LOG_FILE_PREFIX_URL=$SUITE_LOG_FILE_PREFIX_URL" >>$GITHUB_ENV
 
-SUITE_REPORT_BUCKET_PATH=$JOB_S3_ROOT/$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$PART$STORAGE
+SUITE_REPORT_BUCKET_PATH=$JOB_S3_ROOT/$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$PART$STORAGE$cas_suffix
 echo "SUITE_REPORT_BUCKET_PATH=$SUITE_REPORT_BUCKET_PATH" >>$GITHUB_ENV
 
 echo "::endgroup::"

@@ -111,6 +111,10 @@ jobs:
       # Artifacts
       artifacts: ${{ inputs.artifacts }}
       # Args
+      # Exposed to setup.sh so the report path can be varied per storage backend
+      # (e.g. CAS runs get a distinct "/cas" S3 segment and don't overwrite the
+      # non-CAS report). The processed value is passed on the command line later.
+      regression_args: ${{ inputs.regression_args }}
       args: --test-to-end
         --no-colors
         --local
