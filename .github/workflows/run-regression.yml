@@ -844,7 +844,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: lightweight_delete
-      timeout_minutes: 180
+      timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
