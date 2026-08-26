@@ -314,6 +314,18 @@ def check_clickhouse_version(version):
     return check
 
 
+def check_monotonic_export_partition_compat(test):
+    """True after Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+).
+
+    Those PRs replaced exact partition-key equality with subset/monotonic
+    checking. Released 26.3.13 and 26.6.1 still use the old checker.
+    """
+    return (
+        check_clickhouse_version(">=26.3.17")(test)
+        and check_clickhouse_version("<26.6")(test)
+    ) or check_clickhouse_version(">=26.6.2")(test)
+
+
 def check_is_boringssl_build(test):
     """Return True if ClickHouse was built with BoringSSL/AWS-LC (OPENSSL_IS_BORING_SSL=1).
 

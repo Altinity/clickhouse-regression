@@ -1,6 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
-from helpers.common import getuid
+from helpers.common import getuid, check_monotonic_export_partition_compat
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from s3.requirements.export_part import *
@@ -168,7 +168,15 @@ def different_partition_key(self):
 
     with Then("I should see an error related to the different partition key"):
         assert results[0].exitcode == 36, error()
-        assert "Tables have different partition key" in results[0].output, error()
+        if check_monotonic_export_partition_compat(self):
+            assert (
+                "not part of the source MergeTree partition key"
+                in results[0].output
+            ), error()
+        else:
+            assert (
+                "Tables have different partition key" in results[0].output
+            ), error()
 
 
 @TestScenario
