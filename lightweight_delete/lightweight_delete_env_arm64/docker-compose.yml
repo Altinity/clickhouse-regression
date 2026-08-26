@@ -1,8 +1,6 @@
 version: '2.3'
 
 volumes:
-  data1-1:
-
   clickhouse1_jbod1:
     driver: local
     driver_opts:
