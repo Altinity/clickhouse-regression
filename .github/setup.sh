@@ -124,15 +124,21 @@ else
   keeper_or_zookeeper="zookeeper"
 fi
 
-# CAS runs (--cas / --with-cas) must not upload to the same S3 report path as
-# their non-CAS counterpart, otherwise they overwrite each other's report.html,
-# raw.log and *-fails.log.txt. Append a "/cas" segment unless the job already
-# encodes it via storage_path (e.g. tiered_storage_cas sets STORAGE=/cas).
-# The CAS flag can arrive via args (flags/extra_args) or regression_args.
+# CAS runs must not share an S3 report path with their non-CAS counterpart
+# (or with each other), otherwise they overwrite report.html, raw.log and
+# *-fails.log.txt. --cas-s3-cache contains "--cas" as a prefix, so match the
+# cache flag first and use a distinct suffix. Skip appending when storage_path
+# already encodes the same segment (e.g. tiered_storage_cas sets STORAGE=/cas).
+# Flags can arrive via args (flags/extra_args) or regression_args.
 cas_suffix=""
 all_regression_args="$args $regression_args"
-if [[ $all_regression_args == *'--cas'* || $all_regression_args == *'--with-cas'* ]] && [[ $STORAGE != *cas* ]]; then
+if [[ $all_regression_args == *'--cas-s3-cache'* ]]; then
+  cas_suffix="/cas-s3-cache"
+elif [[ $all_regression_args == *'--cas'* || $all_regression_args == *'--with-cas'* ]]; then
   cas_suffix="/cas"
+fi
+if [[ -n "$cas_suffix" && "$STORAGE" == *"$cas_suffix"* ]]; then
+  cas_suffix=""
 fi
 
 
