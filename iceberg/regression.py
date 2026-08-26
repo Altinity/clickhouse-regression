@@ -417,6 +417,20 @@ xfails = {
     ],
 }
 
+
+def _has_monotonic_export_partition_compat(test):
+    """True once Iceberg EXPORT PARTITION uses subset/monotonic checking.
+
+    Altinity/ClickHouse#2074 (26.3) and #2253 (26.6) replaced Iceberg spec
+    equality with the same gate as object-storage destinations. Released
+    26.3.13 and 26.6.1 still use the old checker.
+    """
+    return (
+        check_clickhouse_version(">=26.3.17")(test)
+        and check_clickhouse_version("<26.6")(test)
+    ) or check_clickhouse_version(">=26.6.2")(test)
+
+
 ffails = {
     "/iceberg/iceberg engine": (
         Skip,
@@ -562,6 +576,45 @@ ffails = {
         Skip,
         "Decimal(p<=38) is accepted from 26.6 (Altinity/ClickHouse#2157)",
         check_clickhouse_version(">=26.6"),
+    ),
+    # After #2074 (26.3.17+) / #2253 (26.6.2+) Iceberg export no longer
+    # rejects these spec mismatches (returns 0 instead of BAD_ARGUMENTS).
+    # Identity column mismatch and icebergBucket width mismatch still reject.
+    "/iceberg/export partition/: catalog/*/partition compatibility/rejected/*compound field order reversed": (
+        Skip,
+        "compound field-order mismatch is not rejected after "
+        "Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+)",
+        _has_monotonic_export_partition_compat,
+    ),
+    "/iceberg/export partition/: catalog/*/partition compatibility/rejected/*transform vs identity*": (
+        Skip,
+        "transform-vs-identity mismatch is not rejected after "
+        "Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+)",
+        _has_monotonic_export_partition_compat,
+    ),
+    "/iceberg/export partition/: catalog/*/partition compatibility/rejected/*truncate width mismatch*": (
+        Skip,
+        "truncate width mismatch is not rejected after "
+        "Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+)",
+        _has_monotonic_export_partition_compat,
+    ),
+    "/iceberg/export partition/: catalog/*/partition compatibility/rejected/*field-count mismatch*": (
+        Skip,
+        "partition field-count mismatch is not rejected after "
+        "Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+)",
+        _has_monotonic_export_partition_compat,
+    ),
+    "/iceberg/export partition/: catalog/*/partition compatibility/rejected/*unsupported MergeTree expression*": (
+        Skip,
+        "unsupported MergeTree partition expressions are not rejected after "
+        "Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+)",
+        _has_monotonic_export_partition_compat,
+    ),
+    "/iceberg/export partition/: catalog/*/partition compatibility/rejected/*unpartitioned destination": (
+        Skip,
+        "partitioned-source / unpartitioned-destination is not rejected after "
+        "Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+)",
+        _has_monotonic_export_partition_compat,
     ),
     "/iceberg/export partition/: catalog/*/casting": (
         Skip,

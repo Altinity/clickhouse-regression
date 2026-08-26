@@ -130,13 +130,9 @@ version: 1.0
 
 [ClickHouse] SHALL reject `EXPORT PARTITION` synchronously with `BAD_ARGUMENTS` when the source and destination partition specs disagree, including:
 
-* Compound fields specified in different orders.
-* A transform on one side and identity on the other for the same column.
-* Different transform widths (for example `bucket[8]` vs `bucket[16]`, or `truncate[4]` vs `truncate[8]`).
-* Different field counts (compound vs single-column).
-* Source `PARTITION BY` expressions that have no Iceberg analogue (for example `intDiv`).
 * Different partition columns entirely.
-* Partitioned source paired with an unpartitioned Iceberg destination.
+* Different `icebergBucket` widths (for example `bucket[8]` vs `bucket[16]`).
+* Before Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+): compound fields specified in different orders; a transform on one side and identity on the other for the same column; different `icebergTruncate` widths; different field counts (compound vs single-column); source `PARTITION BY` expressions that have no Iceberg analogue (for example `intDiv`); partitioned source paired with an unpartitioned Iceberg destination. After those merges the subset/monotonic checker currently completes those cases instead of rejecting.
 
 In every rejected case no Iceberg snapshot is created and the destination remains in its prior state.
 
