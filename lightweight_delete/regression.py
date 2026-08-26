@@ -165,10 +165,13 @@ def regression(
         with Given("no content-addressed storage configuration"):
             reset_cas_config()
 
-    with Cluster(
-        **cluster_args,
-        nodes=nodes,
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = Cluster(
+            **cluster_args,
+            nodes=nodes,
+        )
+
+    with cluster:
         self.context.cluster = cluster
         self.context.stress = stress
 
