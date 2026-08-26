@@ -1024,6 +1024,8 @@ export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
 
+export_merge_tree_part_schema_mismatch_mode = r"""'{"default":"strict"}'"""
+
 export_merge_tree_part_throw_on_pending_mutations = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_throw_on_pending_patch_parts = r"""'{"default":"1"}'"""
@@ -1570,6 +1572,8 @@ input_format_parquet_bloom_filter_push_down = r"""'{"default":"1"}'"""
 
 input_format_parquet_case_insensitive_column_matching = r"""'{"default":"0"}'"""
 
+input_format_parquet_decode_thread_fraction = r"""'{"default":"0.375"}'"""
+
 input_format_parquet_enable_json_parsing = r"""'{"default":"1"}'"""
 
 input_format_parquet_enable_row_group_prefetch = r"""'{"default":"1"}'"""
@@ -1591,6 +1595,8 @@ input_format_parquet_memory_low_watermark = r"""'{"default":"2097152"}'"""
 input_format_parquet_page_filter_push_down = r"""'{"default":"1"}'"""
 
 input_format_parquet_prefer_block_bytes = r"""'{"default":"16744704"}'"""
+
+input_format_parquet_prefetch_memory_fraction = r"""'{"default":"0.6"}'"""
 
 input_format_parquet_preserve_order = r"""'{"default":"0"}'"""
 
@@ -3307,6 +3313,8 @@ use_partition_key = r"""'{"default":"1"}'"""
 use_partition_pruning = r"""'{"default":"1"}'"""
 
 use_primary_key = r"""'{"default":"1"}'"""
+
+use_puffin_files_cache = r"""'{"default":"1"}'"""
 
 use_query_cache = r"""'{"default":"0"}'"""
 
