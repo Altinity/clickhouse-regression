@@ -1,0 +1,10 @@
+<clickhouse>
+    <!--
+    Placeholder for the CAS S3-cache overlay.
+
+    The dedicated CAS suite always defines cas_disk in storage.xml. This file is
+    filled in by cas/cas_mode.py when the suite is started with the cas-s3-cache
+    option (adds a type=cache disk in front of cas_disk and retargets cas_policy /
+    default) and reset back to this placeholder afterwards.
+    -->
+</clickhouse>
