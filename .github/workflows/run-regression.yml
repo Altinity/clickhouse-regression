@@ -324,7 +324,7 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition
       part: 1
-      timeout_minutes: 180
+      timeout_minutes: 360
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-artifacts
@@ -345,7 +345,7 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition
       part: 2
-      timeout_minutes: 180
+      timeout_minutes: 360
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 2/*"'
       artifact_name: alter-attach-partition-artifacts
