@@ -2,7 +2,10 @@ from testflows.core import *
 from session_timezone.requirements import *
 from testflows.asserts import error
 from session_timezone.tests.steps import *
-from helpers.common import check_clickhouse_version, check_if_25_8_altinity_build
+from helpers.common import (
+    check_clickhouse_version,
+    check_if_altinity_build,
+)
 
 
 @TestScenario
@@ -125,17 +128,21 @@ def date_datetime_column_types(self):
             " settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;"
         )
 
-        if check_clickhouse_version("<=26.1")(self) and not check_if_25_8_altinity_build(self):
-            message = "2000-01-01 00:00:00\tAsia/Novosibirsk"
+        if check_clickhouse_version("<26.2")(self) and not (
+            check_if_altinity_build(self) and check_clickhouse_version("~25.8")(self)
+        ):
+            message = "begin\n2000-01-01 00:00:00\tAsia/Novosibirsk\nend"
         else:
             # https://github.com/ClickHouse/ClickHouse/issues/103732
-            message = ""
+            message = "begin\nend"
 
         clickhouse_local(
-            query=f"create table {table_name} (d DateTime) Engine=Memory as select "
+            query="select 'begin';"
+            f" create table {table_name} (d DateTime) Engine=Memory as select "
             "toDateTime('2000-01-01 00:00:00', 'UTC');"
             f" select *, timezone() from {table_name} where d = '2000-01-01 00:00:00' "
-            "settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;",
+            "settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;"
+            " select 'end';",
             message=message,
         )
 
