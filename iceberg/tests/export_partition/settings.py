@@ -54,16 +54,18 @@ from iceberg.tests.export_partition.steps.verification import (
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 NUMBER_OF_COLUMNS_DOESNT_MATCH = 20
+THERE_IS_NO_COLUMN = 8
 
 SCHEMA_MATCH_MODE = "export_merge_tree_part_schema_match_mode"
 IGNORE_EXTRA_SOURCE_COLUMNS = "export_merge_tree_part_ignore_extra_source_columns"
 MODE_POSITION = "POSITION"
+MODE_NAME = "NAME"
 
 
-def _schema_match_settings(*, ignore_extra=False):
-    """``POSITION`` matching, optionally dropping unmatched source columns."""
+def _schema_match_settings(*, mode=MODE_POSITION, ignore_extra=False):
+    """``POSITION`` or ``NAME`` matching, optionally dropping unmatched source columns."""
     return [
-        (SCHEMA_MATCH_MODE, MODE_POSITION),
+        (SCHEMA_MATCH_MODE, mode),
         (IGNORE_EXTRA_SOURCE_COLUMNS, int(ignore_extra)),
     ]
 
@@ -481,12 +483,261 @@ def schema_match_ignore_extra_rejects_type_mismatch(
         )
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("NAME reorders non-partition columns by name")
+def schema_match_name_reorders_non_partition_columns(
+    self, minio_root_user, minio_root_password
+):
+    """``NAME`` matching binds destination columns to source columns of the
+    same name, so a permutation of non-partition-key columns still copies
+    values correctly. Positional matching would swap ``region`` and
+    ``color``.
+    """
+    source_table = _seed_source_with_columns(
+        columns="id Int64, year Int32, region String, color String",
+        values="(1, 2020, 'EU', 'red'), (2, 2020, 'US', 'blue')",
+    )
+
+    with Given("create Iceberg destination with region and color swapped"):
+        destination = create_iceberg_destination(
+            columns="id Int64, year Int32, color String, region String",
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with When("export under NAME matching"):
+        export_partition(
+            source_table=source_table,
+            destination=destination,
+            partition_id="2020",
+            extra_settings=_schema_match_settings(mode=MODE_NAME),
+        )
+
+    with Then("destination values match the source by name"):
+        assert_destination_row_count(
+            destination=destination,
+            expected=2,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+        assert_source_and_destination_match(
+            source_table=source_table,
+            destination=destination,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            columns="id, year, region, color",
+            order_by="id",
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("NAME ignore extra source columns drops unmatched columns")
+def schema_match_name_ignore_extra_drops_unmatched(
+    self, minio_root_user, minio_root_password
+):
+    """In ``NAME`` mode, ``ignore_extra_source_columns = 1`` drops a source
+    column whose name is absent from the destination even when that extra
+    is not trailing. Positional ignore-extra would map ``extra`` onto
+    ``region``.
+    """
+    source_table = _seed_source_with_columns(
+        columns="id Int64, year Int32, extra String, region String",
+        values="(1, 2020, 'DROPME', 'EU'), (2, 2020, 'DROPME', 'US')",
+    )
+
+    with Given("create Iceberg destination without the extra column"):
+        destination = create_iceberg_destination(
+            columns="id Int64, year Int32, region String",
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with When("export under NAME matching with ignore_extra_source_columns"):
+        export_partition(
+            source_table=source_table,
+            destination=destination,
+            partition_id="2020",
+            extra_settings=_schema_match_settings(mode=MODE_NAME, ignore_extra=True),
+        )
+
+    with Then("destination region values match the source region, not extra"):
+        assert_destination_row_count(
+            destination=destination,
+            expected=2,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+        assert_source_and_destination_match(
+            source_table=source_table,
+            destination=destination,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            columns="id, year, region",
+            order_by="id",
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("NAME rejects destination column absent from source")
+def schema_match_name_rejects_destination_column_absent(
+    self, minio_root_user, minio_root_password
+):
+    """Equal column counts with a destination name that does not exist on
+    the source is ``THERE_IS_NO_COLUMN`` in ``NAME`` mode — not a
+    positional remap, and not ``NUMBER_OF_COLUMNS_DOESNT_MATCH``.
+    """
+    source_table = _seed_source_with_columns(
+        columns="id Int64, year Int32, region String",
+        values="(1, 2020, 'EU'), (2, 2020, 'US')",
+    )
+
+    with Given("create Iceberg destination with a renamed payload column"):
+        destination = create_iceberg_destination(
+            columns="id Int64, year Int32, area String",
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with Then("EXPORT PARTITION is rejected with THERE_IS_NO_COLUMN"):
+        export_partition(
+            source_table=source_table,
+            destination=destination,
+            partition_id="2020",
+            extra_settings=_schema_match_settings(mode=MODE_NAME),
+            exitcode=THERE_IS_NO_COLUMN,
+            message="THERE_IS_NO_COLUMN",
+            wait_for_completion=False,
+        )
+
+    with And("no export status row is recorded"):
+        count = count_partition_export_rows(
+            source_table=source_table,
+            partition_id="2020",
+            destination=destination,
+        )
+        assert count == 0, error(
+            f"Expected no status row after synchronous rejection, got {count}"
+        )
+
+    with And("destination remains empty"):
+        assert_destination_row_count(
+            destination=destination,
+            expected=0,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("NAME still rejects extra destination columns")
+def schema_match_name_rejects_extra_destination(
+    self, minio_root_user, minio_root_password
+):
+    """Column-count checking runs before name lookup: a destination with
+    more columns than the source is ``NUMBER_OF_COLUMNS_DOESNT_MATCH``
+    even under ``NAME`` matching, not ``THERE_IS_NO_COLUMN``.
+    """
+    source_table = _seed_source_with_columns(
+        columns=SIMPLE_COLUMNS,
+        values="(1, 2020), (2, 2020)",
+    )
+
+    with Given("create Iceberg destination with an extra column"):
+        destination = create_iceberg_destination(
+            columns="id Int64, year Int32, extra String",
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with Then("EXPORT PARTITION is rejected under NAME matching"):
+        export_partition(
+            source_table=source_table,
+            destination=destination,
+            partition_id="2020",
+            extra_settings=_schema_match_settings(mode=MODE_NAME),
+            exitcode=NUMBER_OF_COLUMNS_DOESNT_MATCH,
+            message="NUMBER_OF_COLUMNS",
+            wait_for_completion=False,
+        )
+
+    with And("destination remains empty"):
+        assert_destination_row_count(
+            destination=destination,
+            expected=0,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("NAME reorders partition key column by name")
+def schema_match_name_reorders_partition_key_column(
+    self, minio_root_user, minio_root_password
+):
+    """``NAME`` matching looks up partition-key owners by name, so moving
+    ``year`` to a different ordinal is accepted as long as both tables
+    still declare a column named ``year``. Default ``POSITION`` matching
+    rejects the same layout (see ``reversed destination column order
+    maps values by name``).
+    """
+    source_table = _seed_source_with_columns(
+        columns="id Int64, year Int32",
+        values="(1, 2020), (2, 2020)",
+    )
+
+    with Given("create Iceberg destination with year declared first"):
+        destination = create_iceberg_destination(
+            columns="year Int32, id Int64",
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with When("export under NAME matching"):
+        export_partition(
+            source_table=source_table,
+            destination=destination,
+            partition_id="2020",
+            extra_settings=_schema_match_settings(mode=MODE_NAME),
+        )
+
+    with Then("destination id and year match the source by name"):
+        assert_destination_row_count(
+            destination=destination,
+            expected=2,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+        assert_source_and_destination_match(
+            source_table=source_table,
+            destination=destination,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            columns="id, year",
+            order_by="id",
+        )
+
+
 SCHEMA_MATCH_SCENARIOS = (
     schema_match_position_rejects_extra_source,
     schema_match_ignore_extra_source_drops_trailing,
     schema_match_position_rejects_extra_destination,
     schema_match_ignore_extra_rejects_extra_destination,
     schema_match_ignore_extra_rejects_type_mismatch,
+    schema_match_name_reorders_non_partition_columns,
+    schema_match_name_ignore_extra_drops_unmatched,
+    schema_match_name_rejects_destination_column_absent,
+    schema_match_name_rejects_extra_destination,
+    schema_match_name_reorders_partition_key_column,
 )
 
 SCENARIOS = (parquet_compression_method_flows_to_data_files,)

@@ -507,12 +507,12 @@ version: 1.0
 [ClickHouse] SHALL honour `export_merge_tree_part_schema_match_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2220, replacing #2111's `export_merge_tree_part_schema_mismatch_mode`). Possible values:
 
 * `POSITION` (default). Columns are matched positionally, like `INSERT INTO dest SELECT * FROM src`. Column names are not otherwise considered.
-* `NAME`. Every destination column is matched to a source column with the same exact, case-sensitive name, so destination columns MAY be declared in a different order. A destination column absent from the source SHALL throw `THERE_IS_NO_COLUMN`, with no positional fallback.
+* `NAME`. Every destination column is matched to a source column with the same exact, case-sensitive name, so destination columns MAY be declared in a different order — including partition-key owning columns. A destination column whose name is absent from the source SHALL throw `THERE_IS_NO_COLUMN`, with no positional fallback.
 
 Together with `export_merge_tree_part_ignore_extra_source_columns` (default `0`):
 
-* When `0`, every source column MUST have a corresponding destination column. A mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty.
-* When `1`, a source column without a corresponding destination column SHALL be dropped and not exported. In `POSITION` mode this allows extra trailing source columns; in `NAME` mode, source columns whose name has no destination counterpart. The destination having a column absent from the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH`.
+* When `0`, every source column MUST have a corresponding destination column. A column-count mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty. In `NAME` mode, equal counts with a destination name missing from the source SHALL throw `THERE_IS_NO_COLUMN` instead.
+* When `1`, a source column without a corresponding destination column SHALL be dropped and not exported. In `POSITION` mode this allows extra trailing source columns; in `NAME` mode, source columns whose name has no destination counterpart, including extras that are not trailing. A destination with more columns than the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH`.
 * Dropping extras SHALL NOT bypass cast validation on kept columns: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.
 
 The settings are recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.
