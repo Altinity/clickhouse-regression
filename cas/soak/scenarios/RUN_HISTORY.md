@@ -544,3 +544,93 @@ Every attempted scenario run is appended here (newest at the bottom). `run_dir` 
 | 2026-08-21T11:28:57 | S43 | 1 | ci | 900s | fail | 03ccb87d029d | 20260821T111857_S43_seed1 | Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S43_20260821T111857']' timed out after 600 seconds |
 | 2026-08-21T11:38:58 | S44 | 1 | ci | 900s | fail | 03ccb87d029d | 20260821T112857_S44_seed1 | Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S44_20260821T112857']' timed out after 600 seconds |
 | 2026-08-21T11:49:00 | S45 | 1 | ci | 900s | fail | 03ccb87d029d | 20260821T113858_S45_seed1 | Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S45_20260821T113858']' timed out after 600 seconds |
+| 2026-08-21T15:19:36 | S01 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T151903_S01_seed1 | S01 peak RSS grew 1054 MiB during a 512 MiB blob upload — investigate Build::putBlob materializing BlobSource into a String before putIfAbsentStream (README known first investigation target) |
+| 2026-08-21T15:20:17 | S02 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T151936_S02_seed1 |  |
+| 2026-08-21T15:23:00 | S03 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T152017_S03_seed1 |  |
+| 2026-08-21T15:25:26 | S04 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T152300_S04_seed1 |  |
+| 2026-08-21T15:38:26 | S05 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T152526_S05_seed1 |  |
+| 2026-08-21T15:43:49 | S06 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T153826_S06_seed1 |  |
+| 2026-08-21T15:49:34 | S07 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T154349_S07_seed1 | S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive for the direct cap trip; the indirect fail-closed property check still runs. |
+| 2026-08-21T17:32:49 | S08 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T154934_S08_seed1 | forced GC left 7 orphan object(s): {'unreachable:_manifests': 7}. If explicit GC was driven concurrently with background GC (or on both replicas), this is likely the known GC-CONCURRENT-LEADER-LEAK. |
+| 2026-08-21T17:34:32 | S09 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T173249_S09_seed1 |  |
+| 2026-08-21T17:35:30 | S10 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T173432_S10_seed1 |  |
+| 2026-08-21T17:55:58 | S11 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T173530_S11_seed1 |  |
+| 2026-08-21T17:58:31 | S12 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T175558_S12_seed1 |  |
+| 2026-08-21T18:31:04 | S13 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T175831_S13_seed1 | GC log has 20 real (non-benign) Error finish row(s) |
+| 2026-08-21T18:52:07 | S14 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T183104_S14_seed1 |  |
+| 2026-08-21T18:57:48 | S15 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T185207_S15_seed1 |  |
+| 2026-08-21T19:00:22 | S16 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T185748_S16_seed1 |  |
+| 2026-08-21T19:01:11 | S17 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T190022_S17_seed1 |  |
+| 2026-08-21T19:04:50 | S18 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T190111_S18_seed1 | S18 FREEZE failed (possible pre-existing B3 freeze/shadow bug): Node(localhost:8123) HTTP 500: Code: 49. DB::Exception: CasRefCatalog::createNamespace: namespace 'shadow/s18_snap_1/store/6c7/6c7bc956-5a45-49c3-b88d-b46b7c55f148' already carries a catalog entry (state 'live') -- a stalled Creating entry is resumed through reconcileStaleCreator + completeCreation, never a fresh createNamespace call; an existing Live or Removing namespace must complete its current lifecycle before a fresh creation can be admitted. (LOGICAL_ERROR) (version 26.6.2.20000.altinityantalya) / sql=ALTER TABLE s18_freeze FREEZE WITH NAME 's18_snap_1' |
+| 2026-08-21T19:05:23 | S19 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T190450_S19_seed1 |  |
+| 2026-08-21T19:05:56 | S20 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T190523_S20_seed1 |  |
+| 2026-08-21T19:36:15 | S21 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T190556_S21_seed1 | timed out |
+| 2026-08-21T19:40:31 | S22 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T193615_S22_seed1 |  |
+| 2026-08-21T19:42:36 | S23 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T194031_S23_seed1 |  |
+| 2026-08-21T19:43:53 | S24 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T194236_S24_seed1 |  |
+| 2026-08-21T19:44:41 | S25 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T194353_S25_seed1 |  |
+| 2026-08-21T19:45:36 | S26 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T194441_S26_seed1 |  |
+| 2026-08-21T19:49:44 | S27 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T194536_S27_seed1 |  |
+| 2026-08-21T19:54:06 | S28 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T194944_S28_seed1 | GC log has 7 real (non-benign) Error finish row(s) |
+| 2026-08-21T19:54:53 | S29 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T195406_S29_seed1 |  |
+| 2026-08-21T19:57:28 | S30 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T195453_S30_seed1 |  |
+| 2026-08-21T19:58:29 | S31 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T195728_S31_seed1 |  |
+| 2026-08-21T19:58:56 | S32 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T195829_S32_seed1 |  |
+| 2026-08-21T19:59:55 | S33 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T195856_S33_seed1 |  |
+| 2026-08-21T20:02:30 | S34 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T195955_S34_seed1 |  |
+| 2026-08-21T20:04:44 | S35 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T200230_S35_seed1 |  |
+| 2026-08-21T20:06:25 | S36 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T200444_S36_seed1 |  |
+| 2026-08-21T20:07:57 | S37 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T200625_S37_seed1 |  |
+| 2026-08-21T20:09:30 | S38 | 1 | ci | 900s | inconclusive | 2585e234d944 | 20260821T200757_S38_seed1 |  |
+| 2026-08-21T20:12:40 | S39 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T200930_S39_seed1 | GC log has 17 real (non-benign) Error finish row(s) |
+| 2026-08-21T20:16:49 | S40 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T201240_S40_seed1 | quiescence failed: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table default.s40_dedup_outage does not exist. (UNKNOWN_TABLE) (version 26.6.2.20000.altinityantalya) / sql=SYSTEM SYNC REPLICA s40_dedup_outage |
+| 2026-08-21T20:19:32 | S41 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T201649_S41_seed1 |  |
+| 2026-08-21T20:43:23 | S42 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T201932_S42_seed1 | GC log has 7 real (non-benign) Error finish row(s) |
+| 2026-08-21T20:46:28 | S43 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T204323_S43_seed1 | quiescence failed: Node(localhost:8123) HTTP 400: Code: 36. DB::Exception: Table default.w3_recreated (3e1f0a2b-4c5d-4e6f-8a9b-0c1d2e3f4a5b) is not replicated. (BAD_ARGUMENTS) (version 26.6.2.20000.altinityantalya) / sql=SYSTEM SYNC REPLICA w3_recreated |
+| 2026-08-21T20:47:18 | S44 | 1 | ci | 900s | pass | 2585e234d944 | 20260821T204628_S44_seed1 |  |
+| 2026-08-21T20:48:24 | S45 | 1 | ci | 900s | fail | 2585e234d944 | 20260821T204718_S45_seed1 |  |
+| 2026-08-22T02:38:16 | S01 | 1 | ci | 900s | fail | d13f46cb3f06 | 20260822T023746_S01_seed1 | S01 peak RSS grew 1003 MiB during a 512 MiB blob upload — investigate Build::putBlob materializing BlobSource into a String before putIfAbsentStream (README known first investigation target) |
+| 2026-08-22T02:38:49 | S02 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T023816_S02_seed1 |  |
+| 2026-08-22T02:41:08 | S03 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T023849_S03_seed1 |  |
+| 2026-08-22T02:43:33 | S04 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T024108_S04_seed1 |  |
+| 2026-08-22T02:55:50 | S05 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T024333_S05_seed1 |  |
+| 2026-08-22T03:01:40 | S06 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T025550_S06_seed1 |  |
+| 2026-08-22T03:07:10 | S07 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T030140_S07_seed1 | S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive for the direct cap trip; the indirect fail-closed property check still runs. |
+| 2026-08-22T04:06:20 | S08 | 1 | ci | 900s | fail | d13f46cb3f06 | 20260822T030710_S08_seed1 |  |
+| 2026-08-22T04:07:30 | S09 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T040620_S09_seed1 |  |
+| 2026-08-22T04:08:29 | S10 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T040730_S10_seed1 |  |
+| 2026-08-22T04:29:52 | S11 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T040829_S11_seed1 |  |
+| 2026-08-22T04:32:22 | S12 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T042952_S12_seed1 |  |
+| 2026-08-22T04:55:34 | S13 | 1 | ci | 900s | fail | d13f46cb3f06 | 20260822T043222_S13_seed1 | quiescence failed: <urlopen error [Errno 111] Connection refused> |
+| 2026-08-22T05:15:21 | S14 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T045534_S14_seed1 |  |
+| 2026-08-22T05:20:52 | S15 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T051521_S15_seed1 |  |
+| 2026-08-22T05:23:26 | S16 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T052052_S16_seed1 |  |
+| 2026-08-22T05:24:15 | S17 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T052326_S17_seed1 |  |
+| 2026-08-22T05:25:34 | S18 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T052415_S18_seed1 |  |
+| 2026-08-22T05:26:08 | S19 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T052534_S19_seed1 |  |
+| 2026-08-22T05:26:45 | S20 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T052608_S20_seed1 |  |
+| 2026-08-22T05:27:14 | S21 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T052645_S21_seed1 |  |
+| 2026-08-22T05:29:10 | S22 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T052714_S22_seed1 |  |
+| 2026-08-22T05:31:15 | S23 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T052910_S23_seed1 |  |
+| 2026-08-22T05:32:32 | S24 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T053115_S24_seed1 |  |
+| 2026-08-22T05:33:20 | S25 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T053232_S25_seed1 |  |
+| 2026-08-22T05:34:15 | S26 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T053320_S26_seed1 |  |
+| 2026-08-22T05:38:13 | S27 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T053415_S27_seed1 |  |
+| 2026-08-22T05:51:50 | S28 | 1 | ci | 900s | fail | d13f46cb3f06 | 20260822T053813_S28_seed1 | quiescence failed: quiesce after OPTIMIZE/MATERIALIZE TTL: 2 replication-queue entries carry a real last_exception for over 180s — genuine error |
+| 2026-08-22T05:52:52 | S29 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T055150_S29_seed1 |  |
+| 2026-08-22T05:55:32 | S30 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T055252_S30_seed1 |  |
+| 2026-08-22T05:56:38 | S31 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T055532_S31_seed1 |  |
+| 2026-08-22T05:57:06 | S32 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T055638_S32_seed1 |  |
+| 2026-08-22T05:58:04 | S33 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T055706_S33_seed1 |  |
+| 2026-08-22T06:00:43 | S34 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T055804_S34_seed1 |  |
+| 2026-08-22T06:02:58 | S35 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T060043_S35_seed1 |  |
+| 2026-08-22T06:04:38 | S36 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T060258_S36_seed1 |  |
+| 2026-08-22T06:06:11 | S37 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T060438_S37_seed1 |  |
+| 2026-08-22T06:07:54 | S38 | 1 | ci | 900s | inconclusive | d13f46cb3f06 | 20260822T060611_S38_seed1 |  |
+| 2026-08-22T06:11:05 | S39 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T060754_S39_seed1 |  |
+| 2026-08-22T06:17:48 | S40 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T061105_S40_seed1 | quiescence failed: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table default.s40_dedup_outage does not exist. (UNKNOWN_TABLE) (version 26.6.2.20000.altinityantalya) / sql=SYSTEM SYNC REPLICA s40_dedup_outage |
+| 2026-08-22T06:20:31 | S41 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T061748_S41_seed1 |  |
+| 2026-08-22T06:40:40 | S42 | 1 | ci | 900s | fail | d13f46cb3f06 | 20260822T062031_S42_seed1 | GC log has 8 real (non-benign) Error finish row(s) |
+| 2026-08-22T06:43:48 | S43 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T064040_S43_seed1 | quiescence failed: Node(localhost:8123) HTTP 400: Code: 36. DB::Exception: Table default.w3_recreated (3e1f0a2b-4c5d-4e6f-8a9b-0c1d2e3f4a5b) is not replicated. (BAD_ARGUMENTS) (version 26.6.2.20000.altinityantalya) / sql=SYSTEM SYNC REPLICA w3_recreated |
+| 2026-08-22T06:44:38 | S44 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T064348_S44_seed1 |  |
+| 2026-08-22T06:45:54 | S45 | 1 | ci | 900s | pass | d13f46cb3f06 | 20260822T064438_S45_seed1 |  |

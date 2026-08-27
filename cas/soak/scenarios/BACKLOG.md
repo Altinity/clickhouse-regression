@@ -3466,3 +3466,143 @@ than to an error.
 - **Run:** 20260821T113858_S45_seed1
 - **Observed:** scenario raised: Command '['/home/julian/altinity/clickhouse-regression/cas/soak/scripts/predown_dump.sh', 'S45_20260821T113858']' timed out after 600 seconds
 
+## S01-20260821T151903-1: S01 peak RSS grew 1054 MiB during a 512 MiB blob upload — investigate Build::put
+
+- **Logged (UTC):** 2026-08-21T15:19:36
+- **Severity:** suspected-bug
+- **Run:** 20260821T151903_S01_seed1
+- **Observed:** S01 peak RSS grew 1054 MiB during a 512 MiB blob upload — investigate Build::putBlob materializing BlobSource into a String before putIfAbsentStream (README known first investigation target)
+
+## S07-20260821T154349-1: S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive 
+
+- **Logged (UTC):** 2026-08-21T15:49:34
+- **Severity:** finding
+- **Run:** 20260821T154349_S07_seed1
+- **Observed:** S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive for the direct cap trip; the indirect fail-closed property check still runs.
+
+## S08-20260821T154934-1: forced GC left 7 orphan object(s): {'unreachable:_manifests': 7}. If explicit GC
+
+- **Logged (UTC):** 2026-08-21T17:32:49
+- **Severity:** suspected-bug
+- **Run:** 20260821T154934_S08_seed1
+- **Observed:** forced GC left 7 orphan object(s): {'unreachable:_manifests': 7}. If explicit GC was driven concurrently with background GC (or on both replicas), this is likely the known GC-CONCURRENT-LEADER-LEAK.
+
+## S13-20260821T175831-1: GC log has 20 real (non-benign) Error finish row(s)
+
+- **Logged (UTC):** 2026-08-21T18:31:04
+- **Severity:** suspected-bug
+- **Run:** 20260821T175831_S13_seed1
+- **Observed:** GC log has 20 real (non-benign) Error finish row(s)
+
+## S18-20260821T190111-1: S18 FREEZE failed (possible pre-existing B3 freeze/shadow bug): Node(localhost:8
+
+- **Logged (UTC):** 2026-08-21T19:04:50
+- **Severity:** suspected-bug
+- **Run:** 20260821T190111_S18_seed1
+- **Observed:** S18 FREEZE failed (possible pre-existing B3 freeze/shadow bug): Node(localhost:8123) HTTP 500: Code: 49. DB::Exception: CasRefCatalog::createNamespace: namespace 'shadow/s18_snap_1/store/6c7/6c7bc956-5a45-49c3-b88d-b46b7c55f148' already carries a catalog entry (state 'live') -- a stalled Creating entry is resumed through reconcileStaleCreator + completeCreation, never a fresh createNamespace call; an existing Live or Removing namespace must complete its current lifecycle before a fresh creation can be admitted. (LOGICAL_ERROR) (version 26.6.2.20000.altinityantalya) | sql=ALTER TABLE s18_freeze FREEZE WITH NAME 's18_snap_1'
+
+## S18-20260821T190111-2: forced GC left 1 orphan object(s): {'unreachable:_manifests': 1}. If explicit GC
+
+- **Logged (UTC):** 2026-08-21T19:04:50
+- **Severity:** suspected-bug
+- **Run:** 20260821T190111_S18_seed1
+- **Observed:** forced GC left 1 orphan object(s): {'unreachable:_manifests': 1}. If explicit GC was driven concurrently with background GC (or on both replicas), this is likely the known GC-CONCURRENT-LEADER-LEAK.
+
+## S21-20260821T190556-1: scenario raised: timed out
+
+- **Logged (UTC):** 2026-08-21T19:36:15
+- **Severity:** suspected-bug
+- **Run:** 20260821T190556_S21_seed1
+- **Observed:** scenario raised: timed out
+
+## S28-20260821T194944-1: GC log has 7 real (non-benign) Error finish row(s)
+
+- **Logged (UTC):** 2026-08-21T19:54:06
+- **Severity:** suspected-bug
+- **Run:** 20260821T194944_S28_seed1
+- **Observed:** GC log has 7 real (non-benign) Error finish row(s)
+
+## S39-20260821T200930-1: GC log has 17 real (non-benign) Error finish row(s)
+
+- **Logged (UTC):** 2026-08-21T20:12:40
+- **Severity:** suspected-bug
+- **Run:** 20260821T200930_S39_seed1
+- **Observed:** GC log has 17 real (non-benign) Error finish row(s)
+
+## S40-20260821T201240-1: quiescence failed: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table
+
+- **Logged (UTC):** 2026-08-21T20:16:49
+- **Severity:** finding
+- **Run:** 20260821T201240_S40_seed1
+- **Observed:** quiescence failed: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table default.s40_dedup_outage does not exist. (UNKNOWN_TABLE) (version 26.6.2.20000.altinityantalya) | sql=SYSTEM SYNC REPLICA s40_dedup_outage
+
+## S42-20260821T201932-1: GC log has 7 real (non-benign) Error finish row(s)
+
+- **Logged (UTC):** 2026-08-21T20:43:23
+- **Severity:** suspected-bug
+- **Run:** 20260821T201932_S42_seed1
+- **Observed:** GC log has 7 real (non-benign) Error finish row(s)
+
+## S43-20260821T204323-1: quiescence failed: Node(localhost:8123) HTTP 400: Code: 36. DB::Exception: Table
+
+- **Logged (UTC):** 2026-08-21T20:46:28
+- **Severity:** finding
+- **Run:** 20260821T204323_S43_seed1
+- **Observed:** quiescence failed: Node(localhost:8123) HTTP 400: Code: 36. DB::Exception: Table default.w3_recreated (3e1f0a2b-4c5d-4e6f-8a9b-0c1d2e3f4a5b) is not replicated. (BAD_ARGUMENTS) (version 26.6.2.20000.altinityantalya) | sql=SYSTEM SYNC REPLICA w3_recreated
+
+## S01-20260822T023746-1: S01 peak RSS grew 1003 MiB during a 512 MiB blob upload — investigate Build::put
+
+- **Logged (UTC):** 2026-08-22T02:38:16
+- **Severity:** suspected-bug
+- **Run:** 20260822T023746_S01_seed1
+- **Observed:** S01 peak RSS grew 1003 MiB during a 512 MiB blob upload — investigate Build::putBlob materializing BlobSource into a String before putIfAbsentStream (README known first investigation target)
+
+## S07-20260822T030140-1: S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive 
+
+- **Logged (UTC):** 2026-08-22T03:07:10
+- **Severity:** finding
+- **Run:** 20260822T030140_S07_seed1
+- **Observed:** S07 could not trigger a manifest cap with dev-scale SQL — recorded inconclusive for the direct cap trip; the indirect fail-closed property check still runs.
+
+## S13-20260822T043222-1: quiescence failed: <urlopen error [Errno 111] Connection refused>
+
+- **Logged (UTC):** 2026-08-22T04:55:34
+- **Severity:** suspected-bug
+- **Run:** 20260822T043222_S13_seed1
+- **Observed:** quiescence failed: <urlopen error [Errno 111] Connection refused>
+
+## S28-20260822T053813-1: quiescence failed: quiesce after OPTIMIZE/MATERIALIZE TTL: 2 replication-queue e
+
+- **Logged (UTC):** 2026-08-22T05:51:50
+- **Severity:** suspected-bug
+- **Run:** 20260822T053813_S28_seed1
+- **Observed:** quiescence failed: quiesce after OPTIMIZE/MATERIALIZE TTL: 2 replication-queue entries carry a real last_exception for over 180s — genuine error
+
+## S28-20260822T053813-2: GC log has 14 real (non-benign) Error finish row(s)
+
+- **Logged (UTC):** 2026-08-22T05:51:50
+- **Severity:** suspected-bug
+- **Run:** 20260822T053813_S28_seed1
+- **Observed:** GC log has 14 real (non-benign) Error finish row(s)
+
+## S40-20260822T061105-1: quiescence failed: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table
+
+- **Logged (UTC):** 2026-08-22T06:17:48
+- **Severity:** finding
+- **Run:** 20260822T061105_S40_seed1
+- **Observed:** quiescence failed: Node(localhost:8124) HTTP 404: Code: 60. DB::Exception: Table default.s40_dedup_outage does not exist. (UNKNOWN_TABLE) (version 26.6.2.20000.altinityantalya) | sql=SYSTEM SYNC REPLICA s40_dedup_outage
+
+## S42-20260822T062031-1: GC log has 8 real (non-benign) Error finish row(s)
+
+- **Logged (UTC):** 2026-08-22T06:40:40
+- **Severity:** suspected-bug
+- **Run:** 20260822T062031_S42_seed1
+- **Observed:** GC log has 8 real (non-benign) Error finish row(s)
+
+## S43-20260822T064040-1: quiescence failed: Node(localhost:8123) HTTP 400: Code: 36. DB::Exception: Table
+
+- **Logged (UTC):** 2026-08-22T06:43:48
+- **Severity:** finding
+- **Run:** 20260822T064040_S43_seed1
+- **Observed:** quiescence failed: Node(localhost:8123) HTTP 400: Code: 36. DB::Exception: Table default.w3_recreated (3e1f0a2b-4c5d-4e6f-8a9b-0c1d2e3f4a5b) is not replicated. (BAD_ARGUMENTS) (version 26.6.2.20000.altinityantalya) | sql=SYSTEM SYNC REPLICA w3_recreated
+
