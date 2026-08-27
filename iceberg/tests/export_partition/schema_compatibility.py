@@ -16,7 +16,7 @@ those cells are dropped; the case is expanded across ``missing_side``
 shared identity ``PARTITION BY`` are also dropped as nonsensical on
 Iceberg destinations.
 
-``export_merge_tree_part_schema_mismatch_mode`` (Altinity/ClickHouse#2111)
+``export_merge_tree_part_schema_match_mode`` (Altinity/ClickHouse#2220)
 is not an axis here; re-add it once that PR is merged alongside #2134.
 
 Nested Tuple/Array/Map partition-key layout cases from

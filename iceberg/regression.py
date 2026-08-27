@@ -510,16 +510,16 @@ ffails = {
         "(Altinity/ClickHouse#2032)",
         lambda test: True,
     ),
-    "/iceberg/export partition/: catalog/*/settings/schema mismatch mode/*": (
+    "/iceberg/export partition/: catalog/*/settings/schema match mode/*": (
         Skip,
-        "export_merge_tree_part_schema_mismatch_mode is not merged yet "
-        "(Altinity/ClickHouse#2111)",
+        "export_merge_tree_part_schema_match_mode is not merged yet "
+        "(Altinity/ClickHouse#2220)",
         lambda test: True,
     ),
     "/iceberg/export partition/: catalog/*/schema compatibility/*": (
         Skip,
         "create-time schema compatibility matrix is not merged yet "
-        "(Altinity/ClickHouse#2134, #2111)",
+        "(Altinity/ClickHouse#2134, #2220)",
         lambda test: True,
     ),
     # Altinity/ClickHouse#2157: getIcebergType gained Int8/UInt8/Bool/Decimal

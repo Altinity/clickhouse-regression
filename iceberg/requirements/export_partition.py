@@ -294,7 +294,7 @@ RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas = Requirement(
     description=(
         "[ClickHouse] SHALL apply a consistent accept/reject oracle when the source MergeTree and Iceberg destination are created with schemas that already differ, without any subsequent `ALTER` (distinct from schema-evolution-between-exports):\n"
         "\n"
-        "* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_mismatch_mode = 'strict'`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.\n"
+        "* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_match_mode = 'POSITION'` with `export_merge_tree_part_ignore_extra_source_columns = 0`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.\n"
         "* **Name.** Non-partition-key columns MAY differ in name; matching is positional. Partition-key owning columns MUST have the same name at the same position (see `SchemaCompatibility.PartitionKeyNameAndPosition`).\n"
         "* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.\n"
         "* **Position.** Swapping a partition-key owning column with a neighbour SHALL be rejected. Swapping equal-typed non-partition-key columns SHALL be accepted under positional matching.\n"
@@ -924,23 +924,28 @@ RQ_Iceberg_ExportPartition_Settings_ParquetCompression = Requirement(
     num="8.5",
 )
 
-RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode = Requirement(
-    name="RQ.Iceberg.ExportPartition.Settings.SchemaMismatchMode",
+RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode = Requirement(
+    name="RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL honour `export_merge_tree_part_schema_mismatch_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2111). Columns are matched positionally. Possible values:\n"
+        "[ClickHouse] SHALL honour `export_merge_tree_part_schema_match_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2220, replacing #2111's `export_merge_tree_part_schema_mismatch_mode`). Possible values:\n"
         "\n"
-        "* `strict` (default). Source and destination MUST have the same number of columns. A mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty.\n"
-        "* `ignore_extra_source_columns_by_position`. The source MAY have more columns than the destination. Extra trailing source columns (by declared/readable position) SHALL be dropped and not exported. The destination having more columns than the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` in this mode.\n"
-        "* Dropping trailing extras SHALL NOT bypass cast validation on the kept positional prefix: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.\n"
+        "* `POSITION` (default). Columns are matched positionally, like `INSERT INTO dest SELECT * FROM src`. Column names are not otherwise considered.\n"
+        "* `NAME`. Every destination column is matched to a source column with the same exact, case-sensitive name, so destination columns MAY be declared in a different order. A destination column absent from the source SHALL throw `THERE_IS_NO_COLUMN`, with no positional fallback.\n"
         "\n"
-        "The mode is recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.\n"
+        "Together with `export_merge_tree_part_ignore_extra_source_columns` (default `0`):\n"
         "\n"
-        "**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`, `schema mismatch mode`).\n"
+        "* When `0`, every source column MUST have a corresponding destination column. A mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty.\n"
+        "* When `1`, a source column without a corresponding destination column SHALL be dropped and not exported. In `POSITION` mode this allows extra trailing source columns; in `NAME` mode, source columns whose name has no destination counterpart. The destination having a column absent from the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH`.\n"
+        "* Dropping extras SHALL NOT bypass cast validation on kept columns: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.\n"
+        "\n"
+        "The settings are recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.\n"
+        "\n"
+        "**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`, `schema match mode`).\n"
         "\n"
     ),
     link=None,
@@ -1293,7 +1298,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
             num="8.5",
         ),
         Heading(
-            name="RQ.Iceberg.ExportPartition.Settings.SchemaMismatchMode",
+            name="RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode",
             level=2,
             num="8.6",
         ),
@@ -1361,7 +1366,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents,
         RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance,
         RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
-        RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode,
+        RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode,
         RQ_Iceberg_ExportPartition_DirectWrites,
         RQ_Iceberg_ExportPartition_Truncate,
         RQ_Iceberg_ExportPartition_Truncate_RepopulateAfterTruncate,
@@ -1429,7 +1434,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
     * 8.3 [RQ.Iceberg.ExportPartition.SystemMonitoring.ProfileEvents](#rqicebergexportpartitionsystemmonitoringprofileevents)
     * 8.4 [RQ.Iceberg.ExportPartition.SystemMonitoring.KilledProvenance](#rqicebergexportpartitionsystemmonitoringkilledprovenance)
     * 8.5 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
-    * 8.6 [RQ.Iceberg.ExportPartition.Settings.SchemaMismatchMode](#rqicebergexportpartitionsettingsschemamismatchmode)
+    * 8.6 [RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode](#rqicebergexportpartitionsettingsschemamatchmode)
 * 9 [Post-export destination operations](#post-export-destination-operations)
     * 9.1 [RQ.Iceberg.ExportPartition.DirectWrites](#rqicebergexportpartitiondirectwrites)
     * 9.2 [RQ.Iceberg.ExportPartition.Truncate](#rqicebergexportpartitiontruncate)
@@ -1591,7 +1596,7 @@ version: 1.0
 
 [ClickHouse] SHALL apply a consistent accept/reject oracle when the source MergeTree and Iceberg destination are created with schemas that already differ, without any subsequent `ALTER` (distinct from schema-evolution-between-exports):
 
-* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_mismatch_mode = 'strict'`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.
+* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_match_mode = 'POSITION'` with `export_merge_tree_part_ignore_extra_source_columns = 0`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.
 * **Name.** Non-partition-key columns MAY differ in name; matching is positional. Partition-key owning columns MUST have the same name at the same position (see `SchemaCompatibility.PartitionKeyNameAndPosition`).
 * **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.
 * **Position.** Swapping a partition-key owning column with a neighbour SHALL be rejected. Swapping equal-typed non-partition-key columns SHALL be accepted under positional matching.
@@ -1873,18 +1878,23 @@ version: 1.0
 
 [ClickHouse] SHALL forward `output_format_parquet_compression_method` to the Parquet writer used by `EXPORT PARTITION`, so the compression codec recorded inside committed data files reflects the requested setting.
 
-### RQ.Iceberg.ExportPartition.Settings.SchemaMismatchMode
+### RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode
 version: 1.0
 
-[ClickHouse] SHALL honour `export_merge_tree_part_schema_mismatch_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2111). Columns are matched positionally. Possible values:
+[ClickHouse] SHALL honour `export_merge_tree_part_schema_match_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2220, replacing #2111's `export_merge_tree_part_schema_mismatch_mode`). Possible values:
 
-* `strict` (default). Source and destination MUST have the same number of columns. A mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty.
-* `ignore_extra_source_columns_by_position`. The source MAY have more columns than the destination. Extra trailing source columns (by declared/readable position) SHALL be dropped and not exported. The destination having more columns than the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` in this mode.
-* Dropping trailing extras SHALL NOT bypass cast validation on the kept positional prefix: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.
+* `POSITION` (default). Columns are matched positionally, like `INSERT INTO dest SELECT * FROM src`. Column names are not otherwise considered.
+* `NAME`. Every destination column is matched to a source column with the same exact, case-sensitive name, so destination columns MAY be declared in a different order. A destination column absent from the source SHALL throw `THERE_IS_NO_COLUMN`, with no positional fallback.
 
-The mode is recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.
+Together with `export_merge_tree_part_ignore_extra_source_columns` (default `0`):
 
-**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`, `schema mismatch mode`).
+* When `0`, every source column MUST have a corresponding destination column. A mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty.
+* When `1`, a source column without a corresponding destination column SHALL be dropped and not exported. In `POSITION` mode this allows extra trailing source columns; in `NAME` mode, source columns whose name has no destination counterpart. The destination having a column absent from the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH`.
+* Dropping extras SHALL NOT bypass cast validation on kept columns: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.
+
+The settings are recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.
+
+**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`, `schema match mode`).
 
 ## Post-export destination operations
 

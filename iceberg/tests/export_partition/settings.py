@@ -5,8 +5,10 @@ in ``storage_paths``; ``force_export`` / ``manifest_ttl`` in
 ``transactions``; ``allow_experimental_export_merge_tree_partition`` and
 ``export_merge_tree_partition_max_retries`` upstream) are not re-tested here.
 
-``export_merge_tree_part_schema_mismatch_mode`` (Altinity/ClickHouse#2111)
-is covered under the ``schema mismatch mode`` sub-feature.
+``export_merge_tree_part_schema_match_mode`` and
+``export_merge_tree_part_ignore_extra_source_columns``
+(Altinity/ClickHouse#2220, replacing #2111) are covered under the
+``schema match mode`` sub-feature.
 """
 
 import io
@@ -16,7 +18,7 @@ from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
-    RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode,
+    RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode,
 )
 
 from helpers.common import getuid
@@ -53,9 +55,18 @@ SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 NUMBER_OF_COLUMNS_DOESNT_MATCH = 20
 
-SCHEMA_MISMATCH_MODE = "export_merge_tree_part_schema_mismatch_mode"
-MODE_STRICT = "strict"
-MODE_IGNORE_EXTRA = "ignore_extra_source_columns_by_position"
+SCHEMA_MATCH_MODE = "export_merge_tree_part_schema_match_mode"
+IGNORE_EXTRA_SOURCE_COLUMNS = "export_merge_tree_part_ignore_extra_source_columns"
+MODE_POSITION = "POSITION"
+
+
+def _schema_match_settings(*, ignore_extra=False):
+    """``POSITION`` matching, optionally dropping unmatched source columns."""
+    return [
+        (SCHEMA_MATCH_MODE, MODE_POSITION),
+        (IGNORE_EXTRA_SOURCE_COLUMNS, int(ignore_extra)),
+    ]
+
 
 # Required whenever this module drives PyIceberg through ``get_data_files`` /
 # ``load_pyiceberg_table`` in the no-catalog case. Without it, the manifest
@@ -221,18 +232,19 @@ def parquet_compression_method_flows_to_data_files(
 
 
 # ---------------------------------------------------------------------------
-# export_merge_tree_part_schema_mismatch_mode (Altinity/ClickHouse#2111)
+# export_merge_tree_part_schema_match_mode (Altinity/ClickHouse#2220)
 # ---------------------------------------------------------------------------
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
-@Name("strict rejects extra source columns")
-def schema_mismatch_strict_rejects_extra_source(
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("POSITION rejects extra source columns")
+def schema_match_position_rejects_extra_source(
     self, minio_root_user, minio_root_password
 ):
-    """``strict`` (default) requires equal column counts: source with a
-    trailing extra column is rejected with ``NUMBER_OF_COLUMNS_DOESNT_MATCH``.
+    """Default ``POSITION`` matching with ``ignore_extra_source_columns = 0``
+    requires equal column counts: a source with a trailing extra column is
+    rejected with ``NUMBER_OF_COLUMNS_DOESNT_MATCH``.
     """
     source_table = _seed_source_with_columns(
         columns="id Int64, year Int32, extra String",
@@ -247,12 +259,12 @@ def schema_mismatch_strict_rejects_extra_source(
             minio_root_password=minio_root_password,
         )
 
-    with Then("EXPORT PARTITION is rejected under strict mode"):
+    with Then("EXPORT PARTITION is rejected under POSITION matching"):
         export_partition(
             source_table=source_table,
             destination=destination,
             partition_id="2020",
-            extra_settings=[(SCHEMA_MISMATCH_MODE, MODE_STRICT)],
+            extra_settings=_schema_match_settings(ignore_extra=False),
             exitcode=NUMBER_OF_COLUMNS_DOESNT_MATCH,
             message="NUMBER_OF_COLUMNS",
             wait_for_completion=False,
@@ -270,13 +282,14 @@ def schema_mismatch_strict_rejects_extra_source(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
-@Name("ignore extra source columns by position drops trailing columns")
-def schema_mismatch_ignore_extra_source_drops_trailing(
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("ignore extra source columns drops trailing columns")
+def schema_match_ignore_extra_source_drops_trailing(
     self, minio_root_user, minio_root_password
 ):
-    """``ignore_extra_source_columns_by_position`` allows a wider source: the
-    trailing extra columns are dropped and the positional prefix is exported.
+    """``export_merge_tree_part_ignore_extra_source_columns = 1`` allows a
+    wider source: trailing extra columns are dropped and the positional
+    prefix is exported.
     """
     source_table = _seed_source_with_columns(
         columns="id Int64, year Int32, extra String",
@@ -291,12 +304,12 @@ def schema_mismatch_ignore_extra_source_drops_trailing(
             minio_root_password=minio_root_password,
         )
 
-    with When("export under ignore_extra_source_columns_by_position"):
+    with When("export with ignore_extra_source_columns enabled"):
         export_partition(
             source_table=source_table,
             destination=destination,
             partition_id="2020",
-            extra_settings=[(SCHEMA_MISMATCH_MODE, MODE_IGNORE_EXTRA)],
+            extra_settings=_schema_match_settings(ignore_extra=True),
         )
 
     with Then("destination has all source rows and matching id, year values"):
@@ -317,12 +330,14 @@ def schema_mismatch_ignore_extra_source_drops_trailing(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
-@Name("strict rejects extra destination columns")
-def schema_mismatch_strict_rejects_extra_destination(
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("POSITION rejects extra destination columns")
+def schema_match_position_rejects_extra_destination(
     self, minio_root_user, minio_root_password
 ):
-    """``strict`` rejects a destination that has more columns than the source."""
+    """``POSITION`` matching rejects a destination that has more columns than
+    the source.
+    """
     source_table = _seed_source_with_columns(
         columns=SIMPLE_COLUMNS,
         values="(1, 2020), (2, 2020)",
@@ -336,12 +351,12 @@ def schema_mismatch_strict_rejects_extra_destination(
             minio_root_password=minio_root_password,
         )
 
-    with Then("EXPORT PARTITION is rejected under strict mode"):
+    with Then("EXPORT PARTITION is rejected under POSITION matching"):
         export_partition(
             source_table=source_table,
             destination=destination,
             partition_id="2020",
-            extra_settings=[(SCHEMA_MISMATCH_MODE, MODE_STRICT)],
+            extra_settings=_schema_match_settings(ignore_extra=False),
             exitcode=NUMBER_OF_COLUMNS_DOESNT_MATCH,
             message="NUMBER_OF_COLUMNS",
             wait_for_completion=False,
@@ -357,12 +372,12 @@ def schema_mismatch_strict_rejects_extra_destination(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
-@Name("ignore extra source columns by position rejects extra destination columns")
-def schema_mismatch_ignore_extra_rejects_extra_destination(
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("ignore extra source columns still rejects extra destination columns")
+def schema_match_ignore_extra_rejects_extra_destination(
     self, minio_root_user, minio_root_password
 ):
-    """``ignore_extra_source_columns_by_position`` only relaxes the
+    """``export_merge_tree_part_ignore_extra_source_columns`` only relaxes the
     source-has-more direction; destination-has-more is still rejected.
     """
     source_table = _seed_source_with_columns(
@@ -379,13 +394,13 @@ def schema_mismatch_ignore_extra_rejects_extra_destination(
         )
 
     with Then(
-        "EXPORT PARTITION is still rejected under ignore_extra_source_columns_by_position"
+        "EXPORT PARTITION is still rejected with ignore_extra_source_columns enabled"
     ):
         export_partition(
             source_table=source_table,
             destination=destination,
             partition_id="2020",
-            extra_settings=[(SCHEMA_MISMATCH_MODE, MODE_IGNORE_EXTRA)],
+            extra_settings=_schema_match_settings(ignore_extra=True),
             exitcode=NUMBER_OF_COLUMNS_DOESNT_MATCH,
             message="NUMBER_OF_COLUMNS",
             wait_for_completion=False,
@@ -411,15 +426,15 @@ def schema_mismatch_ignore_extra_rejects_extra_destination(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMismatchMode("1.0"))
-@Name("ignore extra source columns by position still rejects type mismatch")
-def schema_mismatch_ignore_extra_rejects_type_mismatch(
+@Requirements(RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode("1.0"))
+@Name("ignore extra source columns still rejects type mismatch")
+def schema_match_ignore_extra_rejects_type_mismatch(
     self, minio_root_user, minio_root_password
 ):
     """Dropping trailing extras must not bypass cast validation on the kept
     positional prefix. Source ``id Int64`` vs destination ``id Int32`` is a
-    lossy cast and is rejected even under
-    ``ignore_extra_source_columns_by_position``.
+    lossy cast and is rejected even with
+    ``export_merge_tree_part_ignore_extra_source_columns = 1``.
     """
     source_table = _seed_source_with_columns(
         columns="id Int64, year Int32, extra String",
@@ -441,7 +456,7 @@ def schema_mismatch_ignore_extra_rejects_type_mismatch(
             source_table=source_table,
             destination=destination,
             partition_id="2020",
-            extra_settings=[(SCHEMA_MISMATCH_MODE, MODE_IGNORE_EXTRA)],
+            extra_settings=_schema_match_settings(ignore_extra=True),
             exitcode=rejection_exitcode,
             message=rejection_message,
             wait_for_completion=False,
@@ -466,12 +481,12 @@ def schema_mismatch_ignore_extra_rejects_type_mismatch(
         )
 
 
-SCHEMA_MISMATCH_SCENARIOS = (
-    schema_mismatch_strict_rejects_extra_source,
-    schema_mismatch_ignore_extra_source_drops_trailing,
-    schema_mismatch_strict_rejects_extra_destination,
-    schema_mismatch_ignore_extra_rejects_extra_destination,
-    schema_mismatch_ignore_extra_rejects_type_mismatch,
+SCHEMA_MATCH_SCENARIOS = (
+    schema_match_position_rejects_extra_source,
+    schema_match_ignore_extra_source_drops_trailing,
+    schema_match_position_rejects_extra_destination,
+    schema_match_ignore_extra_rejects_extra_destination,
+    schema_match_ignore_extra_rejects_type_mismatch,
 )
 
 SCENARIOS = (parquet_compression_method_flows_to_data_files,)
@@ -487,8 +502,8 @@ def feature(self, minio_root_user, minio_root_password):
             minio_root_password=minio_root_password,
         )
 
-    with Feature("schema mismatch mode"):
-        for scenario in SCHEMA_MISMATCH_SCENARIOS:
+    with Feature("schema match mode"):
+        for scenario in SCHEMA_MATCH_SCENARIOS:
             Scenario(test=scenario, flags=TE)(
                 minio_root_user=minio_root_user,
                 minio_root_password=minio_root_password,
