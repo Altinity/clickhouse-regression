@@ -790,9 +790,7 @@ def wait_for_archived_log(node, logs_dir, logsize, timeout):
             return None
         if not name.endswith(".gz"):
             return f"{logs_dir}/{name}"
-        cmd = node.command(
-            f"stat -c %s {logs_dir}/{name}", no_checks=True, steps=False
-        )
+        cmd = node.command(f"stat -c %s {logs_dir}/{name}", no_checks=True, steps=False)
         size = last_line(cmd.output)
         if size == previous_size:
             cmd = node.command(

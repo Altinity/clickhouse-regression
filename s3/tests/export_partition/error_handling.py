@@ -154,13 +154,10 @@ def different_partition_key(self):
         assert results[0].exitcode == 36, error()
         if check_monotonic_export_partition_compat(self):
             assert (
-                "not part of the source MergeTree partition key"
-                in results[0].output
+                "not part of the source MergeTree partition key" in results[0].output
             ), error()
         else:
-            assert (
-                "Tables have different partition key" in results[0].output
-            ), error()
+            assert "Tables have different partition key" in results[0].output, error()
 
 
 @TestScenario

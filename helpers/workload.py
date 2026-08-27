@@ -32,6 +32,7 @@ from helpers.alter import (
     alter_table_delete_rows,
 )
 
+
 @dataclass
 class WorkloadState:
     """Objects created by the workload, used to check action preconditions."""
@@ -56,6 +57,7 @@ class WorkloadState:
 
     def table_prefix(self):
         return f"workload_{self.uid}_"
+
 
 @dataclass
 class Action:
@@ -141,6 +143,7 @@ def _numeric_columns(columns, include_id=False):
         and (include_id or c["name"] != "id")
     ]
 
+
 @action("create_table", group="create")
 def _action_create_table(node, state, cluster=None, **kwargs):
     """Create a MergeTree table with random columns."""
@@ -175,6 +178,7 @@ def _action_create_mv(node, state, cluster=None, **kwargs):
             steps=False,
         )
     state.views.append(mv_name)
+
 
 @action("insert_batch", group="insert", preconditions=["table_exists"])
 def _action_insert_batch(node, state, **kwargs):
@@ -297,6 +301,7 @@ def _action_delete_rows(node, state, **kwargs):
         steps=False,
     )
     state.rows_inserted[table_name] = max(0, state.rows_inserted[table_name] // 2)
+
 
 @action("drop_table", group="drop", preconditions=["table_exists"])
 def _action_drop_table(node, state, cluster=None, **kwargs):
@@ -460,6 +465,7 @@ def _cleanup(node, state, cluster=None):
     state.views.clear()
     state.tables.clear()
     state.rows_inserted.clear()
+
 
 @TestStep(Given)
 def simulate_workload(
