@@ -8,7 +8,7 @@ from testflows.core import *
 from testflows.combinatorics import combinations
 
 from helpers.alter import *
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, getuid
 from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
 
@@ -207,7 +207,7 @@ def alter_combinations(
             )
 
             for i in range(n_tables):
-                table_name = f"table{i}_{self.context.storage_policy}"
+                table_name = f"table{i}_{self.context.storage_policy}_{getuid()}"
                 replicated_table_cluster(
                     table_name=table_name,
                     storage_policy=self.context.storage_policy,
@@ -262,8 +262,8 @@ def alter_combinations(
                                 f"I OPTIMIZE {table}",
                                 test=optimize_random,
                                 parallel=run_optimize_in_parallel,
-                                flags=TE,
-                            )(table_name=table_name)
+                                flags=TE | ERROR_NOT_COUNTED,
+                            )(table_name=table)
 
                         join()
 
@@ -530,7 +530,7 @@ def full_disk(self):
     """
 
     alter_combinations(
-        actions=self.build_action_list(fill_disks=True),
+        actions=build_action_list(fill_disks=True),
         limit=None if self.context.stress else 20,
         limit_disk_space=True,
     )

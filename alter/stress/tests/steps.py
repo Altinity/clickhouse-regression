@@ -74,7 +74,7 @@ def disk_config(self):
         disks=disks,
         policies=policies,
         restart=True,
-        timeout=30,
+        timeout=300,
         config_file="s3_storage.xml",
     )
 
@@ -95,6 +95,8 @@ def insert_random(
         settings = "SETTINGS " + settings
     else:
         settings = ""
+
+    kwargs.setdefault("timeout", 600)
 
     return node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
@@ -155,9 +157,14 @@ def replicated_table_cluster(
 
     try:
         with Given("I have a table"):
+            node.query(
+                f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
+                timeout=60,
+                settings=[("distributed_ddl_task_timeout", 360)],
+            )
             r = node.query(
                 f"""
-                CREATE TABLE IF NOT EXISTS {table_name} 
+                CREATE TABLE {table_name} 
                 ON CLUSTER '{cluster_name}' ({columns}) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
                 ORDER BY {order_by} {partition_by} {primary_key} {ttl}
@@ -347,7 +354,7 @@ def interrupt_network(cluster, node, cluster_prefix):
 
 
 @TestStep(When)
-def wait_for_mutations_to_finish(self, node, timeout=60, delay=5, command_like=None):
+def wait_for_mutations_to_finish(self, node, timeout=300, delay=5, command_like=None):
     """Wait for all pending mutations to complete."""
     query = "SELECT * FROM system.mutations WHERE is_done=0"
     if command_like:

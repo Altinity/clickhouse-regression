@@ -7,9 +7,11 @@ from itertools import chain
 
 from testflows.core import *
 from testflows.combinatorics import combinations
+from testflows.uexpect.uexpect import ExpectTimeoutError
 
 from helpers.alter import *
 from helpers.common import *
+from helpers.cluster import MESSAGES_TO_RETRY
 from alter.stress.tests.tc_netem import *
 from alter.stress.tests.steps import *
 from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
@@ -23,12 +25,25 @@ table_schema_lock = RLock()
 step_retry_timeout = 900
 step_retry_delay = 30
 
-alter_query_args = {"retry_delay": 60, "retry_count": 5}
+# MinIO merges of these tables routinely run past the default 300s shell timeout.
+# If the client gives up, @Retry starts another OPTIMIZE while the first is still
+# holding part locks, which then fails MOVE PARTITION with Code 384.
+query_timeout = 900
+
+alter_query_args = {
+    "retry_delay": 60,
+    "retry_count": 5,
+    "timeout": query_timeout,
+    "messages_to_retry": MESSAGES_TO_RETRY
+    + [
+        "PART_IS_TEMPORARILY_LOCKED",
+        "participating in background process",
+    ],
+}
 
 
 @TestStep
 @Name("optimize")
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
     """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if table_name is None:
@@ -37,7 +52,20 @@ def optimize_random(self, node=None, table_name=None, repeat_limit=3):
         node = get_random_node_for_table(table_name=table_name)
 
     for _ in range(random.randint(1, repeat_limit)):
-        optimize(node=node, table_name=table_name)
+        try:
+            node.query(
+                f"OPTIMIZE TABLE {table_name}",
+                exitcode=0,
+                timeout=query_timeout,
+            )
+        except ExpectTimeoutError:
+            # Server-side OPTIMIZE continues. Retrying would pile up merges
+            # that hold part locks (Code 384) for the rest of the combination.
+            note(
+                f"OPTIMIZE {table_name} on {node.name} still running after "
+                f"{query_timeout}s; not retrying"
+            )
+            break
 
 
 @TestStep
@@ -337,7 +365,7 @@ def replace_random_part(self):
                 node=node,
                 table_name=destination_table_name,
                 partition_name=partition,
-                path_to_backup=source_table_name,
+                source_table=source_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
                 **alter_query_args,
@@ -378,10 +406,9 @@ def move_random_partition_to_random_table(self):
                 node=node,
                 table_name=source_table_name,
                 partition_name=partition,
-                path_to_backup=destination_table_name,
+                destination_table=destination_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
-                timeout=30,
                 **alter_query_args,
             )
 
@@ -421,7 +448,6 @@ def move_random_partition_to_random_disk(self):
             disk="DISK",
             exitcode=0,
             no_checks=self.context.ignore_failed_part_moves,
-            timeout=30,
             **alter_query_args,
         )
 

@@ -4,6 +4,7 @@ import time
 from testflows.core import *
 
 from helpers.alter import *
+from helpers.common import check_clickhouse_version
 from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
 
@@ -211,8 +212,19 @@ def select_all_missing_column(self):
 
     @TestStep(When)
     def replace_partition(self, table1_name, table2_name):
+        # 26.6 refuses REPLACE PARTITION when the source has no parts in that
+        # partition (ClickHouse #23727 / #104939). This scenario races DROP
+        # COLUMN against REPLACE, so partition 3 can have no *active* parts
+        # for a moment; that used to silently clear the destination. The
+        # assertion here is SELECT count() after DETACH/ATTACH, not REPLACE
+        # safety (that is covered by alter/table/replace_partition). Opt in
+        # to the pre-26.6 behaviour so the race can still reach that check.
+        settings = None
+        if check_clickhouse_version(">=26.6")(self):
+            settings = [("allow_replace_partition_from_empty_source", 1)]
         nodes[1].query(
-            f"ALTER TABLE {table1_name} REPLACE PARTITION 3 FROM {table2_name}"
+            f"ALTER TABLE {table1_name} REPLACE PARTITION 3 FROM {table2_name}",
+            settings=settings,
         )
 
     with Given("I have ClickHouse nodes"):
@@ -260,9 +272,12 @@ def select_all_missing_column(self):
 
         with By("I check system.mutations"):
             for node in nodes:
+                # Diagnostic dump only. latest_fail_reason often contains
+                # "Exception:", which node.query treats as a failed query
+                # even when exitcode is 0.
                 node.query(
                     "SELECT * FROM system.mutations FORMAT Vertical",
-                    exitcode=0,
+                    no_checks=True,
                     timeout=60,
                 )
 
