@@ -12,6 +12,7 @@ from helpers.argparser import (
     CaptureClusterArgs,
     CaptureS3Args,
 )
+from helpers.cas_storage import add_cas_arguments, apply_cas_context
 from s3.tests.common import start_minio
 
 xfails = {
@@ -24,13 +25,21 @@ ffails = {}
 
 
 def argparser(parser):
-    """Add --unsafe flag to the parser."""
+    """Add --unsafe and CAS flags to the parser."""
     argparser_base(parser)
 
     parser.add_argument(
         "--unsafe",
         action="store_true",
         help="Disable workarounds for known issues.",
+    )
+
+    add_cas_arguments(
+        parser,
+        cas_help="use a single CAS object-storage disk for the external and "
+        "tiered policies (MinIO/RustFS only; requires Antalya >= 26.6)",
+        s3_cache_help="like --cas, but layer a type=cache disk in front of the "
+        "CAS disk (external and tiered policy names are unchanged)",
     )
 
 
@@ -259,6 +268,8 @@ def regression(
     stress: bool,
     with_analyzer=False,
     unsafe=False,
+    use_cas=False,
+    use_cas_s3_cache=False,
 ):
     """Stress testing regression."""
 
@@ -266,10 +277,18 @@ def regression(
 
     self.context.stress = stress
     self.context.unsafe = unsafe
+    self.context.use_cas_storage = False
+    self.context.use_cas_s3_cache = False
 
     storages = s3_args.pop("storages", None)
     if storages is None:
         storages = ["minio"]
+
+    # --cas-s3-cache implies CAS and wins if both flags are passed.
+    if use_cas_s3_cache or use_cas:
+        if storages != ["minio"]:
+            fail("--cas / --cas-s3-cache requires --storage minio")
+        apply_cas_context(self, s3_cache=bool(use_cas_s3_cache))
 
     module_args = dict(
         cluster_args=cluster_args,

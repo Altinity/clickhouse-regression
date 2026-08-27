@@ -436,6 +436,8 @@ def move_random_partition_to_random_disk(self):
             exitcode=0,
         )
         disks = json.loads(r.output)["arrayJoin(disks)"]
+        if len(disks) < 2:
+            skip("storage policy has only one disk")
         disks.remove(src_disk)
         dest_disk = random.choice(disks)
 

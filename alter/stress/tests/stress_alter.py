@@ -58,11 +58,14 @@ def build_action_list(
             freeze_unfreeze_random_part,
             drop_random_part,
             replace_random_part,
-            move_random_partition_to_random_disk,
             move_random_partition_to_random_table,
             attach_random_part_from_table,
             fetch_random_part_from_table,
         ]
+        # CAS collapses both policies onto one disk, so MOVE PARTITION TO DISK
+        # has no destination.
+        if not getattr(current().context, "use_cas_storage", False):
+            actions.append(move_random_partition_to_random_disk)
 
     if projections:
         actions += [

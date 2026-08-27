@@ -10,7 +10,13 @@ from testflows.core import *
 from testflows.asserts import error
 
 from helpers.queries import *
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
+from helpers.cas_storage import (
+    CAS_CACHE_DISK,
+    CAS_CACHE_MAX_SIZE,
+    CAS_CACHE_PATH,
+    CAS_DISK,
+)
 from s3.tests.common import (
     s3_storage,
     insert_random,
@@ -24,7 +30,50 @@ from s3.tests.common import (
 def disk_config(self):
     """Set up disks and policies for stress tests."""
 
-    if getattr(self.context, "uri", None):
+    if getattr(self.context, "use_cas_storage", False):
+        if not check_if_antalya_build(self) or not check_clickhouse_version(">=26.6")(
+            self
+        ):
+            skip("CAS requires an Antalya build >= 26.6")
+
+        if not getattr(self.context, "uri", None):
+            fail("--cas / --cas-s3-cache requires MinIO/RustFS (no S3 URI in context)")
+
+        # One CAS pool, both policy names kept so CREATE TABLE does not change.
+        # Two CAS disks would be two server_root_id namespaces; MOVE PARTITION
+        # across them is not a valid CAS operation.
+        with Given("I have a CAS object-storage disk configured"):
+            cas_disk = {
+                "type": "object_storage",
+                "object_storage_type": "s3",
+                "metadata_type": "cas",
+                "server_root_id": "alter-stress-cas-{replica}",
+                "endpoint": f"{self.context.uri}cas/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+            }
+            if getattr(self.context, "use_cas_s3_cache", False):
+                disks = {
+                    CAS_DISK: cas_disk,
+                    CAS_CACHE_DISK: {
+                        "type": "cache",
+                        "disk": CAS_DISK,
+                        "path": CAS_CACHE_PATH,
+                        "max_size": CAS_CACHE_MAX_SIZE,
+                    },
+                }
+                policy_disk = CAS_CACHE_DISK
+            else:
+                disks = {CAS_DISK: cas_disk}
+                policy_disk = CAS_DISK
+
+        with And("I have storage policies pointing at the CAS disk"):
+            policies = {
+                "external": {"volumes": {"external": {"disk": policy_disk}}},
+                "tiered": {"volumes": {"default": {"disk": policy_disk}}},
+            }
+
+    elif getattr(self.context, "uri", None):
         with Given("I have two S3 disks configured"):
             disks = {
                 "external": {
