@@ -327,7 +327,7 @@ NESTED_ADD_COLUMNS = (
 @TestScenario
 def alter_add_nested_column_commit_unknown(self, minio_root_user, minio_root_password):
     """Commit-unknown recovery must treat an already-committed nested ADD COLUMN
-    as applied.
+    as applied (https://github.com/Altinity/ClickHouse/issues/2215).
 
     ``isAddColumnApplied`` rebuilds the expected Iceberg type via
     ``getIcebergType`` from the current ``last-column-id``. For Array / Map /
