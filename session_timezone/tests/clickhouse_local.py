@@ -137,12 +137,12 @@ def date_datetime_column_types(self):
             message = "begin\nend"
 
         clickhouse_local(
-            query="select 'begin';"
+            query="select 'begin' FORMAT TSV;"
             f" create table {table_name} (d DateTime) Engine=Memory as select "
             "toDateTime('2000-01-01 00:00:00', 'UTC');"
             f" select *, timezone() from {table_name} where d = '2000-01-01 00:00:00' "
             "settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;"
-            " select 'end';",
+            " select 'end' FORMAT TSV;",
             message=message,
         )
 
