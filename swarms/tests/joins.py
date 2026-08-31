@@ -132,10 +132,11 @@ def check_join(
     if node is None:
         node = self.context.node
 
+    # A different facet of ClickHouse#89996 than the one below, and not fixed by #94748.
     if (
         join_clause == "FULL OUTER JOIN"
         and object_storage_cluster_join_mode == "allow"
-        and cluster_join_fix_missing
+        and check_clickhouse_version("<26.3")(self)
     ):
         xfail(
             "FULL OUTER JOIN is not supported in allow mode https://github.com/ClickHouse/ClickHouse/issues/89996"
