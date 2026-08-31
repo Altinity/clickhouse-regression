@@ -132,7 +132,6 @@ def check_join(
     if node is None:
         node = self.context.node
 
-    # A different facet of ClickHouse#89996 than the one below, and not fixed by #94748.
     if (
         join_clause == "FULL OUTER JOIN"
         and object_storage_cluster_join_mode == "allow"
@@ -360,7 +359,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table"
@@ -368,7 +367,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -376,7 +375,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -384,7 +383,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -392,7 +391,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3_table_function"
@@ -400,7 +399,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3_table_function"
@@ -408,7 +407,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3_table_function"
@@ -416,7 +415,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table"
@@ -424,56 +423,56 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table"
@@ -481,14 +480,14 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -496,7 +495,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
         or (
             left_table.table_type == "s3_table_function"
@@ -504,7 +503,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
-            and cluster_join_fix_missing
+            and check_clickhouse_version("<26.3")(self)
         )
     ):
         # resulting rows are not stable
