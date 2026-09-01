@@ -164,14 +164,21 @@ def insert_ontime_data(self, year, node=None):
     if node is None:
         node = self.context.node
 
-    if check_clickhouse_version("<23.3")(self):
-        node.query(
-            f"INSERT INTO ontime SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
+    threads = 40 if check_clickhouse_version("<23.3")(self) else 20
+    # Public bucket. After ClickHouse #106855, unsigned s3() reads that would
+    # fall back to server credentials are rejected unless NOSIGN is set.
+    if check_clickhouse_version(">=23.4")(self):
+        s3_source = (
+            f"s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', NOSIGN, CSVWithNames)"
         )
     else:
-        node.query(
-            f"INSERT INTO ontime SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 20;"
+        s3_source = (
+            f"s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames)"
         )
+
+    node.query(
+        f"INSERT INTO ontime SELECT * FROM {s3_source} SETTINGS max_insert_threads = {threads};"
+    )
 
 
 @TestStep(Given)

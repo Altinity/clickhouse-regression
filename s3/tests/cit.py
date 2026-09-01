@@ -10,6 +10,19 @@ from s3.tests.common import *
 from s3.requirements import *
 
 
+def unsigned_s3_auth(self, maybe_auth=""):
+    """s3() auth argument for unsigned/anonymous access.
+
+    After ClickHouse #106855, omitting credentials is treated as using server
+    credentials and is rejected. NOSIGN is the replacement (available since 23.4).
+    """
+    if maybe_auth:
+        return maybe_auth
+    if check_clickhouse_version(">=23.4")(self):
+        return "NOSIGN, "
+    return ""
+
+
 @TestOutline(Scenario)
 @Requirements(RQ_SRS_015_S3_TableFunction_S3_Syntax("1.0"))
 @Examples(
@@ -36,7 +49,7 @@ def test_put(self, maybe_auth, positive):
         values_csv = "1,2,3\n3,2,1\n78,43,45\n"
         put_query = (
             "insert into table function s3('{}', {} 'CSV', '{}') values {}".format(
-                uri, maybe_auth, table_format, values
+                uri, unsigned_s3_auth(self, maybe_auth), table_format, values
             )
         )
 
@@ -118,7 +131,7 @@ def test_put_csv(self, maybe_auth, positive):
         table_format = "column1 UInt32, column2 UInt32, column3 UInt32"
         put_query = (
             "insert into table function s3('{}', {} 'CSV', '{}') format CSV".format(
-                uri, maybe_auth, table_format
+                uri, unsigned_s3_auth(self, maybe_auth), table_format
             )
         )
         csv_data = "8,9,16\n11,18,13\n22,14,2"
@@ -155,8 +168,8 @@ def test_put_get_with_redirect(self):
         table_format = "column1 UInt32, column2 UInt32, column3 UInt32"
         values = "(1, 1, 1), (1, 1, 1), (11, 11, 11)"
         values_csv = "1,1,1\n1,1,1\n11,11,11"
-        query = "insert into table function s3('{}', 'CSV', '{}') values {}".format(
-            minio_redirect_uri, table_format, values
+        query = "insert into table function s3('{}', {} 'CSV', '{}') values {}".format(
+            minio_redirect_uri, unsigned_s3_auth(self), table_format, values
         )
 
     with Then("I insert data at the target address 'proxy1'"):
@@ -166,8 +179,8 @@ def test_put_get_with_redirect(self):
         assert values_csv + "\n" == get_s3_file_content(cluster, bucket, "test.csv")
 
     with And("I make sure that the data returned from 'proxy1' matches"):
-        query = "select *, column1*column2*column3 from s3('{}', 'CSV', '{}') FORMAT TabSeparated".format(
-            minio_redirect_uri, table_format
+        query = "select *, column1*column2*column3 from s3('{}', {} 'CSV', '{}') FORMAT TabSeparated".format(
+            minio_redirect_uri, unsigned_s3_auth(self), table_format
         )
         stdout = run_query(instance, query)
 
