@@ -81,6 +81,7 @@ def scenario(self, engine):
             path = (
                 node.query(
                     f"SELECT path_on_disk FROM system.part_log WHERE table = '{table_name}'"
+                    f" AND table_uuid = '{table_uuid}'"
                     " AND event_type='MovePart' ORDER BY event_time FORMAT TabSeparated"
                 )
                 .output.strip()
