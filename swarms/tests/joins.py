@@ -194,6 +194,12 @@ def check_join(
         "PASTE JOIN",
     ]
 
+    # A JOIN with an object storage cluster table on the left was shipped whole to the swarm
+    # nodes, failing with UNKNOWN_TABLE / UNKNOWN_DATABASE. Fixed by ClickHouse#94748.
+    cluster_join_fix_missing = check_clickhouse_version("~26.1")(
+        self
+    ) or check_clickhouse_version("<25.8.33")(self)
+
     if (
         (
             object_storage_cluster_join_mode == "allow"
@@ -201,7 +207,7 @@ def check_join(
             and right_table.table_type == "iceberg_table"
             and object_storage_cluster
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             object_storage_cluster_join_mode == "allow"
@@ -209,7 +215,7 @@ def check_join(
             and right_table.table_type == "iceberg_table"
             and object_storage_cluster
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             object_storage_cluster_join_mode == "allow"
@@ -217,21 +223,21 @@ def check_join(
             and right_table.table_type == "iceberg_table"
             and object_storage_cluster
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "iceberg_table"
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "iceberg_table"
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
     ):
         exitcode, message = (
@@ -247,7 +253,7 @@ def check_join(
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -256,7 +262,7 @@ def check_join(
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             left_table.table_type == "s3_table_function"
@@ -265,7 +271,7 @@ def check_join(
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
@@ -273,14 +279,14 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "merge_tree_table"
             and object_storage_cluster_join_mode == "allow"
             and join_clause != "PASTE JOIN"
-            and check_clickhouse_version("<26.3")(self)
+            and cluster_join_fix_missing
         )
     ):
         exitcode, message = (
