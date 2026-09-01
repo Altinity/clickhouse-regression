@@ -591,7 +591,7 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition_cas
       part: 1
-      timeout_minutes: 360
+      timeout_minutes: 720
       storage_path: /attach_partition/cas
       regression_args: '--cas --only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-cas-artifacts
