@@ -55,14 +55,21 @@ def cas_storage_config(
     endpoint=CAS_S3_ENDPOINT,
     access_key_id=CAS_S3_ACCESS_KEY,
     secret_access_key=CAS_S3_SECRET_KEY,
+    gc_interval_sec=None,
 ):
     """XML that defines ``cas_disk`` and ``cas_policy``.
 
     When ``with_s3_cache`` is set, also defines ``cas_cache`` wrapping
     ``cas_disk`` and points ``cas_policy`` (and ``default``, if requested) at
-    the cache disk.
+    the cache disk. ``gc_interval_sec`` is omitted unless a suite sets it;
+    the server default is 60.
     """
     policy_disk = CAS_CACHE_DISK if with_s3_cache else CAS_DISK
+    gc_interval_xml = (
+        f"\n                <gc_interval_sec>{gc_interval_sec}</gc_interval_sec>"
+        if gc_interval_sec is not None
+        else ""
+    )
 
     disks = [
         f"""            <{CAS_DISK}>
@@ -72,7 +79,7 @@ def cas_storage_config(
                 <server_root_id>{server_root_id}</server_root_id>
                 <endpoint>{endpoint}</endpoint>
                 <access_key_id>{access_key_id}</access_key_id>
-                <secret_access_key>{secret_access_key}</secret_access_key>
+                <secret_access_key>{secret_access_key}</secret_access_key>{gc_interval_xml}
             </{CAS_DISK}>"""
     ]
     if with_s3_cache:
