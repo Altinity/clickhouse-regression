@@ -68,6 +68,9 @@ https://s3.amazonaws.com/altinity-build-artifacts/REFs/<BRANCH>/<SHA>/<RUN_ID>/c
 
 Verify with `curl -sI -o /dev/null -w "%{http_code}\n" <URL>` — if 404, the run hasn't published its report yet and should be skipped.
 
+For any other URL - JSON browser, direct artifact paths, job directory naming,
+compressed `job.log.zst` on REF runs - read `.claude/skills/_shared/ci-urls.md`.
+
 Then parse each report:
 
 ```bash
@@ -118,6 +121,28 @@ This skill stays focused on monitoring; investigation lives in dedicated skills.
 
 ---
 
+## Failure Categories (shared vocabulary)
+
+Failures surfaced here, and the results that come back from the investigation
+skills, use **exactly these five** names:
+
+| Category | Means |
+|----------|-------|
+| `regression` | A change broke it - name the PR, or the merge window |
+| `pre-existing-flaky` | Fails at a similar rate before and after |
+| `infrastructure` | The environment failed, not the code |
+| `cascade` | A consequence of another failure in the same job |
+| `unknown` | Not enough evidence to place it yet |
+
+Full definitions: read `.claude/skills/_shared/failure-categories.md`.
+
+On a branch, the culprit is often a **merge window** rather than a single PR: the
+job set a pull request runs is chosen per PR and may be much smaller than MasterCI's,
+so a candidate PR may never have run the failing job. A missing row means "did not
+run", not "passed". "Broke between `<SHA>` and `<SHA>`" is a complete answer.
+
+---
+
 ## Routing failures to investigation skills
 
 Pick the skill based on the row type in the cross-reference report:
@@ -152,13 +177,14 @@ The report has these sections (in this order):
 
 ## Interpretation guide
 
-| Pattern | Likely meaning |
-|---|---|
-| Same job fails 3/3 with **different test names** each run | Job/shard instability (timeout, infra), not a single test bug |
-| Same job + same test fails 3/3 | Real regression or definitive flaky test → investigate or xfail |
-| Same regression scenario (e.g. `swarms/.../initiator out of disk space`) fails on **both** x86_64 and aarch64 in all runs | Strong signal of a real bug, not arch-specific flakiness |
-| Job `error` (no test name) consistently | Often a timeout or runner-level error — check the job's `json.html` |
-| One run has many failures and the next two are clean | Likely transient infra; record for comparison but don't block release |
+| Pattern | Likely category | Note |
+|---|---|---|
+| Same job fails 3/3 with **different test names** each run | `infrastructure` | Job/shard instability - the job is the problem, not any of the tests |
+| Same job + same test fails 3/3, and passed before | `regression` or `pre-existing-flaky` | Decide by the rate comparison, then investigate or xfail |
+| Same regression scenario fails on **both** x86_64 and aarch64 in all runs | `regression` | Strong signal of a real bug, not arch-specific flakiness |
+| Job `error` (no test name) consistently | `infrastructure` or `unknown` | Often a timeout or runner-level error — check the job's `json.html` |
+| One run has many failures and the next two are clean | `infrastructure` | Transient; record for comparison but don't block release |
+| Starts failing at a sharp boundary and **never** recovers | `regression` **or** `infrastructure` | These look identical on a branch timeline. Check whether the runner image or a dependency changed at that boundary before blaming the code |
 
 ---
 
