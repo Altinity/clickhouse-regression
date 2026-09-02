@@ -371,6 +371,155 @@ def alter_add_nested_column_commit_unknown(self, minio_root_user, minio_root_pas
         assert isinstance(map_type.fields[0].field_type, MapType), error()
 
 
+def _describe_column_names(node, table_name):
+    describe = node.query(f"DESCRIBE TABLE {table_name}")
+    return [
+        line.split("\t")[0]
+        for line in describe.output.strip().split("\n")
+        if line.strip()
+    ]
+
+
+def _iceberg_field_names(catalog, namespace, table_name):
+    return [
+        field.name
+        for field in catalog.load_table(f"{namespace}.{table_name}").schema().fields
+    ]
+
+
+def _assert_column_order(
+    node, catalog, clickhouse_table_name, namespace, table_name, expected
+):
+    described = _describe_column_names(node, clickhouse_table_name)
+    iceberg_names = _iceberg_field_names(catalog, namespace, table_name)
+    assert described == expected, error(
+        f"DESCRIBE order {described} != {expected}"
+    )
+    assert iceberg_names == expected, error(
+        f"Iceberg schema order {iceberg_names} != {expected}"
+    )
+
+
+@TestScenario
+def alter_column_first_and_after(self, minio_root_user, minio_root_password):
+    """ADD COLUMN / MODIFY COLUMN FIRST and AFTER must persist field order
+    in Iceberg metadata, not only append or leave columns in place.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"datalake_db_{getuid()}"
+    clickhouse_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
+    node = self.context.node
+
+    with Given("create iceberg catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And("create an unpartitioned Iceberg table (name, value)"):
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=Schema(
+                NestedField(1, "name", StringType(), required=False),
+                NestedField(2, "value", LongType(), required=False),
+            ),
+            location=catalog_steps.table_s3_location(namespace, table_name),
+            partition_spec=PartitionSpec(),
+            sort_order=SortOrder(),
+        )
+
+    with And("create database with DataLakeCatalog engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("insert one row"):
+        table.append(pa.Table.from_pylist([{"name": "Alice", "value": 20}]))
+
+    with When("ADD COLUMN extra FIRST"):
+        node.query(
+            "SET allow_insert_into_iceberg = 1; "
+            f"ALTER TABLE {clickhouse_table_name} "
+            "ADD COLUMN extra Nullable(String) FIRST"
+        )
+
+    with Then("extra is the first field"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["extra", "name", "value"],
+        )
+
+    with When("ADD COLUMN mid AFTER name"):
+        node.query(
+            "SET allow_insert_into_iceberg = 1; "
+            f"ALTER TABLE {clickhouse_table_name} "
+            "ADD COLUMN mid Nullable(Int32) AFTER name"
+        )
+
+    with Then("mid sits between name and value"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["extra", "name", "mid", "value"],
+        )
+
+    with When("MODIFY COLUMN value FIRST"):
+        node.query(
+            "SET allow_insert_into_iceberg = 1; "
+            f"ALTER TABLE {clickhouse_table_name} "
+            "MODIFY COLUMN value Nullable(Int64) FIRST"
+        )
+
+    with Then("value moves to the front"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["value", "extra", "name", "mid"],
+        )
+
+    with When("MODIFY COLUMN extra AFTER mid"):
+        node.query(
+            "SET allow_insert_into_iceberg = 1; "
+            f"ALTER TABLE {clickhouse_table_name} "
+            "MODIFY COLUMN extra Nullable(String) AFTER mid"
+        )
+
+    with Then("extra moves after mid"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["value", "name", "mid", "extra"],
+        )
+
+    with Then("existing row is still readable in the new order"):
+        result = node.query(
+            f"SELECT value, name, mid, extra FROM {clickhouse_table_name} "
+            "FORMAT TabSeparated"
+        )
+        assert result.output == "20\tAlice\t\\N\t\\N", error()
+
+
 @TestFeature
 @Name("alter support")
 def feature(self, minio_root_user, minio_root_password):
@@ -386,5 +535,8 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=alter_add_nested_column_commit_unknown)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=alter_column_first_and_after)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
