@@ -1,6 +1,6 @@
 ---
 name: regression-test-database-investigation
-description: Use the internal CI database to determine whether an Altinity regression test failure is flaky, a likely regression, or a new/unknown failure.
+description: Investigate one Altinity regression-suite (TestFlows) failure - "investigate this test", "why is this scenario failing". Handles scenario paths starting with a slash (`/swarms/...`, `/lightweight delete/...`, `/ldap/authentication`) - anything recorded in `gh-data.clickhouse_regression_results`. Uses the CI database to classify it as a regression, pre-existing flaky, infrastructure, cascade, or unknown.
 ---
 
 # Skill: Database Failure Investigation (MVP)
@@ -29,6 +29,12 @@ It does not analyze logs or run tests.
 
 The agent must not assume credentials.
 If the password is not provided, explicitly ask for it before proceeding.
+
+> **This database has no error-text column.** Unlike the upstream
+> `default.checks` on play.clickhouse.com, `gh-data` tables expose **no
+> `test_context_raw`** and **no runner / `instance_type`** column. You cannot search
+> for an error signature or correlate with hardware from SQL here — the failure text
+> has to come from the job artifact. Do not assume the two schemas match.
 
 ### Connection Example
 
@@ -172,6 +178,32 @@ Failing
 
 ---
 
+## Output Vocabulary
+
+The investigation must end with **exactly one** of these five categories, spelled as
+written. `pr-ci-failure-triage` consumes this result directly, so any other wording
+breaks the report:
+
+| Category | Means |
+|----------|-------|
+| `regression` | A change broke it - name the PR, or the merge window |
+| `pre-existing-flaky` | Fails at a similar rate before and after |
+| `infrastructure` | The environment failed, not the code |
+| `cascade` | A consequence of another failure in the same job |
+| `unknown` | Not enough evidence to place it yet |
+
+Full definitions and the evidence each requires: read
+`.claude/skills/_shared/failure-categories.md`.
+
+Report the **mechanism** alongside the category, never instead of it - a data race,
+a sanitizer slowdown, an assertion, a hardware-dependent codepath. "`pre-existing-flaky`,
+sanitizer slowdown under tsan" is a complete answer; "flaky" is not.
+
+Use `unknown` when the evidence is missing, and say what would resolve it. Do not
+round an unproven case up to `pre-existing-flaky`.
+
+---
+
 ## Step 1: Identify the Search Key
 
 1. Use the provided test path or suite-level path directly as the search key.
@@ -246,23 +278,43 @@ High-level consistency is sufficient (same file, same assertion, same exception 
 
 Classify the failure as **one** of the following:
 
-### Flaky (Likely)
+### `pre-existing-flaky`
 
-* Failures appear intermittently (low fail rate, e.g., <10%)
+* Fails at a similar rate with and without the change under review - compare the
+  two rates, do not judge the absolute number
 * Passes after reruns
 * Scattered across versions/architectures with no pattern
 
-### Regression (Likely)
+A low overall rate does **not** by itself mean flaky: a test that fails 0.5% of the
+time historically but 10 of 10 times here is `regression`.
+
+### `regression`
 
 * Passed in previous versions
 * Fails consistently in newer versions
 * Error signature is stable
 * High fail rate on specific versions
 
-### New / Unknown
+### `infrastructure`
+
+* Error names an environment component: docker, network, DNS, disk, package
+  install, object store, `Cannot start clickhouse-server`
+* Passes on rerun, and unrelated suites failed at the same time
+* Say **which** component failed - "infrastructure" with no named mechanism is a guess
+
+### `cascade`
+
+* The failure follows an earlier one in the same job - typically the server died
+  and everything after it failed too
+* Do not classify it on its own: find the root cause failure, classify that, and
+  list these as its consequence
+
+### `unknown`
 
 * No meaningful historical data
 * First occurrence or insufficient signal
+* State what would resolve it: more runs, a specific attempt's log, a bisect, or a
+  local reproduction. Do not round it up to `pre-existing-flaky`.
 
 ---
 

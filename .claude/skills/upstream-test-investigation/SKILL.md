@@ -1,6 +1,6 @@
 ---
 name: upstream-test-investigation
-description: Deep investigation of a specific upstream ClickHouse test failure - query history, analyze logs, find root cause, search for existing upstream issues and fixes.
+description: Investigate one upstream CI failure in depth - "investigate this test", "why is this test failing", "analyse this failure". Handles Stateless tests (`03340_projections_formatting`), Integration tests (`test_s3_cluster/test.py::test_ambiguous`), unit tests, and job-level failures with no test name (`Server died`, `Unknown error`, `Timeout`, `Cannot start clickhouse-server`) - anything recorded in `gh-data.checks`. Works from a PR or from a branch/MasterCI run: queries history, analyses logs, identifies the PR or merge window that broke it, and searches Altinity and upstream issues.
 ---
 
 # Skill: Upstream Test Failure Investigation
@@ -53,13 +53,67 @@ These job types require a different investigation approach than Integration/Stat
 
 ---
 
+## Output Vocabulary
+
+The investigation must end with **exactly one** of these five categories, spelled as
+written. `pr-ci-failure-triage` consumes this result directly, so any other wording
+breaks the report:
+
+| Category | Means |
+|----------|-------|
+| `regression` | A change broke it - name the PR, or the merge window |
+| `pre-existing-flaky` | Fails at a similar rate before and after |
+| `infrastructure` | The environment failed, not the code |
+| `cascade` | A consequence of another failure in the same job |
+| `unknown` | Not enough evidence to place it yet |
+
+Full definitions and the evidence each requires: read
+`.claude/skills/_shared/failure-categories.md`.
+
+Report the **mechanism** alongside the category, never instead of it - a data race,
+a sanitizer slowdown, an assertion, a hardware-dependent codepath. "`pre-existing-flaky`,
+sanitizer slowdown under tsan" is a complete answer; "flaky" is not.
+
+Use `unknown` when the evidence is missing, and say what would resolve it. Do not
+round an unproven case up to `pre-existing-flaky`.
+
+---
+
 ## Step 1: Gather Information
 
-Collect from user or context:
-1. **Test name** (full path)
-2. **CI job URL or report URL**
-3. **PR number** (if applicable)
-4. **Database password** (for Altinity database)
+Always collect:
+1. **Failure name** - a test name, or a job-level name with no test (see below)
+2. **Check (job) name** - pins the build type; without it, history mixes builds
+3. **CI job URL or report URL**
+4. **Database password** (for the Altinity database)
+
+Then identify **which context** you are in, because it changes what else you need
+and what question you are answering:
+
+| Context | Also collect | Question to answer |
+|---------|--------------|--------------------|
+| **Pull request** | PR number | Did this PR break it? |
+| **Branch / MasterCI** (`pull_request_number = 0`) | branch name, the failing run, the last passing run | What broke it on this branch, and when? |
+
+The branch context usually arrives from `release-branch-monitor`, phrased as "this
+test started failing on `<branch>`, run X failed and run Y passed". Those two runs
+are the merge window - keep them, Step 5 needs them.
+
+### When the failure has no test name
+
+Roughly 13% of failures in `gh-data.checks` are job-level: `Server died`,
+`Unknown error`, `Timeout`, `Cannot start clickhouse-server`, `Check failed`,
+`Some queries hung`, `Build ClickHouse`. They are rows in this table, so they belong
+to this skill - but there is no test to look up.
+
+For these:
+1. **`Server died` first goes through the taxonomy** in `pr-ci-failure-triage`
+   (*Server died Taxonomy*): exit 143 from a harness timeout, an actual crash, and
+   an OOM all carry this same label, and only one of them is a bug.
+2. **Recover the test that was actually running** - `ci-job-forensics` section 4.
+   The report will not name it; the client log or the shell trace will.
+3. Then continue from Step 2 using the recovered test, or - if none can be
+   recovered - treat the job itself as the subject and rely on logs.
 
 ---
 
@@ -83,12 +137,19 @@ Use queries from the `upstream-ci-database-queries` skill.
 
 ### Classification
 
-| Pattern | Classification |
-|---------|----------------|
-| Failures across many PRs over months | Pre-existing flaky |
-| Failures only in current PR | Potential regression |
-| Failures on debug only | Assertion catching silent bug |
-| Failures on specific version only | Version-specific regression |
+| Pattern | Category | Mechanism to note |
+|---------|----------|-------------------|
+| Failures across many PRs over months | `pre-existing-flaky` | - |
+| Failures only in current PR, and the diff touches code the test exercises | `regression` | - |
+| Failures only in current PR, but no plausible code path | `unknown` | say what would resolve it |
+| Failures on debug only | category from the rate comparison | assertion catching a bug release ignores |
+| Failures on a specific version only | category from the rate comparison | version-specific behaviour |
+| Environment errors, passes on rerun | `infrastructure` | name the failing component |
+| Follows a server death in the same job | `cascade` | classify the root cause instead |
+
+The first two columns are the answer. "Debug only" and "version-specific" are
+**mechanisms**, not categories - they still need the rate comparison to decide
+whether the change is responsible.
 
 ---
 
@@ -96,15 +157,12 @@ Use queries from the `upstream-ci-database-queries` skill.
 
 ### Finding Log URLs
 
-**Integration tests:**
-```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=Integration%20tests%20%28<build_type>%29
-```
+All CI report, log and artifact URL patterns live in one place:
+**read `.claude/skills/_shared/ci-urls.md`**.
 
-**Stateless tests:**
-```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=Stateless+tests+%28<build_type>%29&name_2=Tests
-```
+It covers the PR-vs-REF fork (path segment, `name_0`, and `job.log` vs `job.log.zst`),
+the CI report and JSON-browser URLs, direct artifact paths and job directory naming,
+S3 listing, range reads for large logs, and the rerun-overwrites-artifacts gotcha.
 
 ### Common Failure Patterns
 
@@ -152,7 +210,97 @@ cat tests/integration/<TEST_DIR>/test.py
 
 ---
 
-## Step 5: Search for Upstream Issues
+## Step 5: Identify What Broke It
+
+Only for `regression` candidates. Skip when history already says
+`pre-existing-flaky`.
+
+**In a PR context**, the culprit is the PR - confirm the mechanism: does the diff
+touch code the test exercises?
+
+**In a branch context**, find the merge window. Branch runs carry
+`pull_request_number = 0`, so the history is a clean timeline:
+
+```sql
+SELECT check_start_time, commit_sha, test_status
+FROM `gh-data`.checks
+WHERE test_name = '<TEST_NAME>'
+  AND check_name = '<EXACT_JOB_NAME>'
+  AND pull_request_number = 0
+  AND check_start_time > now() - INTERVAL 60 DAY
+ORDER BY check_start_time
+```
+
+Take the last-good and first-bad `commit_sha` and list what landed between them:
+
+```bash
+cd <clickhouse-clone> && git log --oneline <LAST_GOOD>..<FIRST_BAD>
+```
+
+> **Needs the ClickHouse source.** If you do not already know where a clone is,
+> **ask the user** - do not guess a path and do not clone it yourself. Check the
+> remotes before reading: `origin` is often the Altinity fork, whose `master` is
+> frozen because work happens on release branches, while `upstream` is
+> `ClickHouse/ClickHouse`. Read `upstream/master` for "what does upstream have
+> today"; a `git log origin/master` that comes back ancient means the wrong remote,
+> not a stale clone. Without a clone, the same questions can be answered from the
+> API at one request each.
+
+
+Then narrow, in this order:
+1. Did any PR in the window run this same job and fail it? Query
+   `pull_request_number IN (...)` with the same `check_name`.
+2. Does any diff in the window reach the code the test exercises?
+3. If it still will not narrow, **the window is the answer**.
+
+> **A single PR often cannot be identified, and the reason is structural.** The set
+> of jobs a pull request runs is **chosen per PR** - it may match MasterCI or be much
+> smaller. MasterCI always runs the full set.
+>
+> So **a missing row is ambiguous**: finding no result for a candidate PR does not
+> mean the test passed there - the job may never have run. Confirm the job ran
+> before reading anything into its absence:
+>
+> ```sql
+> SELECT pull_request_number, check_name, countIf(test_status='FAIL') AS fails, count() AS runs
+> FROM `gh-data`.checks
+> WHERE pull_request_number IN (<CANDIDATES>) AND check_name = '<EXACT_JOB_NAME>'
+> GROUP BY pull_request_number, check_name
+> ```
+>
+> A PR absent from these results never ran the job, and tells you nothing. If none
+> of the candidates ran it, the merge window is the answer and no further querying
+> will improve on it.
+>
+> Report the window instead: "broke between `<SHA>` and `<SHA>`, N commits, of which
+> these touch relevant code". That is a complete answer, not a partial one.
+
+Before concluding the code broke: if the failure starts at a sharp boundary and
+never recovers, check whether the **environment** changed at that boundary - runner
+image tag, base image, a dependency. Persistent infrastructure breakage looks
+identical to a code regression on a branch timeline.
+
+---
+
+## Step 6: Search for Existing Issues
+
+Search **both** repositories. An Altinity-side issue is often the one that exists,
+especially for failures on `antalya-*` and `*-altinity*` branches.
+
+```bash
+# Altinity fork - check this one too, it is frequently the only hit
+gh search issues --repo Altinity/ClickHouse "<test_name>" --limit 10
+gh search issues --repo Altinity/ClickHouse "<error_keyword>" --state open --limit 10
+
+# Upstream
+gh search issues --repo ClickHouse/ClickHouse "<test_name>" --limit 10
+```
+
+Report what you found on each side separately: an upstream issue with a fix that is
+not in our branch is a backport candidate; an Altinity issue may already track this
+exact failure.
+
+
 
 ### Basic Searches
 
@@ -233,7 +381,7 @@ If all searches return empty, the bug is **unreported** and should be filed.
 
 ---
 
-## Step 6: Local Reproduction
+## Step 7: Local Reproduction
 
 ### Download Debug Binary
 
@@ -257,7 +405,7 @@ chmod +x clickhouse
 
 ---
 
-## Step 7: Risk Assessment
+## Step 8: Risk Assessment
 
 | Factor | Question |
 |--------|----------|
@@ -316,7 +464,13 @@ When the failure requires `allow_experimental_*` settings (visible in fuzzer's `
 <Key error message or stack trace>
 ```
 
-### Upstream Status
+### What Broke It
+
+- **Culprit:** PR #N, **or** merge window `<LAST_GOOD>..<FIRST_BAD>` (N commits)
+- If the window could not be narrowed to one PR, say so and say why - a reduced job
+  set on PRs is a normal and complete reason
+
+### Existing Issues
 - **Issue:** <link> or "None found"
 - **Fix PR:** <link> or "None"
 
