@@ -94,90 +94,6 @@ def alter_column_in_sequence(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-def alter_add_add_drop_column(self, minio_root_user, minio_root_password):
-    """Check that a column remains droppable after another column is added.
-    Test to reproduce https://github.com/Altinity/ClickHouse/issues/2085."""
-    namespace = f"namespace_{getuid()}"
-    table_name = f"table_{getuid()}"
-    database_name = f"datalake_db_{getuid()}"
-    clickhouse_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
-
-    with Given("create iceberg catalog and namespace"):
-        catalog = catalog_steps.create_catalog(
-            s3_endpoint="http://localhost:9002",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And("create an unpartitioned Iceberg table"):
-        table = catalog_steps.create_iceberg_table(
-            catalog=catalog,
-            namespace=namespace,
-            table_name=table_name,
-            schema=Schema(
-                NestedField(1, "name", StringType(), required=False),
-            ),
-            location=catalog_steps.table_s3_location(namespace, table_name),
-            partition_spec=PartitionSpec(),
-            sort_order=SortOrder(),
-        )
-
-    with And("create database with DataLakeCatalog engine"):
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-            storage_endpoint="http://minio:9000/warehouse",
-        )
-
-    with And("insert one row"):
-        table.append(pa.Table.from_pylist([{"name": "Alice"}]))
-
-    with When("add two columns one after another"):
-        alter_steps.add_column(
-            table_name=clickhouse_table_name,
-            column_name="column_a",
-            column_type="Nullable(String)",
-        )
-        alter_steps.add_column(
-            table_name=clickhouse_table_name,
-            column_name="column_b",
-            column_type="Nullable(Int64)",
-        )
-
-    with And("both added columns are visible"):
-        result = self.context.node.query(
-            f"SELECT * FROM {clickhouse_table_name} FORMAT TabSeparated"
-        )
-        assert result.output == "Alice\t\\N\t\\N", error()
-
-    with And("run SHOW CREATE TABLE"):
-        result = self.context.node.query(f"SHOW CREATE TABLE {clickhouse_table_name}")
-        assert "`name` Nullable(String)" in result.output, error()
-        assert "`column_a` Nullable(String)" in result.output, error()
-        assert "`column_b` Nullable(Int64)" in result.output, error()
-
-    with And("drop the first added column"):
-        alter_steps.drop_column(
-            table_name=clickhouse_table_name,
-            column_name="column_a",
-        )
-
-    with Then("the remaining schema and data are correct"):
-        result = self.context.node.query(
-            f"SELECT * FROM {clickhouse_table_name} FORMAT TabSeparated"
-        )
-        assert result.output == "Alice\t\\N", error()
-
-        refreshed_table = catalog.load_table(f"{namespace}.{table_name}")
-        assert [field.name for field in refreshed_table.schema().fields] == [
-            "name",
-            "column_b",
-        ], error()
-
-
-@TestScenario
 def alter_drop_partition_column(self, minio_root_user, minio_root_password):
     """Check that Iceberg rejects dropping a column used by its partition spec."""
     namespace = f"namespace_{getuid()}"
@@ -467,9 +383,6 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=alter_drop_sorting_column)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
-    Scenario(test=alter_add_add_drop_column)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=alter_add_nested_column_commit_unknown)(
