@@ -43,7 +43,7 @@ Do not invent a separate category for "new failure on the branch" - that is
 
 ### `regression`
 
-Two things must both hold:
+Normally two things must both hold:
 
 1. **Rate.** The failure rate after the suspected change is far above the rate
    before it. Compare, do not ask yes/no - a test that already failed sometimes can
@@ -53,6 +53,21 @@ Two things must both hold:
 
 If only the rate fits and no code path does, say so and use `unknown`. A timeline
 alone is correlation, not cause.
+
+> **Exception: a deterministic mechanism is enough on its own.** When the mechanism
+> is demonstrated in the source - the code rejects this input unconditionally, the
+> setting's default changed, the function no longer exists - the failure rate is
+> 100% by construction and a rate comparison adds nothing. Do not withhold the
+> verdict waiting for counts that cannot come out any other way, and do not fall
+> back to `unknown`: `unknown` means missing evidence, and here the evidence is the
+> code.
+>
+> State what you read instead of counts - file, line, and the commit or PR that
+> introduced it. "`src/IO/S3/Credentials.cpp` refuses this call since #106855" is
+> stronger evidence than any failure rate.
+>
+> This applies only when you have actually read the code. A guess about a
+> deterministic mechanism is still a guess, and still `unknown`.
 
 **Name the culprit as precisely as the evidence allows**, and no further:
 
