@@ -9,7 +9,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ##  🗓 Scheduled Regression Runs
 
-Results for **the latest** scheduled workflow runs. Most scheduled runs are **x86 only**. **arm64** runs on ClickHouse **head**, **Altinity stable 25.8**, and **Antalya 26.3**.
+Results for **the latest** scheduled workflow runs. Most scheduled runs are **x86 only**. **arm64** runs on ClickHouse **head**, **Altinity stable 25.8**, and **Antalya 26.6**.
 
 | ClickHouse Version                  | Status                                                                                                                                                                                                                                                                                |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -19,7 +19,7 @@ Results for **the latest** scheduled workflow runs. Most scheduled runs are **x8
 | **`26.3`**                          | [![🗓 Scheduled ClickHouse 26.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml) |
 | **`25.8`**                          | [![🗓 Scheduled ClickHouse 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml) |
 | **`26.6.2.20001.altinityantalya`** (x86 + arm64) | [![🗓 Scheduled Altinity 26.6 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-6.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-6.yml)      |
-| **`26.3.10.20001.altinityantalya`** (x86 + arm64) | [![🗓 Scheduled Altinity 26.3 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml)      |
+| **`26.3.10.20001.altinityantalya`** | [![🗓 Scheduled Altinity 26.3 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-3.yml)      |
 | **`26.1.11.20001.altinityantalya`** | [![🗓 Scheduled Altinity 26.1 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-1.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-1.yml)      |
 | **`25.8.33.20001.altinityantalya`** | [![🗓 Scheduled Altinity 25.8 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml/badge.svg?branch=main)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml)      |
 | **`25.8.28.10001.altinitystable`** (x86 + arm64) | [![🗓 Scheduled Altinity 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml)      |
@@ -42,7 +42,7 @@ All times UTC.
 | **Saturday**  | ❌   | ✅             |
 
 - **head** runs at 00:00 UTC on Tuesday and Thursday (x86 + arm64).
-- **All other versions** run once a week at 22:00 UTC on Saturday (x86 only, except **Altinity stable 25.8** and **Antalya 26.3** which also run arm64).
+- **All other versions** run once a week at 22:00 UTC on Saturday (x86 only, except **Altinity stable 25.8** and **Antalya 26.6** which also run arm64).
 
 ## 🔍 Table of Contents
 
