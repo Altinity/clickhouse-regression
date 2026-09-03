@@ -194,7 +194,10 @@ def not_enough_privileges(name):
 
 
 def cannot_parse_string_as_float(string):
-    return (6, f"Exception: Cannot parse string '{string}' as Float64")
+    if check_clickhouse_version("<26.7")(current()):
+        return (6, f"Exception: Cannot parse string '{string}' as Float64")
+    else:
+        return (72, f"Exception: Cannot read floating point value here: {string}")
 
 
 def missing_columns(name):
