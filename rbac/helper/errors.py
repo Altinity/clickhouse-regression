@@ -204,6 +204,16 @@ def missing_columns(name):
     return (47, f"Exception: Missing columns: '{name}' while processing")
 
 
+def cannot_drop_key_column(name):
+    if check_clickhouse_version("<26.8")(current()):
+        return (47, f"Exception: Missing columns: '{name}' while processing")
+    else:
+        return (
+            12,
+            f"Exception: Trying to ALTER DROP key {name} column which is a part of key expression",
+        )
+
+
 def missing_columns_analyzer(name):
     if check_clickhouse_version("<24.9")(current()):
         return (47, f"Exception: Unknown expression identifier '{name}' in scope")
