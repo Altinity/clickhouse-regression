@@ -148,8 +148,10 @@ def invalid_parameters(self):
         exitcode = 43
         if check_clickhouse_version("<24.7")(self):
             message = "DB::Exception: Illegal type of argument"
-        else:
+        elif check_clickhouse_version("<26.8")(self):
             message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'aes_encrypt_mysql'."
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 4th argument 'IV' to function 'aes_encrypt_mysql'."
         aes_encrypt_mysql(
             plaintext="'hello there'",
             key="'0123456789123456'",

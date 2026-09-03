@@ -2,7 +2,12 @@ from helpers.common import check_clickhouse_version, current, is_with_analyzer
 
 
 def forgot_quotes():
-    if check_clickhouse_version(">=24.9")(current()):
+    if check_clickhouse_version(">=26.9")(current()):
+        return (
+            47,
+            "DB::Exception: Unknown expression or function identifier `aes`. In scope SELECT",
+        )
+    elif check_clickhouse_version(">=24.9")(current()):
         return (
             47,
             "DB::Exception: Unknown expression or function identifier `aes` in scope SELECT",
