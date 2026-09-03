@@ -32,9 +32,10 @@ def if_valid(partition, with_id):
         if partition in not_exists:
             return None, None, False
         elif partition == "!" and check_clickhouse_version(">=25.2")(current()):
+            # 26.8+ (#115066) also lists !~ / !~*; common prefix matches both.
             return (
                 62,
-                "DB::Exception: Exclamation mark can only occur in != operator: Syntax error: failed at position",
+                "DB::Exception: Exclamation mark can only occur in !=",
                 False,
             )
         elif partition == "'":
@@ -57,9 +58,10 @@ def if_valid(partition, with_id):
         if partition in not_exists:
             return None, None, False
         elif partition == "!" and check_clickhouse_version(">=25.2")(current()):
+            # 26.8+ (#115066) also lists !~ / !~*; common prefix matches both.
             return (
                 62,
-                "DB::Exception: Exclamation mark can only occur in != operator: Syntax error: failed at position",
+                "DB::Exception: Exclamation mark can only occur in !=",
                 False,
             )
         elif partition == "'" and check_clickhouse_version(">=25.2")(current()):
@@ -68,8 +70,13 @@ def if_valid(partition, with_id):
                 "DB::Exception: Single quoted string is not closed: Syntax error: failed at position",
                 False,
             )
-        elif partition in unrecognized_token and check_clickhouse_version(">=25.2")(
-            current()
+        elif (
+            partition in unrecognized_token
+            and check_clickhouse_version(">=25.2")(current())
+            # `~` became a valid regexp-match token in 26.8; it now fails as a generic syntax error.
+            and not (
+                partition == "~" and check_clickhouse_version(">=26.8")(current())
+            )
         ):
             return (
                 62,
