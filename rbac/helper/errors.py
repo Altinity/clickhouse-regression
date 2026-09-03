@@ -204,8 +204,10 @@ def missing_columns(name):
 def missing_columns_analyzer(name):
     if check_clickhouse_version("<24.9")(current()):
         return (47, f"Exception: Unknown expression identifier '{name}' in scope")
-    else:
+    elif check_clickhouse_version("<26.9")(current()):
         return (47, f"Exception: Unknown expression identifier `{name}` in scope")
+    else:
+        return (47, f"Exception: Unknown expression identifier `{name}`. In scope")
 
 
 # Errors: wrong name
