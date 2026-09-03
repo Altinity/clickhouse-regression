@@ -59,11 +59,7 @@ def enable_cas_default_storage(self, s3_cache=False):
     ``type=cache`` disk in front of ``cas_disk``.
     """
     cas_config_path().write_text(
-        cas_storage_config(
-            "lightweight-delete-cas-{replica}",
-            with_s3_cache=s3_cache,
-            gc_interval_sec=3600,
-        )
+        cas_storage_config("lightweight-delete-cas-{replica}", with_s3_cache=s3_cache)
     )
     apply_cas_context(self, s3_cache=s3_cache)
     try:
