@@ -564,4 +564,8 @@ def feature(self):
         disk_config()
 
     for scenario in loads(current_module(), Scenario):
+        # loads() also returns the alter_combinations Outline. Invoking it
+        # here without `actions` is TypeError; named scenarios call it.
+        if scenario is alter_combinations:
+            continue
         Scenario(run=scenario, tags=["long", "combinatoric"])

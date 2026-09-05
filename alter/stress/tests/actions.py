@@ -128,92 +128,121 @@ def select_max_min_random(self, repeat_limit=5):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add column")
 def add_random_column(self):
-    """Add a column with a random name."""
+    """Add a column with a random name to every table.
+
+    The name is chosen once. Retrying the whole step with a new name
+    leaves earlier ADD COLUMN IF NOT EXISTS results on a subset of tables
+    and fails the later cross-table schema check.
+    """
     column_name = f"c{random.randint(0, 99999)}"
     with table_schema_lock:
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            wait_for_mutations_to_finish(node=node)
-            By(
-                name=f"add column to {table_name} with {node.name}",
-                test=alter_table_add_column,
-            )(
-                table_name=table_name,
-                column_name=column_name,
-                column_type="UInt16",
-                node=node,
-                exitcode=0,
-                timeout=120,
-                if_not_exists=True,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    wait_for_mutations_to_finish(node=node)
+                    By(
+                        name=f"add column to {table_name} with {node.name}",
+                        test=alter_table_add_column,
+                    )(
+                        table_name=table_name,
+                        column_name=column_name,
+                        column_type="UInt16",
+                        node=node,
+                        exitcode=0,
+                        if_not_exists=True,
+                        **alter_query_args,
+                    )
 
         retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
             tables=self.context.table_names
         )
 
 
+def drop_column_and_dependent_indexes(node, table_name, column_name, **query_kwargs):
+    """DROP COLUMN together with skip indexes that reference it.
+
+    ClickHouse rejects DROP COLUMN (Code 47) if a skip index still uses the
+    column. CLEAR INDEX does not drop the index definition.
+    """
+    r = node.query(
+        f"SELECT name FROM system.data_skipping_indices "
+        f"WHERE table = '{table_name}' "
+        f"AND has(splitByRegexp('\\\\W+', expr), '{column_name}') "
+        f"FORMAT TSV",
+        no_checks=True,
+    )
+    parts = [
+        f"DROP INDEX IF EXISTS {name.strip()}"
+        for name in r.output.splitlines()
+        if name.strip()
+    ]
+    parts.append(f"DROP COLUMN IF EXISTS {column_name}")
+    return node.query(
+        f"ALTER TABLE {table_name} {', '.join(parts)}",
+        **query_kwargs,
+    )
+
+
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("delete column")
 def delete_random_column(self):
-    """Delete a random column."""
+    """Delete a random column from every table."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        for table_name in self.context.table_names:
-            with By("selecting a random node that knows about the table"):
-                node = get_random_node_for_table(table_name=table_name)
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    with By("selecting a random node that knows about the table"):
+                        node = get_random_node_for_table(table_name=table_name)
 
-            with And("waiting for any other mutations on that column to finish"):
-                wait_for_mutations_to_finish(node=node, command_like=column_name)
+                    with And("waiting for any other mutations on that column to finish"):
+                        wait_for_mutations_to_finish(node=node, command_like=column_name)
 
-            And(
-                name=f"delete column from {table_name} with {node.name}",
-                test=alter_table_drop_column,
-            )(
-                node=node,
-                table_name=table_name,
-                column_name=column_name,
-                exitcode=0,
-                timeout=120,
-                **alter_query_args,
-            )
+                    with And(
+                        f"delete column from {table_name} with {node.name}"
+                    ):
+                        drop_column_and_dependent_indexes(
+                            node=node,
+                            table_name=table_name,
+                            column_name=column_name,
+                            exitcode=0,
+                            **alter_query_args,
+                        )
 
         check_tables_have_same_columns(tables=self.context.table_names)
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("rename column")
 def rename_random_column(self):
-    """Rename a random column to a random value."""
+    """Rename a random column to a random value on every table."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     new_name = f"c{random.randint(0, 99999)}"
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            # wait_for_mutations_to_finish(node=node)
-            By(
-                name=f"rename column from {table_name} with {node.name}",
-                test=alter_table_rename_column,
-            )(
-                node=node,
-                table_name=table_name,
-                column_name_old=column_name,
-                column_name_new=new_name,
-                exitcode=0,
-                timeout=120,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    By(
+                        name=f"rename column from {table_name} with {node.name}",
+                        test=alter_table_rename_column,
+                    )(
+                        node=node,
+                        table_name=table_name,
+                        column_name_old=column_name,
+                        column_name_new=new_name,
+                        exitcode=0,
+                        **alter_query_args,
+                    )
 
         retry(
             check_tables_have_same_columns,
@@ -241,7 +270,6 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
-        timeout=120,
         **alter_query_args,
     )
 
@@ -578,10 +606,13 @@ def delete_random_rows_lightweight(self):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add projection")
 def add_random_projection(self, safe=True):
-    """Add a random projection to all tables."""
+    """Add a random projection to all tables.
+
+    The projection name is chosen once so a retry cannot leave
+    different projections on a subset of tables.
+    """
 
     with table_schema_lock:
         table_name = get_random_table_name()
@@ -589,22 +620,24 @@ def add_random_projection(self, safe=True):
         column_name = get_random_column_name(node=node, table_name=table_name)
         projection_name = f"projection_{getuid()[:8]}_{column_name}"
 
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
 
-            if safe:
-                wait_for_mutations_to_finish(node=node)
+                    if safe:
+                        wait_for_mutations_to_finish(node=node)
 
-            node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
-                exitcode=0,
-                **alter_query_args,
-            )
-            node.query(
-                f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
-                exitcode=0,
-                **alter_query_args,
-            )
+                    node.query(
+                        f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
+                        exitcode=0,
+                        **alter_query_args,
+                    )
+                    node.query(
+                        f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
+                        exitcode=0,
+                        **alter_query_args,
+                    )
 
         if safe:
             retry(
@@ -798,8 +831,16 @@ def modify_random_ttl(self):
     node = get_random_node_for_table(table_name=table_name)
 
     ttl_expression = f"key + INTERVAL {random.randint(1, 10)} YEAR"
+    # CAS (and any single-volume policy) has no destination volume.
+    # Non-CAS tiered/local keep a volume named `external`.
     if random.randint(0, 1):
-        ttl_expression += " to volume 'external'"
+        r = node.query(
+            f"SELECT volume_name FROM system.storage_policies "
+            f"WHERE policy_name='{self.context.storage_policy}' "
+            f"AND volume_name='external' FORMAT TSV"
+        )
+        if r.output.strip():
+            ttl_expression += " to volume 'external'"
 
     node.query(
         f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}",
@@ -1039,8 +1080,8 @@ def check_consistency(
                             f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index}"
                         )
                     for column in outlier_columns:
-                        node.query(
-                            f"ALTER TABLE {table_name} DROP COLUMN IF EXISTS {column}"
+                        drop_column_and_dependent_indexes(
+                            node=node, table_name=table_name, column_name=column
                         )
 
 
