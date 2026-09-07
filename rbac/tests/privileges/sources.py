@@ -844,6 +844,8 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
 
     table_name = f"table_{getuid()}"
 
+    # NOSIGN: the bucket is never reached, only the privilege check matters.
+
     with Scenario("S3 source without privilege"):
         with Given("The user has table privilege"):
             node.query(f"GRANT CREATE TABLE ON {table_name} TO {grant_target_name}")
@@ -856,7 +858,7 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
 
         with Then("I check the user can't use the S3 source"):
             node.query(
-                f"CREATE TABLE {table_name} (x String) ENGINE=S3('https://my.amazonaws.com/mybucket/mydata', 'TSV')",
+                f"CREATE TABLE {table_name} (x String) ENGINE=S3('https://my.amazonaws.com/mybucket/mydata', NOSIGN, 'TSV')",
                 settings=[("user", user_name)],
                 exitcode=exitcode,
                 message=message,
@@ -868,7 +870,7 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
 
         with Then("I check the user can use the S3 source"):
             node.query(
-                f"CREATE TABLE {table_name} (x String) ENGINE=S3('https://my.amazonaws.com/mybucket/mydata', 'TSV')",
+                f"CREATE TABLE {table_name} (x String) ENGINE=S3('https://my.amazonaws.com/mybucket/mydata', NOSIGN, 'TSV')",
                 settings=[("user", f"{user_name}")],
             )
 
@@ -881,7 +883,7 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
 
         with Then("I check the user cannot use the S3 source"):
             node.query(
-                f"CREATE TABLE {table_name} (x String) ENGINE=S3('https://my.amazonaws.com/mybucket/mydata', 'TSV')",
+                f"CREATE TABLE {table_name} (x String) ENGINE=S3('https://my.amazonaws.com/mybucket/mydata', NOSIGN, 'TSV')",
                 settings=[("user", user_name)],
                 exitcode=exitcode,
                 message=message,
