@@ -3,7 +3,7 @@ from testflows.asserts import error
 
 from rbac.requirements import *
 
-from helpers.common import getuid, get_settings_value
+from helpers.common import getuid, get_settings_value, check_clickhouse_version
 
 import rbac.tests.multiple_auth_methods.common as common
 import rbac.tests.multiple_auth_methods.errors as errors
@@ -11,10 +11,24 @@ import rbac.tests.multiple_auth_methods.errors as errors
 import random
 
 
+def same_password_expired_login_expected(user_name):
+    """Expected login result when two methods accept the same password and
+    one VALID UNTIL has already passed.
+
+    From 26.8 (ClickHouse #110144) a shared credential uses the earliest
+    VALID UNTIL, including an already-expired one, so login is rejected.
+    Docs: CREATE USER — "the earliest VALID UNTIL wins even when it has
+    already passed". Before that, any still-valid matching method was enough.
+    """
+    if check_clickhouse_version(">=26.8")(current()):
+        return errors.wrong_password(user_name)
+    return None
+
+
 @TestScenario
 def same_passwords_one_expired(self):
-    """Check that if user has two same passwords and one of them is expired,
-    user still can login."""
+    """Check login when the user has two copies of the same password and one
+    of them is expired. From 26.8 the shared credential is rejected."""
     node = self.context.node
     user_name = f"user_{getuid()}"
 
@@ -32,8 +46,12 @@ def same_passwords_one_expired(self):
             )
             node.query(query)
 
-        with When("check that user can login with this password"):
-            common.login(user_name=user_name, password="123")
+        with When("check login with this password"):
+            common.login(
+                user_name=user_name,
+                password="123",
+                expected=same_password_expired_login_expected(user_name),
+            )
 
     finally:
         with Finally("drop user"):
@@ -42,8 +60,8 @@ def same_passwords_one_expired(self):
 
 @TestScenario
 def same_password_one_expired_different_auth_methods(self):
-    """Check that if user has two same passwords for two different auth methods
-    and one of them is expired, user still can login."""
+    """Check login when two different auth methods share the same password and
+    one of them is expired. From 26.8 the shared credential is rejected."""
     node = self.context.node
     user_name = f"user_{getuid()}"
 
@@ -61,8 +79,12 @@ def same_password_one_expired_different_auth_methods(self):
             )
             node.query(query)
 
-        with When("check that user can login with this password"):
-            common.login(user_name=user_name, password="123")
+        with When("check login with this password"):
+            common.login(
+                user_name=user_name,
+                password="123",
+                expected=same_password_expired_login_expected(user_name),
+            )
 
     finally:
         with Finally("drop user"):
@@ -188,7 +210,14 @@ def keep_adding_new_auth_methods_with_expiration_date(self):
 
 @TestScenario
 def on_cluster(self):
-    """Check that VALID UNTIL clause with multiple authentication methods works on a cluster."""
+    """Check VALID UNTIL with multiple authentication methods on a cluster.
+
+    The user is created with two copies of the same password, one already
+    expired. From 26.8 that shared credential is rejected on every node;
+    before that, login still succeeded where one method remained valid.
+    After ALTER USER VALID UNTIL on the second node, login fails there
+    on all versions.
+    """
     user_name = f"user_{getuid()}"
 
     try:
@@ -210,11 +239,20 @@ def on_cluster(self):
                 f"ALTER USER {user_name} VALID UNTIL '{past_date}'"
             )
 
-        with Then(
-            "check that user can login with this password on first and third nodes"
-        ):
-            common.login(user_name=user_name, password="123", node=self.context.node)
-            common.login(user_name=user_name, password="123", node=self.context.node_3)
+        with Then("check login with this password on first and third nodes"):
+            expected = same_password_expired_login_expected(user_name)
+            common.login(
+                user_name=user_name,
+                password="123",
+                node=self.context.node,
+                expected=expected,
+            )
+            common.login(
+                user_name=user_name,
+                password="123",
+                node=self.context.node_3,
+                expected=expected,
+            )
 
         with And("check that user cannot login with expired password on second node"):
             common.login(
