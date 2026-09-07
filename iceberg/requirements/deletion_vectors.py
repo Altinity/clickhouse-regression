@@ -17,7 +17,8 @@ RQ_Iceberg_DeletionVectors_Read = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support reading Iceberg format version 3 tables whose row-level deletes are\n"
-        "stored as deletion vectors (`deletion-vector-v1` blobs in `Puffin` files). For every data file,\n"
+        "stored as deletion vectors (`deletion-vector-v1` blobs), in either a `Puffin` file or a\n"
+        "Delta-style `.bin` container (RQ.Iceberg.DeletionVectors.DeltaContainer). For every data file,\n"
         "[ClickHouse] SHALL exclude exactly the row positions recorded in that file's deletion vector, so\n"
         "the query result matches the logical table state committed by the writer.\n"
         "\n"
@@ -165,6 +166,86 @@ RQ_Iceberg_DeletionVectors_StorageBackends = Requirement(
     link=None,
     level=2,
     num="2.6",
+)
+
+RQ_Iceberg_DeletionVectors_DeltaContainer = Requirement(
+    name="RQ.Iceberg.DeletionVectors.DeltaContainer",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Databricks writes Iceberg v3 deletion vectors into a Delta-style container — an object named\n"
+        "`deletion_vector_*.bin` holding a one-byte format version followed by the same\n"
+        "`deletion-vector-v1` blob a `Puffin` file would embed — while still declaring\n"
+        "`file_format = PUFFIN` in the delete manifest. [ClickHouse] SHALL read deletion vectors from\n"
+        "such a container and SHALL return the same rows it would for the equivalent `Puffin` file.\n"
+        "\n"
+        "The container SHALL be identified from the object's bytes rather than from the manifest's\n"
+        "declared `file_format` or the object's file extension, because neither distinguishes the two:\n"
+        "\n"
+        "* an object whose first four bytes are the `Puffin` magic `PFA1` SHALL be read as a `Puffin`\n"
+        "  file, including its footer identity checks;\n"
+        "* otherwise, when the eight bytes at the manifest's `content_offset` form a valid\n"
+        "  `deletion-vector-v1` envelope — a big-endian `combined_length` of at least 4, the magic\n"
+        "  `D1 D3 39 64`, and `content_size_in_bytes` equal to `combined_length + 8` — the referenced\n"
+        "  region SHALL be read directly as the blob, with no footer involved.\n"
+        "\n"
+        "The manifest's `content_offset` addresses the start of the blob, that is the four-byte\n"
+        "`combined_length` prefix, so a single-vector Delta container written with one version byte\n"
+        "declares `content_offset = 1` and `content_size_in_bytes = <object size> - 1`. A container\n"
+        "holding several blobs SHALL be supported, each entry addressing its own region.\n"
+        "\n"
+        "Checks that do not depend on the `Puffin` footer SHALL continue to apply: the manifest\n"
+        "`record_count` SHALL match the deserialized bitmap cardinality, the blob region SHALL lie\n"
+        "inside the object, and the resource limits of\n"
+        "RQ.Iceberg.DeletionVectors.ErrorHandling.ResourceLimits SHALL be enforced.\n"
+        "\n"
+        "```sql\n"
+        "SELECT count() FROM icebergS3('http://minio:9000/warehouse/uniform_table/', 'minio', 'minio123');\n"
+        "-- deletion vector read from deletion_vector_<uuid>.bin at content_offset = 1\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="2.7",
+)
+
+RQ_Iceberg_DeletionVectors_DeltaContainer_FailClosed = Requirement(
+    name="RQ.Iceberg.DeletionVectors.DeltaContainer.FailClosed",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "For a deletion-vector object that is neither a `Puffin` file nor a readable Delta container,\n"
+        "[ClickHouse] SHALL fail the query with an explicit `BAD_ARGUMENTS` exception naming the object,\n"
+        "SHALL NOT crash or become unresponsive, and SHALL NOT return a row set with the deletion vector\n"
+        "dropped or partially applied. This covers at least an object whose bytes carry no envelope at\n"
+        "the declared `content_offset`, a `content_offset` that misdescribes where the blob starts, and\n"
+        "an object too small to be either container.\n"
+        "\n"
+        "Because the container is identified from the bytes, the error cannot name a single defect the\n"
+        "way a footer-level check can; a single message reporting that the object is neither container\n"
+        "is sufficient, provided it names the object and the offset probed.\n"
+        "\n"
+        "Defects below the envelope — a bad CRC, a malformed roaring bitmap, a cardinality disagreeing\n"
+        "with the manifest — SHALL fail as they do for a `Puffin` file\n"
+        "(RQ.Iceberg.DeletionVectors.ErrorHandling.MalformedBlob), since the blob decoder is shared.\n"
+        "\n"
+        "The set of acceptable Delta containers is deliberately permissive: any leading version byte is\n"
+        "accepted, as is a bare envelope with no version byte at all (`content_offset = 0`). The Delta\n"
+        "specification does not enumerate what a non-`Puffin` deletion-vector container may contain, so\n"
+        "unknown wrappers are read rather than rejected until a concrete file is reported that must be\n"
+        "declined.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="2.8",
 )
 
 RQ_Iceberg_DeletionVectors_WriterOperations = Requirement(
@@ -1200,6 +1281,10 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_BlobMetadata = Requirement(
         "[ClickHouse] SHALL validate the `Puffin` footer metadata of a deletion-vector blob and reject\n"
         "invalid metadata with `BAD_ARGUMENTS`, including at least:\n"
         "\n"
+        "This requirement applies only to vectors stored in a `Puffin` container. A Delta container\n"
+        "(RQ.Iceberg.DeletionVectors.DeltaContainer) carries no footer, so none of the defects below are\n"
+        "expressible there and none of these checks run for it.\n"
+        "\n"
         "| Defect | Expected message fragment |\n"
         "|---|---|\n"
         "| blob `type` is not `deletion-vector-v1` | `expected deletion-vector-v1` |\n"
@@ -1372,7 +1457,8 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_CorruptPuffinFile = Requirement(
         "\n"
         "* an empty object, and the file truncated at any point — header-only, mid-blob, and inside\n"
         "  the footer;\n"
-        "* corrupted leading or trailing magic bytes;\n"
+        "* corrupted trailing magic bytes;\n"
+        "* corrupted leading magic bytes — with the qualification below;\n"
         "* a hostile `FooterPayloadSize`: zero, negative, beyond the file size, and above the footer\n"
         "  payload cap;\n"
         "* a footer payload that is not valid JSON;\n"
@@ -1380,6 +1466,15 @@ RQ_Iceberg_DeletionVectors_ErrorHandling_CorruptPuffinFile = Requirement(
         "  and the footer is load-bearing JSON, so a flipped byte SHALL either produce an explicit\n"
         "  error or leave the query result byte-for-byte correct (a flip inside an informational\n"
         "  footer property changes nothing the reader uses) — never a wrong row set.\n"
+        "\n"
+        "Damaged **leading** magic is the one case where a byte-for-byte correct result is also\n"
+        "acceptable. Since the container is identified from the bytes\n"
+        "(RQ.Iceberg.DeletionVectors.DeltaContainer), a `Puffin` file that has lost its `PFA1` header\n"
+        "still presents a valid `deletion-vector-v1` envelope at its `content_offset`, so it may be read\n"
+        "as a Delta container and produce the correct row set. Trailing-magic damage keeps the file on\n"
+        "the `Puffin` path, where the footer read still fails. This is a deliberate narrowing: the\n"
+        "guarantee that mangled `Puffin` framing is always reported is given up in exchange for accepting\n"
+        "containers the Delta specification does not enumerate.\n"
         "\n"
         "Reasoning: these files are written by external engines over object storage, where partial\n"
         "writes and bit rot are realistic; a reader that trusts damaged framing can crash on hostile\n"
@@ -1923,6 +2018,12 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
             name="RQ.Iceberg.DeletionVectors.AccessForms.Azure", level=2, num="2.5"
         ),
         Heading(name="RQ.Iceberg.DeletionVectors.StorageBackends", level=2, num="2.6"),
+        Heading(name="RQ.Iceberg.DeletionVectors.DeltaContainer", level=2, num="2.7"),
+        Heading(
+            name="RQ.Iceberg.DeletionVectors.DeltaContainer.FailClosed",
+            level=2,
+            num="2.8",
+        ),
         Heading(name="Producing Operations", level=1, num="3"),
         Heading(name="RQ.Iceberg.DeletionVectors.WriterOperations", level=2, num="3.1"),
         Heading(name="Vector Content Shapes", level=1, num="4"),
@@ -2161,6 +2262,8 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
         RQ_Iceberg_DeletionVectors_AccessForms,
         RQ_Iceberg_DeletionVectors_AccessForms_Azure,
         RQ_Iceberg_DeletionVectors_StorageBackends,
+        RQ_Iceberg_DeletionVectors_DeltaContainer,
+        RQ_Iceberg_DeletionVectors_DeltaContainer_FailClosed,
         RQ_Iceberg_DeletionVectors_WriterOperations,
         RQ_Iceberg_DeletionVectors_EmptyVector,
         RQ_Iceberg_DeletionVectors_AllRowsDeleted,
@@ -2236,6 +2339,8 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
     * 2.4 [RQ.Iceberg.DeletionVectors.AccessForms](#rqicebergdeletionvectorsaccessforms)
     * 2.5 [RQ.Iceberg.DeletionVectors.AccessForms.Azure](#rqicebergdeletionvectorsaccessformsazure)
     * 2.6 [RQ.Iceberg.DeletionVectors.StorageBackends](#rqicebergdeletionvectorsstoragebackends)
+    * 2.7 [RQ.Iceberg.DeletionVectors.DeltaContainer](#rqicebergdeletionvectorsdeltacontainer)
+    * 2.8 [RQ.Iceberg.DeletionVectors.DeltaContainer.FailClosed](#rqicebergdeletionvectorsdeltacontainerfailclosed)
 * 3 [Producing Operations](#producing-operations)
     * 3.1 [RQ.Iceberg.DeletionVectors.WriterOperations](#rqicebergdeletionvectorswriteroperations)
 * 4 [Vector Content Shapes](#vector-content-shapes)
@@ -2386,7 +2491,8 @@ Terms used throughout this specification:
 version: 1.0
 
 [ClickHouse] SHALL support reading Iceberg format version 3 tables whose row-level deletes are
-stored as deletion vectors (`deletion-vector-v1` blobs in `Puffin` files). For every data file,
+stored as deletion vectors (`deletion-vector-v1` blobs), in either a `Puffin` file or a
+Delta-style `.bin` container (RQ.Iceberg.DeletionVectors.DeltaContainer). For every data file,
 [ClickHouse] SHALL exclude exactly the row positions recorded in that file's deletion vector, so
 the query result matches the logical table state committed by the writer.
 
@@ -2474,6 +2580,64 @@ RQ.Iceberg.DeletionVectors.AccessForms.Azure in environments without an Azure se
 Cache-related requirements
 (section 12) apply only to S3 and Azure, because the `Puffin` cache is keyed partly on the object
 etag and local filesystem objects have none.
+
+### RQ.Iceberg.DeletionVectors.DeltaContainer
+version: 1.0
+
+Databricks writes Iceberg v3 deletion vectors into a Delta-style container — an object named
+`deletion_vector_*.bin` holding a one-byte format version followed by the same
+`deletion-vector-v1` blob a `Puffin` file would embed — while still declaring
+`file_format = PUFFIN` in the delete manifest. [ClickHouse] SHALL read deletion vectors from
+such a container and SHALL return the same rows it would for the equivalent `Puffin` file.
+
+The container SHALL be identified from the object's bytes rather than from the manifest's
+declared `file_format` or the object's file extension, because neither distinguishes the two:
+
+* an object whose first four bytes are the `Puffin` magic `PFA1` SHALL be read as a `Puffin`
+  file, including its footer identity checks;
+* otherwise, when the eight bytes at the manifest's `content_offset` form a valid
+  `deletion-vector-v1` envelope — a big-endian `combined_length` of at least 4, the magic
+  `D1 D3 39 64`, and `content_size_in_bytes` equal to `combined_length + 8` — the referenced
+  region SHALL be read directly as the blob, with no footer involved.
+
+The manifest's `content_offset` addresses the start of the blob, that is the four-byte
+`combined_length` prefix, so a single-vector Delta container written with one version byte
+declares `content_offset = 1` and `content_size_in_bytes = <object size> - 1`. A container
+holding several blobs SHALL be supported, each entry addressing its own region.
+
+Checks that do not depend on the `Puffin` footer SHALL continue to apply: the manifest
+`record_count` SHALL match the deserialized bitmap cardinality, the blob region SHALL lie
+inside the object, and the resource limits of
+RQ.Iceberg.DeletionVectors.ErrorHandling.ResourceLimits SHALL be enforced.
+
+```sql
+SELECT count() FROM icebergS3('http://minio:9000/warehouse/uniform_table/', 'minio', 'minio123');
+-- deletion vector read from deletion_vector_<uuid>.bin at content_offset = 1
+```
+
+### RQ.Iceberg.DeletionVectors.DeltaContainer.FailClosed
+version: 1.0
+
+For a deletion-vector object that is neither a `Puffin` file nor a readable Delta container,
+[ClickHouse] SHALL fail the query with an explicit `BAD_ARGUMENTS` exception naming the object,
+SHALL NOT crash or become unresponsive, and SHALL NOT return a row set with the deletion vector
+dropped or partially applied. This covers at least an object whose bytes carry no envelope at
+the declared `content_offset`, a `content_offset` that misdescribes where the blob starts, and
+an object too small to be either container.
+
+Because the container is identified from the bytes, the error cannot name a single defect the
+way a footer-level check can; a single message reporting that the object is neither container
+is sufficient, provided it names the object and the offset probed.
+
+Defects below the envelope — a bad CRC, a malformed roaring bitmap, a cardinality disagreeing
+with the manifest — SHALL fail as they do for a `Puffin` file
+(RQ.Iceberg.DeletionVectors.ErrorHandling.MalformedBlob), since the blob decoder is shared.
+
+The set of acceptable Delta containers is deliberately permissive: any leading version byte is
+accepted, as is a bare envelope with no version byte at all (`content_offset = 0`). The Delta
+specification does not enumerate what a non-`Puffin` deletion-vector container may contain, so
+unknown wrappers are read rather than rejected until a concrete file is reported that must be
+declined.
 
 ## Producing Operations
 
@@ -3159,6 +3323,10 @@ version: 1.0
 [ClickHouse] SHALL validate the `Puffin` footer metadata of a deletion-vector blob and reject
 invalid metadata with `BAD_ARGUMENTS`, including at least:
 
+This requirement applies only to vectors stored in a `Puffin` container. A Delta container
+(RQ.Iceberg.DeletionVectors.DeltaContainer) carries no footer, so none of the defects below are
+expressible there and none of these checks run for it.
+
 | Defect | Expected message fragment |
 |---|---|
 | blob `type` is not `deletion-vector-v1` | `expected deletion-vector-v1` |
@@ -3265,7 +3433,8 @@ This covers at least:
 
 * an empty object, and the file truncated at any point — header-only, mid-blob, and inside
   the footer;
-* corrupted leading or trailing magic bytes;
+* corrupted trailing magic bytes;
+* corrupted leading magic bytes — with the qualification below;
 * a hostile `FooterPayloadSize`: zero, negative, beyond the file size, and above the footer
   payload cap;
 * a footer payload that is not valid JSON;
@@ -3273,6 +3442,15 @@ This covers at least:
   and the footer is load-bearing JSON, so a flipped byte SHALL either produce an explicit
   error or leave the query result byte-for-byte correct (a flip inside an informational
   footer property changes nothing the reader uses) — never a wrong row set.
+
+Damaged **leading** magic is the one case where a byte-for-byte correct result is also
+acceptable. Since the container is identified from the bytes
+(RQ.Iceberg.DeletionVectors.DeltaContainer), a `Puffin` file that has lost its `PFA1` header
+still presents a valid `deletion-vector-v1` envelope at its `content_offset`, so it may be read
+as a Delta container and produce the correct row set. Trailing-magic damage keeps the file on
+the `Puffin` path, where the footer read still fails. This is a deliberate narrowing: the
+guarantee that mangled `Puffin` framing is always reported is given up in exchange for accepting
+containers the Delta specification does not enumerate.
 
 Reasoning: these files are written by external engines over object storage, where partial
 writes and bit rot are realistic; a reader that trusts damaged framing can crash on hostile
