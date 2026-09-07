@@ -10,6 +10,9 @@ hostile inputs for the error-handling requirements:
 
   where FooterPayload is the FileMetadata JSON (uncompressed here);
 
+* the Databricks/Delta ``.bin`` container (:func:`build_delta_bin`), which
+  is a one-byte format version followed by the same blobs and no footer;
+
 * the Iceberg v3 ``deletion-vector-v1`` blob layout::
 
       len(BE u32, of magic+vector) | magic D1 D3 39 64 | vector | crc(BE u32)
@@ -29,7 +32,13 @@ import zlib
 
 PUFFIN_MAGIC = b"PFA1"
 DV_MAGIC = bytes([0xD1, 0xD3, 0x39, 0x64])
+
+# PUFFIN_DV_MAX_BLOB_SIZE in PuffinDeletionVectorReader.h — the absolute cap the
+# reader applies to a declared blob length before it looks at the container
+MAX_DV_BLOB_SIZE = 2 * 1024**3
 DV_BLOB_TYPE = "deletion-vector-v1"
+# leading byte of a Databricks/Delta deletion-vector container
+DELTA_VERSION_BYTE = 1
 # Iceberg's reserved _pos field id — compliant writers declare a DV blob as
 # computed over the row-position column
 DV_POSITION_FIELD_ID = 2147483645
@@ -227,6 +236,129 @@ def build_dv_payload(
         crc = zlib.crc32(combined) & 0xFFFFFFFF
 
     return struct.pack(">I", combined_length) + combined + struct.pack(">I", crc)
+
+
+def build_delta_bin(
+    positions=None,
+    payload=None,
+    payloads=None,
+    version_byte=DELTA_VERSION_BYTE,
+    prefix=None,
+    trailing=b"",
+):
+    """Databricks/Delta on-disk deletion-vector container (``.bin``).
+
+    Delta PROTOCOL "Deletion Vector File Storage Format"::
+
+        version(u8=1) | <deletion-vector-v1 blob> [| blob₂ ...]
+
+    where the blob is byte-identical to what a Puffin file embeds — length
+    prefix, magic, roaring bitmap, CRC. So the container is exactly one
+    prefix byte over :func:`build_dv_payload`, which is why every crafted
+    Puffin payload can be reused here unchanged.
+
+    Args:
+        positions / payload: the single blob, as positions to delete or as
+            pre-built (possibly hostile) blob bytes.
+        payloads: several blobs concatenated into one container, for the
+            shared-container case.
+        version_byte: leading version byte; None writes a bare envelope
+            with no version byte at all (``content_offset = 0``).
+        prefix: replaces the leading bytes entirely (unknown-wrapper
+            defects); mutually exclusive with *version_byte*.
+        trailing: bytes appended after the last blob.
+
+    Returns:
+        (file_bytes, ranges) where *ranges* is a list of
+        ``(content_offset, content_size_in_bytes)`` pairs, one per blob, to
+        put in the manifest entries.
+    """
+    if payloads is None:
+        if payload is None:
+            payload = build_dv_payload(positions=positions or [])
+        payloads = [payload]
+
+    if prefix is None:
+        prefix = b"" if version_byte is None else bytes([version_byte])
+
+    data = bytearray(prefix)
+    ranges = []
+    for blob in payloads:
+        ranges.append((len(data), len(blob)))
+        data += blob
+    data += trailing
+
+    return bytes(data), ranges
+
+
+def delta_bin_blob_range(data, version_byte=DELTA_VERSION_BYTE):
+    """``(content_offset, content_size_in_bytes)`` of the single blob in a
+    ``.bin`` built with a one-byte (or absent) version prefix."""
+    offset = 0 if version_byte is None else 1
+    return offset, len(data) - offset
+
+
+def envelope_probe_accepts(payload, content_size=None):
+    """Whether the reader would recognize *payload*, declared as *content_size*
+    bytes, as a ``deletion-vector-v1`` envelope.
+
+    Mirrors ``isDeletionVectorV1Envelope``: at least 12 bytes, the magic behind
+    the 4-byte big-endian length prefix, a combined length of at least 4, and
+    ``content_size_in_bytes == combined_length + 8``.
+    """
+    if content_size is None:
+        content_size = len(payload)
+    if len(payload) < 8 or content_size < 12:
+        return False
+    combined_length = int.from_bytes(payload[:4], "big")
+    return (
+        payload[4:8] == DV_MAGIC
+        and combined_length >= 4
+        and content_size == combined_length + 8
+    )
+
+
+def rejected_at_container_seam(payload, content_size=None):
+    """Whether *container detection* is what rejects this blob, and therefore
+    whether a Delta ``.bin`` reports the coarse container-level message rather
+    than a defect-specific one.
+
+    The reader validates in a fixed order, and only the last stage differs
+    between containers:
+
+    1. blob read limits — negative, above the 2 GiB cap, or below 12 bytes;
+    2. blob bounds against the object size;
+    3. container detection — a ``PFA1`` header, else a deletion-vector-v1
+       envelope at ``content_offset``.
+
+    Stages 1 and 2 run *before* detection, so a defect either of them catches
+    is reported identically in a Puffin file and in a ``.bin``. Only a defect
+    that survives to stage 3 and then fails the envelope probe — a wrong magic,
+    or a length prefix disagreeing with the declared size — is rejected at the
+    seam, where a ``.bin`` has no header to be recognized by. Defects deeper in
+    the blob (CRC, bitmap structure, cardinality) are past detection and keep
+    their own messages.
+    """
+    if content_size is None:
+        content_size = len(payload)
+    if content_size < 12 or content_size > MAX_DV_BLOB_SIZE:
+        return False
+    return not envelope_probe_accepts(payload, content_size=content_size)
+
+
+def container_of(data):
+    """Which container the first bytes of an object declare: ``"puffin"``
+    when the leading magic is ``PFA1``, ``"delta_bin"`` when it is a Delta
+    version byte, ``"unknown"`` otherwise.
+
+    This is the harness-side mirror of the server's detection, used to
+    assert *after* a fixture is built that the container under test really
+    is the one the test believes it is."""
+    if data[:4] == PUFFIN_MAGIC:
+        return "puffin"
+    if data[:1] == bytes([DELTA_VERSION_BYTE]):
+        return "delta_bin"
+    return "unknown"
 
 
 def build_puffin(

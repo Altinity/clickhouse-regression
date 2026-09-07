@@ -8,6 +8,7 @@ inspect and mutate the raw table objects (Puffin files, Avro manifests,
 metadata JSON) that the corruption harness rewrites.
 """
 
+import gzip
 import json
 
 import boto3
@@ -17,6 +18,8 @@ from testflows.core import *
 S3_HOST_ENDPOINT = "http://localhost:9002"
 S3_NETWORK_ENDPOINT = "http://minio:9000"
 WAREHOUSE_BUCKET = "warehouse"
+
+GZIP_MAGIC = b"\x1f\x8b"
 
 
 def s3_client(test=None):
@@ -143,9 +146,24 @@ def latest_metadata_key(namespace, table_name):
     return max(keys, key=version)
 
 
+def read_metadata_bytes(key):
+    """Bytes of a table metadata JSON, decompressed when it is compressed.
+
+    Iceberg's ``write.metadata.compression-codec`` may be ``gzip``, in which
+    case the object is named ``*.gz.metadata.json`` and holds a gzip stream.
+    Spark writes them uncompressed here, so this only matters for tables
+    produced elsewhere — Databricks compresses them. Decided by the magic
+    rather than the name, because the name is a writer's convention.
+    """
+    data = get_object_bytes(key)
+    if data[:2] == GZIP_MAGIC:
+        return gzip.decompress(data)
+    return data
+
+
 def read_table_metadata(namespace, table_name):
     """Parse the newest table metadata JSON into a dict."""
-    return json.loads(get_object_bytes(latest_metadata_key(namespace, table_name)))
+    return json.loads(read_metadata_bytes(latest_metadata_key(namespace, table_name)))
 
 
 def get_snapshots(namespace, table_name):

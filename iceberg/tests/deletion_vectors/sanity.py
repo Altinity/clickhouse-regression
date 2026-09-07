@@ -348,9 +348,7 @@ def writer_operation(self, operation, statements):
         )
 
     with And("the operation produced at least one deletion vector"):
-        s3_objects.assert_puffin_exists(
-            namespace=table.namespace, table_name=table.table_name
-        )
+        common.assert_writer_produced_vectors(table=table)
 
     with Then("ClickHouse rows equal the writer engine's own rows"):
         spark_rows = spark.select_rows(

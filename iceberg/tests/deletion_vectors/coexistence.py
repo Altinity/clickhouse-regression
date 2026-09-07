@@ -73,9 +73,7 @@ def across_data_files(self):
                 "DELETE FROM {table} WHERE id >= 100 AND id % 10 = 0",
             ],
         )
-        s3_objects.assert_puffin_exists(
-            namespace=table.namespace, table_name=table.table_name
-        )
+        common.assert_writer_produced_vectors(table=table)
 
     with And("file C (ids 200..249) is added with no delete at all"):
         spark.execute(
@@ -254,9 +252,7 @@ def format_version_upgrade(self):
             table_name=table.table_name,
             condition="id IN (50, 51)",
         )
-        s3_objects.assert_puffin_exists(
-            namespace=table.namespace, table_name=table.table_name
-        )
+        common.assert_writer_produced_vectors(table=table)
 
     with Then("pre-upgrade deletes stay absent and newly deleted rows disappear"):
         expected_after = [i for i in expected_before if i not in (50, 51)]

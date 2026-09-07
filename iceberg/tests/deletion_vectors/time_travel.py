@@ -133,9 +133,7 @@ def snapshot_refresh(self):
             table_name=table.table_name,
             condition="id < 10",
         )
-        s3_objects.assert_puffin_exists(
-            namespace=table.namespace, table_name=table.table_name
-        )
+        common.assert_writer_produced_vectors(table=table)
 
     expected = list(range(10, rows))
 
@@ -186,9 +184,7 @@ def query_cache(self):
         spark.delete_rows(
             namespace=table.namespace, table_name=table.table_name, condition="id < 10"
         )
-        s3_objects.assert_puffin_exists(
-            namespace=table.namespace, table_name=table.table_name
-        )
+        common.assert_writer_produced_vectors(table=table)
 
     old = list(range(rows))
     new = list(range(10, rows))
