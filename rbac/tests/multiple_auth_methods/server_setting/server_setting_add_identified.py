@@ -20,7 +20,7 @@ def run_check_alter_user_add_auth_methods(self, max_auth_methods_per_user):
         alter_user_add_ten_auth_methods,
     ]
 
-    with Given("create users with 2 auth methods each"):
+    with Given("create users with two SSH keys and a plaintext password"):
         user_names = [f"user{i}_{getuid()}" for i in range(len(checks))]
         for user_name in user_names:
             create_user_identified_with_ssh_keys_and_plaintext_password(
@@ -39,7 +39,7 @@ def run_check_alter_user_add_auth_methods(self, max_auth_methods_per_user):
         Check(test=check)(
             user_name=user_name,
             max_auth_methods_per_user=max_auth_methods_per_user,
-            current_number_of_auth_methods=2,
+            current_number_of_auth_methods=grouped_ssh_keys_method_count(2) + 1,
         )
 
 

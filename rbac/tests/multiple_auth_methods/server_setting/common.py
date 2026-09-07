@@ -2,9 +2,20 @@ from testflows.core import *
 
 from rbac.requirements import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 import rbac.tests.multiple_auth_methods.common as common
 import rbac.tests.multiple_auth_methods.errors as errors
+
+
+def grouped_ssh_keys_method_count(n_keys):
+    """How many methods one `ssh_key BY KEY ..., KEY ...` clause counts as.
+
+    From 26.8 (ClickHouse #111181) each SSH key counts toward
+    `max_authentication_methods_per_user`.
+    """
+    if check_clickhouse_version(">=26.8")(current()):
+        return n_keys
+    return 1
 
 
 # create user
@@ -47,14 +58,22 @@ def create_user_identified_by_one_password(self, user_name, **kwargs):
 
 
 @TestCheck
-def create_user_identified_with_ssh_key(self, user_name, **kwargs):
-    """Create a user identified by ssh_key."""
+def create_user_identified_with_ssh_key(
+    self, user_name, max_auth_methods_per_user=100, **kwargs
+):
+    """Create a user identified by two ssh keys."""
     ssh_key = "AAAAC3NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     ssh_key2 = "AAAAC2NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     identified = f"ssh_key BY KEY '{ssh_key}' TYPE 'ssh-ed25519', KEY '{ssh_key2}' TYPE 'ssh-ed25519'"
+    n_methods = grouped_ssh_keys_method_count(2)
     common.create_user(
         user_name=user_name,
         identified=identified,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if 0 < max_auth_methods_per_user < n_methods
+            else None
+        ),
     )
 
 
@@ -66,12 +85,13 @@ def create_user_identified_with_ssh_keys_and_plaintext_password(
     ssh_key = "AAAAC3NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     ssh_key2 = "AAAAC2NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     identified = f"ssh_key BY KEY '{ssh_key}' TYPE 'ssh-ed25519', KEY '{ssh_key2}' TYPE 'ssh-ed25519', plaintext_password by '50'"
+    n_methods = grouped_ssh_keys_method_count(2) + 1
     common.create_user(
         user_name=user_name,
         identified=identified,
         expected=(
             errors.user_can_not_be_created_updated()
-            if max_auth_methods_per_user == 1
+            if 0 < max_auth_methods_per_user < n_methods
             else None
         ),
     )
@@ -169,15 +189,23 @@ def alter_user_identified_by_one_method(self, user_name, **kwargs):
 
 
 @TestCheck
-def alter_user_identified_with_ssh_keys(self, user_name, **kwargs):
-    """Change user's authentication method to ssh keys."""
+def alter_user_identified_with_ssh_keys(
+    self, user_name, max_auth_methods_per_user=100, **kwargs
+):
+    """Change user's authentication method to two ssh keys."""
     ssh_key = "AAAAC3NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     ssh_key2 = "AAAAC2NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
 
     identified = f"ssh_key BY KEY '{ssh_key}' TYPE 'ssh-ed25519', KEY '{ssh_key2}' TYPE 'ssh-ed25519'"
+    n_methods = grouped_ssh_keys_method_count(2)
     common.alter_identified(
         user_name=user_name,
         identified=identified,
+        expected=(
+            errors.user_can_not_be_created_updated()
+            if 0 < max_auth_methods_per_user < n_methods
+            else None
+        ),
     )
 
 
@@ -189,12 +217,13 @@ def alter_user_identified_with_ssh_keys_and_plaintext_password(
     ssh_key = "AAAAC3NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     ssh_key2 = "AAAAC2NzaC1lZDI1NTE5AAAAIBzqa3duS0ce6QYkzUgko9W0Ux7i7d3xPoseFrwnhY4Y"
     identified = f"ssh_key BY KEY '{ssh_key}' TYPE 'ssh-ed25519', KEY '{ssh_key2}' TYPE 'ssh-ed25519', plaintext_password by '49'"
+    n_methods = grouped_ssh_keys_method_count(2) + 1
     common.alter_identified(
         user_name=user_name,
         identified=identified,
         expected=(
             errors.user_can_not_be_created_updated()
-            if max_auth_methods_per_user == 1
+            if 0 < max_auth_methods_per_user < n_methods
             else None
         ),
     )
