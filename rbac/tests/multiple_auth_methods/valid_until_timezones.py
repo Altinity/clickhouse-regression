@@ -2,7 +2,7 @@ from testflows.core import *
 
 from rbac.requirements import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 from helpers.cluster import *
 
 import rbac.tests.multiple_auth_methods.common as common
@@ -92,7 +92,7 @@ def server_timezone(self):
     with Then("check that user can login with this password in GMT timezone"):
         common.login(node=node, user_name=user_name, password="123")
 
-    with And("set timezone to America/Aruba(GMT+4)"):
+    with And("set timezone to America/Aruba(GMT-4)"):
         common.change_server_settings(setting="timezone", value="America/Aruba")
         common.check_timezone(timezone="America/Aruba")
 
@@ -101,19 +101,29 @@ def server_timezone(self):
     ):
         common.login(node=node, user_name=user_name, password="123")
 
-    with And("set timezone to Asia/Novosibirsk(GMT-7)"):
+    with And("set timezone to Asia/Novosibirsk(GMT+7)"):
         common.change_server_settings(setting="timezone", value="Asia/Novosibirsk")
         common.check_timezone(timezone="Asia/Novosibirsk")
 
     with And(
         "check that user can not login with this password in Asia/Novosibirsk(GMT-7) timezone"
     ):
-        common.login(
-            node=node,
-            user_name=user_name,
-            password="123",
-            expected=errors.wrong_password(user_name=user_name),
-        )
+        # Before 26.8 the stored VALID UNTIL was a naive wall-clock string and
+        # was re-parsed in the new server timezone after restart, so this
+        # Novosibirsk (+7 vs GMT) login failed. From 26.8 (ClickHouse #110171
+        # attach encoding) the deadline is kept as an absolute instant; changing
+        # timezone no longer moves it. Docs: CREATE USER — "stored as an
+        # absolute instant"; enforcement uses that instant. Changelog did not
+        # call this out; SHOW CREATE still prints local time.
+        if check_clickhouse_version(">=26.8")(self):
+            common.login(node=node, user_name=user_name, password="123")
+        else:
+            common.login(
+                node=node,
+                user_name=user_name,
+                password="123",
+                expected=errors.wrong_password(user_name=user_name),
+            )
 
 
 @TestFeature
