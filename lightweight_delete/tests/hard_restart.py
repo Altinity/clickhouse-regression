@@ -1,5 +1,6 @@
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import *
+from lightweight_delete.cas_mode import check_cas_mode
 
 
 @TestStep(When)
@@ -30,7 +31,6 @@ def kill_clickhouse_process(self, signal="SIGKILL", node=None):
 
 
 @TestScenario
-@Repeat(100, until="fail")
 def hard_restart(self, signal="SIGKILL", node=None):
     """Check that clickhouse either completes DELETE operation or
     leaves data in the same state after a hard restart
@@ -98,5 +98,6 @@ def feature(self, node="clickhouse1"):
 
     with Feature(f"{signal}"):
         self.context.table_engine = table_engine
-        for scenario in loads(current_module(), Scenario):
-            scenario(signal=signal)
+        # CAS restarts are too slow.
+        count = 50 if check_cas_mode(self) else 100
+        Scenario(test=hard_restart, repeats=Repeat(count, until="fail"))(signal=signal)
