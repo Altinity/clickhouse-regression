@@ -10,12 +10,17 @@ directory under ``user_files`` while keeping everything else byte-identical:
 * manifest list / manifests — fastavro round-trip rewriting
   ``manifest_path``, ``data_file.file_path`` and
   ``data_file.referenced_data_file``;
-* ``*.puffin`` — footer rebuild rewriting each blob's
+* Puffin deletion vectors — footer rebuild rewriting each blob's
   ``referenced-data-file`` property (the reader cross-checks it against the
   manifest entry's data file path); the blob region stays byte-identical so
   the manifest-declared ``content_offset`` / ``content_size_in_bytes``
   remain valid;
-* data files — copied verbatim.
+* Delta ``.bin`` deletion vectors and data files — copied verbatim.
+
+Which of the last two applies is decided by the object's leading bytes rather
+than its key. A Delta run rewrites vectors in place and leaves the ``.puffin``
+extension on them, so the extension says nothing about the container, and a
+``.bin`` has no footer to rebuild.
 
 The rewritten tree is staged in a host temporary directory and transferred
 into the container with a single ``docker cp`` — pushing file content
@@ -24,6 +29,7 @@ long command lines.
 """
 
 import copy
+import gzip
 import io
 import json
 import os
@@ -38,6 +44,7 @@ from testflows.core import *
 from helpers.common import getuid
 
 from iceberg.tests.deletion_vectors.steps import puffin as puffin_steps
+from iceberg.tests.deletion_vectors.steps import manifest as manifest_steps
 from iceberg.tests.deletion_vectors.steps import s3_objects
 
 USER_FILES_DIR = "/var/lib/clickhouse/user_files"
@@ -127,14 +134,33 @@ def clone_table_to_local(self, table, node=None):
                     relative = key[len(table.prefix) :].lstrip("/")
 
                     if key.endswith(".metadata.json"):
+                        # a table written with write.metadata.compression-codec
+                        # = gzip keeps a gzip stream under a *.gz.metadata.json
+                        # key, so unwrap before the text rewrite and rewrap
+                        # after — the key still claims the same encoding
+                        compressed = data[:2] == s3_objects.GZIP_MAGIC
+                        if compressed:
+                            data = gzip.decompress(data)
                         text = data.decode("utf-8").replace(old_location, local_dir)
                         data = text.encode("utf-8")
+                        if compressed:
+                            data = gzip.compress(data)
                     elif key.endswith(".avro"):
                         data = _rewrite_locations_in_avro(data, old_location, local_dir)
-                    elif key.endswith(".puffin"):
-                        data = _rewrite_locations_in_puffin(
-                            data, old_location, local_dir
-                        )
+                    elif key.endswith(manifest_steps.DV_FILE_SUFFIXES):
+                        # dispatch on the bytes, not the extension: in a Delta
+                        # run the vector keeps its ``.puffin`` key while holding
+                        # a ``.bin``, which has no footer to rewrite. Its
+                        # ``referenced-data-file`` lives only in the manifest
+                        # entry, rewritten above either way, so the object is
+                        # copied verbatim.
+                        if (
+                            puffin_steps.container_of(data)
+                            == manifest_steps.PUFFIN_CONTAINER
+                        ):
+                            data = _rewrite_locations_in_puffin(
+                                data, old_location, local_dir
+                            )
 
                     destination = os.path.join(staging, relative)
                     os.makedirs(os.path.dirname(destination), exist_ok=True)

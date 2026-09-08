@@ -22,6 +22,31 @@ ROWS = 100
 POSITIONS = list(range(0, ROWS, 10))  # the healthy vector: 10 positions
 CARDINALITY = len(POSITIONS)
 
+# the container is identified from the object's bytes, so a container that
+# is neither Puffin nor a readable envelope yields one message rather than a
+# defect-specific one; two sentence middles exist ("header magic ..." and
+# "file size N is smaller than PFA1"), so only the common prefix is asserted
+UNKNOWN_CONTAINER_FRAGMENT = "is neither a Puffin container"
+
+
+def expected_fragment(puffin_fragment, at_seam):
+    """The message a defect produces in the container under test.
+
+    A Puffin file announces itself with a header, so a defect in the blob's
+    length prefix or magic still reaches the blob parser and is reported
+    precisely. A Delta ``.bin`` has no header: those same fields are how the
+    reader recognizes the container at all, so breaking one fails detection and
+    the read fails closed with the coarse container-level message instead. Same
+    error class and the same fail-closed guarantee, less specific text.
+
+    *at_seam* says whether detection is what rejects this defect — see
+    ``puffin.rejected_at_container_seam``, which models the reader's check order
+    so that only the defects genuinely caught there get the coarser expectation.
+    """
+    if not at_seam or manifest.container_mode() != manifest.DELTA_BIN_CONTAINER:
+        return puffin_fragment
+    return UNKNOWN_CONTAINER_FRAGMENT
+
 
 def valid_bitmap32():
     return puffin.build_bitmap32(POSITIONS)
@@ -182,9 +207,13 @@ def blob_defect(self, name, payload, cardinality, fragment):
             declared_cardinality=cardinality,
         )
 
-    with Then(f"the read fails with BAD_ARGUMENTS: {fragment!r}"):
+    expected = expected_fragment(
+        fragment, at_seam=puffin.rejected_at_container_seam(payload)
+    )
+
+    with Then(f"the read fails with BAD_ARGUMENTS: {expected!r}"):
         common.assert_table_read_fails(
-            table=table, error_name="BAD_ARGUMENTS", message_fragment=fragment
+            table=table, error_name="BAD_ARGUMENTS", message_fragment=expected
         )
 
 
@@ -584,6 +613,8 @@ def blob_length_limit(self):
             entry_mutator=huge_length,
         )
 
+    # container-independent: the absolute blob-size cap is checked before the
+    # reader looks at the container at all, so a .bin names the length too
     with Then("the read fails with BAD_ARGUMENTS naming the hostile length"):
         common.assert_table_read_fails(
             table=table,
@@ -596,8 +627,11 @@ def blob_length_limit(self):
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_ResourceLimits("1.0"))
 def cardinality_materialization_limit(self):
     """A declared cardinality above 100,000,000 fails with BAD_ARGUMENTS
-    before the vector is materialized (the footer read itself is inherent —
-    the ceiling compares against the footer's cardinality property)."""
+    before the vector is materialized.
+
+    The ceiling is driven by the manifest ``record_count`` (and, on a
+    Puffin file, the footer ``cardinality`` we keep in sync with it). A
+    ``.bin`` has no footer; the same knobs still trip the limit."""
     with Given(
         "a table whose data file pretends to be large enough for a "
         "vector of 100,000,001 positions"
@@ -634,11 +668,9 @@ def cardinality_materialization_limit(self):
             message_fragment="exceeds materialization limit",
             log_comment=log_comment,
         )
-        # the ceiling compares against the footer's cardinality property,
-        # so the footer parse (1 event) is inherent, and the rejected
-        # blob-read attempt still counts its event on entry — but the
-        # guard rejects before the payload is deserialized or allocated,
-        # which the error message itself names
+        # the guard rejects before the payload is deserialized. A Puffin
+        # load may count a footer parse plus the rejected blob-read; a
+        # .bin has no footer, so the bound is at most those two events.
         reads = common.get_profile_event_of_failed_query(
             event="PuffinFilesRead", log_comment=log_comment
         )
@@ -687,6 +719,11 @@ def real_orc_data_file(self):
             "vectors for ORC data files (no Puffin file after the "
             "DELETE), so the real-ORC integration case cannot run"
         )
+
+    with And("the vector is in the container under test"):
+        # the DELETE above is committed after the fixture, so the vector it
+        # wrote arrives as a Puffin file and needs converting explicitly
+        common.ensure_delta_containers(table=table)
 
     with Then("the read fails with NOT_IMPLEMENTED naming both sides"):
         common.assert_table_read_fails(

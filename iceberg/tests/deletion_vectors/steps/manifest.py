@@ -75,13 +75,34 @@ def manifest_keys(namespace, table_name, content=None):
     return keys
 
 
+PUFFIN_CONTAINER = "puffin"
+DELTA_BIN_CONTAINER = "delta_bin"
+
+DV_FILE_SUFFIXES = (".puffin", ".bin")
+
+
+def container_mode(test=None):
+    """Which container the current test crafts deletion vectors into.
+
+    Set once by the Delta feature (``self.context.dv_container``) and read
+    by every crafting path, so a scenario reused under both containers does
+    not need to know which one it is running in. Defaults to ``puffin``,
+    which is what keeps the existing feature byte-for-byte unaffected.
+    """
+    test = test or current()
+    return getattr(test.context, "dv_container", PUFFIN_CONTAINER)
+
+
 def is_dv_entry(entry):
-    """True for a live deletion-vector manifest entry (a position-delete
-    entry whose file is a Puffin file)."""
+    """True for a live deletion-vector manifest entry: a position-delete
+    entry whose file is a deletion-vector container. Both suffixes count —
+    Databricks writes ``deletion_vector_*.bin`` while declaring
+    ``file_format = PUFFIN``, so the extension identifies neither the
+    container nor the entry kind."""
     data_file = entry["data_file"]
     return data_file.get("content") == POSITION_DELETES_CONTENT and data_file[
         "file_path"
-    ].endswith(".puffin")
+    ].endswith(DV_FILE_SUFFIXES)
 
 
 def find_dv_entries(namespace, table_name):
@@ -198,14 +219,22 @@ def replace_deletion_vector(
     footer_blobs_mutator=None,
     entry_mutator=None,
     puffin_kwargs=None,
+    container=None,
 ):
     """Replace the (single) deletion vector of a table with a synthetic one
     and keep the metadata chain consistent — except for the injected defect.
 
-    The new Puffin file is written to the *same object key* as the original
+    The new container is written to the *same object key* as the original
     (no metadata JSON rewrite needed) and the manifest entry's
     ``content_offset`` / ``content_size_in_bytes`` / ``record_count`` are
     synchronized to the new blob.
+
+    The blob itself is container-independent, so *container* only decides
+    what is wrapped around it: a Puffin file with a footer
+    (``content_offset = 4``) or a Delta ``.bin`` with a version byte
+    (``content_offset = 1``). It defaults to :func:`container_mode`, which
+    is how a crafted-vector scenario runs under either container without
+    knowing about it.
 
     Args:
         payload: new blob bytes (from ``puffin.build_dv_payload``). None →
@@ -221,9 +250,30 @@ def replace_deletion_vector(
             may corrupt any field after the consistent values were set.
         puffin_kwargs: extra keyword arguments for ``puffin.build_puffin``
             (e.g. ``compress_footer`` / ``flags`` for footer-level defects).
+        container: ``puffin`` or ``delta_bin``; defaults to the container
+            mode of the current test.
 
     Returns the manifest entry dict as written.
     """
+    if container is None:
+        container = container_mode()
+
+    footer_only = {
+        "blob_overrides": blob_overrides,
+        "footer_blobs_mutator": footer_blobs_mutator,
+        "puffin_kwargs": puffin_kwargs,
+    }
+    if container == DELTA_BIN_CONTAINER:
+        used = sorted(name for name, value in footer_only.items() if value)
+        # failing loudly beats silently writing a Puffin: a footer-level
+        # defect has no meaning in a container without a footer, and a test
+        # that quietly got one would pass for the wrong reason
+        assert not used, (
+            f"{', '.join(used)} describe Puffin footer defects and cannot be "
+            f"expressed in a {DELTA_BIN_CONTAINER} container — this scenario "
+            f"is Puffin-specific and must not run under Delta"
+        )
+
     dv_entries = find_dv_entries(namespace, table_name)
     assert (
         len(dv_entries) == 1
@@ -244,21 +294,31 @@ def replace_deletion_vector(
         )
 
         if payload is not None:
-            blob = {
-                "payload": payload,
-                "properties": {
-                    "referenced-data-file": data_file["referenced_data_file"],
-                    "cardinality": str(cardinality),
-                },
-            }
-            blob.update(blob_overrides or {})
-            blobs = [blob]
-            if footer_blobs_mutator is not None:
-                blobs = footer_blobs_mutator(blobs)
-            file_bytes, _ = puffin.build_puffin(blobs, **(puffin_kwargs or {}))
+            if container == DELTA_BIN_CONTAINER:
+                file_bytes, ranges = puffin.build_delta_bin(payload=payload)
+                content_offset, content_size = ranges[0]
+            else:
+                blob = {
+                    "payload": payload,
+                    "properties": {
+                        "referenced-data-file": data_file["referenced_data_file"],
+                        "cardinality": str(cardinality),
+                    },
+                }
+                blob.update(blob_overrides or {})
+                blobs = [blob]
+                if footer_blobs_mutator is not None:
+                    blobs = footer_blobs_mutator(blobs)
+                file_bytes, _ = puffin.build_puffin(blobs, **(puffin_kwargs or {}))
+                content_offset, content_size = 4, len(payload)
+            assert puffin.container_of(file_bytes) == container, (
+                f"built a {puffin.container_of(file_bytes)} container while "
+                f"crafting for {container}"
+            )
             s3_objects.put_object_bytes(data_file["file_path"], file_bytes)
-            data_file["content_offset"] = 4
-            data_file["content_size_in_bytes"] = len(payload)
+            data_file["content_offset"] = content_offset
+            data_file["content_size_in_bytes"] = content_size
+            data_file["file_size_in_bytes"] = len(file_bytes)
 
         data_file["record_count"] = cardinality
         if entry_mutator is not None:
@@ -273,6 +333,92 @@ def replace_deletion_vector(
         content=MANIFEST_LIST_DELETES,
     )
     return written_entry
+
+
+@TestStep(When)
+def convert_dvs_to_delta_bin(self, namespace, table_name, skip_converted=False):
+    """Rewrite every writer-produced Puffin deletion vector of the current
+    snapshot as a Delta ``.bin``, in place, and repoint the manifest at it.
+
+    This is the route that makes a container-agnostic scenario run under
+    ``.bin`` without being touched: the blobs stay exactly as the writer
+    serialized them and only the wrapper changes, so a failure afterwards is
+    about the container and nothing else.
+
+    Objects keep their original keys — the ``.puffin`` extension included,
+    since ClickHouse identifies the container from the bytes and Databricks
+    misdeclares the format anyway. Keeping the key means no metadata JSON
+    rewrite and no second code path for renamed objects.
+
+    Args:
+        skip_converted: leave objects that are already Delta containers
+            alone, making the step idempotent. Off by default so that a
+            scenario whose subject *is* the conversion fails loudly if it was
+            handed something other than a Puffin file.
+
+    Returns the number of converted objects.
+    """
+    entries = find_dv_entries(namespace, table_name)
+    assert entries, "no live deletion-vector entry to convert"
+
+    # one Puffin may back several entries (a coalesced file), so convert
+    # objects once and map every entry through the resulting layout
+    layouts = {}
+    for path in sorted({entry["entry"]["data_file"]["file_path"] for entry in entries}):
+        data = s3_objects.get_object_bytes(path)
+        if skip_converted and puffin.container_of(data) != PUFFIN_CONTAINER:
+            continue
+        assert puffin.container_of(data) == PUFFIN_CONTAINER, (
+            f"{path} is not a Puffin file ({data[:4]!r}) — nothing to convert, "
+            f"and converting twice would nest a container inside a container"
+        )
+        blobs = sorted(
+            puffin.parse_puffin_footer(data)["blobs"], key=lambda b: b["offset"]
+        )
+        payloads = [
+            data[blob["offset"] : blob["offset"] + blob["length"]] for blob in blobs
+        ]
+        bin_bytes, ranges = puffin.build_delta_bin(payloads=payloads)
+        s3_objects.put_object_bytes(path, bin_bytes)
+        layouts[path] = {
+            (blob["offset"], blob["length"]): new_range
+            for blob, new_range in zip(blobs, ranges)
+        }, len(bin_bytes)
+
+    def mutator(entry):
+        data_file = entry["data_file"]
+        if not (is_dv_entry(entry) and data_file["file_path"] in layouts):
+            return entry
+        offset_map, new_file_size = layouts[data_file["file_path"]]
+        old = (data_file["content_offset"], data_file["content_size_in_bytes"])
+        assert old in offset_map, (
+            f"manifest entry claims blob {old} in {data_file['file_path']}, "
+            f"which its Puffin footer did not declare: {sorted(offset_map)}"
+        )
+        content_offset, content_size = offset_map[old]
+        data_file["content_offset"] = content_offset
+        data_file["content_size_in_bytes"] = content_size
+        data_file["file_size_in_bytes"] = new_file_size
+        return entry
+
+    mutate_manifest_entries(
+        namespace=namespace,
+        table_name=table_name,
+        mutator=mutator,
+        content=MANIFEST_LIST_DELETES,
+    )
+    return len(layouts)
+
+
+def dv_containers(namespace, table_name):
+    """``{file_path: container}`` of every live deletion vector, read from
+    the objects themselves rather than from the metadata."""
+    return {
+        entry["entry"]["data_file"]["file_path"]: puffin.container_of(
+            s3_objects.get_object_bytes(entry["entry"]["data_file"]["file_path"])
+        )
+        for entry in find_dv_entries(namespace, table_name)
+    }
 
 
 def read_dv_payload(namespace, table_name):

@@ -149,7 +149,70 @@ def table_with_deletion_vectors(
             dv_entries = manifest_steps.find_dv_entries(namespace, table_name)
             assert dv_entries, "no live deletion-vector entry in the current snapshot"
 
-    return DVTable(namespace, table_name)
+    table = DVTable(namespace, table_name)
+
+    ensure_delta_containers(table=table)
+
+    return table
+
+
+@TestStep(When)
+def ensure_delta_containers(self, table):
+    """When the current test crafts into Delta containers, rewrite any
+    writer-produced Puffin vector of *table* as a ``.bin`` and verify the
+    result. A no-op under Puffin, and idempotent.
+
+    Called for every fixture, and callable again by any scenario that
+    commits further writer deletes afterwards: a vector created by a later
+    Spark ``DELETE`` arrives as a Puffin file, and without this it would
+    quietly test the Puffin path from inside the Delta run.
+    """
+    if manifest_steps.container_mode() != manifest_steps.DELTA_BIN_CONTAINER:
+        return
+
+    if not manifest_steps.find_dv_entries(table.namespace, table.table_name):
+        return
+
+    containers = set(
+        manifest_steps.dv_containers(table.namespace, table.table_name).values()
+    )
+    if containers == {manifest_steps.DELTA_BIN_CONTAINER}:
+        return
+
+    with By("rewriting the writer vectors as Delta .bin containers"):
+        manifest_steps.convert_dvs_to_delta_bin(
+            namespace=table.namespace,
+            table_name=table.table_name,
+            skip_converted=True,
+        )
+        drop_iceberg_metadata_cache()
+        drop_puffin_cache()
+
+    with And("verifying the table really reads through a .bin now"):
+        # the post-condition is not optional: a conversion that quietly did
+        # nothing leaves a Puffin table that passes the whole Delta run for
+        # the wrong reason
+        assert_container(table=table)
+
+
+@TestStep(Then)
+def assert_writer_produced_vectors(self, table, min_count=1):
+    """The writer really produced deletion vectors for *table*, and they are
+    in the container under test.
+
+    Scenarios that commit vector-producing DML themselves — rather than
+    through ``table_with_deletion_vectors`` — check this instead of
+    ``s3_objects.assert_puffin_exists`` directly, so that a vector written
+    by a mid-scenario ``DELETE`` is converted too. Without it a Delta run
+    would read the writer's Puffin bytes and still pass.
+    """
+    keys = s3_objects.assert_puffin_exists(
+        namespace=table.namespace,
+        table_name=table.table_name,
+        min_count=min_count,
+    )
+    ensure_delta_containers(table=table)
+    return keys
 
 
 @TestStep(Then)
@@ -421,11 +484,176 @@ def assert_table_read_fails(
     )
 
 
+@TestStep(Given)
+def use_container(self, container):
+    """Craft deletion vectors into *container* for the rest of this test,
+    restoring the enclosing feature's mode afterwards.
+
+    Needed by the handful of scenarios that must start from a
+    writer-produced Puffin even when running inside the Delta feature —
+    conversion tests, and anything comparing one container against the
+    other."""
+    previous = getattr(self.context, "dv_container", manifest_steps.PUFFIN_CONTAINER)
+    self.context.dv_container = container
+    try:
+        yield container
+    finally:
+        self.context.dv_container = previous
+
+
+@TestStep(Then)
+def assert_container(self, table, container=None):
+    """Every live deletion vector of the table is stored in the expected
+    container, read from the objects themselves rather than from metadata.
+
+    This is the guard against the one failure mode a Delta run cannot
+    otherwise detect: if a conversion or an installer silently left a Puffin
+    file behind, every scenario still passes and the run proves nothing.
+    Defaults to the current container mode, so calling it after building a
+    fixture is enough."""
+    if container is None:
+        container = manifest_steps.container_mode()
+
+    containers = manifest_steps.dv_containers(table.namespace, table.table_name)
+    assert containers, error("no live deletion vector to check the container of")
+    wrong = {path: found for path, found in containers.items() if found != container}
+    assert not wrong, error(
+        f"expected every deletion vector in a {container} container, but "
+        f"{len(wrong)} of {len(containers)} differ: {wrong}"
+    )
+    return containers
+
+
+@TestStep(When)
+def install_delta_bin(
+    self,
+    table,
+    positions=None,
+    payload=None,
+    payloads=None,
+    version_byte=puffin_steps.DELTA_VERSION_BYTE,
+    prefix=None,
+    trailing=b"",
+    content_offset=None,
+    content_size=None,
+    declared_cardinality=None,
+    retarget_path=False,
+):
+    """Install a Delta ``.bin`` deletion-vector container on the table and
+    point the manifest entry at it.
+
+    Route 1 of the three ways we get a ``.bin`` (the other two being
+    conversion of a writer-produced Puffin and the Databricks fixture): full
+    control of both the bytes and the metadata that describes them, which is
+    what negative and edge-case scenarios need.
+
+    Args:
+        positions / payload / payloads: the blob(s), as positions to delete,
+            pre-built (possibly hostile) blob bytes, or several blobs sharing
+            one container.
+        version_byte: leading version byte; None writes a bare envelope with
+            no version byte, which the reader accepts at offset 0.
+        prefix: replaces the leading bytes entirely — an unknown wrapper.
+        content_offset / content_size: override what the manifest declares,
+            for misdescription defects. Defaults are the true values.
+        declared_cardinality: manifest ``record_count`` for the entry.
+        retarget_path: upload a sibling ``deletion_vector_*.bin`` and repoint
+            ``file_path`` at it instead of overwriting the writer's object —
+            the file layout Databricks actually leaves behind.
+
+    Returns the container bytes as written.
+    """
+    bin_bytes, ranges = puffin_steps.build_delta_bin(
+        positions=positions,
+        payload=payload,
+        payloads=payloads,
+        version_byte=version_byte,
+        prefix=prefix,
+        trailing=trailing,
+    )
+    true_offset, true_size = ranges[0]
+
+    dv_entries = manifest_steps.find_dv_entries(table.namespace, table.table_name)
+    assert len(dv_entries) == 1, error(
+        f"expected exactly one deletion-vector entry, found {len(dv_entries)}"
+    )
+    old_uri = dv_entries[0]["entry"]["data_file"]["file_path"]
+
+    if retarget_path:
+        target_uri = f"{old_uri.rsplit('/', 1)[0]}/deletion_vector_{getuid()}.bin"
+        s3_objects.put_object_bytes(target_uri, bin_bytes)
+    else:
+        s3_objects.put_object_bytes(old_uri, bin_bytes)
+        target_uri = None
+
+    def entry_mutator(entry):
+        data_file = entry["data_file"]
+        if target_uri is not None:
+            data_file["file_path"] = target_uri
+        data_file["content_offset"] = (
+            true_offset if content_offset is None else content_offset
+        )
+        data_file["content_size_in_bytes"] = (
+            true_size if content_size is None else content_size
+        )
+        data_file["file_size_in_bytes"] = len(bin_bytes)
+
+    manifest_steps.replace_deletion_vector(
+        namespace=table.namespace,
+        table_name=table.table_name,
+        declared_cardinality=declared_cardinality,
+        entry_mutator=entry_mutator,
+    )
+    drop_iceberg_metadata_cache()
+    drop_puffin_cache()
+    return bin_bytes
+
+
+@TestStep(Then)
+def assert_stored_deletion_vector(
+    self, table, expected_bytes=None, expected_prefix=None, content_offset=None
+):
+    """The live deletion-vector object (and its declared offset) is what
+    the scenario just installed — not the builder's return value.
+
+    Needed by installs whose leading bytes are not a Delta version byte, so
+    ``assert_container`` cannot be used, and by any case where a no-op
+    install would still produce the fixture's original row set."""
+    entries = manifest_steps.find_dv_entries(table.namespace, table.table_name)
+    assert len(entries) == 1, error(
+        f"expected exactly one deletion-vector entry, found {len(entries)}"
+    )
+    data_file = entries[0]["entry"]["data_file"]
+    stored = s3_objects.get_object_bytes(data_file["file_path"])
+
+    if expected_bytes is not None:
+        assert stored == expected_bytes, error(
+            f"stored deletion-vector object is {len(stored)} bytes, "
+            f"expected {len(expected_bytes)}; "
+            f"stored[:8]={stored[:8]!r}"
+        )
+    if expected_prefix is not None:
+        assert stored[: len(expected_prefix)] == expected_prefix, error(
+            f"stored object prefix {stored[: len(expected_prefix)]!r} "
+            f"!= {expected_prefix!r}"
+        )
+    if content_offset is not None:
+        assert data_file["content_offset"] == content_offset, error(
+            f"entry declares content_offset {data_file['content_offset']}, "
+            f"expected {content_offset}"
+        )
+    return stored, data_file
+
+
 @TestStep(When)
 def replace_vector_with_positions(self, table, positions, payload=None):
     """Replace the table's single deletion vector with a crafted one
     deleting exactly *positions*, then drop the metadata and Puffin caches
     so the next read re-resolves the rewritten chain.
+
+    The container is whatever the current test crafts into (see
+    ``manifest.container_mode``), so a scenario calling this runs unchanged
+    under both Puffin and Delta.
 
     Args:
         payload: pre-built blob bytes to install instead of the default
@@ -440,6 +668,7 @@ def replace_vector_with_positions(self, table, positions, payload=None):
         payload=payload,
         declared_cardinality=len(positions),
     )
+    assert_container(table=table)
     drop_iceberg_metadata_cache()
     drop_puffin_cache()
 
@@ -646,3 +875,79 @@ def drop_iceberg_metadata_cache(self, node=None):
 def unique_log_comment(prefix="dv"):
     """Unique log_comment for per-query profile-event accounting."""
     return f"{prefix}_{getuid()}"
+
+
+@TestStep(Finally)
+def cleanup_created_tables(self):
+    """Batch-drop every table the suite created: unregister from the REST
+    catalog via pyiceberg (fast, no Spark JVM), then delete the S3
+    objects. Best-effort — cleanup must never fail the suite — but the S3
+    prefix of a table is only deleted once the table is confirmed gone
+    from the catalog (dropped, or already absent): deleting the objects
+    under a still-registered table would turn a retriable leftover into a
+    permanently broken catalog entry.
+
+    Shared by every feature that creates fixture tables, so a second
+    feature cannot drift into leaving tables behind in CI."""
+    tables = getattr(self.context, "spark_created_tables", [])
+    if not tables:
+        return
+
+    from pyiceberg.catalog import load_catalog
+    from pyiceberg.exceptions import NoSuchTableError
+
+    catalog = None
+    try:
+        catalog = load_catalog(
+            f"dv_cleanup_{getuid()}",
+            **{
+                "uri": "http://localhost:8182",
+                "type": "rest",
+                "s3.endpoint": s3_objects.S3_HOST_ENDPOINT,
+                "s3.access-key-id": self.context.minio_root_user,
+                "s3.secret-access-key": self.context.minio_root_password,
+            },
+        )
+    except Exception as exc:
+        note(
+            f"REST catalog unavailable for cleanup, retaining all "
+            f"{len(tables)} table(s) for a later attempt: {exc}"
+        )
+
+    dropped = 0
+    retained = []
+    deleted_objects = 0
+    for namespace, table_name in tables:
+        identifier = f"{namespace}.{table_name}"
+
+        unregistered = False
+        if catalog is not None:
+            try:
+                catalog.drop_table(identifier)
+                unregistered = True
+            except NoSuchTableError:
+                unregistered = True  # confirmed absent
+            except Exception as exc:
+                note(f"failed to drop {identifier} from the catalog: {exc}")
+            try:
+                catalog.drop_namespace(namespace)
+            except Exception:
+                pass  # non-empty or already gone — harmless either way
+
+        if not unregistered:
+            retained.append(identifier)
+            continue
+
+        dropped += 1
+        try:
+            deleted_objects += s3_objects.delete_prefix(
+                s3_objects.table_prefix(namespace, table_name)
+            )
+        except Exception as exc:
+            note(f"failed to delete objects of {identifier}: {exc}")
+
+    note(
+        f"cleanup: {dropped}/{len(tables)} table(s) dropped, "
+        f"{deleted_objects} object(s) removed"
+        + (f", retained for later cleanup: {retained}" if retained else "")
+    )

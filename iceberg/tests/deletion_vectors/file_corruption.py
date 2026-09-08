@@ -63,6 +63,9 @@ def fixture_table(self):
     return table
 
 
+LEADING_MAGIC_CORRUPTED = "leading magic corrupted"
+
+
 @TestScenario
 @Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_CorruptPuffinFile("1.0"))
 def puffin_defect(self, name, data):
@@ -77,6 +80,32 @@ def puffin_defect(self, name, data):
 
     with Then("the read fails explicitly and the server stays responsive"):
         common.assert_fails_without_crash(table=ctx.table)
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_DeletionVectors_ErrorHandling_CorruptPuffinFile("1.0"))
+def puffin_leading_magic_corrupted(self, name, data):
+    """Damaged leading ``PFA1`` is no longer a must-fail framing case.
+
+    The container is identified from the bytes
+    (RQ.Iceberg.DeletionVectors.DeltaContainer): a Puffin file that has lost
+    its header still presents a valid ``deletion-vector-v1`` envelope at
+    ``content_offset``, so the query may succeed and return the correct
+    rows. The contract that remains is fail-closed on a *wrong* row set,
+    and a server that stays responsive. Trailing-magic damage still fails
+    on the Puffin path.
+    """
+    ctx = self.context
+
+    with Given(f"the Puffin file damaged: {name}"):
+        corruption.corrupted_object(
+            key=ctx.keys["puffin"], data=data, original=ctx.originals["puffin"]
+        )
+
+    with Then("the result is exactly correct or an explicit error"):
+        common.assert_correct_or_explicit_error(
+            table=ctx.table, expected_ids=ctx.expected
+        )
 
 
 @TestScenario
@@ -111,7 +140,12 @@ def corrupt_puffin_file(self):
     original = self.context.originals["puffin"]
 
     for name, data in corruption.puffin_structural_cases(original).items():
-        Scenario(test=puffin_defect, name=name)(name=name, data=data)
+        test = (
+            puffin_leading_magic_corrupted
+            if name == LEADING_MAGIC_CORRUPTED
+            else puffin_defect
+        )
+        Scenario(test=test, name=name)(name=name, data=data)
 
     for index, offset in enumerate(corruption.flip_offsets(len(original), FLIP_COUNT)):
         name = f"byte flip {index}"

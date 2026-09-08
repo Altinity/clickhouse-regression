@@ -1018,11 +1018,15 @@ export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
 
 export_merge_tree_part_filename_pattern = r"""'{"default":"{part_name}_{checksum}"}'"""
 
+export_merge_tree_part_ignore_extra_source_columns = r"""'{"default":"0"}'"""
+
 export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_schema_match_mode = r"""'{"default":"POSITION"}'"""
 
 export_merge_tree_part_schema_mismatch_mode = r"""'{"default":"strict"}'"""
 

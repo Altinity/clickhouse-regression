@@ -255,9 +255,7 @@ def count_from_files_cache(self):
             table_name=table.table_name,
             condition="id < 10",
         )
-        s3_objects.assert_puffin_exists(
-            namespace=table.namespace, table_name=table.table_name
-        )
+        common.assert_writer_produced_vectors(table=table)
 
     with Then("the next count() is N - deleted, not the cached N"):
         count = common.count_rows(table=table, settings=cache_setting)
