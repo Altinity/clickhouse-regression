@@ -557,6 +557,28 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
+  alter_attach_partition_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition
+      part: 3
+      timeout_minutes: 180
+      storage_path: /attach_partition
+      regression_args: '--only "/alter/attach partition/part 3/*"'
+      artifact_name: alter-attach-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   alter_move_partition:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -643,6 +665,28 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
+  alter_attach_partition_cas_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas
+      part: 3
+      timeout_minutes: 180
+      storage_path: /attach_partition/cas
+      regression_args: '--cas --only "/alter/attach partition/part 3/*"'
+      artifact_name: alter-attach-partition-cas-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   alter_move_partition_cas:
     if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -717,6 +761,28 @@ jobs:
       timeout_minutes: 180
       storage_path: /attach_partition/cas-s3-cache
       regression_args: '--cas-s3-cache --only "/alter/attach partition/part 2/*"'
+      artifact_name: alter-attach-partition-cas-s3-cache-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_s3_cache_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas_s3_cache
+      part: 3
+      timeout_minutes: 180
+      storage_path: /attach_partition/cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/alter/attach partition/part 3/*"'
       artifact_name: alter-attach-partition-cas-s3-cache-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
