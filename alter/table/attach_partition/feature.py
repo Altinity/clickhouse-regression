@@ -12,7 +12,8 @@ def feature(self):
     """Run features from the attach partition suite.
 
     Part 1 and part 3 split the original part 1 so CAS CI jobs stay around 2h
-    each. Part 2 is still replica add/remove and restart.
+    each. The Repeat(100) simple attach check is split across those two parts.
+    Part 2 is still replica add/remove and restart.
     """
 
     self.context.node_1 = self.context.cluster.node("clickhouse1")
@@ -75,6 +76,14 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
+            Feature(
+                run=load(
+                    "alter.table.attach_partition.simple_attach_partition_from",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
             join()
 
     with Feature("part 2"):
@@ -131,7 +140,7 @@ def feature(self):
             Feature(
                 run=load(
                     "alter.table.attach_partition.simple_attach_partition_from",
-                    "feature",
+                    "feature_tuple_keys",
                 ),
                 parallel=True,
                 executor=pool,

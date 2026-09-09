@@ -158,21 +158,24 @@ def attach_partition_from_table(
                 ), error()
 
 
+PARTITION_KEYS_SCALAR = {
+    "intDiv(a,2)",
+    "intDiv(a,3)",
+    "intDiv(b,2)",
+}
+PARTITION_KEYS_TUPLE = {
+    "(a%2,b%2)",
+    "(intDiv(a,2),intDiv(b,2))",
+    "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
+}
+
+
 @TestScenario
 @Repeat(100)
 @Flags(TE)
-def attach_partition_from(self):
+def attach_partition_from(self, partition_keys):
     """Run test check with different partition keys and different engines for both source
     and destination tables."""
-
-    partition_keys = {
-        "intDiv(a,2)",
-        "intDiv(a,3)",
-        "intDiv(b,2)",
-        "(a%2,b%2)",
-        "(intDiv(a,2),intDiv(b,2))",
-        "(intDiv(a,2),intDiv(b,2),intDiv(c,2))",
-    }
 
     source_table_types = {
         partitioned_MergeTree,
@@ -212,5 +215,21 @@ def attach_partition_from(self):
 )
 @Name("check simple attach partition")
 def feature(self):
-    """Check that `ATTACH PARTITION FROM` works correctly."""
-    Scenario("simple attach partition", test=attach_partition_from)()
+    """Check ATTACH PARTITION FROM with scalar partition keys."""
+    Scenario("simple attach partition", test=attach_partition_from)(
+        partition_keys=PARTITION_KEYS_SCALAR
+    )
+
+
+@TestFeature
+@Requirements(
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_Replicas("1.0"),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom("1.0"),
+    RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom_KeepData("1.0"),
+)
+@Name("check simple attach partition 2")
+def feature_tuple_keys(self):
+    """Check ATTACH PARTITION FROM with tuple partition keys."""
+    Scenario("simple attach partition", test=attach_partition_from)(
+        partition_keys=PARTITION_KEYS_TUPLE
+    )
