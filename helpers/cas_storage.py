@@ -15,6 +15,12 @@ CAS_POLICY = "cas_policy"
 CAS_CACHE_PATH = "/var/lib/clickhouse/cas_cache/"
 CAS_CACHE_MAX_SIZE = "10Gi"
 
+# Non-default: the S3 client's 5 s / 100-request keep-alive makes concurrent
+# SELECT FINAL open a socket per request, which exhausts the container's
+# ephemeral ports and fences the CAS mount lease -- Altinity/ClickHouse#2243.
+CAS_S3_KEEP_ALIVE_TIMEOUT = 60
+CAS_S3_KEEP_ALIVE_MAX_REQUESTS = 1000
+
 CAS_S3_CACHE_FLAG_HELP = (
     "like --cas, but layer a type=cache disk in front of the CAS disk "
     "(production-shaped S3 cache; cas_policy name is unchanged)"
@@ -79,7 +85,9 @@ def cas_storage_config(
                 <server_root_id>{server_root_id}</server_root_id>
                 <endpoint>{endpoint}</endpoint>
                 <access_key_id>{access_key_id}</access_key_id>
-                <secret_access_key>{secret_access_key}</secret_access_key>{gc_interval_xml}
+                <secret_access_key>{secret_access_key}</secret_access_key>
+                <http_keep_alive_timeout>{CAS_S3_KEEP_ALIVE_TIMEOUT}</http_keep_alive_timeout>
+                <http_keep_alive_max_requests>{CAS_S3_KEEP_ALIVE_MAX_REQUESTS}</http_keep_alive_max_requests>{gc_interval_xml}
             </{CAS_DISK}>"""
     ]
     if with_s3_cache:
