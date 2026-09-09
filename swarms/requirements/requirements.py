@@ -625,6 +625,35 @@ RQ_SRS_044_Swarm_Settings_object_storage_max_nodes = Requirement(
     num="2.7.1",
 )
 
+RQ_SRS_044_Swarm_Settings_object_storage_cluster_fallback_to_local_if_empty = Requirement(
+    name="RQ.SRS-044.Swarm.Settings.object_storage_cluster_fallback_to_local_if_empty",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `object_storage_cluster_fallback_to_local_if_empty` setting.\n"
+        "\n"
+        "When `object_storage_cluster` names a swarm that is unknown or has no worker nodes (for example an observer-only swarm, or after the last worker is removed), and this setting is enabled, [ClickHouse] SHALL execute the **read** query on the local node instead of failing with `CLUSTER_DOESNT_EXIST`.\n"
+        "\n"
+        "The setting SHALL NOT apply to:\n"
+        "* explicit `*Cluster` table functions (`s3Cluster`, `icebergS3Cluster`, and similar)\n"
+        "* writes (`INSERT` into object storage with `object_storage_cluster` set)\n"
+        "* `object_storage_remote_initiator_cluster` (a missing remote-initiator cluster SHALL still fail with `CLUSTER_DOESNT_EXIST`)\n"
+        "\n"
+        "When the swarm has at least one worker, enabling this setting SHALL NOT change query routing: reads SHALL still execute on swarm workers, not on the initiator.\n"
+        "\n"
+        "With `object_storage_remote_initiator=1` and a valid `object_storage_remote_initiator_cluster`, the decision to fall back SHALL be made on the remote initiator, because `object_storage_cluster` may be unknown locally and defined only on the remote (or the reverse).\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="2.7.2",
+)
+
 RQ_SRS_044_Swarm_ObserverNodes = Requirement(
     name="RQ.SRS-044.Swarm.ObserverNodes",
     version="1.0",
@@ -912,6 +941,103 @@ RQ_SRS_044_Swarm_Joins_Paste = Requirement(
     num="2.11.3.5",
 )
 
+RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `object_storage_cluster_join_mode` setting that controls the behavior of JOIN operations when using object storage cluster functions (such as `s3Cluster`) or iceberg tables.\n"
+        "\n"
+        "The setting SHALL ONLY apply when:\n"
+        "- The query contains a JOIN operation\n"
+        "- The FROM clause uses an object storage cluster function or table on the left side of the JOIN\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.1",
+)
+
+RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode_Allow = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Allow",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support `object_storage_cluster_join_mode='allow'` as the default mode.\n"
+        "\n"
+        "When this mode is enabled:\n"
+        "- The entire query SHALL be sent to swarm nodes as-is\n"
+        "- JOIN operations SHALL be executed on the remote swarm nodes\n"
+        "- This SHALL preserve the behavior prior to the introduction of this setting\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.2",
+)
+
+RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode_Local = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Local",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support `object_storage_cluster_join_mode='local'` mode.\n"
+        "\n"
+        "When this mode is enabled:\n"
+        "- Only the left part of the JOIN SHALL be sent to swarm nodes\n"
+        "- Swarm nodes SHALL execute the left part and return results to the initiator\n"
+        "- The initiator node SHALL collect responses from swarm nodes\n"
+        "- The initiator node SHALL execute the JOIN operation locally with the right table\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.3",
+)
+
+RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode_Global = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Global",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support `object_storage_cluster_join_mode='global'` mode.\n"
+        "\n"
+        "When this mode is implemented, it SHALL:\n"
+        "- Execute the right part of the JOIN on the initiator node\n"
+        "- Send the result of the right part along with the query to swarm nodes\n"
+        "- Execute the JOIN operation with the left part on swarm nodes\n"
+        "\n"
+        "Note: This mode is NOT currently implemented and SHALL return an appropriate error or warning if used.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.4",
+)
+
 RQ_SRS_044_Swarm_Joins_Settings_DefaultStrictness = Requirement(
     name="RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness",
     version="1.0",
@@ -927,7 +1053,7 @@ RQ_SRS_044_Swarm_Joins_Settings_DefaultStrictness = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.1",
+    num="2.11.5.1",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_AnyJoinDistinct = Requirement(
@@ -945,7 +1071,7 @@ RQ_SRS_044_Swarm_Joins_Settings_AnyJoinDistinct = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.2",
+    num="2.11.5.2",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_CrossToInnerRewrite = Requirement(
@@ -963,7 +1089,7 @@ RQ_SRS_044_Swarm_Joins_Settings_CrossToInnerRewrite = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.3",
+    num="2.11.5.3",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_Algorithm = Requirement(
@@ -981,7 +1107,7 @@ RQ_SRS_044_Swarm_Joins_Settings_Algorithm = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.4",
+    num="2.11.5.4",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_AnyTakeLastRow = Requirement(
@@ -999,7 +1125,7 @@ RQ_SRS_044_Swarm_Joins_Settings_AnyTakeLastRow = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.5",
+    num="2.11.5.5",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_UseNulls = Requirement(
@@ -1017,7 +1143,7 @@ RQ_SRS_044_Swarm_Joins_Settings_UseNulls = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.6",
+    num="2.11.5.6",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_PartialMergeRows = Requirement(
@@ -1035,7 +1161,7 @@ RQ_SRS_044_Swarm_Joins_Settings_PartialMergeRows = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.7",
+    num="2.11.5.7",
 )
 
 RQ_SRS_044_Swarm_Joins_Settings_OnDiskMaxFiles = Requirement(
@@ -1056,7 +1182,7 @@ RQ_SRS_044_Swarm_Joins_Settings_OnDiskMaxFiles = Requirement(
     ),
     link=None,
     level=4,
-    num="2.11.4.8",
+    num="2.11.5.8",
 )
 
 SRS_044_Swarm_Cluster_Query_Execution = Specification(
@@ -1207,6 +1333,11 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
             level=3,
             num="2.7.1",
         ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Settings.object_storage_cluster_fallback_to_local_if_empty",
+            level=3,
+            num="2.7.2",
+        ),
         Heading(name="Observer", level=2, num="2.8"),
         Heading(name="RQ.SRS-044.Swarm.ObserverNodes", level=3, num="2.8.1"),
         Heading(name="RBAC", level=2, num="2.9"),
@@ -1228,42 +1359,63 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         Heading(name="RQ.SRS-044.Swarm.Joins.Any", level=4, num="2.11.3.3"),
         Heading(name="RQ.SRS-044.Swarm.Joins.Asof", level=4, num="2.11.3.4"),
         Heading(name="RQ.SRS-044.Swarm.Joins.Paste", level=4, num="2.11.3.5"),
-        Heading(name="Join Settings", level=3, num="2.11.4"),
+        Heading(name="Swarm Join Settings", level=3, num="2.11.4"),
         Heading(
-            name="RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness",
+            name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode",
             level=4,
             num="2.11.4.1",
         ),
         Heading(
-            name="RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct",
+            name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Allow",
             level=4,
             num="2.11.4.2",
         ),
         Heading(
-            name="RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite",
+            name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Local",
             level=4,
             num="2.11.4.3",
         ),
         Heading(
-            name="RQ.SRS-044.Swarm.Joins.Settings.Algorithm", level=4, num="2.11.4.4"
+            name="RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Global",
+            level=4,
+            num="2.11.4.4",
+        ),
+        Heading(name="General Join Settings", level=3, num="2.11.5"),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness",
+            level=4,
+            num="2.11.5.1",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct",
+            level=4,
+            num="2.11.5.2",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite",
+            level=4,
+            num="2.11.5.3",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.Algorithm", level=4, num="2.11.5.4"
         ),
         Heading(
             name="RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow",
             level=4,
-            num="2.11.4.5",
+            num="2.11.5.5",
         ),
         Heading(
-            name="RQ.SRS-044.Swarm.Joins.Settings.UseNulls", level=4, num="2.11.4.6"
+            name="RQ.SRS-044.Swarm.Joins.Settings.UseNulls", level=4, num="2.11.5.6"
         ),
         Heading(
             name="RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows",
             level=4,
-            num="2.11.4.7",
+            num="2.11.5.7",
         ),
         Heading(
             name="RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles",
             level=4,
-            num="2.11.4.8",
+            num="2.11.5.8",
         ),
     ),
     requirements=(
@@ -1298,6 +1450,7 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheUpdates,
         RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheNoDiskSpace,
         RQ_SRS_044_Swarm_Settings_object_storage_max_nodes,
+        RQ_SRS_044_Swarm_Settings_object_storage_cluster_fallback_to_local_if_empty,
         RQ_SRS_044_Swarm_ObserverNodes,
         RQ_SRS_044_Swarm_RBAC_RowPolicy,
         RQ_SRS_044_Swarm_RBAC_ColumnPolicy,
@@ -1313,6 +1466,10 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_Joins_Any,
         RQ_SRS_044_Swarm_Joins_Asof,
         RQ_SRS_044_Swarm_Joins_Paste,
+        RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode,
+        RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode_Allow,
+        RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode_Local,
+        RQ_SRS_044_Swarm_Joins_SwarmSettings_object_storage_cluster_join_mode_Global,
         RQ_SRS_044_Swarm_Joins_Settings_DefaultStrictness,
         RQ_SRS_044_Swarm_Joins_Settings_AnyJoinDistinct,
         RQ_SRS_044_Swarm_Joins_Settings_CrossToInnerRewrite,
@@ -1371,6 +1528,7 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
             * 2.6.3.5 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheNoDiskSpace](#rqsrs-044swarmcachingparquetmetadatacachenodiskspace)
     * 2.7 [Settings](#settings)
         * 2.7.1 [RQ.SRS-044.Swarm.Settings.object_storage_max_nodes](#rqsrs-044swarmsettingsobject_storage_max_nodes)
+        * 2.7.2 [RQ.SRS-044.Swarm.Settings.object_storage_cluster_fallback_to_local_if_empty](#rqsrs-044swarmsettingsobject_storage_cluster_fallback_to_local_if_empty)
     * 2.8 [Observer](#observer)
         * 2.8.1 [RQ.SRS-044.Swarm.ObserverNodes](#rqsrs-044swarmobservernodes)
     * 2.9 [RBAC](#rbac)
@@ -1392,16 +1550,21 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
             * 2.11.3.3 [RQ.SRS-044.Swarm.Joins.Any](#rqsrs-044swarmjoinsany)
             * 2.11.3.4 [RQ.SRS-044.Swarm.Joins.Asof](#rqsrs-044swarmjoinsasof)
             * 2.11.3.5 [RQ.SRS-044.Swarm.Joins.Paste](#rqsrs-044swarmjoinspaste)
-        * 2.11.4 [Join Settings](#join-settings)
-            * 2.11.4.1 [RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness](#rqsrs-044swarmjoinssettingsdefaultstrictness)
-            * 2.11.4.2 [RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct](#rqsrs-044swarmjoinssettingsanyjoindistinct)
-            * 2.11.4.3 [RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite](#rqsrs-044swarmjoinssettingscrosstoinnerrewrite)
-            * 2.11.4.4 [RQ.SRS-044.Swarm.Joins.Settings.Algorithm](#rqsrs-044swarmjoinssettingsalgorithm)
-            * 2.11.4.5 [RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow](#rqsrs-044swarmjoinssettingsanytakelastrow)
-            * 2.11.4.6 [RQ.SRS-044.Swarm.Joins.Settings.UseNulls](#rqsrs-044swarmjoinssettingsusenulls)
-            * 2.11.4.7 [RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows](#rqsrs-044swarmjoinssettingspartialmergerows)
-            * 2.11.4.8 [RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles](#rqsrs-044swarmjoinssettingsondiskmaxfiles)
-
+        * 2.11.4 [Swarm Join Settings](#swarm-join-settings)
+            * 2.11.4.1 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_mode)
+            * 2.11.4.2 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Allow](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_modeallow)
+            * 2.11.4.3 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Local](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_modelocal)
+            * 2.11.4.4 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Global](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_modeglobal)
+        * 2.11.5 [General Join Settings](#general-join-settings)
+            * 2.11.5.1 [RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness](#rqsrs-044swarmjoinssettingsdefaultstrictness)
+            * 2.11.5.2 [RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct](#rqsrs-044swarmjoinssettingsanyjoindistinct)
+            * 2.11.5.3 [RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite](#rqsrs-044swarmjoinssettingscrosstoinnerrewrite)
+            * 2.11.5.4 [RQ.SRS-044.Swarm.Joins.Settings.Algorithm](#rqsrs-044swarmjoinssettingsalgorithm)
+            * 2.11.5.5 [RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow](#rqsrs-044swarmjoinssettingsanytakelastrow)
+            * 2.11.5.6 [RQ.SRS-044.Swarm.Joins.Settings.UseNulls](#rqsrs-044swarmjoinssettingsusenulls)
+            * 2.11.5.7 [RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows](#rqsrs-044swarmjoinssettingspartialmergerows)
+            * 2.11.5.8 [RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles](#rqsrs-044swarmjoinssettingsondiskmaxfiles)
+            
 
 ## Introduction
 
@@ -1657,10 +1820,28 @@ Swarm nodes SHALL not cache the parquet metadata if node has no enough space to 
 
 ### Settings
 
+This section describes swarm-specific settings that control swarm cluster behavior.
+
 #### RQ.SRS-044.Swarm.Settings.object_storage_max_nodes
 version: 1.0  
 
 [ClickHouse] SHALL support the `object_storage_max_nodes` setting to limit the number of nodes used in swarm cluster for a particular query
+
+#### RQ.SRS-044.Swarm.Settings.object_storage_cluster_fallback_to_local_if_empty
+version: 1.0  
+
+[ClickHouse] SHALL support the `object_storage_cluster_fallback_to_local_if_empty` setting.
+
+When `object_storage_cluster` names a swarm that is unknown or has no worker nodes (for example an observer-only swarm, or after the last worker is removed), and this setting is enabled, [ClickHouse] SHALL execute the **read** query on the local node instead of failing with `CLUSTER_DOESNT_EXIST`.
+
+The setting SHALL NOT apply to:
+* explicit `*Cluster` table functions (`s3Cluster`, `icebergS3Cluster`, and similar)
+* writes (`INSERT` into object storage with `object_storage_cluster` set)
+* `object_storage_remote_initiator_cluster` (a missing remote-initiator cluster SHALL still fail with `CLUSTER_DOESNT_EXIST`)
+
+When the swarm has at least one worker, enabling this setting SHALL NOT change query routing: reads SHALL still execute on swarm workers, not on the initiator.
+
+With `object_storage_remote_initiator=1` and a valid `object_storage_remote_initiator_cluster`, the decision to fall back SHALL be made on the remote initiator, because `object_storage_cluster` may be unknown locally and defined only on the remote (or the reverse).
 
 ### Observer
 
@@ -1768,7 +1949,59 @@ version: 1.0
 
 [ClickHouse] SHALL support paste joins for swarm queries. Paste joins SHALL perform a horizontal concatenation of two tables.
 
-#### Join Settings
+#### Swarm Join Settings
+
+This section describes swarm-specific settings that control JOIN behavior when using object storage cluster functions. 
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode
+version: 1.0  
+
+[ClickHouse] SHALL support the `object_storage_cluster_join_mode` setting that controls the behavior of JOIN operations when using object storage cluster functions (such as `s3Cluster`) or iceberg tables.
+
+The setting SHALL ONLY apply when:
+- The query contains a JOIN operation
+- The FROM clause uses an object storage cluster function or table on the left side of the JOIN
+
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Allow
+version: 1.0  
+
+[ClickHouse] SHALL support `object_storage_cluster_join_mode='allow'` as the default mode.
+
+When this mode is enabled:
+- The entire query SHALL be sent to swarm nodes as-is
+- JOIN operations SHALL be executed on the remote swarm nodes
+- This SHALL preserve the behavior prior to the introduction of this setting
+
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Local
+version: 1.0  
+
+[ClickHouse] SHALL support `object_storage_cluster_join_mode='local'` mode.
+
+When this mode is enabled:
+- Only the left part of the JOIN SHALL be sent to swarm nodes
+- Swarm nodes SHALL execute the left part and return results to the initiator
+- The initiator node SHALL collect responses from swarm nodes
+- The initiator node SHALL execute the JOIN operation locally with the right table
+
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Global
+version: 1.0  
+
+[ClickHouse] SHALL support `object_storage_cluster_join_mode='global'` mode.
+
+When this mode is implemented, it SHALL:
+- Execute the right part of the JOIN on the initiator node
+- Send the result of the right part along with the query to swarm nodes
+- Execute the JOIN operation with the left part on swarm nodes
+
+Note: This mode is NOT currently implemented and SHALL return an appropriate error or warning if used.
+
+#### General Join Settings
+
+This section describes general ClickHouse join settings that SHALL also work with swarm queries. 
+These are standard ClickHouse settings, not swarm-specific settings.
 
 ##### RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness
 version: 1.0  

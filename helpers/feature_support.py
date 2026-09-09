@@ -69,6 +69,7 @@ def setting_supported(setting_name, table="system.settings"):
     """
 
     def check(test):
+        name = ""
         with Then(f"I check whether the {setting_name} setting exists"):
             name = get_settings_value(
                 setting_name, node=test.context.node, table=table, column="name"

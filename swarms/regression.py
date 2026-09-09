@@ -53,6 +53,12 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<25.8")(test),
     ),
+    "/swarms/feature/fallback to local if empty/*": (
+        Skip,
+        "object_storage_cluster_fallback_to_local_if_empty is available in Antalya 26.6+",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<=26.6.2.20001")(test),
+    ),
 }
 
 
