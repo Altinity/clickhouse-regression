@@ -18,8 +18,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 UPSTREAM = "ClickHouse/ClickHouse"
 FORK = "Altinity/ClickHouse"
+REPO = UPSTREAM  # overridden by --repo; Altinity-only features live in the fork
 DEFAULT_REFS = [
-    f"{UPSTREAM}:master",
+    f"{REPO}:master",
     f"{FORK}:antalya-26.6",
     f"{FORK}:antalya-25.8",
     f"{FORK}:25.8",
@@ -47,7 +48,7 @@ def raw(repo, ref, path):
 def find_files(token):
     """Which files contain this? Code search indexes the default branch only."""
     out = gh("api", "-X", "GET", "search/code", "-f",
-             f"q={token} repo:{UPSTREAM}", "--jq", ".items[].path")
+             f"q={token} repo:{REPO}", "--jq", ".items[].path")
     paths = [p for p in out.splitlines() if p]
     # Source first: docs mention every setting and drown the file that implements it.
     src = [p for p in paths if p.startswith("src/")]
@@ -58,7 +59,7 @@ def find_files(token):
 
 def find_prs(token):
     out = gh("api", "-X", "GET", "search/issues", "-f",
-             f"q=repo:{UPSTREAM} {token} type:pr", "-f", "per_page=50", "--jq",
+             f"q=repo:{REPO} {token} type:pr", "-f", "per_page=50", "--jq",
              '.items[] | "\\(.number)\\t\\(.closed_at // "open")\\t\\(.title)"')
     rows = [l.split("\t") for l in out.splitlines() if l]
     # The PR that INTRODUCED a name is the earliest merged one that mentions it;
@@ -68,7 +69,7 @@ def find_prs(token):
 
 
 def pr_detail(number):
-    out = gh("api", f"repos/{UPSTREAM}/pulls/{number}", "--jq",
+    out = gh("api", f"repos/{REPO}/pulls/{number}", "--jq",
              '{n:.number, merged:.merged_at, sha:.merge_commit_sha, title:.title}')
     try:
         return json.loads(out)
@@ -82,7 +83,7 @@ def changelog_for_pr(number):
     Lists the changelog files first - guessing a release filename wastes a round and
     the names are not predictable.
     """
-    names = [n for n in gh("api", f"repos/{UPSTREAM}/contents/docs/changelogs",
+    names = [n for n in gh("api", f"repos/{REPO}/contents/docs/changelogs",
                            "--jq", ".[].name").splitlines() if n.startswith("v")]
 
     def ver_key(n):
@@ -93,7 +94,7 @@ def changelog_for_pr(number):
     with ThreadPoolExecutor(max_workers=8) as ex:
         cands = sorted(names, key=ver_key, reverse=True)[:25]
         for name, body in zip(cands, ex.map(
-                lambda n: raw(UPSTREAM, "master", f"docs/changelogs/{n}"), cands)):
+                lambda n: raw(REPO, "master", f"docs/changelogs/{n}"), cands)):
             if body and f"#{number}" in body:
                 for line in body.splitlines():
                     if f"/{number}" in line or f"#{number}" in line:
@@ -120,18 +121,27 @@ def main():
     ap.add_argument("--pr", type=int, help="PR number, if already known")
     ap.add_argument("--path", help="file to probe for blast radius (default: first code-search hit)")
     ap.add_argument("--refs", nargs="*", default=DEFAULT_REFS, help="repo:ref pairs")
+    ap.add_argument("--repo", default=UPSTREAM,
+                    help=f"repository to search (default {UPSTREAM}; use {FORK} for "
+                         "Altinity-only features - searching upstream for one finds nothing)")
     a = ap.parse_args()
+    global REPO
+    REPO = a.repo
 
     with ThreadPoolExecutor(max_workers=3) as ex:
         f_files = ex.submit(find_files, a.token)
         f_prs = ex.submit(find_prs, a.token)
         (files, n_src), (prs, open_prs) = f_files.result(), f_prs.result()
 
-    print(f"# token: {a.token}\n")
+    print(f"# token: {a.token}   repo: {REPO}\n")
     print("## Files (default branch, source first)")
     print("\n".join(f"  {p}" for p in files) or "  (none - try a shorter or more distinctive token)")
     if files and not n_src:
         print("  ! no src/ hit - the token may be documentation-only, or too generic")
+    if not files and REPO == FORK:
+        print("  ! code search indexes only the default branch, and the fork's master is")
+        print("    frozen - an Altinity-only symbol will never show up here. Pass --path")
+        print("    explicitly; the blast radius below reads each ref directly and still works.")
 
     print("\n## Merged PRs mentioning it, oldest first (the first is usually the one that introduced it)")
     for n, closed, title in prs[:8]:

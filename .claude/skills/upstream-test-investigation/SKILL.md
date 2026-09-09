@@ -1,6 +1,6 @@
 ---
 name: upstream-test-investigation
-description: Investigate one upstream CI failure in depth - "investigate this test", "why is this test failing", "analyse this failure". Handles Stateless tests (`03340_projections_formatting`), Integration tests (`test_s3_cluster/test.py::test_ambiguous`), unit tests, and job-level failures with no test name (`Server died`, `Unknown error`, `Timeout`, `Cannot start clickhouse-server`) - anything recorded in `gh-data.checks`. Works from a PR or from a branch/MasterCI run: queries history, analyses logs, identifies the PR or merge window that broke it, and searches Altinity and upstream issues.
+description: Investigate one upstream CI failure in depth - "investigate this test", "why is this test failing", "analyse this failure". Handles Stateless tests (`03340_projections_formatting`), Integration tests (`test_s3_cluster/test.py::test_ambiguous`), unit tests, and job-level failures with no test name (`Server died`, `Unknown error`, `Timeout`, `Cannot start clickhouse-server`) - anything recorded in `gh-data.checks`. Works from a PR or from a branch/MasterCI run, and without the CI database password: reads the product source when the assertion names a symbol, queries history, analyses logs, identifies the PR or merge window that broke it, and checks up front whether an issue or an open fix PR already exists.
 ---
 
 # Skill: Upstream Test Failure Investigation
@@ -114,6 +114,113 @@ For these:
    The report will not name it; the client log or the shell trace will.
 3. Then continue from Step 2 using the recovered test, or - if none can be
    recovered - treat the job itself as the subject and rely on logs.
+
+---
+
+## Step 1a: Already Reported, or Already Being Fixed?
+
+**Seven seconds, before any investigation.** Someone may already have done this work
+- an investigation was once run to completion on a test that had an open fix PR
+filed the same day.
+
+Look for work **in progress**, which the later issue search (Step 6) does not cover:
+that one finds issues, while a fix usually arrives as a pull request nobody has
+merged yet.
+
+```bash
+# 1. Open PRs that TOUCH this test file. The only search that reliably finds them.
+gh pr list --repo <repo> --state open --limit 100 --json number,title,files \
+  --jq '.[] | select(.files[]?.path | test("<test file path>")) | "#\(.number) \(.title)"'
+
+# 2. Open PRs by words from the failure - faster, less precise, catches near misses
+gh api -X GET search/issues \
+  -f q='repo:<repo> type:pr state:open <keywords from the error>' \
+  --jq '.items[]|"#\(.number)  \(.title)"'
+
+# 3. Issues, open or closed, in BOTH repositories
+gh search issues --repo Altinity/ClickHouse "<test name or error keyword>" --limit 10
+gh search issues --repo ClickHouse/ClickHouse "<test name or error keyword>" --limit 10
+```
+
+Run 1 and 2 against `Altinity/ClickHouse` for anything on an `antalya-*` or
+`*altinity*` branch, and against `ClickHouse/ClickHouse` when the test and the code
+are both upstream.
+
+> **Search 1 is not optional, and search by test name does not replace it.** GitHub
+> issue search indexes titles and bodies, **not changed files**. A fix PR named
+> "Fix DataLake auth token profile events integration test" does not contain the
+> test's path anywhere searchable - it was invisible to a search for
+> `test_database_iceberg_lakekeeper_catalog`, and visible only by listing open PRs
+> and filtering on the files they touch.
+
+**If you find something, read it before continuing.** Either it already fixes the
+failure - and the job becomes reviewing that PR, which is different and much smaller
+work - or it does not, and you now know what it covers and can say so.
+
+Expect the fix PR to be **recent**. The more recently the failure appeared in CI,
+the more likely someone is already on it, and the more likely it is too new to be
+findable any other way.
+
+---
+
+## Step 1b: Can the Source Answer This Before the Database Can?
+
+Do this **before Step 2 and before asking for a password**. A whole class of
+failures is settled here in seconds, and for these the database can only say *when*.
+
+**The signal:** the assertion names a **symbol** - a profile event, a setting, a
+function, an error code, an exact message - and the failure is not a timeout or a
+crash. When a test asserts on a name and the name moved, the database will show a
+clean before/after that tells you nothing about the cause.
+
+**The first command is a grep, not a query:**
+
+```bash
+# Does the symbol still exist under that name, on the branch that failed?
+gh api -X GET search/code -f q='<symbol> repo:ClickHouse/ClickHouse' --jq '.items[].path'
+curl -sL "https://raw.githubusercontent.com/<repo>/<failing branch>/src/Common/ProfileEvents.cpp" \
+  | grep -n '<symbol>'
+```
+
+Gone, or present under a different name, means the case is closed: the product
+renamed it and the test was not updated. That is a `regression` whose fix belongs in
+the test.
+
+### Use the script
+
+`../regression-test-database-investigation/scripts/source_forensics.py` does the
+whole of this in one run - files, culprit PR with merge date, changelog release,
+blast radius across branches - with the lookups issued in parallel:
+
+```bash
+.claude/skills/regression-test-database-investigation/scripts/source_forensics.py \
+  --token '<symbol or exact message>' [--repo Altinity/ClickHouse] [--path src/...]
+```
+
+**Pass `--repo Altinity/ClickHouse` for anything Altinity-only** - swarms, CAS,
+datalake catalogs, export. Searching upstream for a fork-only symbol returns
+nothing, and nothing reads exactly like "it was removed". Note the fork's default
+branch is frozen, so code search finds nothing there either; pass `--path` and let
+the per-ref blast radius answer instead.
+
+### The database is still not blocked on a password
+
+A missing password does not stop the investigation. Do everything that does not need
+it - this step, reading the test source, reading `job.log` - and ask for it at the
+point where a query is genuinely the next step, saying what it would add. Often it
+only dates the failure while the cause and the fix are already settled.
+
+### Stop when the source has answered
+
+If you have the mechanism, the culprit PR and the blast radius, **skip Steps 2-4**
+and go to Step 5. Steps 2-4 date a failure; that is worth having when the cause is
+open and worth nothing once it is read from source. Do not ask for a password to
+complete a picture that is already complete - name the query as a remaining gap.
+
+> **A deterministic mechanism needs no rate.** When the code demonstrably rejects
+> or renames something, the failure rate is 100% by construction and counts add
+> nothing. Report file, line and the PR instead, and do not fall back to `unknown`
+> for want of numbers. This applies only when you actually read the code.
 
 ---
 
@@ -231,6 +338,24 @@ WHERE test_name = '<TEST_NAME>'
 ORDER BY check_start_time
 ```
 
+> **Never use `--contains` on a ClickHouse clone.** `git branch -r --contains` and
+> `git tag --contains` walk thousands of refs and do not finish - observed killed at
+> two minutes, and again at five. To ask whether a named ref carries a commit,
+> invert the question:
+>
+> ```bash
+> git merge-base --is-ancestor <SHA> <ref> && echo present || echo absent
+> ```
+>
+> One reachability check per ref, instant. And **always name the ref** in a
+> `git grep`: a bare one reads whatever branch is checked out, which is often a
+> maintenance branch and has produced the opposite conclusion.
+>
+> A clone that predates the failing build cannot answer "not present" at all - only
+> "I did not look". When the branch you need is newer than the clone, read the file
+> per ref over HTTP instead (`.claude/skills/_shared/ci-urls.md`). Do not `git fetch`;
+> it takes minutes and is the user's call.
+
 Take the last-good and first-bad `commit_sha` and list what landed between them:
 
 ```bash
@@ -282,7 +407,42 @@ identical to a code regression on a branch timeline.
 
 ---
 
+## Step 5b: Has This Class of Failure Been Fixed Before?
+
+Before proposing anything, check whether the same kind of work has already been done
+- in the regression repository for a test-side fix, or in the product for a
+behaviour change.
+
+```bash
+# a. By string - did anyone already touch this exact symbol or message?
+git log --oneline -S '<symbol or message>' -- . | head
+
+# b. By FORM - has this KIND of failure been fixed here before?
+#    Run this even when (a) returns nothing; it usually does.
+git log --oneline -i --grep='exception message' --grep='error message' \
+        --grep='update.*message' --grep='rename' | head -20
+```
+
+**(b) is the one that pays.** Searching by string looks for this failure; searching
+by form looks for *this class* of work. Adapting tests to renamed symbols and
+reworded messages is recurring maintenance, and every past instance used different
+words - so a string search finds none of them.
+
+It tells you three things at once: that this is routine rather than a novel finding,
+the version-guard style already settled on, and where such fixes are centralised.
+
+**Report every affected call site, not only the one that failed.** A rename usually
+breaks several assertions and the others simply have not run yet. Scope is part of
+the verdict.
+
+---
+
 ## Step 6: Search for Existing Issues
+
+Step 1a already asked whether anyone is **currently** working on it. This step is
+the deeper pass, once you know the mechanism: search by the **error signature and
+the culprit PR**, not just by the test name, to find an upstream issue or fix that
+should be backported.
 
 Search **both** repositories. An Altinity-side issue is often the one that exists,
 especially for failures on `antalya-*` and `*-altinity*` branches.
@@ -470,9 +630,13 @@ When the failure requires `allow_experimental_*` settings (visible in fuzzer's `
 - If the window could not be narrowed to one PR, say so and say why - a reduced job
   set on PRs is a normal and complete reason
 
-### Existing Issues
+### Already Reported or Being Fixed
+- **Open fix PR:** <link> or "none - checked open PRs touching <test file>"
 - **Issue:** <link> or "None found"
-- **Fix PR:** <link> or "None"
+- **Merged fix:** <link> or "None"
+
+State that you checked, not only what you found. "None found" is a result;
+silence reads as "did not look".
 
 ### Reproduction Steps
 1. <step>
