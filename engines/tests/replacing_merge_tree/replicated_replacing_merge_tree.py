@@ -4,6 +4,7 @@ from testflows.core import *
 from engines.requirements import *
 from engines.tests.steps import *
 from helpers.common import check_clickhouse_version, getuid
+from helpers.queries import sync_replica
 
 
 append_path(sys.path, "..")
@@ -35,6 +36,9 @@ def without_is_deleted(self, cluster_name=None):
             self.context.nodes[0].query(
                 f"INSERT INTO {name} VALUES {insert_values}",
             )
+
+        with And("I wait for the second replica to sync"):
+            sync_replica(node=self.context.nodes[1], table_name=name)
 
         with Then(
             "I select all data from the table and expect to see all latest version data (deleted and not)"
@@ -85,6 +89,9 @@ def without_is_deleted_distributed(self, cluster_name=None):
             self.context.nodes[0].query(
                 f"INSERT INTO {name} VALUES {insert_values}",
             )
+
+        with And("I wait for the second replica to sync"):
+            sync_replica(node=self.context.nodes[1], table_name=name)
 
         with And("I create distributed table on the initial table"):
             self.context.nodes[0].query(
@@ -159,6 +166,9 @@ def with_is_deleted(self, cluster_name=None):
                 f"INSERT INTO {name} VALUES {insert_values}",
             )
 
+        with And("I wait for the second replica to sync"):
+            sync_replica(node=self.context.nodes[1], table_name=name)
+
         with Then(
             "I select all data from the table and expect to see all latest version data (deleted and not)"
         ):
@@ -211,6 +221,9 @@ def with_is_deleted_distributed(self, cluster_name=None):
             self.context.nodes[0].query(
                 f"INSERT INTO {name} VALUES {insert_values}",
             )
+
+        with And("I wait for the second replica to sync"):
+            sync_replica(node=self.context.nodes[1], table_name=name)
 
         with And("I create distributed table on the initial table"):
             self.context.nodes[0].query(
@@ -295,6 +308,9 @@ def update_distributed(self, cluster_name=None):
                 f"INSERT INTO {name} VALUES {insert_values_local}",
             )
 
+        with And("I wait for the second replica to sync"):
+            sync_replica(node=self.context.nodes[1], table_name=name)
+
         with And("I create distributed table"):
             self.context.nodes[0].query(
                 f"CREATE TABLE IF NOT EXISTS distr_{name} ON CLUSTER '{cluster_name}'"
@@ -316,6 +332,9 @@ def update_distributed(self, cluster_name=None):
             self.context.nodes[0].query(
                 f"INSERT INTO {name} VALUES {insert_values_update}"
             )
+
+        with And("I wait for the second replica to sync"):
+            sync_replica(node=self.context.nodes[1], table_name=name)
 
         with And("I check data that data has been updated"):
             self.context.nodes[0].query(

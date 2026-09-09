@@ -9,6 +9,9 @@ def feature(self, minio_root_user, minio_root_password):
         test=load("swarms.tests.swarm_sanity", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
+        test=load("swarms.tests.fallback_to_local_if_empty", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
         test=load("swarms.tests.invalid_configuration", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(

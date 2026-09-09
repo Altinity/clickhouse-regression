@@ -18,7 +18,17 @@ Everything below forks on this. Get it wrong and every URL 404s.
 |---|---|---|
 | Path segment | `PRs/<PR>/<SHA>/` | `REFs/<BRANCH>/<SHA>//` (**double slash**) |
 | JSON browser key | `PR=<PR>` + `name_0=PR` | `REF=<BRANCH>` + `name_0=MasterCI` |
-| Job log file | `job.log` (plain) | `job.log.zst` (**zstd-compressed**) |
+| Job log file | `job.log` | `job.log` **or** `job.log.zst` - varies |
+
+**Do not assume the compression.** REF runs were documented here as always
+publishing `job.log.zst`; they do not - a REF integration job was observed
+publishing plain `job.log`, and the `.zst` URL 404s. **List the directory instead
+of guessing**, which also shows you what else the job produced:
+
+```bash
+curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=REFs/<BRANCH>/<SHA>/<job_artifact_dir>/" \
+  | grep -oE '<Key>[^<]+</Key>' | sed 's/<[^>]*>//g;s|.*/||'
+```
 
 ---
 
@@ -76,6 +86,38 @@ curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=P
 curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=REFs/<BRANCH>/<SHA>/&delimiter=/" \
   | grep -oE '<Prefix>[^<]+</Prefix>' | sed 's/<[^>]*>//g'
 ```
+
+## Server logs from an integration job
+
+Integration jobs do not publish server logs as files - they are inside
+`logs.tar.gz`, which routinely exceeds 400 MB. The path inside it is a fixed
+convention, so **go straight to the file**; listing the archive first and then
+extracting streams the whole thing twice.
+
+```bash
+# One pass. <dir> is the test directory, gwN the pytest worker, nodeN the instance.
+curl -s "<artifact base>/logs.tar.gz" \
+  | tar -xzO "tests/integration/<dir>/_instances-gw0/node1/logs/clickhouse-server.log" \
+  > server.log
+```
+
+Verified against a real REF job: the archive holds `ci/tmp/` entries first and then
+`tests/integration/`, and the server log is at exactly that path. Guessing the
+member costs nothing when wrong - the extraction comes out **empty**, never wrong -
+so vary `gw0`/`gw1` or `node1`/`node2` and repeat.
+
+If two guesses fail, list without pulling the whole archive: a `tar.gz` is one
+stream, so a partial download lists every member up to the truncation point.
+
+```bash
+curl -s -r 0-60000000 "<artifact base>/logs.tar.gz" | tar -tz 2>/dev/null | grep clickhouse-server.log
+```
+
+Everything else about the run - the failing assertion, the command line, the shell
+trace - is in `job.log`, which is small. Read that first and pull the server log
+only when the answer is not there.
+
+---
 
 ## Reading a large log without downloading it
 

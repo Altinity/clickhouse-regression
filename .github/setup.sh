@@ -128,7 +128,7 @@ fi
 # (or with each other), otherwise they overwrite report.html, raw.log and
 # *-fails.log.txt. --cas-s3-cache contains "--cas" as a prefix, so match the
 # cache flag first and use a distinct suffix. Skip appending when storage_path
-# already encodes the same segment (e.g. tiered_storage_cas sets STORAGE=/cas).
+# already encodes CAS (e.g. tiered_storage_cas sets STORAGE=/with_cas).
 # Flags can arrive via args (flags/extra_args) or regression_args.
 cas_suffix=""
 all_regression_args="$args $regression_args"
@@ -137,7 +137,7 @@ if [[ $all_regression_args == *'--cas-s3-cache'* ]]; then
 elif [[ $all_regression_args == *'--cas'* || $all_regression_args == *'--with-cas'* ]]; then
   cas_suffix="/cas"
 fi
-if [[ -n "$cas_suffix" && "$STORAGE" == *"$cas_suffix"* ]]; then
+if [[ -n "$cas_suffix" && "$STORAGE" == *cas* ]]; then
   cas_suffix=""
 fi
 

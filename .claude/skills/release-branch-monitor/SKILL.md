@@ -69,7 +69,8 @@ https://s3.amazonaws.com/altinity-build-artifacts/REFs/<BRANCH>/<SHA>/<RUN_ID>/c
 Verify with `curl -sI -o /dev/null -w "%{http_code}\n" <URL>` — if 404, the run hasn't published its report yet and should be skipped.
 
 For any other URL - JSON browser, direct artifact paths, job directory naming,
-compressed `job.log.zst` on REF runs - read `.claude/skills/_shared/ci-urls.md`.
+whether a REF run's job log is compressed (it varies) - read
+`.claude/skills/_shared/ci-urls.md`.
 
 Then parse each report:
 

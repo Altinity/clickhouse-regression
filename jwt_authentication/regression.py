@@ -6,6 +6,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.common import check_clickhouse_version
 
 from jwt_authentication.requirements.requirements import *
 
@@ -17,6 +18,18 @@ ffails = {
     "/jwt authentication/static jwks": (Skip, "Under development"),
     "/jwt authentication/dynamic jwks": (Skip, "Under development"),
 }
+
+
+def _legacy_jwt_validators_rejected(test, clickhouse_path):
+    """True when <jwt_validators> aborts startup (ClickHouse#100332, 26.8+).
+
+    Head/latest CI often leaves ``clickhouse_version`` unset until the cluster
+    starts, so also match the package path.
+    """
+    if check_clickhouse_version(">=26.8")(test):
+        return True
+    path = (clickhouse_path or "").lower()
+    return "head" in path or "latest" in path
 
 
 @TestFeature
@@ -54,6 +67,12 @@ def regression(
 
     if stress is not None:
         self.context.stress = stress
+
+    if _legacy_jwt_validators_rejected(self, cluster_args.get("clickhouse_path")):
+        skip(
+            reason="legacy jwt_validators config is rejected on ClickHouse 26.8+ "
+            "(ClickHouse#100332); use the oauth suite for token_processors"
+        )
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
