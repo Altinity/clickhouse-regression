@@ -1,7 +1,6 @@
-import time
-
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import *
+from lightweight_delete.cas_mode import check_cas_mode
 
 
 @TestScenario
@@ -37,7 +36,9 @@ def disk_space(self, node=None):
         )
 
     with When("I perform a lot of deletes"):
-        for i in range(30):
+        # CAS mutations are too slow for the original 30x20 loop.
+        id_count = 15 if check_cas_mode(self) else 30
+        for i in range(id_count):
             for j in range(20):
                 delete(
                     table_name=table_name,

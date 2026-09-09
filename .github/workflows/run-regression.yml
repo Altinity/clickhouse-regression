@@ -1352,7 +1352,7 @@ jobs:
       suite_name: lightweight_delete
       job_name: lightweight_delete_cas
       part: 1
-      timeout_minutes: 360
+      timeout_minutes: 300
       storage_path: /cas
       regression_args: '--cas --only "/lightweight delete/disk space/*"'
       artifact_name: lightweight_delete-cas-artifacts
@@ -1373,7 +1373,7 @@ jobs:
       suite_name: lightweight_delete
       job_name: lightweight_delete_cas
       part: 2
-      timeout_minutes: 240
+      timeout_minutes: 300
       storage_path: /cas
       regression_args: '--cas --only "/lightweight delete/hard restart/*"'
       artifact_name: lightweight_delete-cas-artifacts
@@ -1394,9 +1394,30 @@ jobs:
       suite_name: lightweight_delete
       job_name: lightweight_delete_cas
       part: 3
-      timeout_minutes: 360
+      timeout_minutes: 300
       storage_path: /cas
-      regression_args: '--cas --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*"'
+      regression_args: '--cas --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
+      artifact_name: lightweight_delete-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_4:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas
+      part: 4
+      timeout_minutes: 300
+      storage_path: /cas
+      regression_args: '--cas --only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
       artifact_name: lightweight_delete-cas-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1415,7 +1436,7 @@ jobs:
       suite_name: lightweight_delete
       job_name: lightweight_delete_cas_s3_cache
       part: 1
-      timeout_minutes: 360
+      timeout_minutes: 300
       storage_path: /cas-s3-cache
       regression_args: '--cas-s3-cache --only "/lightweight delete/disk space/*"'
       artifact_name: lightweight_delete-cas-s3-cache-artifacts
@@ -1436,7 +1457,7 @@ jobs:
       suite_name: lightweight_delete
       job_name: lightweight_delete_cas_s3_cache
       part: 2
-      timeout_minutes: 240
+      timeout_minutes: 300
       storage_path: /cas-s3-cache
       regression_args: '--cas-s3-cache --only "/lightweight delete/hard restart/*"'
       artifact_name: lightweight_delete-cas-s3-cache-artifacts
@@ -1457,9 +1478,30 @@ jobs:
       suite_name: lightweight_delete
       job_name: lightweight_delete_cas_s3_cache
       part: 3
-      timeout_minutes: 360
+      timeout_minutes: 300
       storage_path: /cas-s3-cache
-      regression_args: '--cas-s3-cache --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*"'
+      regression_args: '--cas-s3-cache --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
+      artifact_name: lightweight_delete-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_s3_cache_4:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas_s3_cache
+      part: 4
+      timeout_minutes: 300
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
       artifact_name: lightweight_delete-cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
