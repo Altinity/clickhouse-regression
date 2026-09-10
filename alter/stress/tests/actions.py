@@ -1272,7 +1272,7 @@ def fill_clickhouse_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
+                assert int(disk_size_k) < 10e6, error(
                     "Disk does not appear to be restricted!"
                 )
 
@@ -1480,7 +1480,7 @@ def fill_zookeeper_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
+                assert int(disk_size_k) < 10e6, error(
                     "Disk does not appear to be restricted!"
                 )
 
