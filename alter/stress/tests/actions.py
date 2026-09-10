@@ -1296,7 +1296,7 @@ def fill_clickhouse_disks(self):
 
 @TestStep(Given)
 def clickhouse_limited_disk_config(self, node):
-    """Install a config file overriding clickhouse storage locations"""
+    """Build a config file overriding clickhouse storage locations."""
 
     config_override = {
         "logger": {
@@ -1333,24 +1333,24 @@ def clickhouse_limited_disk_config(self, node):
         config_file="override_data_dir.xml",
     )
 
-    return add_config(
-        config=config,
-        restart=False,
-        node=node,
-        check_preprocessed=False,
-    )
+    return config
 
 
 @TestStep(Given)
 def limit_clickhouse_disks(self, node):
-    """
-    Restart clickhouse using small disks.
+    """Restart clickhouse using small disks.
+
+    Own override_data_dir.xml write/restore here. Nested add_config removes the
+    path override after this step has already started ClickHouse, so the server
+    keeps path=/var/lib/clickhouse-limited. Combinations cleanup then greps the
+    stale /var/lib/clickhouse preprocessed copy for s3_storage.xml and Fails.
     """
 
     migrate_dirs = {
         "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
         "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
     }
+    config = clickhouse_limited_disk_config(node=node)
 
     try:
         with Given("I stop clickhouse"):
@@ -1363,7 +1363,11 @@ def limit_clickhouse_disks(self, node):
                 node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
 
         with And("I write an override config for clickhouse"):
-            clickhouse_limited_disk_config(node=node)
+            node.command(
+                f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC",
+                steps=False,
+                exitcode=0,
+            )
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse(log_dir="/var/log/clickhouse-server-limited")
@@ -1377,6 +1381,9 @@ def limit_clickhouse_disks(self, node):
         with And("I move clickhouse files from the small disks"):
             for normal_dir, limited_dir in migrate_dirs.items():
                 node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+
+        with And("I restore the original data directory config"):
+            node.command(f"rm -rf {config.path}", exitcode=0)
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse()
