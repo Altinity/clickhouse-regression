@@ -26,6 +26,7 @@ def minio(self, uri, bucket_prefix):
     config_d.enable_export_partition()
 
     Feature(run=load("s3.tests.export_partition.sanity", "feature"))
+    Feature(run=load("s3.tests.export_partition.skip_policy", "feature"))
     # Feature(run=load("s3.tests.export_partition.error_handling", "feature"))
     # Feature(run=load("s3.tests.export_partition.kill", "feature"))
     # Feature(run=load("s3.tests.export_partition.clusters_nodes", "feature"))
