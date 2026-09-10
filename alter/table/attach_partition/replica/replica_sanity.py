@@ -46,7 +46,7 @@ def parallel_add_remove_sanity(self):
         join()
 
         with Then("I wait for the second node to sync by watching the row count"):
-            retry(assert_row_count, timeout=120, delay=1)(
+            retry(assert_row_count, timeout=300, delay=1)(
                 node=nodes[1], table_name=table_name, rows=rows_per_insert
             )
 
@@ -89,7 +89,7 @@ def parallel_add_remove_sanity(self):
         join()
 
         with And("I wait for the third node to sync by watching the row count"):
-            retry(assert_row_count, timeout=120, delay=1)(
+            retry(assert_row_count, timeout=300, delay=1)(
                 node=nodes[2], table_name=table_name, rows=rows_per_insert * insert_sets
             )
 
@@ -131,7 +131,7 @@ def parallel_add_remove_sanity(self):
         join()
 
         with Then("I wait for the first node to sync by watching the row count"):
-            retry(assert_row_count, timeout=120, delay=1)(
+            retry(assert_row_count, timeout=300, delay=1)(
                 node=nodes[0], table_name=table_name, rows=rows_per_insert * insert_sets
             )
 

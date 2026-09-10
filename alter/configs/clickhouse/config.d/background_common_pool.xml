@@ -1,0 +1,9 @@
+<clickhouse>
+    <!--
+    ATTACH PARTITION FROM on ReplicatedMergeTree is REPLACE_RANGE and runs in
+    the common background pool. Default is 8 threads with max_tasks ==
+    max_threads and no wait queue; under CAS attach combinatorics trySchedule
+    refuses and num_tries still increments (Altinity/ClickHouse#2343).
+    -->
+    <background_common_pool_size>32</background_common_pool_size>
+</clickhouse>
