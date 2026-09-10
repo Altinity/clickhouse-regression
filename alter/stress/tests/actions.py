@@ -14,7 +14,6 @@ from helpers.common import *
 from helpers.cluster import MESSAGES_TO_RETRY
 from alter.stress.tests.tc_netem import *
 from alter.stress.tests.steps import *
-from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
 
@@ -1273,7 +1272,7 @@ def fill_clickhouse_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
+                assert int(disk_size_k) < 10e6, error(
                     "Disk does not appear to be restricted!"
                 )
 
@@ -1297,7 +1296,7 @@ def fill_clickhouse_disks(self):
 
 @TestStep(Given)
 def clickhouse_limited_disk_config(self, node):
-    """Install a config file overriding clickhouse storage locations"""
+    """Build a config file overriding clickhouse storage locations."""
 
     config_override = {
         "logger": {
@@ -1334,24 +1333,24 @@ def clickhouse_limited_disk_config(self, node):
         config_file="override_data_dir.xml",
     )
 
-    return add_config(
-        config=config,
-        restart=False,
-        node=node,
-        check_preprocessed=False,
-    )
+    return config
 
 
 @TestStep(Given)
 def limit_clickhouse_disks(self, node):
-    """
-    Restart clickhouse using small disks.
+    """Restart clickhouse using small disks.
+
+    Own override_data_dir.xml write/restore here. Nested add_config removes the
+    path override after this step has already started ClickHouse, so the server
+    keeps path=/var/lib/clickhouse-limited. Combinations cleanup then greps the
+    stale /var/lib/clickhouse preprocessed copy for s3_storage.xml and Fails.
     """
 
     migrate_dirs = {
         "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
         "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
     }
+    config = clickhouse_limited_disk_config(node=node)
 
     try:
         with Given("I stop clickhouse"):
@@ -1364,7 +1363,11 @@ def limit_clickhouse_disks(self, node):
                 node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
 
         with And("I write an override config for clickhouse"):
-            clickhouse_limited_disk_config(node=node)
+            node.command(
+                f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC",
+                steps=False,
+                exitcode=0,
+            )
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse(log_dir="/var/log/clickhouse-server-limited")
@@ -1379,21 +1382,63 @@ def limit_clickhouse_disks(self, node):
             for normal_dir, limited_dir in migrate_dirs.items():
                 node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
 
+        with And("I restore the original data directory config"):
+            node.command(f"rm -rf {config.path}", exitcode=0)
+
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse()
 
 
+def _zoo_cfg_with_dirs(content, data_dir, log_dir):
+    """Return zoo.cfg text with dataDir and dataLogDir replaced."""
+    lines = []
+    seen_data = seen_log = False
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("dataDir="):
+            lines.append(f"dataDir={data_dir}")
+            seen_data = True
+        elif stripped.startswith("dataLogDir="):
+            lines.append(f"dataLogDir={log_dir}")
+            seen_log = True
+        else:
+            lines.append(line)
+    if not seen_data:
+        lines.append(f"dataDir={data_dir}")
+    if not seen_log:
+        lines.append(f"dataLogDir={log_dir}")
+    return "\n".join(lines) + "\n"
+
+
+def _write_zoo_cfg(node, content):
+    node.command(
+        f"cat <<HEREDOC > /conf/zoo.cfg\n{content}\nHEREDOC",
+        steps=False,
+        exitcode=0,
+    )
+
+
 @TestStep(Given)
 def limit_zookeeper_disks(self, node):
-    """
-    Restart zookeeper using small disks.
+    """Restart zookeeper using small disks.
+
+    Own zoo.cfg write/restore here. Nested add_zookeeper_config_file(restart=True)
+    restores dataDir=/data after this step has already started ZK, so zkServer.sh
+    looks for /data/zookeeper_server.pid while the process still lives under
+    /data-limited and restart fails.
     """
 
     migrate_dirs = {
         "/data": "/data-limited",
         "/datalog": "/datalog-limited",
     }
-    zk_config = {"dataDir": "/data-limited", "dataLogDir": "/datalog-limited"}
+
+    with Given("I read the original zoo.cfg"):
+        original_cfg = node.command("cat /conf/zoo.cfg", exitcode=0).output.strip() + "\n"
+
+    limited_cfg = _zoo_cfg_with_dirs(
+        original_cfg, data_dir="/data-limited", log_dir="/datalog-limited"
+    )
 
     try:
         with Given("I stop zookeeper"):
@@ -1406,7 +1451,10 @@ def limit_zookeeper_disks(self, node):
                 node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
 
         with And("I write an override config for zookeeper"):
-            add_zookeeper_config_file(entries=zk_config, restart=True, node=node)
+            _write_zoo_cfg(node, limited_cfg)
+
+        with And("I start zookeeper on the small disks"):
+            node.start_zookeeper()
 
         yield
 
@@ -1418,7 +1466,10 @@ def limit_zookeeper_disks(self, node):
             for normal_dir, limited_dir in migrate_dirs.items():
                 node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
 
-        with Finally("I start zookeeper"):
+        with And("I restore the original zoo.cfg"):
+            _write_zoo_cfg(node, original_cfg)
+
+        with And("I start zookeeper"):
             node.start_zookeeper()
 
 
@@ -1436,7 +1487,7 @@ def fill_zookeeper_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
+                assert int(disk_size_k) < 10e6, error(
                     "Disk does not appear to be restricted!"
                 )
 

@@ -180,45 +180,46 @@ volumes:
       device: tmpfs
       type: tmpfs
 
+  # tmpfs used by fill_*_disks. Caps stay small so a 32GB host does not OOM.
   var_lib_clickhouse-limited-1:
     driver: local
     driver_opts:
-      o: "size=30G"
+      o: "size=4G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-1:
     driver: local
     driver_opts:
-      o: "size=5G"
+      o: "size=1G"
       device: tmpfs
       type: tmpfs
   
   var_lib_clickhouse-limited-2:
     driver: local
     driver_opts:
-      o: "size=30G"
+      o: "size=4G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-2:
     driver: local
     driver_opts:
-      o: "size=5G"
+      o: "size=1G"
       device: tmpfs
       type: tmpfs
 
   var_lib_clickhouse-limited-3:
     driver: local
     driver_opts:
-      o: "size=30G"
+      o: "size=4G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-3:
     driver: local
     driver_opts:
-      o: "size=5G"
+      o: "size=1G"
       device: tmpfs
       type: tmpfs
 
@@ -232,7 +233,7 @@ volumes:
   zookeeper_datalog-limited-1:
     driver: local
     driver_opts:
-      o: "size=5G"
+      o: "size=1G"
       device: tmpfs
       type: tmpfs
 
@@ -246,7 +247,7 @@ volumes:
   zookeeper_datalog-limited-2:
     driver: local
     driver_opts:
-      o: "size=5G"
+      o: "size=1G"
       device: tmpfs
       type: tmpfs
 
@@ -260,7 +261,7 @@ volumes:
   zookeeper_datalog-limited-3:
     driver: local
     driver_opts:
-      o: "size=5G"
+      o: "size=1G"
       device: tmpfs
       type: tmpfs
 
