@@ -14,7 +14,6 @@ from helpers.common import *
 from helpers.cluster import MESSAGES_TO_RETRY
 from alter.stress.tests.tc_netem import *
 from alter.stress.tests.steps import *
-from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
 
@@ -1383,17 +1382,56 @@ def limit_clickhouse_disks(self, node):
             node.start_clickhouse()
 
 
+def _zoo_cfg_with_dirs(content, data_dir, log_dir):
+    """Return zoo.cfg text with dataDir and dataLogDir replaced."""
+    lines = []
+    seen_data = seen_log = False
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("dataDir="):
+            lines.append(f"dataDir={data_dir}")
+            seen_data = True
+        elif stripped.startswith("dataLogDir="):
+            lines.append(f"dataLogDir={log_dir}")
+            seen_log = True
+        else:
+            lines.append(line)
+    if not seen_data:
+        lines.append(f"dataDir={data_dir}")
+    if not seen_log:
+        lines.append(f"dataLogDir={log_dir}")
+    return "\n".join(lines) + "\n"
+
+
+def _write_zoo_cfg(node, content):
+    node.command(
+        f"cat <<HEREDOC > /conf/zoo.cfg\n{content}\nHEREDOC",
+        steps=False,
+        exitcode=0,
+    )
+
+
 @TestStep(Given)
 def limit_zookeeper_disks(self, node):
-    """
-    Restart zookeeper using small disks.
+    """Restart zookeeper using small disks.
+
+    Own zoo.cfg write/restore here. Nested add_zookeeper_config_file(restart=True)
+    restores dataDir=/data after this step has already started ZK, so zkServer.sh
+    looks for /data/zookeeper_server.pid while the process still lives under
+    /data-limited and restart fails.
     """
 
     migrate_dirs = {
         "/data": "/data-limited",
         "/datalog": "/datalog-limited",
     }
-    zk_config = {"dataDir": "/data-limited", "dataLogDir": "/datalog-limited"}
+
+    with Given("I read the original zoo.cfg"):
+        original_cfg = node.command("cat /conf/zoo.cfg", exitcode=0).output.strip() + "\n"
+
+    limited_cfg = _zoo_cfg_with_dirs(
+        original_cfg, data_dir="/data-limited", log_dir="/datalog-limited"
+    )
 
     try:
         with Given("I stop zookeeper"):
@@ -1406,7 +1444,10 @@ def limit_zookeeper_disks(self, node):
                 node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
 
         with And("I write an override config for zookeeper"):
-            add_zookeeper_config_file(entries=zk_config, restart=True, node=node)
+            _write_zoo_cfg(node, limited_cfg)
+
+        with And("I start zookeeper on the small disks"):
+            node.start_zookeeper()
 
         yield
 
@@ -1418,7 +1459,10 @@ def limit_zookeeper_disks(self, node):
             for normal_dir, limited_dir in migrate_dirs.items():
                 node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
 
-        with Finally("I start zookeeper"):
+        with And("I restore the original zoo.cfg"):
+            _write_zoo_cfg(node, original_cfg)
+
+        with And("I start zookeeper"):
             node.start_zookeeper()
 
 
