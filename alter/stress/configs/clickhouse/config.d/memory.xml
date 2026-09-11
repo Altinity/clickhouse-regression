@@ -1,0 +1,8 @@
+<yandex>
+    <!--
+      CX53 runners are 32GB. Three unconstrained servers each try to use ~15GB
+      and the host OOMs (exit 137). Cap the server so projections+indexes stay
+      inside one machine.
+    -->
+    <max_server_memory_usage>6000000000</max_server_memory_usage>
+</yandex>

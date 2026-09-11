@@ -1336,6 +1336,17 @@ def clickhouse_limited_disk_config(self, node):
     return config
 
 
+def _copy_tree(node, src, dst):
+    """Copy src/ into dst/. Prefer rsync; never apt-install it (needs outbound HTTP)."""
+    has_rsync = node.command("command -v rsync", no_checks=True).exitcode == 0
+    if has_rsync:
+        node.command(f"rsync -a -H --delete {src}/ {dst}")
+        return
+    node.command(f"mkdir -p {dst}")
+    node.command(f"rm -rf {dst}/lost+found")
+    node.command(f"cp -a {src}/. {dst}/")
+
+
 @TestStep(Given)
 def limit_clickhouse_disks(self, node):
     """Restart clickhouse using small disks.
@@ -1357,10 +1368,8 @@ def limit_clickhouse_disks(self, node):
             node.stop_clickhouse()
 
         with And("I move clickhouse files to small disks"):
-            node.command("apt update && apt install rsync -y")
-
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
+                _copy_tree(node, normal_dir, limited_dir)
 
         with And("I write an override config for clickhouse"):
             node.command(
@@ -1380,7 +1389,7 @@ def limit_clickhouse_disks(self, node):
 
         with And("I move clickhouse files from the small disks"):
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+                _copy_tree(node, limited_dir, normal_dir)
 
         with And("I restore the original data directory config"):
             node.command(f"rm -rf {config.path}", exitcode=0)
@@ -1445,10 +1454,8 @@ def limit_zookeeper_disks(self, node):
             node.stop_zookeeper()
 
         with And("I move zookeeper files to small disks"):
-            node.command("apt update && apt install rsync -y")
-
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
+                _copy_tree(node, normal_dir, limited_dir)
 
         with And("I write an override config for zookeeper"):
             _write_zoo_cfg(node, limited_cfg)
@@ -1464,7 +1471,7 @@ def limit_zookeeper_disks(self, node):
 
         with And("I move zookeeper files from the small disks"):
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+                _copy_tree(node, limited_dir, normal_dir)
 
         with And("I restore the original zoo.cfg"):
             _write_zoo_cfg(node, original_cfg)

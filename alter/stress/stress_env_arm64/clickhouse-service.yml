@@ -12,6 +12,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=$S3_AMAZON_ACCESS_KEY
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/instant_moves.xml:/etc/clickhouse-server/config.d/instant_moves.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/memory.xml:/etc/clickhouse-server/config.d/memory.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
@@ -20,6 +21,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
+    mem_limit: 7g
+    memswap_limit: 7g
     cap_add:
       - NET_ADMIN
 

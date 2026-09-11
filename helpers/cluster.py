@@ -1996,24 +1996,34 @@ class Cluster(object):
             with Finally("I clean up"):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
-                        with Shell() as bash:
-                            log_path = f"../_service_logs"
-                            bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
-                            bash(f"mkdir -p {log_path}")
-                            nodes = bash(
-                                f"{self.docker_compose} ps --services"
-                            ).output.split("\n")
-                            debug(nodes)
-                            for node in nodes:
-                                snode = bash(
-                                    f"{self.docker_compose} logs {node} "
-                                    f"> {log_path}/{node}.log",
-                                    timeout=1000,
+                        # Log collection must not fail the suite. After node
+                        # restarts / netem the compose shell can miss a prompt
+                        # for minutes (ttl+restarts hung 1000s on `cd`).
+                        try:
+                            with Shell() as bash:
+                                log_path = f"../_service_logs"
+                                bash(
+                                    f"cd {self.docker_compose_project_dir}",
+                                    timeout=30,
                                 )
-                                if snode.exitcode != 0:
-                                    xfail(
-                                        f"failed to get service log - exitcode {snode.exitcode}"
+                                bash(f"mkdir -p {log_path}")
+                                nodes = bash(
+                                    f"{self.docker_compose} ps --services"
+                                ).output.split("\n")
+                                debug(nodes)
+                                for node in nodes:
+                                    snode = bash(
+                                        f"{self.docker_compose} logs {node} "
+                                        f"> {log_path}/{node}.log",
+                                        timeout=60,
                                     )
+                                    if snode.exitcode != 0:
+                                        debug(
+                                            f"failed to get service log for {node} "
+                                            f"- exitcode {snode.exitcode}"
+                                        )
+                        except Exception as e:
+                            debug(f"failed to collect service logs: {e}")
 
                 self.down()
         finally:
