@@ -355,6 +355,12 @@ def one_by_one(self):
 
     for action in action_subsets:
         with Example(action.replace("_", " ")):
+            if action == "fill_disks":
+                skip(
+                    "covered by the full disk scenario; filling tmpfs is host RAM "
+                    "outside the ClickHouse cgroup and OOMs CX53 (32GB)"
+                )
+
             action_list_args = all_disabled.copy()
             action_list_args[action] = True
 
@@ -367,7 +373,7 @@ def one_by_one(self):
             alter_combinations(
                 actions=action_list,
                 limit=None if self.context.stress else 20,
-                limit_disk_space=(action == "fill_disks"),
+                limit_disk_space=False,
             )
 
 

@@ -21,8 +21,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
-    mem_limit: 7g
-    memswap_limit: 7g
+    mem_limit: 5g
+    memswap_limit: 5g
     cap_add:
       - NET_ADMIN
 

@@ -1,8 +1,18 @@
 <yandex>
     <!--
-      CX53 runners are 32GB. Three unconstrained servers each try to use ~15GB
-      and the host OOMs (exit 137). Cap the server so projections+indexes stay
-      inside one machine.
+      CX53 is 32GB. Three servers plus ZK/MinIO/Python must fit.
+      ClickHouse otherwise sizes each cache to ~50% of the 7GB cgroup
+      (3.5GiB * 5 caches) and starts a 512-thread schedule pool.
     -->
-    <max_server_memory_usage>6000000000</max_server_memory_usage>
+    <max_server_memory_usage>4000000000</max_server_memory_usage>
+    <uncompressed_cache_size>268435456</uncompressed_cache_size>
+    <mark_cache_size>268435456</mark_cache_size>
+    <primary_index_cache_size>134217728</primary_index_cache_size>
+    <index_mark_cache_size>134217728</index_mark_cache_size>
+    <vector_similarity_index_cache_size>67108864</vector_similarity_index_cache_size>
+    <background_schedule_pool_size>16</background_schedule_pool_size>
+    <background_pool_size>8</background_pool_size>
+    <background_move_processing_pool_size>4</background_move_processing_pool_size>
+    <background_fetches_pool_size>4</background_fetches_pool_size>
+    <background_common_pool_size>8</background_common_pool_size>
 </yandex>
