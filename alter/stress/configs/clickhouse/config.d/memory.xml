@@ -1,8 +1,12 @@
 <yandex>
     <!--
       CX53 is 32GB. Three servers plus ZK/MinIO/Python must fit.
-      ClickHouse otherwise sizes each cache to ~50% of the 7GB cgroup
+      ClickHouse otherwise sizes each cache to ~50% of the cgroup
       (3.5GiB * 5 caches) and starts a 512-thread schedule pool.
+      Do not shrink background_pool_size below the mutation-entry
+      default (20): ClickHouse refuses to start if
+      background_pool_size * background_merges_mutations_concurrency_ratio
+      is smaller than number_of_free_entries_in_pool_to_execute_mutation.
     -->
     <max_server_memory_usage>4000000000</max_server_memory_usage>
     <uncompressed_cache_size>268435456</uncompressed_cache_size>
@@ -11,8 +15,4 @@
     <index_mark_cache_size>134217728</index_mark_cache_size>
     <vector_similarity_index_cache_size>67108864</vector_similarity_index_cache_size>
     <background_schedule_pool_size>16</background_schedule_pool_size>
-    <background_pool_size>8</background_pool_size>
-    <background_move_processing_pool_size>4</background_move_processing_pool_size>
-    <background_fetches_pool_size>4</background_fetches_pool_size>
-    <background_common_pool_size>8</background_common_pool_size>
 </yandex>
