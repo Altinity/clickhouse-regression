@@ -160,7 +160,7 @@ services:
   mc:
     depends_on:
       - minio
-    image: minio/mc
+    image: quay.io/minio/mc
     container_name: mc
     environment:
       - AWS_ACCESS_KEY_ID=minio

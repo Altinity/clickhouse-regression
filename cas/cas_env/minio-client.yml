@@ -1,6 +1,6 @@
 services:
   mc:
-    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z
     init: true
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER:-}

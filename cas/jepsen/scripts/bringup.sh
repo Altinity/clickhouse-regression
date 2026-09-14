@@ -69,7 +69,7 @@ ip_of jepsen-keeper > keeper.txt
 echo "Waiting for RustFS on network $NETWORK..."
 rustfs_ok=0
 for _ in $(seq 1 60); do
-  if docker run --rm --network "$NETWORK" --entrypoint /bin/sh minio/mc:latest -c \
+  if docker run --rm --network "$NETWORK" --entrypoint /bin/sh quay.io/minio/mc:latest -c \
     'mc alias set local http://jepsen-rustfs:11121 clickhouse clickhouse >/dev/null 2>&1 && mc ls local >/dev/null 2>&1'; then
     rustfs_ok=1
     break
@@ -86,7 +86,7 @@ if [[ "$rustfs_ok" -ne 1 ]]; then
 fi
 
 echo "Creating CAS bucket..."
-if ! docker run --rm --network "$NETWORK" --entrypoint /bin/sh minio/mc:latest -c '
+if ! docker run --rm --network "$NETWORK" --entrypoint /bin/sh quay.io/minio/mc:latest -c '
 mc alias set local http://jepsen-rustfs:11121 clickhouse clickhouse >/dev/null
 mc mb -p local/test >/dev/null 2>&1 || true
 mc rm -r --force local/test/jepsen_cas/ >/dev/null 2>&1 || true

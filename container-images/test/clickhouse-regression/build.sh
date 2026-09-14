@@ -12,8 +12,8 @@ docker pull mysql:5.7.30
 docker pull confluentinc/cp-kafka:5.2.0
 docker pull yandex/clickhouse-s3-proxy:21495
 docker pull yandex/clickhouse-python-bottle:21495
-docker pull minio/minio:RELEASE.2022-04-09T15-09-52Z
-docker pull minio/mc:RELEASE.2022-05-09T04-08-26Z
+docker pull quay.io/minio/minio:RELEASE.2022-04-09T15-09-52Z
+docker pull quay.io/minio/mc:RELEASE.2022-05-09T04-08-26Z
 echo "Save images"
 docker save library/hello-world -o hello-world.dockerimage
 docker save zookeeper:3.7.0 -o zookeeper.3.7.0.dockerimage
@@ -26,7 +26,7 @@ docker save mysql:5.7.30 -o mysql.5.7.30.dockerimage
 docker save confluentinc/cp-kafka:5.2.0 -o cp-kafka.5.2.0.dockerimage
 docker save yandex/clickhouse-s3-proxy:21495 -o clickhouse-s3-proxy.21495.dockerimage
 docker save yandex/clickhouse-python-bottle:21495 -o clickhouse-python-bottle.21495.dockerimage
-docker save minio/minio:RELEASE.2022-04-09T15-09-52Z -o minio.RELEASE.2022-04-09T15-09-52Z.dockerimage
-docker save minio/mc:RELEASE.2022-05-09T04-08-26Z -o mc:RELEASE.2022-05-09T04-08-26Z.dockerimage
+docker save quay.io/minio/minio:RELEASE.2022-04-09T15-09-52Z -o minio.RELEASE.2022-04-09T15-09-52Z.dockerimage
+docker save quay.io/minio/mc:RELEASE.2022-05-09T04-08-26Z -o mc:RELEASE.2022-05-09T04-08-26Z.dockerimage
 echo "Build image"
 docker build -t registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/image .
