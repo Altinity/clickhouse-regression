@@ -171,6 +171,7 @@ echo "confidential=$confidential" >>$GITHUB_ENV
 echo "aws_endpoint_args=$aws_endpoint_args" >>$GITHUB_ENV
 
 JOB_REPORT_INDEX=$JOB_BUCKET_URL/index.html#$artifact_s3_dir/
+echo "JOB_REPORT_INDEX=$JOB_REPORT_INDEX" >>$GITHUB_ENV
 
 JOB_S3_ROOT=s3://$artifact_s3_bucket_path/$artifact_s3_dir
 echo "JOB_S3_ROOT=$JOB_S3_ROOT" >>$GITHUB_ENV
