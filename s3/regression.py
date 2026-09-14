@@ -590,6 +590,12 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
     ),
+    "/:/:/export tests/export partition/skip policy/*": (
+        Skip,
+        "per-part commit marker completeness under skip policy is not merged yet "
+        "(Altinity/ClickHouse#2294, #2311)",
+        lambda test: True,
+    ),
 }
 
 
