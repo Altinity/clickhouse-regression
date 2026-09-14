@@ -128,6 +128,7 @@ def build_insert_query(table, n_rows: int, table_index: int):
         FROM numbers({n_rows})
         """
 
+
 @TestOutline(Scenario)
 @Tags("combinatoric")
 def check_table_combination(

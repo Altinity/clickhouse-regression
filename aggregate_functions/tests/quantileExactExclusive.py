@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_QuantileExactExclusive,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id
+from aggregate_functions.tests.steps import check_clickhouse_version, get_snapshot_id
 from aggregate_functions.tests.quantile import scenario as checks
 
 
@@ -17,8 +17,14 @@ def scenario(
     self, func="quantileExactExclusive({params})", table=None, snapshot_id=None
 ):
     """Check quantileExactExclusive aggregate function by using the same tests as for quantile."""
+    # >=26.6 changed the interpolation delta precision for Float32 and 64-bit ints (ClickHouse#107154)
+    if check_clickhouse_version(">=26.6")(self):
+        clickhouse_version = ">=26.6"
+    else:
+        clickhouse_version = ">=23.12"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:

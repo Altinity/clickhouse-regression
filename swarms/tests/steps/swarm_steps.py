@@ -184,7 +184,18 @@ def change_clickhouse_config(
         )
 
     with And("adding xml config file to the server"):
-        return add_config(config, restart=restart, modify=modify, user=user, node=node)
+        # When the config is applied via a restart, the restart deterministically
+        # reloads it, so the passive preprocessed-config poll is redundant and
+        # can spuriously time out on a busy/slow-to-reload swarm node. Skip it in
+        # that case and rely on the restart + reload confirmation.
+        return add_config(
+            config,
+            restart=restart,
+            modify=modify,
+            user=user,
+            node=node,
+            poll_preprocessed=not restart,
+        )
 
 
 @TestStep(Given)

@@ -13,13 +13,22 @@ on:
           - all_gcs
           - aes_encryption
           - aggregate_functions
+          - aggregate_functions_cas
+          - aggregate_functions_cas_s3_cache
           - atomic_insert
+          - atomic_insert_cas
+          - atomic_insert_cas_s3_cache
           - alter_all
           - alter_replace_partition
           - alter_attach_partition
           - alter_move_partition
+          - alter_cas
+          - alter_cas_s3_cache
           - attach
           - base_58
+          - cas
+          - cas_all
+          - cas_s3_cache
           - benchmark_all
           - benchmark_aws
           - benchmark_gcs
@@ -31,6 +40,8 @@ on:
           - disk_level_encryption
           - dns
           - engines
+          - engines_cas
+          - engines_cas_s3_cache
           - example
           - extended_precision_data_types
           - functions
@@ -41,6 +52,8 @@ on:
           - key_value
           - ldap
           - lightweight_delete
+          - lightweight_delete_cas
+          - lightweight_delete_cas_s3_cache
           - memory
           - parquet_all
           - parquet
@@ -54,6 +67,8 @@ on:
           - s3_gcs
           - s3_minio
           - selects
+          - selects_cas
+          - selects_cas_s3_cache
           - session_timezone
           - settings
           - ssl_server
@@ -62,6 +77,7 @@ on:
           - tiered_storage_gcs
           - tiered_storage_local
           - tiered_storage_minio
+          - tiered_storage_cas
           - window_functions
       arch:
         description: "Architecture to run tests on (default: x86)"
@@ -76,8 +92,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - clickhouse_package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
-            artifact_name: altinitystable-23-3-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:23.8.16.43.altinitystable
             artifact_name: altinitystable-23-8-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:24.3.18.10426.altinitystable

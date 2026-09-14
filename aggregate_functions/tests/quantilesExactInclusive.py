@@ -22,6 +22,10 @@ def scenario(
     else:
         clickhouse_version = ">=23.12"
 
+    # >=26.6 changed the interpolation delta precision for Float32 and 64-bit ints (ClickHouse#107154)
+    if check_clickhouse_version(">=26.6")(self):
+        clickhouse_version = ">=26.6"
+
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )

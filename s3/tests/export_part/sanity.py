@@ -1,6 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
-from helpers.common import getuid, check_if_antalya_post_26_3_10_20001
+from helpers.common import getuid, check_clickhouse_version
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
@@ -90,7 +90,7 @@ def mismatched_columns(self):
         )
 
     with Then("I should see an error related to mismatched columns"):
-        if check_if_antalya_post_26_3_10_20001(self):
+        if check_clickhouse_version(">26.3.10.20001")(self):
             assert results[0].exitcode == 20, error()
             assert "NUMBER_OF_COLUMNS" in results[0].output, error()
         else:

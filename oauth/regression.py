@@ -18,6 +18,10 @@ from oauth.tests.steps.clikhouse import (
     change_user_directories_config,
 )
 from helpers.cluster import create_cluster
+from helpers.feature_support import (
+    setting_supported_in_binary,
+    validate_feature_support,
+)
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
@@ -237,12 +241,22 @@ def regression(
         "grafana": ("grafana",),
     }
     self.context.clickhouse_version = clickhouse_version
+    self.context.clickhouse_path = cluster_args["clickhouse_path"]
 
     if stress is not None:
         self.context.stress = stress
 
     identity_provider_lower = str(identity_provider).lower()
     provider_module = _load_provider_module(identity_provider_lower)
+
+    if not validate_feature_support(
+        self,
+        feature="OAuth/JWT authentication",
+        check=setting_supported_in_binary(
+            "enable_token_auth", table="system.server_settings"
+        ),
+    ):
+        return
 
     with Given("docker-compose cluster"):
         regression_dir = os.path.dirname(os.path.abspath(__file__))
@@ -304,21 +318,24 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.cache_semantics", "feature"))
-    Scenario(run=load("oauth.tests.access_control", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
-    Scenario(run=load("oauth.tests.tls", "feature"))
-    Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
-    Scenario(run=load("oauth.tests.identity", "feature"))
-    Scenario(run=load("oauth.tests.log_hygiene", "feature"))
-    Scenario(run=load("oauth.tests.quotas", "feature"))
-    # Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+    if check_clickhouse_version("<26.3")(self):
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+    else:
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+        Scenario(run=load("oauth.tests.configuration", "feature"))
+        Scenario(run=load("oauth.tests.authentication", "feature"))
+        Scenario(run=load("oauth.tests.tokens", "feature"))
+        Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+        Scenario(run=load("oauth.tests.cache_semantics", "feature"))
+        Scenario(run=load("oauth.tests.access_control", "feature"))
+        Scenario(run=load("oauth.tests.groups", "feature"))
+        Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+        Scenario(run=load("oauth.tests.tls", "feature"))
+        Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
+        Scenario(run=load("oauth.tests.identity", "feature"))
+        Scenario(run=load("oauth.tests.log_hygiene", "feature"))
+        Scenario(run=load("oauth.tests.quotas", "feature"))
+        # Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
 
 if main():

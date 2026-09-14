@@ -16,6 +16,7 @@ from helpers.common import (
     experimental_analyzer,
     check_if_antalya_build,
 )
+from helpers.feature_support import validate_feature_support, setting_supported
 
 from swarms.requirements.requirements import *
 
@@ -51,6 +52,10 @@ ffails = {
         "Task rescheduling fix is only available in Antalya builds since 25.8",
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<25.8")(test),
+    ),
+    "/swarms/feature/fallback to local if empty/*": (
+        Skip,
+        "object_storage_cluster_fallback_to_local_if_empty is not in an official release yet",
     ),
 }
 
@@ -117,7 +122,14 @@ def regression(
         self.context.swarm_nodes = [self.context.node2, self.context.node3]
         self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]
 
-    with And("enable or disable experimental analyzer if needed"):
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Swarm object_storage_cluster",
+        check=setting_supported("object_storage_cluster"),
+    ):
+        return
+
+    with Given("enable or disable experimental analyzer if needed"):
         for node in self.context.nodes:
             experimental_analyzer(node=node, with_analyzer=with_analyzer)
 

@@ -105,7 +105,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         "external_cache"
                         if (
                             check_clickhouse_version(">=26.3")(self)
-                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas)
                         )
                         else "external"
                     )
@@ -146,7 +146,7 @@ def scenario(self, cluster, node="clickhouse1"):
                         "external_cache"
                         if (
                             check_clickhouse_version(">=26.3")(self)
-                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs or cluster.with_cas)
                         )
                         else "external"
                     )

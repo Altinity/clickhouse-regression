@@ -119,6 +119,11 @@ def create_and_populate_table(
         node = current().context.node
     try:
         with By(f"creating table {name}"):
+            settings_clause = ""
+            if "AggregatingMergeTree" in engine and check_clickhouse_version(">=26.7")(
+                self
+            ):
+                settings_clause = " SETTINGS allow_dimensions_outside_sorting_key = 1"
             retry(
                 node.query,
                 timeout=100,
@@ -129,7 +134,8 @@ def create_and_populate_table(
                 f"(id Int64, x Int64, {extra_table_col})"
                 f"ENGINE = {engine}"
                 f"{' PARTITION BY id' if not engine.endswith('Log') else ''}"
-                f"{' ORDER BY id' if not engine.endswith('Log') else ''};",
+                f"{' ORDER BY id' if not engine.endswith('Log') else ''}"
+                f"{settings_clause};",
                 exitcode=0,
             )
 

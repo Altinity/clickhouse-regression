@@ -41,7 +41,7 @@ def check_drop_definer(self):
         node.query(
             f"DROP USER {definer_user}",
             exitcode=118,
-            message=f"DB::Exception: User `{definer_user}` is used as a definer in views",
+            message=f"DB::Exception: User `{definer_user}` is used as a definer",
         )
 
     with And("create new definer user"):
@@ -58,7 +58,7 @@ def check_drop_definer(self):
         node.query(
             f"DROP USER {new_definer_user}",
             exitcode=118,
-            message=f"DB::Exception: User `{new_definer_user}` is used as a definer in views",
+            message=f"DB::Exception: User `{new_definer_user}` is used as a definer",
         )
 
     with And("drop materialized view"):
@@ -134,7 +134,7 @@ def check_drop_definer_default_values(self):
         node.query(
             f"DROP USER {definer_user}",
             exitcode=118,
-            message=f"DB::Exception: User `{definer_user}` is used as a definer in views",
+            message=f"DB::Exception: User `{definer_user}` is used as a definer",
         )
 
     with And("drop materialized view"):
@@ -186,7 +186,7 @@ def check_drop_definer_modified(self):
         node.query(
             f"DROP USER {definer_user}",
             exitcode=118,
-            message=f"DB::Exception: User `{definer_user}` is used as a definer in views",
+            message=f"DB::Exception: User `{definer_user}` is used as a definer",
         )
 
     with And("alter sql security to NONE"):

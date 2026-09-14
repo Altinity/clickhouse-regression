@@ -7,10 +7,23 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
 
 from engines.requirements import *
+from helpers.cas_storage import add_cas_arguments
+from engines.cas_mode import (
+    enable_cas_default_storage,
+    reset_cas_config,
+)
+
+
+def argparser(parser):
+    argparser_base(parser)
+    add_cas_arguments(
+        parser,
+        cas_help="use content-addressed storage as the default MergeTree disk",
+    )
 
 
 xfails = {
@@ -45,14 +58,29 @@ def regression(
     clickhouse_version,
     stress=None,
     with_analyzer=False,
+    use_cas=False,
+    use_cas_s3_cache=False,
 ):
     """ClickHouse different ENGINES regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.use_cas_storage = False
+    self.context.default_storage_policy = None
 
     if stress is not None:
         self.context.stress = stress
+
+    if use_cas_s3_cache or use_cas:
+        with Given(
+            "content-addressed storage with an S3 cache disk as the default MergeTree disk"
+            if use_cas_s3_cache
+            else "content-addressed storage as the default MergeTree disk"
+        ):
+            enable_cas_default_storage(s3_cache=use_cas_s3_cache)
+    else:
+        with Given("no content-addressed storage configuration"):
+            reset_cas_config()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(

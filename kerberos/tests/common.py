@@ -219,7 +219,9 @@ def check_wrong_config(
         with When("I modify xml file"):
             root = xml_parse_file(config_path)
             root = modify_file(root)
-            root.append(xmltree.fromstring(f"<comment>{uid}</comment>"))
+            # XML comment, not a <comment> element: ClickHouse 26.8+
+            # (ClickHouse#100332) rejects unknown top-level config keys.
+            root.append(xmltree.Comment(text=f"config uid: {uid}"))
             config_contents = xmltree.tostring(
                 root, encoding="utf8", method="xml"
             ).decode("utf-8")

@@ -200,7 +200,7 @@ def check_order_by_when_privilege_is_granted(table, user, node):
         assert f"ORDER BY (b, {column})" in output["statement"], error()
 
     with But(f"I cannot drop the required column {column}"):
-        exitcode, message = errors.missing_columns(column)
+        exitcode, message = errors.cannot_drop_key_column(column)
         node.query(
             f"ALTER TABLE {table} DROP COLUMN {column}",
             exitcode=exitcode,

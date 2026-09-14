@@ -194,18 +194,33 @@ def not_enough_privileges(name):
 
 
 def cannot_parse_string_as_float(string):
-    return (6, f"Exception: Cannot parse string '{string}' as Float64")
+    if check_clickhouse_version("<26.7")(current()):
+        return (6, f"Exception: Cannot parse string '{string}' as Float64")
+    else:
+        return (72, f"Exception: Cannot read floating point value here: {string}")
 
 
 def missing_columns(name):
     return (47, f"Exception: Missing columns: '{name}' while processing")
 
 
+def cannot_drop_key_column(name):
+    if check_clickhouse_version("<26.8")(current()):
+        return (47, f"Exception: Missing columns: '{name}' while processing")
+    else:
+        return (
+            12,
+            f"Exception: Trying to ALTER DROP key {name} column which is a part of key expression",
+        )
+
+
 def missing_columns_analyzer(name):
     if check_clickhouse_version("<24.9")(current()):
         return (47, f"Exception: Unknown expression identifier '{name}' in scope")
-    else:
+    elif check_clickhouse_version("<26.9")(current()):
         return (47, f"Exception: Unknown expression identifier `{name}` in scope")
+    else:
+        return (47, f"Exception: Unknown expression identifier `{name}`. In scope")
 
 
 # Errors: wrong name

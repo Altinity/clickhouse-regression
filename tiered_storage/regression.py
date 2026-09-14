@@ -9,7 +9,11 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import (
+    check_clickhouse_version,
+    check_if_not_antalya_build,
+    experimental_analyzer,
+)
 from s3.tests.common import temporary_bucket_path, parse_s3_uri
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
@@ -44,6 +48,13 @@ def argparser(parser):
         "--with-s3gcs",
         action="store_true",
         help="use S3 Google Cloud storage for external disk",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--with-cas",
+        action="store_true",
+        help="use content-addressed (CAS) storage for the external/slow tier disk",
         default=False,
     )
 
@@ -182,6 +193,12 @@ xfails = {
 ffails = {
     ":/ttl moves/alter with merge": (XFail, "bug, test gets stuck"),
     "with s3amazon/alter table policy": (XFail, "Investigating"),
+    "/tiered storage/with cas": (
+        Skip,
+        "CAS is only supported on Antalya builds >= 26.6",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.6")(test),
+    ),
 }
 
 
@@ -197,6 +214,7 @@ def feature(
     with_s3amazon=False,
     with_s3hetzner=False,
     with_s3gcs=False,
+    with_cas=False,
     environ=None,
     base_uri=None,
     s3_region=None,
@@ -246,7 +264,7 @@ def feature(
             environ["GCS_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}"
 
     with add_storage_config(
-        with_minio, with_s3amazon or with_s3hetzner, with_s3gcs, environ
+        with_minio, with_s3amazon or with_s3hetzner, with_s3gcs, with_cas, environ
     ):
         Scenario(
             run=load("tiered_storage.tests.startup_and_queries", "scenario"),
@@ -401,6 +419,7 @@ def regression(
     with_s3amazon=False,
     with_s3hetzner=False,
     with_s3gcs=False,
+    with_cas=False,
     aws_s3_access_key=None,
     aws_s3_key_id=None,
     aws_s3_uri=None,
@@ -499,6 +518,7 @@ def regression(
         cluster.with_s3amazon = with_s3amazon or with_s3hetzner
         cluster.with_s3hetzner = with_s3hetzner
         cluster.with_s3gcs = with_s3gcs
+        cluster.with_cas = with_cas
         self.context.cluster = cluster
 
         with Given("I enable or disable experimental analyzer if needed"):
@@ -508,7 +528,9 @@ def regression(
                 )
 
         name = "normal"
-        if with_minio:
+        if with_cas:
+            name = "with cas"
+        elif with_minio:
             name = "with minio"
         elif with_s3amazon:
             name = "with s3amazon"
@@ -523,6 +545,7 @@ def regression(
             with_s3amazon=with_s3amazon,
             with_s3hetzner=with_s3hetzner,
             with_s3gcs=with_s3gcs,
+            with_cas=with_cas,
             environ=environ,
             base_uri=base_uri,
             s3_region=aws_region,

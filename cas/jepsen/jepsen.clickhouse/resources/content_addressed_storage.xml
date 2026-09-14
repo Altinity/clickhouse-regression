@@ -1,0 +1,30 @@
+<clickhouse>
+    <storage_configuration>
+        <disks>
+            <!-- Shared CAS pool on RustFS (conditional PUTs). Each CH node gets a distinct
+                 server_root_id via {server_root_id} substitution at install time.
+                 PR #2159 registers metadata_type as "cas" (not "content_addressed"). -->
+            <cas>
+                <type>object_storage</type>
+                <object_storage_type>s3</object_storage_type>
+                <metadata_type>cas</metadata_type>
+                <server_root_id>{server_root_id}</server_root_id>
+                <endpoint>http://jepsen-rustfs:11121/test/jepsen_cas/</endpoint>
+                <access_key_id>clickhouse</access_key_id>
+                <secret_access_key>clickhouse</secret_access_key>
+                <scratch_path>cas_scratch/</scratch_path>
+                <gc_enabled>1</gc_enabled>
+                <gc_interval_sec>5</gc_interval_sec>
+            </cas>
+        </disks>
+        <policies>
+            <cas>
+                <volumes>
+                    <main>
+                        <disk>cas</disk>
+                    </main>
+                </volumes>
+            </cas>
+        </policies>
+    </storage_configuration>
+</clickhouse>

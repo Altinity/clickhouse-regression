@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+_instances/
+logs/
+runs/
+failure.json
+soak.db
+*.log
+*.deb
+control.tar.gz
+debian-binary
+configs/storage_conf_tuned_ch1.xml
+configs/storage_conf_tuned_ch2.xml
+soak/archive/*.db

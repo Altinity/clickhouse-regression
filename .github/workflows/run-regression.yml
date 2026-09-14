@@ -55,13 +55,22 @@ on:
           - all_hetzner
           - aes_encryption
           - aggregate_functions
+          - aggregate_functions_cas
+          - aggregate_functions_cas_s3_cache
           - atomic_insert
+          - atomic_insert_cas
+          - atomic_insert_cas_s3_cache
           - alter_all
           - alter_replace_partition
           - alter_attach_partition
           - alter_move_partition
+          - alter_cas
+          - alter_cas_s3_cache
           - attach
           - base_58
+          - cas
+          - cas_all
+          - cas_s3_cache
           - benchmark_all
           - benchmark_aws
           - benchmark_gcs
@@ -74,6 +83,8 @@ on:
           - disk_level_encryption
           - dns
           - engines
+          - engines_cas
+          - engines_cas_s3_cache
           - example
           - extended_precision_data_types
           - functions
@@ -84,6 +95,8 @@ on:
           - key_value
           - ldap
           - lightweight_delete
+          - lightweight_delete_cas
+          - lightweight_delete_cas_s3_cache
           - memory
           - oauth
           - parquet_all
@@ -105,6 +118,8 @@ on:
           - export_part
           - export_partition
           - selects
+          - selects_cas
+          - selects_cas_s3_cache
           - session_timezone
           - settings
           - ssl_server
@@ -115,6 +130,7 @@ on:
           - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
+          - tiered_storage_cas
           - version
           - window_functions
           - hive_partitioning
@@ -209,6 +225,10 @@ on:
         description: "Whether to run Parquet Native V3 suites"
         type: boolean
         default: false
+      run_cas_suites:
+        description: "Whether to run CAS suite variants (--cas / --cas-s3-cache) with suite=all"
+        type: boolean
+        default: false
       is_workflow_call:
           description: "True when this workflow is executed via workflow_call"
           type: boolean
@@ -238,12 +258,13 @@ jobs:
       suite_name: aggregate_functions
       part: 1
       timeout_minutes: 180
+      regression_args: '--only "/aggregate functions/part 1/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -255,12 +276,13 @@ jobs:
       suite_name: aggregate_functions
       part: 2
       timeout_minutes: 180
+      regression_args: '--only "/aggregate functions/part 2/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -272,12 +294,139 @@ jobs:
       suite_name: aggregate_functions
       part: 3
       timeout_minutes: 240
+      regression_args: '--only "/aggregate functions/part 3/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/aggregate functions/part 3/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_cas_1:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'aggregate_functions_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      job_name: aggregate_functions_cas
+      part: 1
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--cas --only "/aggregate functions/part 1/*"'
+      artifact_name: aggregate_functions-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_cas_2:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'aggregate_functions_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      job_name: aggregate_functions_cas
+      part: 2
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--cas --only "/aggregate functions/part 2/*"'
+      artifact_name: aggregate_functions-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_cas_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'aggregate_functions_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      job_name: aggregate_functions_cas
+      part: 3
+      timeout_minutes: 240
+      storage_path: /cas
+      regression_args: '--cas --only "/aggregate functions/part 3/*"'
+      artifact_name: aggregate_functions-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_cas_s3_cache_1:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'aggregate_functions_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      job_name: aggregate_functions_cas_s3_cache
+      part: 1
+      timeout_minutes: 180
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/aggregate functions/part 1/*"'
+      artifact_name: aggregate_functions-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_cas_s3_cache_2:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'aggregate_functions_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      job_name: aggregate_functions_cas_s3_cache
+      part: 2
+      timeout_minutes: 180
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/aggregate functions/part 2/*"'
+      artifact_name: aggregate_functions-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_cas_s3_cache_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'aggregate_functions_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      job_name: aggregate_functions_cas_s3_cache
+      part: 3
+      timeout_minutes: 240
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/aggregate functions/part 3/*"'
+      artifact_name: aggregate_functions-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -288,6 +437,46 @@ jobs:
     with:
       suite_name: atomic_insert
       timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  atomic_insert_cas:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'atomic_insert_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: atomic_insert
+      job_name: atomic_insert_cas
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--cas'
+      artifact_name: atomic_insert-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  atomic_insert_cas_s3_cache:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'atomic_insert_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: atomic_insert
+      job_name: atomic_insert_cas_s3_cache
+      timeout_minutes: 180
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache'
+      artifact_name: atomic_insert-cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -325,7 +514,7 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition
       part: 1
-      timeout_minutes: 180
+      timeout_minutes: 360
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-artifacts
@@ -338,7 +527,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-
+  
   alter_attach_partition_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
     uses: ./.github/workflows/reusable-suite.yml
@@ -346,9 +535,30 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition
       part: 2
-      timeout_minutes: 180
+      timeout_minutes: 360
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 2/*"'
+      artifact_name: alter-attach-partition-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition
+      part: 3
+      timeout_minutes: 360
+      storage_path: /attach_partition
+      regression_args: '--only "/alter/attach partition/part 3/*"'
       artifact_name: alter-attach-partition-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -370,6 +580,212 @@ jobs:
       storage_path: /move_partition
       regression_args: '--only "/alter/move partition/*"'
       artifact_name: alter-move-partition-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_replace_partition_cas:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_replace_partition_cas
+      timeout_minutes: 180
+      storage_path: /replace_partition/cas
+      regression_args: '--cas --only "/alter/replace partition/*"'
+      artifact_name: alter-replace-partition-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_1:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas
+      part: 1
+      timeout_minutes: 720
+      storage_path: /attach_partition/cas
+      regression_args: '--cas --only "/alter/attach partition/part 1/*"'
+      artifact_name: alter-attach-partition-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_2:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas
+      part: 2
+      timeout_minutes: 360
+      storage_path: /attach_partition/cas
+      regression_args: '--cas --only "/alter/attach partition/part 2/*"'
+      artifact_name: alter-attach-partition-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas
+      part: 3
+      timeout_minutes: 360
+      storage_path: /attach_partition/cas
+      regression_args: '--cas --only "/alter/attach partition/part 3/*"'
+      artifact_name: alter-attach-partition-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_move_partition_cas:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_move_partition_cas
+      timeout_minutes: 180
+      storage_path: /move_partition/cas
+      regression_args: '--cas --only "/alter/move partition/*"'
+      artifact_name: alter-move-partition-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_replace_partition_cas_s3_cache:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_replace_partition_cas_s3_cache
+      timeout_minutes: 180
+      storage_path: /replace_partition/cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/alter/replace partition/*"'
+      artifact_name: alter-replace-partition-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_s3_cache_1:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas_s3_cache
+      part: 1
+      timeout_minutes: 360
+      storage_path: /attach_partition/cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/alter/attach partition/part 1/*"'
+      artifact_name: alter-attach-partition-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_s3_cache_2:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas_s3_cache
+      part: 2
+      timeout_minutes: 360
+      storage_path: /attach_partition/cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/alter/attach partition/part 2/*"'
+      artifact_name: alter-attach-partition-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_cas_s3_cache_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition_cas_s3_cache
+      part: 3
+      timeout_minutes: 360
+      storage_path: /attach_partition/cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/alter/attach partition/part 3/*"'
+      artifact_name: alter-attach-partition-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_move_partition_cas_s3_cache:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'alter_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_move_partition_cas_s3_cache
+      timeout_minutes: 180
+      storage_path: /move_partition/cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/alter/move partition/*"'
+      artifact_name: alter-move-partition-cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -403,6 +819,44 @@ jobs:
     with:
       suite_name: base_58
       timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  cas:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: cas
+      timeout_minutes: 180
+      storage_path: /cas
+      artifact_name: cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  cas_s3_cache:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: cas
+      job_name: cas_s3_cache
+      timeout_minutes: 180
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache'
+      artifact_name: cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -515,7 +969,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/clickhouse keeper/part ${{ matrix.part }}/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/clickhouse keeper/part ${{ matrix.part }}/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -532,14 +987,14 @@ jobs:
       part: ${{ matrix.part }}
       timeout_minutes: 180
       storage_path: /ssl
-      regression_args: '--ssl'
+      regression_args: '--ssl --only "/clickhouse keeper/part ${{ matrix.part }}/*"'
       artifact_name: clickhouse_keeper-ssl-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/clickhouse keeper/part ${{ matrix.part }}/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -631,6 +1086,46 @@ jobs:
     with:
       suite_name: engines
       timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  engines_cas:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'engines_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: engines
+      job_name: engines_cas
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--cas'
+      artifact_name: engines-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  engines_cas_s3_cache:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'engines_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: engines
+      job_name: engines_cas_s3_cache
+      timeout_minutes: 180
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache'
+      artifact_name: engines-cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -866,7 +1361,175 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: lightweight_delete
-      timeout_minutes: 180
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_1:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas
+      part: 1
+      timeout_minutes: 300
+      storage_path: /cas
+      regression_args: '--cas --only "/lightweight delete/disk space/*"'
+      artifact_name: lightweight_delete-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_2:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas
+      part: 2
+      timeout_minutes: 300
+      storage_path: /cas
+      regression_args: '--cas --only "/lightweight delete/hard restart/*"'
+      artifact_name: lightweight_delete-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas
+      part: 3
+      timeout_minutes: 300
+      storage_path: /cas
+      regression_args: '--cas --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
+      artifact_name: lightweight_delete-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_4:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas
+      part: 4
+      timeout_minutes: 300
+      storage_path: /cas
+      regression_args: '--cas --only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
+      artifact_name: lightweight_delete-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_s3_cache_1:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas_s3_cache
+      part: 1
+      timeout_minutes: 300
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/lightweight delete/disk space/*"'
+      artifact_name: lightweight_delete-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_s3_cache_2:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas_s3_cache
+      part: 2
+      timeout_minutes: 300
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/lightweight delete/hard restart/*"'
+      artifact_name: lightweight_delete-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_s3_cache_3:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas_s3_cache
+      part: 3
+      timeout_minutes: 300
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
+      artifact_name: lightweight_delete-cas-s3-cache-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete_cas_s3_cache_4:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'lightweight_delete_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      job_name: lightweight_delete_cas_s3_cache
+      part: 4
+      timeout_minutes: 300
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache --only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"'
+      artifact_name: lightweight_delete-cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1015,7 +1678,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/rbac/part 1/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/rbac/part 1/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1032,7 +1696,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/rbac/part 2/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/rbac/part 2/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1049,7 +1714,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/rbac/part 3/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/rbac/part 3/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1063,14 +1729,14 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /aws
-      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/s3/aws s3/part 1/*"'
       artifact_name: s3-aws-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/aws s3/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1084,14 +1750,14 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /aws
-      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/s3/aws s3/part 2/*"'
       artifact_name: s3-aws-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/aws s3/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1147,14 +1813,14 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /azure
-      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}} --only "/s3/azure/part 1/*"'
       artifact_name: s3-azure-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/azure/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1168,14 +1834,14 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /azure
-      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}} --only "/s3/azure/part 2/*"'
       artifact_name: s3-azure-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/azure/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1189,14 +1855,14 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /gcs
-      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}} --only "/s3/gcs/part 1/*"'
       artifact_name: s3-gcs-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/gcs/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1210,14 +1876,14 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /gcs
-      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}} --only "/s3/gcs/part 2/*"'
       artifact_name: s3-gcs-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/gcs/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1230,14 +1896,14 @@ jobs:
       job_name: s3_minio_export_part
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/export tests/export part/*" --as-binary'
       artifact_name: s3-minio-export-part-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/export tests/export part/*" --as-binary ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1250,14 +1916,14 @@ jobs:
       job_name: s3_minio_export_partition
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/export tests/export partition/*" --as-binary'
       artifact_name: s3-minio-export-partition-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/export tests/export partition/*" --as-binary ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1271,14 +1937,14 @@ jobs:
       part: 1
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/part 1/*"'
       artifact_name: s3-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 1/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1292,14 +1958,14 @@ jobs:
       part: 2
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/part 2/*"'
       artifact_name: s3-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 2/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1313,14 +1979,14 @@ jobs:
       part: 3
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: '--storage minio'
+      regression_args: '--storage minio --only "/s3/minio/part 3/*"'
       artifact_name: s3-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 3/*" ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1331,6 +1997,46 @@ jobs:
     with:
       suite_name: selects
       timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  selects_cas:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'selects_cas' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: selects
+      job_name: selects_cas
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--cas'
+      artifact_name: selects-cas-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  selects_cas_s3_cache:
+    if: ${{ (inputs.suite == 'all' && inputs.run_cas_suites) || inputs.suite == 'cas_all' || inputs.suite == 'selects_cas_s3_cache' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: selects
+      job_name: selects_cas_s3_cache
+      timeout_minutes: 180
+      storage_path: /cas-s3-cache
+      regression_args: '--cas-s3-cache'
+      artifact_name: selects-cas-s3-cache-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1385,7 +2091,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/ssl server/part 1/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/ssl server/part 1/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1402,7 +2109,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/ssl server/part 2/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/ssl server/part 2/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1419,7 +2127,8 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/ssl server/part 3/*" ${{ inputs.extra_args }}
+      regression_args: '--only "/ssl server/part 3/*"'
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
@@ -1527,6 +2236,26 @@ jobs:
       storage_path: /minio
       regression_args: '--with-minio'
       artifact_name: tiered_storage-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_cas:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_cas' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'cas_all' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_cas
+      timeout_minutes: 180
+      storage_path: /cas
+      regression_args: '--with-cas'
+      artifact_name: tiered_storage-cas-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}

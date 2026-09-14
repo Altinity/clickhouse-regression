@@ -23,6 +23,7 @@ from iceberg.tests.export_partition.steps.common import (
     insert_data,
     get_partition_ids,
     count_rows,
+    SOURCE_ENGINE_REPLICATED,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
@@ -348,6 +349,10 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(test=empty_partition, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=cross_replica_export, flags=TE)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
+    if getattr(self.context, "source_engine", SOURCE_ENGINE_REPLICATED) == (
+        SOURCE_ENGINE_REPLICATED
+    ):
+        Scenario(test=cross_replica_export, flags=TE)(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )

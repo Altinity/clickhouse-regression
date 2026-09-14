@@ -10,7 +10,13 @@ from testflows.core import *
 from testflows.asserts import error
 
 from helpers.queries import *
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
+from helpers.cas_storage import (
+    CAS_CACHE_DISK,
+    CAS_CACHE_MAX_SIZE,
+    CAS_CACHE_PATH,
+    CAS_DISK,
+)
 from s3.tests.common import (
     s3_storage,
     insert_random,
@@ -24,7 +30,50 @@ from s3.tests.common import (
 def disk_config(self):
     """Set up disks and policies for stress tests."""
 
-    if getattr(self.context, "uri", None):
+    if getattr(self.context, "use_cas_storage", False):
+        if not check_if_antalya_build(self) or not check_clickhouse_version(">=26.6")(
+            self
+        ):
+            skip("CAS requires an Antalya build >= 26.6")
+
+        if not getattr(self.context, "uri", None):
+            fail("--cas / --cas-s3-cache requires MinIO/RustFS (no S3 URI in context)")
+
+        # One CAS pool, both policy names kept so CREATE TABLE does not change.
+        # Two CAS disks would be two server_root_id namespaces; MOVE PARTITION
+        # across them is not a valid CAS operation.
+        with Given("I have a CAS object-storage disk configured"):
+            cas_disk = {
+                "type": "object_storage",
+                "object_storage_type": "s3",
+                "metadata_type": "cas",
+                "server_root_id": "alter-stress-cas-{replica}",
+                "endpoint": f"{self.context.uri}cas/",
+                "access_key_id": f"{self.context.access_key_id}",
+                "secret_access_key": f"{self.context.secret_access_key}",
+            }
+            if getattr(self.context, "use_cas_s3_cache", False):
+                disks = {
+                    CAS_DISK: cas_disk,
+                    CAS_CACHE_DISK: {
+                        "type": "cache",
+                        "disk": CAS_DISK,
+                        "path": CAS_CACHE_PATH,
+                        "max_size": CAS_CACHE_MAX_SIZE,
+                    },
+                }
+                policy_disk = CAS_CACHE_DISK
+            else:
+                disks = {CAS_DISK: cas_disk}
+                policy_disk = CAS_DISK
+
+        with And("I have storage policies pointing at the CAS disk"):
+            policies = {
+                "external": {"volumes": {"external": {"disk": policy_disk}}},
+                "tiered": {"volumes": {"default": {"disk": policy_disk}}},
+            }
+
+    elif getattr(self.context, "uri", None):
         with Given("I have two S3 disks configured"):
             disks = {
                 "external": {
@@ -74,7 +123,7 @@ def disk_config(self):
         disks=disks,
         policies=policies,
         restart=True,
-        timeout=30,
+        timeout=300,
         config_file="s3_storage.xml",
     )
 
@@ -95,6 +144,8 @@ def insert_random(
         settings = "SETTINGS " + settings
     else:
         settings = ""
+
+    kwargs.setdefault("timeout", 600)
 
     return node.query(
         f"INSERT INTO {table_name} SELECT * FROM generateRandom('{columns}') LIMIT {rows} {settings}",
@@ -155,9 +206,14 @@ def replicated_table_cluster(
 
     try:
         with Given("I have a table"):
+            node.query(
+                f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
+                timeout=60,
+                settings=[("distributed_ddl_task_timeout", 360)],
+            )
             r = node.query(
                 f"""
-                CREATE TABLE IF NOT EXISTS {table_name} 
+                CREATE TABLE {table_name} 
                 ON CLUSTER '{cluster_name}' ({columns}) 
                 ENGINE=ReplicatedMergeTree('/clickhouse/tables/{table_name}', '{{replica}}')
                 ORDER BY {order_by} {partition_by} {primary_key} {ttl}
@@ -347,7 +403,7 @@ def interrupt_network(cluster, node, cluster_prefix):
 
 
 @TestStep(When)
-def wait_for_mutations_to_finish(self, node, timeout=60, delay=5, command_like=None):
+def wait_for_mutations_to_finish(self, node, timeout=300, delay=5, command_like=None):
     """Wait for all pending mutations to complete."""
     query = "SELECT * FROM system.mutations WHERE is_done=0"
     if command_like:

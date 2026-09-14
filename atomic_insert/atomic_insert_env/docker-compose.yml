@@ -11,6 +11,19 @@ services:
       file: ../../docker-compose/keeper-service.yml
       service: keeper1
 
+  minio:
+    extends:
+      file: rustfs-service.yml
+      service: minio
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio:
+        condition: service_healthy
+
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -22,6 +35,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper1:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy
 
   clickhouse2:
@@ -36,6 +51,8 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      minio-client:
+        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -49,6 +66,8 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      minio-client:
+        condition: service_healthy
 
   clickhouse4:
     extends:
@@ -61,6 +80,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse4/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
     depends_on:
       zookeeper1:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
@@ -79,4 +100,6 @@ services:
       zookeeper1:
         condition: service_healthy
       keeper1:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy

@@ -1,7 +1,8 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_if_antalya_build
+from helpers.feature_support import validate_feature_support, setting_supported
 
 import pyarrow as pa
 
@@ -9,7 +10,12 @@ from pyiceberg.schema import Schema, NestedField
 from pyiceberg.types import TimestampType, TimestamptzType, LongType
 from pyiceberg.partitioning import PartitionSpec
 from pyiceberg.table.sorting import SortOrder, SortField, SortDirection, NullOrder
-from pyiceberg.transforms import HourTransform, MonthTransform, YearTransform, DayTransform
+from pyiceberg.transforms import (
+    HourTransform,
+    MonthTransform,
+    YearTransform,
+    DayTransform,
+)
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
@@ -52,7 +58,9 @@ def run_sort_key_timezone_scenario(
         f"create {namespace}.{table_name} with {transform.__class__.__name__} sort order on {timestamp_type.__class__.__name__}"
     ):
         schema = Schema(
-            NestedField(field_id=1, name="ts", field_type=timestamp_type, required=False),
+            NestedField(
+                field_id=1, name="ts", field_type=timestamp_type, required=False
+            ),
             NestedField(field_id=2, name="val", field_type=LongType(), required=False),
         )
         sort_order = SortOrder(
@@ -111,7 +119,9 @@ def run_sort_key_timezone_scenario(
 
 
 @TestScenario
-def sort_key_with_day_transform_and_utc_timezone(self, minio_root_user, minio_root_password):
+def sort_key_with_day_transform_and_utc_timezone(
+    self, minio_root_user, minio_root_password
+):
     """Regression test for issue #1487: DayTransform sort key with iceberg_partition_timezone = 'UTC'."""
     run_sort_key_timezone_scenario(
         self,
@@ -128,7 +138,9 @@ def sort_key_with_day_transform_and_utc_timezone(self, minio_root_user, minio_ro
 
 
 @TestScenario
-def sort_key_with_hour_transform_and_utc_timezone(self, minio_root_user, minio_root_password):
+def sort_key_with_hour_transform_and_utc_timezone(
+    self, minio_root_user, minio_root_password
+):
     """Check that HourTransform sort key does not cause parse failure with iceberg_partition_timezone set."""
     run_sort_key_timezone_scenario(
         self,
@@ -145,7 +157,9 @@ def sort_key_with_hour_transform_and_utc_timezone(self, minio_root_user, minio_r
 
 
 @TestScenario
-def sort_key_with_month_transform_and_utc_timezone(self, minio_root_user, minio_root_password):
+def sort_key_with_month_transform_and_utc_timezone(
+    self, minio_root_user, minio_root_password
+):
     """Check that MonthTransform sort key does not cause parse failure with iceberg_partition_timezone set."""
     run_sort_key_timezone_scenario(
         self,
@@ -162,7 +176,9 @@ def sort_key_with_month_transform_and_utc_timezone(self, minio_root_user, minio_
 
 
 @TestScenario
-def sort_key_with_year_transform_and_utc_timezone(self, minio_root_user, minio_root_password):
+def sort_key_with_year_transform_and_utc_timezone(
+    self, minio_root_user, minio_root_password
+):
     """Check that YearTransform sort key does not cause parse failure with iceberg_partition_timezone set."""
     run_sort_key_timezone_scenario(
         self,
@@ -221,7 +237,9 @@ def sort_key_with_day_transform_and_negative_utc_offset_timezone(
 
 
 @TestScenario
-def sort_key_with_day_transform_and_timestamptz_type(self, minio_root_user, minio_root_password):
+def sort_key_with_day_transform_and_timestamptz_type(
+    self, minio_root_user, minio_root_password
+):
     """Check that DayTransform sort key on a TimestamptzType column does not cause
     parse failure when iceberg_partition_timezone is set.
     """
@@ -248,6 +266,13 @@ def feature(self, minio_root_user, minio_root_password):
     Covers all temporal transforms, both TimestampType and TimestamptzType,
     and UTC / positive-offset / negative-offset timezones.
     """
+    if check_if_antalya_build(self) and not validate_feature_support(
+        self,
+        feature="Iceberg partition timezone",
+        check=setting_supported("iceberg_partition_timezone"),
+    ):
+        return
+
     Scenario(test=sort_key_with_day_transform_and_utc_timezone)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

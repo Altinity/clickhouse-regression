@@ -206,6 +206,20 @@ def sanitize_docker_tag(tag):
     return re.sub(r"[^a-zA-Z0-9_.-]", "_", unquote(tag))
 
 
+def chime_option():
+    """Silence the client query-completion chime, on by default since 26.6.
+
+    ClickHouse/ClickHouse#104545 made the client write ASCII BEL (\\x07) to stderr
+    when a query takes at least 5s and stderr is a tty. Our bash sessions run under
+    a pty (docker exec -it), so stderr is a tty, and the commands merge stderr into
+    stdout with 2>&1 -- the BEL ends up inside the captured query output. Empty for
+    older clients, which do not have the option and would fail to start with it.
+    """
+    if check_clickhouse_version(">=26.6")(current()):
+        return " --chime 0"
+    return ""
+
+
 class Shell(ShellBase):
     def __exit__(self, type, value, traceback):
         # send exit and Ctrl-D repeatedly
@@ -340,7 +354,16 @@ class Node(object):
         def __exit__(self, exc_type, exc_val, exc_tb):
             if self.command_context:
                 self.command_context.app.send("exit")
-                self.command_context.__exit__(exc_type, exc_val, exc_tb)
+                try:
+                    self.command_context.__exit__(exc_type, exc_val, exc_tb)
+                except ValueError:
+                    # Tearing down the interactive clickhouse-client-tty is
+                    # racy: after "exit" the async command reads the shell exit
+                    # code via "echo $?", which can come back empty and make
+                    # int("") raise ValueError. The session is being closed
+                    # regardless, so a failed exit-code read must not error the
+                    # whole test.
+                    pass
 
         @staticmethod
         def _parse_error_code(message):
@@ -929,6 +952,8 @@ class ClickHouseNode(Node):
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
 
+        client += chime_option()
+
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
                 query.write(sql)
@@ -1012,6 +1037,8 @@ class ClickHouseNode(Node):
             client += (
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
+
+        client += chime_option()
 
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
@@ -1147,6 +1174,8 @@ class ClickHouseNode(Node):
             client += (
                 " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
             )
+
+        client += chime_option()
 
         if progress:
             client += " --progress"
@@ -1816,6 +1845,33 @@ class Cluster(object):
                 time.sleep(1)
         return container_id
 
+    def node_container_network(self, node=None, container_id=None, timeout=300):
+        """Return the name of the docker network a service's container is attached to.
+
+        Must be called with self.lock acquired.
+        """
+        if container_id is None:
+            if node is None:
+                raise TypeError("either node or container_id must be specified")
+            container_id = self.node_container_id(node=node, timeout=timeout)
+
+        c = self.control_shell(
+            "docker inspect --format "
+            "'{{range $net, $conf := .NetworkSettings.Networks}}{{$net}} {{end}}' "
+            f"{container_id}",
+            timeout=timeout,
+        )
+
+        networks = c.output.split() if c.exitcode == 0 else []
+
+        if not networks:
+            raise RuntimeError(
+                f"failed to get the docker network of the "
+                f"{node if node is not None else container_id} container"
+            )
+
+        return networks[0]
+
     def shell(self, node, timeout=300):
         """Returns unique shell terminal to be used."""
         container_id = None
@@ -1940,24 +1996,34 @@ class Cluster(object):
             with Finally("I clean up"):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
-                        with Shell() as bash:
-                            log_path = f"../_service_logs"
-                            bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
-                            bash(f"mkdir -p {log_path}")
-                            nodes = bash(
-                                f"{self.docker_compose} ps --services"
-                            ).output.split("\n")
-                            debug(nodes)
-                            for node in nodes:
-                                snode = bash(
-                                    f"{self.docker_compose} logs {node} "
-                                    f"> {log_path}/{node}.log",
-                                    timeout=1000,
+                        # Log collection must not fail the suite. After node
+                        # restarts / netem the compose shell can miss a prompt
+                        # for minutes (ttl+restarts hung 1000s on `cd`).
+                        try:
+                            with Shell() as bash:
+                                log_path = f"../_service_logs"
+                                bash(
+                                    f"cd {self.docker_compose_project_dir}",
+                                    timeout=30,
                                 )
-                                if snode.exitcode != 0:
-                                    xfail(
-                                        f"failed to get service log - exitcode {snode.exitcode}"
+                                bash(f"mkdir -p {log_path}")
+                                nodes = bash(
+                                    f"{self.docker_compose} ps --services"
+                                ).output.split("\n")
+                                debug(nodes)
+                                for node in nodes:
+                                    snode = bash(
+                                        f"{self.docker_compose} logs {node} "
+                                        f"> {log_path}/{node}.log",
+                                        timeout=60,
                                     )
+                                    if snode.exitcode != 0:
+                                        debug(
+                                            f"failed to get service log for {node} "
+                                            f"- exitcode {snode.exitcode}"
+                                        )
+                        except Exception as e:
+                            debug(f"failed to collect service logs: {e}")
 
                 self.down()
         finally:

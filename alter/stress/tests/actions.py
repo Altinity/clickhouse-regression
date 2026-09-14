@@ -7,12 +7,13 @@ from itertools import chain
 
 from testflows.core import *
 from testflows.combinatorics import combinations
+from testflows.uexpect.uexpect import ExpectTimeoutError
 
 from helpers.alter import *
 from helpers.common import *
+from helpers.cluster import MESSAGES_TO_RETRY
 from alter.stress.tests.tc_netem import *
 from alter.stress.tests.steps import *
-from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
 
 table_schema_lock = RLock()
 
@@ -23,12 +24,25 @@ table_schema_lock = RLock()
 step_retry_timeout = 900
 step_retry_delay = 30
 
-alter_query_args = {"retry_delay": 60, "retry_count": 5}
+# MinIO merges of these tables routinely run past the default 300s shell timeout.
+# If the client gives up, @Retry starts another OPTIMIZE while the first is still
+# holding part locks, which then fails MOVE PARTITION with Code 384.
+query_timeout = 900
+
+alter_query_args = {
+    "retry_delay": 60,
+    "retry_count": 5,
+    "timeout": query_timeout,
+    "messages_to_retry": MESSAGES_TO_RETRY
+    + [
+        "PART_IS_TEMPORARILY_LOCKED",
+        "participating in background process",
+    ],
+}
 
 
 @TestStep
 @Name("optimize")
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def optimize_random(self, node=None, table_name=None, repeat_limit=3):
     """Apply OPTIMIZE on the given table and node, choosing at random if not specified."""
     if table_name is None:
@@ -37,7 +51,20 @@ def optimize_random(self, node=None, table_name=None, repeat_limit=3):
         node = get_random_node_for_table(table_name=table_name)
 
     for _ in range(random.randint(1, repeat_limit)):
-        optimize(node=node, table_name=table_name)
+        try:
+            node.query(
+                f"OPTIMIZE TABLE {table_name}",
+                exitcode=0,
+                timeout=query_timeout,
+            )
+        except ExpectTimeoutError:
+            # Server-side OPTIMIZE continues. Retrying would pile up merges
+            # that hold part locks (Code 384) for the rest of the combination.
+            note(
+                f"OPTIMIZE {table_name} on {node.name} still running after "
+                f"{query_timeout}s; not retrying"
+            )
+            break
 
 
 @TestStep
@@ -100,92 +127,121 @@ def select_max_min_random(self, repeat_limit=5):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add column")
 def add_random_column(self):
-    """Add a column with a random name."""
+    """Add a column with a random name to every table.
+
+    The name is chosen once. Retrying the whole step with a new name
+    leaves earlier ADD COLUMN IF NOT EXISTS results on a subset of tables
+    and fails the later cross-table schema check.
+    """
     column_name = f"c{random.randint(0, 99999)}"
     with table_schema_lock:
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            wait_for_mutations_to_finish(node=node)
-            By(
-                name=f"add column to {table_name} with {node.name}",
-                test=alter_table_add_column,
-            )(
-                table_name=table_name,
-                column_name=column_name,
-                column_type="UInt16",
-                node=node,
-                exitcode=0,
-                timeout=120,
-                if_not_exists=True,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    wait_for_mutations_to_finish(node=node)
+                    By(
+                        name=f"add column to {table_name} with {node.name}",
+                        test=alter_table_add_column,
+                    )(
+                        table_name=table_name,
+                        column_name=column_name,
+                        column_type="UInt16",
+                        node=node,
+                        exitcode=0,
+                        if_not_exists=True,
+                        **alter_query_args,
+                    )
 
         retry(check_tables_have_same_columns, timeout=120, delay=step_retry_delay)(
             tables=self.context.table_names
         )
 
 
+def drop_column_and_dependent_indexes(node, table_name, column_name, **query_kwargs):
+    """DROP COLUMN together with skip indexes that reference it.
+
+    ClickHouse rejects DROP COLUMN (Code 47) if a skip index still uses the
+    column. CLEAR INDEX does not drop the index definition.
+    """
+    r = node.query(
+        f"SELECT name FROM system.data_skipping_indices "
+        f"WHERE table = '{table_name}' "
+        f"AND has(splitByRegexp('\\\\W+', expr), '{column_name}') "
+        f"FORMAT TSV",
+        no_checks=True,
+    )
+    parts = [
+        f"DROP INDEX IF EXISTS {name.strip()}"
+        for name in r.output.splitlines()
+        if name.strip()
+    ]
+    parts.append(f"DROP COLUMN IF EXISTS {column_name}")
+    return node.query(
+        f"ALTER TABLE {table_name} {', '.join(parts)}",
+        **query_kwargs,
+    )
+
+
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("delete column")
 def delete_random_column(self):
-    """Delete a random column."""
+    """Delete a random column from every table."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        for table_name in self.context.table_names:
-            with By("selecting a random node that knows about the table"):
-                node = get_random_node_for_table(table_name=table_name)
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    with By("selecting a random node that knows about the table"):
+                        node = get_random_node_for_table(table_name=table_name)
 
-            with And("waiting for any other mutations on that column to finish"):
-                wait_for_mutations_to_finish(node=node, command_like=column_name)
+                    with And("waiting for any other mutations on that column to finish"):
+                        wait_for_mutations_to_finish(node=node, command_like=column_name)
 
-            And(
-                name=f"delete column from {table_name} with {node.name}",
-                test=alter_table_drop_column,
-            )(
-                node=node,
-                table_name=table_name,
-                column_name=column_name,
-                exitcode=0,
-                timeout=120,
-                **alter_query_args,
-            )
+                    with And(
+                        f"delete column from {table_name} with {node.name}"
+                    ):
+                        drop_column_and_dependent_indexes(
+                            node=node,
+                            table_name=table_name,
+                            column_name=column_name,
+                            exitcode=0,
+                            **alter_query_args,
+                        )
 
         check_tables_have_same_columns(tables=self.context.table_names)
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("rename column")
 def rename_random_column(self):
-    """Rename a random column to a random value."""
+    """Rename a random column to a random value on every table."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
     new_name = f"c{random.randint(0, 99999)}"
 
     with table_schema_lock:
         column_name = get_random_column_name(node=node, table_name=table_name)
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
-            # wait_for_mutations_to_finish(node=node)
-            By(
-                name=f"rename column from {table_name} with {node.name}",
-                test=alter_table_rename_column,
-            )(
-                node=node,
-                table_name=table_name,
-                column_name_old=column_name,
-                column_name_new=new_name,
-                exitcode=0,
-                timeout=120,
-                **alter_query_args,
-            )
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
+                    By(
+                        name=f"rename column from {table_name} with {node.name}",
+                        test=alter_table_rename_column,
+                    )(
+                        node=node,
+                        table_name=table_name,
+                        column_name_old=column_name,
+                        column_name_new=new_name,
+                        exitcode=0,
+                        **alter_query_args,
+                    )
 
         retry(
             check_tables_have_same_columns,
@@ -213,7 +269,6 @@ def update_random_column(self):
         condition=f"({column_name} < 10000)",
         node=node,
         exitcode=0,
-        timeout=120,
         **alter_query_args,
     )
 
@@ -337,7 +392,7 @@ def replace_random_part(self):
                 node=node,
                 table_name=destination_table_name,
                 partition_name=partition,
-                path_to_backup=source_table_name,
+                source_table=source_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
                 **alter_query_args,
@@ -378,10 +433,9 @@ def move_random_partition_to_random_table(self):
                 node=node,
                 table_name=source_table_name,
                 partition_name=partition,
-                path_to_backup=destination_table_name,
+                destination_table=destination_table_name,
                 exitcode=0,
                 no_checks=self.context.ignore_failed_part_moves,
-                timeout=30,
                 **alter_query_args,
             )
 
@@ -409,6 +463,8 @@ def move_random_partition_to_random_disk(self):
             exitcode=0,
         )
         disks = json.loads(r.output)["arrayJoin(disks)"]
+        if len(disks) < 2:
+            skip("storage policy has only one disk")
         disks.remove(src_disk)
         dest_disk = random.choice(disks)
 
@@ -421,7 +477,6 @@ def move_random_partition_to_random_disk(self):
             disk="DISK",
             exitcode=0,
             no_checks=self.context.ignore_failed_part_moves,
-            timeout=30,
             **alter_query_args,
         )
 
@@ -550,10 +605,13 @@ def delete_random_rows_lightweight(self):
 
 
 @TestStep
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 @Name("add projection")
 def add_random_projection(self, safe=True):
-    """Add a random projection to all tables."""
+    """Add a random projection to all tables.
+
+    The projection name is chosen once so a retry cannot leave
+    different projections on a subset of tables.
+    """
 
     with table_schema_lock:
         table_name = get_random_table_name()
@@ -561,22 +619,24 @@ def add_random_projection(self, safe=True):
         column_name = get_random_column_name(node=node, table_name=table_name)
         projection_name = f"projection_{getuid()[:8]}_{column_name}"
 
-        for table_name in self.context.table_names:
-            node = get_random_node_for_table(table_name=table_name)
+        for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
+            with attempt:
+                for table_name in self.context.table_names:
+                    node = get_random_node_for_table(table_name=table_name)
 
-            if safe:
-                wait_for_mutations_to_finish(node=node)
+                    if safe:
+                        wait_for_mutations_to_finish(node=node)
 
-            node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
-                exitcode=0,
-                **alter_query_args,
-            )
-            node.query(
-                f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
-                exitcode=0,
-                **alter_query_args,
-            )
+                    node.query(
+                        f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
+                        exitcode=0,
+                        **alter_query_args,
+                    )
+                    node.query(
+                        f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
+                        exitcode=0,
+                        **alter_query_args,
+                    )
 
         if safe:
             retry(
@@ -770,8 +830,16 @@ def modify_random_ttl(self):
     node = get_random_node_for_table(table_name=table_name)
 
     ttl_expression = f"key + INTERVAL {random.randint(1, 10)} YEAR"
+    # CAS (and any single-volume policy) has no destination volume.
+    # Non-CAS tiered/local keep a volume named `external`.
     if random.randint(0, 1):
-        ttl_expression += " to volume 'external'"
+        r = node.query(
+            f"SELECT volume_name FROM system.storage_policies "
+            f"WHERE policy_name='{self.context.storage_policy}' "
+            f"AND volume_name='external' FORMAT TSV"
+        )
+        if r.output.strip():
+            ttl_expression += " to volume 'external'"
 
     node.query(
         f"ALTER TABLE {table_name} MODIFY TTL {ttl_expression}",
@@ -1011,8 +1079,8 @@ def check_consistency(
                             f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index}"
                         )
                     for column in outlier_columns:
-                        node.query(
-                            f"ALTER TABLE {table_name} DROP COLUMN IF EXISTS {column}"
+                        drop_column_and_dependent_indexes(
+                            node=node, table_name=table_name, column_name=column
                         )
 
 
@@ -1204,7 +1272,7 @@ def fill_clickhouse_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
+                assert int(disk_size_k) < 10e6, error(
                     "Disk does not appear to be restricted!"
                 )
 
@@ -1228,7 +1296,7 @@ def fill_clickhouse_disks(self):
 
 @TestStep(Given)
 def clickhouse_limited_disk_config(self, node):
-    """Install a config file overriding clickhouse storage locations"""
+    """Build a config file overriding clickhouse storage locations."""
 
     config_override = {
         "logger": {
@@ -1265,37 +1333,50 @@ def clickhouse_limited_disk_config(self, node):
         config_file="override_data_dir.xml",
     )
 
-    return add_config(
-        config=config,
-        restart=False,
-        node=node,
-        check_preprocessed=False,
-    )
+    return config
+
+
+def _copy_tree(node, src, dst):
+    """Copy src/ into dst/. Prefer rsync; never apt-install it (needs outbound HTTP)."""
+    has_rsync = node.command("command -v rsync", no_checks=True).exitcode == 0
+    if has_rsync:
+        node.command(f"rsync -a -H --delete {src}/ {dst}")
+        return
+    node.command(f"mkdir -p {dst}")
+    node.command(f"rm -rf {dst}/lost+found")
+    node.command(f"cp -a {src}/. {dst}/")
 
 
 @TestStep(Given)
 def limit_clickhouse_disks(self, node):
-    """
-    Restart clickhouse using small disks.
+    """Restart clickhouse using small disks.
+
+    Own override_data_dir.xml write/restore here. Nested add_config removes the
+    path override after this step has already started ClickHouse, so the server
+    keeps path=/var/lib/clickhouse-limited. Combinations cleanup then greps the
+    stale /var/lib/clickhouse preprocessed copy for s3_storage.xml and Fails.
     """
 
     migrate_dirs = {
         "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
         "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
     }
+    config = clickhouse_limited_disk_config(node=node)
 
     try:
         with Given("I stop clickhouse"):
             node.stop_clickhouse()
 
         with And("I move clickhouse files to small disks"):
-            node.command("apt update && apt install rsync -y")
-
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
+                _copy_tree(node, normal_dir, limited_dir)
 
         with And("I write an override config for clickhouse"):
-            clickhouse_limited_disk_config(node=node)
+            node.command(
+                f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC",
+                steps=False,
+                exitcode=0,
+            )
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse(log_dir="/var/log/clickhouse-server-limited")
@@ -1308,36 +1389,79 @@ def limit_clickhouse_disks(self, node):
 
         with And("I move clickhouse files from the small disks"):
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+                _copy_tree(node, limited_dir, normal_dir)
+
+        with And("I restore the original data directory config"):
+            node.command(f"rm -rf {config.path}", exitcode=0)
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse()
 
 
+def _zoo_cfg_with_dirs(content, data_dir, log_dir):
+    """Return zoo.cfg text with dataDir and dataLogDir replaced."""
+    lines = []
+    seen_data = seen_log = False
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("dataDir="):
+            lines.append(f"dataDir={data_dir}")
+            seen_data = True
+        elif stripped.startswith("dataLogDir="):
+            lines.append(f"dataLogDir={log_dir}")
+            seen_log = True
+        else:
+            lines.append(line)
+    if not seen_data:
+        lines.append(f"dataDir={data_dir}")
+    if not seen_log:
+        lines.append(f"dataLogDir={log_dir}")
+    return "\n".join(lines) + "\n"
+
+
+def _write_zoo_cfg(node, content):
+    node.command(
+        f"cat <<HEREDOC > /conf/zoo.cfg\n{content}\nHEREDOC",
+        steps=False,
+        exitcode=0,
+    )
+
+
 @TestStep(Given)
 def limit_zookeeper_disks(self, node):
-    """
-    Restart zookeeper using small disks.
+    """Restart zookeeper using small disks.
+
+    Own zoo.cfg write/restore here. Nested add_zookeeper_config_file(restart=True)
+    restores dataDir=/data after this step has already started ZK, so zkServer.sh
+    looks for /data/zookeeper_server.pid while the process still lives under
+    /data-limited and restart fails.
     """
 
     migrate_dirs = {
         "/data": "/data-limited",
         "/datalog": "/datalog-limited",
     }
-    zk_config = {"dataDir": "/data-limited", "dataLogDir": "/datalog-limited"}
+
+    with Given("I read the original zoo.cfg"):
+        original_cfg = node.command("cat /conf/zoo.cfg", exitcode=0).output.strip() + "\n"
+
+    limited_cfg = _zoo_cfg_with_dirs(
+        original_cfg, data_dir="/data-limited", log_dir="/datalog-limited"
+    )
 
     try:
         with Given("I stop zookeeper"):
             node.stop_zookeeper()
 
         with And("I move zookeeper files to small disks"):
-            node.command("apt update && apt install rsync -y")
-
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
+                _copy_tree(node, normal_dir, limited_dir)
 
         with And("I write an override config for zookeeper"):
-            add_zookeeper_config_file(entries=zk_config, restart=True, node=node)
+            _write_zoo_cfg(node, limited_cfg)
+
+        with And("I start zookeeper on the small disks"):
+            node.start_zookeeper()
 
         yield
 
@@ -1347,9 +1471,12 @@ def limit_zookeeper_disks(self, node):
 
         with And("I move zookeeper files from the small disks"):
             for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
+                _copy_tree(node, limited_dir, normal_dir)
 
-        with Finally("I start zookeeper"):
+        with And("I restore the original zoo.cfg"):
+            _write_zoo_cfg(node, original_cfg)
+
+        with And("I start zookeeper"):
             node.start_zookeeper()
 
 
@@ -1367,7 +1494,7 @@ def fill_zookeeper_disks(self):
             with When(f"I get the size of {disk_mount} on {node.name}"):
                 r = node.command(f"df -k --output=size {disk_mount}")
                 disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
+                assert int(disk_size_k) < 10e6, error(
                     "Disk does not appear to be restricted!"
                 )
 

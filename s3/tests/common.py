@@ -1,5 +1,6 @@
 import os
 import base64
+import platform
 import tempfile
 from contextlib import contextmanager
 from urllib.parse import urlparse
@@ -91,10 +92,13 @@ def add_config(
                 node.stop_clickhouse(safe=False)
 
             with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
+                logfile = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log"
+                # `stat` uses different flags on GNU/Linux (-c %s) and BSD/macOS (-f %z)
+                if platform.system() == "Darwin":
+                    stat_cmd = f"stat -f %z {logfile}"
+                else:
+                    stat_cmd = f"stat -c %s {logfile}"
+                cmd = node.cluster.command(None, stat_cmd)
                 logsize = cmd.output.split(" ")[0].strip()
 
             with And("I start ClickHouse back up"):
@@ -178,65 +182,6 @@ def add_config(
 
                         with And("I wait for config to be reloaded"):
                             wait_for_config_to_be_loaded()
-
-
-def _export_partition_setting_name():
-    """Return the right ``EXPORT PARTITION`` server-config flag name for the
-    running ClickHouse build.
-
-    The flag was renamed in https://github.com/Altinity/ClickHouse/pull/1618
-    commit ``be182397``. Antalya 25.8 ships the legacy
-    ``enable_experimental_export_merge_tree_partition_feature``; 26.1+ uses
-    the renamed ``allow_experimental_export_merge_tree_partition``. Anything
-    that does not advertise a clickhouse_version (or is otherwise ``<26.1``)
-    falls back to the legacy name so a 25.8-line run still wires up correctly.
-    """
-    if check_clickhouse_version("<26.1")(current()):
-        return "enable_experimental_export_merge_tree_partition_feature"
-    return "allow_experimental_export_merge_tree_partition"
-
-
-def create_export_partition_config(
-    config_d_dir="/etc/clickhouse-server/config.d",
-    config_file=None,
-):
-    """Create export partition config content.
-
-    Picks the right experimental setting name based on the running ClickHouse
-    version (see :func:`_export_partition_setting_name`). Pass ``config_file``
-    explicitly to override the default ``<setting_name>.xml`` filename.
-    """
-    setting_name = _export_partition_setting_name()
-    if config_file is None:
-        config_file = f"{setting_name}.xml"
-    entries = {setting_name: "1"}
-
-    return create_xml_config_content(
-        entries, config_file=config_file, config_d_dir=config_d_dir
-    )
-
-
-@TestStep(Given)
-def enable_export_partition(
-    self,
-    config_d_dir="/etc/clickhouse-server/config.d",
-    config_file=None,
-    timeout=300,
-    restart=True,
-    config=None,
-    nodes=None,
-):
-    """Add configuration which enables export partition.
-
-    The XML setting key (and default filename) is selected from the running
-    ClickHouse version: 25.8 builds use the legacy
-    ``enable_experimental_export_merge_tree_partition_feature`` name; 26.1+
-    uses the renamed ``allow_experimental_export_merge_tree_partition``.
-    """
-    if config is None:
-        config = create_export_partition_config(config_d_dir, config_file)
-
-    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
 
 
 def create_s3_storage_config_content(
@@ -1891,6 +1836,29 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
 
     actual_count = get_row_count(node=node, table_name=table_name)
     assert rows == actual_count, error()
+
+
+@TestStep(When)
+def wait_for_all_mutations_to_complete(
+    self, node=None, table_name=None, timeout=30, delay=1
+):
+    """Wait for all mutations to complete on a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT count() FROM system.mutations WHERE is_done = 0"
+    else:
+        query = f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
+
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            pending_mutations = node.query(
+                query,
+                exitcode=0,
+                steps=True,
+            ).output.strip()
+            assert int(pending_mutations) == 0, error()
 
 
 @TestStep(Then)

@@ -1,0 +1,48 @@
+<clickhouse>
+    <logger>
+        <level>trace</level>
+		<log>/var/log/clickhouse-server/clickhouse-keeper.log</log>
+        <errorlog>/var/log/clickhouse-server/clickhouse-keeper.err.log</errorlog>
+        <size>100M</size>
+        <count>5</count>
+	    <console>true</console>
+    </logger>
+    <listen_host>0.0.0.0</listen_host>
+    <keeper_server>
+        <tcp_port>2181</tcp_port>
+        <server_id from_env="KEEPER_SERVER_ID"/>
+	    <log_storage_path>/var/lib/clickhouse/coordination/log</log_storage_path>
+	    <snapshot_storage_path>/var/lib/clickhouse/coordination/snapshots</snapshot_storage_path>
+
+        <coordination_settings>
+            <operation_timeout_ms>10000</operation_timeout_ms> <!-- defaults -->
+            <min_session_timeout_ms>10000</min_session_timeout_ms> <!-- defaults -->
+            <session_timeout_ms>30000</session_timeout_ms> <!-- defaults to 30sec in clickhouse -->
+            <raft_logs_level>information</raft_logs_level>
+            <compress_logs>false</compress_logs>
+            <!-- All settings listed in https://github.com/ClickHouse/ClickHouse/blob/master/src/Coordination/CoordinationSettings.h -->
+        </coordination_settings>
+
+        <!-- dynamic reconfiguration -->
+        <enable_reconfiguration>true</enable_reconfiguration>
+
+        <!-- enable sanity hostname checks for cluster configuration (if localhost is used with remote endpoints)
+        <hostname_checks_enabled>true</hostname_checks_enabled> -->
+
+        <http_control>
+            <port>9182</port>
+            <readiness>
+                <endpoint>/ready</endpoint>
+            </readiness>
+        </http_control>
+
+        <raft_configuration>
+            <server>
+                <id>1</id>
+                <hostname>keeper1</hostname>
+                <port>9234</port>
+            </server>
+        </raft_configuration>
+
+    </keeper_server>
+</clickhouse>

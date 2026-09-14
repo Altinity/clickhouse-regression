@@ -185,6 +185,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
 
 @TestFeature
+@Name("row policy")
 def feature(self, minio_root_user, minio_root_password):
     """Test row policies on tables from Iceberg database engine."""
     Feature(test=row_policies)(

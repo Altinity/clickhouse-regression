@@ -198,6 +198,11 @@ def clickhouse_limited_disk_config(self, node):
         node=node,
         check_preprocessed=True,
         after_removal=False,
+        # The restart deterministically reloads the config, and this config
+        # relocates <path>/logging so the passive poll of the default
+        # preprocessed_configs path would never observe the change and would
+        # burn the full timeout. Skip the poll and rely on the restart.
+        poll_preprocessed=False,
     )
 
 

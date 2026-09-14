@@ -11,6 +11,7 @@ from helpers.common import getuid, check_clickhouse_version
 from s3.tests.common import (
     default_s3_disk_and_volume,
     assert_row_count,
+    wait_for_all_mutations_to_complete,
     insert_random,
     temporary_bucket_path,
     s3_storage,
@@ -169,6 +170,11 @@ def index(self):
             )
 
     with Check("clear"):
+        with Given("the materialize mutation has finished"):
+            wait_for_all_mutations_to_complete(
+                node=nodes[0], table_name=table_name, **retry_args
+            )
+
         with When("I clear an index"):
             retry(nodes[0].query, **retry_args)(
                 f"ALTER TABLE {table_name} CLEAR INDEX idx_test",

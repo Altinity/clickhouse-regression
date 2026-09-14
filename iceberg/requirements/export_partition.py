@@ -106,13 +106,9 @@ RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection = Requiremen
     description=(
         "[ClickHouse] SHALL reject `EXPORT PARTITION` synchronously with `BAD_ARGUMENTS` when the source and destination partition specs disagree, including:\n"
         "\n"
-        "* Compound fields specified in different orders.\n"
-        "* A transform on one side and identity on the other for the same column.\n"
-        "* Different transform widths (for example `bucket[8]` vs `bucket[16]`, or `truncate[4]` vs `truncate[8]`).\n"
-        "* Different field counts (compound vs single-column).\n"
-        "* Source `PARTITION BY` expressions that have no Iceberg analogue (for example `intDiv`).\n"
         "* Different partition columns entirely.\n"
-        "* Partitioned source paired with an unpartitioned Iceberg destination.\n"
+        "* Different `icebergBucket` widths (for example `bucket[8]` vs `bucket[16]`).\n"
+        "* Before Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+): compound fields specified in different orders; a transform on one side and identity on the other for the same column; different `icebergTruncate` widths; different field counts (compound vs single-column); source `PARTITION BY` expressions that have no Iceberg analogue (for example `intDiv`); partitioned source paired with an unpartitioned Iceberg destination. After those merges the subset/monotonic checker currently completes those cases instead of rejecting.\n"
         "\n"
         "In every rejected case no Iceberg snapshot is created and the destination remains in its prior state.\n"
         "\n"
@@ -133,9 +129,11 @@ RQ_Iceberg_ExportPartition_DataTypes_Primitives = Requirement(
         "[ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:\n"
         "\n"
         "* Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.\n"
+        "* From 26.6 (Altinity/ClickHouse#2157): also `Int8`, `UInt8` (Iceberg `int`), and `Bool` (Iceberg `boolean`).\n"
         "* Floating-point types `Float32` and `Float64`.\n"
         "* Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.\n"
         "* `String` and `UUID`.\n"
+        "* From 26.6 (Altinity/ClickHouse#2157): `Decimal(p, s)` with precision `p <= 38` (Iceberg `decimal(p, s)`).\n"
         "\n"
         "**Regression module:** `iceberg.tests.export_partition.datatypes` (`datatypes.py`).\n"
         "\n"
@@ -197,10 +195,9 @@ RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection = Requirement(
     description=(
         "[ClickHouse] SHALL fail explicitly — and SHALL NOT silently coerce, downcast, or drop data — when an exported column has no supported Iceberg mapping in this release:\n"
         "\n"
-        "* Narrow integers `Int8` and `UInt8`.\n"
-        "* `Bool`.\n"
+        "* Before 26.6: narrow integers `Int8` and `UInt8`, `Bool`, and `Decimal(p, s)`.\n"
         "* `FixedString(N)`.\n"
-        "* `Decimal(p, s)`.\n"
+        "* From 26.6: `Decimal(p, s)` with precision `p > 38` (Iceberg decimal is limited to 38).\n"
         "* `Enum8` (and its variants).\n"
         "* `LowCardinality(T)` (including `Array(LowCardinality(String))`).\n"
         "\n"
@@ -262,6 +259,53 @@ RQ_Iceberg_ExportPartition_Casting_LossyCasts = Requirement(
     link=None,
     level=2,
     num="3.9",
+)
+
+RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition = Requirement(
+    name="RQ.Iceberg.ExportPartition.SchemaCompatibility.PartitionKeyNameAndPosition",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL verify, by name and position, that every top-level column owning a source `PARTITION BY` column or subcolumn occupies the same position in the destination schema (Altinity/ClickHouse#2134, closing #2123). Columns are otherwise matched positionally, like `INSERT INTO dest SELECT * FROM src`, so a partition-key column that has moved or been renamed WOULD otherwise receive the wrong values and change which Iceberg partitions the rows land in.\n"
+        "\n"
+        "* If the destination column at that position has a different name, `EXPORT PARTITION` / `EXPORT PART` SHALL be rejected synchronously with `BAD_ARGUMENTS` whose message identifies the partition-key column.\n"
+        "* If that owning column contains a named `Tuple`, its element names SHALL be declared in the same order on both sides, recursively through nested tuples and through `Array` / `Map` containers. A layout mismatch SHALL be rejected with `BAD_ARGUMENTS`.\n"
+        "* This check does not itself verify type compatibility (for example `DateTime` timezone drift). Type mismatches remain subject to the existing positional cast gate (`canBeSafelyCast`, or `export_merge_tree_part_allow_lossy_cast = 1`).\n"
+        "* The check applies even when both tables' `PARTITION BY` expressions are textually identical.\n"
+        "\n"
+        "**Regression module:** `iceberg.tests.export_partition.schema_compatibility` (`schema_compatibility.py`); also `partition_compatibility.py` (`reversed destination column order maps values by name`).\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="3.10",
+)
+
+RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas = Requirement(
+    name="RQ.Iceberg.ExportPartition.SchemaCompatibility.CreateTimeSchemas",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL apply a consistent accept/reject oracle when the source MergeTree and Iceberg destination are created with schemas that already differ, without any subsequent `ALTER` (distinct from schema-evolution-between-exports):\n"
+        "\n"
+        "* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_match_mode = 'POSITION'` with `export_merge_tree_part_ignore_extra_source_columns = 0`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.\n"
+        "* **Name.** Non-partition-key columns MAY differ in name; matching is positional. Partition-key owning columns MUST have the same name at the same position (see `SchemaCompatibility.PartitionKeyNameAndPosition`).\n"
+        "* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.\n"
+        "* **Position.** Swapping a partition-key owning column with a neighbour SHALL be rejected. Swapping equal-typed non-partition-key columns SHALL be accepted under positional matching.\n"
+        "* **Default.** Differing `DEFAULT` expressions on an otherwise compatible present column SHALL NOT by themselves reject the export of explicitly inserted values.\n"
+        "\n"
+        "**Regression module:** `iceberg.tests.export_partition.schema_compatibility` (`schema_compatibility.py`).\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="3.11",
 )
 
 RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain = Requirement(
@@ -880,6 +924,35 @@ RQ_Iceberg_ExportPartition_Settings_ParquetCompression = Requirement(
     num="8.5",
 )
 
+RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode = Requirement(
+    name="RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL honour `export_merge_tree_part_schema_match_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2220, replacing #2111's `export_merge_tree_part_schema_mismatch_mode`). Possible values:\n"
+        "\n"
+        "* `POSITION` (default). Columns are matched positionally, like `INSERT INTO dest SELECT * FROM src`. Column names are not otherwise considered.\n"
+        "* `NAME`. Every destination column is matched to a source column with the same exact, case-sensitive name, so destination columns MAY be declared in a different order — including partition-key owning columns. A destination column whose name is absent from the source SHALL throw `THERE_IS_NO_COLUMN`, with no positional fallback.\n"
+        "\n"
+        "Together with `export_merge_tree_part_ignore_extra_source_columns` (default `0`):\n"
+        "\n"
+        "* When `0`, every source column MUST have a corresponding destination column. A column-count mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty. In `NAME` mode, equal counts with a destination name missing from the source SHALL throw `THERE_IS_NO_COLUMN` instead.\n"
+        "* When `1`, a source column without a corresponding destination column SHALL be dropped and not exported. In `POSITION` mode this allows extra trailing source columns; in `NAME` mode, source columns whose name has no destination counterpart, including extras that are not trailing. A destination with more columns than the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH`.\n"
+        "* Dropping extras SHALL NOT bypass cast validation on kept columns: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.\n"
+        "\n"
+        "The settings are recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.\n"
+        "\n"
+        "**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`, `schema match mode`).\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="8.6",
+)
+
 RQ_Iceberg_ExportPartition_DirectWrites = Requirement(
     name="RQ.Iceberg.ExportPartition.DirectWrites",
     version="1.0",
@@ -1053,6 +1126,16 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         Heading(
             name="RQ.Iceberg.ExportPartition.Casting.LossyCasts", level=2, num="3.9"
         ),
+        Heading(
+            name="RQ.Iceberg.ExportPartition.SchemaCompatibility.PartitionKeyNameAndPosition",
+            level=2,
+            num="3.10",
+        ),
+        Heading(
+            name="RQ.Iceberg.ExportPartition.SchemaCompatibility.CreateTimeSchemas",
+            level=2,
+            num="3.11",
+        ),
         Heading(name="Committed Iceberg metadata", level=1, num="4"),
         Heading(
             name="RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain",
@@ -1214,6 +1297,11 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
             level=2,
             num="8.5",
         ),
+        Heading(
+            name="RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode",
+            level=2,
+            num="8.6",
+        ),
         Heading(name="Post-export destination operations", level=1, num="9"),
         Heading(name="RQ.Iceberg.ExportPartition.DirectWrites", level=2, num="9.1"),
         Heading(name="RQ.Iceberg.ExportPartition.Truncate", level=2, num="9.2"),
@@ -1244,6 +1332,8 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         RQ_Iceberg_ExportPartition_DataTypes_ExportSurfaces,
         RQ_Iceberg_ExportPartition_Casting_SafeCasts,
         RQ_Iceberg_ExportPartition_Casting_LossyCasts,
+        RQ_Iceberg_ExportPartition_SchemaCompatibility_PartitionKeyNameAndPosition,
+        RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas,
         RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain,
         RQ_Iceberg_ExportPartition_ManifestIntegrity_PartitionSpec,
         RQ_Iceberg_ExportPartition_ManifestIntegrity_ColumnStats,
@@ -1276,6 +1366,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents,
         RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance,
         RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
+        RQ_Iceberg_ExportPartition_Settings_SchemaMatchMode,
         RQ_Iceberg_ExportPartition_DirectWrites,
         RQ_Iceberg_ExportPartition_Truncate,
         RQ_Iceberg_ExportPartition_Truncate_RepopulateAfterTruncate,
@@ -1304,6 +1395,8 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
     * 3.7 [RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces](#rqicebergexportpartitiondatatypesexportsurfaces)
     * 3.8 [RQ.Iceberg.ExportPartition.Casting.SafeCasts](#rqicebergexportpartitioncastingsafecasts)
     * 3.9 [RQ.Iceberg.ExportPartition.Casting.LossyCasts](#rqicebergexportpartitioncastinglossycasts)
+    * 3.10 [RQ.Iceberg.ExportPartition.SchemaCompatibility.PartitionKeyNameAndPosition](#rqicebergexportpartitionschemacompatibilitypartitionkeynameandposition)
+    * 3.11 [RQ.Iceberg.ExportPartition.SchemaCompatibility.CreateTimeSchemas](#rqicebergexportpartitionschemacompatibilitycreatetimeschemas)
 * 4 [Committed Iceberg metadata](#committed-iceberg-metadata)
     * 4.1 [RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain](#rqicebergexportpartitionmanifestintegritysnapshotchain)
     * 4.2 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec](#rqicebergexportpartitionmanifestintegritypartitionspec)
@@ -1341,6 +1434,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
     * 8.3 [RQ.Iceberg.ExportPartition.SystemMonitoring.ProfileEvents](#rqicebergexportpartitionsystemmonitoringprofileevents)
     * 8.4 [RQ.Iceberg.ExportPartition.SystemMonitoring.KilledProvenance](#rqicebergexportpartitionsystemmonitoringkilledprovenance)
     * 8.5 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
+    * 8.6 [RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode](#rqicebergexportpartitionsettingsschemamatchmode)
 * 9 [Post-export destination operations](#post-export-destination-operations)
     * 9.1 [RQ.Iceberg.ExportPartition.DirectWrites](#rqicebergexportpartitiondirectwrites)
     * 9.2 [RQ.Iceberg.ExportPartition.Truncate](#rqicebergexportpartitiontruncate)
@@ -1413,13 +1507,9 @@ version: 1.0
 
 [ClickHouse] SHALL reject `EXPORT PARTITION` synchronously with `BAD_ARGUMENTS` when the source and destination partition specs disagree, including:
 
-* Compound fields specified in different orders.
-* A transform on one side and identity on the other for the same column.
-* Different transform widths (for example `bucket[8]` vs `bucket[16]`, or `truncate[4]` vs `truncate[8]`).
-* Different field counts (compound vs single-column).
-* Source `PARTITION BY` expressions that have no Iceberg analogue (for example `intDiv`).
 * Different partition columns entirely.
-* Partitioned source paired with an unpartitioned Iceberg destination.
+* Different `icebergBucket` widths (for example `bucket[8]` vs `bucket[16]`).
+* Before Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+): compound fields specified in different orders; a transform on one side and identity on the other for the same column; different `icebergTruncate` widths; different field counts (compound vs single-column); source `PARTITION BY` expressions that have no Iceberg analogue (for example `intDiv`); partitioned source paired with an unpartitioned Iceberg destination. After those merges the subset/monotonic checker currently completes those cases instead of rejecting.
 
 In every rejected case no Iceberg snapshot is created and the destination remains in its prior state.
 
@@ -1429,9 +1519,11 @@ version: 1.0
 [ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:
 
 * Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.
+* From 26.6 (Altinity/ClickHouse#2157): also `Int8`, `UInt8` (Iceberg `int`), and `Bool` (Iceberg `boolean`).
 * Floating-point types `Float32` and `Float64`.
 * Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.
 * `String` and `UUID`.
+* From 26.6 (Altinity/ClickHouse#2157): `Decimal(p, s)` with precision `p <= 38` (Iceberg `decimal(p, s)`).
 
 **Regression module:** `iceberg.tests.export_partition.datatypes` (`datatypes.py`).
 
@@ -1460,10 +1552,9 @@ version: 1.0
 
 [ClickHouse] SHALL fail explicitly — and SHALL NOT silently coerce, downcast, or drop data — when an exported column has no supported Iceberg mapping in this release:
 
-* Narrow integers `Int8` and `UInt8`.
-* `Bool`.
+* Before 26.6: narrow integers `Int8` and `UInt8`, `Bool`, and `Decimal(p, s)`.
 * `FixedString(N)`.
-* `Decimal(p, s)`.
+* From 26.6: `Decimal(p, s)` with precision `p > 38` (Iceberg decimal is limited to 38).
 * `Enum8` (and its variants).
 * `LowCardinality(T)` (including `Array(LowCardinality(String))`).
 
@@ -1487,6 +1578,31 @@ version: 1.0
 [ClickHouse] SHALL reject `EXPORT PARTITION` that would require a lossy cast when `export_merge_tree_part_allow_lossy_cast = 0`, and SHALL accept the export (with truncated values matching INSERT SELECT) when the setting is enabled.
 
 **Regression module:** `iceberg.tests.export_partition.casting` (`casting.py`, `lossy`).
+
+### RQ.Iceberg.ExportPartition.SchemaCompatibility.PartitionKeyNameAndPosition
+version: 1.0
+
+[ClickHouse] SHALL verify, by name and position, that every top-level column owning a source `PARTITION BY` column or subcolumn occupies the same position in the destination schema (Altinity/ClickHouse#2134, closing #2123). Columns are otherwise matched positionally, like `INSERT INTO dest SELECT * FROM src`, so a partition-key column that has moved or been renamed WOULD otherwise receive the wrong values and change which Iceberg partitions the rows land in.
+
+* If the destination column at that position has a different name, `EXPORT PARTITION` / `EXPORT PART` SHALL be rejected synchronously with `BAD_ARGUMENTS` whose message identifies the partition-key column.
+* If that owning column contains a named `Tuple`, its element names SHALL be declared in the same order on both sides, recursively through nested tuples and through `Array` / `Map` containers. A layout mismatch SHALL be rejected with `BAD_ARGUMENTS`.
+* This check does not itself verify type compatibility (for example `DateTime` timezone drift). Type mismatches remain subject to the existing positional cast gate (`canBeSafelyCast`, or `export_merge_tree_part_allow_lossy_cast = 1`).
+* The check applies even when both tables' `PARTITION BY` expressions are textually identical.
+
+**Regression module:** `iceberg.tests.export_partition.schema_compatibility` (`schema_compatibility.py`); also `partition_compatibility.py` (`reversed destination column order maps values by name`).
+
+### RQ.Iceberg.ExportPartition.SchemaCompatibility.CreateTimeSchemas
+version: 1.0
+
+[ClickHouse] SHALL apply a consistent accept/reject oracle when the source MergeTree and Iceberg destination are created with schemas that already differ, without any subsequent `ALTER` (distinct from schema-evolution-between-exports):
+
+* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_match_mode = 'POSITION'` with `export_merge_tree_part_ignore_extra_source_columns = 0`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.
+* **Name.** Non-partition-key columns MAY differ in name; matching is positional. Partition-key owning columns MUST have the same name at the same position (see `SchemaCompatibility.PartitionKeyNameAndPosition`).
+* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.
+* **Position.** Swapping a partition-key owning column with a neighbour SHALL be rejected. Swapping equal-typed non-partition-key columns SHALL be accepted under positional matching.
+* **Default.** Differing `DEFAULT` expressions on an otherwise compatible present column SHALL NOT by themselves reject the export of explicitly inserted values.
+
+**Regression module:** `iceberg.tests.export_partition.schema_compatibility` (`schema_compatibility.py`).
 
 ## Committed Iceberg metadata
 
@@ -1761,6 +1877,24 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL forward `output_format_parquet_compression_method` to the Parquet writer used by `EXPORT PARTITION`, so the compression codec recorded inside committed data files reflects the requested setting.
+
+### RQ.Iceberg.ExportPartition.Settings.SchemaMatchMode
+version: 1.0
+
+[ClickHouse] SHALL honour `export_merge_tree_part_schema_match_mode` on `EXPORT PART` / `EXPORT PARTITION` (Altinity/ClickHouse#2220, replacing #2111's `export_merge_tree_part_schema_mismatch_mode`). Possible values:
+
+* `POSITION` (default). Columns are matched positionally, like `INSERT INTO dest SELECT * FROM src`. Column names are not otherwise considered.
+* `NAME`. Every destination column is matched to a source column with the same exact, case-sensitive name, so destination columns MAY be declared in a different order — including partition-key owning columns. A destination column whose name is absent from the source SHALL throw `THERE_IS_NO_COLUMN`, with no positional fallback.
+
+Together with `export_merge_tree_part_ignore_extra_source_columns` (default `0`):
+
+* When `0`, every source column MUST have a corresponding destination column. A column-count mismatch in either direction SHALL be rejected synchronously with `NUMBER_OF_COLUMNS_DOESNT_MATCH`; no row SHALL appear in the export-status system table and the destination SHALL remain empty. In `NAME` mode, equal counts with a destination name missing from the source SHALL throw `THERE_IS_NO_COLUMN` instead.
+* When `1`, a source column without a corresponding destination column SHALL be dropped and not exported. In `POSITION` mode this allows extra trailing source columns; in `NAME` mode, source columns whose name has no destination counterpart, including extras that are not trailing. A destination with more columns than the source SHALL still be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH`.
+* Dropping extras SHALL NOT bypass cast validation on kept columns: a lossy type pair on a kept column SHALL still be rejected under the lossy-cast gate.
+
+The settings are recorded on the partition-export manifest so a non-initiating replica SHALL apply the same policy that scheduled the task.
+
+**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`, `schema match mode`).
 
 ## Post-export destination operations
 

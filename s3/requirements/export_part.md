@@ -294,9 +294,9 @@ version: 1.0
 ### RQ.ClickHouse.ExportPart.Restrictions.PartitionKey
 version: 1.0
 
-[ClickHouse] SHALL validate that source and destination tables have the same partition key expression by:
-* Checking that the partition key expression matches between source and destination tables
-* Throwing a `BAD_ARGUMENTS` exception (error code 36) with message "Tables have different partition key" when partition keys differ
+[ClickHouse] SHALL validate that source and destination tables have compatible partition keys by:
+* Checking that each exported source partition maps to a single destination partition
+* Throwing a `BAD_ARGUMENTS` exception (error code 36) when they are incompatible. Before Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+) the message is "Tables have different partition key"; after those merges the message names the destination column that is not part of the source MergeTree partition key
 * Performing this validation during the initial export setup phase
 
 ### RQ.ClickHouse.ExportPart.Restrictions.SourcePart

@@ -16,9 +16,15 @@ from testflows._core.testtype import TestSubType
 
 
 def current_cpu():
-    """Return current cpu architecture."""
-    arch = platform.processor()
-    if arch not in ("x86_64", "aarch64", "arm"):
+    """Return current cpu architecture.
+
+    macOS reports ``arm`` / ``arm64``; normalize those to ``aarch64`` so snapshot
+    ids and arch checks match Linux ARM hosts.
+    """
+    arch = platform.processor() or platform.machine()
+    if arch in ("arm", "arm64"):
+        return "aarch64"
+    if arch not in ("x86_64", "aarch64"):
         raise TypeError(f"unsupported CPU architecture {arch}")
     return arch
 
@@ -192,34 +198,6 @@ def check_if_antalya_pre_26_1(test=None):
     return not check_clickhouse_version(">=26.1")(test)
 
 
-# Next Antalya 26.3 release after 26.3.10.20001.altinityantalya.
-# Gates PR 1779 export auto-cast, PR 1874 system.tables partition/sorting keys,
-# PR 1909 iceberg_delete_data_on_drop purge, and PR 1917
-# replicated_partition_exports history table (no manifest TTL release).
-ANTALYA_POST_26_3_10_20001 = ">26.3.10.20001"
-
-
-def check_if_antalya_post_26_3_10_20001(test=None):
-    """True on Antalya builds newer than ``26.3.10.20001.altinityantalya``."""
-    return (
-        check_if_antalya_build(test)
-        and check_clickhouse_version(ANTALYA_POST_26_3_10_20001)(test)
-    )
-
-
-# After Antalya 26.3.13.20001, EXPORT PARTITION lossy-cast rejection uses
-# INCOMPATIBLE_COLUMNS (122) instead of BAD_ARGUMENTS (36).
-ANTALYA_POST_26_3_13_20001 = ">26.3.13.20001"
-
-
-def check_if_antalya_post_26_3_13_20001(test=None):
-    """True on Antalya builds newer than ``26.3.13.20001.altinityantalya``."""
-    return (
-        check_if_antalya_build(test)
-        and check_clickhouse_version(ANTALYA_POST_26_3_13_20001)(test)
-    )
-
-
 def check_clickhouse_version_or_antalya(version):
     """Return a predicate that is True when either ``check_clickhouse_version(version)``
     matches *or* the build is an Antalya build.
@@ -334,6 +312,18 @@ def check_clickhouse_version(version):
             return clickhouse_version_list == version_list
 
     return check
+
+
+def check_monotonic_export_partition_compat(test):
+    """True after Altinity/ClickHouse#2074 (26.3.17+) / #2253 (26.6.2+).
+
+    Those PRs replaced exact partition-key equality with subset/monotonic
+    checking. Released 26.3.13 and 26.6.1 still use the old checker.
+    """
+    return (
+        check_clickhouse_version(">=26.3.17")(test)
+        and check_clickhouse_version("<26.6")(test)
+    ) or check_clickhouse_version(">=26.6.2")(test)
 
 
 def check_is_boringssl_build(test):
@@ -777,6 +767,92 @@ def add_invalid_config(
         assert exitcode == 0, error()
 
 
+def last_line(output):
+    """Return the last non-empty line of a command output."""
+    lines = [line.strip() for line in (output or "").splitlines() if line.strip()]
+    return lines[-1] if lines else ""
+
+
+def wait_for_archived_log(node, logs_dir, logsize, timeout):
+    """Return the path of the newest rotated log once it holds at least logsize
+    bytes of readable content, or None.
+    """
+    started = time.time()
+    previous_size = None
+    while time.time() - started < timeout:
+        cmd = node.command(
+            f"ls -t {logs_dir}/clickhouse-server.log.[0-9]* 2>/dev/null | head -1",
+            no_checks=True,
+            steps=False,
+        )
+        name = os.path.basename(last_line(cmd.output))
+        if not name:
+            return None
+        if not name.endswith(".gz"):
+            return f"{logs_dir}/{name}"
+        cmd = node.command(f"stat -c %s {logs_dir}/{name}", no_checks=True, steps=False)
+        size = last_line(cmd.output)
+        if size == previous_size:
+            cmd = node.command(
+                f"zcat -f {logs_dir}/{name} | wc -c", no_checks=True, steps=False
+            )
+            readable = last_line(cmd.output)
+            if readable.isdigit() and int(readable) >= int(logsize):
+                return f"{logs_dir}/{name}"
+        previous_size = size
+        time.sleep(1)
+    return None
+
+
+def restart_clickhouse_and_tail_log(
+    node, bash, cluster, user=None, wait_healthy=True, archive_timeout=120
+):
+    """Restart ClickHouse and tail the server log from the restart point, reading
+    the rotated archive once it is fully compressed if the log rotated."""
+    container_logs_dir = "/var/log/clickhouse-server"
+    log_file = f"{container_logs_dir}/clickhouse-server.log"
+    logs_dir = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs"
+
+    with When("I close terminal to the node to be restarted"):
+        bash.close()
+
+    with And("I stop ClickHouse to apply the config changes"):
+        node.stop_clickhouse(safe=False)
+
+    with And("I get the current log size"):
+        cmd = node.cluster.command(None, f"stat -c %s {logs_dir}/clickhouse-server.log")
+        logsize = cmd.output.split(" ")[0].strip()
+
+    with And("I start ClickHouse back up"):
+        node.start_clickhouse(user=user, wait_healthy=wait_healthy)
+
+    with And("I detect if the log file was rotated during restart"):
+        cmd = node.cluster.command(None, f"stat -c %s {logs_dir}/clickhouse-server.log")
+        current_logsize = cmd.output.split(" ")[0].strip()
+        rotated = int(current_logsize) < int(logsize)
+
+    archive = None
+    if rotated:
+        with And("I locate the most recently archived log file"):
+            archive = wait_for_archived_log(
+                node, container_logs_dir, logsize, archive_timeout
+            )
+            if archive is None:
+                note("no complete archived log found, the reload message may be lost")
+
+    with Then("I tail the log file from using previous log size as the offset"):
+        bash.prompt = bash.__class__.prompt
+        bash.open()
+        if archive:
+            bash.send(
+                f"{{ zcat -f {archive} | tail -c +{logsize}; tail -c +1 -f {log_file}; }}"
+            )
+        elif rotated:
+            bash.send(f"tail -c +1 -f {log_file}")
+        else:
+            bash.send(f"tail -c +{logsize} -f {log_file}")
+
+
 def add_config(
     config,
     timeout=300,
@@ -787,6 +863,7 @@ def add_config(
     wait_healthy=True,
     check_preprocessed=True,
     after_removal=True,
+    poll_preprocessed=True,
 ):
     """Add dynamic configuration file to ClickHouse.
 
@@ -794,6 +871,12 @@ def add_config(
     :param timeout: timeout, default: 300 sec
     :param restart: restart server, default: False
     :param modify: only modify configuration file, default: False
+    :param poll_preprocessed: poll the preprocessed config for the change before
+        confirming the reload, default: True. Set to False when the config is
+        applied via ``restart=True`` (the restart deterministically reloads the
+        config, making the passive poll redundant) or when the config relocates
+        ``<path>``/logging so that the polled preprocessed file is no longer the
+        one that reflects the applied state.
     """
     if node is None:
         node = current().context.node
@@ -827,40 +910,13 @@ def add_config(
     def wait_for_config_to_be_loaded(user=None):
         """Wait for config to be loaded."""
         if restart:
-            with When("I close terminal to the node to be restarted"):
-                bash.close()
-
-            with And("I stop ClickHouse to apply the config changes"):
-                node.stop_clickhouse(safe=False)
-
-            with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                logsize = cmd.output.split(" ")[0].strip()
-
-            with And("I start ClickHouse back up"):
-                node.start_clickhouse(user=user, wait_healthy=wait_healthy)
-
-            with And("I detect if the log file was rotated during restart"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                current_logsize = cmd.output.split(" ")[0].strip()
-                if int(current_logsize) < int(logsize):
-                    # Log rotated while server was restarting: captured offset is
-                    # past the new file's EOF. Reset to byte 1 so tail reads from
-                    # the start of the new file.
-                    logsize = "1"
-
-            with Then("I tail the log file from using previous log size as the offset"):
-                bash.prompt = bash.__class__.prompt
-                bash.open()
-                bash.send(
-                    f"tail -c +{logsize} -f /var/log/clickhouse-server/clickhouse-server.log"
-                )
+            restart_clickhouse_and_tail_log(
+                node=node,
+                bash=bash,
+                cluster=cluster,
+                user=user,
+                wait_healthy=wait_healthy,
+            )
 
         with Then("I wait for config reload message in the log file"):
             if restart:
@@ -906,11 +962,12 @@ def add_config(
                     node.command(command, steps=False, exitcode=0)
 
                 if check_preprocessed:
-                    with Then(
-                        f"{config.preprocessed_name} should be updated",
-                        description=f"timeout {timeout}",
-                    ):
-                        check_preprocessed_config_is_updated()
+                    if poll_preprocessed:
+                        with Then(
+                            f"{config.preprocessed_name} should be updated",
+                            description=f"timeout {timeout}",
+                        ):
+                            check_preprocessed_config_is_updated()
 
                     with And("I wait for config to be reloaded"):
                         wait_for_config_to_be_loaded(user=user)
@@ -934,13 +991,14 @@ def add_config(
                         node.command(f"rm -rf {config.path}", exitcode=0)
 
                     if check_preprocessed:
-                        with Then(
-                            f"{config.preprocessed_name} should be updated",
-                            description=f"timeout {timeout}",
-                        ):
-                            check_preprocessed_config_is_updated(
-                                after_removal=after_removal
-                            )
+                        if poll_preprocessed:
+                            with Then(
+                                f"{config.preprocessed_name} should be updated",
+                                description=f"timeout {timeout}",
+                            ):
+                                check_preprocessed_config_is_updated(
+                                    after_removal=after_removal
+                                )
 
                         with And("I wait for config to be reloaded"):
                             wait_for_config_to_be_loaded()
@@ -995,40 +1053,13 @@ def remove_config(
     def wait_for_config_to_be_loaded(user=None):
         """Wait for config to be loaded."""
         if restart:
-            with When("I close terminal to the node to be restarted"):
-                bash.close()
-
-            with And("I stop ClickHouse to apply the config changes"):
-                node.stop_clickhouse(safe=False)
-
-            with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                logsize = cmd.output.split(" ")[0].strip()
-
-            with And("I start ClickHouse back up"):
-                node.start_clickhouse(user=user, wait_healthy=wait_healthy)
-
-            with And("I detect if the log file was rotated during restart"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
-                current_logsize = cmd.output.split(" ")[0].strip()
-                if int(current_logsize) < int(logsize):
-                    # Log rotated while server was restarting: captured offset is
-                    # past the new file's EOF. Reset to byte 1 so tail reads from
-                    # the start of the new file.
-                    logsize = "1"
-
-            with Then("I tail the log file from using previous log size as the offset"):
-                bash.prompt = bash.__class__.prompt
-                bash.open()
-                bash.send(
-                    f"tail -c +{logsize} -f /var/log/clickhouse-server/clickhouse-server.log"
-                )
+            restart_clickhouse_and_tail_log(
+                node=node,
+                bash=bash,
+                cluster=cluster,
+                user=user,
+                wait_healthy=wait_healthy,
+            )
 
         with Then("I wait for config reload message in the log file"):
             if restart:

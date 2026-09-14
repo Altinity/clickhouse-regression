@@ -9,7 +9,12 @@ from alter.table.attach_partition.requirements.requirements import (
 @Specifications(SRS034_ClickHouse_Alter_Table_Attach_Partition)
 @Name("attach partition")
 def feature(self):
-    """Run features from the attach partition suite."""
+    """Run features from the attach partition suite.
+
+    Part 1 and part 3 split the original part 1 so CAS CI jobs stay around 2h
+    each. The Repeat(100) simple attach check is split across those two parts.
+    Part 2 is still replica add/remove and restart.
+    """
 
     self.context.node_1 = self.context.cluster.node("clickhouse1")
     self.context.node_2 = self.context.cluster.node("clickhouse2")
@@ -28,18 +33,6 @@ def feature(self):
                 executor=pool,
             )
             Feature(
-                run=load("alter.table.attach_partition.partition_key", "feature"),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
-                run=load(
-                    "alter.table.attach_partition.partition_key_datetime", "feature"
-                ),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
                 run=load("alter.table.attach_partition.storage", "feature"),
                 parallel=True,
                 executor=pool,
@@ -49,16 +42,6 @@ def feature(self):
                     "alter.table.attach_partition.corrupted_partitions",
                     "feature",
                 ),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
-                run=load("alter.table.attach_partition.rbac", "feature"),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
-                run=load("alter.table.attach_partition.conditions", "feature"),
                 parallel=True,
                 executor=pool,
             )
@@ -95,21 +78,6 @@ def feature(self):
             )
             Feature(
                 run=load(
-                    "alter.table.attach_partition.operations_on_attached_partition",
-                    "feature",
-                ),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
-                run=load(
-                    "alter.table.attach_partition.part_names.part_names", "feature"
-                ),
-                parallel=True,
-                executor=pool,
-            )
-            Feature(
-                run=load(
                     "alter.table.attach_partition.simple_attach_partition_from",
                     "feature",
                 ),
@@ -129,3 +97,52 @@ def feature(self):
                 "alter.table.attach_partition.restart_clickhouse_server", "feature"
             )
         )
+
+    with Feature("part 3"):
+        with Pool() as pool:
+            Feature(
+                run=load("alter.table.attach_partition.partition_key", "feature"),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
+                    "alter.table.attach_partition.partition_key_datetime", "feature"
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("alter.table.attach_partition.rbac", "feature"),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load("alter.table.attach_partition.conditions", "feature"),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
+                    "alter.table.attach_partition.operations_on_attached_partition",
+                    "feature",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
+                    "alter.table.attach_partition.part_names.part_names", "feature"
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
+                run=load(
+                    "alter.table.attach_partition.simple_attach_partition_from",
+                    "feature_tuple_keys",
+                ),
+                parallel=True,
+                executor=pool,
+            )
+            join()

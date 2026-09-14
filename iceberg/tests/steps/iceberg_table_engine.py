@@ -24,7 +24,9 @@ def create_table_with_iceberg_engine(
     if allow_dynamic_metadata_for_data_lakes:
         settings_list.append("allow_dynamic_metadata_for_data_lakes = true")
     if iceberg_partition_timezone is not None:
-        settings_list.append(f"iceberg_partition_timezone = '{iceberg_partition_timezone}'")
+        settings_list.append(
+            f"iceberg_partition_timezone = '{iceberg_partition_timezone}'"
+        )
     settings = ("SETTINGS " + ", ".join(settings_list)) if settings_list else ""
 
     try:

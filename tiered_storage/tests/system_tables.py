@@ -45,7 +45,12 @@ def scenario(self, cluster, node="clickhouse1"):
             with Then("result should match the expected"):
                 with values() as that:
                     name = "disk_data"
-                    if (
+                    if cluster.with_cas:
+                        # CAS reports object-storage path prefix (e.g. data/)
+                        # instead of a local metadata path under
+                        # /var/lib/clickhouse/disks/...
+                        name += "_with_cas"
+                    elif (
                         cluster.with_minio
                         or (cluster.with_s3gcs)
                         or (
@@ -56,7 +61,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         name += "_with_external"
                         if check_clickhouse_version(">=26.3")(self):
                             name += ">=26.3"
-                    assert that(snapshot(disk_data, id=name, mode=snapshot.CHECK)), error()
+                    assert that(
+                        snapshot(disk_data, id=name, mode=snapshot.CHECK)
+                    ), error()
 
         with When("I read system.storage_policies"):
             policy_fields = "policy_name, volume_name, volume_priority, disks, volume_type, max_data_part_size, move_factor, prefer_not_to_merge"
@@ -80,6 +87,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     if (
                         cluster.with_minio
                         or (cluster.with_s3gcs)
+                        or cluster.with_cas
                         or (
                             check_clickhouse_version(">=22.3")(self)
                             and cluster.with_s3amazon
@@ -88,4 +96,6 @@ def scenario(self, cluster, node="clickhouse1"):
                         name += "_with_external"
                         if check_clickhouse_version(">=26.3")(self):
                             name += ">=26.3"
-                    assert that(snapshot(policies_data, id=name, mode=snapshot.CHECK)), error()
+                    assert that(
+                        snapshot(policies_data, id=name, mode=snapshot.CHECK)
+                    ), error()

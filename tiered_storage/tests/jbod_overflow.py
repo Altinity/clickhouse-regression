@@ -119,6 +119,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                         cluster.with_minio
                                         or cluster.with_s3amazon
                                         or cluster.with_s3gcs
+                                        or cluster.with_cas
                                     )
                                 )
                                 else "external"

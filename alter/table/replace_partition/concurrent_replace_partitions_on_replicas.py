@@ -41,7 +41,7 @@ def create_partitions_with_random_parts(self, table_name, number_of_partitions):
             with By(
                 f"creating {number_of_parts} parts inside the {partition} partition"
             ):
-                for parts in range(1, number_of_parts):
+                for parts in range(1, number_of_parts + 1):
                     node.query(
                         f"INSERT INTO {table_name} (p, i) SELECT {partition}, rand64() FROM numbers(10)"
                     )

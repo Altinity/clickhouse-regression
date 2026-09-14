@@ -96,7 +96,7 @@ services:
 
   minio:
     extends:
-      file: minio-service.yml
+      file: rustfs-service.yml
       service: minio
 
   minio-client:

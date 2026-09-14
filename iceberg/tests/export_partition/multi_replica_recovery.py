@@ -32,6 +32,7 @@ from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
     insert_data,
     sync_replica,
+    require_replicated_source,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
@@ -1419,6 +1420,9 @@ def feature(self, minio_root_user, minio_root_password):
     not-applicable scenarios are never registered (avoids penalising
     requirement-satisfaction with not-applicable runtime ``skip()``s).
     """
+    require_replicated_source(
+        "multi-replica export coordination requires ReplicatedMergeTree"
+    )
     if not hasattr(self.context, "nodes") or len(self.context.nodes) < 2:
         skip("need at least two ClickHouse replicas")
     if self.context.catalog not in CATALOG_MODES_FOR_MULTI_REPLICA:

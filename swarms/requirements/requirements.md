@@ -46,6 +46,7 @@
             * 2.6.3.5 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheNoDiskSpace](#rqsrs-044swarmcachingparquetmetadatacachenodiskspace)
     * 2.7 [Settings](#settings)
         * 2.7.1 [RQ.SRS-044.Swarm.Settings.object_storage_max_nodes](#rqsrs-044swarmsettingsobject_storage_max_nodes)
+        * 2.7.2 [RQ.SRS-044.Swarm.Settings.object_storage_cluster_fallback_to_local_if_empty](#rqsrs-044swarmsettingsobject_storage_cluster_fallback_to_local_if_empty)
     * 2.8 [Observer](#observer)
         * 2.8.1 [RQ.SRS-044.Swarm.ObserverNodes](#rqsrs-044swarmobservernodes)
     * 2.9 [RBAC](#rbac)
@@ -343,6 +344,22 @@ This section describes swarm-specific settings that control swarm cluster behavi
 version: 1.0  
 
 [ClickHouse] SHALL support the `object_storage_max_nodes` setting to limit the number of nodes used in swarm cluster for a particular query
+
+#### RQ.SRS-044.Swarm.Settings.object_storage_cluster_fallback_to_local_if_empty
+version: 1.0  
+
+[ClickHouse] SHALL support the `object_storage_cluster_fallback_to_local_if_empty` setting.
+
+When `object_storage_cluster` names a swarm that is unknown or has no worker nodes (for example an observer-only swarm, or after the last worker is removed), and this setting is enabled, [ClickHouse] SHALL execute the **read** query on the local node instead of failing with `CLUSTER_DOESNT_EXIST`.
+
+The setting SHALL NOT apply to:
+* explicit `*Cluster` table functions (`s3Cluster`, `icebergS3Cluster`, and similar)
+* writes (`INSERT` into object storage with `object_storage_cluster` set)
+* `object_storage_remote_initiator_cluster` (a missing remote-initiator cluster SHALL still fail with `CLUSTER_DOESNT_EXIST`)
+
+When the swarm has at least one worker, enabling this setting SHALL NOT change query routing: reads SHALL still execute on swarm workers, not on the initiator.
+
+With `object_storage_remote_initiator=1` and a valid `object_storage_remote_initiator_cluster`, the decision to fall back SHALL be made on the remote initiator, because `object_storage_cluster` may be unknown locally and defined only on the remote (or the reverse).
 
 ### Observer
 

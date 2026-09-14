@@ -42,6 +42,8 @@ def fetch_ontime_data(self, from_year, to_year, node=None):
     with And(
         f"I insert ontime data from s3 for {from_year}-{to_year} to the local table"
     ):
+        # NOSIGN: public bucket. Since ClickHouse #106855 an unsigned s3() read
+        # falls back to the server's own credentials and is refused (ACCESS_DENIED).
         node.query(
             f"INSERT INTO ontime_data "
             f"SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', NOSIGN, CSVWithNames) "

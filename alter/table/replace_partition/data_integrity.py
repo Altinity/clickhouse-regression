@@ -7,7 +7,7 @@ from alter.table.replace_partition.common import (
     create_table_partitioned_by_column_with_data,
 )
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, replace_partition, check_clickhouse_version
 
 
 @TestScenario
@@ -39,6 +39,7 @@ def non_existent_partition(
     self, destination_partitions, source_partitions, partition_to_replace
 ):
     """Replace partition that does not exist either on the destination or the source table."""
+    node = self.context.node
     source_table = "source" + getuid()
     destination_table = "destination" + getuid()
 
@@ -54,14 +55,39 @@ def non_existent_partition(
             table_name=source_table, number_of_partitions=source_partitions
         )
 
-    with Then(
-        "I replace partition that does not exist on the destination table but exists on the source table"
-    ):
-        replace_partition_and_validate_data(
-            destination_table=destination_table,
-            source_table=source_table,
-            partition_to_replace=partition_to_replace,
+    source_partition_is_empty = partition_to_replace > source_partitions
+
+    if source_partition_is_empty and check_clickhouse_version(">=26.6")(self):
+        select_destination = (
+            f"SELECT i FROM {destination_table} WHERE p = {partition_to_replace} "
+            "ORDER BY tuple(*) FORMAT TabSeparated"
         )
+
+        with And("I save the data of the partition on the destination table"):
+            data_before = node.query(select_destination).output
+
+        with Then(
+            "replace partition is refused because the source partition has no parts"
+        ):
+            replace_partition(
+                destination_table=destination_table,
+                source_table=source_table,
+                partition=partition_to_replace,
+                exitcode=36,
+                message="DB::Exception: Source table",
+            )
+
+        with And("the data of the destination table is kept"):
+            assert node.query(select_destination).output == data_before, error()
+    else:
+        with Then(
+            "I replace partition that does not exist on the destination table but exists on the source table"
+        ):
+            replace_partition_and_validate_data(
+                destination_table=destination_table,
+                source_table=source_table,
+                partition_to_replace=partition_to_replace,
+            )
 
 
 @TestScenario

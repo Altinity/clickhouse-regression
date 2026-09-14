@@ -74,7 +74,7 @@ def privilege_check(grant_target_name, user_name, node=None):
                     f"ATTACH DICTIONARY {dict_name}",
                     settings=[("user", user_name)],
                     exitcode=134,
-                    message=f"DB::Exception: Table `{dict_name}` doesn't exist.",
+                    message=f"DB::Exception: Table `{dict_name}` doesn't exist",
                 )
 
         finally:
@@ -143,7 +143,7 @@ def privilege_check(grant_target_name, user_name, node=None):
                     f"ATTACH DICTIONARY {dict_name}",
                     settings=[("user", user_name)],
                     exitcode=134,
-                    message=f"DB::Exception: Table `{dict_name}` doesn't exist.",
+                    message=f"DB::Exception: Table `{dict_name}` doesn't exist",
                 )
 
         finally:

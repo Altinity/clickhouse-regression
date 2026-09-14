@@ -15,8 +15,10 @@ def read_data_with_s3_table_function(
     format="TabSeparated",
     object_storage_cluster=None,
     use_hive_partitioning=None,
+    extra_settings=None,
     exitcode=None,
     message=None,
+    no_checks=False,
     node=None,
 ):
     """Read data from S3 using the s3 table function.
@@ -31,8 +33,10 @@ def read_data_with_s3_table_function(
         format: Format of the result
         object_storage_cluster: swarm cluster name
         use_hive_partitioning: Use hive partitioning
+        extra_settings: extra query settings as a list of (name, value) tuples
         exitcode: Exit code of the query
         message: Message of the query
+        no_checks: Skip exitcode/message checks
         node: Node to run the query on
 
     Returns:
@@ -41,7 +45,7 @@ def read_data_with_s3_table_function(
     if node is None:
         node = self.context.node
 
-    settings = []
+    settings = list(extra_settings or [])
 
     if object_storage_cluster:
         settings.append(
@@ -77,6 +81,7 @@ def read_data_with_s3_table_function(
         settings=settings,
         exitcode=exitcode,
         message=message,
+        no_checks=no_checks,
     )
     return result
 
@@ -92,6 +97,7 @@ def read_data_with_s3Cluster_table_function(
     group_by=None,
     order_by=None,
     format="TabSeparated",
+    extra_settings=None,
     exitcode=None,
     message=None,
     node=None,
@@ -107,6 +113,7 @@ def read_data_with_s3Cluster_table_function(
         group_by: Columns to group by
         order_by: Columns to order by
         format: Format of the result
+        extra_settings: extra query settings as a list of (name, value) tuples
         exitcode: Exit code of the query
         message: Message of the query
         node: Node to run the query on
@@ -131,7 +138,12 @@ def read_data_with_s3Cluster_table_function(
     if format:
         query += f" FORMAT {format}"
 
-    result = node.query(query, exitcode=exitcode, message=message)
+    result = node.query(
+        query,
+        settings=list(extra_settings or []),
+        exitcode=exitcode,
+        message=message,
+    )
     return result
 
 

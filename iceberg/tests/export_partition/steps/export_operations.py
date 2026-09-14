@@ -5,13 +5,17 @@ Adapted from the s3 export_partition steps. The main adjustments are:
 * Waiting for completion is optional (some scenarios need to observe a
   ``PENDING`` state first).
 * Supports a list of destination tables per call (useful for fan-out tests).
+* Completion polling uses :func:`export_status.wait_for_export_status`, which
+  reads from ``system.replicated_partition_exports`` or
+  ``system.partition_exports`` depending on ``self.context.source_engine``.
 
 EXPORT PARTITION needs two ClickHouse experimental flags enabled, and
 they live in different layers:
 
 * ``allow_experimental_export_merge_tree_partition`` is a *server*
-  setting (declared in ``ServerSettings.cpp``) and is enabled via
-  ``configs/clickhouse/config.d/export_partition.xml``.
+  setting (declared in ``ServerSettings.cpp``). It is pushed into
+  ``config.d`` at runtime on Antalya only, via
+  ``helpers.config.config_d.enable_export_partition``.
 * ``allow_experimental_insert_into_iceberg`` is a regular per-query
   ``Setting``. The commit/write phase runs on a background context
   that ClickHouse builds from the server context plus a small manifest
@@ -22,9 +26,9 @@ they live in different layers:
   ``configs/clickhouse/users.d/allow_experimental_insert_into_iceberg.xml``.
   We additionally inject it per-query in :func:`export_partition` so
   scenarios that pass an explicit ``settings=`` list keep the
-  synchronous gate (``StorageReplicatedMergeTree::exportPartitionToTable``)
-  satisfied, matching what :func:`insert_into_iceberg_destination` and
-  :func:`truncate_iceberg_destination` already do.
+  synchronous gate satisfied on both ``ReplicatedMergeTree`` and plain
+  ``MergeTree`` sources, matching what :func:`insert_into_iceberg_destination`
+  and :func:`truncate_iceberg_destination` already do.
 """
 
 from testflows.core import *
@@ -46,19 +50,13 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
 )
 
-# ``EXPORT_PARTITION_ALREADY_EXPORTED`` (server error code 1006) when a
-# duplicate export key is still live in Keeper. Older builds surface the
-# same rejection as ``BAD_ARGUMENTS`` (client exit 36); newer builds map
-# ``1006 % 256`` to client exit 238. Requirements allow either:
-# ``EXPORT_PARTITION_ALREADY_EXPORTED``, historically ``BAD_ARGUMENTS``.
-EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_LEGACY = 36
+# Sentinel passed as ``exitcode=`` so :func:`export_partition` routes through
+# :func:`query_expecting_duplicate_export_rejection` instead of asserting a
+# specific client exit. clickhouse-client maps ``server_code % 256``, and the
+# ``EXPORT_PARTITION_ALREADY_EXPORTED`` server code has moved (1006 → 1010),
+# so the numeric exit is not stable. Rejection is identified by a non-zero
+# exit plus the ``Export with key`` message.
 EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE = 238
-EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODES = frozenset(
-    {
-        EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE_LEGACY,
-        EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
-    }
-)
 DUPLICATE_EXPORT_REJECTION_MESSAGE = "Export with key"
 
 
@@ -66,8 +64,8 @@ def assert_duplicate_export_rejected(result, message=None):
     """Assert ``result`` is a synchronous duplicate-export rejection."""
     from testflows.asserts import error
 
-    assert result.exitcode in EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODES, error(
-        "expected duplicate-export client exit 36 or 238, "
+    assert result.exitcode != 0, error(
+        "expected duplicate-export rejection (non-zero exit), "
         f"got {result.exitcode}: {result.output}"
     )
     expected_message = message or DUPLICATE_EXPORT_REJECTION_MESSAGE
@@ -75,7 +73,7 @@ def assert_duplicate_export_rejected(result, message=None):
 
 
 def query_expecting_duplicate_export_rejection(node, sql, settings=None, message=None):
-    """Run ``sql`` and assert duplicate-export rejection (exit 36 or 238)."""
+    """Run ``sql`` and assert duplicate-export rejection (any non-zero exit)."""
     result = node.query(sql, settings=settings, ignore_exception=True)
     assert_duplicate_export_rejected(result, message=message)
     return result
@@ -153,7 +151,7 @@ def prepare_export_partition_settings(context_catalog, settings):
     ``StorageReplicatedMergeTree::exportPartitionToTable`` / the
     ``IcebergMetadata::write`` path). The feature itself is enabled
     server-side via ``allow_experimental_export_merge_tree_partition``
-    from ``configs/clickhouse/config.d/export_partition.xml``, but that
+    (``config_d.enable_export_partition`` on Antalya), but that
     setting alone is no longer enough because the commit path is shared
     with INSERT/TRUNCATE.
 
@@ -267,8 +265,8 @@ def export_partition(
         message: Expected substring in the error output. Typically set
             together with ``exitcode`` when asserting rejection.
         wait_for_completion: If ``True`` and no rejection is expected, block
-            until the row in ``system.replicated_partition_exports`` reaches
-            ``COMPLETED``.
+            until the export status system table reports ``COMPLETED`` for
+            this ``(source_table, partition_id, destination)`` triple.
     """
     if node is None:
         node = self.context.node
@@ -596,12 +594,12 @@ def kill_export_partition(
     :func:`export_partition`. The ``WHERE`` clause is built via
     :func:`iceberg.tests.export_partition.steps.export_status._destination_where_pieces`
     so the ``destination_database`` / ``destination_table`` filter is
-    aligned with what ``system.replicated_partition_exports`` actually
-    stores — an unqualified ``ns.tbl`` split out from the catalog-mode
+    aligned with what the export status system table actually stores —
+    an unqualified ``ns.tbl`` split out from the catalog-mode
     identifier ``datalake_xxx.\\`ns.tbl\\``` (see the helper's docstring
     for the rationale). Using the fully-qualified SQL identifier here
     would match no row under Ice / Glue and silently leave the target
-    PENDING, which is the Phase 3 regression this fixed.
+    PENDING.
     """
     if node is None:
         node = self.context.node

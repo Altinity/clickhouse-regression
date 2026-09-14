@@ -1,0 +1,19 @@
+services:
+  minio:
+    image: rustfs/rustfs:1.0.0-beta.12
+    container_name: alter_rustfs
+    environment:
+      - RUSTFS_ACCESS_KEY=minio
+      - RUSTFS_SECRET_KEY=minio123
+      - RUSTFS_SCANNER_ENABLED=false
+      - RUSTFS_HEAL_ENABLED=false
+      - RUSTFS_ADDRESS=:9001
+      - RUSTFS_CONSOLE_ENABLE=false
+    ports:
+      - "9001:9001"
+    command: ["/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent --show-error http://127.0.0.1:9001/health || exit 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 60

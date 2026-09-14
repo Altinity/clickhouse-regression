@@ -23,8 +23,15 @@ def feature(self, minio_root_user, minio_root_password):
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load(
-            "iceberg.tests.iceberg_table_engine.iceberg_writes_minmax", "write_min_max_pruning"
+            "iceberg.tests.iceberg_table_engine.iceberg_writes_minmax",
+            "write_min_max_pruning",
         ),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_table_engine.deletes", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_table_engine.compaction", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load(

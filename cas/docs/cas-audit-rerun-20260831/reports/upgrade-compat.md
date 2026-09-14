@@ -1,0 +1,33 @@
+# upgrade-compat -- fresh audit 2026-08-31
+
+## Scope
+- Files/dirs examined: `Formats/CasFormat.{h,cpp}` (`G_BUILD`, `changePoints`, `checkCompatibility`, `currentCompatibilityVersion`), `Formats/CasPoolMetaFormat.cpp` (`decodePoolMeta` floors), `Pool/CasPoolMeta.cpp` (`admitOrValidate` / `min_reader_generation`), `Formats/CasTextFormat.cpp` (`expectHeaderLine`), `Formats/CasPartManifestFormat.cpp` (`computePayloadDigest`), `Formats/CasServerRootFormats.cpp` (required `write_attempt_id`), `ContentAddressedSettings.cpp` (`cas_` prefix + unprefixed window), `src/Storages/MergeTree/DataPartsExchange.cpp` (relink versions 10/11), `ContentAddressedMetadataStorage.cpp` (`prepareAdoptFromManifest` decode fallback), `ContentAddressedExchange.h`.
+- Explicitly out of scope: per-format body grammars beyond header/`v` handling; `Backend/*` token dialects; system-log schema evolution.
+
+Throughout: this build's `G_BUILD` is 10 (`CasFormat.h:62`). There is no released generation-11 binary on this tree, so mixed-generation claims are about the next bump.
+
+## Findings
+
+None. The recreate-only floor, unused `changePoints` table, relink handshake, and unprefixed-settings window are the intended pre-release policy, not defects that fire on this build.
+
+## By-design / info / non-actionable
+- **Pool generation 10 is recreate-only.** `decodePoolMeta` (`CasPoolMetaFormat.cpp:112-118`) refuses `header.v < kMountWriteAttemptIdGeneration` (10) with `UNKNOWN_FORMAT_VERSION` and "recreate the pool". Writers stamp `currentCompatibilityVersion()` == `G_BUILD` (`CasFormat.cpp:110-115`). A generation-9 pool cannot be opened. Filimonov CAS-042: deliberate pre-release recreate-only policy. Still true; the floor moved from 9 to 10 for `write_attempt_id`.
+- **`changePoints()` is still unread at decode.** Callers are tests plus the definition (`CasFormat.cpp:72`). `checkCompatibility` (`:117-123`) is only `v > G_BUILD`. The registry still encodes `{g,g}` pairs (no backward window). Comments in `gtest_cas_format.cpp` admit this. Same as CAS-042 / previous upgrade-compat-2/5: the table is inventory for a future write-down-to-floor policy, not a live gate.
+- **`min_reader_generation` is still raised to `G_BUILD` on algo admit.** `admitOrValidate` (`CasPoolMeta.cpp:88-90`) CAS-unions the new algo and sets `next.min_reader_generation = G_BUILD` in the same write. New pools are minted at `G_BUILD` (`:152`). Today the format floor already equals `G_BUILD`, so a generation-9 binary cannot be in the pool anyway. Filimonov CAS-013: latent until the next bump. Residual: the next generation that forgets to bump the `decodePoolMeta` recreate floor while still stamping `v = G_BUILD` on every object would lock older readers out of objects that did not change.
+- **Every object header is stamped `G_BUILD`, including formats whose `changePoints` floor is 1.** `writeHeaderLine` / run / envelope all call `currentCompatibilityVersion()`. A future bump therefore marks every newly written object unreadable to the previous build, not only the format that changed. Recreate-only makes that the intended cluster rule: do not mix writer generations on one pool.
+- **PartManifest `pd` is a re-encode digest that includes the header line.** `computePayloadDigest` (`CasPartManifestFormat.cpp:314-325`) hashes `encodePartManifest` with `pd` zeroed; encode writes `writeHeaderLine` first (`:98`). A later `G_BUILD` that can still *open* a generation-10 pool would report every existing manifest as `CORRUPTED_DATA`. Under today's floor (`v < 10` refused), that path is unreachable. Same latent class as previous upgrade-compat-1; not a HEAD defect.
+- **Relink negotiates the replication protocol, not `G_BUILD`.** Offer gate is `REPLICATION_PROTOCOL_VERSION_WITH_CA_CONFIRM` (11), not 10 (`DataPartsExchange.cpp:398-405`). A peer that only advertises 10 gets bytes, never an unconfirmed relink. Cookie `part_manifest_v2`; unknown cookie → byte fallback (`:916-922`). Same-pool UUID is still the only CAS identity on the wire (`cas_pool_uuid`). A generation mismatch inside one pool is not constructible today (old build cannot mount). Residual (CAS-043): `prepareAdoptFromManifest` (`ContentAddressedMetadataStorage.cpp:2339-2345`) treats only `CORRUPTED_DATA` as `MechanismFallbackAllowed`. `UNKNOWN_FORMAT_VERSION` from `expectHeaderLine` would fail the fetch instead of falling back to bytes — latent for the next `G_BUILD`, one-line hardening.
+- **`cas_*` prefix with an unprefixed compat window.** `ContentAddressedSettings.cpp:49,128-169,210-217`: prefixed names are canonical; unprefixed builtins still apply; both spellings of the same key throw; unknown `cas_*` throws `UNKNOWN_SETTING`. A WARNING names the superseded keys. The `non_cas_keys` skip-list is gone (closes CAS-106). The window has no version or date bound — deleting the legacy block is what closes it. Not a defect; it is the documented compat period.
+- **Mount-lease decode requires `write_attempt_id`.** `decodeMountLease` (`CasServerRootFormats.cpp:178-179`) fails closed on a missing or zero attempt id. That is the generation-10 reason the pool floor exists. A generation-9 lease body is never interpreted.
+- **`FormatId::Roster` still has no traits row.** `traitsFor` throws `LOGICAL_ERROR`. No writer. Same as previous upgrade-compat-10; dormant.
+
+## Closed-since-2026-08-12
+- **Pool recreate floor is 10, not 9.** `kMountWriteAttemptIdGeneration` / `decodePoolMeta` (`83c03e` series + generation-10 bump). Previous upgrade-compat-9 ("hard-floors at generation 9") is stale.
+- **Unconfirmed relink to an old receiver is gone.** Offer requires `…_WITH_CA_CONFIRM` (`DataPartsExchange.cpp:404`). Previous upgrade-compat-3's "hand an unconfirmed relink" trigger is closed; mixed protocol versions degrade to bytes.
+- **`non_cas_keys` / `UNKNOWN_SETTING` at startup (CAS-106) is gone.** `917600b122b` — settings live under `cas_`. Unprefixed names warn instead of rejecting foreign S3 keys.
+- Previous upgrade-compat-1/2/4/5 remain as latent/recreate-only policy, not as closed defects.
+
+## Coverage
+- Reviewed: `G_BUILD` / `kMountWriteAttemptIdGeneration` / `decodePoolMeta` floors; every `changePoints` array vs `checkCompatibility`; `min_reader_generation` raise on admit and mint; header stamp sites (`writeHeaderLine`, run, envelope); PartManifest `pd` re-encode; relink protocol 10 vs 11, cookie, confirm, decode-fallback error codes; `cas_` vs unprefixed settings loader.
+- N-A: released mixed-binary fixture (only one `G_BUILD` exists on this pin).
+- Deferred: ref-log / snapshot body meaning changes at generations 4–7 (recreate-only; no live gen-3 pool can open).

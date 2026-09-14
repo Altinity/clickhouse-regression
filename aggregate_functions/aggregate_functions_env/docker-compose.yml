@@ -10,6 +10,9 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      minio-client:
+        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -20,6 +23,9 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      minio-client:
+        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -30,6 +36,22 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      minio-client:
+        condition: service_healthy
+
+  minio:
+    extends:
+      file: rustfs-service.yml
+      service: minio
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio:
+        condition: service_healthy
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy

@@ -1,3 +1,4 @@
+from helpers.common import check_clickhouse_version
 from oauth.tests.steps.clikhouse import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
@@ -41,4 +42,5 @@ def check_authentication_with_invalid_token(self):
 def feature(self):
     """Feature to test OAuth authentication flow."""
     Scenario(run=check_authentication_flow)
-    Scenario(run=check_authentication_with_invalid_token)
+    if check_clickhouse_version(">=26.3")(self):
+        Scenario(run=check_authentication_with_invalid_token)

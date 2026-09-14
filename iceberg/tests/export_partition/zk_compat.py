@@ -18,6 +18,7 @@ from helpers.common import getuid
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
     insert_data,
+    require_replicated_source,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
@@ -216,6 +217,10 @@ def feature(self, minio_root_user, minio_root_password):
     _require_no_catalog(
         "legacy ZK layout is a ReplicatedMergeTree concern, not a "
         "destination concern; run it once via the no_catalog path"
+    )
+    require_replicated_source(
+        "the /exports znode and SYSTEM RESTART REPLICA recovery are "
+        "ReplicatedMergeTree-only"
     )
     Scenario(test=export_after_restart_recreates_exports_znode, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password

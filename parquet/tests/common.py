@@ -338,7 +338,7 @@ def start_minio(
                 objects = minio_client.list_objects(bucket.name, recursive=True)
                 object_names = [o.object_name for o in objects]
                 for name in object_names:
-                    if "warehouse" in bucket.name:
+                    if "warehouse" in bucket.name or "cas" in bucket.name:
                         continue
                     minio_client.remove_object(bucket.name, name)
 

@@ -1,5 +1,7 @@
 import random
 
+from testflows.asserts import error
+
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
     replace_partition_and_validate_data,
@@ -896,6 +898,18 @@ def freeze_destination_and_source_partition_with_name(self):
     freeze_source_partition_with_name()
 
 
+def random_existing_partition(table_name, node):
+    """Pick at random a partition that currently has parts on the table."""
+    partitions = node.query(
+        f"SELECT DISTINCT partition FROM system.parts "
+        f"WHERE table = '{table_name}' AND active FORMAT TabSeparated"
+    ).output.split()
+
+    assert partitions, error(f"no partition with parts left on {table_name}")
+
+    return random.choice(partitions)
+
+
 @TestStep(When)
 def concurrent_replace_with_multiple_actions(
     self,
@@ -918,9 +932,11 @@ def concurrent_replace_with_multiple_actions(
         "running the replace partition number of times and each time run number of other actions in parallel"
     ):
         for i in range(number_of_iterations):
-            partition_to_replace = random.randrange(1, number_of_partitions)
             for retry in retries(timeout=60):
                 with retry:
+                    partition_to_replace = random_existing_partition(
+                        table_name=source_table, node=self.context.node
+                    )
                     Check(
                         name=f"replace partition on the destination table #{i}",
                         test=replace_partition_and_validate_data,

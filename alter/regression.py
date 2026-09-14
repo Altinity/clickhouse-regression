@@ -12,13 +12,20 @@ from helpers.common import (
     experimental_analyzer,
     check_with_any_sanitizer,
     allow_higher_cpu_wait_ratio,
+    check_clickhouse_version,
 )
 from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.datatypes import *
+from helpers.cas_storage import add_cas_arguments
+from alter.cas_mode import (
+    enable_cas_default_storage,
+    check_cas_mode,
+    reset_cas_config,
+)
 
 
 def argparser(parser):
-    """Custom argparser that adds a --use-specific-clickhouse-version option."""
+    """Custom argparser that adds alter-specific options."""
     base_argparser(parser)
 
     parser.add_argument(
@@ -30,6 +37,12 @@ def argparser(parser):
         "binary and stores it inside a container along the main version",
         metavar="path",
         default="docker://altinity/clickhouse-server:23.3.13.7.altinitytest",
+    )
+
+    add_cas_arguments(
+        parser,
+        cas_help="use content-addressed storage as the default MergeTree disk "
+        "(skips filesystem-path tests that require local parts)",
     )
 
 
@@ -89,7 +102,7 @@ xfails = {
             check_clickhouse_version("<23.3"),
         )
     ],
-    "/alter/attach partition/part 1/partition key datetime/*": [
+    "/alter/attach partition/part 3/partition key datetime/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24.2"))
     ],
     "/alter/attach partition/part 1/storage/attach partition on tiered and default storages/*": [
@@ -120,13 +133,13 @@ xfails = {
             check_clickhouse_version(">=24.3"),
         )
     ],
-    "/alter/attach partition/part 1/part level/merge increment/*": [
+    "/alter/attach partition/part 3/part level/merge increment/*": [
         (
             Fail,
             "Need to investigate",
         )
     ],
-    "/alter/attach partition/part 1/part level/part level reset/*": [  # ReplicatedReplacingMergeTree
+    "/alter/attach partition/part 3/part level/part level reset/*": [  # ReplicatedReplacingMergeTree
         (
             Fail,
             "Need to investigate",
@@ -138,49 +151,49 @@ xfails = {
             "Bug when replacing partitions concurrently",
         )
     ],
-    "/alter/attach partition/part 1/conditions/indices/*": [
+    "/alter/attach partition/part 3/conditions/indices/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/54896",
             check_clickhouse_version("<23.3"),
         )
     ],
-    "/alter/attach partition/part 1/conditions/projections/*": [
+    "/alter/attach partition/part 3/conditions/projections/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/54896",
             check_clickhouse_version("<23.3"),
         )
     ],
-    "attach partition/part 1/conditions/primary key/:": [
+    "attach partition/part 3/conditions/primary key/:": [
         (
             Fail,
             "Bug fixed in 23 https://github.com/ClickHouse/ClickHouse/issues/41783",
             check_clickhouse_version("<23"),
         )
     ],
-    "/alter/attach partition/part 1/part level/too high level/:/I check that part was not attached by checking the parts state": [
+    "/alter/attach partition/part 3/part level/too high level/:/I check that part was not attached by checking the parts state": [
         (
             Fail,
             "Need to investigate why part name stays the same",
             check_clickhouse_version("<22.12"),
         )
     ],
-    "/alter/attach partition/part 1/operations on attached partitions/multiple operations/*": [
+    "/alter/attach partition/part 3/operations on attached partitions/multiple operations/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/68052",
             check_clickhouse_version("<24.3.6"),
         )
     ],
-    "/alter/attach partition/part 1/partition key/attach partition from with id/*": [
+    "/alter/attach partition/part 3/partition key/attach partition from with id/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/68052",
             check_clickhouse_version("<24.3.6"),
         )
     ],
-    "/alter/attach partition/part 1/part level/reset when equal to legacy max level/*": [
+    "/alter/attach partition/part 3/part level/reset when equal to legacy max level/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/69001",
@@ -199,10 +212,17 @@ ffails = {
     ),
     "/alter/attach partition/part 1/temporary table": (
         Skip,
-        "Not implemented before 23.5",
-        check_clickhouse_version("<23.5"),
+        "Not implemented before 23.5; also crashes the server on CAS "
+        "https://github.com/Altinity/ClickHouse/issues/2173",
+        lambda test: check_clickhouse_version("<23.5")(test) or check_cas_mode(test),
     ),
-    "/alter/attach partition/part 1/part level/part levels user example/*": (
+    "/alter/replace partition/temporary table": (
+        Skip,
+        "temporary MergeTree parts are on local disk; REPLACE into cas_policy "
+        "fails with 'disk does not belong to storage policy'",
+        check_cas_mode,
+    ),
+    "/alter/attach partition/part 3/part level/part levels user example/*": (
         Skip,
         "Crashes before 24.3",
         check_clickhouse_version("<24.3"),
@@ -212,7 +232,7 @@ ffails = {
         "https://github.com/ClickHouse/ClickHouse/issues/62459",
         check_clickhouse_version("<24.4"),
     ),
-    "/alter/attach partition/part 1/part level/part levels user example": (
+    "/alter/attach partition/part 3/part level/part levels user example": (
         Skip,
         "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
         check_with_any_sanitizer,
@@ -221,10 +241,30 @@ ffails = {
         Skip,
         "min_os_cpu_wait_time_ratio_to_throw does not work sometimes, need to check on all versions",
     ),
-    "/alter/attach partition/part 1/part level/reset when equal to legacy max level": (
+    "/alter/attach partition/part 3/part level/reset when equal to legacy max level": (
         Skip,
         "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
         check_with_any_sanitizer,
+    ),
+    "/alter/attach partition/part 1/corrupted partitions": (
+        Skip,
+        "requires local filesystem part files under /var/lib/clickhouse",
+        check_cas_mode,
+    ),
+    "/alter/replace partition/corrupted partitions": (
+        Skip,
+        "requires local filesystem part files under /var/lib/clickhouse",
+        check_cas_mode,
+    ),
+    "/alter/attach partition/part 3/part level/too high level": (
+        Skip,
+        "renames detached parts on the local filesystem",
+        check_cas_mode,
+    ),
+    "/alter/attach partition/part 3/part level/part levels user example": (
+        Skip,
+        "renames detached parts on the local filesystem",
+        check_cas_mode,
     ),
 }
 
@@ -244,6 +284,8 @@ def regression(
     use_specific_version,
     stress=None,
     with_analyzer=False,
+    use_cas=False,
+    use_cas_s3_cache=False,
 ):
     """Alter regression."""
     nodes = {
@@ -260,8 +302,21 @@ def regression(
     self.context.uri = "http://minio:9001/root/data/alter"
     self.context.access_key_id = "minio"
     self.context.secret_access_key = "minio123"
+    self.context.use_cas_storage = False
+    self.context.default_storage_policy = None
 
     self.context.stress = stress
+
+    if use_cas_s3_cache or use_cas:
+        with Given(
+            "content-addressed storage with an S3 cache disk as the default MergeTree disk"
+            if use_cas_s3_cache
+            else "content-addressed storage as the default MergeTree disk"
+        ):
+            enable_cas_default_storage(s3_cache=use_cas_s3_cache)
+    else:
+        with Given("no content-addressed storage configuration"):
+            reset_cas_config()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(

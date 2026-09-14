@@ -1,0 +1,11 @@
+<clickhouse>
+    <profiles>
+        <default>
+            <!-- R4: 10ms sampling so a short soak still fills system.trace_log.
+                 Default period is 1s, too sparse. Mounted at users.d because
+                 <profiles> lives in users.xml. -->
+            <query_profiler_real_time_period_ns>10000000</query_profiler_real_time_period_ns>
+            <query_profiler_cpu_time_period_ns>10000000</query_profiler_cpu_time_period_ns>
+        </default>
+    </profiles>
+</clickhouse>

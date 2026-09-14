@@ -1,6 +1,6 @@
 ---
 name: upstream-ci-database-queries
-description: Reference for querying CI databases that store upstream test results (Stateless and Integration tests), including cross-referencing Altinity CI vs upstream CI.
+description: Query reference for the CI databases - connection details, schema, ready-made queries, log and artifact URL patterns, and how to cross-reference Altinity CI against upstream CI. A lookup table for other skills: it returns data, it does not classify failures.
 ---
 
 # Skill: Upstream CI Database Queries
@@ -9,6 +9,19 @@ description: Reference for querying CI databases that store upstream test result
 
 Reference for querying CI databases that store **upstream test results** (Stateless and Integration tests).
 This is separate from the regression test database (`clickhouse_regression_results`).
+
+---
+
+## This skill does not classify failures
+
+It returns **data**. Deciding whether a failure is a `regression`,
+`pre-existing-flaky`, `infrastructure`, `cascade`, or `unknown` belongs to
+`pr-ci-failure-triage`, `upstream-test-investigation`, and
+`regression-test-database-investigation`, using the shared definitions in
+`.claude/skills/_shared/failure-categories.md`.
+
+Keeping verdicts out of this file is deliberate: judgment rules change, and a rule
+duplicated here would silently contradict the skills that own it.
 
 ---
 
@@ -115,6 +128,44 @@ WHERE pull_request_number = <PR_NUMBER>
 ORDER BY check_name, check_start_time
 ```
 
+### Bisect a Regression Using Branch Runs
+
+Branch runs (nightly, release, `antalya-*`) are stored with
+**`pull_request_number = 0`**. Filtering on that removes all PR noise and turns the
+history into a timeline you can bisect — the fastest way to date a regression when
+no PR is implicated.
+
+```sql
+SELECT check_start_time, commit_sha, check_status, test_status
+FROM `gh-data`.checks
+WHERE test_name = '<TEST_NAME>'
+  AND check_name = '<EXACT_JOB_NAME>'   -- pin the build type, or you mix them
+  AND pull_request_number = 0           -- branch runs only
+  AND check_start_time > now() - INTERVAL 60 DAY
+ORDER BY check_start_time
+```
+
+Take the last-good and first-bad `commit_sha`, then list the window locally:
+
+```bash
+cd <clickhouse-clone> && git log --oneline <LAST_GOOD>..<FIRST_BAD>
+```
+
+> **Needs the ClickHouse source.** If you do not already know where a clone is,
+> **ask the user** - do not guess a path and do not clone it yourself. Check the
+> remotes before reading: `origin` is often the Altinity fork, whose `master` is
+> frozen because work happens on release branches, while `upstream` is
+> `ClickHouse/ClickHouse`. Read `upstream/master` for "what does upstream have
+> today"; a `git log origin/master` that comes back ancient means the wrong remote,
+> not a stale clone. Without a clone, the same questions can be answered from the
+> API at one request each.
+
+
+A real regression shows a **sharp** pass-then-fail boundary. A scattered mix of
+pass and fail is flakiness, not a regression — do not bisect it.
+
+---
+
 ### Test History (30 days)
 
 ```sql
@@ -130,18 +181,38 @@ GROUP BY test_status
 ORDER BY cnt DESC
 ```
 
-### Check if Test is Pre-existing Flaky
+### Failure Rate, Branch Baseline vs a PR
+
+The comparison the classification skills need: how often a test fails **with** a
+change against how often it fails **without** one. Return both sides, not a list of
+failures - a raw list of failures cannot show a rate.
 
 ```sql
-SELECT test_name, pull_request_number, check_start_time, check_name
+SELECT
+    pull_request_number = <THIS_PR> AS on_this_pr,
+    count()                          AS runs,
+    countIf(test_status = 'FAIL')    AS fails,
+    round(100.0 * fails / runs, 1)   AS fail_pct
 FROM `gh-data`.checks
 WHERE test_name = '<TEST_NAME>'
-  AND test_status = 'FAIL'
-ORDER BY check_start_time DESC
-LIMIT 20
+  AND check_name = '<EXACT_JOB_NAME>'          -- same build type on both sides
+  AND (pull_request_number = 0 OR pull_request_number = <THIS_PR>)
+  AND check_start_time > now() - INTERVAL 60 DAY
+GROUP BY on_this_pr
 ```
 
-If failures span multiple PRs over weeks/months → pre-existing flaky test.
+To see which other PRs it fails in:
+
+```sql
+SELECT pull_request_number, count() AS fails, max(check_start_time) AS last_seen
+FROM `gh-data`.checks
+WHERE test_name = '<TEST_NAME>' AND test_status = 'FAIL'
+  AND check_start_time > now() - INTERVAL 60 DAY
+GROUP BY pull_request_number ORDER BY last_seen DESC
+```
+
+A long failure history does **not** by itself settle the verdict - the reading of
+these numbers is defined in the classification skills, not here.
 
 ### Failure Rate by Build Type
 
@@ -238,66 +309,12 @@ ORDER BY check_start_time DESC
 
 ## Log URLs
 
-There are two URL patterns depending on whether the CI run is for a **PR** or a **branch/REF** (e.g., `antalya-25.8`, `v25.8.16.20001.altinityantalya`).
+All CI report, log and artifact URL patterns live in one place:
+**read `.claude/skills/_shared/ci-urls.md`**.
 
-### PR-based Runs
-
-**JSON log browser:**
-```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=<URL_ENCODED_JOB_NAME>
-```
-
-**Direct log file:**
-```
-https://altinity-build-artifacts.s3.amazonaws.com/PRs/<PR>/<SHA>/<job_artifact_dir>/<log_file>
-```
-
-**CI report:**
-```
-https://s3.amazonaws.com/altinity-build-artifacts/PRs/<PR>/<SHA>/<RUN_ID>/ci_run_report.html
-```
-
-### Branch/REF-based Runs
-
-**JSON log browser** — note `name_0=MasterCI` instead of `name_0=PR`:
-```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=<BRANCH>&sha=<SHA>&name_0=MasterCI&name_1=<URL_ENCODED_JOB_NAME>
-```
-
-**Direct log file:**
-```
-https://altinity-build-artifacts.s3.amazonaws.com/REFs/<BRANCH>/<SHA>//<job_artifact_dir>/<log_file>
-```
-
-**CI report:**
-```
-https://s3.amazonaws.com/altinity-build-artifacts/REFs/<BRANCH>/<SHA>/<RUN_ID>/ci_run_report.html
-```
-
-### Job Artifact Directory Naming
-
-The `<job_artifact_dir>` in direct log URLs follows this pattern:
-
-| Job Type | Directory Pattern | Example |
-|----------|------------------|---------|
-| Integration tests | `integration_tests_<build>_<N>_<M>` | `integration_tests_amd_binary_1_5` |
-| Stateless tests | `stateless_tests_<build>_<modes>_parallel` | `stateless_tests_amd_binary_old_analyzer_s3_storage_databasereplicated_parallel` |
-| AST fuzzer | `ast_fuzzer_<build>` | `ast_fuzzer_amd_msan` |
-| Stress test | `stress_test_<build>` | `stress_test_amd_tsan` |
-
-### S3 Artifact Listing
-
-**PR artifacts:**
-```bash
-curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=PRs/<PR>/<SHA>/&delimiter=/" \
-  | grep -oE '<Prefix>[^<]+</Prefix>' | sed 's/<[^>]*>//g'
-```
-
-**REF artifacts:**
-```bash
-curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=REFs/<BRANCH>/<SHA>/&delimiter=/" \
-  | grep -oE '<Prefix>[^<]+</Prefix>' | sed 's/<[^>]*>//g'
-```
+It covers the PR-vs-REF fork (path segment, `name_0`, and `job.log` vs `job.log.zst`),
+the CI report and JSON-browser URLs, direct artifact paths and job directory naming,
+S3 listing, range reads for large logs, and the rerun-overwrites-artifacts gotcha.
 
 ---
 
@@ -337,14 +354,32 @@ LIMIT 30
 "
 ```
 
-### Step 3: Interpret Results
+### Step 3: What the Result Tells You
 
-| Finding | Conclusion |
-|---------|------------|
-| Same error exists upstream before our branch point | **Pre-existing upstream bug**, not caused by backport |
-| Same error only appears after a specific upstream PR | Upstream regression, check if that PR was backported |
-| Error does not exist upstream at all | **Altinity-specific issue**, likely from our patches |
-| Error appears upstream only recently | May be a new upstream regression reaching our branch |
+This answers **where the defect comes from** - a different question from which of
+the five categories it gets. Feed it into the classification, do not use it instead:
+
+| Finding | What it establishes |
+|---------|---------------------|
+| Same error exists upstream before our branch point | The defect predates our branch - a backport did not introduce it |
+| Same error appears upstream only after a specific upstream PR | An upstream regression; check whether that PR reached our branch |
+| Error appears upstream only recently | A new upstream regression may be arriving in our branch |
+| Error does not appear upstream at all | Only that **upstream CI has no record of it** - see below |
+
+The last row is the one that gets over-read. No upstream record is consistent with
+an Altinity-specific defect, but equally with upstream never running that
+configuration, that sanitizer, or that test at all. Confirm upstream actually runs
+the job before concluding the defect is ours:
+
+```sql
+SELECT check_name, count() AS runs, max(check_start_time) AS last_seen
+FROM default.checks
+WHERE test_name = '<TEST_NAME>' AND check_start_time > now() - INTERVAL 90 DAY
+GROUP BY check_name ORDER BY runs DESC
+```
+
+No rows means upstream does not run it, and the absence of failures there proves
+nothing.
 
 ### Step 4: Monthly Distribution
 

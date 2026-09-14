@@ -189,8 +189,10 @@ def invalid_parameters(self):
         exitcode = 43
         if check_clickhouse_version("<24.7")(self):
             message = "DB::Exception: Illegal type of argument"
-        else:
+        elif check_clickhouse_version("<26.8")(self):
             message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'decrypt'. Expected: Initialization vector binary string, got: UInt8"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 4th argument 'IV' to function 'decrypt'. Expected: Initialization vector binary string, got: UInt8"
         decrypt(
             ciphertext=ciphertext,
             key="'0123456789123456'",
@@ -204,8 +206,10 @@ def invalid_parameters(self):
         exitcode = 43
         if check_clickhouse_version("<24.7")(self):
             message = "DB::Exception: Illegal type of argument"
-        else:
+        elif check_clickhouse_version("<26.8")(self):
             message = "DB::Exception: A value of illegal type was provided as 4th argument 'AAD' to function 'decrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8"
+        else:
+            message = "DB::Exception: A value of illegal type was provided as 5th argument 'AAD' to function 'decrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8"
         decrypt(
             ciphertext=ciphertext,
             key="'0123456789123456'",
