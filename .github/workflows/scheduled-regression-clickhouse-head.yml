@@ -6,40 +6,36 @@ on:
   schedule:
     - cron: "0 0 * * 2,4"
 
+# Matrix keeps a single nested expansion of run-regression.yml at parse
+# time. Four separate `uses:` jobs exceed GitHub's workflow object size.
 jobs:
-  clickhouse-head-x86-with-analyzer-zookeeper:
+  clickhouse-head:
+    name: clickhouse-head-${{ matrix.id }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: x86-with-analyzer-zookeeper
+            arch: x86
+            extra_args: '--with-analyzer'
+            run_s3_suites: 'false'
+          - id: arm-with-analyzer-zookeeper
+            arch: arm64
+            extra_args: '--with-analyzer'
+            run_s3_suites: 'false'
+          - id: x86-with-analyzer-keeper
+            arch: x86
+            extra_args: '--with-analyzer --use-keeper'
+            run_s3_suites: 'true'
+          - id: arm-with-analyzer-keeper
+            arch: arm64
+            extra_args: '--with-analyzer --use-keeper'
+            run_s3_suites: 'false'
     uses: ./.github/workflows/run-regression.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
-      extra_args: '--with-analyzer'
-      arch: x86
+      extra_args: ${{ matrix.extra_args }}
+      arch: ${{ matrix.arch }}
       parquet_native_v3: true
+      run_s3_suites: ${{ fromJSON(matrix.run_s3_suites) }}
     secrets: inherit
-
-  clickhouse-head-arm-with-analyzer-zookeeper:
-    uses: ./.github/workflows/run-regression.yml
-    with:
-      package: "docker://clickhouse/clickhouse-server:head-alpine"
-      extra_args: '--with-analyzer'
-      arch: arm64
-      parquet_native_v3: true
-    secrets: inherit
-
-  clickhouse-head-x86-with-analyzer-keeper:
-    uses: ./.github/workflows/run-regression.yml
-    with:
-      package: "docker://clickhouse/clickhouse-server:head-alpine"
-      extra_args: '--with-analyzer --use-keeper'
-      arch: x86
-      run_s3_suites: true
-      parquet_native_v3: true
-    secrets: inherit
-
-  clickhouse-head-arm-with-analyzer-keeper:
-   uses: ./.github/workflows/run-regression.yml
-   with:
-     package: "docker://clickhouse/clickhouse-server:head-alpine"
-     extra_args: '--with-analyzer --use-keeper'
-     arch: arm64
-     parquet_native_v3: true
-   secrets: inherit
