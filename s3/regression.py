@@ -596,6 +596,12 @@ ffails = {
         "(Altinity/ClickHouse#2294, #2311)",
         lambda test: True,
     ),
+    "/:/:/export tests/export part/system monitoring/duplicate logging/*error*": (
+        Skip,
+        "committed-file reuse on error policy is not in a released build yet "
+        "(Altinity/ClickHouse#2290)",
+        lambda test: True,
+    ),
 }
 
 
