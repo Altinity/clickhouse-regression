@@ -18,9 +18,12 @@ RUN mkdir -p /var/lib/clickhouse/coordination
 # /usr/bin command paths, which on UBI are symlinks to /usr/bin/clickhouse.
 # Docker follows the symlink and mounts the wrapper over the real multicall
 # binary itself, causing infinite self-recursion. Replace them with
-# independent hard links (also kept unshadowed under /usr/local/bin) so
-# wrapper scripts have a real binary to call instead of recursing into
-# themselves. Alpine/Ubuntu images are untouched by this.
+# independent hard links so wrapper scripts (which invoke /usr/bin/clickhouse
+# by absolute path) have a real binary to call instead of recursing into
+# themselves. Do not also link into /usr/local/bin: it comes earlier on
+# PATH, so a bare `clickhouse-server` invocation would resolve there instead
+# of /usr/bin, silently bypassing whatever the wrapper does. Alpine/Ubuntu
+# images are untouched by this.
 RUN if [ -f /etc/alpine-release ]; then \
     apk update && \
     apk add --no-cache curl openssl shadow openssh-client ca-certificates iproute2; \
@@ -28,7 +31,6 @@ RUN if [ -f /etc/alpine-release ]; then \
     dnf install -y openssl openssh-clients ca-certificates iproute procps-ng && \
     dnf clean all && \
     for command in benchmark client compressor extract-from-config git-import local obfuscator server; do \
-        ln /usr/bin/clickhouse "/usr/local/bin/clickhouse-${command}"; \
         rm -f "/usr/bin/clickhouse-${command}"; \
         ln /usr/bin/clickhouse "/usr/bin/clickhouse-${command}"; \
     done; \
