@@ -11,7 +11,7 @@ def insert_cas_partitions(
     rows_per_partition=10,
     node=None,
 ):
-    """Insert deterministic rows into the given partitions."""
+    """Insert deterministic CAS partitions into the given table."""
     if node is None:
         node = self.context.node
 

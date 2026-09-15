@@ -1,6 +1,5 @@
 """Direct inspection of the objects a CAS pool holds in object storage."""
 
-import re
 import time
 
 from testflows.asserts import error
@@ -10,17 +9,36 @@ BLOB_PREFIX = "blobs/"
 MANIFEST_PREFIX = "cas/manifests/"
 NS_PREFIX = "cas/ns/"
 
-BLOB_KEY = re.compile(r"blobs/ch128/([0-9a-f]{2})/([0-9a-f]{32})$")
-BLOB_META_KEY = re.compile(r"blobs/ch128/([0-9a-f]{2})/([0-9a-f]{32})\.meta$")
-MANIFEST_KEY = re.compile(
-    r"cas/manifests/.+/[0-9a-f]{16}-[0-9a-f]{16}/\d{6}\.zst$"
-)
+# ``mc find --print {size}`` uses IEC units for large objects and a bare ``B``
+# for small ones. Decimal KB/MB/GB are accepted in case the client spelling
+# changes.
+_SIZE_UNITS = {
+    "B": 1,
+    "KiB": 1024,
+    "MiB": 1024**2,
+    "GiB": 1024**3,
+    "KB": 1000,
+    "MB": 1000**2,
+    "GB": 1000**3,
+}
+
+def docker_exec(cluster, service, command):
+    """Run ``command`` in ``service`` without a TTY.
+
+    ``Cluster.command(service, ...)`` uses ``docker exec -it`` and opens
+    bash. The RustFS image has no bash, and a TTY makes ``mc`` query the
+    host terminal for colours and cursor position. Those replies
+    (``11;rgb:...``, ``2;44R``) land in the user's shell after the test.
+    """
+    container_id = cluster.node_container_id(service)
+    return cluster.command(
+        None, f"docker exec {container_id} {command}", no_checks=True
+    )
 
 
 @TestStep(Then)
-@Name("snapshot the objects stored in a CAS pool")
 def pool_snapshot(self, pool_prefix, cluster=None):
-    """Return every object in the pool as ``{key: size}``.
+    """Snapshot the objects stored in a CAS pool as ``{key: size}``.
 
     Keys are relative to the pool prefix, so they read as ``blobs/...``,
     ``cas/manifests/...`` and ``cas/ns/...``. Sizes are part of the snapshot
@@ -30,37 +48,38 @@ def pool_snapshot(self, pool_prefix, cluster=None):
     if cluster is None:
         cluster = self.context.cluster
 
-    listing = cluster.command(
+    # Alias ``minio`` is the RustFS S3 endpoint (compose service name).
+    # Pipe, not tab: host bash is a pexpect Shell, and a tab is cursor motion.
+    listing = docker_exec(
+        cluster,
         "mc",
-        f"mc --no-color find minio/warehouse/{pool_prefix} --print '{{}}\t{{size}}'",
+        f"mc --no-color find minio/warehouse/{pool_prefix} --print '{{}}|{{size}}'",
     )
 
-    # The mc container leaks terminal colour-query responses into stdout.
-    output = re.sub(
-        r"\x1b\](?:10|11|12);rgb:[0-9a-fA-F/]+(?:\x07|\x1b\\)", "", listing.output
-    )
-    output = re.sub(r"\x1b\[\d+;\d+R", "", output)
-
+    output = listing.output
     pool_path = f"minio/warehouse/{pool_prefix}/"
     snapshot = {}
 
     for line in output.splitlines():
-        if pool_path not in line or "\t" not in line:
+        line = line.strip()
+        if pool_path not in line or "|" not in line:
             continue
-        path, _, size = line.strip().rpartition("\t")
+        path, _, size = line.rpartition("|")
         snapshot[path.split(pool_path, 1)[1]] = size.strip()
+
+    if not snapshot and pool_path in output:
+        fail(f"could not parse any keys from pool listing:\n{output}")
 
     return snapshot
 
 
 @TestStep(Then)
-@Name("wait for a CAS pool to stop changing")
 def settled_pool_snapshot(self, pool_prefix, attempts=15, delay=2):
-    """Poll until two consecutive snapshots agree, and return the last one.
+    """Wait for a CAS pool to stop changing, then return the last snapshot.
 
-    Replication, merges and background CAS work keep writing after a query has
-    returned, so a snapshot taken immediately is not a baseline that anything
-    can be compared against.
+    Polls until two consecutive snapshots agree. Replication, merges and
+    background CAS work keep writing after a query has returned, so a snapshot
+    taken immediately is not a baseline that anything can be compared against.
     """
     previous = pool_snapshot(pool_prefix=pool_prefix)
 
@@ -72,6 +91,35 @@ def settled_pool_snapshot(self, pool_prefix, attempts=15, delay=2):
         previous = current
 
     fail(f"pool {pool_prefix} never stopped changing, nothing can be compared")
+
+
+def size_in_bytes(size):
+    """Parse one pool-snapshot size, which ``mc`` prints as ``1.0 MiB`` / ``542 B``."""
+    number, _, unit = str(size).strip().partition(" ")
+    return int(float(number) * _SIZE_UNITS[unit.strip() or "B"])
+
+
+@TestStep(Then)
+def pool_size_bytes(self, pool_prefix, cluster=None):
+    """Measure the physical size of a CAS pool on the RustFS volume.
+
+    ``du`` counts what the disk holds, including RustFS sidecars that an S3
+    listing from ``mc`` does not show. The compose service is named ``minio``;
+    its volume root is ``/data`` and the S3 bucket is ``warehouse``.
+    """
+    if cluster is None:
+        cluster = self.context.cluster
+
+    pool_dir = f"/data/warehouse/{pool_prefix}"
+    listing = docker_exec(cluster, "minio", f"sh -c 'du -sb {pool_dir}'")
+    first_line = (
+        listing.output.strip().splitlines()[0] if listing.output.strip() else ""
+    )
+    total = first_line.split()[0] if first_line else ""
+    assert total.isdigit(), error(
+        f"could not read RustFS pool size for {pool_dir}: {listing.output}"
+    )
+    return int(total)
 
 
 def pool_difference(before, after):
@@ -112,59 +160,6 @@ def namespaces_of(keys):
             namespaces.add("/".join(parts[:4]) + "/")
 
     return sorted(namespaces)
-
-
-@TestStep(Then)
-@Name("assert a CAS pool has blobs, manifests, and namespaces")
-def assert_cas_pool_shape(self, snapshot):
-    """Check the pool holds the object families a MergeTree write must publish."""
-    keys = list(snapshot)
-    blobs = blob_keys(snapshot)
-    metas = sorted(
-        key
-        for key in keys
-        if key.startswith(BLOB_PREFIX) and key.endswith(".meta")
-    )
-    manifests = sorted(key for key in keys if key.startswith(MANIFEST_PREFIX))
-    namespaces = namespaces_of(keys)
-
-    note(
-        f"pool shape: {len(blobs)} blobs, {len(metas)} .meta, "
-        f"{len(manifests)} manifests, namespaces={namespaces}"
-    )
-
-    assert blobs, error(f"no content blobs:\n{keys}")
-    assert metas, error(f"no blob .meta sidecars:\n{keys}")
-    assert manifests, error(f"no part manifests:\n{keys}")
-    assert namespaces, error(f"no {NS_PREFIX} namespaces:\n{keys}")
-
-    for key in blobs:
-        match = BLOB_KEY.fullmatch(key)
-        assert match is not None, error(f"invalid blob key: {key}")
-        assert match.group(1) == match.group(2)[:2], error(
-            f"blob shard does not match its hash: {key}"
-        )
-
-    for key in metas:
-        match = BLOB_META_KEY.fullmatch(key)
-        assert match is not None, error(f"invalid blob metadata key: {key}")
-        assert match.group(1) == match.group(2)[:2], error(
-            f"blob .meta shard does not match its hash: {key}"
-        )
-
-    assert {f"{key}.meta" for key in blobs} == set(metas), error(
-        f"every content blob must have exactly one .meta sidecar: "
-        f"blobs={blobs}, metas={metas}"
-    )
-
-    for key in manifests:
-        assert MANIFEST_KEY.fullmatch(key), error(
-            f"part manifest must use the expected .zst path: {key}"
-        )
-
-    assert not any(key.endswith(".parquet") for key in keys), error(
-        f"CAS MergeTree objects must not be Parquet files:\n{keys}"
-    )
 
 
 def backup_manifest_keys(snapshot, backup_name):

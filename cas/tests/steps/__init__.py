@@ -10,11 +10,13 @@ replication  SYNC REPLICA, fetch pause/resume, replica agreement
 partitions   ALTER PARTITION / FETCH helpers
 metrics      CAS system.events snapshots for relink proofs
 freeze       FREEZE / UNFREEZE helpers
+gc           SYSTEM CAS GC RUN helpers
 pool         direct inspection of the objects a CAS pool holds
 """
 
 from cas.tests.steps.disk import (
     CAS_POLICY,
+    CAS_POLICY_POOL,
     REPLICATED_CLUSTER,
     SHARDED_CLUSTER,
     cas_disk_clause,
@@ -65,11 +67,9 @@ from cas.tests.steps.alter import (
     table_columns,
 )
 from cas.tests.steps.checksums import (
-    merge_checksum_components,
     partition_checksum,
     payload_table_checksum,
     table_checksum,
-    table_checksum_components,
     table_row_count,
 )
 from cas.tests.steps.data import (
@@ -77,21 +77,24 @@ from cas.tests.steps.data import (
     insert_cas_payload_rows,
 )
 from cas.tests.steps.freeze import (
-    collect_garbage,
     freeze_table,
     local_backup_files,
     unfreeze_table,
 )
+from cas.tests.steps.gc import (
+    collect_garbage,
+    start_garbage_collection,
+    stop_garbage_collection,
+)
 from cas.tests.steps.pool import (
-    BLOB_PREFIX,
-    MANIFEST_PREFIX,
-    assert_cas_pool_shape,
     backup_manifest_keys,
     blob_keys,
     namespaces_of,
     pool_difference,
+    pool_size_bytes,
     pool_snapshot,
     settled_pool_snapshot,
+    size_in_bytes,
 )
 from cas.tests.steps.metrics import (
     assert_blob_bodies_were_uploaded,
@@ -124,8 +127,9 @@ from cas.tests.steps.replication import (
     sync_replicas,
 )
 from cas.tests.steps.tables import (
+    active_part_disk,
     create_cas_merge_tree_table,
-    create_cas_partitioned_table,
+    table_engine_and_policy,
     create_distributed_over_cas,
     create_replicated_cas_table,
     create_replicated_cas_table_cross_pool,
@@ -137,11 +141,11 @@ from cas.tests.steps.tables import (
 
 __all__ = [
     "ALTER_COLUMNS",
-    "BLOB_PREFIX",
     "CAS_POLICY",
-    "MANIFEST_PREFIX",
+    "CAS_POLICY_POOL",
     "REPLICATED_CLUSTER",
     "SHARDED_CLUSTER",
+    "active_part_disk",
     "active_part_names",
     "add_column",
     "add_constraint",
@@ -154,7 +158,6 @@ __all__ = [
     "backup_manifest_keys",
     "blob_keys",
     "assert_blob_bodies_were_uploaded",
-    "assert_cas_pool_shape",
     "assert_no_blob_reupload_on_fetch",
     "assert_replicas_agree",
     "assert_replication_queue_healthy",
@@ -171,10 +174,11 @@ __all__ = [
     "clear_projection",
     "clear_statistics",
     "collect_garbage",
+    "start_garbage_collection",
+    "stop_garbage_collection",
     "column_metadata",
     "comment_column",
     "create_cas_merge_tree_table",
-    "create_cas_partitioned_table",
     "create_distributed_over_cas",
     "create_filled_alter_table",
     "create_replicated_cas_table",
@@ -204,7 +208,6 @@ __all__ = [
     "materialize_projection",
     "materialize_statistics",
     "materialize_ttl",
-    "merge_checksum_components",
     "modify_column",
     "modify_column_setting",
     "modify_constraint",
@@ -218,8 +221,10 @@ __all__ = [
     "payload_table_checksum",
     "namespaces_of",
     "pool_difference",
+    "pool_size_bytes",
     "pool_snapshot",
     "settled_pool_snapshot",
+    "size_in_bytes",
     "replace_partition_from",
     "remove_column_property",
     "remove_sample_by",
@@ -234,7 +239,7 @@ __all__ = [
     "sync_replica",
     "sync_replicas",
     "table_checksum",
-    "table_checksum_components",
+    "table_engine_and_policy",
     "table_row_count",
     "unfreeze_table",
 ]

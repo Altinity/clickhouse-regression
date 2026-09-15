@@ -56,20 +56,3 @@ def local_backup_files(self, backup_name, node=None):
         for line in listing.output.splitlines()
         if line.strip().startswith(prefix)
     )
-
-
-@TestStep(When)
-@Name("run garbage collection on a CAS pool")
-def collect_garbage(self, disk, nodes=None, rounds=4):
-    """Run garbage collection on ``disk`` from every server mounting the pool.
-
-    Reclamation is staged — a round condemns what it found unreachable and a
-    later round deletes it — and only one server holds the collection lease at
-    a time, so a single round on a single server proves nothing either way.
-    """
-    if nodes is None:
-        nodes = self.context.nodes
-
-    for _ in range(rounds):
-        for node in nodes:
-            node.query(f"SYSTEM CAS GC RUN '{disk}'")
