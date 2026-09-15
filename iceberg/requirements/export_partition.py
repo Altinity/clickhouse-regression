@@ -847,7 +847,16 @@ RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports = Require
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL fill every documented column of `system.replicated_partition_exports` for a successful export, so the row is sufficient on its own to identify the source, the destination, the partition, the initiating replica, and the resulting status without consulting other system tables.\n"
+        "[ClickHouse] SHALL fill every documented column of `system.partition_exports` (and its `system.replicated_partition_exports` alias) for a successful export, so the row is sufficient on its own to identify the source, the destination, the partition, the initiating replica (when the source is `Replicated*MergeTree`), and the resulting status without consulting other system tables.\n"
+        "\n"
+        "For an Iceberg destination the commit-info columns SHALL name the files just written on both `Replicated*MergeTree` (persisted in ZooKeeper) and plain `MergeTree` (persisted in the on-disk task descriptor):\n"
+        "\n"
+        "* `committed_metadata_file` SHALL be a real metadata path (`v<V>.metadata.json` / `v<V>-<uuid>.metadata.json`, or `<V>-<uuid>.metadata.json`), not the already-committed sentinel.\n"
+        "* `committed_manifest_list` SHALL name the `snap-*.avro` manifest list of the new snapshot.\n"
+        "* `committed_manifest_file` SHALL name the manifest file referenced by that list.\n"
+        "* `committed_marker_file` SHALL stay empty (that column is for plain object-storage destinations).\n"
+        "\n"
+        "All four commit-info columns SHALL stay empty while the export is `PENDING` and after it is `KILLED` before a successful commit.\n"
         "\n"
         "**Regression module:** `iceberg.tests.export_partition.system_monitoring` (`system_monitoring.py`).\n"
         "\n"
@@ -1851,7 +1860,16 @@ Iceberg regression containers bind one host `users.d` directory into every repli
 ### RQ.Iceberg.ExportPartition.SystemMonitoring.ReplicatedPartitionExports
 version: 1.0
 
-[ClickHouse] SHALL fill every documented column of `system.replicated_partition_exports` for a successful export, so the row is sufficient on its own to identify the source, the destination, the partition, the initiating replica, and the resulting status without consulting other system tables.
+[ClickHouse] SHALL fill every documented column of `system.partition_exports` (and its `system.replicated_partition_exports` alias) for a successful export, so the row is sufficient on its own to identify the source, the destination, the partition, the initiating replica (when the source is `Replicated*MergeTree`), and the resulting status without consulting other system tables.
+
+For an Iceberg destination the commit-info columns SHALL name the files just written on both `Replicated*MergeTree` (persisted in ZooKeeper) and plain `MergeTree` (persisted in the on-disk task descriptor):
+
+* `committed_metadata_file` SHALL be a real metadata path (`v<V>.metadata.json` / `v<V>-<uuid>.metadata.json`, or `<V>-<uuid>.metadata.json`), not the already-committed sentinel.
+* `committed_manifest_list` SHALL name the `snap-*.avro` manifest list of the new snapshot.
+* `committed_manifest_file` SHALL name the manifest file referenced by that list.
+* `committed_marker_file` SHALL stay empty (that column is for plain object-storage destinations).
+
+All four commit-info columns SHALL stay empty while the export is `PENDING` and after it is `KILLED` before a successful commit.
 
 **Regression module:** `iceberg.tests.export_partition.system_monitoring` (`system_monitoring.py`).
 
