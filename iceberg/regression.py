@@ -718,6 +718,10 @@ def regression(
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     Feature(
+        test=load("iceberg.tests.iceberg_engine.native_create.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    Feature(
         test=load("iceberg.tests.iceberg_table_engine.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
