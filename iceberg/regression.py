@@ -522,6 +522,18 @@ ffails = {
         "(Altinity/ClickHouse#2134, #2220)",
         lambda test: True,
     ),
+    "/iceberg/export partition/: catalog/*/system monitoring/commit-info columns name Iceberg files after success": (
+        Skip,
+        "commit-info persistence is not in a released build yet "
+        "(Altinity/ClickHouse#2290)",
+        lambda test: True,
+    ),
+    "/iceberg/export partition/: catalog/*/system monitoring/commit-info columns stay empty before commit": (
+        Skip,
+        "commit-info persistence is not in a released build yet "
+        "(Altinity/ClickHouse#2290)",
+        lambda test: True,
+    ),
     # Altinity/ClickHouse#2157: getIcebergType gained Int8/UInt8/Bool/Decimal
     # on 26.6. Older builds still reject those types.
     "/iceberg/export partition/: catalog/*/datatypes/*/accepted/* Int8": (
