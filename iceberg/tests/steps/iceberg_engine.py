@@ -30,6 +30,8 @@ def create_experimental_iceberg_database_with_rest_catalog(
     auth_header="Authorization: Bearer foo",
     cluster_name=None,
     namespaces=None,
+    default_base_location=None,
+    storage_uri_style=None,
     exitcode=None,
     message=None,
     node=None,
@@ -70,6 +72,10 @@ def create_experimental_iceberg_database_with_rest_catalog(
         settings["auth_header"] = auth_header
     if namespaces is not None:
         settings["namespaces"] = namespaces
+    if default_base_location is not None:
+        settings["default_base_location"] = default_base_location
+    if storage_uri_style is not None:
+        settings["storage_uri_style"] = storage_uri_style
 
     if settings:
         settings_str = ",".join(
@@ -110,6 +116,8 @@ def create_experimental_iceberg_database_with_glue_catalog(
     storage_endpoint="http://minio:9000/warehouse",
     cluster_name=None,
     namespaces=None,
+    default_base_location=None,
+    storage_uri_style=None,
     exitcode=None,
     message=None,
     node=None,
@@ -152,6 +160,10 @@ def create_experimental_iceberg_database_with_glue_catalog(
         settings["aws_secret_access_key"] = s3_secret_access_key
     if namespaces is not None:
         settings["namespaces"] = namespaces
+    if default_base_location is not None:
+        settings["default_base_location"] = default_base_location
+    if storage_uri_style is not None:
+        settings["storage_uri_style"] = storage_uri_style
 
     if settings:
         settings_str = ",".join(
