@@ -13,7 +13,6 @@ from helpers.datatypes import (
     Date32,
     DateTime64,
     String,
-    FixedString,
     UUID,
     Nullable,
     Array,
@@ -22,6 +21,7 @@ from helpers.datatypes import (
 )
 from helpers.tables import Column
 
+from iceberg.requirements.native_create_drop import *
 from iceberg.tests.iceberg_engine.native_create.steps import (
     RawType,
     database_only_setup,
@@ -29,6 +29,16 @@ from iceberg.tests.iceberg_engine.native_create.steps import (
     native_iceberg_table,
     insert_into_native_iceberg_table,
     check_column_value,
+    catalog_and_database,
+    create_table,
+    pyiceberg_schema_shape,
+    snapshot_state,
+    assert_rejected_no_trace,
+    ENGINE_LESS,
+    EXPLICIT_ENGINE,
+    BAD_ARGUMENTS,
+    INCORRECT_QUERY,
+    FILE_DOESNT_EXIST,
 )
 
 
@@ -41,7 +51,8 @@ class ScalarTypeConfig:
     select_expr: str = "*"
 
 
-# Bool unsupported for native Iceberg CREATE (Code 36); see xfails in iceberg/regression.py.
+# Types the Iceberg writer does not map (FixedString) are covered by
+# ``unsupported_types_rejected`` below, not listed here.
 SCALAR_TYPE_CONFIGS = [
     ScalarTypeConfig("integer", Int32(), "42", "42"),
     ScalarTypeConfig("long", Int64(), "1234567890123", "1234567890123"),
@@ -69,13 +80,14 @@ SCALAR_TYPE_CONFIGS = [
         "'550e8400-e29b-41d4-a716-446655440000'",
         "550e8400-e29b-41d4-a716-446655440000",
     ),
-    ScalarTypeConfig("fixed", FixedString(5), "toFixedString('abcde', 5)", "abcde"),
 ]
 
 
 @TestScenario
-def scalar_type_round_trip(self, minio_root_user, minio_root_password, config):
+def scalar_type_round_trip(self, config):
     """Check that a scalar Iceberg type survives CREATE → INSERT → SELECT."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     table_name = f"t_{config.type_name}_{getuid()}"
     col_name = "col"
 
@@ -113,8 +125,10 @@ def scalar_type_round_trip(self, minio_root_user, minio_root_password, config):
 
 
 @TestScenario
-def nullable_round_trip(self, minio_root_user, minio_root_password):
+def nullable_round_trip(self):
     """Check Nullable columns store and return non-null values and NULL."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     table_name = f"t_nullable_{getuid()}"
 
     with Given("create DataLakeCatalog database"):
@@ -166,8 +180,10 @@ def nullable_round_trip(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-def list_type_round_trip(self, minio_root_user, minio_root_password):
+def list_type_round_trip(self):
     """Check Array columns survive round-trips including nested and empty lists."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     table_name = f"t_list_{getuid()}"
 
     with Given("create DataLakeCatalog database"):
@@ -225,8 +241,10 @@ def list_type_round_trip(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-def map_type_round_trip(self, minio_root_user, minio_root_password):
+def map_type_round_trip(self):
     """Check Map(String, V) columns survive round-trips."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     table_name = f"t_map_{getuid()}"
 
     with Given("create DataLakeCatalog database"):
@@ -280,8 +298,10 @@ def map_type_round_trip(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-def struct_type_round_trip(self, minio_root_user, minio_root_password):
+def struct_type_round_trip(self):
     """Check Tuple columns survive round-trips including nested structs."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     table_name = f"t_struct_{getuid()}"
 
     with Given("create DataLakeCatalog database"):
@@ -329,8 +349,10 @@ def struct_type_round_trip(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-def all_scalars_in_one_table(self, minio_root_user, minio_root_password):
+def all_scalars_in_one_table(self):
     """Check a table with all supported scalar types can be created and queried."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     table_name = f"t_all_scalars_{getuid()}"
 
     with Given("create DataLakeCatalog database"):
@@ -352,7 +374,6 @@ def all_scalars_in_one_table(self, minio_root_user, minio_root_password):
         Column(name="dt64tz_col", datatype=RawType("DateTime64(6, 'UTC')")),
         Column(name="string_col", datatype=String()),
         Column(name="uuid_col", datatype=UUID()),
-        Column(name="fixed_col", datatype=FixedString(5)),
     ]
 
     with And("natively CREATE TABLE with all scalar types"):
@@ -380,17 +401,14 @@ def all_scalars_in_one_table(self, minio_root_user, minio_root_password):
                 "toDateTime64('2024-01-01 00:00:00.000000', 6), "
                 "toDateTime64('2024-01-01 00:00:00.000000', 6, 'UTC'), "
                 "'hello', "
-                "'550e8400-e29b-41d4-a716-446655440000', "
-                "toFixedString('abcde', 5)"
+                "'550e8400-e29b-41d4-a716-446655440000'"
                 ")"
             ),
         )
 
     with Then("SELECT * succeeds and all values appear"):
         node = self.context.node
-        result = node.query(
-            f"SELECT * FROM {ch_name} ORDER BY int32_col FORMAT TabSeparated"
-        )
+        result = node.query(f"SELECT * FROM {ch_name} ORDER BY int32_col FORMAT TabSeparated")
         for expected in [
             "1",
             "2",
@@ -401,42 +419,154 @@ def all_scalars_in_one_table(self, minio_root_user, minio_root_password):
             "2024-01-01 00:00:00.000000",
             "hello",
             "550e8400-e29b-41d4-a716-446655440000",
-            "abcde",
         ]:
             assert expected in result.output, error()
 
 
-@TestFeature
-@Name("datatypes")
-def feature(self, minio_root_user, minio_root_password):
-    """Check Iceberg v2 data types via native CREATE, INSERT, and SELECT."""
-    for config in SCALAR_TYPE_CONFIGS:
-        Scenario(
-            name=f"scalar {config.type_name}",
-            test=scalar_type_round_trip,
-        )(
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
-            config=config,
+@TestScenario
+@Requirements(RQ_Iceberg_NativeCreateDrop_Schema_Columns("1.0"))
+def required_and_optional_in_catalog_schema(self):
+    """C1: plain columns register as required, Nullable ones as optional, and
+    nested types carry element ids, as PyIceberg reads them from the catalog."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
+    with Given("catalog and database"):
+        catalog, database_name = catalog_and_database(
+            minio_root_user=minio_root_user, minio_root_password=minio_root_password
+        )
+    namespace, table_name = f"ns_{getuid()}", f"t_{getuid()}"
+    create_table(
+        database_name=database_name,
+        namespace=namespace,
+        table_name=table_name,
+        path=self.context.create_path,
+        columns=[
+            "id Int64",
+            "opt Nullable(String)",
+            "arr Array(Int64)",
+            "nested Array(Array(String))",
+            "m Map(String, Int64)",
+            "t Tuple(a Int64, b String)",
+        ],
+    )
+    table = catalog.load_table(f"{namespace}.{table_name}")
+    shape = pyiceberg_schema_shape(table)
+    assert shape[0] == ("id", "long", True), error(shape)
+    assert shape[1] == ("opt", "string", False), error(shape)
+    assert shape[2][1].startswith("list<"), error(shape)
+    assert shape[3][1].startswith("list<list<"), error(shape)
+    assert shape[4][1].startswith("map<"), error(shape)
+    assert shape[5][1].startswith("struct<"), error(shape)
+    ids = [f.field_id for f in table.schema().fields]
+    assert ids == sorted(ids) and ids[0] == 1, error(ids)
+    assert table.schema().highest_field_id > 6, error("nested element ids not assigned")
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_NativeCreateDrop_Schema_Columns("1.0"))
+def unsupported_types_rejected(self):
+    """A column type the Iceberg writer cannot map is rejected with
+    BAD_ARGUMENTS and leaves no trace.
+
+    FixedString has no writer mapping to Iceberg `fixed[N]` on any Antalya
+    branch or upstream master (Utils.cpp type conversion), although the
+    reader maps `fixed[N]` to FixedString (SchemaProcessor.cpp). Found
+    2026-09-15; see findings.md, environment facts.
+    """
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
+    with Given("catalog and database"):
+        catalog, database_name = catalog_and_database(
+            minio_root_user=minio_root_user, minio_root_password=minio_root_password
+        )
+    for type_name in ("FixedString(5)",):
+        with Check(type_name, flags=TE):
+            namespace, table_name = f"ns_{getuid()}", f"t_{getuid()}"
+            args = dict(
+                catalog=catalog,
+                namespace=namespace,
+                table_name=table_name,
+                database_name=database_name,
+            )
+            with When("snapshot state"):
+                before = snapshot_state(**args)
+            create_table(
+                database_name=database_name,
+                namespace=namespace,
+                table_name=table_name,
+                path=self.context.create_path,
+                columns=["id Int64", f"col {type_name}"],
+                exitcode=BAD_ARGUMENTS,
+                message="Unsupported type for iceberg",
+            )
+            with Then("no trace"):
+                after = snapshot_state(**args)
+                assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_NativeCreateDrop_Schema_Columns("1.0"))
+def empty_column_list(self):
+    """CREATE TABLE without columns leaves no trace. A bare engine-less
+    CREATE is stopped by the generic query validation, INCORRECT_QUERY
+    "required list of column descriptions or AS section or SELECT", before
+    the DataLakeCatalog code runs (the PR's own "Cannot create table without
+    columns" check is not reachable from SQL). With an explicit engine a
+    column-less CREATE has always meant "attach to the table at this path and
+    infer its columns", so with nothing at the path the server answers
+    FILE_DOESNT_EXIST instead."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
+    with Given("catalog and database"):
+        catalog, database_name = catalog_and_database(
+            minio_root_user=minio_root_user, minio_root_password=minio_root_password
+        )
+    namespace, table_name = f"ns_{getuid()}", f"t_{getuid()}"
+    args = dict(
+        catalog=catalog, namespace=namespace, table_name=table_name, database_name=database_name
+    )
+    if self.context.create_path == ENGINE_LESS:
+        exitcode, message = INCORRECT_QUERY, "required list of column descriptions"
+    else:
+        exitcode, message = FILE_DOESNT_EXIST, "doesn't exist"
+    with When("snapshot state"):
+        before = snapshot_state(**args)
+    create_table(
+        database_name=database_name,
+        namespace=namespace,
+        table_name=table_name,
+        path=self.context.create_path,
+        columns=[],
+        exitcode=exitcode,
+        message=message,
+    )
+    with Then("no trace"):
+        assert_rejected_no_trace(
+            before=before, after=snapshot_state(**args), namespace_expected=False
         )
 
-    Scenario(test=nullable_round_trip)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Scenario(test=list_type_round_trip)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Scenario(test=map_type_round_trip)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Scenario(test=struct_type_round_trip)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Scenario(test=all_scalars_in_one_table)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
+
+@TestFeature
+@Name("datatypes")
+@Requirements(RQ_Iceberg_NativeCreateDrop_Schema_Columns("1.0"))
+def feature(self, minio_root_user, minio_root_password):
+    """Check Iceberg data types via native CREATE, INSERT, and SELECT, under
+    both creation paths."""
+    for path in (EXPLICIT_ENGINE, ENGINE_LESS):
+        with Feature(path):
+            self.context.create_path = path
+            for config in SCALAR_TYPE_CONFIGS:
+                Scenario(name=f"scalar {config.type_name}", test=scalar_type_round_trip, flags=TE)(
+                    config=config
+                )
+            for scenario in (
+                nullable_round_trip,
+                list_type_round_trip,
+                map_type_round_trip,
+                struct_type_round_trip,
+                all_scalars_in_one_table,
+                required_and_optional_in_catalog_schema,
+                unsupported_types_rejected,
+                empty_column_list,
+            ):
+                Scenario(run=scenario, flags=TE)
