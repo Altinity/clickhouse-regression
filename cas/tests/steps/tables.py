@@ -1,8 +1,9 @@
-"""Table create/drop helpers for CAS MergeTree, ReplicatedMergeTree, Distributed."""
+"""Table create/drop and inspect helpers for CAS MergeTree, ReplicatedMergeTree, Distributed."""
 
 from testflows.core import *
 
 from cas.tests.steps.disk import (
+    CAS_POLICY,
     REPLICATED_CLUSTER,
     SHARDED_CLUSTER,
     storage_settings,
@@ -13,8 +14,29 @@ DEFAULT_PARTITION_BY = "p"
 DEFAULT_ORDER_BY = "i"
 
 
+def table_engine_and_policy(node, table_name):
+    """Return ``(engine, storage_policy)`` from ``system.tables``."""
+    engine, policy = (
+        node.query(
+            "SELECT engine, storage_policy FROM system.tables "
+            f"WHERE database = currentDatabase() AND name = '{table_name}'"
+        )
+        .output.strip()
+        .split("\t")
+    )
+    return engine, policy
+
+
+def active_part_disk(node, table_name):
+    """Disk that holds active parts of ``table_name``."""
+    return node.query(
+        "SELECT any(disk_name) FROM system.parts "
+        f"WHERE database = currentDatabase() AND table = '{table_name}' "
+        "AND active"
+    ).output.strip()
+
+
 @TestStep(Given)
-@Name("create a CAS MergeTree table")
 def create_cas_merge_tree_table(
     self,
     table_name,
@@ -24,7 +46,8 @@ def create_cas_merge_tree_table(
     order_by=DEFAULT_ORDER_BY,
     pool_prefix=None,
     server_root_id=None,
-    policy=None,
+    policy=CAS_POLICY,
+    disk_name=None,
     drop_sync=True,
 ):
     """Create a non-replicated MergeTree on CAS (policy or inline pool)."""
@@ -36,7 +59,8 @@ def create_cas_merge_tree_table(
         pool_prefix=pool_prefix,
         server_root_id=server_root_id,
         node=node,
-        policy=policy or "cas_policy",
+        policy=policy,
+        disk_name=disk_name,
     )
 
     node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
@@ -60,46 +84,6 @@ def create_cas_merge_tree_table(
         with Finally(f"drop {table_name}"):
             suffix = " SYNC" if drop_sync else ""
             node.query(f"DROP TABLE IF EXISTS {table_name}{suffix}")
-
-
-@TestStep(Given)
-def create_cas_partitioned_table(
-    self,
-    table_name,
-    pool_prefix,
-    partition_by=DEFAULT_PARTITION_BY,
-    order_by=DEFAULT_ORDER_BY,
-    node=None,
-    server_root_id=None,
-):
-    """Create a MergeTree table on a shared CAS pool."""
-    if node is None:
-        node = self.context.node
-
-    settings = storage_settings(
-        self, pool_prefix=pool_prefix, server_root_id=server_root_id, node=node
-    )
-
-    node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
-    node.query(
-        f"""
-        CREATE TABLE {table_name}
-        (
-            {DEFAULT_COLUMNS}
-        )
-        ENGINE = MergeTree
-        PARTITION BY {partition_by}
-        ORDER BY {order_by}
-        {settings}
-        """
-    )
-
-    try:
-        yield table_name
-
-    finally:
-        with Finally(f"drop {table_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestStep(Given)

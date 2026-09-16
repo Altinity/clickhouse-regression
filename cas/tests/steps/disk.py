@@ -5,6 +5,7 @@ from testflows.core import *
 REPLICATED_CLUSTER = "replicated_cluster"
 SHARDED_CLUSTER = "sharded_cluster"
 CAS_POLICY = "cas_policy"
+CAS_POLICY_POOL = "data/cas"
 
 
 def cas_disk_clause(

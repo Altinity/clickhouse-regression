@@ -336,6 +336,8 @@ analyzer_compatibility_apply_final_to_all_joined_tables = r"""'{"default":"0"}'"
 
 analyzer_compatibility_join_using_top_level_identifier = r"""'{"default":"0"}'"""
 
+analyzer_compatibility_multiple_joins_qualify_column_names = r"""'{"default":"0"}'"""
+
 analyzer_compatibility_prefer_alias_over_subcolumn = r"""'{"default":"0"}'"""
 
 analyzer_inline_views = r"""'{"default":"0"}'"""
@@ -1089,6 +1091,8 @@ filesystem_cache_reserve_space_wait_lock_timeout_milliseconds = r"""'{"default":
 filesystem_cache_segments_batch_size = r"""'{"default":"20"}'"""
 
 filesystem_cache_skip_download_if_exceeds_per_query_cache_write_limit = r"""'{"default":"1"}'"""
+
+filesystem_cache_wait_for_concurrent_download_timeout_milliseconds = r"""'{"default":"1000"}'"""
 
 filesystem_prefetch_max_memory_usage = r"""'{"default":"1073741824"}'"""
 
@@ -3166,6 +3170,8 @@ split_parts_ranges_into_intersecting_and_non_intersecting_final = r"""'{"default
 
 splitby_max_substrings_includes_remaining_string = r"""'{"default":"0"}'"""
 
+statistics_max_set_size_for_exact_selectivity_estimation = r"""'{"default":"10000"}'"""
+
 stop_refreshable_materialized_views_on_startup = r"""'{"default":"0"}'"""
 
 storage_file_read_method = r"""'{"default":"pread"}'"""
@@ -3215,6 +3221,8 @@ throw_if_deduplication_in_dependent_materialized_views_enabled_with_async_insert
 throw_if_no_data_to_insert = r"""'{"default":"1"}'"""
 
 throw_on_error_from_cache_on_write_operations = r"""'{"default":"0"}'"""
+
+throw_on_hive_partitioning_resolution_failure = r"""'{"default":"0"}'"""
 
 throw_on_max_partitions_per_insert_block = r"""'{"default":"1"}'"""
 

@@ -25,6 +25,7 @@ from helpers.common import (
     check_if_antalya_build,
 )
 from parquet.tests.common import start_minio, parquet_test_columns
+from s3.tests.common import parse_s3_uri
 
 
 def parquet_argparser(parser):
@@ -754,6 +755,44 @@ def regression(
         if "gcs" in storages:
             with Feature("gcs"):
                 fail("GCS not implemented")
+
+        if "hetzner" in storages:
+            hetzner_s3_uri = s3_args.get("hetzner_s3_uri")
+            hetzner_s3_region = s3_args.get("hetzner_s3_region")
+            hetzner_s3_key_id = s3_args.get("hetzner_s3_key_id")
+            hetzner_s3_access_key = s3_args.get("hetzner_s3_access_key")
+
+            with Given("I make sure the Hetzner S3 credentials are set"):
+                if hetzner_s3_uri is None or hetzner_s3_uri.value is None:
+                    fail("Hetzner S3 URI needs to be set")
+
+                if hetzner_s3_key_id is None or hetzner_s3_key_id.value is None:
+                    fail("Hetzner S3 key id needs to be set")
+
+                if (
+                    hetzner_s3_access_key is None
+                    or hetzner_s3_access_key.value is None
+                ):
+                    fail("Hetzner S3 access key needs to be set")
+
+            s3_endpoint_url, bucket, _ = parse_s3_uri(hetzner_s3_uri.value)
+
+            self.context.storage = "hetzner"
+            self.context.aws_s3_bucket = bucket
+            self.context.uri = f"{s3_endpoint_url}/{bucket}/data/parquet/"
+            self.context.access_key_id = hetzner_s3_key_id.value
+            self.context.secret_access_key = hetzner_s3_access_key.value
+            self.context.s3_client = boto3.client(
+                "s3",
+                endpoint_url=s3_endpoint_url,
+                aws_access_key_id=self.context.access_key_id,
+                aws_secret_access_key=self.context.secret_access_key,
+                region_name=(
+                    hetzner_s3_region.value if hetzner_s3_region is not None else None
+                ),
+            )
+            with Feature("hetzner"):
+                Feature(run=load("parquet.tests.s3", "feature"))
 
 
 if main():

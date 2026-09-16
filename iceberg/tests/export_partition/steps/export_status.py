@@ -48,6 +48,18 @@ def export_kill_provenance_columns(test=None):
     return "source_replica, toUnixTimestamp(create_time)"
 
 
+EXPORT_COMMIT_INFO_COLUMNS = (
+    "committed_metadata_file",
+    "committed_manifest_list",
+    "committed_manifest_file",
+    "committed_marker_file",
+)
+
+ALREADY_COMMITTED_SENTINEL = (
+    "<committed in a previous run, paths unavailable>"
+)
+
+
 def export_status_table_display_name(test=None):
     """Short name for error messages (``partition_exports`` vs ``replicated_…``)."""
     table = partition_exports_system_table(test)
@@ -147,6 +159,44 @@ def get_export_row(
     ).output.strip()
 
     return output if output else None
+
+
+@TestStep(When)
+def get_export_commit_info(
+    self,
+    source_table,
+    partition_id,
+    destination=None,
+    destination_table=None,
+    node=None,
+):
+    """Return the four commit-info columns as a dict, or ``None`` if no row.
+
+    Uses ``JSONEachRow`` so empty strings (Iceberg ``committed_marker_file``,
+    or all four columns before commit) are distinguishable from a missing row.
+    When several history rows match, the latest ``create_time`` wins.
+    """
+    if node is None:
+        node = self.context.node
+
+    where = [
+        f"source_table = '{source_table}'",
+        f"partition_id = '{partition_id}'",
+    ]
+    where.extend(_destination_where_pieces(destination, destination_table))
+    where_clause = " AND ".join(where)
+    columns = ", ".join(EXPORT_COMMIT_INFO_COLUMNS)
+
+    output = node.query(
+        f"SELECT {columns} FROM {partition_exports_system_table(self)} "
+        f"WHERE {where_clause} "
+        f"ORDER BY create_time DESC LIMIT 1 "
+        f"FORMAT JSONEachRow",
+    ).output.strip()
+
+    if not output:
+        return None
+    return json.loads(output.splitlines()[0])
 
 
 @TestStep(When)
