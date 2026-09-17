@@ -106,6 +106,14 @@ def aggregate_funcs_over_rows_frame(self, func):
     ):
         snapshot_name += "/version>=25.12"
 
+    # ClickHouse #110917 (26.8): groupUniqArray integer keys use HashCRC32;
+    # the unique set is unchanged, but hash iteration order is not.
+    if (
+        func.startswith("groupUniqArray")
+        and check_clickhouse_version(">=26.8")(self)
+    ):
+        snapshot_name += "/version>=26.8"
+
     execute_query(
         f"""
         SELECT {func} OVER (ORDER BY salary, empno ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS func

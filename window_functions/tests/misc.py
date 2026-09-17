@@ -223,34 +223,37 @@ def from_subquery(self):
 @TestScenario
 def groups_frame(self):
     """Check using `GROUPS` frame."""
-    exitcode, message = groups_frame_error(self)
-
-    expected = convert_output(
-        """
-     sum | unique1 | four
-    -----+---------+------
-      12 |       0 |    0
-      12 |       8 |    0
-      12 |       4 |    0
-      27 |       5 |    1
-      27 |       9 |    1
-      27 |       1 |    1
-      35 |       6 |    2
-      35 |       2 |    2
-      45 |       3 |    3
-      45 |       7 |    3
-    """
-    )
-
-    execute_query(
-        """
-        SELECT sum(unique1) over (order by four groups between unbounded preceding and current row),
+    # ClickHouse #108653 (26.8) implements GROUPS frames (SQL:2011).
+    # Before that the server returns NOT_IMPLEMENTED (exit 48).
+    # ORDER BY four, unique1 keeps peer-group row order stable.
+    sql = """
+        SELECT sum(unique1) OVER (ORDER BY four GROUPS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS sum,
             unique1, four
         FROM tenk1 WHERE unique1 < 10
-        """,
-        exitcode=exitcode,
-        message=message,
-    )
+        ORDER BY four, unique1
+        """
+
+    if check_clickhouse_version(">=26.8")(self):
+        expected = convert_output(
+            """
+         sum | unique1 | four
+        -----+---------+------
+          12 |       0 |    0
+          12 |       4 |    0
+          12 |       8 |    0
+          27 |       1 |    1
+          27 |       5 |    1
+          27 |       9 |    1
+          35 |       2 |    2
+          35 |       6 |    2
+          45 |       3 |    3
+          45 |       7 |    3
+        """
+        )
+        execute_query(sql, expected=expected)
+    else:
+        exitcode, message = groups_frame_error(self)
+        execute_query(sql, exitcode=exitcode, message=message)
 
 
 @TestScenario
