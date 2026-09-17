@@ -24,7 +24,11 @@ def scenario(
     snapshot_id=None,
 ):
     """Check quantileDeterministic aggregate function by using the same tests as for avg."""
-    if check_clickhouse_version(">=25.2")(self):
+    if check_clickhouse_version(">=26.8")(self) and (
+        "State" in self.name or "Merge" in self.name
+    ):
+        clickhouse_version = ">=26.8"
+    elif check_clickhouse_version(">=25.2")(self):
         clickhouse_version = ">=25.2"
     else:
         clickhouse_version = ">=23.12"
