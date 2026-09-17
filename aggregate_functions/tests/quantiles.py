@@ -14,7 +14,11 @@ from aggregate_functions.tests.quantile import scenario as checks
 def scenario(self, func="quantiles({params})", table=None, snapshot_id=None):
     """Check quantiles aggregate function by using the same tests as for quantile."""
 
-    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+    if check_clickhouse_version(">=26.8")(self) and "Merge" in self.name:
+        clickhouse_version = ">=26.8"
+    elif check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(
+        self
+    ):
         clickhouse_version = ">=24.3"
     else:
         clickhouse_version = ">=23.12"
