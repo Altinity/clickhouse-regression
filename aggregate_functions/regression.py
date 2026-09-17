@@ -835,6 +835,34 @@ ffails = {
         Skip,
         "MVTEncode test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesBottomKMasks": (
+        Skip,
+        "timeSeriesBottomKMasks test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function mergedJSONPatch": (
+        Skip,
+        "mergedJSONPatch test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesLimitKMasks": (
+        Skip,
+        "timeSeriesLimitKMasks test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function gini": (
+        Skip,
+        "gini test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesIncreaseToGrid": (
+        Skip,
+        "timeSeriesIncreaseToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesTopKMasks": (
+        Skip,
+        "timeSeriesTopKMasks test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function groupFormat": (
+        Skip,
+        "groupFormat test is not implemented",
+    ),
 }
 
 

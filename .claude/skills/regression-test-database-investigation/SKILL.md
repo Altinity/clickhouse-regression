@@ -44,11 +44,29 @@ say what it would add. Often it only confirms *since when* a failure occurs, whi
 the cause and the fix are already settled - in that case, report the finding and
 name the query as the remaining gap rather than waiting.
 
-> **This database has no error-text column.** Unlike the upstream
-> `default.checks` on play.clickhouse.com, `gh-data` tables expose **no
-> `test_context_raw`** and **no runner / `instance_type`** column. You cannot search
-> for an error signature or correlate with hardware from SQL here — the failure text
-> has to come from the job artifact. Do not assume the two schemas match.
+> **The error text is in `result_message`, not `test_context_raw`.** This table
+> carries the failure text under a different name from the `checks` tables, so a
+> search written for those returns nothing here. Use `result_message` and you can
+> match an error signature, or pull the asserted values straight out of the
+> assertion:
+>
+> ```sql
+> SELECT test_name, job_name, architecture,
+>        extractAll(result_message, '\^ is = .([0-9]+).') AS observed
+> FROM `gh-data`.clickhouse_regression_results
+> WHERE result = 'Fail' AND result_message LIKE '%<ERROR SIGNATURE>%'
+>   AND start_time > now() - INTERVAL 45 DAY
+> ```
+>
+> The `extractAll` is for assertions that compare numbers; it returns `[]` for any
+> other failure shape, which is not a broken query. Match on the message the server
+> or the harness actually printed, not on the scenario name — `result_message`
+> carries the traceback, where the scenario appears as a function name with
+> underscores.
+>
+> What this table genuinely lacks is a runner / `instance_type` column — hardware
+> correlation still needs the job log. (Note that `gh-data.checks`, the table for
+> upstream and integration tests, *does* have `test_context_raw`.)
 
 ### Connection Example
 

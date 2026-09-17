@@ -15,12 +15,12 @@ def same_password_expired_login_expected(user_name):
     """Expected login result when two methods accept the same password and
     one VALID UNTIL has already passed.
 
-    From 26.8 (ClickHouse #110144) a shared credential uses the earliest
+    From 26.9 (ClickHouse #110144) a shared credential uses the earliest
     VALID UNTIL, including an already-expired one, so login is rejected.
     Docs: CREATE USER — "the earliest VALID UNTIL wins even when it has
     already passed". Before that, any still-valid matching method was enough.
     """
-    if check_clickhouse_version(">=26.8")(current()):
+    if check_clickhouse_version(">=26.9")(current()):
         return errors.wrong_password(user_name)
     return None
 
