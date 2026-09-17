@@ -1260,12 +1260,14 @@ def fill_clickhouse_disks(self):
     """Force clickhouse to run on a full disk."""
 
     node = random.choice(self.context.ch_nodes)
+    # Never fill the log tmpfs: TRACE logs plus a 100% full log volume make
+    # docker exec return OSError EIO and the rest of the scenario Errors.
     clickhouse_disk_mounts = [
-        "/var/log/clickhouse-server-limited",
         "/var/lib/clickhouse-limited",
     ]
     delay = random.random() * 10 + 5
     file_name = "file.dat"
+    keep_free_k = 102400  # 100 MiB so ClickHouse and docker exec can still write
 
     try:
         for disk_mount in clickhouse_disk_mounts:
@@ -1276,9 +1278,14 @@ def fill_clickhouse_disks(self):
                     "Disk does not appear to be restricted!"
                 )
 
-            with And(f"I create a file to fill {disk_mount} on {node.name}"):
+            with And(f"I fill {disk_mount} on {node.name}, leaving {keep_free_k}K free"):
+                r = node.command(f"df -k --output=avail {disk_mount}")
+                avail_k = int(r.output.splitlines()[1].strip())
+                fill_k = max(0, avail_k - keep_free_k)
+                if fill_k == 0:
+                    continue
                 node.command(
-                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
+                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={fill_k}",
                     no_checks=True,
                 )
 
@@ -1306,6 +1313,8 @@ def clickhouse_limited_disk_config(self, node):
             KeyWithAttributes(
                 "errorlog", {"replace": "replace"}
             ): "/var/log/clickhouse-server-limited/clickhouse-server.err.log",
+            # Default suite log level is trace; a 1G log tmpfs fills in minutes.
+            KeyWithAttributes("level", {"replace": "replace"}): "warning",
         },
         KeyWithAttributes(
             "path", {"replace": "replace"}
@@ -1498,10 +1507,14 @@ def fill_zookeeper_disks(self):
                     "Disk does not appear to be restricted!"
                 )
 
-            with And(f"I create a file to fill {disk_mount} on {node.name}"):
-
+            with And(f"I fill {disk_mount} on {node.name}, leaving 100MiB free"):
+                r = node.command(f"df -k --output=avail {disk_mount}")
+                avail_k = int(r.output.splitlines()[1].strip())
+                fill_k = max(0, avail_k - 102400)
+                if fill_k == 0:
+                    continue
                 node.command(
-                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
+                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={fill_k}",
                     no_checks=True,
                 )
 

@@ -468,3 +468,213 @@ def log_failing_mutations(self, nodes=None):
                     )
                     if r.output.strip():
                         note(f"State of {column}:\n{r.output.strip()}")
+
+
+_PROFILING_LOG_DIR = "/var/log/clickhouse-server"
+
+_PROFILING_DUMPS = (
+    (
+        "profiling_query_kind.log",
+        """
+SELECT
+    query_kind,
+    count() AS n,
+    sum(query_duration_ms) AS sum_ms,
+    round(avg(query_duration_ms), 1) AS avg_ms,
+    round(quantile(0.95)(query_duration_ms), 1) AS p95_ms,
+    max(query_duration_ms) AS max_ms
+FROM system.query_log
+WHERE type = 'QueryFinish'
+GROUP BY query_kind
+ORDER BY sum_ms DESC
+""",
+    ),
+    (
+        "profiling_query_prefix.log",
+        """
+SELECT
+    multiIf(
+        startsWith(query, 'ALTER TABLE'), 'ALTER',
+        startsWith(query, 'OPTIMIZE'), 'OPTIMIZE',
+        startsWith(query, 'INSERT'), 'INSERT',
+        startsWith(query, 'SELECT'), 'SELECT',
+        startsWith(query, 'SYSTEM'), 'SYSTEM',
+        startsWith(query, 'CREATE'), 'CREATE',
+        startsWith(query, 'DROP'), 'DROP',
+        startsWith(query, 'ATTACH'), 'ATTACH',
+        startsWith(query, 'DETACH'), 'DETACH',
+        startsWith(query, 'KILL'), 'KILL',
+        query_kind
+    ) AS prefix,
+    count() AS n,
+    sum(query_duration_ms) AS sum_ms,
+    round(avg(query_duration_ms), 1) AS avg_ms,
+    max(query_duration_ms) AS max_ms
+FROM system.query_log
+WHERE type = 'QueryFinish'
+GROUP BY prefix
+ORDER BY sum_ms DESC
+""",
+    ),
+    (
+        "profiling_profile_events.log",
+        """
+SELECT
+    event,
+    sum(ProfileEvents[event]) AS total
+FROM system.query_log
+ARRAY JOIN mapKeys(ProfileEvents) AS event
+WHERE type = 'QueryFinish'
+  AND (
+      event LIKE 'S3%'
+      OR event LIKE 'CAS%'
+      OR event LIKE '%Merge%'
+      OR event LIKE '%Fetch%'
+      OR event LIKE '%Replica%'
+      OR event LIKE 'Disk%'
+      OR event LIKE '%Part%'
+      OR event LIKE 'WriteBufferFromS3%'
+      OR event LIKE 'ReadBufferFromS3%'
+  )
+GROUP BY event
+HAVING total > 0
+ORDER BY total DESC
+LIMIT 80
+""",
+    ),
+    (
+        "profiling_system_events.log",
+        """
+SELECT event, value
+FROM system.events
+WHERE event LIKE 'S3%'
+   OR event LIKE 'CAS%'
+   OR event LIKE '%Merge%'
+   OR event LIKE '%Fetch%'
+   OR event LIKE '%Replica%'
+   OR event LIKE 'Disk%'
+   OR event LIKE '%Part%'
+ORDER BY value DESC
+LIMIT 80
+""",
+    ),
+    (
+        "profiling_system_metrics.log",
+        """
+SELECT metric, value
+FROM system.metrics
+WHERE value != 0
+  AND (
+      metric LIKE '%Merge%'
+      OR metric LIKE '%Mutation%'
+      OR metric LIKE '%Replica%'
+      OR metric LIKE '%Part%'
+      OR metric LIKE '%S3%'
+      OR metric LIKE '%CAS%'
+      OR metric LIKE '%Disk%'
+      OR metric LIKE '%Memory%'
+  )
+ORDER BY metric
+""",
+    ),
+    (
+        "profiling_part_log.log",
+        """
+SELECT
+    event_type,
+    count() AS n,
+    sum(size_in_bytes) AS bytes,
+    round(avg(duration_ms), 1) AS avg_ms,
+    max(duration_ms) AS max_ms
+FROM system.part_log
+GROUP BY event_type
+ORDER BY n DESC
+""",
+    ),
+    (
+        "profiling_cas_log.log",
+        """
+SELECT event_type, outcome, count() AS n
+FROM system.cas_log
+GROUP BY event_type, outcome
+ORDER BY n DESC
+""",
+    ),
+    (
+        "profiling_cas_gc_log.log",
+        """
+SELECT
+    event_type,
+    outcome,
+    phase,
+    count() AS n,
+    sum(duration_ms) AS sum_duration_ms,
+    max(duration_ms) AS max_duration_ms,
+    sum(phase_duration_microseconds) AS sum_phase_us,
+    max(phase_duration_microseconds) AS max_phase_us
+FROM system.cas_gc_log
+GROUP BY event_type, outcome, phase
+ORDER BY n DESC
+""",
+    ),
+    (
+        "profiling_trace_log.log",
+        """
+SELECT trace_type, count() AS n
+FROM system.trace_log
+GROUP BY trace_type
+ORDER BY n DESC
+""",
+    ),
+    (
+        "profiling_metric_log_peaks.log",
+        """
+SELECT
+    min(event_time) AS first_ts,
+    max(event_time) AS last_ts,
+    count() AS rows,
+    max(CurrentMetrics['BackgroundMergesAndMutationsPoolTask']) AS max_merges,
+    max(CurrentMetrics['ReplicasMaxAbsoluteDelay']) AS max_replica_delay,
+    max(CurrentMetrics['MemoryTracking']) AS max_memory_tracking,
+    max(ProfileEvents['S3ReadBytes']) AS s3_read_bytes,
+    max(ProfileEvents['S3WriteBytes']) AS s3_write_bytes,
+    max(ProfileEvents['MergedUncompressedBytes']) AS merged_uncompressed_bytes
+FROM system.metric_log
+""",
+    ),
+)
+
+
+@TestStep(Finally)
+def dump_stress_profiling(self):
+    """Flush system logs and write compact summaries next to server logs."""
+
+    nodes = getattr(self.context, "ch_nodes", None) or []
+    for node in nodes:
+        try:
+            node.query("SYSTEM FLUSH LOGS", no_checks=True)
+        except Exception as exc:
+            note(f"{node.name} SYSTEM FLUSH LOGS failed: {exc}")
+            continue
+
+        for filename, sql in _PROFILING_DUMPS:
+            path = f"{_PROFILING_LOG_DIR}/{filename}"
+            query = (
+                sql.strip().rstrip(";")
+                + f"\nINTO OUTFILE '{path}' TRUNCATE FORMAT TSVWithNames"
+            )
+            try:
+                node.query(query, no_checks=True)
+            except Exception as exc:
+                note(f"{node.name} {filename} dump failed: {exc}")
+
+        try:
+            r = node.query(
+                _PROFILING_DUMPS[0][1].strip().rstrip(";") + " FORMAT TSVWithNames",
+                no_checks=True,
+            )
+            if r.output.strip():
+                note(f"{node.name} query_kind summary:\n{r.output.strip()}")
+        except Exception as exc:
+            note(f"{node.name} query_kind note failed: {exc}")
+
