@@ -190,30 +190,45 @@ against from the report's reason and description, and test the pattern against
 
 ---
 
-## 6. Database Column Asymmetry
+## 6. Search the Error Text in SQL, Don't Download Logs
 
-The Altinity and upstream CI databases are **not** the same schema. Assuming
-symmetry costs a round of failed queries:
-
-| Column | `gh-data.checks` (Altinity) | `default.checks` (upstream, play.clickhouse.com) |
-|--------|------------------------------|--------------------------------------------------|
-| `test_context_raw` | absent | present — full failure text, searchable without downloading logs |
-| runner / `instance_type` | absent | present |
-
-`test_context_raw` on the upstream database lets you search for an error signature
-directly:
+**`gh-data.checks` has `test_context_raw`** — the full failure text, searchable.
+So does upstream `default.checks`. Reach for it before you fetch a single
+`job.log`: it turns "which runs carry this signature" from a log-scraping exercise
+into one query.
 
 ```sql
-SELECT check_start_time, check_name, pull_request_number
-FROM default.checks
-WHERE test_status = 'FAIL'
+SELECT toDate(check_start_time) AS day, count() AS tests,
+       uniq(check_name) AS jobs, uniq(pull_request_number) AS prs
+FROM `gh-data`.checks
+WHERE check_start_time > now() - INTERVAL 45 DAY
   AND test_context_raw LIKE '%<ERROR SIGNATURE>%'
-  AND check_start_time > now() - INTERVAL 90 DAY
-ORDER BY check_start_time
+GROUP BY day ORDER BY day
 ```
 
-For the Altinity database there is no equivalent — the error text must come from
-the artifact.
+> An earlier version of this file said the column was absent on the Altinity side.
+> It is not. Following that cost one investigation 20 hand-downloaded `job.log`
+> files, and two failure rates reported an order of magnitude too low because the
+> cheaper query was never run.
+
+**It undercounts, so cross-check the total.** The column holds the *reported*
+failure text. A test killed by the harness timeout leaves a process-kill trace,
+not a server exception, so it never matches a search for the underlying cause even
+when that cause is real. One run matched 75 tests this way while the report carried
+another 81 rows with the same root cause.
+
+### What really does differ between the two databases
+
+| Column | `gh-data.checks` (Altinity) | `default.checks` (upstream) |
+|--------|------------------------------|------------------------------|
+| `test_context_raw` | present | present |
+| runner / `instance_type` | **absent** | present |
+
+Hardware correlation still needs the job log — see section 3.
+
+The Altinity regression suites live in a different table,
+`gh-data.clickhouse_regression_results`, which has no `test_context_raw`; its
+equivalent is `result_message`.
 
 ---
 

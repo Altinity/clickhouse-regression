@@ -23,6 +23,112 @@ from helpers.common import (
 
 
 xfails = {
+    "/iceberg/native create/*/schema/partition values in manifest": [
+        (
+            Error,
+            "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
+        )
+    ],
+    "/iceberg/native create/*/metadata/first commit has no parent": [
+        (
+            Error,
+            "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
+        )
+    ],
+    "/iceberg/native create/*/metadata/pyiceberg reads clickhouse rows": [
+        (
+            Error,
+            "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
+        )
+    ],
+    "/iceberg/native create/*/sanity/explicit engine create": [
+        (
+            Fail,
+            "On a REST catalog the explicit-engine CREATE writes `metadata/v1-<uuid>.metadata.json` (IcebergMetadata::createInitial) and then RestCatalog::createTable ignores that path and sends a CreateTableRequest, so the server creates the table with its own UUID and its own `00000-<uuid>.metadata.json`. The ClickHouse file is an orphan from birth: B1 sees two initial files, engine SETTINGS never reach the file the catalog uses. See iceberg/tests/iceberg_engine/native_create/findings.md finding 4.",
+        )
+    ],
+    "/iceberg/native create/*/explicit engine/any iceberg engine accepted without fixed backend": [
+        (
+            Fail,
+            "On a REST catalog the explicit-engine CREATE writes `metadata/v1-<uuid>.metadata.json` (IcebergMetadata::createInitial) and then RestCatalog::createTable ignores that path and sends a CreateTableRequest, so the server creates the table with its own UUID and its own `00000-<uuid>.metadata.json`. The ClickHouse file is an orphan from birth: B1 sees two initial files, engine SETTINGS never reach the file the catalog uses. See iceberg/tests/iceberg_engine/native_create/findings.md finding 4.",
+        )
+    ],
+    "/iceberg/native create/*/explicit engine/initial file naming*": [
+        (
+            Fail,
+            "On a REST catalog the explicit-engine CREATE writes `metadata/v1-<uuid>.metadata.json` (IcebergMetadata::createInitial) and then RestCatalog::createTable ignores that path and sends a CreateTableRequest, so the server creates the table with its own UUID and its own `00000-<uuid>.metadata.json`. The ClickHouse file is an orphan from birth: B1 sees two initial files, engine SETTINGS never reach the file the catalog uses. See iceberg/tests/iceberg_engine/native_create/findings.md finding 4.",
+        )
+    ],
+    "/iceberg/native create/*/metadata/gzip metadata*": [
+        (
+            Fail,
+            "On a REST catalog the explicit-engine CREATE writes `metadata/v1-<uuid>.metadata.json` (IcebergMetadata::createInitial) and then RestCatalog::createTable ignores that path and sends a CreateTableRequest, so the server creates the table with its own UUID and its own `00000-<uuid>.metadata.json`. The ClickHouse file is an orphan from birth: B1 sees two initial files, engine SETTINGS never reach the file the catalog uses. See iceberg/tests/iceberg_engine/native_create/findings.md finding 4.",
+        )
+    ],
+    "/iceberg/native create/*/schema/engine settings with explicit engine*": [
+        (
+            Fail,
+            "On a REST catalog the explicit-engine CREATE writes `metadata/v1-<uuid>.metadata.json` (IcebergMetadata::createInitial) and then RestCatalog::createTable ignores that path and sends a CreateTableRequest, so the server creates the table with its own UUID and its own `00000-<uuid>.metadata.json`. The ClickHouse file is an orphan from birth: B1 sees two initial files, engine SETTINGS never reach the file the catalog uses. See iceberg/tests/iceberg_engine/native_create/findings.md finding 4.",
+        )
+    ],
+    "/iceberg/native create/*/sanity/drop with purge": [
+        (
+            Fail,
+            "Every Iceberg commit through a REST catalog leaves an orphan metadata file: IcebergStorageSink writes `metadata/vN-<uuid>.metadata.json`, then RestCatalog::updateMetadata sends only add-snapshot / set-snapshot-ref and the server writes its own `0000N-<uuid>.metadata.json`; the ClickHouse file is never referenced, so `DROP TABLE ... data_lake_delete_data_on_drop = 1` (server-side purge of the metadata tree) cannot remove it and the location is not empty. Pre-existing upstream behaviour (same in master IcebergWrites.cpp); with PR 2305 the leftover then also blocks an explicit-engine re-CREATE at the same location.",
+        )
+    ],
+    "/iceberg/native create/*/drop/drop routes/*": [
+        (
+            Fail,
+            "Every Iceberg commit through a REST catalog leaves an orphan metadata file: IcebergStorageSink writes `metadata/vN-<uuid>.metadata.json`, then RestCatalog::updateMetadata sends only add-snapshot / set-snapshot-ref and the server writes its own `0000N-<uuid>.metadata.json`; the ClickHouse file is never referenced, so `DROP TABLE ... data_lake_delete_data_on_drop = 1` (server-side purge of the metadata tree) cannot remove it and the location is not empty. Pre-existing upstream behaviour (same in master IcebergWrites.cpp); with PR 2305 the leftover then also blocks an explicit-engine re-CREATE at the same location.",
+        )
+    ],
+    "/iceberg/native create/*/drop/server-wide default/*": [
+        (
+            Fail,
+            "Every Iceberg commit through a REST catalog leaves an orphan metadata file: IcebergStorageSink writes `metadata/vN-<uuid>.metadata.json`, then RestCatalog::updateMetadata sends only add-snapshot / set-snapshot-ref and the server writes its own `0000N-<uuid>.metadata.json`; the ClickHouse file is never referenced, so `DROP TABLE ... data_lake_delete_data_on_drop = 1` (server-side purge of the metadata tree) cannot remove it and the location is not empty. Pre-existing upstream behaviour (same in master IcebergWrites.cpp); with PR 2305 the leftover then also blocks an explicit-engine re-CREATE at the same location.",
+        )
+    ],
+    "/iceberg/native create/*/lifecycle/recreate after purge drop*": [
+        (
+            Fail,
+            "Every Iceberg commit through a REST catalog leaves an orphan metadata file: IcebergStorageSink writes `metadata/vN-<uuid>.metadata.json`, then RestCatalog::updateMetadata sends only add-snapshot / set-snapshot-ref and the server writes its own `0000N-<uuid>.metadata.json`; the ClickHouse file is never referenced, so `DROP TABLE ... data_lake_delete_data_on_drop = 1` (server-side purge of the metadata tree) cannot remove it and the location is not empty. Pre-existing upstream behaviour (same in master IcebergWrites.cpp); with PR 2305 the leftover then also blocks an explicit-engine re-CREATE at the same location.",
+        )
+    ],
+    "/iceberg/native create/*/sanity/create as source copies keys": [
+        (
+            Fail,
+            "ClickHouse writes non-spec plural partition transform names `days` / `hours` for toRelativeDayNum / toRelativeHourNum (Utils.cpp getPartitionField), so PyIceberg parses the spec as `unknown`. Fixed upstream in ClickHouse/ClickHouse#114864 (closes #114848, merged 2026-08-28); not yet in antalya-26.6 / PR 2305.",
+        )
+    ],
+    "/iceberg/native create/*/schema/accepted transforms/PARTITION BY toRelativeDayNum*": [
+        (
+            Fail,
+            "ClickHouse writes non-spec plural partition transform names `days` / `hours` for toRelativeDayNum / toRelativeHourNum (Utils.cpp getPartitionField), so PyIceberg parses the spec as `unknown`. Fixed upstream in ClickHouse/ClickHouse#114864 (closes #114848, merged 2026-08-28); not yet in antalya-26.6 / PR 2305.",
+        )
+    ],
+    "/iceberg/native create/*/schema/accepted transforms/PARTITION BY toRelativeHourNum*": [
+        (
+            Fail,
+            "ClickHouse writes non-spec plural partition transform names `days` / `hours` for toRelativeDayNum / toRelativeHourNum (Utils.cpp getPartitionField), so PyIceberg parses the spec as `unknown`. Fixed upstream in ClickHouse/ClickHouse#114864 (closes #114848, merged 2026-08-28); not yet in antalya-26.6 / PR 2305.",
+        )
+    ],
+    "/iceberg/native create/*/metadata/initial file/*": [
+        (
+            Fail,
+            "ClickHouse writes non-spec plural partition transform names `days` / `hours` for toRelativeDayNum / toRelativeHourNum (Utils.cpp getPartitionField), so PyIceberg parses the spec as `unknown`. Fixed upstream in ClickHouse/ClickHouse#114864 (closes #114848, merged 2026-08-28); not yet in antalya-26.6 / PR 2305.",
+        )
+    ],
+    "/iceberg/native create/*/lifecycle/insert alter select*/PyIceberg sees the final schema and rows": [
+        (
+            Fail,
+            "ClickHouse writes non-spec plural partition transform names `days` / `hours` for toRelativeDayNum / toRelativeHourNum (Utils.cpp getPartitionField), so PyIceberg parses the spec as `unknown`. Fixed upstream in ClickHouse/ClickHouse#114864 (closes #114848, merged 2026-08-28); not yet in antalya-26.6 / PR 2305.",
+        ),
+        (
+            Error,
+            "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
+        )
+    ],
     "/iceberg/export partition/: catalog/*/manifest integrity/value_counts across data files sum to source row count": [
         (
             Fail,
@@ -419,6 +525,14 @@ xfails = {
 }
 
 ffails = {
+    "/iceberg/native create": (
+        Skip,
+        "Native CREATE TABLE / DROP TABLE for DataLakeCatalog is an Antalya feature "
+        "introduced in Antalya 26.6 (Altinity/ClickHouse#2305)",
+        lambda test: not (
+            check_if_antalya_build(test) and check_clickhouse_version(">=26.6")(test)
+        ),
+    ),
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",
@@ -522,6 +636,18 @@ ffails = {
         "(Altinity/ClickHouse#2134, #2220)",
         lambda test: True,
     ),
+    "/iceberg/export partition/: catalog/*/system monitoring/commit-info columns name Iceberg files after success": (
+        Skip,
+        "commit-info persistence is not in a released build yet "
+        "(Altinity/ClickHouse#2290)",
+        lambda test: True,
+    ),
+    "/iceberg/export partition/: catalog/*/system monitoring/commit-info columns stay empty before commit": (
+        Skip,
+        "commit-info persistence is not in a released build yet "
+        "(Altinity/ClickHouse#2290)",
+        lambda test: True,
+    ),
     # Altinity/ClickHouse#2157: getIcebergType gained Int8/UInt8/Bool/Decimal
     # on 26.6. Older builds still reject those types.
     "/iceberg/export partition/: catalog/*/datatypes/*/accepted/* Int8": (
@@ -618,6 +744,13 @@ ffails = {
         Skip,
         "Hybrid table engine is Antalya-only",
         check_if_not_antalya_build,
+    ),
+    "/iceberg/cluster join filter": (
+        Skip,
+        "icebergS3Cluster JOIN filter pushdown lands in Antalya 26.6 "
+        "(Altinity/ClickHouse#2249)",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.6")(test),
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
@@ -718,6 +851,10 @@ def regression(
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     Feature(
+        test=load("iceberg.tests.iceberg_engine.native_create.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    Feature(
         test=load("iceberg.tests.iceberg_table_engine.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
@@ -739,6 +876,14 @@ def regression(
 
     # Feature(
     #     test=load("iceberg.tests.deletion_vectors.feature", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    #
+    # Feature(
+    #     test=load("iceberg.tests.deletion_vectors.delta_feature", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    #
+    # Feature(
+    #     test=load("iceberg.tests.cluster_join_filter.feature", "feature"),
     # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     # Feature(

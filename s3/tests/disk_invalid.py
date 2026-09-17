@@ -189,6 +189,8 @@ def access_failed(self):
 
     if self.context.storage == "azure":
         message = "Server failed to authenticate"
+    elif self.context.storage == "hetzner":
+        message = "The AWS Access Key Id you provided does not exist in our records"
     else:
         message = (
             "AccessDenied"
@@ -269,11 +271,17 @@ def access_failed_skip_check(self):
                     message="DB::Exception:",
                     exitcode=243,
                 )
-                assert (
-                    "user/qa-test is not authorized"
-                    if self.context.storage == "aws_s3"
-                    else "DB::Exception: Message: Access Denied" in r.output
-                ), error()
+                if self.context.storage == "hetzner":
+                    assert (
+                        "The AWS Access Key Id you provided does not exist in our records"
+                        in r.output
+                    ), error()
+                else:
+                    assert (
+                        "user/qa-test is not authorized"
+                        if self.context.storage == "aws_s3"
+                        else "DB::Exception: Message: Access Denied" in r.output
+                    ), error()
         else:
             with Given(
                 f"""I create table using S3 storage policy external,
@@ -349,6 +357,8 @@ def access_default(self):
 
     if self.context.storage == "azure":
         message = "Server failed to authenticate"
+    elif self.context.storage == "hetzner":
+        message = "The AWS Access Key Id you provided does not exist in our records"
     else:
         message = (
             "AccessDenied"
