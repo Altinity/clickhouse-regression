@@ -99,6 +99,7 @@ def syntax_error():
 
 
 def groups_frame_error(test):
+    """NOT_IMPLEMENTED for GROUPS frames on ClickHouse < 26.8 (#108653)."""
     return (48, "Exception: Window frame")
 
 
