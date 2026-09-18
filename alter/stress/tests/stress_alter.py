@@ -292,16 +292,22 @@ def alter_combinations(
 
                 except Exception as e:
                     with Finally("I dump system.part_logs"):
-                        for node in self.context.ch_nodes:
-                            try:
-                                node.query(
-                                    "SELECT * FROM system.part_log "
-                                    "INTO OUTFILE '/var/log/clickhouse-server/profiling_part_log_raw.log' "
-                                    "TRUNCATE FORMAT CSV",
-                                    no_checks=True,
-                                )
-                            except Exception as dump_exc:
-                                note(f"{node.name} part_log dump failed: {dump_exc}")
+                        if limit_disk_space:
+                            note("skipping part_log dump on limited disks")
+                        else:
+                            for node in self.context.ch_nodes:
+                                try:
+                                    node.query(
+                                        "SELECT * FROM system.part_log "
+                                        "INTO OUTFILE '/var/log/clickhouse-server/profiling_part_log_raw.log' "
+                                        "TRUNCATE FORMAT CSV",
+                                        no_checks=True,
+                                        timeout=60,
+                                    )
+                                except Exception as dump_exc:
+                                    note(
+                                        f"{node.name} part_log dump failed: {dump_exc}"
+                                    )
                     if limit_disk_space and _limited_disk_io_error(e):
                         note(
                             f"disk I/O during group (limited tmpfs): {type(e).__name__}: {e}"
@@ -320,6 +326,7 @@ def alter_combinations(
                                             "FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' "
                                             "FORMAT TSV",
                                             no_checks=True,
+                                            timeout=60,
                                         )
                                         if r.output.strip() == "":
                                             continue
@@ -329,6 +336,7 @@ def alter_combinations(
                                         node.query(
                                             "KILL MUTATION WHERE latest_fail_reason != ''",
                                             no_checks=True,
+                                            timeout=60,
                                         )
 
                             with By("making sure that replicas agree"):

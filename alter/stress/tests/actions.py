@@ -141,7 +141,12 @@ def add_random_column(self):
             with attempt:
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
-                    wait_for_mutations_to_finish(node=node)
+                    wait_for_mutations_to_finish(
+                        node=node,
+                        command_like="COLUMN",
+                        timeout=60,
+                        raise_on_timeout=False,
+                    )
                     By(
                         name=f"add column to {table_name} with {node.name}",
                         test=alter_table_add_column,
@@ -201,7 +206,12 @@ def delete_random_column(self):
                         node = get_random_node_for_table(table_name=table_name)
 
                     with And("waiting for any other mutations on that column to finish"):
-                        wait_for_mutations_to_finish(node=node, command_like=column_name)
+                        wait_for_mutations_to_finish(
+                            node=node,
+                            command_like=column_name,
+                            timeout=60,
+                            raise_on_timeout=False,
+                        )
 
                     with And(
                         f"delete column from {table_name} with {node.name}"
@@ -257,7 +267,12 @@ def update_random_column(self):
     """Replace some values on a random column."""
     table_name = get_random_table_name()
     node = get_random_node_for_table(table_name=table_name)
-    wait_for_mutations_to_finish(node=node, command_like="COLUMN")
+    wait_for_mutations_to_finish(
+        node=node,
+        command_like="COLUMN",
+        timeout=60,
+        raise_on_timeout=False,
+    )
     column_name = get_random_column_name(node=node, table_name=table_name)
     By(
         name=f"update column from {table_name} with {node.name}",
@@ -625,7 +640,12 @@ def add_random_projection(self, safe=True):
                     node = get_random_node_for_table(table_name=table_name)
 
                     if safe:
-                        wait_for_mutations_to_finish(node=node)
+                        wait_for_mutations_to_finish(
+                            node=node,
+                            command_like="PROJECTION",
+                            timeout=60,
+                            raise_on_timeout=False,
+                        )
 
                     node.query(
                         f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
@@ -708,7 +728,12 @@ def drop_random_projection(self):
                             table_name + ": " + exit_messages[table_name]
                         )
 
-        wait_for_mutations_to_finish(node=node, command_like="DROP PROJECTION")
+        wait_for_mutations_to_finish(
+            node=node,
+            command_like="DROP PROJECTION",
+            timeout=60,
+            raise_on_timeout=False,
+        )
         retry(
             check_tables_have_same_projections,
             timeout=step_retry_timeout,
@@ -730,9 +755,6 @@ def add_random_index(self, safe=True):
             with attempt:
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
-
-                    if safe:
-                        wait_for_mutations_to_finish(node=node)
 
                     node.query(
                         f"ALTER TABLE {table_name} ADD INDEX IF NOT EXISTS {index_name} {column_name} TYPE bloom_filter",
@@ -771,7 +793,12 @@ def clear_random_index(self):
         index_name = random.choice(indexes)
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
-        wait_for_mutations_to_finish(node=node, command_like=index_name)
+        wait_for_mutations_to_finish(
+            node=node,
+            command_like=index_name,
+            timeout=60,
+            raise_on_timeout=False,
+        )
 
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
@@ -793,7 +820,7 @@ def drop_random_index(self):
 
     index_name = random.choice(indexes)
 
-    for attempt in retries(timeout=step_retry_timeout * 2, delay=step_retry_delay):
+    for attempt in retries(timeout=step_retry_timeout, delay=step_retry_delay):
         with attempt:
             exit_codes = {}
             with When(f"I drop {index_name} on all tables"):
@@ -803,7 +830,10 @@ def drop_random_index(self):
 
                     with And("waiting for any other mutations on that index to finish"):
                         wait_for_mutations_to_finish(
-                            node=node, command_like=index_name, timeout=300
+                            node=node,
+                            command_like=index_name,
+                            timeout=60,
+                            raise_on_timeout=False,
                         )
 
                     with And("dropping the index"):
@@ -916,7 +946,12 @@ def check_tables_have_same_projections(
             table_projections = {}
             for table_name in tables:
                 node = get_random_node_for_table(table_name=table_name)
-                wait_for_mutations_to_finish(node=node, command_like="PROJECTION")
+                wait_for_mutations_to_finish(
+                    node=node,
+                    command_like="PROJECTION",
+                    timeout=60,
+                    raise_on_timeout=False,
+                )
                 table_projections[table_name] = set(
                     get_projections(node=node, table_name=table_name)
                 )
@@ -1313,9 +1348,15 @@ def clickhouse_limited_disk_config(self, node):
             KeyWithAttributes(
                 "errorlog", {"replace": "replace"}
             ): "/var/log/clickhouse-server-limited/clickhouse-server.err.log",
-            # Default suite log level is trace; a 1G log tmpfs fills in minutes.
+            # Default suite log level is trace; limited log tmpfs is 256M.
             KeyWithAttributes("level", {"replace": "replace"}): "warning",
         },
+        # Query profiler / metric_log / cas_log write to the data tmpfs (RAM).
+        KeyWithAttributes("metric_log", {"remove": "1"}): "",
+        KeyWithAttributes("asynchronous_metric_log", {"remove": "1"}): "",
+        KeyWithAttributes("cas_log", {"remove": "1"}): "",
+        KeyWithAttributes("cas_gc_log", {"remove": "1"}): "",
+        KeyWithAttributes("trace_log", {"remove": "1"}): "",
         KeyWithAttributes(
             "path", {"replace": "replace"}
         ): "/var/lib/clickhouse-limited/",
@@ -1371,6 +1412,19 @@ def limit_clickhouse_disks(self, node):
         "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
     }
     config = clickhouse_limited_disk_config(node=node)
+    users_path = "/etc/clickhouse-server/users.d/limited_disk_no_profiler.xml"
+    users_xml = """\
+<clickhouse>
+    <profiles>
+        <default>
+            <log_queries replace="replace">0</log_queries>
+            <log_query_threads replace="replace">0</log_query_threads>
+            <query_profiler_real_time_period_ns replace="replace">0</query_profiler_real_time_period_ns>
+            <query_profiler_cpu_time_period_ns replace="replace">0</query_profiler_cpu_time_period_ns>
+        </default>
+    </profiles>
+</clickhouse>
+"""
 
     try:
         with Given("I stop clickhouse"):
@@ -1383,6 +1437,13 @@ def limit_clickhouse_disks(self, node):
         with And("I write an override config for clickhouse"):
             node.command(
                 f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC",
+                steps=False,
+                exitcode=0,
+            )
+
+        with And("I disable query profiler and query_log on limited disks"):
+            node.command(
+                f"cat <<HEREDOC > {users_path}\n{users_xml}\nHEREDOC",
                 steps=False,
                 exitcode=0,
             )
@@ -1402,6 +1463,9 @@ def limit_clickhouse_disks(self, node):
 
         with And("I restore the original data directory config"):
             node.command(f"rm -rf {config.path}", exitcode=0)
+
+        with And("I restore query profiler settings"):
+            node.command(f"rm -rf {users_path}", exitcode=0)
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse()

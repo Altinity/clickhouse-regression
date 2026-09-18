@@ -180,46 +180,47 @@ volumes:
       device: tmpfs
       type: tmpfs
 
-  # tmpfs used by fill_*_disks. Caps stay small so a 32GB host does not OOM.
+  # tmpfs used by fill_*_disks. 2G data / 256M logs per node so a filled
+  # 32GB CX53 still has room for 3×5g ClickHouse plus ZooKeeper tmpfs.
   var_lib_clickhouse-limited-1:
     driver: local
     driver_opts:
-      o: "size=4G"
+      o: "size=2G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-1:
     driver: local
     driver_opts:
-      o: "size=1G"
+      o: "size=256M"
       device: tmpfs
       type: tmpfs
   
   var_lib_clickhouse-limited-2:
     driver: local
     driver_opts:
-      o: "size=4G"
+      o: "size=2G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-2:
     driver: local
     driver_opts:
-      o: "size=1G"
+      o: "size=256M"
       device: tmpfs
       type: tmpfs
 
   var_lib_clickhouse-limited-3:
     driver: local
     driver_opts:
-      o: "size=4G"
+      o: "size=2G"
       device: tmpfs
       type: tmpfs
 
   var_log_clickhouse-limited-3:
     driver: local
     driver_opts:
-      o: "size=1G"
+      o: "size=256M"
       device: tmpfs
       type: tmpfs
 

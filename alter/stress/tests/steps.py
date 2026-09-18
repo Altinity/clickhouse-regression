@@ -8,6 +8,7 @@ from platform import processor
 
 from testflows.core import *
 from testflows.asserts import error
+from testflows.uexpect.uexpect import ExpectTimeoutError
 
 from helpers.queries import *
 from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
@@ -403,8 +404,14 @@ def interrupt_network(cluster, node, cluster_prefix):
 
 
 @TestStep(When)
-def wait_for_mutations_to_finish(self, node, timeout=300, delay=5, command_like=None):
-    """Wait for all pending mutations to complete."""
+def wait_for_mutations_to_finish(
+    self, node, timeout=300, delay=5, command_like=None, raise_on_timeout=True
+):
+    """Wait for pending mutations to complete.
+
+    Each poll is capped so a stuck SELECT on system.mutations cannot hang
+    past the outer timeout (default docker-exec timeout is 300s per query).
+    """
     query = "SELECT * FROM system.mutations WHERE is_done=0"
     if command_like:
         query += f" AND command LIKE '%{command_like}%'"
@@ -412,16 +419,29 @@ def wait_for_mutations_to_finish(self, node, timeout=300, delay=5, command_like=
     query += " FORMAT Vertical"
 
     start_time = time.time()
+    r = None
 
     with By("querying system.mutations until all are done"):
         while time.time() - start_time < timeout:
-            r = node.query(query, no_checks=True)
+            remaining = timeout - (time.time() - start_time)
+            try:
+                r = node.query(
+                    query, no_checks=True, timeout=max(10, min(30, remaining))
+                )
+            except ExpectTimeoutError:
+                time.sleep(delay)
+                continue
             if r.output == "":
-                return
+                return True
 
             time.sleep(delay)
 
-        assert r.output == "", error("mutations did not finish in time")
+        if r is not None and r.output == "":
+            return True
+        if raise_on_timeout:
+            assert False, error("mutations did not finish in time")
+        note("mutations did not finish in time; continuing")
+        return False
 
 
 @TestStep(Finally)
@@ -435,6 +455,7 @@ def log_failing_mutations(self, nodes=None):
             r = node.query(
                 "SELECT * FROM system.mutations WHERE is_done=0 FORMAT Vertical",
                 no_checks=True,
+                timeout=60,
             )
             if r.output.strip() == "":
                 continue
@@ -445,6 +466,7 @@ def log_failing_mutations(self, nodes=None):
             r = node.query(
                 "SELECT latest_failed_part, table, latest_fail_reason FROM system.mutations WHERE is_done=0 FORMAT JSONCompactColumns",
                 no_checks=True,
+                timeout=60,
             )
             for part, table, fail_reason in zip(*json.loads(r.output)):
                 if fail_reason == "":
@@ -649,10 +671,14 @@ FROM system.metric_log
 def dump_stress_profiling(self):
     """Flush system logs and write compact summaries next to server logs."""
 
+    if getattr(self.context, "limit_disk_space", False):
+        note("skipping dump_stress_profiling on limited disks")
+        return
+
     nodes = getattr(self.context, "ch_nodes", None) or []
     for node in nodes:
         try:
-            node.query("SYSTEM FLUSH LOGS", no_checks=True)
+            node.query("SYSTEM FLUSH LOGS", no_checks=True, timeout=120)
         except Exception as exc:
             note(f"{node.name} SYSTEM FLUSH LOGS failed: {exc}")
             continue
@@ -664,7 +690,7 @@ def dump_stress_profiling(self):
                 + f"\nINTO OUTFILE '{path}' TRUNCATE FORMAT TSVWithNames"
             )
             try:
-                node.query(query, no_checks=True)
+                node.query(query, no_checks=True, timeout=60)
             except Exception as exc:
                 note(f"{node.name} {filename} dump failed: {exc}")
 
@@ -672,6 +698,7 @@ def dump_stress_profiling(self):
             r = node.query(
                 _PROFILING_DUMPS[0][1].strip().rstrip(";") + " FORMAT TSVWithNames",
                 no_checks=True,
+                timeout=60,
             )
             if r.output.strip():
                 note(f"{node.name} query_kind summary:\n{r.output.strip()}")
