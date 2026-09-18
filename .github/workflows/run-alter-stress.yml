@@ -148,7 +148,9 @@ env:
     ./*.html
     ./*/_instances/*.log
     ./*/_instances/*/logs/*.log
+    ./*/_instances/*/logs/profiling_*
     ./*/*/_instances/*/logs/*.log
+    ./*/*/_instances/*/logs/profiling_*
     ./*/*/_instances/*.log
 
 jobs:

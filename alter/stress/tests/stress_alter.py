@@ -6,11 +6,19 @@ import inspect
 
 from testflows.core import *
 from testflows.combinatorics import combinations
+from testflows.uexpect.uexpect import ExpectTimeoutError
 
 from helpers.alter import *
 from helpers.common import check_clickhouse_version, getuid
 from alter.stress.tests.actions import *
 from alter.stress.tests.steps import *
+
+
+def _limited_disk_io_error(exc):
+    """True when docker exec died because a limited tmpfs is full."""
+    if isinstance(exc, OSError) and getattr(exc, "errno", None) in (5, 28):
+        return True
+    return isinstance(exc, ExpectTimeoutError)
 
 
 def build_action_list(
@@ -282,66 +290,104 @@ def alter_combinations(
                         with And("I wait for all mutations to finish"):
                             wait_for_mutations_to_finish(timeout=300)
 
-                except:
-                    with Finally("I dump system.part_logs to csv"):
-                        for node in self.context.ch_nodes:
-                            node.query(
-                                "SELECT * FROM system.part_log INTO OUTFILE '/var/log/clickhouse-server/part_log.csv' TRUNCATE FORMAT CSV"
-                            )
+                except Exception as e:
+                    with Finally("I dump system.part_logs"):
+                        if limit_disk_space:
+                            note("skipping part_log dump on limited disks")
+                        else:
+                            for node in self.context.ch_nodes:
+                                try:
+                                    node.query(
+                                        "SELECT * FROM system.part_log "
+                                        "INTO OUTFILE '/var/log/clickhouse-server/profiling_part_log_raw.log' "
+                                        "TRUNCATE FORMAT CSV",
+                                        no_checks=True,
+                                        timeout=60,
+                                    )
+                                except Exception as dump_exc:
+                                    note(
+                                        f"{node.name} part_log dump failed: {dump_exc}"
+                                    )
+                    if limit_disk_space and _limited_disk_io_error(e):
+                        note(
+                            f"disk I/O during group (limited tmpfs): {type(e).__name__}: {e}"
+                        )
 
                 finally:
-                    with Finally(
-                        "I make sure that the replicas are consistent", flags=TE
-                    ):
-                        if kill_stuck_mutations:
-                            with By("killing any failing mutations"):
-                                for node in self.context.ch_nodes:
-                                    r = node.query(
-                                        "SELECT database, table, mutation_id, command, latest_fail_reason "
-                                        "FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' "
-                                        "FORMAT TSV",
-                                        no_checks=True,
-                                    )
-                                    if r.output.strip() == "":
-                                        continue
-                                    note(
-                                        f"{node.name} failing mutations (killing, not a Fail):\n{r.output}"
-                                    )
-                                    node.query(
-                                        "KILL MUTATION WHERE latest_fail_reason != ''",
-                                        no_checks=True,
-                                    )
+                    try:
+                        with Finally(
+                            "I make sure that the replicas are consistent", flags=TE
+                        ):
+                            if kill_stuck_mutations:
+                                with By("killing any failing mutations"):
+                                    for node in self.context.ch_nodes:
+                                        r = node.query(
+                                            "SELECT database, table, mutation_id, command, latest_fail_reason "
+                                            "FROM system.mutations WHERE is_done=0 AND latest_fail_reason != '' "
+                                            "FORMAT TSV",
+                                            no_checks=True,
+                                            timeout=60,
+                                        )
+                                        if r.output.strip() == "":
+                                            continue
+                                        note(
+                                            f"{node.name} failing mutations (killing, not a Fail):\n{r.output}"
+                                        )
+                                        node.query(
+                                            "KILL MUTATION WHERE latest_fail_reason != ''",
+                                            no_checks=True,
+                                            timeout=60,
+                                        )
 
-                        with By("making sure that replicas agree"):
-                            check_consistency(
-                                restore_consistent_structure=enforce_table_structure
+                            with By("making sure that replicas agree"):
+                                check_consistency(
+                                    restore_consistent_structure=enforce_table_structure
+                                )
+
+                        with And(
+                            "I make sure that there is still free disk space on the host"
+                        ):
+                            r = self.context.cluster.command(None, "df -h .")
+                            if "100%" in r.output:
+                                with When("I drop rows to free up space"):
+                                    for table_name in self.context.table_names:
+                                        delete_random_rows(table_name=table_name)
+                                        delete_random_rows(table_name=table_name)
+                    except Exception as e:
+                        if limit_disk_space and _limited_disk_io_error(e):
+                            note(
+                                f"skipping consistency after disk I/O error: {type(e).__name__}: {e}"
                             )
-
-                    with And(
-                        "I make sure that there is still free disk space on the host"
-                    ):
-                        r = self.context.cluster.command(None, "df -h .")
-                        if "100%" in r.output:
-                            with When("I drop rows to free up space"):
-                                for table_name in self.context.table_names:
-                                    delete_random_rows(table_name=table_name)
-                                    delete_random_rows(table_name=table_name)
+                        else:
+                            raise
 
             note(f"Average time per test combination {(time.time()-t)/(i+1):.1f}s")
 
     finally:
+        with Finally("I dump query_log / metric_log / cas_log / trace_log summaries"):
+            try:
+                dump_stress_profiling()
+            except Exception as e:
+                note(f"dump_stress_profiling failed: {e}")
+
         with Finally("I log any pending mutations that might have caused a fail"):
-            log_failing_mutations()
+            try:
+                log_failing_mutations()
+            except Exception as e:
+                note(f"log_failing_mutations failed: {e}")
 
         with Finally(
             "I drop each table on each node in case the cluster is in a bad state"
         ):
-            for node in self.context.ch_nodes:
-                for table_name in self.context.table_names:
-                    When(test=delete_one_replica, parallel=True)(
-                        node=node, table_name=table_name, timeout=120
-                    )
-            join()
+            try:
+                for node in self.context.ch_nodes:
+                    for table_name in self.context.table_names:
+                        When(test=delete_one_replica, parallel=True)(
+                            node=node, table_name=table_name, timeout=120
+                        )
+                join()
+            except Exception as e:
+                note(f"drop tables failed: {e}")
 
 
 @TestScenario

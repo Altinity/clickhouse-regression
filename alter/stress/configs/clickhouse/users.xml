@@ -10,6 +10,12 @@
             <!-- Use cache of uncompressed blocks of data. Meaningful only for processing many of very short queries. -->
             <use_uncompressed_cache>0</use_uncompressed_cache>
 
+            <!-- Needed for dump_stress_profiling (query_log / trace_log). -->
+            <log_queries>1</log_queries>
+            <log_query_threads>0</log_query_threads>
+            <query_profiler_real_time_period_ns>100000000</query_profiler_real_time_period_ns>
+            <query_profiler_cpu_time_period_ns>100000000</query_profiler_cpu_time_period_ns>
+
             <!-- How to choose between replicas during distributed query processing.
                  random - choose random replica from set of replicas with minimum number of errors
                  nearest_hostname - from set of replicas with minimum number of errors, choose replica
