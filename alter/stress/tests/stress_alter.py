@@ -449,7 +449,7 @@ def pairs(self):
 
 
 @TestScenario
-def safe(self):
+def sanity(self):
     """
     Perform only actions that are relatively unlikely to cause exceptions.
     """

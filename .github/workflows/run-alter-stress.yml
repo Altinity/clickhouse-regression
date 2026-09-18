@@ -1,5 +1,5 @@
-name: 🦾 Stress tests
-run-name: 🦾 ${{ inputs.custom_run_name || format('{0} | Stress {1} | Provider {2} | Arch {3}', inputs.version, inputs.scenario, inputs.storage_provider, inputs.architecture) }}
+name: Alter stress
+run-name: Alter stress | ${{ inputs.custom_run_name || format('{0} | {1} | {2} | {3}', inputs.version, inputs.scenario, inputs.storage_provider, inputs.architecture) }}
 on:
   workflow_dispatch:
     inputs:
@@ -14,10 +14,11 @@ on:
         type: string
         default: "26.6.2.20001"
       scenario:
-        description: "🦾 Stress scenario to run (default: safe)"
+        description: "Scenario to run (default: sanity). all = every combinations scenario."
         type: choice
         options:
-          - safe
+          - sanity
+          - all
           - parts
           - columns and indexes unsafe
           - add remove replicas
@@ -140,7 +141,7 @@ env:
     --parallel ${{ vars.PARALLEL }}
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log ${{ inputs.extra_args }}${{ inputs.stress && ' --stress' || '' }}
-    --only ":/simplified/*" ":/combinations/${{ inputs.scenario }}/*"
+    --only ":/simplified/*" "${{ inputs.scenario == 'all' && ':/combinations/*' || format(':/combinations/{0}/*', inputs.scenario) }}"
   artifact_paths: |
     ./report.html
     ./*.log.txt
