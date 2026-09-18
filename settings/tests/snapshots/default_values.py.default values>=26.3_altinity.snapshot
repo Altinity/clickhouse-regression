@@ -776,6 +776,12 @@ do_not_merge_across_partitions_select_final = r"""'{"default":"0"}'"""
 
 drain_timeout = r"""'{"default":"3"}'"""
 
+dynamic_disk_allow_from_env = r"""'{"default":"0"}'"""
+
+dynamic_disk_allow_from_zk = r"""'{"default":"0"}'"""
+
+dynamic_disk_allow_include = r"""'{"default":"0"}'"""
+
 dynamic_throw_on_type_mismatch = r"""'{"default":"1"}'"""
 
 empty_result_for_aggregation_by_constant_keys_on_empty_set = r"""'{"default":"1"}'"""
@@ -951,6 +957,8 @@ filesystem_cache_reserve_space_wait_lock_timeout_milliseconds = r"""'{"default":
 filesystem_cache_segments_batch_size = r"""'{"default":"20"}'"""
 
 filesystem_cache_skip_download_if_exceeds_per_query_cache_write_limit = r"""'{"default":"1"}'"""
+
+filesystem_cache_wait_for_concurrent_download_timeout_milliseconds = r"""'{"default":"1000"}'"""
 
 filesystem_prefetch_max_memory_usage = r"""'{"default":"1073741824"}'"""
 
@@ -2838,7 +2846,7 @@ show_data_lake_catalogs_in_system_tables = r"""'{"default":"0"}'"""
 
 show_processlist_include_internal = r"""'{"default":"1"}'"""
 
-show_remote_databases_in_system_tables = r"""'{"default":"0"}'"""
+show_remote_databases_in_system_tables = r"""'{"default":"1"}'"""
 
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
@@ -2903,6 +2911,8 @@ throw_if_deduplication_in_dependent_materialized_views_enabled_with_async_insert
 throw_if_no_data_to_insert = r"""'{"default":"1"}'"""
 
 throw_on_error_from_cache_on_write_operations = r"""'{"default":"0"}'"""
+
+throw_on_hive_partitioning_resolution_failure = r"""'{"default":"0"}'"""
 
 throw_on_max_partitions_per_insert_block = r"""'{"default":"1"}'"""
 
