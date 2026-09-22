@@ -532,6 +532,13 @@
         * 5.21.12 [Alter Database](#alter-database)
             * 5.21.12.1 [RQ.SRS-006.RBAC.Privileges.AlterDatabase](#rqsrs-006rbacprivilegesalterdatabase)
             * 5.21.12.2 [RQ.SRS-006.RBAC.Privileges.AlterDatabase.Settings](#rqsrs-006rbacprivilegesalterdatabasesettings)
+        * 5.21.13 [Mutation read access](#mutation-read-access)
+            * 5.21.13.1 [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess](#rqsrs-006rbacprivilegesmutationreadaccess)
+            * 5.21.13.2 [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.OnCluster](#rqsrs-006rbacprivilegesmutationreadaccessoncluster)
+            * 5.21.13.3 [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.ReplicatedDatabase](#rqsrs-006rbacprivilegesmutationreadaccessreplicateddatabase)
+            * 5.21.13.4 [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.ObjectResolution](#rqsrs-006rbacprivilegesmutationreadaccessobjectresolution)
+            * 5.21.13.5 [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.VirtualColumn](#rqsrs-006rbacprivilegesmutationreadaccessvirtualcolumn)
+            * 5.21.13.6 [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.GrantDependentTableFunction](#rqsrs-006rbacprivilegesmutationreadaccessgrantdependenttablefunction)
     * 5.22 [Create](#create)
         * 5.22.1 [RQ.SRS-006.RBAC.Privileges.Create](#rqsrs-006rbacprivilegescreate)
         * 5.22.2 [RQ.SRS-006.RBAC.Privileges.CreateTable](#rqsrs-006rbacprivilegescreatetable)
@@ -566,6 +573,7 @@
         * 5.29.2 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterUpdate](#rqsrs-006rbacprivilegeskillmutationalterupdate)
         * 5.29.3 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterDelete](#rqsrs-006rbacprivilegeskillmutationalterdelete)
         * 5.29.4 [RQ.SRS-006.RBAC.Privileges.KillMutation.AlterDropColumn](#rqsrs-006rbacprivilegeskillmutationalterdropcolumn)
+        * 5.29.5 [RQ.SRS-006.RBAC.Privileges.KillMutation.ReadAccess](#rqsrs-006rbacprivilegeskillmutationreadaccess)
     * 5.30 [Show](#show)
         * 5.30.1 [RQ.SRS-006.RBAC.ShowTables.Privilege](#rqsrs-006rbacshowtablesprivilege)
         * 5.30.2 [RQ.SRS-006.RBAC.ShowTables.RequiredPrivilege](#rqsrs-006rbacshowtablesrequiredprivilege)
@@ -4908,6 +4916,51 @@ version: 1.0
 [ClickHouse] SHALL support granting and revoking `ALTER DATABASE SETTINGS` privilege,
 which permits users to **alter** the settings of a database.
 
+#### Mutation read access
+
+##### RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess
+version: 1.0
+
+[ClickHouse] SHALL accept `ALTER TABLE ... UPDATE`, `ALTER TABLE ... DELETE`, lightweight `UPDATE`, and lightweight `DELETE FROM` only when the submitting user has the read privilege on everything the mutation reads.
+The read privilege is `SELECT` on a column or table, `dictGet` on a dictionary, `SELECT` on the attribute and key columns of a `joinGet`, the source privilege of a table function, or `SELECT` on every column a SQL user-defined function body reads.
+The read may sit in the `WHERE` predicate, on the right-hand side of an `UPDATE` assignment, in a subquery, on the right of `IN`, or nested inside those expressions.
+A subquery over one plain table requires `SELECT` on each column it references.
+A join, several tables, a nested subquery, a table function in `FROM`, an asterisk, or a name that stays qualified requires `SELECT` on each whole table.
+`validate_mutation_query` SHALL NOT change this decision.
+A mutation that is accepted SHALL NOT copy a value from an unreadable table into a readable column.
+
+##### RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.OnCluster
+version: 1.0
+
+[ClickHouse] SHALL enforce [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess](#rqsrs-006rbacprivilegesmutationreadaccess) on the initiating server before an `ON CLUSTER` mutation is enqueued.
+
+##### RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.ReplicatedDatabase
+version: 1.0
+
+[ClickHouse] SHALL enforce [RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess](#rqsrs-006rbacprivilegesmutationreadaccess) on the initiating server before a mutation in a Replicated database is enqueued.
+
+##### RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.ObjectResolution
+version: 1.0
+
+[ClickHouse] SHALL resolve an unqualified table, set, dictionary, or Join table in a mutation to the mutated table's database.
+A grant on a same-named object in the session's current database SHALL NOT satisfy that read, and the stored mutation SHALL read the mutated database's object.
+A one-part name on the right of `IN` SHALL be a table.
+A `WITH` name, a `SELECT` alias, an `ARRAY JOIN` alias, and a session temporary table SHALL NOT take the place of that table, and only inside their own `SELECT` level.
+A `dictGet` or `joinGet` argument that is one constant string names that object.
+An argument that is not one constant string SHALL require the privilege on every such object.
+
+##### RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.VirtualColumn
+version: 1.0
+
+[ClickHouse] SHALL NOT require `SELECT` on a virtual column of the mutated table or of a subquery table.
+[ClickHouse] SHALL require `SELECT` on a real column whose name is the same as a virtual column.
+
+##### RQ.SRS-006.RBAC.Privileges.Mutation.ReadAccess.GrantDependentTableFunction
+version: 1.0
+
+[ClickHouse] SHALL reject `viewIfPermitted` and `mergeTreeTextIndex` inside a mutation for every user.
+What those functions read depends on the current user's grants, and the mutation later runs with full access.
+
 ### Create
 
 #### RQ.SRS-006.RBAC.Privileges.Create
@@ -5094,6 +5147,12 @@ version: 1.0
 
 [ClickHouse] SHALL successfully execute `KILL MUTATION` query on an `ALTER DROP COLUMN` mutation if and only if
 the user has `ALTER DROP COLUMN` privilege on the table where the mutation was created, either directly or through a role.
+
+#### RQ.SRS-006.RBAC.Privileges.KillMutation.ReadAccess
+version: 1.0
+
+[ClickHouse] SHALL execute `KILL MUTATION` without requiring `SELECT` on the columns or tables that the killed mutation reads.
+The user still needs the privilege that created the mutation.
 
 ### Show
 
