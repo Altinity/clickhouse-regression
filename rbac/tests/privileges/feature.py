@@ -174,6 +174,11 @@ def feature(self):
                 executor=pool,
             )
             Feature(
+                run=load("rbac.tests.privileges.alter.mutation_read_access", "feature"),
+                parallel=True,
+                executor=pool,
+            )
+            Feature(
                 run=load("rbac.tests.privileges.alter.alter_freeze", "feature"),
                 parallel=True,
                 executor=pool,

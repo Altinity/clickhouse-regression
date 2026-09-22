@@ -40,6 +40,9 @@ issue_38716 = "https://github.com/ClickHouse/ClickHouse/issues/38716"
 pull_47002 = "https://github.com/ClickHouse/ClickHouse/pull/47002"
 issue_65134 = "https://github.com/ClickHouse/ClickHouse/issues/65134"
 issue_70898 = "https://github.com/ClickHouse/ClickHouse/issues/70898"
+issue_105614 = "https://github.com/ClickHouse/ClickHouse/issues/105614"
+issue_107588 = "https://github.com/ClickHouse/ClickHouse/issues/107588"
+pull_107486 = "https://github.com/ClickHouse/ClickHouse/pull/107486"
 
 xfails = {
     "part 1/syntax/show create quota/I show create quota current": [
@@ -242,6 +245,90 @@ xfails = {
     ],
 }
 
+# Mutation read access is missing until ClickHouse#107486. Direct column
+# reads fail with validation on or off (#105614). A subquery is denied locally
+# when validate_mutation_query is 1, and accepted when it is 0 (#107588).
+# IN, a SQL UDF, and dictGet are accepted with validation left on, and so is
+# every one of those reads ON CLUSTER. Drop these once that pull request is
+# in the version under test.
+#
+# Each pattern names the suite. TestFlows only hands an xfail to a child when
+# the pattern matches that child as a path prefix, so a leading '*' is dropped
+# at 'part 1' and never reaches the scenario.
+_mutation_read = "part 1/privileges/mutation read access"
+
+
+def _mutation_xfail(suites, leaf, reason):
+    for suite in suites:
+        xfails[f"{_mutation_read}/{suite}/{leaf}"] = [(Fail, reason)]
+
+
+_mutation_xfail(
+    ("combinations", "on cluster", "replicated database"),
+    ":where_column grant=0*",
+    issue_105614,
+)
+_mutation_xfail(
+    ("combinations", "on cluster"),
+    ": assignment grant=0*",
+    issue_105614,
+)
+for _leaf in (
+    ": subquery grant=0 validate=0*",
+    ": subquery_assignment grant=0 validate=0*",
+    ": in_set grant=0 validate=0*",
+    ": udf grant=0 validate=0*",
+):
+    _mutation_xfail(("combinations", "on cluster"), _leaf, issue_107588)
+_mutation_xfail(
+    ("combinations",),
+    ": subquery_constant grant=0 validate=0*",
+    issue_107588,
+)
+_mutation_xfail(("combinations",), ": dict_get grant=0 validate=0*", issue_107588)
+_mutation_xfail(("combinations",), ": join_get grant=0 validate=0*", issue_107588)
+# Validation on does not see these carriers. A local subquery is already denied.
+for _leaf in (
+    ": in_set grant=0 validate=1*",
+    ": udf grant=0 validate=1*",
+    ": dict_get grant=0 validate=1*",
+):
+    _mutation_xfail(("combinations",), _leaf, issue_107588)
+# ON CLUSTER does not run the submission check, so validation on still accepts.
+for _leaf in (
+    ": subquery grant=0 validate=1*",
+    ": subquery_assignment grant=0 validate=1*",
+    ": in_set grant=0 validate=1*",
+    ": udf grant=0 validate=1*",
+):
+    _mutation_xfail(("on cluster",), _leaf, issue_107588)
+_mutation_xfail(
+    ("partial grant",),
+    ":subquery_wrong_column denied=1 validate=0*",
+    issue_107588,
+)
+_mutation_xfail(
+    ("partial grant",),
+    ":star_column_grant denied=1 validate=0*",
+    issue_107588,
+)
+_mutation_xfail(("partial grant",), ":join_column_grant denied=1*", pull_107486)
+for _name, _reason in (
+    ("one part in name is a table", pull_107486),
+    ("with and alias scope", pull_107486),
+    ("temporary table is not grant free", issue_107588),
+    ("unqualified name without grant", issue_107588),
+    ("nested indirect read", issue_107588),
+    ("array join column", issue_107588),
+    ("joinGet attribute without key", issue_107588),
+    ("dictGet name that is not one object", pull_107486),
+    ("table function without source grant", issue_107588),
+    ("real column shadowing virtual", pull_107486),
+    ("stored mutation reads mutated database", pull_107486),
+    ("grant dependent table function", pull_107486),
+):
+    xfails[f"{_mutation_read}/{_name}"] = [(Fail, _reason)]
+
 xflags = {
     "part 1/privileges/alter index/table_type='ReplicatedVersionedCollapsingMergeTree-sharded_cluster'/role with privileges from role with grant option/granted=:/I try to ALTER INDEX with given part 1/privileges/I check order by when privilege is granted": (
         SKIP,
@@ -378,6 +465,11 @@ ffails = {
         Skip,
         "https://github.com/ClickHouse/ClickHouse/pull/89450",
         check_clickhouse_version(">=25.11"),
+    ),
+    "/rbac/part 1/privileges/mutation read access": (
+        Skip,
+        "mutation read checks covered here are the 26.10 behavior, https://github.com/ClickHouse/ClickHouse/pull/107486",
+        check_clickhouse_version("<26.10"),
     ),
 }
 
