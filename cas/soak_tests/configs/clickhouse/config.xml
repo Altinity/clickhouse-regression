@@ -325,14 +325,12 @@
         <flush_interval_milliseconds>7500</flush_interval_milliseconds>
     </part_log>
 
-    <!-- Uncomment to write text log into table.
-         Text log contains all information from usual server log but stores it in structured and efficient way.
+    <!-- S39 counts mount-lease renewal lines here. The table does not exist while this block is commented out. -->
     <text_log>
         <database>system</database>
         <table>text_log</table>
         <flush_interval_milliseconds>7500</flush_interval_milliseconds>
     </text_log>
-    -->
 
     <!-- Parameters for embedded dictionaries, used in Yandex.Metrica.
          See https://clickhouse.com/docs/en/dicts/internal_dicts/

@@ -467,8 +467,8 @@ class S22(Scenario):
         try:
             hz = self._ctl("/healthz")
         except Exception as e:
-            result.add(Verdict.inconclusive("fault proxy reachable", "control :8474 up",
-                                            f"unreachable: {e}"))
+            result.add(Verdict("fault proxy reachable", "control :8474 up",
+                                f"unreachable: {e}", "fail"))
             return
         result.observations["proxy"] = {"healthz": hz}
 

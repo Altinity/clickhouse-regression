@@ -1,7 +1,7 @@
 """S12 ten-replica shared pool (P0).
 
-The body is the original card. A 2-node env fails the replica-count check until
-the ten-replica compose is wired; that harness work is separate from this port.
+The body is the original card. The runner starts clickhouse3–10 for this card
+and points remote_servers at all ten replicas.
 """
 
 import threading

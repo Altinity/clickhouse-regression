@@ -14,6 +14,7 @@ from cas.soak_tests.steps.card import (
     drop_table_both,
     drop_tables_like,
 )
+from cas.soak_tests.steps.variants import activate, restore, ten_nodes
 
 
 def _log(msg):
@@ -77,6 +78,7 @@ _CLEANUP_LIKE = (
     "s40_%",
     "s41_%",
     "s42_%",
+    "s43_%",
     "s44_%",
     "s45_%",
     "w3_%",
@@ -89,7 +91,6 @@ def run_card(self, card_cls):
     scale = str(getattr(self.context, "scenario_scale", "dev"))
     card = card_cls()
     params = card.resolve_params(scale)
-    cluster = cluster_from_context(self.context)
     result = ScenarioResult(
         scenario=card.name,
         title=card.title,
@@ -97,6 +98,7 @@ def run_card(self, card_cls):
         seed=seed,
         params=params,
     )
+    cluster = cluster_from_context(self.context)
     ctx = _Ctx(cluster, params, seed, scale, _log)
     user = getattr(self.context, "minio_root_user", None)
     password = getattr(self.context, "minio_root_password", None)
@@ -111,6 +113,12 @@ def run_card(self, card_cls):
         ctx.extra["since_event_time"] = None
     note(f"{card.name}: {card.title} scale={scale} params={params}")
     try:
+        activate(self.context, card.compose_variant)
+        if card.compose_variant == "tenreplicas":
+            cluster = ten_nodes()
+        else:
+            cluster = cluster_from_context(self.context)
+        ctx.cluster = cluster
         for like in _CLEANUP_LIKE:
             drop_tables_like(cluster, like)
         try:
@@ -122,8 +130,25 @@ def run_card(self, card_cls):
             note(f"{card.name} raised {type(e).__name__}: {e}")
             result.note_anomaly(f"raised {type(e).__name__}: {e}")
             result.add(
-                Verdict.inconclusive("card completed", "no uncaught exception", str(e)[:500])
+                Verdict(
+                    "card completed",
+                    "no uncaught exception",
+                    f"{type(e).__name__}: {e}"[:500],
+                    "fail",
+                )
             )
+        apply_card_result(result)
+    except Exception as e:
+        note(f"{card.name} variant switch raised {type(e).__name__}: {e}")
+        result.note_anomaly(f"variant switch raised {type(e).__name__}: {e}")
+        result.add(
+            Verdict(
+                "cluster variant",
+                card.compose_variant or "default",
+                f"{type(e).__name__}: {e}"[:500],
+                "fail",
+            )
+        )
         apply_card_result(result)
     finally:
         for name in list(result.observations.get("tables", []) or []):
@@ -143,7 +168,10 @@ def feature(self):
             f"no implemented scenario cards match {spec!r}; "
             "registered: " + ", ".join(c.name for c in select("all") or ["(none)"])
         )
-    for card_cls in cards:
-        Scenario(test=run_card, name=f"{card_cls.name} {card_cls.title}", flags=TE)(
-            card_cls=card_cls
-        )
+    try:
+        for card_cls in cards:
+            Scenario(test=run_card, name=f"{card_cls.name} {card_cls.title}", flags=TE)(
+                card_cls=card_cls
+            )
+    finally:
+        restore(self.context)

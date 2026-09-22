@@ -1,7 +1,6 @@
 """S41 wide-insert write-path baseline (P1).
 
-CA versus plain S3 on the s41 compose. Profilers and query_log collection are
-in the card; bringing up that compose is later harness work.
+CA versus plain S3. The s3plain disk and policy are in the shared storage config.
 """
 
 import time

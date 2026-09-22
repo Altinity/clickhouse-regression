@@ -11,6 +11,28 @@ services:
       minio:
         condition: service_healthy
 
+
+  s3proxy:
+    image: python:3.12-slim
+    command: ["python3", "/app/s3_fault_proxy.py"]
+    environment:
+      RUSTFS_UPSTREAM: "minio:9000"
+      S3_PROXY_PORT: "9000"
+      S3_PROXY_CTL_PORT: "8474"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/proxy:/app:ro"
+    ports:
+      - "8474:8474"
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8474/healthz', timeout=2)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
   zookeeper1:
     extends:
       file: ../../../docker-compose/zookeeper-service.yml
@@ -35,6 +57,8 @@ services:
         condition: service_healthy
       zookeeper1:
         condition: service_healthy
+      s3proxy:
+        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -56,6 +80,174 @@ services:
       zookeeper1:
         condition: service_healthy
 
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    profiles: ["tenreplicas"]
+    ports:
+      - "8125:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse4:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse4
+    profiles: ["tenreplicas"]
+    ports:
+      - "8126:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse4/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse5:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse5
+    profiles: ["tenreplicas"]
+    ports:
+      - "8127:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse5/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse6:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse6
+    profiles: ["tenreplicas"]
+    ports:
+      - "8128:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse6/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse7:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse7
+    profiles: ["tenreplicas"]
+    ports:
+      - "8129:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse7/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse8:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse8
+    profiles: ["tenreplicas"]
+    ports:
+      - "8130:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse8/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse9:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse9
+    profiles: ["tenreplicas"]
+    ports:
+      - "8131:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse9/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse10:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse10
+    profiles: ["tenreplicas"]
+    ports:
+      - "8132:8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse10/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/fsck_only_ca_regression.xml:/etc/clickhouse-server/fsck-only.xml:ro"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+
   all_services_ready:
     image: hello-world
     depends_on:
@@ -68,4 +260,6 @@ services:
       mc:
         condition: service_healthy
       zookeeper1:
+        condition: service_healthy
+      s3proxy:
         condition: service_healthy

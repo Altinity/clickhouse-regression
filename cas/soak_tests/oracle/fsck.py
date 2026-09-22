@@ -1,6 +1,11 @@
 """cas-fsck / cas-gc-dryrun parsers. Pure: no docker, no cluster."""
 
+import re
+
 PARTIAL_MARGIN_S = 20
+
+# clickhouse disks writes cursor-control and color even when stdout is a file.
+_ANSI = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
 
 KNOWN_DETAIL_CLASSES = (
     "reachable",
@@ -62,10 +67,14 @@ def parse_fsck_detail(stdout: str) -> tuple[list[dict], list[str]]:
     return detail_rows, sorted(unknown_classes)
 
 
+def _plain_fsck_line(line: str) -> str:
+    return _ANSI.sub("", line).strip()
+
+
 def parse_fsck_stdout(stdout: str, *, exit_code: int, detail: bool) -> dict:
     """Build the fsck result dict the checkpoint asserts on."""
     summary_line = next(
-        (ln for ln in stdout.splitlines() if ln.startswith("reachable=")),
+        (plain for ln in stdout.splitlines() if (plain := _plain_fsck_line(ln)).startswith("reachable=")),
         "",
     )
     res = parse_fsck_summary(summary_line) if summary_line else {}

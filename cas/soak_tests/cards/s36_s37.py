@@ -1,7 +1,6 @@
 """S36 and S37 disk moves (P1).
 
-Ports of the multidisk cards. They need the ca_local / ca_local3 policies;
-booting that compose is later harness work.
+Ports of the multidisk cards. ca_local and ca_local3 are in the shared storage config.
 """
 
 import threading

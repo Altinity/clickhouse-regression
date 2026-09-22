@@ -14,7 +14,7 @@ Port stages (do these in order; each stage is its own change)
 3. Soak phase 1                         done (green-path ledger driver, no chaos)
 4. Soak phase 2                         done (deterministic chaos on the same driver)
 5. Soak phase 3                         done (wall-clock duration driver)
-6. Scenario cards                       done (S01–S45; compose variants still need the harness)
+6. Scenario cards                       done (S01–S45; the runner selects each card's cluster variant)
 
 ``--suite`` names below match the old harness so we can compare runs later.
 Unimplemented suites skip rather than fail.

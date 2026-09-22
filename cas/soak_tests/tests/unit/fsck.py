@@ -60,6 +60,17 @@ def parse_dryrun_entries(self):
 
 
 @TestScenario
+@Name("parse fsck summary ignores cursor color")
+def parse_fsck_summary_ignores_cursor_color(self):
+    colored = (
+        "\x1b[01;31m\x1b[Kreachable=\x1b[m\x1b[K120 dangling=\x1b[m\x1b[K0 "
+        "unreachable=7 pending_gc=3\n"
+    )
+    r = parse_fsck_stdout(colored, exit_code=0, detail=False)
+    assert r["reachable"] == 120 and r["dangling"] == 0 and r["unreachable"] == 7, error()
+
+
+@TestScenario
 @Name("parse fsck stdout collects detail rows")
 def parse_fsck_stdout_detail(self):
     stdout = (

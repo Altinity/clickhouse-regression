@@ -37,10 +37,7 @@ _S3_CORRECTNESS_MARKERS = (
 )
 
 # Host-mapped HTTP ports from soak_tests_env/docker-compose.yml.
-_DEFAULT_PORTS = {
-    "clickhouse1": 8123,
-    "clickhouse2": 8124,
-}
+_DEFAULT_PORTS = {f"clickhouse{i}": 8122 + i for i in range(1, 11)}
 
 
 class QueryError(RuntimeError):

@@ -165,21 +165,38 @@ class S16(Scenario):
         ca_events = ca_since(ctx)
         result.observations["ca_event_counts"] = ca_events
         resurrect_count = O.event_total(ca_events, "blob_reuse_resurrect")
+        deleted_count = O.event_total(ca_events, "blob_delete")
         result.observations["reuse_events"] = {
             et: O.event_total(ca_events, et)
             for et in ("blob_reuse_resurrect", "blob_reuse_adopt", "blob_put", "blob_delete", "objects_spared")
         }
-        result.add(
-            Verdict.check(
-                "resurrection events recorded (cas_log)",
-                "blob_reuse_resurrect fires for the drop/GC-condemn/re-insert cycle",
-                f"blob_reuse_resurrect={resurrect_count}",
-                resurrect_count > 0,
-                ""
-                if resurrect_count > 0
-                else "no blob_reuse_resurrect events — GC may not have condemned before re-insert",
+        if resurrect_count > 0:
+            result.add(
+                Verdict.check(
+                    "resurrection events recorded (cas_log)",
+                    "blob_reuse_resurrect fires for the drop/GC-condemn/re-insert cycle",
+                    f"blob_reuse_resurrect={resurrect_count}",
+                    True,
+                )
             )
-        )
+        elif deleted_count == 0:
+            result.add(
+                Verdict.inconclusive(
+                    "resurrection events recorded (cas_log)",
+                    "blob_reuse_resurrect after GC condemns the retired token",
+                    "blob_delete=0 in this window, so GC did not condemn before the re-insert",
+                )
+            )
+        else:
+            result.add(
+                Verdict.check(
+                    "resurrection events recorded (cas_log)",
+                    "blob_reuse_resurrect fires after blob_delete",
+                    f"blob_reuse_resurrect={resurrect_count} blob_delete={deleted_count}",
+                    False,
+                    "GC condemned content and the re-insert did not emit blob_reuse_resurrect",
+                )
+            )
         bad = ca_events.get("bad_total", {})
         oracle_stable = (final_chk == expected_oracle) and all(
             row["checksum"] == expected_oracle for row in cycle_log

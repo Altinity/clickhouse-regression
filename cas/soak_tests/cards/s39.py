@@ -1,7 +1,7 @@
 """S39 mount-lease fault tolerance (P1).
 
-Two fault legs against the object-store proxy. If :8474 is down the card
-records inconclusive and returns; the proxy compose is later harness work.
+Two fault legs against the object-store proxy. The runner points the ``ca``
+disk at that proxy for this card. A down control port fails the card.
 """
 
 import json as _json
@@ -60,12 +60,11 @@ class S39(Scenario):
     # above and the leg-A/leg-B asserts below): short_fault_s < _MOUNT_RENEW_PERIOD_S (10) and
     # << _MOUNT_LEASE_TTL_S (30), so the short leg overlaps AT MOST one renewal beat and can never
     # fence; long_fault_s > _MOUNT_LEASE_TTL_S (30) + a safety margin, so the long leg reliably
-    # fences. The `ci` row previously set short_fault_s=15 (>= the renew period), which violated
-    # this invariant and made leg A's own soundness assert raise.
+    # fences. `ci` was 15 and `full` was 20; both overlapped a renewal beat, so both are 9 now.
     param_table = {
         "dev": {"short_fault_s": 8, "long_fault_s": 40, "settle_s": 20, "rows": 2000, "payload_bytes": 512},
         "ci": {"short_fault_s": 9, "long_fault_s": 50, "settle_s": 40, "rows": 20000, "payload_bytes": 1024},
-        "full": {"short_fault_s": 20, "long_fault_s": 60, "settle_s": 60, "rows": 100000, "payload_bytes": 2048},
+        "full": {"short_fault_s": 9, "long_fault_s": 60, "settle_s": 60, "rows": 100000, "payload_bytes": 2048},
     }
 
     def run(self, ctx, result):
@@ -79,8 +78,8 @@ class S39(Scenario):
         try:
             hz = _ctl("/healthz")
         except Exception as e:
-            result.add(Verdict.inconclusive("fault proxy reachable", "control :8474 up",
-                                            f"unreachable: {e}"))
+            result.add(Verdict("fault proxy reachable", "control :8474 up",
+                                f"unreachable: {e}", "fail"))
             return
         result.observations["proxy"] = {"healthz": hz}
         _ctl("/config", {"rate": 0.0})

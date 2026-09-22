@@ -233,6 +233,7 @@ def p1_cards_resolve_params(self):
     assert S37().compose_variant == "multidisk", error()
     assert S39().compose_variant == "s3faultproxy", error()
     assert S39().resolve_params("ci")["short_fault_s"] < 10, error()
+    assert S39().resolve_params("full")["short_fault_s"] < 10, error()
     assert S41().compose_variant == "s41", error()
     assert S41().resolve_params("full")["rows"] == 10000000, error()
     for card in (S22(), S31(), S36(), S37(), S39(), S41()):

@@ -18,6 +18,25 @@
                 <gc_interval_sec>10</gc_interval_sec>
                 <expect_continue_min_bytes>65536</expect_continue_min_bytes>
             </ca>
+            <!-- Plain S3 comparison disk for S41. Different prefix so it stays out of cas-fsck. -->
+            <s3plain>
+                <type>object_storage</type>
+                <object_storage_type>s3</object_storage_type>
+                <metadata_type>local</metadata_type>
+                <endpoint>http://minio:9000/warehouse/s3plain_pool/</endpoint>
+                <access_key_id>admin</access_key_id>
+                <secret_access_key>password</secret_access_key>
+                <expect_continue_min_bytes>65536</expect_continue_min_bytes>
+            </s3plain>
+            <!-- Local disks for S36/S37. Outside disks/ so the CA scratch dir stays writable. -->
+            <local1>
+                <type>local</type>
+                <path>/var/lib/clickhouse/local_disks/local1/</path>
+            </local1>
+            <local2>
+                <type>local</type>
+                <path>/var/lib/clickhouse/local_disks/local2/</path>
+            </local2>
         </disks>
         <policies>
             <ca>
@@ -27,6 +46,38 @@
                     </main>
                 </volumes>
             </ca>
+            <s3plain>
+                <volumes>
+                    <main>
+                        <disk>s3plain</disk>
+                    </main>
+                </volumes>
+            </s3plain>
+            <ca_local>
+                <volumes>
+                    <hot>
+                        <disk>local1</disk>
+                        <max_data_part_size_bytes>4194304</max_data_part_size_bytes>
+                    </hot>
+                    <cas>
+                        <disk>ca</disk>
+                    </cas>
+                </volumes>
+                <move_factor>0.1</move_factor>
+            </ca_local>
+            <ca_local3>
+                <volumes>
+                    <hot>
+                        <disk>local1</disk>
+                        <disk>local2</disk>
+                        <max_data_part_size_bytes>4194304</max_data_part_size_bytes>
+                    </hot>
+                    <cas>
+                        <disk>ca</disk>
+                    </cas>
+                </volumes>
+                <move_factor>0.1</move_factor>
+            </ca_local3>
             <!-- Keep the default policy on the local disk so system logs
                  (cas_gc_log / cas_log / query_log) are not stored in the pool
                  under test. Soak DDL sets storage_policy='ca' explicitly. -->

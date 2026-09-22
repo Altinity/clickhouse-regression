@@ -97,6 +97,10 @@ class S23(Scenario):
             result.note_anomaly(
                 f"S23 expected an empty pool but found {len(leftover)} CA table(s): {leftover[:10]}"
             )
+        # Earlier cards in this process leave unreachable objects. Drain them before the
+        # idle window so the first rounds are not charged as empty-pool GC cost.
+        _, residual = C.drive_gc_until_stable()
+        result.observations["pre_idle_residual_unreachable"] = residual
 
         mem_before = None
         base_rss = 0
@@ -504,27 +508,32 @@ class S25(Scenario):
         result.observations["s25_pool_shape"] = {
             k: pool.get(k) for k in ("blobs", "roots", "_manifests", "_files", "_total", "_ok")
         }
+        addressed = 0
         if pool.get("_ok"):
-            blob_objs = pool["blobs"]["objects"]
-            result.add(
-                Verdict.check(
-                    "part files content-addressed under non-Atomic db",
-                    "blob objects present for a CA table in an Ordinary database",
-                    blob_objs,
-                    blob_objs > 0,
-                    ""
-                    if blob_objs > 0
-                    else "no blob objects for a populated CA table in an Ordinary database",
-                )
+            for key in ("blobs", "_manifests", "roots", "refs"):
+                addressed += int((pool.get(key) or {}).get("objects") or 0)
+        # RustFS does not store object keys as files under the pool directory, so a
+        # successful find can report zero objects while cas-fsck lists the blobs.
+        fsck = C.run_cas_fsck(detail=False)
+        result.observations["s25_fsck"] = {
+            k: fsck.get(k) for k in ("reachable", "dangling", "distinct_blobs")
+        }
+        in_pool = addressed
+        for key in ("reachable", "distinct_blobs"):
+            value = fsck.get(key)
+            if isinstance(value, (int, float)):
+                in_pool += int(value)
+        result.add(
+            Verdict.check(
+                "part files content-addressed under non-Atomic db",
+                "cas-fsck or the pool listing shows objects for the Ordinary-database table",
+                in_pool,
+                in_pool > 0,
+                ""
+                if in_pool > 0
+                else "no content-addressed objects for a populated CA table in an Ordinary database",
             )
-        else:
-            result.add(
-                Verdict.inconclusive(
-                    "part files content-addressed under non-Atomic db",
-                    "blob objects present",
-                    "pool shape probe failed",
-                )
-            )
+        )
 
         C.assert_replicas_agree(
             result, cl, C.table_checksum_query(table), name="S25 non-Atomic replica agreement"
@@ -757,8 +766,8 @@ class S27(Scenario):
         try:
             hz = self._ctl("/healthz")
         except Exception as e:
-            result.add(Verdict.inconclusive("list-anomaly proxy reachable", "control :8474 up",
-                                            f"unreachable: {e}"))
+            result.add(Verdict("list-anomaly proxy reachable", "control :8474 up",
+                                f"unreachable: {e}", "fail"))
             return
         result.observations["proxy"] = {"healthz": hz}
 

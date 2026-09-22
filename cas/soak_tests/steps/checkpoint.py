@@ -221,12 +221,16 @@ def cas_fsck(*, node=None, disk=FSCK_DISK, detail=True, timeout=600):
                 exit_code = int(line.split(":", 1)[1])
             except ValueError:
                 pass
-    # Never `cat` the full file: progress lines (walking refs / listing *)
-    # streamed through TestFlows bash have killed the process on large pools.
+    # The summary line is first. A --detail scan then prints one row per object, so
+    # `tail` drops `reachable=...` and the checkpoint sees dangling=None on a clean pool.
+    # Keep the summary, then a short sample of everything that is not progress chatter.
+    # Color and cursor codes sit in front of `reachable=`, so a start-of-line
+    # match misses the summary and the checkpoint sees dangling as missing.
     dumped = _node_command_retry(
         self,
         node,
-        f"grep -Ev 'walking refs|listing blobs|listing manifests' {remote} | tail -n 80",
+        f"grep -a -E 'reachable=' {remote} | head -n 5; "
+        f"grep -a -Ev 'walking refs|listing blobs|listing manifests|reachable=' {remote} | head -n 40",
         timeout,
     )
     output = dumped.output or ""
