@@ -5,7 +5,44 @@ from testflows.core import *
 REPLICATED_CLUSTER = "replicated_cluster"
 SHARDED_CLUSTER = "sharded_cluster"
 CAS_POLICY = "cas_policy"
-CAS_POLICY_POOL = "data/cas"
+CAS_POLICY_POOL = "data/shared"
+# AWS s3_disk only. A sibling of the CAS pools under the per-run prefix.
+# `data` would be the parent of `data/shared` and `data/<table>`.
+AWS_S3_DISK_PREFIX = "s3/data"
+
+
+def cas_key_prefix(self, pool_prefix=""):
+    """Return ``bucket[/run_prefix]/pool_prefix`` for the active object store."""
+    parts = [
+        getattr(self.context, "cas_bucket", "warehouse"),
+        getattr(self.context, "cas_root_prefix", ""),
+        pool_prefix,
+    ]
+    return "/".join(part.strip("/") for part in parts if part and str(part).strip("/"))
+
+
+def cas_endpoint(self, pool_prefix, endpoint_host=None):
+    """Return the S3 endpoint URL for ``pool_prefix`` on the active object store."""
+    host = endpoint_host or getattr(
+        self.context, "cas_endpoint_host", "http://minio:9000"
+    )
+    return f"{host.rstrip('/')}/{cas_key_prefix(self, pool_prefix)}/"
+
+
+def cas_disk_auth_clause(self):
+    """Return access-key (and region, on AWS) fragments for an inline CAS disk."""
+    access_key = getattr(self.context, "cas_access_key", self.context.minio_root_user)
+    secret_key = getattr(
+        self.context, "cas_secret_key", self.context.minio_root_password
+    )
+    clause = (
+        f"access_key_id = '{access_key}', "
+        f"secret_access_key = '{secret_key}'"
+    )
+    region = getattr(self.context, "cas_region", None)
+    if region:
+        clause += f", region = '{region}'"
+    return clause
 
 
 def cas_disk_clause(
@@ -13,7 +50,7 @@ def cas_disk_clause(
     pool_prefix,
     server_root_id=None,
     node=None,
-    endpoint_host="http://minio:9000",
+    endpoint_host=None,
     disk_name=None,
 ):
     """Return a SETTINGS disk = disk(...) clause for content-addressed S3.
@@ -31,9 +68,8 @@ def cas_disk_clause(
     if server_root_id is None:
         server_root_id = f"cas-{node.name}"
 
-    access_key = self.context.minio_root_user
-    secret_key = self.context.minio_root_password
     name = f"name = '{disk_name}', " if disk_name else ""
+    endpoint = cas_endpoint(self, pool_prefix, endpoint_host=endpoint_host)
 
     return (
         "SETTINGS disk = disk("
@@ -42,9 +78,8 @@ def cas_disk_clause(
         "object_storage_type = s3, "
         "metadata_type = cas, "
         f"server_root_id = '{server_root_id}', "
-        f"endpoint = '{endpoint_host}/warehouse/{pool_prefix}/', "
-        f"access_key_id = '{access_key}', "
-        f"secret_access_key = '{secret_key}'"
+        f"endpoint = '{endpoint}', "
+        f"{cas_disk_auth_clause(self)}"
         ")"
     )
 

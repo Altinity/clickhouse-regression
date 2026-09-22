@@ -3,6 +3,9 @@ services:
     extends:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
+    environment:
+      - CAS_ACCESS_KEY_ID=${CAS_ACCESS_KEY_ID}
+      - CAS_SECRET_ACCESS_KEY=${CAS_SECRET_ACCESS_KEY}
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/:/etc/clickhouse-server/users.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
