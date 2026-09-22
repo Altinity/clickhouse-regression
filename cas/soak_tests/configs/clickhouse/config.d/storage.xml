@@ -1,0 +1,42 @@
+<clickhouse>
+    <storage_configuration>
+        <disks>
+            <default>
+                <keep_free_space_bytes>1024</keep_free_space_bytes>
+            </default>
+            <!-- Writable CAS disk over shared RustFS (minio service).
+                 Disk/policy name `ca` matches the soak harness DDL (storage_policy='ca'). -->
+            <ca>
+                <type>object_storage</type>
+                <object_storage_type>s3</object_storage_type>
+                <metadata_type>cas</metadata_type>
+                <endpoint>http://minio:9000/warehouse/soak_pool/</endpoint>
+                <access_key_id>admin</access_key_id>
+                <secret_access_key>password</secret_access_key>
+                <server_root_id>ca_soak_{replica}</server_root_id>
+                <gc_enabled>1</gc_enabled>
+                <gc_interval_sec>10</gc_interval_sec>
+                <expect_continue_min_bytes>65536</expect_continue_min_bytes>
+            </ca>
+        </disks>
+        <policies>
+            <ca>
+                <volumes>
+                    <main>
+                        <disk>ca</disk>
+                    </main>
+                </volumes>
+            </ca>
+            <!-- Keep the default policy on the local disk so system logs
+                 (cas_gc_log / cas_log / query_log) are not stored in the pool
+                 under test. Soak DDL sets storage_policy='ca' explicitly. -->
+            <default>
+                <volumes>
+                    <default>
+                        <disk>default</disk>
+                    </default>
+                </volumes>
+            </default>
+        </policies>
+    </storage_configuration>
+</clickhouse>
