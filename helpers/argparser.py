@@ -1,6 +1,33 @@
+import argparse
 import os
 
 from testflows.core import Secret
+
+
+#: What --prepare-env narrows the run to: the step that prepares the images and
+#: brings the cluster up, in whichever suite is running.
+#:
+#: NOT "/*/docker-compose cluster*". A leading wildcard segment matches every
+#: test in the suite, so the filter selected everything and the tests ran.
+PREPARE_ENV_ONLY = "*docker-compose cluster*"
+
+
+class PrepareEnv(argparse.Action):
+    """Turn on --prepare-env, and narrow the run to preparing.
+
+    Sets the same `_only` the framework's own `--only` reads, so the suite stops
+    after the cluster step and finishes normally. Narrowing later, from inside a
+    step, is too late: the patterns are read when the top-level test is built.
+    """
+
+    def __init__(self, option_strings, dest, **kwargs):
+        super().__init__(option_strings, dest, nargs=0, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, True)
+        only = list(getattr(namespace, "_only", None) or [])
+        only.append(PREPARE_ENV_ONLY)
+        setattr(namespace, "_only", only)
 
 
 def argparser(parser):
@@ -30,6 +57,17 @@ def argparser(parser):
         help="Path to ClickHouse package or binary, default: /usr/bin/clickhouse",
         metavar="PATH",
         default=os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"),
+    )
+
+    parser.add_argument(
+        "--prepare-env",
+        action=PrepareEnv,
+        dest="prepare_env",
+        help=(
+            "build and fetch every image this configuration needs, then exit "
+            "without running any test"
+        ),
+        default=False,
     )
 
     parser.add_argument(
@@ -154,6 +192,9 @@ def CaptureClusterArgs(func):
         local,
         clickhouse_path,
         as_binary,
+        # Absorbed, not forwarded: the flag's whole effect is the --only it set
+        # when it was parsed, and the feature does not take an argument for it.
+        prepare_env,
         base_os,
         keeper_path,
         zookeeper_version,
