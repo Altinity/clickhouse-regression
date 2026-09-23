@@ -1,10 +1,11 @@
 <clickhouse>
     <!--
-    Placeholder for the CAS S3-cache overlay.
+    Placeholder for the CAS disk overlay.
 
-    The dedicated CAS suite always defines cas_disk in storage.xml. This file is
-    filled in by cas/cas_mode.py when the suite is started with the cas-s3-cache
-    option (adds a type=cache disk in front of cas_disk and retargets cas_policy /
-    default) and reset back to this placeholder afterwards.
+    cas/regression.py fills this file in before the cluster starts. It sets the
+    cas_disk endpoint from cas_endpoint() and, with --cas-s3-cache, adds a
+    type=cache disk in front of cas_disk and retargets cas_policy. The file is
+    reset to this placeholder when the run ends. The default policy stays on
+    the local disk so system logs do not write into the CAS pool.
     -->
 </clickhouse>

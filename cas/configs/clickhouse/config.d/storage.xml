@@ -13,21 +13,26 @@
             <access_key_id>admin</access_key_id>
             <secret_access_key>password</secret_access_key>
         </s3_disk>
+        <!-- Endpoint is written into zz_cas_s3_cache.xml by cas/regression.py
+             from cas_endpoint(), the same helper inline disks use. -->
         <cas_disk>
             <type>object_storage</type>
             <object_storage_type>s3</object_storage_type>
             <metadata_type>cas</metadata_type>
             <server_root_id>cas-{replica}</server_root_id>
-            <endpoint>http://minio:9000/warehouse/data/cas/</endpoint>
             <access_key_id>admin</access_key_id>
             <secret_access_key>password</secret_access_key>
         </cas_disk>
     </disks>
     <policies>
+        <!-- Local disk. Do not put cas_disk here: system logs (query_log,
+             part_log, …) use the default policy and would flood the CAS pool.
+             Tests that want CAS must set storage_policy = 'cas_policy' (or an
+             inline disk) on the table. -->
         <default>
             <volumes>
                 <default>
-                    <disk>cas_disk</disk>
+                    <disk>default</disk>
                 </default>
             </volumes>
         </default>

@@ -89,6 +89,8 @@ from cas.tests.steps.gc import (
 from cas.tests.steps.pool import (
     backup_manifest_keys,
     blob_keys,
+    cleanup_cas_storage,
+    delete_pool_prefix,
     namespaces_of,
     pool_difference,
     pool_size_bytes,
@@ -237,6 +239,8 @@ __all__ = [
     "optimize_final",
     "partition_checksum",
     "payload_table_checksum",
+    "cleanup_cas_storage",
+    "delete_pool_prefix",
     "namespaces_of",
     "pool_difference",
     "pool_size_bytes",
