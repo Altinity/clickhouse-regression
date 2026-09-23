@@ -24,6 +24,9 @@ from helpers.common import check_clickhouse_version, current_cpu
 
 MINIMUM_COMPOSE_VERSION = "2.23.1"
 
+#: Keys self._environ_applied under, beside the (thread, node) pairs.
+_CONTROL_SHELL_ID = ("control", None)
+
 NONE = object()
 
 MESSAGES_TO_RETRY = [
@@ -45,6 +48,34 @@ MESSAGES_TO_RETRY = [
     "is executing longer than distributed_ddl_task_timeout",  # distributed TTL timeout message
     "You can retry this error.",  # happens with too many pending alters
 ]
+
+
+def container_id_in(output):
+    """The container id in a shell's output, or "" when there is none.
+
+    The control shell is a pty, so stderr shares the buffer with the answer:
+    a compose deprecation warning, a hint or a progress line all arrive with
+    the id. Taking the whole output made `docker exec` fail with
+    `No such container: WARN[0000]`, so the id is found rather than assumed.
+    """
+    for line in reversed(output.strip().splitlines()):
+        line = line.strip()
+        if re.fullmatch(r"[0-9a-f]{12,64}", line):
+            return line
+    return ""
+
+
+def compose_version_in(output):
+    """The (major, minor, patch) in `docker compose version --short` output.
+
+    Searched for the same reason: `output.split()[-1]` raised
+    `invalid literal for int() with base 10: '--log-level'` when the echoed
+    command shared the buffer with the version.
+    """
+    found = re.search(r"(\d+)\.(\d+)\.(\d+)", output)
+    if found is None:
+        return None
+    return tuple(int(part) for part in found.groups())
 
 
 def short_hash(s):
@@ -1576,7 +1607,7 @@ class Cluster(object):
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
-        docker_compose="docker-compose --log-level ERROR",
+        docker_compose="docker compose",
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
@@ -1593,6 +1624,8 @@ class Cluster(object):
         cicd=False,
     ):
         self._bash = {}
+        #: What each local shell has been told, keyed like self._bash.
+        self._environ_applied = {}
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
         self.clickhouse_path = clickhouse_path
@@ -1622,14 +1655,17 @@ class Cluster(object):
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
-            cmd = bash(f"{self.docker_compose} --version")
-            version = tuple(
-                int(x) for x in cmd.output.split()[-1].strip("v").split(".")
-            )
+            cmd = bash(f"{self.docker_compose} version --short")
+            version = compose_version_in(cmd.output)
+            if version is None:
+                raise RuntimeError(
+                    f"could not read a version from `{self.docker_compose}"
+                    f" version --short`: {cmd.output.strip()!r}"
+                )
             min_version = tuple(int(x) for x in MINIMUM_COMPOSE_VERSION.split("."))
             if version < min_version:
                 raise RuntimeError(
-                    f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}"
+                    f"docker compose version must be >= {MINIMUM_COMPOSE_VERSION}"
                 )
 
         # auto set configs directory
@@ -1808,6 +1844,7 @@ class Cluster(object):
                     if time.time() - time_start > timeout:
                         raise RuntimeError(f"failed to open control shell")
         self._control_shell = shell
+        self.apply_environ(self._control_shell, _CONTROL_SHELL_ID)
         return self._control_shell
 
     def close_control_shell(self):
@@ -1816,6 +1853,7 @@ class Cluster(object):
             return
         shell = self._control_shell
         self._control_shell = None
+        self._environ_applied.pop(_CONTROL_SHELL_ID, None)
         shell.__exit__(None, None, None)
 
     def node_container_id(self, node, timeout=300):
@@ -1830,7 +1868,7 @@ class Cluster(object):
                     c = self.control_shell(
                         f"{self.docker_compose} ps -q {node}", timeout=timeout
                     )
-                    container_id = c.output.strip()
+                    container_id = container_id_in(c.output)
                     if c.exitcode == 0 and len(container_id) > 1:
                         break
                 except IOError:
@@ -1911,6 +1949,26 @@ class Cluster(object):
         shell.timeout = timeout
         return shell
 
+    def apply_environ(self, shell, id):
+        """Export anything in self.environ this shell has not been told.
+
+        EVERY local shell, and kept in sync rather than pushed once. The
+        control shell was never told at all, and `docker compose` parses the
+        project on every subcommand: `ps -q` and `exec` through that shell
+        therefore interpolated an unset CLICKHOUSE_TESTS_DIR and warned about
+        it, on the same line the caller then read a container id from.
+
+        Sync matters for the other kind: a shell is cached per thread for the
+        life of the thread, so one opened before the environment was set never
+        saw a variable at all.
+        """
+        applied = self._environ_applied.setdefault(id, {})
+        for name, value in self.environ.items():
+            if applied.get(name) == value:
+                continue
+            shell(f"export {name}={value}")
+            applied[name] = value
+
     def bash(self, node, timeout=NONE, command="bash --noediting"):
         """Returns thread-local bash terminal
         to a specific node.
@@ -1959,10 +2017,6 @@ class Cluster(object):
                                     f"failed to open bash to node {node}"
                                 )
 
-                if node is None:
-                    for name, value in self.environ.items():
-                        self._bash[id](f"export {name}={value}")
-
                 self._bash[id].timeout = timeout
 
                 # clean up any stale open shells for threads that have exited
@@ -1973,8 +2027,15 @@ class Cluster(object):
                     if thread_name not in active_thread_names:
                         self._bash[bash_id].__exit__(None, None, None)
                         del self._bash[bash_id]
+                        # With the shell goes the record of what it was told:
+                        # thread names repeat, and the next shell under this
+                        # id starts knowing nothing.
+                        self._environ_applied.pop(bash_id, None)
 
-            return self._bash[id]
+            if node is None:
+                self.apply_environ(self._bash[id], id)
+
+        return self._bash[id]
 
     def close_bash(self, node):
         current_thread = threading.current_thread()
@@ -1985,6 +2046,7 @@ class Cluster(object):
                 return
             self._bash[id].__exit__(None, None, None)
             del self._bash[id]
+            self._environ_applied.pop(id, None)
 
     def __enter__(self):
         with Given("docker-compose cluster"):
@@ -2088,6 +2150,7 @@ class Cluster(object):
                 if self._control_shell:
                     self._control_shell.__exit__(None, None, None)
                     self._control_shell = None
+                    self._environ_applied.pop(_CONTROL_SHELL_ID, None)
             return cmd
 
     def open_instances_permissions(self, node):
@@ -2466,7 +2529,7 @@ def create_cluster(
     collect_service_logs=False,
     configs_dir=None,
     nodes=None,
-    docker_compose="docker-compose --log-level ERROR",
+    docker_compose="docker compose",
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
