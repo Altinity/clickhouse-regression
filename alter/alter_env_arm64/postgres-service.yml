@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   postgres:
     image: postgres:15.0-bullseye

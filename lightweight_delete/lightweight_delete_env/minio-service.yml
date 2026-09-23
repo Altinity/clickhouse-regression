@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   # RustFS rather than MinIO: CAS commits objects with conditional writes
   # (If-Match/If-None-Match), which the pinned MinIO release does not support.

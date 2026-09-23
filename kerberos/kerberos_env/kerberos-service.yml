@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
     kerberos:
         image: altinityinfra/docker-krb5-server:1.0

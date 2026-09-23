@@ -1,5 +1,3 @@
-version: "2.3"
-
 services:
   clickhouse:
     image: clickhouse-regression/$CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME
