@@ -42,7 +42,9 @@ def insert_alter_select(self, path):
             path=path,
             columns=COLUMNS,
             partition_by="toRelativeDayNum(d)",
-            engine_settings=({"iceberg_format_version": 2} if path == EXPLICIT_ENGINE else None),
+            engine_settings=(
+                {"iceberg_format_version": 2} if path == EXPLICIT_ENGINE else None
+            ),
         )
 
     def metadata_location():
@@ -53,9 +55,12 @@ def insert_alter_select(self, path):
             "INSERT",
             f"INSERT INTO {ch_name} VALUES (1, 'a', '2024-01-01'), (2, 'b', '2024-01-02')",
         ),
-        ("ADD COLUMN", f"ALTER TABLE {ch_name} ADD COLUMN extra Int32"),
+        ("ADD COLUMN", f"ALTER TABLE {ch_name} ADD COLUMN extra Nullable(Int32)"),
         ("RENAME COLUMN", f"ALTER TABLE {ch_name} RENAME COLUMN extra TO renamed"),
-        ("MODIFY COLUMN", f"ALTER TABLE {ch_name} MODIFY COLUMN renamed Int64"),
+        (
+            "MODIFY COLUMN",
+            f"ALTER TABLE {ch_name} MODIFY COLUMN renamed Nullable(Int64)",
+        ),
         ("DROP COLUMN", f"ALTER TABLE {ch_name} DROP COLUMN renamed"),
         ("ALTER DELETE", f"ALTER TABLE {ch_name} DELETE WHERE id = 2"),
     ]
@@ -69,10 +74,14 @@ def insert_alter_select(self, path):
                     ("allow_experimental_iceberg_compaction", 0),
                 ],
             )
-            assert metadata_location() != previous, error("metadata-location did not advance")
+            assert metadata_location() != previous, error(
+                "metadata-location did not advance"
+            )
 
     with Check("SELECT with a partition predicate", flags=TE):
-        got = node.query(f"SELECT id FROM {ch_name} WHERE d = '2024-01-01'").output.strip()
+        got = node.query(
+            f"SELECT id FROM {ch_name} WHERE d = '2024-01-01'"
+        ).output.strip()
         assert got == "1", error(got)
 
     with Check("PyIceberg sees the final schema and rows", flags=TE):
@@ -89,8 +98,12 @@ def insert_alter_select(self, path):
             f"TRUNCATE TABLE {ch_name}",
             inline_settings=[("allow_insert_into_iceberg", 1)],
         )
-        assert metadata_location() != previous, error("metadata-location did not advance")
-        assert node.query(f"SELECT count() FROM {ch_name}").output.strip() == "0", error()
+        assert metadata_location() != previous, error(
+            "metadata-location did not advance"
+        )
+        assert (
+            node.query(f"SELECT count() FROM {ch_name}").output.strip() == "0"
+        ), error()
 
     with Then("invariants hold"):
         check_state_invariants(**args, expected=PRESENT)
@@ -123,7 +136,9 @@ def recreate_after_purge_drop(self):
             columns=COLUMNS,
             purge_on_exit=False,
         )
-        insert_into_native_iceberg_table(table_name=ch_name, values_sql="(1, 'a', '2024-01-01')")
+        insert_into_native_iceberg_table(
+            table_name=ch_name, values_sql="(1, 'a', '2024-01-01')"
+        )
         drop_table(
             database_name=database_name,
             namespace=namespace,
@@ -186,7 +201,9 @@ def recreate_after_keep_drop(self):
             columns=COLUMNS,
             purge_on_exit=False,
         )
-        insert_into_native_iceberg_table(table_name=ch_name, values_sql="(1, 'a', '2024-01-01')")
+        insert_into_native_iceberg_table(
+            table_name=ch_name, values_sql="(1, 'a', '2024-01-01')"
+        )
         drop_table(
             database_name=database_name,
             namespace=namespace,
@@ -206,7 +223,9 @@ def recreate_after_keep_drop(self):
             message=PURGE_SETTING,
             purge_on_exit=False,
         )
-        assert_state_unchanged(before=leftover, after=snapshot_state(**args))
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_state_unchanged(before=leftover, after=after)
 
     with And("recreate under a database with a different base"):
         base = f"s3://warehouse/alt_{getuid()}"
@@ -217,7 +236,9 @@ def recreate_after_keep_drop(self):
         )
         reported = getattr(catalog, "properties", {}).get("default-base-location")
         if reported:
-            skip("catalog advertises its own base; a database-level base cannot move the table")
+            skip(
+                "catalog advertises its own base; a database-level base cannot move the table"
+            )
         try:
             create_table(
                 database_name=other_db,

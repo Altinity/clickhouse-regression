@@ -46,9 +46,9 @@ def create_requires_grant(self):
         )
 
     with Then("nothing registered"):
-        assert_rejected_no_trace(
-            before=before, after=snapshot_state(**args), namespace_expected=False
-        )
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
     with When("GRANT CREATE TABLE and retry"):
         node.query(f"GRANT CREATE TABLE ON {database_name}.* TO {user}")
@@ -119,7 +119,9 @@ def drop_requires_grant(self):
         )
 
     with Then("the table stays"):
-        assert_state_unchanged(before=before, after=snapshot_state(**args))
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_state_unchanged(before=before, after=after)
 
     with When("GRANT DROP TABLE and retry with purge"):
         node.query(f"GRANT DROP TABLE ON {database_name}.* TO {user}")
@@ -129,7 +131,9 @@ def drop_requires_grant(self):
         )
 
     with Then("dropped and purged"):
-        assert_table_dropped(before=before, after=snapshot_state(**args), purged=True)
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_table_dropped(before=before, after=after, purged=True)
 
 
 @TestFeature

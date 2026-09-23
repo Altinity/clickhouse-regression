@@ -120,9 +120,9 @@ def setting_and_alias_are_one(self):
 
     with Then("system.settings lists data_lake_delete_data_on_drop with default 0"):
         row = node.query(
-            f"SELECT value, alias_for FROM system.settings WHERE name = '{PURGE_SETTING}' FORMAT TSV"
+            f"SELECT default FROM system.settings WHERE name = '{PURGE_SETTING}' FORMAT TSV"
         ).output.strip()
-        assert row.split("\t")[0] == "0", error(row)
+        assert row == "0", error(f"default={row!r}")
 
     with And("the old name is an alias for the new one"):
         alias_for = node.query(
@@ -132,12 +132,12 @@ def setting_and_alias_are_one(self):
 
     with And("setting one name changes the value read through the other"):
         value = node.query(
-            f"SELECT getSetting('{PURGE_SETTING}')",
+            f"SELECT toUInt8(getSetting('{PURGE_SETTING}'))",
             inline_settings=[(PURGE_SETTING_ALIAS, 1)],
         ).output.strip()
         assert value == "1", error(value)
         value = node.query(
-            f"SELECT getSetting('{PURGE_SETTING_ALIAS}')",
+            f"SELECT toUInt8(getSetting('{PURGE_SETTING_ALIAS}'))",
             inline_settings=[(PURGE_SETTING, 1)],
         ).output.strip()
         assert value == "1", error(value)
@@ -175,7 +175,9 @@ def path_based_table_drop(self, storage, purge):
         node.command(f"mkdir -p {local_path}", exitcode=0)
         inventory = lambda: {
             line: None
-            for line in node.command(f"find {local_path} -type f 2>/dev/null").output.split()
+            for line in node.command(
+                f"find {local_path} -type f 2>/dev/null; true", no_checks=True
+            ).output.split()
         }
 
     try:
@@ -234,7 +236,7 @@ def server_wide_default(self, query_override, expect_purged):
                 entries={"profiles": {"default": {PURGE_SETTING: "1"}}},
                 config_file="native_create_purge_default.xml",
                 node=n,
-                modify=True,
+                modify=False,  # modify=True skips the removal on cleanup
             )
 
     with Given("catalog and database"):
@@ -391,7 +393,9 @@ def glue_drop(self):
         check_column_value(table_name=ch_name, expected="1")
 
     with When("DROP TABLE without purge"):
-        drop_table(database_name=database_name, namespace=namespace, table_name=table_name)
+        drop_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
 
     with Then("entry gone, files kept"):
         after = snapshot_state(**args)

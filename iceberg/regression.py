@@ -23,6 +23,24 @@ from helpers.common import (
 
 
 xfails = {
+    "/iceberg/native create/*/idempotency/concurrent creators on three nodes*/one table, one initial metadata file, visible everywhere": [
+        (
+            Fail,
+            "After a CREATE TABLE race on ice-rest-catalog the table directory holds two server-written `00000-<uuid>.metadata.json` files: the catalog points at the winner's, the other was written for a loser's conflicting createTable. Apache Iceberg core `JdbcTableOperations.doCommit` writes the new metadata file before the INSERT that detects the name conflict and does not delete it on AlreadyExistsException; ClickHouse's ten retries of the 409 (PR 2305 issue 1/3) repeat the request. Not a ClickHouse write; B1 cannot hold for a raced table on this catalog. iceberg/tests/iceberg_engine/native_create/findings.md finding 7.",
+        )
+    ],
+    "/iceberg/native create/*/idempotency/concurrent creators on three nodes*/exactly one creator won": [
+        (
+            Fail,
+            "A CREATE TABLE that loses the race at the catalog (REST answers 409 to POST .../tables because another client registered the table after the existence check) is reported as DATALAKE_DATABASE_ERROR (736) 'Failed to create table ... 409 Conflict' after ~33 s of HTTP retries, instead of TABLE_ALREADY_EXISTS (57): RestCatalog::createTable maps the 409 only when IF NOT EXISTS is set. Timing-dependent: a loser that trips the existence check gets 57 as expected. PR 2305 issue 3 in iceberg/tests/iceberg_engine/native_create/pr-2305-issues.md.",
+        )
+    ],
+    "/iceberg/native create/*/idempotency/concurrent creators on one node/one OK, one TABLE_ALREADY_EXISTS, one table": [
+        (
+            Fail,
+            "A CREATE TABLE that loses the race at the catalog (REST answers 409 to POST .../tables because another client registered the table after the existence check) is reported as DATALAKE_DATABASE_ERROR (736) 'Failed to create table ... 409 Conflict' after ~33 s of HTTP retries, instead of TABLE_ALREADY_EXISTS (57): RestCatalog::createTable maps the 409 only when IF NOT EXISTS is set. Timing-dependent: a loser that trips the existence check gets 57 as expected. PR 2305 issue 3 in iceberg/tests/iceberg_engine/native_create/pr-2305-issues.md.",
+        )
+    ],
     "/iceberg/native create/*/schema/partition values in manifest": [
         (
             Error,
@@ -35,7 +53,7 @@ xfails = {
             "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
         )
     ],
-    "/iceberg/native create/*/metadata/pyiceberg reads clickhouse rows": [
+    "/iceberg/native create/*/metadata/pyiceberg reads clickhouse rows*": [
         (
             Error,
             "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
@@ -83,7 +101,7 @@ xfails = {
             "Every Iceberg commit through a REST catalog leaves an orphan metadata file: IcebergStorageSink writes `metadata/vN-<uuid>.metadata.json`, then RestCatalog::updateMetadata sends only add-snapshot / set-snapshot-ref and the server writes its own `0000N-<uuid>.metadata.json`; the ClickHouse file is never referenced, so `DROP TABLE ... data_lake_delete_data_on_drop = 1` (server-side purge of the metadata tree) cannot remove it and the location is not empty. Pre-existing upstream behaviour (same in master IcebergWrites.cpp); with PR 2305 the leftover then also blocks an explicit-engine re-CREATE at the same location.",
         )
     ],
-    "/iceberg/native create/*/drop/server-wide default/*": [
+    "/iceberg/native create/*/drop/server wide default/*": [
         (
             Fail,
             "Every Iceberg commit through a REST catalog leaves an orphan metadata file: IcebergStorageSink writes `metadata/vN-<uuid>.metadata.json`, then RestCatalog::updateMetadata sends only add-snapshot / set-snapshot-ref and the server writes its own `0000N-<uuid>.metadata.json`; the ClickHouse file is never referenced, so `DROP TABLE ... data_lake_delete_data_on_drop = 1` (server-side purge of the metadata tree) cannot remove it and the location is not empty. Pre-existing upstream behaviour (same in master IcebergWrites.cpp); with PR 2305 the leftover then also blocks an explicit-engine re-CREATE at the same location.",
@@ -127,7 +145,7 @@ xfails = {
         (
             Error,
             "PyIceberg cannot scan a ClickHouse-written table: the manifest list is written through avro-cpp, which drops the Iceberg `field-id` attributes from the Avro schema, so pyiceberg raises `ValueError: Cannot convert field, missing field-id: {'name': 'manifest_path' ...}`. Fixed upstream in ClickHouse/ClickHouse#111786 (merged 2026-07-27, writes the id-carrying schema JSON as the avro.schema header); not in antalya-26.6 / PR 2305. See iceberg/tests/iceberg_engine/native_create/findings.md finding 5.",
-        )
+        ),
     ],
     "/iceberg/export partition/: catalog/*/manifest integrity/value_counts across data files sum to source row count": [
         (

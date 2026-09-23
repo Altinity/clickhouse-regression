@@ -408,7 +408,9 @@ def all_scalars_in_one_table(self):
 
     with Then("SELECT * succeeds and all values appear"):
         node = self.context.node
-        result = node.query(f"SELECT * FROM {ch_name} ORDER BY int32_col FORMAT TabSeparated")
+        result = node.query(
+            f"SELECT * FROM {ch_name} ORDER BY int32_col FORMAT TabSeparated"
+        )
         for expected in [
             "1",
             "2",
@@ -501,7 +503,9 @@ def unsupported_types_rejected(self):
             )
             with Then("no trace"):
                 after = snapshot_state(**args)
-                assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+                assert_rejected_no_trace(
+                    before=before, after=after, namespace_expected=False
+                )
 
 
 @TestScenario
@@ -523,7 +527,10 @@ def empty_column_list(self):
         )
     namespace, table_name = f"ns_{getuid()}", f"t_{getuid()}"
     args = dict(
-        catalog=catalog, namespace=namespace, table_name=table_name, database_name=database_name
+        catalog=catalog,
+        namespace=namespace,
+        table_name=table_name,
+        database_name=database_name,
     )
     if self.context.create_path == ENGINE_LESS:
         exitcode, message = INCORRECT_QUERY, "required list of column descriptions"
@@ -541,9 +548,9 @@ def empty_column_list(self):
         message=message,
     )
     with Then("no trace"):
-        assert_rejected_no_trace(
-            before=before, after=snapshot_state(**args), namespace_expected=False
-        )
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
 
 @TestFeature
@@ -556,9 +563,11 @@ def feature(self, minio_root_user, minio_root_password):
         with Feature(path):
             self.context.create_path = path
             for config in SCALAR_TYPE_CONFIGS:
-                Scenario(name=f"scalar {config.type_name}", test=scalar_type_round_trip, flags=TE)(
-                    config=config
-                )
+                Scenario(
+                    name=f"scalar {config.type_name}",
+                    test=scalar_type_round_trip,
+                    flags=TE,
+                )(config=config)
             for scenario in (
                 nullable_round_trip,
                 list_type_round_trip,

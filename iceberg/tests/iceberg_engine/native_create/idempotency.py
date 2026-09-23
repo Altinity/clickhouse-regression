@@ -1,8 +1,6 @@
 """IF NOT EXISTS, concurrent creators, leftover metadata and the no-trace
 rule (plan §3.8)."""
 
-import threading
-
 from testflows.core import *
 from testflows.asserts import error
 
@@ -135,8 +133,17 @@ def if_not_exists_as_select_does_not_fill(self):
 
 
 @TestStep(When)
-def attempt_create(self, node, database_name, namespace, table_name, if_not_exists, results, lock):
-    """One creator in a race; records ``(node, exitcode, output)``."""
+def start_create(self, node, tag, database_name, namespace, table_name, if_not_exists):
+    """Launch one racing CREATE as a background `clickhouse client` inside the
+    container and return at once. The query goes through a file, the client's
+    output and exit code land in `/tmp/race_<tag>.{out,rc}`.
+
+    Racing through background processes rather than parallel TestFlows steps
+    keeps the test process single-threaded: two threads opening a shell to the
+    same node at the same moment crashed the test runner (segfault, 2026-09-22).
+    """
+    import base64
+
     query = build_create_table_query(
         database_name=database_name,
         namespace=namespace,
@@ -144,22 +151,49 @@ def attempt_create(self, node, database_name, namespace, table_name, if_not_exis
         columns=COLUMNS,
         if_not_exists=if_not_exists,
     )
-    # http_max_tries=1: the namespace already exists, so the 409 from
-    # createNamespaceIfNotExists must not be retried for 33 s (findings.md #3).
-    result = node.query(query, no_checks=True, settings=[("http_max_tries", 1)])
-    with lock:
-        results.append((node.name, result.exitcode, result.output.strip()))
+    # clickhouse_table_name escapes backticks for the shell; the file is read verbatim.
+    encoded = base64.b64encode(query.replace("\\`", "`").encode()).decode()
+    # The namespace is pre-created per round; a loser that reaches the catalog's
+    # createTable still pays ~33 s of 409 retries (findings.md #3, #6). A query-level
+    # http_max_tries does not reach the catalog's HTTP client, so no workaround here.
+    node.command(
+        f"echo {encoded} | base64 -d > /tmp/race_{tag}.sql && rm -f /tmp/race_{tag}.rc && "
+        f"bash -c '( clickhouse client --queries-file /tmp/race_{tag}.sql "
+        f"> /tmp/race_{tag}.out 2>&1 < /dev/null; echo $? > /tmp/race_{tag}.rc ) &'",
+        exitcode=0,
+    )
+
+
+@TestStep(Then)
+def wait_create(self, node, tag, timeout=180):
+    """Wait for a racing CREATE started by `start_create`; returns
+    ``(node name, exit code, output)``."""
+    import re as _re
+
+    for attempt in retries(timeout=timeout, delay=0.5):
+        with attempt:
+            rc = node.command(f"cat /tmp/race_{tag}.rc", no_checks=True)
+            assert rc.exitcode == 0 and _re.search(r"\d+", rc.output), error(
+                "still running"
+            )
+    exitcode = int(_re.search(r"\d+", rc.output).group())
+    output = node.command(f"cat /tmp/race_{tag}.out", no_checks=True).output.strip()
+    node.command(
+        f"rm -f /tmp/race_{tag}.sql /tmp/race_{tag}.out /tmp/race_{tag}.rc",
+        no_checks=True,
+    )
+    return (node.name, exitcode, output)
 
 
 @TestOutline(Scenario)
 @Requirements(RQ_Iceberg_NativeCreateDrop_IfNotExists_ConcurrentCreate("1.0"))
 @Examples("if_not_exists rounds", [(False, 5), (True, 5)])
-def concurrent_creators_on_three_nodes(
-    self, minio_root_user, minio_root_password, if_not_exists, rounds
-):
+def concurrent_creators_on_three_nodes(self, if_not_exists, rounds):
     """F3: three nodes with their own databases over one catalog race to
     create the same table; each round ends with exactly one table, one
     initial metadata file, and the expected split of OK / TABLE_ALREADY_EXISTS."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     nodes = all_nodes(self)
     if len(nodes) < 3:
         skip("needs three nodes")
@@ -194,38 +228,34 @@ def concurrent_creators_on_three_nodes(
             table_name=table_name,
             database_name=database_name,
         )
-        results, lock = [], threading.Lock()
-
         with When(
             f"round {round_no}: all nodes CREATE {'IF NOT EXISTS ' if if_not_exists else ''}{table_name}"
         ):
             before = snapshot_state(**args)
-            with Pool(len(nodes)) as executor:
-                for node in nodes:
-                    Step(
-                        name=f"create on {node.name}",
-                        test=attempt_create,
-                        parallel=True,
-                        executor=executor,
-                    )(
-                        node=node,
-                        database_name=databases[node.name],
-                        namespace=namespace,
-                        table_name=table_name,
-                        if_not_exists=if_not_exists,
-                        results=results,
-                        lock=lock,
-                    )
-                join()
+            tags = {node.name: f"{node.name}_{round_no}_{getuid()}" for node in nodes}
+            for node in nodes:
+                start_create(
+                    node=node,
+                    tag=tags[node.name],
+                    database_name=databases[node.name],
+                    namespace=namespace,
+                    table_name=table_name,
+                    if_not_exists=if_not_exists,
+                )
+            results = [wait_create(node=node, tag=tags[node.name]) for node in nodes]
 
         with Then("exactly one creator won"):
             note(results)
             ok = [r for r in results if r[1] == 0]
             failed = [r for r in results if r[1] != 0]
             if if_not_exists:
-                assert len(ok) == len(nodes), error(f"IF NOT EXISTS should never fail: {failed}")
+                assert len(ok) == len(nodes), error(
+                    f"IF NOT EXISTS should never fail: {failed}"
+                )
             else:
-                assert len(ok) == 1, error(f"expected one winner, got {len(ok)}: {results}")
+                assert len(ok) == 1, error(
+                    f"expected one winner, got {len(ok)}: {results}"
+                )
                 for _, code, output in failed:
                     assert code == TABLE_ALREADY_EXISTS, error(
                         f"loser failed with {code}: {output}"
@@ -272,27 +302,19 @@ def concurrent_creators_on_one_node(self):
         table_name=table_name,
         database_name=database_name,
     )
-    results, lock = [], threading.Lock()
-
     with When("two parallel CREATE TABLE without IF NOT EXISTS"):
         before = snapshot_state(**args)
-        with Pool(2) as executor:
-            for i in range(2):
-                Step(
-                    name=f"creator {i}",
-                    test=attempt_create,
-                    parallel=True,
-                    executor=executor,
-                )(
-                    node=node,
-                    database_name=database_name,
-                    namespace=namespace,
-                    table_name=table_name,
-                    if_not_exists=False,
-                    results=results,
-                    lock=lock,
-                )
-            join()
+        tags = [f"one_node_{i}_{getuid()}" for i in range(2)]
+        for tag in tags:
+            start_create(
+                node=node,
+                tag=tag,
+                database_name=database_name,
+                namespace=namespace,
+                table_name=table_name,
+                if_not_exists=False,
+            )
+        results = [wait_create(node=node, tag=tag) for tag in tags]
 
     with Then("one OK, one TABLE_ALREADY_EXISTS, one table"):
         note(results)
@@ -362,7 +384,9 @@ def leftover_metadata_after_keep_drop(self, creator):
             )
             catalog.drop_table(table_identifier(namespace, table_name))
         before = snapshot_state(**args)
-        assert not before.catalog_table and before.metadata_files, error(before.describe())
+        assert not before.catalog_table and before.metadata_files, error(
+            before.describe()
+        )
 
     with When("explicit-engine CREATE TABLE over the leftovers"):
         create_table(
@@ -394,7 +418,9 @@ def leftover_metadata_after_keep_drop(self, creator):
     with Then("success, yet the table is absent and the files untouched"):
         after = snapshot_state(**args)
         assert_state_unchanged(before=before, after=after)
-        check_state_invariants(**args, expected=ABSENT_DATA_KEPT, before=before, state=after)
+        check_state_invariants(
+            **args, expected=ABSENT_DATA_KEPT, before=before, state=after
+        )
 
     with When("engine-less CREATE TABLE over the leftovers (server-side write)"):
         result = self.context.node.query(
@@ -407,7 +433,9 @@ def leftover_metadata_after_keep_drop(self, creator):
             no_checks=True,
         )
 
-    with Then("either refused with nothing changed, or created with the old files untouched"):
+    with Then(
+        "either refused with nothing changed, or created with the old files untouched"
+    ):
         after = snapshot_state(**args)
         if result.exitcode == 0:
             note("REST server created the table over the leftover files")
@@ -458,10 +486,14 @@ def path_based_if_not_exists_attaches(self):
             assert before, error("no leftovers")
 
         with When("CREATE TABLE IF NOT EXISTS at the same path"):
-            node.query(f"CREATE TABLE IF NOT EXISTS {second} (id Int64) ENGINE = {engine}")
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS {second} (id Int64) ENGINE = {engine}"
+            )
 
         with Then("it attaches to the old metadata and reads the old row"):
-            assert s3.object_inventory(f"{key}/") == before, error("attach modified objects")
+            assert s3.object_inventory(f"{key}/") == before, error(
+                "attach modified objects"
+            )
             got = node.query(f"SELECT id FROM {second}").output.strip()
             assert got == "42", error(got)
     finally:
@@ -484,15 +516,19 @@ def no_trace_after_each_rejection_class(self):
         )
     cases = {
         "bad transform": dict(partition_by="toYYYYMM(d)", exitcode=BAD_ARGUMENTS),
-        "bad modifier": dict(columns=["id Int64 DEFAULT 1", "d Date"], exitcode=BAD_ARGUMENTS),
-        "bad clause": dict(order_by="id", storage_clauses="PRIMARY KEY id", exitcode=BAD_ARGUMENTS),
+        "bad modifier": dict(
+            columns=["id Int64 DEFAULT 1", "d Date"], exitcode=BAD_ARGUMENTS
+        ),
+        "bad clause": dict(
+            order_by="id", storage_clauses="PRIMARY KEY id", exitcode=BAD_ARGUMENTS
+        ),
         "non-Iceberg engine": dict(
             path=EXPLICIT_ENGINE,
             engine="MergeTree",
             order_by="id",
             exitcode=BAD_ARGUMENTS,
         ),
-        "empty column list": dict(columns=[], exitcode=BAD_ARGUMENTS),
+        "empty column list": dict(columns=[], exitcode=INCORRECT_QUERY),
     }
     for label, extra in cases.items():
         with Check(label, flags=TE):
@@ -516,7 +552,9 @@ def no_trace_after_each_rejection_class(self):
             )
             with By("snapshot state"):
                 after = snapshot_state(**args)
-            assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+            assert_rejected_no_trace(
+                before=before, after=after, namespace_expected=False
+            )
             assert after.objects == {}, error(f"objects left: {sorted(after.objects)}")
 
 

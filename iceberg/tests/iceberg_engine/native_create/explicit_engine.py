@@ -55,9 +55,11 @@ def non_iceberg_engine_rejected(self, engine):
         engine=engine_for(engine, table_name, minio_root_user, minio_root_password),
         order_by="id" if engine == "MergeTree" else None,
         exitcode=BAD_ARGUMENTS,
-        message="only supports Iceberg-family table engines",
+        message="-family tables; got table engine",  # "This DataLakeCatalog stores Iceberg-family tables; got table engine ...",
     )
-    assert_rejected_no_trace(before=before, after=snapshot_state(**args), namespace_expected=False)
+    with When("snapshot state"):
+        after = snapshot_state(**args)
+    assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
 
 @TestOutline(Scenario)
@@ -76,7 +78,9 @@ def backend_mismatch_on_fixed_backend_catalog(self, engine):
         "default-base-location"
     )
     if not fixed:
-        skip("catalog has no fixed backend; see any_iceberg_engine_accepted_without_fixed_backend")
+        skip(
+            "catalog has no fixed backend; see any_iceberg_engine_accepted_without_fixed_backend"
+        )
 
     namespace, table_name = f"ns_{getuid()}", f"t_{getuid()}"
     args = dict(
@@ -97,7 +101,9 @@ def backend_mismatch_on_fixed_backend_catalog(self, engine):
         exitcode=BAD_ARGUMENTS,
         message="stores tables on",
     )
-    assert_rejected_no_trace(before=before, after=snapshot_state(**args), namespace_expected=False)
+    with When("snapshot state"):
+        after = snapshot_state(**args)
+    assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
 
 @TestScenario
@@ -136,7 +142,9 @@ def generic_iceberg_engine_on_fixed_backend_catalog(self):
         exitcode=BAD_ARGUMENTS,
         message="backend-specific Iceberg engine",
     )
-    assert_rejected_no_trace(before=before, after=snapshot_state(**args), namespace_expected=False)
+    with When("snapshot state"):
+        after = snapshot_state(**args)
+    assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
 
 @TestScenario
@@ -208,7 +216,9 @@ def initial_file_naming(self, version_hint):
         table_name=table_name,
         path=EXPLICIT_ENGINE,
         columns=COLUMNS,
-        engine_settings=({"iceberg_use_version_hint": version_hint} if version_hint else None),
+        engine_settings=(
+            {"iceberg_use_version_hint": version_hint} if version_hint else None
+        ),
     )
     with When("snapshot state"):
         after = snapshot_state(**args)

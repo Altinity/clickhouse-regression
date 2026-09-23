@@ -55,8 +55,12 @@ def initial_file(self):
             table = catalog.load_table(f"{namespace}.{table_name}")
 
             with By("format-version is 1 or 2 and PyIceberg agrees"):
-                assert metadata["format-version"] in (1, 2), error(metadata["format-version"])
-                assert table.metadata.format_version == metadata["format-version"], error()
+                assert metadata["format-version"] in (1, 2), error(
+                    metadata["format-version"]
+                )
+                assert (
+                    table.metadata.format_version == metadata["format-version"]
+                ), error()
 
             with By("one schema with the declared fields"):
                 assert len(metadata["schemas"]) == 1, error(len(metadata["schemas"]))
@@ -66,25 +70,33 @@ def initial_file(self):
                     ("name", "string", False),
                     ("d", "date", True),
                 ], error(fields)
-                assert metadata["last-column-id"] == 3, error(metadata["last-column-id"])
+                assert metadata["last-column-id"] == 3, error(
+                    metadata["last-column-id"]
+                )
 
             with By("one partition spec and one sort order"):
                 assert len(metadata["partition-specs"]) == 1, error()
-                assert [f["transform"] for f in metadata["partition-specs"][0]["fields"]] == [
-                    "day"
-                ], error()
+                assert [
+                    f["transform"] for f in metadata["partition-specs"][0]["fields"]
+                ] == ["day"], error()
                 assert len(metadata["sort-orders"]) == 1, error()
-                assert [f["source-id"] for f in metadata["sort-orders"][0]["fields"]] == [
-                    1
-                ], error()
+                assert [
+                    f["source-id"] for f in metadata["sort-orders"][0]["fields"]
+                ] == [1], error()
 
             with By("no snapshots, no current snapshot, empty logs"):
-                assert metadata.get("snapshots", []) == [], error(metadata.get("snapshots"))
+                assert metadata.get("snapshots", []) == [], error(
+                    metadata.get("snapshots")
+                )
                 assert metadata.get("current-snapshot-id") in (None, -1), error(
                     metadata.get("current-snapshot-id")
                 )
-                assert metadata.get("metadata-log", []) == [], error(metadata.get("metadata-log"))
-                assert metadata.get("snapshot-log", []) == [], error(metadata.get("snapshot-log"))
+                assert metadata.get("metadata-log", []) == [], error(
+                    metadata.get("metadata-log")
+                )
+                assert metadata.get("snapshot-log", []) == [], error(
+                    metadata.get("snapshot-log")
+                )
                 assert table.current_snapshot() is None, error()
 
             with By("location field matches the catalog"):
@@ -138,7 +150,9 @@ def gzip_metadata(self, path):
             note(f"server-written metadata: {key}, gzip={raw[:2] == s3.GZIP_MAGIC}")
 
     with And("INSERT and SELECT work"):
-        insert_into_native_iceberg_table(table_name=ch_name, values_sql="(1, 'a', '2024-01-01')")
+        insert_into_native_iceberg_table(
+            table_name=ch_name, values_sql="(1, 'a', '2024-01-01')"
+        )
         check_column_value(table_name=ch_name, expected="1\ta\t2024-01-01")
         check_state_invariants(**args, expected=PRESENT)
 
@@ -169,7 +183,9 @@ def first_commit_has_no_parent(self):
         )
 
     with When("first INSERT"):
-        insert_into_native_iceberg_table(table_name=ch_name, values_sql="(1, 'a', '2024-01-01')")
+        insert_into_native_iceberg_table(
+            table_name=ch_name, values_sql="(1, 'a', '2024-01-01')"
+        )
 
     with Then("one snapshot, no parent, metadata-log[0] is the initial file"):
         metadata, location = read_registered_metadata(
@@ -188,7 +204,9 @@ def first_commit_has_no_parent(self):
         assert table.current_snapshot().parent_snapshot_id is None, error()
 
     with When("second INSERT"):
-        insert_into_native_iceberg_table(table_name=ch_name, values_sql="(2, 'b', '2024-01-02')")
+        insert_into_native_iceberg_table(
+            table_name=ch_name, values_sql="(2, 'b', '2024-01-02')"
+        )
 
     with Then("the second snapshot's parent is the first"):
         metadata, _ = read_registered_metadata(
@@ -197,7 +215,12 @@ def first_commit_has_no_parent(self):
         by_id = {s["snapshot-id"]: s for s in metadata["snapshots"]}
         current = by_id[metadata["current-snapshot-id"]]
         assert current.get("parent-snapshot-id") == first["snapshot-id"], error(current)
-        rows = catalog.load_table(f"{namespace}.{table_name}").scan().to_arrow().to_pylist()
+        rows = (
+            catalog.load_table(f"{namespace}.{table_name}")
+            .scan()
+            .to_arrow()
+            .to_pylist()
+        )
         assert sorted(r["id"] for r in rows) == [1, 2], error(rows)
 
 
@@ -238,13 +261,19 @@ def pyiceberg_reads_clickhouse_rows(self):
                 ("name", "string", False),
                 ("d", "date", True),
             ], error()
-            assert pyiceberg_spec_shape(table) == [(1, "bucket[4]")], error(str(table.spec()))
-            assert pyiceberg_sort_shape(table) == [(3, "identity")], error(str(table.sort_order()))
-            assert table.metadata.location == expected_table_location(namespace, table_name), error(
-                table.metadata.location
+            assert pyiceberg_spec_shape(table) == [(1, "bucket[4]")], error(
+                str(table.spec())
             )
+            assert pyiceberg_sort_shape(table) == [(3, "identity")], error(
+                str(table.sort_order())
+            )
+            assert table.metadata.location == expected_table_location(
+                namespace, table_name
+            ), error(table.metadata.location)
             rows = sorted(table.scan().to_arrow().to_pylist(), key=lambda r: r["id"])
-            assert [(r["id"], r["name"]) for r in rows] == [(1, "a"), (2, None)], error(rows)
+            assert [(r["id"], r["name"]) for r in rows] == [(1, "a"), (2, None)], error(
+                rows
+            )
 
 
 @TestScenario
