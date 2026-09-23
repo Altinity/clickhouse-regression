@@ -2524,6 +2524,10 @@ output_format_arrow_fixed_string_as_fixed_byte_array = r"""'{"default":"1"}'"""
 
 output_format_arrow_low_cardinality_as_dictionary = r"""'{"default":"0"}'"""
 
+output_format_arrow_record_batch_size = r"""'{"default":"0"}'"""
+
+output_format_arrow_record_batch_size_bytes = r"""'{"default":"0"}'"""
+
 output_format_arrow_string_as_string = r"""'{"default":"1"}'"""
 
 output_format_arrow_unsupported_types_as_binary = r"""'{"default":"1"}'"""
@@ -3563,6 +3567,8 @@ use_with_fill_by_sorting_prefix = r"""'{"default":"1"}'"""
 validate_enum_literals_in_operators = r"""'{"default":"0"}'"""
 
 validate_experimental_and_suspicious_types_inside_nested_types = r"""'{"default":"1"}'"""
+
+validate_group_by_all_key_types = r"""'{"default":"1"}'"""
 
 validate_mutation_query = r"""'{"default":"1"}'"""
 
