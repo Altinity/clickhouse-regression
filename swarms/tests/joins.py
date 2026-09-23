@@ -652,19 +652,6 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         "FULL OUTER JOIN",
     ]
 
-    length = len(
-        list(
-            product(
-                left_tables,
-                right_tables,
-                modes,
-                join_conditions,
-                object_storage_clusters,
-                join_clauses,
-            )
-        )
-    )
-
     all_possible_combinations = list(
         product(
             left_tables,
@@ -677,9 +664,21 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
     )
 
     if not self.context.stress:
-        all_possible_combinations = random.sample(
+        # Each run samples a different set of combinations, so "join N" names
+        # a different combination in every run (and in a CI rerun). Its
+        # parameters are in the scenario's arguments in the log; to reproduce
+        # a failure, rerun with the seed printed below:
+        #   --seed <seed> --only "/swarms/feature/swarm joins/join clause/join N of*"
+        seed = self.context.seed
+        if seed is None:
+            seed = random.SystemRandom().randrange(2**32)
+        note(f"join combinations seed: {seed}")
+
+        all_possible_combinations = random.Random(seed).sample(
             all_possible_combinations, min(1000, len(all_possible_combinations))
         )
+
+    length = len(all_possible_combinations)
 
     with Pool() as pool:
         for num, (
@@ -690,7 +689,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
             object_storage_cluster,
             join_clause,
         ) in enumerate(all_possible_combinations):
-            name = f"join {num} of {length}: {left_table} with {right_table} in {mode} mode on {object_storage_cluster} cluster with {join_clause} clause"
+            name = f"join {num} of {length}"
             Scenario(
                 name=name,
                 test=check_join,

@@ -154,18 +154,16 @@ def check_union(
     left_table,
     right_table,
     node=None,
-    object_storage_cluster_1="replicated_cluster",
-    object_storage_cluster_2="replicated_cluster",
+    all_or_distinct="UNION ALL",
+    object_storage_cluster_setting_1="",
+    object_storage_cluster_setting_2="",
     order_by="tuple(*)",
 ):
     """Check union operation."""
     if node is None:
         node = self.context.node
 
-    with Given("choose to run query with UNION ALL or UNION DISTINCT"):
-        all_or_distinct = random.choice(["UNION ALL", "UNION DISTINCT"])
-
-    with And("create merge tree tables as left and right tables"):
+    with Given("create merge tree tables as left and right tables"):
         left_merge_tree_table = create_table_as_select(
             as_select_from=left_table,
         )
@@ -184,12 +182,6 @@ def check_union(
         expected_result = node.query(query)
 
     with Then("check UNION on iceberg tables and cluster functions"):
-        object_storage_cluster_setting_1 = random.choice(
-            ["", f"SETTINGS object_storage_cluster = '{object_storage_cluster_1}'"]
-        )
-        object_storage_cluster_setting_2 = random.choice(
-            ["", f"SETTINGS object_storage_cluster = '{object_storage_cluster_2}'"]
-        )
         query = _union_query(
             self,
             left_table,
@@ -322,10 +314,45 @@ def union_clause(self, minio_root_user, minio_root_password, node=None):
         )
     )
 
+    # Each run samples a different set of combinations, so "union N" names
+    # a different combination in every run (and in a CI rerun). Its
+    # parameters are in the scenario's arguments in the log; to reproduce
+    # a failure, rerun with the seed printed below:
+    #   --seed <seed> --only "/swarms/feature/swarm union/union clause/union N of*"
+    seed = self.context.seed
+    if seed is None:
+        seed = random.SystemRandom().randrange(2**32)
+    note(f"union combinations seed: {seed}")
+    rng = random.Random(seed)
+
     if not self.context.stress:
-        all_possible_combinations = random.sample(all_possible_combinations, 500)
+        all_possible_combinations = rng.sample(all_possible_combinations, 500)
 
     length = len(all_possible_combinations)
+
+    # Draw the per-scenario choices here, in order, for every combination:
+    # drawing them inside the parallel scenarios would not be reproducible.
+    all_possible_combinations = [
+        (
+            left_table,
+            right_table,
+            object_storage_cluster_1,
+            object_storage_cluster_2,
+            rng.choice(["UNION ALL", "UNION DISTINCT"]),
+            rng.choice(
+                ["", f"SETTINGS object_storage_cluster = '{object_storage_cluster_1}'"]
+            ),
+            rng.choice(
+                ["", f"SETTINGS object_storage_cluster = '{object_storage_cluster_2}'"]
+            ),
+        )
+        for (
+            left_table,
+            right_table,
+            object_storage_cluster_1,
+            object_storage_cluster_2,
+        ) in all_possible_combinations
+    ]
 
     with Pool(10) as pool:
         for num, (
@@ -333,8 +360,11 @@ def union_clause(self, minio_root_user, minio_root_password, node=None):
             right_table,
             object_storage_cluster_1,
             object_storage_cluster_2,
+            all_or_distinct,
+            object_storage_cluster_setting_1,
+            object_storage_cluster_setting_2,
         ) in enumerate(all_possible_combinations):
-            name = f"union {num} of {length}: {left_table} with {right_table} in {object_storage_cluster_1} cluster and {object_storage_cluster_2} cluster"
+            name = f"union {num} of {length}"
             Scenario(
                 name=name,
                 test=check_union,
@@ -343,8 +373,9 @@ def union_clause(self, minio_root_user, minio_root_password, node=None):
             )(
                 left_table=left_table,
                 right_table=right_table,
-                object_storage_cluster_1=object_storage_cluster_1,
-                object_storage_cluster_2=object_storage_cluster_2,
+                all_or_distinct=all_or_distinct,
+                object_storage_cluster_setting_1=object_storage_cluster_setting_1,
+                object_storage_cluster_setting_2=object_storage_cluster_setting_2,
             )
         join()
 
