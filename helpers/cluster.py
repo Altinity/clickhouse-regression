@@ -1,26 +1,22 @@
-import os
-import sys
-import uuid
-import time
-import inspect
 import hashlib
-import threading
-import tempfile
-import re
+import inspect
 import json
+import os
+import re
 import shutil
+import tempfile
+import threading
+import time
+import uuid
 from contextlib import contextmanager
 from urllib.parse import unquote
 
-from testflows._core.cli.arg.common import description
-
 import testflows.settings as settings
-
-from testflows.core import *
 from testflows.asserts import error
 from testflows.connect import Shell as ShellBase
+from testflows.core import *
 from testflows.uexpect import ExpectTimeoutError
-from testflows._core.testtype import TestSubType
+
 from helpers.common import check_clickhouse_version, current_cpu
 
 MINIMUM_COMPOSE_VERSION = "2.23.1"
