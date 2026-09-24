@@ -31,7 +31,7 @@ services:
 
   # One-shot: wait for RustFS, then create the `test` bucket the CA pool path lives under.
   createbucket:
-    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z
+    image: clickhouse/minio-mc:RELEASE.2025-04-16T18-13-26Z
     depends_on:
       - rustfs1
     entrypoint: >

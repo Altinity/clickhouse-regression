@@ -1,6 +1,6 @@
 services:
   minio-client:
-    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z
+    image: clickhouse/minio-mc:RELEASE.2025-04-16T18-13-26Z
     init: true
     entrypoint: >
       /bin/sh -c "

@@ -1,4 +1,4 @@
-FROM quay.io/minio/minio:RELEASE.2022-07-17T15-43-14Z AS minio
+FROM clickhouse/minio-minio:RELEASE.2026-08-04T00-00-00Z AS minio
 
 FROM ubuntu:latest
 
@@ -7,9 +7,8 @@ RUN apt update
 RUN apt install --yes iproute2 procps
 
 # MinIO stopped publishing binaries on dl.min.io (HTTP 410).
-# Copy the binary from the public quay.io image instead.
-# This 2022 tag keeps minio at /opt/bin/minio, not /usr/bin/minio.
-COPY --from=minio /opt/bin/minio /usr/local/bin/minio
+# Copy the binary from the clickhouse/ mirror of the pgsty/minio community fork.
+COPY --from=minio /usr/bin/minio /usr/local/bin/minio
 
 # Create data directory
 RUN mkdir -p /data

@@ -1,6 +1,6 @@
 services:
   minio:
-    image: quay.io/minio/minio:RELEASE.2025-03-12T18-04-18Z-cpuv1
+    image: clickhouse/minio-minio:RELEASE.2026-08-04T00-00-00Z
     container_name: swarms_minio
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER:-}

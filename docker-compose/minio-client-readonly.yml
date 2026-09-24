@@ -1,6 +1,6 @@
 services:
   minio-client-readonly:
-    image: quay.io/minio/mc:RELEASE.2022-06-11T21-10-36Z
+    image: clickhouse/minio-mc:RELEASE.2025-04-16T18-13-26Z
     entrypoint: >
      /bin/sh -c "
      /usr/bin/mc config host add minio http://minio_readonly:9002 minio minio123;

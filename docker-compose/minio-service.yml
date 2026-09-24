@@ -1,6 +1,6 @@
 services:
   minio1:
-    image: quay.io/minio/minio:RELEASE.2022-06-11T19-55-32Z
+    image: clickhouse/minio-minio:RELEASE.2026-08-04T00-00-00Z
     volumes:
       - data1-1:/data1
     ports:

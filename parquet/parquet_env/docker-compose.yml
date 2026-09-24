@@ -158,7 +158,7 @@ services:
   mc:
     depends_on:
       - minio
-    image: quay.io/minio/mc
+    image: clickhouse/minio-mc:RELEASE.2025-04-16T18-13-26Z
     container_name: mc
     environment:
       - AWS_ACCESS_KEY_ID=minio
@@ -169,7 +169,7 @@ services:
       until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do echo '...waiting...' && sleep 1; done;
       /usr/bin/mc rm -r --force minio/warehouse;
       /usr/bin/mc mb minio/warehouse --ignore-existing;
-      /usr/bin/mc policy set public minio/warehouse;
+      /usr/bin/mc anonymous set public minio/warehouse;
       tail -f /dev/null
       "
 
