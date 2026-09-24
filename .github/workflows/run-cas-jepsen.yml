@@ -67,7 +67,7 @@ jobs:
       COMPOSE_PROJECT_NAME: jepsen-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -112,7 +112,7 @@ jobs:
 
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cas-jepsen-artifacts-${{ inputs.arch }}-${{ github.run_id }}
           path: |
