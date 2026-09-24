@@ -24,6 +24,22 @@ from helpers.common import check_clickhouse_version, current_cpu
 
 MINIMUM_COMPOSE_VERSION = "2.23.1"
 
+
+def default_docker_compose():
+    """Return the default docker compose command.
+
+    The standalone `docker-compose` v2 binary is the documented prerequisite
+    and, running in standalone mode, accepts the docker CLI global
+    `--log-level` flag, which keeps compose warnings out of the pty buffer
+    the shells read from. When only the `docker compose` plugin is installed
+    the flag must precede `compose`; placed after it the plugin fails with
+    `unknown flag: --log-level`.
+    """
+    if shutil.which("docker-compose"):
+        return "docker-compose --log-level ERROR"
+    return "docker --log-level ERROR compose"
+
+
 #: Keys self._environ_applied under, beside the (thread, node) pairs.
 _CONTROL_SHELL_ID = ("control", None)
 
@@ -1607,7 +1623,7 @@ class Cluster(object):
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
-        docker_compose="docker compose",
+        docker_compose=None,
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
@@ -1639,6 +1655,8 @@ class Cluster(object):
         self.configs_dir = configs_dir
         self.local = local
         self.nodes: dict[str, list[str]] = nodes or {}
+        if docker_compose is None:
+            docker_compose = default_docker_compose()
         self.docker_compose = docker_compose
         self.thread_fuzzer = thread_fuzzer
         self.running = False
@@ -1825,6 +1843,9 @@ class Cluster(object):
     def control_shell(self, timeout=300):
         """Must be called with self.lock.acquired."""
         if self._control_shell is not None:
+            # Kept in sync like the per-thread shells: the environment is
+            # populated in up(), which may run after the shell was opened.
+            self.apply_environ(self._control_shell, _CONTROL_SHELL_ID)
             return self._control_shell
 
         time_start = time.time()
@@ -2529,7 +2550,7 @@ def create_cluster(
     collect_service_logs=False,
     configs_dir=None,
     nodes=None,
-    docker_compose="docker compose",
+    docker_compose=None,
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,

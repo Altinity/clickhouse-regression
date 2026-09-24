@@ -1009,6 +1009,31 @@ class Cluster(object):
 
         return host_clickhouse_binary_path, host_clickhouse_odbc_bridge_binary_path
 
+    def _export_environ(self, shell):
+        """Export cluster environment variables into a host shell.
+
+        Docker compose resolves the ${CLICKHOUSE_TESTS_*} references in the
+        compose files from the process environment, so every host shell that
+        runs a compose command must have them exported. Without them compose
+        prints a "variable is not set" warning per reference, and because the
+        shells run under a pty that merges stderr into stdout, the warnings end
+        up inside captured output such as the container id from `ps -q`.
+        """
+        for name, value in self.environ.items():
+            shell(f"export {name}={value}")
+
+    def _refresh_environ(self):
+        """Re-export cluster environment variables into already open host shells.
+
+        Must be called after self.environ changes, otherwise the control shell
+        and the cached host bash sessions keep the values they were opened with.
+        """
+        with self.lock:
+            self.close_control_shell()
+            for (thread_name, node_name), shell in self._bash.items():
+                if node_name == f"{None}":
+                    self._export_environ(shell)
+
     @property
     def control_shell(self, timeout=300):
         """Must be called with self.lock.acquired."""
@@ -1024,6 +1049,7 @@ class Cluster(object):
                     shell = Shell()
                     shell.timeout = 30
                     shell("echo 1")
+                    self._export_environ(shell)
                     break
                 except IOError:
                     raise
@@ -1155,8 +1181,7 @@ class Cluster(object):
                                 )
 
                 if node is None:
-                    for name, value in self.environ.items():
-                        self._bash[id](f"export {name}={value}")
+                    self._export_environ(self._bash[id])
 
                 self._bash[id].timeout = timeout
 
@@ -1349,6 +1374,9 @@ class Cluster(object):
                         exitcode=0,
                         timeout=300,
                     )
+
+            with And("I export environment variables into open host shells"):
+                self._refresh_environ()
 
             with And("I list environment variables to show their values"):
                 self.command(None, "env | grep CLICKHOUSE")
