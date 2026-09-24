@@ -30,7 +30,7 @@ def cas_endpoint(self, pool_prefix, endpoint_host=None):
 
 
 def cas_disk_auth_clause(self):
-    """Return access-key (and region, on AWS) fragments for an inline CAS disk."""
+    """Return auth (and region / http_client) fragments for an inline CAS disk."""
     access_key = getattr(self.context, "cas_access_key", self.context.minio_root_user)
     secret_key = getattr(
         self.context, "cas_secret_key", self.context.minio_root_password
@@ -42,6 +42,9 @@ def cas_disk_auth_clause(self):
     region = getattr(self.context, "cas_region", None)
     if region:
         clause += f", region = '{region}'"
+    http_client = getattr(self.context, "cas_http_client", None)
+    if http_client:
+        clause += f", http_client = '{http_client}'"
     return clause
 
 

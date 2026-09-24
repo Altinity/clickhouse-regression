@@ -18,6 +18,7 @@ from helpers.common import (
 from cas.cas_mode import (
     CAS_DISK,
     enable_cas_aws_storage,
+    enable_cas_gcs_storage,
     enable_cas_minio_disk,
 )
 from cas.tests.steps.disk import AWS_S3_DISK_PREFIX, CAS_POLICY_POOL, cas_endpoint
@@ -41,10 +42,31 @@ def argparser(parser):
     )
     parser.add_argument(
         "--storage",
-        choices=["minio", "aws_s3"],
+        choices=["minio", "aws_s3", "gcs"],
         default="minio",
         dest="storage",
         help="object store for CAS disks (default: minio)",
+    )
+    parser.add_argument(
+        "--gcs-bucket",
+        type=Secret(name="gcs_bucket"),
+        default=os.getenv("GCS_BUCKET") or "altinity-qa-test",
+        dest="gcs_bucket",
+        help="GCS bucket for --storage gcs",
+    )
+    parser.add_argument(
+        "--gcs-key-id",
+        type=Secret(name="gcs_key_id"),
+        default=os.getenv("GCS_KEY_ID"),
+        dest="gcs_key_id",
+        help="GCS HMAC access key id for --storage gcs",
+    )
+    parser.add_argument(
+        "--gcs-key-secret",
+        type=Secret(name="gcs_key_secret"),
+        default=os.getenv("GCS_KEY_SECRET"),
+        dest="gcs_key_secret",
+        help="GCS HMAC secret key for --storage gcs",
     )
     parser.add_argument(
         "--aws-s3-bucket",
@@ -102,6 +124,9 @@ def regression(
     aws_s3_region=None,
     aws_s3_key_id=None,
     aws_s3_access_key=None,
+    gcs_bucket=None,
+    gcs_key_id=None,
+    gcs_key_secret=None,
 ):
     """Run tests for content-addressed storage."""
     nodes = {
@@ -127,6 +152,7 @@ def regression(
     self.context.cas_root_prefix = "cas"
     self.context.cas_region = None
     self.context.cas_mc_alias = "minio"
+    self.context.cas_http_client = None
 
     if storage == "aws_s3":
         bucket = _secret_value(aws_s3_bucket)
@@ -154,6 +180,31 @@ def regression(
                 region=region,
                 with_cache=use_cas_s3_cache,
             )
+    elif storage == "gcs":
+        bucket = _secret_value(gcs_bucket)
+        key_id = _secret_value(gcs_key_id)
+        key_secret = _secret_value(gcs_key_secret)
+        if not all((bucket, key_id, key_secret)):
+            fail(
+                "--storage gcs needs --gcs-bucket, --gcs-key-id "
+                "and --gcs-key-secret"
+            )
+
+        self.context.cas_access_key = key_id
+        self.context.cas_secret_key = key_secret
+        self.context.cas_endpoint_host = "https://storage.googleapis.com"
+        self.context.cas_bucket = bucket
+        self.context.cas_root_prefix = f"cas_reg_{getuid()}"
+        self.context.cas_region = None
+        self.context.cas_mc_alias = "gcs"
+        self.context.cas_http_client = "gcs_hmac"
+
+        with Given("CAS disks on GCS"):
+            enable_cas_gcs_storage(
+                s3_endpoint=cas_endpoint(self, AWS_S3_DISK_PREFIX),
+                cas_endpoint=cas_endpoint(self, CAS_POLICY_POOL),
+                with_cache=use_cas_s3_cache,
+            )
     else:
         with Given("named CAS disk endpoint"):
             enable_cas_minio_disk(
@@ -165,7 +216,7 @@ def regression(
         "MINIO_ROOT_USER": minio_root_user,
         "MINIO_ROOT_PASSWORD": minio_root_password,
     }
-    if storage == "aws_s3":
+    if storage in ("aws_s3", "gcs"):
         cluster_environ["CAS_ACCESS_KEY_ID"] = self.context.cas_access_key
         cluster_environ["CAS_SECRET_ACCESS_KEY"] = self.context.cas_secret_key
 
@@ -187,11 +238,11 @@ def regression(
         self.context.node3,
     ]
 
-    if storage == "aws_s3":
-        with And("mc alias for the AWS bucket"):
+    if storage in ("aws_s3", "gcs"):
+        with And(f"mc alias for the {storage} bucket"):
             configure_cas_mc_alias(
                 cluster=cluster,
-                alias="aws",
+                alias=self.context.cas_mc_alias,
                 endpoint=self.context.cas_endpoint_host,
                 access_key=self.context.cas_access_key,
                 secret_key=self.context.cas_secret_key,
