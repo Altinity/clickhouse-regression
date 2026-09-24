@@ -1,5 +1,3 @@
-version: '2.3'
-
 volumes:
   clickhouse1_jbod1:
     driver: local

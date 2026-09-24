@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   minio:
     image: rustfs/rustfs:1.0.0-beta.12

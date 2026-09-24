@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   zookeeper-fips:
     image: altinity/zookeeper-fips:3.7.1-1
