@@ -66,7 +66,9 @@ def default_base_location(self, base):
     with Then("location, metadata/ and data/ are under the effective base"):
         after = snapshot_state(**args)
         expected = expected_table_location(namespace, table_name, effective)
-        assert after.table_location == expected, error(f"{after.table_location} != {expected}")
+        assert after.table_location == expected, error(
+            f"{after.table_location} != {expected}"
+        )
         prefix = s3.prefix_from_uri(expected)
         assert any(k.startswith(prefix + "metadata/") for k in after.objects), error(
             sorted(after.objects)
@@ -86,11 +88,11 @@ def default_base_location(self, base):
         ("http://minio:9000/warehouse/prefix", "s3://warehouse/prefix"),
     ],
 )
-def derived_from_storage_endpoint(
-    self, minio_root_user, minio_root_password, storage_endpoint, base
-):
+def derived_from_storage_endpoint(self, storage_endpoint, base):
     """A5 on a catalog with no base: the bucket path of storage_endpoint is
     the base."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     if self.context.catalog != "glue":
         skip("derivation is observable only on a catalog that reports no base (Glue)")
 
@@ -153,7 +155,9 @@ def storage_endpoint_without_bucket(self):
         exitcode=BAD_ARGUMENTS,
         message="does not contain a bucket",
     )
-    assert_rejected_no_trace(before=before, after=snapshot_state(**args), namespace_expected=False)
+    with When("snapshot state"):
+        after = snapshot_state(**args)
+    assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
 
 @TestScenario
@@ -199,7 +203,9 @@ def no_base_and_no_endpoint(self):
             )
             with Then("no trace"):
                 after = snapshot_state(**args)
-                assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+                assert_rejected_no_trace(
+                    before=before, after=after, namespace_expected=False
+                )
 
     with Check("neither setting", flags=TE):
         with Given("a database with neither setting"):
@@ -228,7 +234,9 @@ def no_base_and_no_endpoint(self):
         )
         with Then("no trace"):
             after = snapshot_state(**args)
-            assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+            assert_rejected_no_trace(
+                before=before, after=after, namespace_expected=False
+            )
 
 
 @TestScenario
@@ -254,7 +262,9 @@ def virtual_hosted_requires_base(self):
             database_name=database_name,
         )
         if catalog_reported_base(catalog):
-            note("catalog advertises a base, so derivation is not attempted; expecting success")
+            note(
+                "catalog advertises a base, so derivation is not attempted; expecting success"
+            )
             create_table(
                 database_name=database_name,
                 namespace=namespace,
@@ -273,8 +283,10 @@ def virtual_hosted_requires_base(self):
                 exitcode=BAD_ARGUMENTS,
                 message="default_base_location",
             )
+            with When("snapshot state"):
+                after = snapshot_state(**args)
             assert_rejected_no_trace(
-                before=before, after=snapshot_state(**args), namespace_expected=False
+                before=before, after=after, namespace_expected=False
             )
 
     with Check("with base", flags=TE):
@@ -295,9 +307,9 @@ def virtual_hosted_requires_base(self):
             columns=COLUMNS,
         )
         _, location = catalog_table_info(catalog, namespace, table_name)
-        assert location == expected_table_location(namespace, table_name, effective), error(
-            location
-        )
+        assert location == expected_table_location(
+            namespace, table_name, effective
+        ), error(location)
 
 
 @TestScenario
@@ -332,7 +344,9 @@ def base_on_a_different_backend(self):
         exitcode=BAD_ARGUMENTS,
         message="stores tables on",
     )
-    assert_rejected_no_trace(before=before, after=snapshot_state(**args), namespace_expected=False)
+    with When("snapshot state"):
+        after = snapshot_state(**args)
+    assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
 
 @TestScenario

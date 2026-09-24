@@ -160,7 +160,9 @@ def native_iceberg_table(
         )
     return helpers_create_table(
         name=clickhouse_table_name(database_name, namespace, table_name),
-        engine=iceberg_s3_engine(namespace, table_name, minio_root_user, minio_root_password),
+        engine=iceberg_s3_engine(
+            namespace, table_name, minio_root_user, minio_root_password
+        ),
         columns=columns,
         query_settings="write_full_path_in_iceberg_metadata = 1",
         order_by=order_by,
@@ -310,11 +312,18 @@ def nodes_with_database(database_name, test=None):
 
 
 def clickhouse_table_visible(database_name, namespace, table_name, node):
-    """``EXISTS TABLE`` on one node."""
+    """``EXISTS TABLE`` on one node. A namespace excluded by the database's
+    `namespaces` filter makes the server raise CATALOG_NAMESPACE_DISABLED; for
+    the invariants that means the table is not visible there."""
     result = node.query(
-        f"EXISTS TABLE {clickhouse_table_name(database_name, namespace, table_name)}"
+        f"EXISTS TABLE {clickhouse_table_name(database_name, namespace, table_name)}",
+        no_checks=True,
     )
-    return result.output.strip() == "1"
+    if result.exitcode == 0:
+        return result.output.strip() == "1"
+    if "CATALOG_NAMESPACE_DISABLED" in result.output:
+        return False
+    raise AssertionError(f"EXISTS TABLE failed on {node.name}: {result.output.strip()}")
 
 
 def clickhouse_table_view(database_name, namespace, table_name, node):
@@ -393,7 +402,9 @@ def snapshot_state(
     Call inside a ``When``/``Then``/``And``/``By`` context to get the ``State``
     back.
     """
-    metadata_location, table_location = catalog_table_info(catalog, namespace, table_name)
+    metadata_location, table_location = catalog_table_info(
+        catalog, namespace, table_name
+    )
     remembered = _remembered_locations(self)
     key = (namespace, table_name)
     inspect = (
@@ -466,9 +477,15 @@ def check_state_invariants(
                 f"node {node_name} sees table={visible}, catalog has it={state.catalog_table}"
             )
 
+    if expected == PRESENT and not state.catalog_table:
+        # A1 already failed (possibly as an xfail); the rest needs a registered table.
+        return state
+
     if expected == PRESENT:
         with By("A2: catalog metadata-location names an existing, parseable file"):
-            assert state.metadata_location, error("catalog returned no metadata-location")
+            assert state.metadata_location, error(
+                "catalog returned no metadata-location"
+            )
             key = s3.key_from_uri(state.metadata_location)
             assert key in state.objects, error(
                 f"metadata-location {key} is not among objects under {state.prefix}: "
@@ -481,13 +498,20 @@ def check_state_invariants(
             )
 
         with By("A5: table location is <base>/<namespace>/<table>"):
-            expected_location = expected_table_location(namespace, table_name, base_location)
+            expected_location = expected_table_location(
+                namespace, table_name, base_location
+            )
             assert state.table_location == expected_location, error(
                 f"catalog location {state.table_location!r} != expected {expected_location!r}"
             )
 
-        with By("A4: namespace location is the namespace base, never a table directory"):
-            assert state.catalog_namespace, error("namespace missing while table is present")
+        with By(
+            "A4: namespace location is the namespace base, never a table directory"
+        ):
+            assert state.catalog_namespace, error(
+                "namespace missing while table is present"
+            )
+            base = (base_location or DEFAULT_BASE_LOCATION).rstrip("/")
             if state.namespace_location is None:
                 note("catalog reports no namespace location; A4 not applicable here")
             else:
@@ -495,10 +519,19 @@ def check_state_invariants(
                 assert not ns_location.endswith(f"/{table_name}"), error(
                     f"namespace location {ns_location!r} ends with the table name"
                 )
-                assert state.table_location.startswith(ns_location + "/"), error(
-                    f"table location {state.table_location!r} is not under "
-                    f"namespace location {ns_location!r}"
-                )
+                if ns_location.startswith(base + "/"):
+                    assert state.table_location.startswith(ns_location + "/"), error(
+                        f"table location {state.table_location!r} is not under "
+                        f"namespace location {ns_location!r}"
+                    )
+                else:
+                    # The namespace was registered by another client or under another
+                    # base; ClickHouse places tables by its own base and ignores the
+                    # namespace's location property (see findings.md, environment facts).
+                    note(
+                        f"namespace location {ns_location!r} is outside base {base!r}; "
+                        f"table placed at {state.table_location!r}"
+                    )
 
         with By("A6: location scheme matches the catalog's backend"):
             assert state.table_location.startswith("s3://"), error(
@@ -508,7 +541,9 @@ def check_state_invariants(
         with By("A7: every node with the database reports the same table"):
             nodes = nodes_with_database(database_name, self)
             views = {
-                node.name: clickhouse_table_view(database_name, namespace, table_name, node)
+                node.name: clickhouse_table_view(
+                    database_name, namespace, table_name, node
+                )
                 for node in nodes
             }
             first = views[nodes[0].name]
@@ -608,7 +643,9 @@ def assert_table_created(self, before, after, version_hint=False):
         )
         others = [k for k in added if not k.endswith(".metadata.json")]
         allowed = [k for k in others if k.endswith("metadata/version-hint.text")]
-        assert others == allowed, error(f"unexpected objects written by CREATE: {others}")
+        assert others == allowed, error(
+            f"unexpected objects written by CREATE: {others}"
+        )
         if version_hint:
             assert allowed, error("version-hint.text expected but not written")
             assert s3.get_object_bytes(allowed[0]).strip() == b"1", error(
@@ -617,12 +654,16 @@ def assert_table_created(self, before, after, version_hint=False):
 
     with By("visible and empty on every node with the database"):
         for node in nodes_with_database(after.database_name, self):
-            assert after.visible[node.name], error(f"node {node.name} does not see the table")
+            assert after.visible[node.name], error(
+                f"node {node.name} does not see the table"
+            )
             count = node.query(
                 f"SELECT count() FROM "
                 f"{clickhouse_table_name(after.database_name, after.namespace, after.table_name)}"
             ).output.strip()
-            assert count == "0", error(f"node {node.name} counts {count} rows in a new table")
+            assert count == "0", error(
+                f"node {node.name} counts {count} rows in a new table"
+            )
 
 
 @TestStep(Then)
@@ -736,7 +777,9 @@ def build_create_table_query(
 
     if path == EXPLICIT_ENGINE:
         if engine is None:
-            engine = iceberg_s3_engine(namespace, table_name, minio_root_user, minio_root_password)
+            engine = iceberg_s3_engine(
+                namespace, table_name, minio_root_user, minio_root_password
+            )
         query += f" ENGINE = {engine}"
 
     if partition_by:
@@ -882,7 +925,9 @@ def drop_table(
         query += " SYNC"
 
     setting = (
-        [] if purge is None else [(PURGE_SETTING_ALIAS if alias else PURGE_SETTING, int(purge))]
+        []
+        if purge is None
+        else [(PURGE_SETTING_ALIAS if alias else PURGE_SETTING, int(purge))]
     )
     kwargs = {"inline_settings": setting} if inline else {"settings": setting}
     return node.query(
@@ -913,7 +958,11 @@ def mergetree_source_table(
         node = self.context.node
     if name is None:
         name = f"default.src_{getuid()}"
-    query = f"CREATE TABLE {name} (" + ", ".join(column_defs(columns)) + ") ENGINE = MergeTree"
+    query = (
+        f"CREATE TABLE {name} ("
+        + ", ".join(column_defs(columns))
+        + ") ENGINE = MergeTree"
+    )
     if partition_by:
         query += f" PARTITION BY {partition_by}"
     query += f" ORDER BY {order_by}"
@@ -957,7 +1006,8 @@ TABLE_ALREADY_EXISTS = 57
 UNKNOWN_TABLE = 60
 SUPPORT_IS_DISABLED = 344 % 256
 ACCESS_DENIED = 497 % 256
-CATALOG_NAMESPACE_DISABLED = 766 % 256
+# CATALOG_NAMESPACE_DISABLED has a different numeric code per version (766 on 25.x,
+# 779 on 26.6), so scenarios assert its name in the message instead of an exit code.
 
 
 AUTO = "auto"

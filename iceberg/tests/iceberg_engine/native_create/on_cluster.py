@@ -51,10 +51,12 @@ def on_cluster_rejected_on_initiator(self):
             message="ON CLUSTER is not supported for DataLakeCatalog",
             ignore_exception=True,
         )
-        assert ddl_queue_entries(node, table_name) == queued, error("a DDL task was enqueued")
-        assert_rejected_no_trace(
-            before=before, after=snapshot_state(**args), namespace_expected=False
+        assert ddl_queue_entries(node, table_name) == queued, error(
+            "a DDL task was enqueued"
         )
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
     with Given("an existing table"):
         create_table(
@@ -76,9 +78,14 @@ def on_cluster_rejected_on_initiator(self):
                 exitcode=NOT_IMPLEMENTED,
                 message="ON CLUSTER is not supported for DataLakeCatalog",
                 ignore_exception=True,
+                inline_settings=[("allow_insert_into_iceberg", 1)],
             )
-            assert ddl_queue_entries(node, table_name) == queued, error("a DDL task was enqueued")
-            assert_state_unchanged(before=before, after=snapshot_state(**args))
+            assert ddl_queue_entries(node, table_name) == queued, error(
+                "a DDL task was enqueued"
+            )
+            with When("snapshot state"):
+                after = snapshot_state(**args)
+            assert_state_unchanged(before=before, after=after)
 
     with Check("RENAME TABLE ON CLUSTER (worker guard)", flags=TE):
         node.query(
@@ -87,7 +94,9 @@ def on_cluster_rejected_on_initiator(self):
             message="ON CLUSTER is not supported for DataLakeCatalog",
             ignore_exception=True,
         )
-        assert_state_unchanged(before=before, after=snapshot_state(**args))
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_state_unchanged(before=before, after=after)
 
 
 @TestScenario
@@ -125,7 +134,9 @@ def worker_guard(self):
         )
         assert result.exitcode != 0, error("query succeeded")
 
-    with Then("node1's worker rejected it with NOT_IMPLEMENTED and the catalog has no table"):
+    with Then(
+        "node1's worker rejected it with NOT_IMPLEMENTED and the catalog has no table"
+    ):
         for attempt in retries(timeout=30, delay=1):
             with attempt:
                 code = node1.query(
@@ -133,9 +144,9 @@ def worker_guard(self):
                     f"WHERE query LIKE '%{table_name}%' AND host = '{node1.name}' LIMIT 1"
                 ).output.strip()
                 assert code == str(NOT_IMPLEMENTED), error(f"exception_code={code!r}")
-        assert_rejected_no_trace(
-            before=before, after=snapshot_state(**args), namespace_expected=False
-        )
+        with When("snapshot state"):
+            after = snapshot_state(**args)
+        assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
 
     with And("control: ON CLUSTER in default works from node2"):
         control = f"default.ctl_{getuid()}"
@@ -144,7 +155,9 @@ def worker_guard(self):
                 f"CREATE TABLE {control} ON CLUSTER {CLUSTER} (id Int64) ENGINE = MergeTree ORDER BY id"
             )
             for node in nodes:
-                assert node.query(f"EXISTS TABLE {control}").output.strip() == "1", error(node.name)
+                assert (
+                    node.query(f"EXISTS TABLE {control}").output.strip() == "1"
+                ), error(node.name)
         finally:
             node2.query(
                 f"DROP TABLE IF EXISTS {control} ON CLUSTER {CLUSTER} SYNC",
@@ -212,7 +225,9 @@ def shared_catalog_visibility(self):
         }.items():
             with Check(label, flags=TE):
                 got = (
-                    nodes[0].query(f"SELECT count() FROM {name}", settings=settings).output.strip()
+                    nodes[0]
+                    .query(f"SELECT count() FROM {name}", settings=settings)
+                    .output.strip()
                 )
                 assert got == "1", error(got)
 

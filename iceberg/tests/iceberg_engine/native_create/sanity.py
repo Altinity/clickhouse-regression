@@ -173,7 +173,9 @@ def create_as_source_copies_keys(self):
         database_name=database_name,
     )
 
-    with Given("a MergeTree source with a day partition key and a two-column sorting key"):
+    with Given(
+        "a MergeTree source with a day partition key and a two-column sorting key"
+    ):
         source = mergetree_source_table(
             columns=["a Int64", "b String", "d Date"],
             partition_by="toRelativeDayNum(d)",
@@ -351,14 +353,20 @@ def drop_keeps_data_by_default(self):
 
     with When("snapshot, then DROP TABLE"):
         before = snapshot_state(**args)
-        assert before.catalog_table and len(before.objects) > 1, error(before.describe())
-        drop_table(database_name=database_name, namespace=namespace, table_name=table_name)
+        assert before.catalog_table and len(before.objects) > 1, error(
+            before.describe()
+        )
+        drop_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
 
     with Then("B5: entry gone, objects untouched"):
         after = snapshot_state(**args)
         assert_table_dropped(before=before, after=after, purged=False)
         assert not catalog_has_table(catalog, namespace, table_name), error()
-        check_state_invariants(**args, expected=ABSENT_DATA_KEPT, before=before, state=after)
+        check_state_invariants(
+            **args, expected=ABSENT_DATA_KEPT, before=before, state=after
+        )
 
     with Finally("clean the kept objects so the bucket is left as found"):
         s3.delete_prefix(after.prefix)
@@ -438,12 +446,16 @@ def drop_table_never_loaded(self):
     with When("DROP TABLE as the first statement touching it"):
         before = snapshot_state(**args)
         assert before.catalog_table, error("PyIceberg table not registered")
-        drop_table(database_name=database_name, namespace=namespace, table_name=table_name)
+        drop_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
 
     with Then("B5: unregistered, objects kept"):
         after = snapshot_state(**args)
         assert_table_dropped(before=before, after=after, purged=False)
-        check_state_invariants(**args, expected=ABSENT_DATA_KEPT, before=before, state=after)
+        check_state_invariants(
+            **args, expected=ABSENT_DATA_KEPT, before=before, state=after
+        )
 
     with Finally("clean the kept objects"):
         s3.delete_prefix(after.prefix)

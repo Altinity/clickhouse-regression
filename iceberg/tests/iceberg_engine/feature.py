@@ -38,6 +38,11 @@ def feature(self, minio_root_user, minio_root_password):
         Feature(
             test=load("iceberg.tests.iceberg_engine.position_delete_reads", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        # Spark writes row lineage into the tabulario REST catalog, so row lineage
+        # stays out of the glue loop below.
+        # Feature(
+        #     test=load("iceberg.tests.iceberg_engine.row_lineage", "feature"),
+        # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.overwrite", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
@@ -58,6 +63,9 @@ def feature(self, minio_root_user, minio_root_password):
                 "iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"
             ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        # Feature(
+        #     test=load("iceberg.tests.iceberg_engine.timestamp_ns_pruning", "feature"),
+        # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.check_datatypes", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
@@ -136,6 +144,9 @@ def feature(self, minio_root_user, minio_root_password):
                 "iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"
             ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        # Feature(
+        #     test=load("iceberg.tests.iceberg_engine.timestamp_ns_pruning", "feature"),
+        # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
         Feature(
             test=load("iceberg.tests.iceberg_engine.check_datatypes", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)

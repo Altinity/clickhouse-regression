@@ -57,6 +57,13 @@ xfails = {
             "Need to investigate",
         )
     ],
+    "/settings/default values/max_insert_threads": [
+        (
+            Fail,
+            "default is auto(N cores) since 26.8 (ClickHouse#109006), depends on the runner's CPU count",
+            check_clickhouse_version(">=26.8"),
+        )
+    ],
     "/settings/default values/max_parsing_threads": [
         (
             Fail,

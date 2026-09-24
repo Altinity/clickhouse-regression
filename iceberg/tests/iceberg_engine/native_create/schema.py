@@ -152,7 +152,9 @@ def accepted_transforms(self):
             with Then("PyIceberg spec carries the transform"):
                 table = catalog.load_table(f"{namespace}.{table_name}")
                 transforms = [str(f.transform) for f in table.spec().fields]
-                assert transforms == [transform], error(f"{transforms} != [{transform}]")
+                assert transforms == [transform], error(
+                    f"{transforms} != [{transform}]"
+                )
 
             with When("INSERT one row and SELECT it with a partition predicate"):
                 insert_into_native_iceberg_table(table_name=ch_name, values_sql=values)
@@ -193,10 +195,13 @@ def partition_values_in_manifest(self):
             partition_by="i",
         )
         insert_into_native_iceberg_table(
-            table_name=ch_name, values_sql="(1, 'a', '2024-01-02', '2024-01-02 03:04:05')"
+            table_name=ch_name,
+            values_sql="(1, 'a', '2024-01-02', '2024-01-02 03:04:05')",
         )
     with Then("the manifest entry carries the partition value"):
-        files = list(catalog.load_table(f"{namespace}.{table_name}").scan().plan_files())
+        files = list(
+            catalog.load_table(f"{namespace}.{table_name}").scan().plan_files()
+        )
         assert files, error("no data files after INSERT")
         for task in files:
             record = task.file.partition
@@ -304,7 +309,9 @@ def rejected_partition_expressions(self, expression):
             )
             with By("snapshot state"):
                 after = snapshot_state(**args)
-            assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+            assert_rejected_no_trace(
+                before=before, after=after, namespace_expected=False
+            )
 
 
 @TestScenario
@@ -343,7 +350,9 @@ def non_positive_transform_parameters(self):
                 )
                 with By("snapshot state"):
                     after = snapshot_state(**args)
-                assert_rejected_no_trace(before=before, after=after, namespace_expected=False)
+                assert_rejected_no_trace(
+                    before=before, after=after, namespace_expected=False
+                )
 
 
 @TestOutline(Scenario)
@@ -375,9 +384,13 @@ def order_by(self, order_by, expected):
     table = catalog.load_table(f"{namespace}.{table_name}")
     assert pyiceberg_sort_shape(table) == expected, error(str(table.sort_order()))
     if expected:
-        assert table.sort_order().order_id != 0, error("non-empty sort order has order-id 0")
+        assert table.sort_order().order_id != 0, error(
+            "non-empty sort order has order-id 0"
+        )
     else:
-        assert table.sort_order().order_id == 0, error("empty sort order should be unsorted (id 0)")
+        assert table.sort_order().order_id == 0, error(
+            "empty sort order should be unsorted (id 0)"
+        )
 
 
 STORAGE_CLAUSES = {
@@ -427,7 +440,9 @@ def unsupported_storage_clauses(self):
                     order_by="i" if clause in ("PRIMARY KEY", "SAMPLE BY") else None,
                     storage_clauses=text,
                     engine_settings=(
-                        {"index_granularity": 8192} if clause == "engine SETTINGS" else None
+                        {"index_granularity": 8192}
+                        if clause == "engine SETTINGS"
+                        else None
                     ),
                     exitcode=BAD_ARGUMENTS,
                     message="DataLakeCatalog CREATE TABLE",
@@ -471,7 +486,9 @@ def unsupported_column_modifiers(self):
                 source = None
                 if path == AS_SOURCE:
                     if modifier == "PRIMARY KEY":
-                        skip("column-level PRIMARY KEY is not a column property after creation")
+                        skip(
+                            "column-level PRIMARY KEY is not a column property after creation"
+                        )
                     with By("source table"):
                         source = mergetree_source_table(
                             columns=columns,
@@ -499,10 +516,14 @@ def unsupported_column_modifiers(self):
                     columns=None if path == AS_SOURCE else columns,
                     source=source,
                     settings=(
-                        [("allow_experimental_statistics", 1)] if modifier == "STATISTICS" else None
+                        [("allow_experimental_statistics", 1)]
+                        if modifier == "STATISTICS"
+                        else None
                     ),
                     exitcode=BAD_ARGUMENTS,
-                    message=("Column 'i'" if modifier != "PRIMARY KEY" else "PRIMARY KEY"),
+                    message=(
+                        "Column 'i'" if modifier != "PRIMARY KEY" else "PRIMARY KEY"
+                    ),
                 )
                 with By("snapshot state"):
                     after = snapshot_state(**args)
@@ -556,7 +577,9 @@ def unsupported_table_elements(self):
 
     with Check("AS source carrying a comment", flags=TE):
         with By("source table"):
-            source = mergetree_source_table(columns=COLUMNS, order_by="i", comment="src comment")
+            source = mergetree_source_table(
+                columns=COLUMNS, order_by="i", comment="src comment"
+            )
         table_name = f"t_{getuid()}"
         args = dict(
             catalog=catalog,
@@ -634,11 +657,11 @@ def non_table_objects(self):
 @TestOutline(Scenario)
 @Requirements(RQ_Iceberg_NativeCreateDrop_Schema_EngineSettings("1.0"))
 @Examples("format_version", [(1,), (2,)])
-def engine_settings_with_explicit_engine(
-    self, minio_root_user, minio_root_password, format_version
-):
+def engine_settings_with_explicit_engine(self, format_version):
     """Positive control: with an explicit engine, SETTINGS are the engine's
     storage settings and iceberg_format_version reaches the metadata."""
+    minio_root_user = self.context.minio_root_user
+    minio_root_password = self.context.minio_root_password
     with Given("catalog and database"):
         catalog, database_name = catalog_and_database(
             minio_root_user=minio_root_user, minio_root_password=minio_root_password
@@ -656,7 +679,9 @@ def engine_settings_with_explicit_engine(
         metadata, _ = read_registered_metadata(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
-    assert metadata["format-version"] == format_version, error(metadata["format-version"])
+    assert metadata["format-version"] == format_version, error(
+        metadata["format-version"]
+    )
 
 
 @TestFeature

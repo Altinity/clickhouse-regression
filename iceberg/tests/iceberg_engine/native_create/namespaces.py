@@ -43,7 +43,9 @@ def namespace_auto_created(self):
     with Then("the namespace now exists and PyIceberg lists it"):
         after = snapshot_state(**args)
         assert_table_created(before=before, after=after)
-        assert (namespace,) in catalog.list_namespaces(), error(catalog.list_namespaces())
+        assert (namespace,) in catalog.list_namespaces(), error(
+            catalog.list_namespaces()
+        )
         check_state_invariants(**args, expected=PRESENT, state=after)
 
 
@@ -148,9 +150,9 @@ def second_table_lands_beside_the_first(self):
         if ns_location is None:
             note("catalog reports no namespace location")
         else:
-            assert ns_location.rstrip("/") == f"{DEFAULT_BASE_LOCATION}/{namespace}", error(
-                ns_location
-            )
+            assert (
+                ns_location.rstrip("/") == f"{DEFAULT_BASE_LOCATION}/{namespace}"
+            ), error(ns_location)
 
     with When("create a second table"):
         create_table(
@@ -200,9 +202,9 @@ def explicit_engine_namespace_location(self):
         if ns_location is None:
             note("catalog reports no namespace location")
         else:
-            assert ns_location.rstrip("/") == f"{DEFAULT_BASE_LOCATION}/{namespace}", error(
-                ns_location
-            )
+            assert (
+                ns_location.rstrip("/") == f"{DEFAULT_BASE_LOCATION}/{namespace}"
+            ), error(ns_location)
         check_state_invariants(
             catalog=catalog,
             namespace=namespace,
@@ -227,9 +229,9 @@ def explicit_engine_namespace_location(self):
             _, location = catalog_table_info(catalog, namespace, t1)
             assert location.rstrip("/") == f"s3://warehouse/{custom}", error(location)
             ns_location = catalog_namespace_location(catalog, namespace)
-            assert ns_location is None or not ns_location.rstrip("/").endswith(custom), error(
-                ns_location
-            )
+            assert ns_location is None or not ns_location.rstrip("/").endswith(
+                custom
+            ), error(ns_location)
 
             create_table(
                 database_name=database_name,
@@ -286,7 +288,10 @@ def nested_namespace(self):
 
     with When("INSERT, ALTER ADD COLUMN, SELECT"):
         insert_into_native_iceberg_table(table_name=ch_name, values_sql="(1, 'a')")
-        self.context.node.query(f"ALTER TABLE {ch_name} ADD COLUMN extra Int32")
+        self.context.node.query(
+            f"ALTER TABLE {ch_name} ADD COLUMN extra Nullable(Int32)",
+            inline_settings=[("allow_insert_into_iceberg", 1)],
+        )
         check_column_value(table_name=ch_name, expected="1\ta")
 
     with Then("invariants hold"):
@@ -323,8 +328,7 @@ def filtered_namespaces(self):
             namespace=other,
             table_name=table_name,
             columns=COLUMNS,
-            exitcode=CATALOG_NAMESPACE_DISABLED,
-            message="Namespace",
+            message="CATALOG_NAMESPACE_DISABLED",
         )
 
     with Then("nothing changed"):
@@ -338,8 +342,7 @@ def filtered_namespaces(self):
             database_name=database_name,
             namespace=other,
             table_name=table_name,
-            exitcode=CATALOG_NAMESPACE_DISABLED,
-            message="Namespace",
+            message="CATALOG_NAMESPACE_DISABLED",
         )
 
     with Then("the external table is still registered"):

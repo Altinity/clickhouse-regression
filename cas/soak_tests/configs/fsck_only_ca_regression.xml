@@ -1,0 +1,20 @@
+<clickhouse>
+    <!-- fsck-ONLY config for `clickhouse disks -C /etc/clickhouse-server/fsck-only.xml`.
+         Must stay OUTSIDE config.d so the server never loads ca_ro. -->
+    <storage_configuration>
+        <disks>
+            <ca_ro>
+                <type>object_storage</type>
+                <object_storage_type>s3</object_storage_type>
+                <metadata_type>cas</metadata_type>
+                <endpoint>http://minio:9000/warehouse/soak_pool/</endpoint>
+                <access_key_id>admin</access_key_id>
+                <secret_access_key>password</secret_access_key>
+                <server_root_id>ca_soak_clickhouse1</server_root_id>
+                <gc_enabled>0</gc_enabled>
+                <expect_continue_min_bytes>65536</expect_continue_min_bytes>
+                <readonly>true</readonly>
+            </ca_ro>
+        </disks>
+    </storage_configuration>
+</clickhouse>
