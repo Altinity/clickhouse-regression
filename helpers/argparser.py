@@ -1,6 +1,42 @@
+import argparse
 import os
 
 from testflows.core import Secret
+
+
+#: What --prepare-env narrows the run to: the same value the framework's own
+#: `--only-tags test:__prepare_env__` produces. It reads "among tests of type
+#: test, run only those tagged __prepare_env__". No Scenario, Check or Test
+#: carries that tag, so all of them are skipped; Modules and Features are a
+#: different type and are not filtered, so they run at every nesting level and
+#: so do the Given steps inside them, which is where the cluster is prepared.
+#:
+#: NOT a `--only` name pattern. `--only` selects by test path and skips any
+#: Feature whose path does not match, so in a suite whose root only loads child
+#: Features (each bringing up its own cluster) the children were skipped and the
+#: run reported OK having prepared nothing. A pattern loose enough to let every
+#: Feature through (`/*/...`) also lets every Scenario through, because both are
+#: just names to `--only`.
+PREPARE_ENV_ONLY_TAGS = ("test", ("__prepare_env__",))
+
+
+class PrepareEnv(argparse.Action):
+    """Turn on --prepare-env, and narrow the run to preparing.
+
+    Appends to the same `_only_tags` the framework's own `--only-tags` fills,
+    so the suite runs its setup, skips every test and finishes normally, with
+    a report and cleanup. Narrowing later, from inside a step, is too late: the
+    filters are read when the top-level test is built.
+    """
+
+    def __init__(self, option_strings, dest, **kwargs):
+        super().__init__(option_strings, dest, nargs=0, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, True)
+        only_tags = list(getattr(namespace, "_only_tags", None) or [])
+        only_tags.append(PREPARE_ENV_ONLY_TAGS)
+        setattr(namespace, "_only_tags", only_tags)
 
 
 def argparser(parser):
@@ -30,6 +66,17 @@ def argparser(parser):
         help="Path to ClickHouse package or binary, default: /usr/bin/clickhouse",
         metavar="PATH",
         default=os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"),
+    )
+
+    parser.add_argument(
+        "--prepare-env",
+        action=PrepareEnv,
+        dest="prepare_env",
+        help=(
+            "build and fetch every image this configuration needs, then exit "
+            "without running any test"
+        ),
+        default=False,
     )
 
     parser.add_argument(
@@ -154,6 +201,9 @@ def CaptureClusterArgs(func):
         local,
         clickhouse_path,
         as_binary,
+        # Absorbed, not forwarded: the flag's whole effect is the --only it set
+        # when it was parsed, and the feature does not take an argument for it.
+        prepare_env,
         base_os,
         keeper_path,
         zookeeper_version,
