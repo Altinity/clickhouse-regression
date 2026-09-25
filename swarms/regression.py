@@ -18,13 +18,23 @@ from helpers.common import (
 )
 from helpers.feature_support import validate_feature_support, setting_supported
 
+
+def argparser(parser):
+    """Custom argparser that adds swarms-specific options."""
+    argparser_minio(parser)
+
+    parser.add_argument(
+        "--seed",
+        action="store",
+        type=int,
+        default=None,
+        help="seed for sampling the join and union combinations, default: random (printed in the log)",
+    )
+
 from swarms.requirements.requirements import *
 
 
 xfails = {
-    "/swarms/feature/swarm joins/join clause/join 455 of 816480*": [
-        (Fail, "https://github.com/Altinity/ClickHouse/issues/1244"),
-    ],
     "/swarms/feature/task rescheduling/rescheduling with bucket granularity": [
         (
             Fail,
@@ -64,7 +74,7 @@ ffails = {
 @Name("swarms")
 @FFails(ffails)
 @XFails(xfails)
-@ArgumentParser(argparser_minio)
+@ArgumentParser(argparser)
 @Specifications(SRS_044_Swarm_Cluster_Query_Execution)
 @CaptureClusterArgs
 @CaptureMinioArgs
@@ -75,6 +85,7 @@ def regression(
     stress=None,
     with_analyzer=False,
     minio_args=None,
+    seed=None,
 ):
     """Run tests for Swarm clusters."""
     nodes = {
@@ -91,6 +102,8 @@ def regression(
 
     if stress is not None:
         self.context.stress = stress
+
+    self.context.seed = seed
 
     minio_root_user = minio_args["minio_root_user"].value
     minio_root_password = minio_args["minio_root_password"].value
