@@ -1902,7 +1902,7 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /azure
-      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}} --only "/s3/azure/part 1/*"'
+      regression_args: '--storage azure --only "/s3/azure/part 1/*"'
       artifact_name: s3-azure-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
@@ -1924,7 +1924,7 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /azure
-      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}} --only "/s3/azure/part 2/*"'
+      regression_args: '--storage azure --only "/s3/azure/part 2/*"'
       artifact_name: s3-azure-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}

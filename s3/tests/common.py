@@ -1,9 +1,12 @@
 import os
 import base64
+import hashlib
+import hmac
 import platform
 import tempfile
 from contextlib import contextmanager
 from urllib.parse import urlparse
+from xml.etree import ElementTree
 
 from minio import Minio
 from testflows.connect import Shell
@@ -799,6 +802,73 @@ def run_query(instance, query, stdin=None, settings=None):
     return result
 
 
+def azure_shared_key(account_name, account_key, method, canonical_resource, headers):
+    """Return a Shared Key Authorization header for an Azure Blob request."""
+    canonical_headers = "".join(
+        f"{name}:{value}\n" for name, value in sorted(headers.items())
+    )
+    string_to_sign = (
+        f"{method}\n\n\n\n\n\n\n\n\n\n\n\n{canonical_headers}{canonical_resource}"
+    )
+    signature = base64.b64encode(
+        hmac.new(
+            base64.b64decode(account_key),
+            string_to_sign.encode(),
+            hashlib.sha256,
+        ).digest()
+    ).decode()
+    return f"SharedKey {account_name}:{signature}"
+
+
+def azure_container_size(account_url, container_name, account_name, account_key):
+    """Sum blob content lengths in an azurite container."""
+    from datetime import datetime, timezone
+
+    total = 0
+    marker = None
+    while True:
+        query = "comp:list\nrestype:container"
+        path = f"/{account_name}/{container_name}?restype=container&comp=list"
+        if marker:
+            query = f"comp:list\nmarker:{marker}\nrestype:container"
+            path += f"&marker={marker}"
+        stamp = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
+        headers = {
+            "x-ms-date": stamp,
+            "x-ms-version": "2020-10-02",
+        }
+        authorization = azure_shared_key(
+            account_name,
+            account_key,
+            "GET",
+            # azurite-rs path-style URLs include the account in the path, and
+            # Shared Key canonicalization prefixes the account again.
+            f"/{account_name}/{account_name}/{container_name}\n{query}",
+            headers,
+        )
+        header_args = " ".join(f"-H '{name}: {value}'" for name, value in headers.items())
+        cmd = (
+            f"curl -sf {header_args} -H 'Authorization: {authorization}' "
+            f"'{account_url.rstrip('/')}{path[len('/' + account_name):]}'"
+        )
+        result = current().context.cluster.command(
+            "bash-tools", cmd, steps=False, no_checks=True
+        )
+        if result.exitcode != 0:
+            raise AssertionError(result.output)
+        root = ElementTree.fromstring(result.output)
+        for node in root.iter():
+            if node.tag.endswith("Content-Length") and node.text:
+                total += int(node.text)
+        next_marker = next(
+            (node.text for node in root.iter() if node.tag.endswith("NextMarker") and node.text),
+            None,
+        )
+        if not next_marker:
+            return total
+        marker = next_marker
+
+
 @TestStep(Given)
 def get_bucket_size(
     self, name=None, prefix=None, key_id=None, access_key=None, minio_enabled=None
@@ -809,19 +879,15 @@ def get_bucket_size(
         account_name = self.context.azure_account_name
         container_name = self.context.azure_container_name
         with By(
-            "querying with az cli",
+            "listing blobs on azurite",
             description=f"account: {account_name}, container: {container_name}",
         ):
-            cmd = (
-                f"AZURE_STORAGE_KEY={self.context.azure_account_key} "
-                f'az storage blob list --container-name {container_name} --account-name {account_name} --num-results "*" --query "[].properties.contentLength" --output json '
-                "| jq -M '. | add'"
+            return azure_container_size(
+                account_url=self.context.azure_storage_account_url,
+                container_name=container_name,
+                account_name=account_name,
+                account_key=self.context.azure_account_key,
             )
-            result = self.context.cluster.command(
-                "azure-client", cmd, steps=False, no_checks=True
-            )
-
-            return int(result.output)
 
     if name is None:
         name = self.context.bucket_name

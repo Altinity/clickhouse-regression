@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster, create_cluster
+from helpers.cluster import Cluster, create_cluster, default_docker_compose
 from helpers.common import experimental_analyzer
 from helpers.argparser import argparser_s3, CaptureClusterArgs, CaptureS3Args
 from s3.tests.common import *
@@ -934,28 +934,17 @@ def hetzner_s3_regression(
 @Name("azure")
 def azure_regression(
     self,
-    account_name,
-    storage_key,
-    container_name,
     cluster_args,
     with_analyzer=False,
 ):
-    """Setup and run aws s3 tests."""
+    """Setup and run Azure Blob Storage tests against azurite-rs."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    if account_name == None:
-        fail("Azure account name needs to be set")
-    account_name = account_name.value
-
-    if storage_key == None:
-        fail("Azure storage key needs to be set")
-    storage_key = storage_key.value
-
-    if container_name == None:
-        fail("Azure container name needs to be set")
-    container_name = container_name.value
-
-    azure_storage_account_url = f"https://{account_name}.blob.core.windows.net/"
+    # Public Azurite well-known account. ClickHouse creates the container.
+    account_name = "devstoreaccount1"
+    storage_key = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="
+    container_name = "azure"
+    azure_storage_account_url = "http://azurite:10000/devstoreaccount1"
     uri = None
     bucket_prefix = None
 
@@ -970,12 +959,7 @@ def azure_regression(
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
-            # environ={
-            #     "AZURE_CLIENT_ID": client_id,
-            #     "AZURE_CLIENT_SECRET": client_secret,
-            #     "AZURE_STORAGE_KEY": storage_key,
-            #     "AZURE_TENANT_ID": tenant_id,
-            # },
+            docker_compose=f"{default_docker_compose()} --profile azure",
             configs_dir=current_dir(),
         )
 
@@ -1153,9 +1137,6 @@ def regression(
     if "azure" in storages:
         Feature(test=azure_regression)(
             cluster_args=cluster_args,
-            account_name=s3_args["azure_account_name"],
-            storage_key=s3_args["azure_storage_key"],
-            container_name=s3_args["azure_container"],
             with_analyzer=with_analyzer,
         )
 
