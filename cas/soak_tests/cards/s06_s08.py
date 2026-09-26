@@ -31,6 +31,23 @@ def _wide_select(n_cols, *, rows, base=0):
     return f"SELECT {', '.join(exprs)} FROM numbers({rows})"
 
 
+def _wait_nonmerge_queue(nodes, table, timeout_s=120):
+    """Wait until only MERGE_PARTS remain. STOP MERGES leaves those entries unexecutable, so SYSTEM SYNC REPLICA waits out receive_timeout."""
+    deadline = time.monotonic() + timeout_s
+    pending = 0
+    sql = (
+        "SELECT count() FROM system.replication_queue "
+        f"WHERE database = 'default' AND table = '{table}' AND type != 'MERGE_PARTS'"
+    )
+    while True:
+        pending = 0
+        for n in nodes:
+            pending += int(n.scalar(sql) or 0)
+        if pending == 0 or time.monotonic() >= deadline:
+            return pending
+        time.sleep(1)
+
+
 def _soft_limit_warnings(cluster, since_event_time):
     where = "logger_name = 'CasStore' AND message LIKE '%crossed soft limit%'"
     if since_event_time:
@@ -342,10 +359,9 @@ class S08(Scenario):
                 failed_inserts == 0,
             )
         )
-        try:
-            nodes[0].command(f"SYSTEM SYNC REPLICA {table}", timeout=600)
-        except Exception as e:
-            ctx.log(f"S08: SYNC raised: {e}")
+        pending = _wait_nonmerge_queue(nodes, table)
+        if pending:
+            ctx.log(f"S08: {pending} non-merge replication queue entries still pending")
         from cas.soak_tests.steps.observe import parts_summary
 
         ps = parts_summary(nodes[0], table)

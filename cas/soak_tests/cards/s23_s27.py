@@ -12,7 +12,15 @@ from cas.soak_tests.steps import card as C
 from cas.soak_tests.steps import observe as O
 
 MIB = 1024 * 1024
-_CAS_OP_SUFFIXES = ("Microseconds", "Errors", "Attempts", "Bytes", "Latency")
+# Physical S3 API calls. DiskS3* and CAS* profile events count the same calls again.
+_S3_API_OPS = (
+    "S3GetObject",
+    "S3PutObject",
+    "S3ListObjects",
+    "S3DeleteObjects",
+    "S3HeadObject",
+    "S3CopyObject",
+)
 _IDLE_COUNTERS = (
     "CASRootList",
     "CASRootGet",
@@ -24,12 +32,13 @@ _IDLE_COUNTERS = (
     "CASBlobHead",
     "CASBlobDelete",
 )
+# Exact-token deletes of already-condemned objects land a round or two after
+# fsck reports unreachable=0 and pending_gc=0.
+_DELETE_PIPELINE_ROUNDS = 6
 
 
-def _is_cas_op_count(key):
-    if not key.startswith("Cas") and not key.startswith("CAS"):
-        return False
-    return not any(key.endswith(suffix) for suffix in _CAS_OP_SUFFIXES)
+def _s3_api_ops(delta):
+    return {k: int(delta.get(k, 0)) for k in _S3_API_OPS if int(delta.get(k, 0)) > 0}
 
 
 def _list_ca_tables(node):
@@ -49,9 +58,12 @@ class S23(Scenario):
     title = "idle shared pool baseline"
     priority = "P2"
     param_table = {
-        "dev": {"idle_minutes": 4, "minute_s": 5, "per_round_s3_budget": 64},
-        "ci": {"idle_minutes": 6, "minute_s": 15, "per_round_s3_budget": 64},
-        "full": {"idle_minutes": 15, "minute_s": 60, "per_round_s3_budget": 64},
+        # 64 was the max of one quiet run on the first CAS iteration. PR 2300's
+        # fold read-ahead overlaps small-object GETs, so a single catch-up round
+        # in the 90s is normal. 128 still fails a multi-hundred-op spike.
+        "dev": {"idle_minutes": 4, "minute_s": 5, "per_round_s3_budget": 128},
+        "ci": {"idle_minutes": 6, "minute_s": 15, "per_round_s3_budget": 128},
+        "full": {"idle_minutes": 15, "minute_s": 60, "per_round_s3_budget": 128},
     }
 
     def run(self, ctx, result):
@@ -97,10 +109,24 @@ class S23(Scenario):
             result.note_anomaly(
                 f"S23 expected an empty pool but found {len(leftover)} CA table(s): {leftover[:10]}"
             )
-        # Earlier cards in this process leave unreachable objects. Drain them before the
-        # idle window so the first rounds are not charged as empty-pool GC cost.
-        _, residual = C.drive_gc_until_stable()
+        # Earlier cards leave unreachable objects. The idle budget applies only once
+        # fsck reports the pool empty. Stopping on a round with no deletes left the
+        # last run measuring a pool that still had 24 unreachable objects.
+        residual = None
+        pipeline = []
+        for _ in range(_DELETE_PIPELINE_ROUNDS):
+            _, residual = C.drive_gc_until_stable()
+            before = C.cluster_events_snapshot(cl)
+            C.gc_drive_round(cl, log_fn=ctx.log)
+            after = C.cluster_events_snapshot(cl)
+            ops = _s3_api_ops(cluster_events_delta(before, after).get("_total", {}))
+            pipeline.append({"unreachable_before": residual, "s3_api": ops})
+            _, residual = C.drive_gc_until_stable()
+            quiet = ops.get("S3DeleteObjects", 0) == 0 and ops.get("S3HeadObject", 0) == 0
+            if residual == 0 and quiet:
+                break
         result.observations["pre_idle_residual_unreachable"] = residual
+        result.observations["pre_idle_delete_pipeline"] = pipeline
 
         mem_before = None
         base_rss = 0
@@ -116,9 +142,10 @@ class S23(Scenario):
                 wall = time.monotonic() - t0
                 after = C.cluster_events_snapshot(cl)
                 round_delta = cluster_events_delta(before, after).get("_total", {})
-                s3_ops = sum(v for k, v in round_delta.items() if _is_cas_op_count(k))
+                ops = _s3_api_ops(round_delta)
+                s3_ops = sum(ops.values())
                 per_minute.append(
-                    {"minute": minute, "wall_s": round(wall, 2), "s3_ops": int(s3_ops)}
+                    {"minute": minute, "wall_s": round(wall, 2), "s3_ops": int(s3_ops), "s3_api": ops}
                 )
                 rest = minute_s - wall
                 if rest > 0:
@@ -142,11 +169,21 @@ class S23(Scenario):
         per_round_ops = [m["s3_ops"] for m in per_minute]
         max_round_ops = max(per_round_ops) if per_round_ops else 0
         result.observations["max_s3_ops_per_round"] = max_round_ops
-        if per_round_ops:
+        pool_empty = residual == 0
+        if per_round_ops and not pool_empty:
+            result.add(
+                Verdict.inconclusive(
+                    "idle GC S3 ops per round below budget",
+                    f"<= {budget} per round on an empty pool",
+                    f"drain left unreachable={residual}; measured rounds {per_round_ops} "
+                    "are leftover cleanup, not idle cost",
+                )
+            )
+        elif per_round_ops:
             result.add(
                 Verdict.check(
                     "idle GC S3 ops per round below budget",
-                    f"max S3/Cas ops per explicit-GC round <= {budget} on an empty pool",
+                    f"max physical S3 API calls per explicit-GC round <= {budget} on an empty pool",
                     f"max={max_round_ops} over {len(per_round_ops)} rounds "
                     f"(per-round: {per_round_ops})",
                     max_round_ops <= budget,
