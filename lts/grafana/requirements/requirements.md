@@ -13,16 +13,21 @@
         * 3.2.1 [RQ.SRS-102.Grafana.Login](#rqsrs-102grafanalogin)
     * 3.3 [Datasource Query](#datasource-query)
         * 3.3.1 [RQ.SRS-102.Grafana.DatasourceQuery](#rqsrs-102grafanadatasourcequery)
-    * 3.4 [Compatibility](#compatibility)
-        * 3.4.1 [RQ.SRS-102.Grafana.Compatibility.LTS](#rqsrs-102grafanacompatibilitylts)
+    * 3.4 [Panel Visualization](#panel-visualization)
+        * 3.4.1 [RQ.SRS-102.Grafana.PanelVisualization](#rqsrs-102grafanapanelvisualization)
+        * 3.4.2 [RQ.SRS-102.Grafana.Macros.TimeSeries](#rqsrs-102grafanamacrostimeseries)
+    * 3.5 [Compatibility](#compatibility)
+        * 3.5.1 [RQ.SRS-102.Grafana.Compatibility.LTS](#rqsrs-102grafanacompatibilitylts)
 
 ## Introduction
 
 This SRS covers the testing requirements for the Altinity ClickHouse Grafana
 datasource plugin when running against Altinity ClickHouse LTS builds. The tests
-verify that Grafana starts successfully with the plugin configured against
-a specific ClickHouse version, and that basic UI operations (login) work
-correctly via Selenium-based browser automation.
+verify that Grafana starts with the plugin configured against a specific
+ClickHouse version, that users can log in, run queries in Explore and see a
+dashboard panel drawn from ClickHouse data, using Selenium-based browser
+automation. Query results are checked for exact values, not just for the
+presence of page content.
 
 ## Terminology
 
@@ -64,8 +69,27 @@ and SHALL display the home page after successful authentication.
 version: 1.0
 
 Grafana SHALL be able to execute SQL queries against ClickHouse through the
-Altinity clickhouse-grafana datasource plugin and SHALL display results
-correctly in the Explore view with Table format.
+Altinity clickhouse-grafana datasource plugin and SHALL display the exact
+query results in the Explore view with Table format, for example the server
+version for `SELECT version()` and `100` for the row count of the seeded
+`default.test_grafana` table.
+
+### Panel Visualization
+
+#### RQ.SRS-102.Grafana.PanelVisualization
+version: 1.0
+
+Grafana SHALL render a time-series dashboard panel from data queried from
+ClickHouse through the Altinity clickhouse-grafana datasource plugin. The
+panel SHALL show no error and SHALL draw the queried series, and the panel's
+query SHALL return the seeded data.
+
+#### RQ.SRS-102.Grafana.Macros.TimeSeries
+version: 1.0
+
+The plugin SHALL expand the `$timeSeriesMs` and `$timeFilterMs` macros for a
+`DateTime` timestamp column, so that a panel query using them returns the
+seeded rows grouped into time buckets within the dashboard time range.
 
 ### Compatibility
 

@@ -145,6 +145,9 @@ jobs:
         ./*/_instances/*/logs/*.log
         ./*/*/_instances/*/logs/*.log
         ./*/*/_instances/*.log
+        ./lts/_instances/*/*.xml
+        ./lts/_instances/*/reports/*.xml
+        ./lts/_instances/*/screenshots/*.png
 
     steps:
       - name: ⤵️ Checkout
