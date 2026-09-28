@@ -201,6 +201,9 @@ Every one of these was a real false positive in this suite:
 
 Shared helpers have unit tests: `python3 -m unittest discover -s lts/steps/tests -t .`
 
+[DEBUGGING.md](DEBUGGING.md) explains how to debug each suite. Update it when
+you change how a suite runs or where it writes its output.
+
 ## CLI Arguments
 
 | Argument | Default | Description |

@@ -63,14 +63,19 @@ def parse_junit(xml_paths, strip_prefix=""):
         except ET.ParseError as error:
             raise ValueError(f"{path} is not valid JUnit XML: {error}") from None
         for testcase in (e for e in root.iter() if _local(e.tag) == "testcase"):
+            name = testcase.get("name") or "unnamed"
             classname = testcase.get("classname") or "unknown"
             if strip_prefix and classname.startswith(strip_prefix):
                 classname = classname[len(strip_prefix) :]
+            # CTest repeats the test name as the class name; there is no class
+            # to group by, so report the test directly under the suite.
+            if classname == name:
+                classname = ""
             outcome, message, details = _outcome(testcase)
             cases.append(
                 {
                     "path": [_safe(part) for part in classname.split(".") if part],
-                    "name": _safe(testcase.get("name") or "unnamed"),
+                    "name": _safe(name),
                     "time": testcase.get("time"),
                     "outcome": outcome,
                     "message": message,

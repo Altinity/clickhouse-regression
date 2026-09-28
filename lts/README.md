@@ -24,6 +24,8 @@ driver to cover both.
 
 ## Quick Start
 
+To debug a failure, see [DEBUGGING.md](DEBUGGING.md).
+
 There is a single `regression.py` at the top level. There are no per-suite
 `regression.py` entry points — every sub-suite is loaded by the orchestrator
 via `Feature(test=load("lts.<suite>.feature", "feature"))`.

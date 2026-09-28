@@ -103,6 +103,8 @@ class ParseJUnitTestCase(unittest.TestCase):
             self.outcomes(cases),
             {"test.py-3-dsn-0": "passed", "parametrized-regression.py-3-dsn-0": "failed"},
         )
+        # The class name repeats the test name, so there is no class path.
+        self.assertEqual([case["path"] for case in cases], [[], []])
 
     def test_multiple_files(self):
         cases = parse_junit(

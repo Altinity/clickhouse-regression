@@ -63,7 +63,9 @@ def run_upstream_tests(
             log_path=os.path.join(logs_dir, "build.log"),
         )
 
-    with When("upstream tests run in the runner container"):
+    # And after Given makes this a setup step too. TestFlows never skips
+    # setup steps, so --only can select single upstream tests.
+    with And("upstream tests run in the runner container"):
         exitcode = run_runner_container(
             image=image,
             name=f"lts-{suite}-{os.getpid()}",
