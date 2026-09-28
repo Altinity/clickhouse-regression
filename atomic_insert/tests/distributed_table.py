@@ -117,12 +117,12 @@ def distributed_tables(
                 if failure_mode == "dummy":
                     for node_name in self.context.cluster.nodes["clickhouse"]:
                         with When(f"on {node_name} "):
-                            output = self.context.cluster.node(node_name).query(
-                                f"SELECT count() FROM {core_table_d} FORMAT TabSeparated",
-                                exitcode=0,
-                            )
                             for attempt in retries(timeout=30, delay=2):
                                 with attempt:
+                                    output = self.context.cluster.node(node_name).query(
+                                        f"SELECT count() FROM {core_table_d} FORMAT TabSeparated",
+                                        exitcode=0,
+                                    )
                                     assert int(output.output) > 0, error()
 
                 elif failure_mode == "throwIf":
