@@ -49,21 +49,26 @@ def check_if_partition_values_on_destination_changed(
             )
 
     with And("checking if the data on the specific partition was replaced or not"):
-        partition_values_source = node.query(
-            f"SELECT * FROM {source_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
-        )
-        partition_values_destination = node.query(
-            f"SELECT * FROM {destination_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
-        )
-
         if changed:
             for retry in retries(count=5, delay=1):
                 with retry:
+                    partition_values_source = node.query(
+                        f"SELECT * FROM {source_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
+                    )
+                    partition_values_destination = node.query(
+                        f"SELECT * FROM {destination_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
+                    )
                     assert (
                         partition_values_source.output.strip()
                         == partition_values_destination.output.strip()
                     ), error()
         else:
+            partition_values_source = node.query(
+                f"SELECT * FROM {source_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
+            )
+            partition_values_destination = node.query(
+                f"SELECT * FROM {destination_table} WHERE p == 1 ORDER BY tuple(*) FORMAT TabSeparated"
+            )
             assert (
                 partition_values_source.output.strip()
                 != partition_values_destination.output.strip()

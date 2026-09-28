@@ -87,10 +87,6 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
             partition=partition,
         )
 
-        parts_after_replace = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*) FORMAT TabSeparated"
-        )
-
     with And(
         "I try to read data from the destination table partition to validate that the partition was corrupted after replace partition"
     ):
@@ -113,6 +109,9 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
     ):
         for retry in retries(timeout=10):
             with retry:
+                parts_after_replace = node.query(
+                    f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert (
                     parts_before_replace.output.strip()
                     != parts_after_replace.output.strip()
