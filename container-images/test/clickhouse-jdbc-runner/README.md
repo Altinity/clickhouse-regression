@@ -1,3 +1,7 @@
+> **Automated:** this is now run by the `lts/clickhouse_jdbc` TestFlows suite, see
+> [lts/README.md](../../../lts/README.md). The instructions below are for
+> running it by hand.
+
 # Running clickhouse-jdbc tests locally
 
 ## New info:

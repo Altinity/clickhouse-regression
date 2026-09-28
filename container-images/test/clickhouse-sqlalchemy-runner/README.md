@@ -1,3 +1,7 @@
+> **Automated:** this is now run by the `lts/clickhouse_sqlalchemy` TestFlows suite, see
+> [lts/README.md](../../../lts/README.md). The instructions below are for
+> running it by hand.
+
 # Running clickhouse-sqlalchemy tests locally
 
 clickhouse-sqlalchemy: `https://github.com/xzkostyan/clickhouse-sqlalchemy/`

@@ -5,10 +5,12 @@ ARG CLICKHOUSE_PYTHON_DRIVER=clickhouse-connect
 
 USER root
 
+# Pinned to the versions the suite was validated with. clickhouse-sqlalchemy
+# 0.3 needs SQLAlchemy 2, which Superset 4.1 does not use.
 RUN if [ "${CLICKHOUSE_PYTHON_DRIVER}" = "clickhouse-sqlalchemy" ]; then \
-        pip3 install --no-cache-dir 'clickhouse-sqlalchemy<0.3.0'; \
+        pip3 install --no-cache-dir 'clickhouse-sqlalchemy==0.2.9'; \
     else \
-        pip3 install --no-cache-dir clickhouse-connect; \
+        pip3 install --no-cache-dir 'clickhouse-connect==1.3.0'; \
     fi
 
 USER superset

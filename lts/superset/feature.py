@@ -6,6 +6,7 @@ from testflows.core import *
 
 from lts.superset.requirements.requirements import (
     SRS_101_Apache_Superset_ClickHouse_Integration_LTS_Testing,
+    RQ_SRS_101_Superset_Environment,
 )
 from lts.superset.steps.environment import (
     superset_environment,
@@ -17,6 +18,7 @@ from lts.superset.steps.environment import (
 @TestFeature
 @Name("superset")
 @Specifications(SRS_101_Apache_Superset_ClickHouse_Integration_LTS_Testing)
+@Requirements(RQ_SRS_101_Superset_Environment("1.0"))
 def feature(
     self,
     superset_version="4.1.1",
