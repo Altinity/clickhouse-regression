@@ -1,5 +1,3 @@
-version: '2.3'
-
 # RustFS is used instead of stock MinIO because content-addressed storage
 # (CAS, --with-cas) requires an S3 backend with conditional DELETE
 # (DeleteObject If-Match) support, which old MinIO images do not provide.

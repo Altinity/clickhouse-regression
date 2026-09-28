@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   aws:
     image: altinityinfra/clickhouse-regression-multiarch:1.0

@@ -1,5 +1,3 @@
-version: "2.3"
-
 services:
   keeper:
     image: clickhouse-regression/$CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE

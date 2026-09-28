@@ -1,5 +1,3 @@
-version: "2.3"
-
 services:
   bash-tools:
     image: altinityinfra/clickhouse-regression-multiarch:2.0

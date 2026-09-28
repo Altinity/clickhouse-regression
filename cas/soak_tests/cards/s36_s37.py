@@ -269,27 +269,35 @@ class S36(Scenario):
         O.assert_fsck_clean(
             result, fsck_off_ca, name="fsck clean after the OFF-CA move", expected="dangling==0")
 
-        # OFF-CA drops the CAS refs the two moved parts held; deferred GC must reclaim that content
-        # (no permanent orphans). Mirrors checkpoint.end_checkpoint's two-step drive: a bounded
-        # residual after forced_gc_to_fixpoint is typically CONDEMNED content (fsck pending-gc) that
-        # only graduates once the ack floor advances via each server's periodic retired-view sync
-        # (~mount_renew_period) -- which forced_gc_to_fixpoint's faster poll can outrun, reporting a
-        # "stable" but nonzero residual as if it were the true fixpoint. drain_condemned_pipeline
-        # drives that graduation to completion; only a residual that survives BOTH steps is a real
-        # leak.
-        _, residual = C.drive_gc_until_stable()
+        # OFF-CA drops the CAS refs. GC condemns those objects, then deletes them on a
+        # later round once the ack floor moves (~10s mount renew). A poll that stops at
+        # the first stable nonzero count reports that pipeline as a leak. One extra
+        # graduation is expected. A residual that is still there after that wait is not.
         history = []
-        if residual and residual > 0:
-            ctx.log(f"S36: draining condemned graduation pipeline after OFF-CA move (residual={residual})")
-            _, residual = C.drive_gc_until_stable()
-            history = []
-        result.observations["gc_after_off_ca"] = {"residual": residual, "rounds": len(history),
-                                                   "history": history}
+        residual = None
+        waited_for_ack = False
+        for round_i in range(4):
+            C.gc_drive_round(cl, log_fn=ctx.log)
+            fsck = C.run_cas_fsck(detail=False)
+            residual = int(fsck.get("unreachable") or 0)
+            history.append(residual)
+            if residual == 0:
+                break
+            plateau = len(history) >= 2 and history[-1] == history[-2]
+            if plateau and not waited_for_ack:
+                ctx.log(f"S36: unreachable stuck at {residual}; waiting one renew period for graduation")
+                time.sleep(10)
+                waited_for_ack = True
+        result.observations["gc_after_off_ca"] = {
+            "residual": residual, "rounds": len(history), "history": history,
+            "waited_for_ack": waited_for_ack,
+        }
         result.add(Verdict.check(
             "GC reclaims the vacated CA content within bounded rounds",
-            "residual reaches 0", f"residual={residual} after {len(history)} round(s)",
+            "unreachable reaches 0, allowing one graduation after the ack floor moves",
+            f"residual={residual} after {len(history)} round(s) {history}",
             residual == 0,
-            "" if residual == 0 else "content vacated by the OFF-CA move was not fully reclaimed"))
+            "" if residual == 0 else "content vacated by the OFF-CA move was still unreachable after one extra graduation"))
 
         # --- dedup-on-TO-CA: moving a part whose content already exists in the pool must dedup,
         # not re-upload -------------------------------------------------------------------------

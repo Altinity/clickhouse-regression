@@ -164,37 +164,51 @@ class S16(Scenario):
         final_chk = cl.node1.query(C.table_checksum_query(table)).strip()
         ca_events = ca_since(ctx)
         result.observations["ca_event_counts"] = ca_events
+        # The first CAS iteration required blob_reuse_resurrect: the writer had to
+        # observe a condemned token and re-upload. After PR 2300 a same-pool re-insert
+        # adopts the live token instead, so resurrect is timing, not the requirement.
+        # A re-insert that adopts, resurrects, or uploads fresh bytes is the safe path.
         resurrect_count = O.event_total(ca_events, "blob_reuse_resurrect")
+        adopt_count = O.event_total(ca_events, "blob_reuse_adopt")
+        put_count = O.event_total(ca_events, "blob_put")
         deleted_count = O.event_total(ca_events, "blob_delete")
         result.observations["reuse_events"] = {
-            et: O.event_total(ca_events, et)
-            for et in ("blob_reuse_resurrect", "blob_reuse_adopt", "blob_put", "blob_delete", "objects_spared")
+            "blob_reuse_resurrect": resurrect_count,
+            "blob_reuse_adopt": adopt_count,
+            "blob_put": put_count,
+            "blob_delete": deleted_count,
+            "objects_spared": O.event_total(ca_events, "objects_spared"),
         }
-        if resurrect_count > 0:
+        reintroduced = resurrect_count + adopt_count + put_count
+        reuse_detail = (
+            f"blob_reuse_resurrect={resurrect_count} blob_reuse_adopt={adopt_count} "
+            f"blob_put={put_count} blob_delete={deleted_count}"
+        )
+        if reintroduced > 0:
             result.add(
                 Verdict.check(
-                    "resurrection events recorded (cas_log)",
-                    "blob_reuse_resurrect fires for the drop/GC-condemn/re-insert cycle",
-                    f"blob_reuse_resurrect={resurrect_count}",
+                    "re-insert reuses or rewrites the content",
+                    "adopt a live token, resurrect a condemned one, or upload fresh bytes",
+                    reuse_detail,
                     True,
                 )
             )
         elif deleted_count == 0:
             result.add(
                 Verdict.inconclusive(
-                    "resurrection events recorded (cas_log)",
-                    "blob_reuse_resurrect after GC condemns the retired token",
-                    "blob_delete=0 in this window, so GC did not condemn before the re-insert",
+                    "re-insert reuses or rewrites the content",
+                    "adopt, resurrect, or a fresh upload",
+                    "no reuse event and blob_delete=0, so the cycle did not reach GC",
                 )
             )
         else:
             result.add(
                 Verdict.check(
-                    "resurrection events recorded (cas_log)",
-                    "blob_reuse_resurrect fires after blob_delete",
-                    f"blob_reuse_resurrect={resurrect_count} blob_delete={deleted_count}",
+                    "re-insert reuses or rewrites the content",
+                    "adopt a live token, resurrect a condemned one, or upload fresh bytes",
+                    reuse_detail,
                     False,
-                    "GC condemned content and the re-insert did not emit blob_reuse_resurrect",
+                    "GC deleted blobs and the re-insert recorded no adopt, resurrect, or upload",
                 )
             )
         bad = ca_events.get("bad_total", {})
