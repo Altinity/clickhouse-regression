@@ -7,7 +7,7 @@ SQL Lab query.
 3. In the browser: log in, find the ``clickhouse`` connection in the
    Databases list, run a query in SQL Lab and check the exact result rows.
 
-A screenshot is saved at every browser step to ``lts/superset/screenshots/``.
+A screenshot is saved at every browser step to ``lts/_instances/superset/screenshots/``.
 """
 
 from testflows.core import *

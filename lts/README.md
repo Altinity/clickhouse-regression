@@ -173,9 +173,9 @@ lts/
 ## Output
 
 - **superset / grafana**: TestFlows output to stdout / log file. Selenium
-  screenshots are written to `lts/<suite>/screenshots/`. Before teardown the
-  logs of every Compose service are saved to `lts/_instances/<suite>/logs/`
-  (`<service>.log` and `compose-ps.log`).
+  screenshots are written to `lts/_instances/<suite>/screenshots/`. Before
+  teardown the logs of every Compose service are saved to
+  `lts/_instances/<suite>/logs/` (`<service>.log` and `compose-ps.log`).
 - **clickhouse-odbc, clickhouse-driver, clickhouse-sqlalchemy, clickhouse-jdbc,
   dbeaver**: every
   upstream test is reported as its own TestFlows scenario, for example
@@ -185,5 +185,21 @@ lts/
   `reports/`). Each suite fails if fewer tests than its known count run, or if
   more are skipped than expected; the thresholds are in each `feature.py`.
 
-When the suites move to CI, the artifacts need `lts/*/screenshots/*.png` and
-`lts/_instances/**/*.xml` in addition to the existing `*.log` globs.
+Each run of a browser suite empties its `lts/_instances/<suite>/` first, so the
+folder only holds the latest run's evidence.
+
+## CI
+
+Run the suites from GitHub Actions with the **🧰 Run LTS** workflow
+(`.github/workflows/run-lts.yml`). Choose a ClickHouse image, and `all` or one
+suite; `superset` runs once per Python driver. Each suite runs as its own job,
+and uploads its evidence the same way as every other regression suite:
+
+- the TestFlows `raw.log`, `report.html` and failure summaries, and the results
+  database upload;
+- the suite's `lts/_instances/<suite>/` logs, JUnit XML and screenshots, both to
+  the S3 report folder `.../lts/<suite>/` and as the job's GitHub artifact
+  `lts_<suite>-artifacts-x86_zookeeper`.
+
+Use **extra_args** for tool versions, for example `--jdbc-release v0.9.8`. The
+runners are x86-only, so the workflow has no architecture choice.

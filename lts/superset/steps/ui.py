@@ -15,6 +15,8 @@ import urllib.error
 
 from testflows.core import *
 
+from lts.steps.docker import screenshots_dir
+
 
 # ---------------------------------------------------------------------------
 # WebDriver
@@ -67,14 +69,11 @@ def create_webdriver(self, hub_url=None, timeout=120):
 
 @TestStep(When)
 def take_screenshot(self, driver, name="screenshot"):
-    """Save a browser screenshot under ``lts/superset/screenshots/``."""
+    """Save a browser screenshot to ``lts/_instances/superset/screenshots/``,
+    where CI collects it as evidence, and record it as a metric."""
     time.sleep(0.3)
 
-    screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
-    os.makedirs(screenshots_dir, exist_ok=True)
-
-    filename = f"{name}.png"
-    filepath = os.path.join(screenshots_dir, filename)
+    filepath = os.path.join(screenshots_dir("superset"), f"{name}.png")
 
     driver.save_screenshot(filepath)
     note(f"Screenshot saved: {filepath}")

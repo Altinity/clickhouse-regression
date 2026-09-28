@@ -62,10 +62,14 @@ the next run of that suite:
 | clickhouse-driver, clickhouse-sqlalchemy | `junit.xml`; `logs/build.log`, `logs/test.log` (pytest output), `logs/clickhouse-server.log` |
 | clickhouse-jdbc | `reports/surefire-*.xml`, `reports/failsafe-*.xml`; `logs/build.log`, `logs/test.log` (Maven output) |
 | dbeaver | `junit.xml`; `logs/build.log`, `logs/test.log` (one `OK` or `FAIL` line per check, with the stack trace) |
-| grafana, superset | `logs/<service>.log` for each Compose service, `logs/compose-ps.log`, `logs/compose-down.log`; screenshots in `lts/<suite>/screenshots/` |
+| grafana, superset | `logs/<service>.log` for each Compose service, `logs/compose-ps.log`, `logs/compose-down.log`; `screenshots/*.png` |
 
 `logs/build.log` is the runner image build. `logs/test.log` is everything the
 runner container printed, which is where a failure before the tests shows up.
+
+For a CI run, the same files are in the job's GitHub artifact,
+`lts_<suite>-artifacts-x86_zookeeper`, and in the job's S3 report folder under
+`lts/_instances/<suite>/`. The job log prints the report folder's URL.
 
 ### 5. Decide whose failure it is
 
@@ -276,7 +280,7 @@ that is.
 The suite runs Grafana, ClickHouse and Selenium with Docker Compose, and drives
 Chrome through Selenium.
 
-- **Look at the screenshots** in `lts/grafana/screenshots/`, taken at each step,
+- **Look at the screenshots** in `lts/_instances/grafana/screenshots/`, taken at each step,
   and at `logs/grafana.log`. A plugin that failed to install or load shows up
   in `logs/grafana.log`.
 - **Bring the stack up by hand** with the versions the suite uses:
@@ -316,7 +320,7 @@ Chrome through Selenium.
 The suite runs Superset, ClickHouse and Selenium with Docker Compose. One run
 tests one driver, selected with `--clickhouse-driver`.
 
-- **Look at the screenshots** in `lts/superset/screenshots/` and at
+- **Look at the screenshots** in `lts/_instances/superset/screenshots/` and at
   `logs/superset.log`.
 - **Bring the stack up by hand:**
 

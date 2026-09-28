@@ -21,6 +21,23 @@ Suite: Which suite to run. Default runs all suites.
  
 Artifacts: Specify whether to upload to internal or public s3 bucket. 'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public.
 
+### Run LTS client-tool tests
+
+To test a ClickHouse LTS build with client tools (ODBC, Superset, Grafana,
+clickhouse-driver, clickhouse-sqlalchemy, clickhouse-jdbc and DBeaver), run
+the `🧰 Run LTS` workflow (`run-lts.yml`). Specify:
+
+* **package**: the ClickHouse Docker image, as `docker://<image>:<tag>`. The
+  runners need an Ubuntu-based image, not an Alpine one.
+* **version**: the expected version. Leave it empty to read it from the image.
+* **suite**: `all`, or one suite. `superset` runs once for each Python driver.
+* **extra_args**: tool version overrides, for example `--jdbc-release v0.9.8`.
+
+Each suite runs as its own x86 job and uploads its report, logs, JUnit XML and
+browser screenshots to `.../lts/<suite>/` in the artifact bucket, and as the
+job's GitHub artifact. See [lts/README.md](../../lts/README.md) and
+[lts/DEBUGGING.md](../../lts/DEBUGGING.md).
+
 ### Regression docker images
 
 Table of which suites rely on what docker images.

@@ -1,6 +1,7 @@
 """Docker steps shared by LTS sub-suites that run an upstream test suite in a runner container."""
 
 import os
+import shutil
 import subprocess
 
 from testflows.core import *
@@ -18,6 +19,31 @@ def suite_results_dir(suite):
     path = os.path.join(LTS_DIR, "_instances", suite)
     os.makedirs(os.path.join(path, "logs"), exist_ok=True)
     return path
+
+
+def reset_suite_results_dir(suite):
+    """Empty ``lts/_instances/<suite>`` so a run's evidence (logs, JUnit XML,
+    screenshots) never mixes with an earlier run's. Returns the path."""
+    path = os.path.join(LTS_DIR, "_instances", suite)
+    shutil.rmtree(path, ignore_errors=True)
+    return suite_results_dir(suite)
+
+
+def screenshots_dir(suite):
+    """Return (and create) ``lts/_instances/<suite>/screenshots``, where the
+    browser suites save screenshots, next to their other evidence."""
+    path = os.path.join(suite_results_dir(suite), "screenshots")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def compose_command():
+    """Return the Docker Compose command: the standalone ``docker-compose``
+    that CI installs if present, as ``helpers/cluster.py`` does, otherwise
+    the ``docker compose`` plugin."""
+    if shutil.which("docker-compose"):
+        return ["docker-compose"]
+    return ["docker", "compose"]
 
 
 def tail(path, size=3000):

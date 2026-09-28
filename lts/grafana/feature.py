@@ -4,6 +4,8 @@ import os
 
 from testflows.core import *
 
+from lts.steps.docker import reset_suite_results_dir
+
 from lts.grafana.requirements.requirements import (
     SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing,
     RQ_SRS_102_Grafana_Environment,
@@ -31,6 +33,7 @@ def feature(
     selenium_version="4.40.0",
 ):
     """Run Grafana plugin integration tests against a ClickHouse image."""
+    reset_suite_results_dir("grafana")
     suite_dir = os.path.dirname(os.path.abspath(__file__))
     configs_dir = os.path.join(suite_dir, "configs")
     clickhouse_image = self.context.clickhouse_image

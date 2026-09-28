@@ -9,6 +9,8 @@ import time
 
 from testflows.core import *
 
+from lts.steps.docker import screenshots_dir
+
 
 @TestStep(Given)
 def create_webdriver(self, hub_url=None, timeout=120):
@@ -62,18 +64,11 @@ def open_grafana(self, driver, base_url="http://grafana:3000"):
 
 @TestStep(When)
 def take_screenshot(self, driver, name="screenshot"):
-    """Save a browser screenshot as a test artifact.
-
-    The PNG is saved into the test's work directory and attached
-    to the test report via the `save_screenshot` method + metric().
-    """
+    """Save a browser screenshot to ``lts/_instances/grafana/screenshots/``,
+    where CI collects it as evidence, and record it as a metric."""
     time.sleep(0.3)
 
-    screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
-    os.makedirs(screenshots_dir, exist_ok=True)
-
-    filename = f"{name}.png"
-    filepath = os.path.join(screenshots_dir, filename)
+    filepath = os.path.join(screenshots_dir("grafana"), f"{name}.png")
 
     driver.save_screenshot(filepath)
     note(f"Screenshot saved: {filepath}")

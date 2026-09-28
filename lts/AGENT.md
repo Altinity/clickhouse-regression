@@ -44,7 +44,7 @@ lts/
 │   └── tests/
 │       └── ui_smoke.py       # End-to-end browser smoke test
 │                             # (login -> verify DB -> SQL Lab query, with
-│                             #  screenshots saved to ../screenshots/)
+│                             #  screenshots saved to lts/_instances/superset/screenshots/)
 │
 └── grafana/                  # Altinity Grafana ClickHouse plugin tests
     ├── __init__.py
