@@ -22,46 +22,53 @@ Ubuntu-based ClickHouse image; Alpine images are rejected at startup.
 Superset tests one driver per run (`--clickhouse-driver`); run it once per
 driver to cover both.
 
+## Prerequisites
+
+- An x86_64 host with Docker, and Docker Compose: the `docker compose` plugin
+  or the standalone `docker-compose` that CI installs.
+- The Python packages in the repository's `requirements.txt`, including
+  `testflows` and `selenium`.
+- Network access to GitHub, PyPI, Maven Central and Docker Hub: the runners
+  clone the tools and download their dependencies and images.
+- For clickhouse-jdbc, access to `/var/run/docker.sock` for your user: the
+  tests start ClickHouse containers themselves.
+
 ## Quick Start
 
-To debug a failure, see [DEBUGGING.md](DEBUGGING.md).
+To debug a failure, see [DEBUGGING.md](DEBUGGING.md). Each suite's own rules and
+known behavior are in its `AGENTS.md`, for example
+[grafana/AGENTS.md](grafana/AGENTS.md).
 
 There is a single `regression.py` at the top level. There are no per-suite
 `regression.py` entry points — every sub-suite is loaded by the orchestrator
 via `Feature(test=load("lts.<suite>.feature", "feature"))`.
 
 ```bash
-# Run all LTS suites
-python3 lts/regression.py \
-    --clickhouse docker://altinityinfra/clickhouse-server:0-25.8.16.10001.altinitytest
+IMAGE=docker://altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest
 
-# Run only the clickhouse-odbc suite
-python3 lts/regression.py \
-    --clickhouse docker://altinityinfra/clickhouse-server:latest \
-    --only "/lts/clickhouse-odbc/*"
+# Run all LTS suites; --test-to-end keeps going after a failing suite
+python3 lts/regression.py --clickhouse $IMAGE --test-to-end --log test.log
 
-# Run only the superset suite
-python3 lts/regression.py \
-    --clickhouse docker://altinityinfra/clickhouse-server:latest \
-    --only "/lts/superset/*"
+# Run one suite
+python3 lts/regression.py --clickhouse $IMAGE --only "/lts/grafana/*" --log test.log
 
-# Run only the grafana suite
-python3 lts/regression.py \
-    --clickhouse docker://altinityinfra/clickhouse-server:latest \
-    --only "/lts/grafana/*"
+# Run Superset with the other Python driver
+python3 lts/regression.py --clickhouse $IMAGE --only "/lts/superset/*" \
+    --clickhouse-driver clickhouse-sqlalchemy --log test.log
 
-# Run the upstream test suites of the client drivers, and the DBeaver checks
-python3 lts/regression.py \
-    --clickhouse docker://altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest \
+# Run several suites
+python3 lts/regression.py --clickhouse $IMAGE --log test.log \
     --only "/lts/clickhouse-driver/*" "/lts/clickhouse-sqlalchemy/*" \
            "/lts/clickhouse-jdbc/*" "/lts/dbeaver/*"
 
 # Run a single clickhouse-jdbc test class
-python3 lts/regression.py \
-    --clickhouse docker://altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest \
-    --only "/lts/clickhouse-jdbc/*" \
+python3 lts/regression.py --clickhouse $IMAGE --only "/lts/clickhouse-jdbc/*" --log test.log \
     --jdbc-maven-args "-Dtest=ClickHouseConnectionTest -Dit.test=ClickHouseConnectionTest -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false"
 ```
+
+The `--only` paths for the suites are `/lts/clickhouse-odbc/*`,
+`/lts/superset/*`, `/lts/grafana/*`, `/lts/clickhouse-driver/*`,
+`/lts/clickhouse-sqlalchemy/*`, `/lts/clickhouse-jdbc/*` and `/lts/dbeaver/*`.
 
 Always pass `--clickhouse`. Without it the suites fall back to an old 25.8 image.
 
@@ -122,7 +129,7 @@ version check, comes from `--clickhouse-version` or from the image tag
 
 - `--jdbc-release <tag>` — clickhouse-java git tag (default `v0.9.9`). v0.9.0
   fails against 26.x servers (`Magic is not correct` while decompressing
-  results), on both Altinity and upstream images; later 0.9.x releases work.
+  results), on both Altinity and upstream images; v0.9.9 passes.
 - `--jdbc-maven-args "<options>"` — extra options for `mvn verify`, for example
   to run one test class.
 
@@ -139,51 +146,66 @@ scenarios, steps, and requirement-to-scenario mapping.
 
 ```
 lts/
-├── AGENT.md
-├── README.md
+├── README.md                 # This file
+├── AGENT.md                  # Conventions shared by all suites
+├── DEBUGGING.md              # How to debug each suite's failures
 ├── regression.py             # Single, top-level orchestrator
-├── clickhouse_odbc/
-│   ├── feature.py            # Calls lts.steps.upstream.run_upstream_tests
-│   ├── requirements/         # SRS-100 (.md + generated .py)
-│   └── configs/              # Dockerfile (cached build stage), runner.sh, diff.patch
-├── superset/
-│   ├── feature.py
-│   ├── requirements/         # SRS-101
-│   ├── steps/                # environment.py, ui.py (Selenium + REST API)
-│   ├── tests/                # ui_smoke.py: driver, test connections, SQL Lab
-│   └── configs/              # docker-compose.yml, Dockerfile.superset, TLS certs
-├── grafana/
-│   ├── feature.py
-│   ├── requirements/         # SRS-102
-│   ├── steps/                # environment.py, ui.py
-│   ├── tests/                # login, datasource_query, panel_graph
-│   └── configs/              # docker-compose.yml, provisioning/, users.xml
 ├── steps/                    # Shared: runner containers, JUnit XML reporting,
-│   │                         # image parsing, Compose log capture
+│   │                         # image parsing, Compose setup, teardown and logs
 │   └── tests/                # Unit tests: python3 -m unittest discover -s lts/steps/tests -t .
+│
+│   # Suites that run a tool's own tests in a runner container:
+├── clickhouse_odbc/          # SRS-100
 ├── clickhouse_driver/        # SRS-103
 ├── clickhouse_sqlalchemy/    # SRS-104
 ├── clickhouse_jdbc/          # SRS-105
-└── dbeaver/                  # SRS-106
-    ├── feature.py            # Calls lts.steps.upstream.run_upstream_tests
+├── dbeaver/                  # SRS-106
+│   ├── AGENTS.md             # Rules specific to the suite
+│   ├── feature.py            # Calls lts.steps.upstream.run_upstream_tests
+│   ├── requirements/         # SRS (.md + generated .py)
+│   └── configs/              # Dockerfile, runner.sh, and patches/, diff.patch or Smoke.java
+│
+│   # Browser suites (Docker Compose + Selenium):
+├── superset/                 # SRS-101
+│   ├── AGENTS.md
+│   ├── feature.py
+│   ├── requirements/
+│   ├── steps/                # environment.py (Compose), ui.py (Selenium + REST API)
+│   ├── tests/                # ui_smoke.py: driver, test connections, SQL Lab
+│   └── configs/              # docker-compose.yml, Dockerfile.superset,
+│                             # init_schema.sql, TLS config and certificates
+└── grafana/                  # SRS-102
+    ├── AGENTS.md
+    ├── feature.py
     ├── requirements/
-    └── configs/              # Dockerfile, runner.sh, patches/ or Smoke.java
+    ├── steps/                # environment.py (Compose), ui.py (Selenium + API)
+    ├── tests/                # login, datasource_query, panel_graph
+    └── configs/              # docker-compose.yml, init_schema.sql,
+                              # provisioning/, users.xml
 ```
+
+The layout shown for `dbeaver/` is the same for the other four runner suites.
 
 ## Output
 
-- **superset / grafana**: TestFlows output to stdout / log file. Selenium
-  screenshots are written to `lts/_instances/<suite>/screenshots/`. Before
-  teardown the logs of every Compose service are saved to
-  `lts/_instances/<suite>/logs/` (`<service>.log` and `compose-ps.log`).
-- **clickhouse-odbc, clickhouse-driver, clickhouse-sqlalchemy, clickhouse-jdbc,
-  dbeaver**: every
-  upstream test is reported as its own TestFlows scenario, for example
+Each suite keeps its evidence in `lts/_instances/<suite>/`, named after the
+suite folder, for example `lts/_instances/clickhouse_odbc/`.
+
+- **grafana, superset**: screenshots of every UI step in `screenshots/`, and
+  the logs of every Compose service, saved before teardown, in `logs/`
+  (`<service>.log`, `compose-ps.log`, `compose-down.log`).
+- **clickhouse-odbc, clickhouse-driver, clickhouse-sqlalchemy,
+  clickhouse-jdbc, dbeaver**: every upstream test is reported as its own
+  TestFlows scenario, for example
   `/lts/clickhouse-driver/tests/columns/test_datetime/DateTimeTimezonesTestCase/test_use_client_timezone`.
-  The runner's build and test output and the JUnit XML are kept in
-  `lts/_instances/<suite>/` (`logs/build.log`, `logs/test.log`, `junit.xml` or
-  `reports/`). Each suite fails if fewer tests than its known count run, or if
-  more are skipped than expected; the thresholds are in each `feature.py`.
+  The folder holds the JUnit XML (`junit.xml`, or `reports/` for
+  clickhouse-jdbc) and the runner's `logs/build.log` and `logs/test.log`, plus
+  `logs/clickhouse-server.log` for the suites that run ClickHouse in the
+  runner and `logs/ctest-detailed.log` for clickhouse-odbc. Each suite fails if
+  fewer tests than its known count run, or if more are skipped than expected;
+  the thresholds are in each `feature.py`.
+
+[DEBUGGING.md](DEBUGGING.md#4-read-the-artifacts) lists every file per suite.
 
 Each run of a browser suite empties its `lts/_instances/<suite>/` first, so the
 folder only holds the latest run's evidence.
@@ -198,8 +220,13 @@ and uploads its evidence the same way as every other regression suite:
 - the TestFlows `raw.log`, `report.html` and failure summaries, and the results
   database upload;
 - the suite's `lts/_instances/<suite>/` logs, JUnit XML and screenshots, both to
-  the S3 report folder `.../lts/<suite>/` and as the job's GitHub artifact
-  `lts_<suite>-artifacts-x86_zookeeper`.
+  the S3 report folder and as the job's GitHub artifact. For clickhouse-odbc,
+  for example, the folder is `.../lts/clickhouse-odbc/` and the artifact
+  `lts_clickhouse_odbc-artifacts-x86_zookeeper`. Superset's are per driver:
+  `.../lts/superset/clickhouse-connect/` and
+  `lts_superset_clickhouse_connect-artifacts-x86_zookeeper`.
 
 Use **extra_args** for tool versions, for example `--jdbc-release v0.9.8`. The
-runners are x86-only, so the workflow has no architecture choice.
+runners are x86-only, so the workflow has no architecture choice. Other
+workflows can call it with `workflow_call`, for example for a scheduled LTS
+run.

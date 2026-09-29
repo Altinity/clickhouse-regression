@@ -204,6 +204,11 @@ Shared helpers have unit tests: `python3 -m unittest discover -s lts/steps/tests
 [DEBUGGING.md](DEBUGGING.md) explains how to debug each suite. Update it when
 you change how a suite runs or where it writes its output.
 
+Each suite folder has an `AGENTS.md` with the rules specific to that suite:
+how it works, what not to change and why, how to bump the tool version, known
+behavior and evidence. Read it before changing the suite, and update it when
+you change what the suite does.
+
 ## CLI Arguments
 
 | Argument | Default | Description |
