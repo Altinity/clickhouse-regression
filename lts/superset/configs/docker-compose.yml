@@ -1,6 +1,6 @@
 services:
   clickhouse:
-    image: ${CLICKHOUSE_IMAGE:-clickhouse/clickhouse-server}:${CLICKHOUSE_VERSION:-latest}
+    image: ${CLICKHOUSE_IMAGE:-clickhouse/clickhouse-server:latest}
     environment:
       - CLICKHOUSE_ALWAYS_RUN_INITDB_SCRIPTS=true
     volumes:

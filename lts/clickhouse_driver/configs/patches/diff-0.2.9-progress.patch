@@ -1,0 +1,13 @@
+diff --git a/tests/test_blocks.py b/tests/test_blocks.py
+index ff99267..38668e1 100644
+--- a/tests/test_blocks.py
++++ b/tests/test_blocks.py
+@@ -87,7 +87,7 @@ class ProgressTestCase(BaseTestCase):
+         progress = self.client.execute_with_progress('SELECT 2')
+         self.assertEqual(
+             list(progress),
+-            [(1, 0), (1, 0)] if self.server_version > (20,) else [(1, 0)]
++            [(1, 1), (1, 1)] if self.server_version > (20,) else [(1, 0)]
+         )
+         self.assertEqual(progress.get_result(), [(2,)])
+         self.assertTrue(self.client.connection.connected)

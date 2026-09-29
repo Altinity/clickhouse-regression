@@ -5,7 +5,6 @@
 # must otherwise stay byte-identical (apart from this sibling
 # reference) so any config / mount change applies on every host
 # architecture. Verify with envs/keycloak/check_envs_in_sync.sh.
-version: "2.3"
 
 services:
   clickhouse:

@@ -1,0 +1,14 @@
+diff --git a/clickhouse_sqlalchemy/drivers/asynch/connector.py b/clickhouse_sqlalchemy/drivers/asynch/connector.py
+index c0be3d5..4282e16 100644
+--- a/clickhouse_sqlalchemy/drivers/asynch/connector.py
++++ b/clickhouse_sqlalchemy/drivers/asynch/connector.py
+@@ -107,6 +107,9 @@ class AsyncAdapt_asynch_cursor:
+         self._rows[:] = []
+         return retval
+ 
++    async def _async_soft_close(self) -> None:
++        return
++
+ 
+ class AsyncAdapt_asynch_dbapi:
+     def __init__(self, asynch):

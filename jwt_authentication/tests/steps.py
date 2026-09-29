@@ -419,11 +419,11 @@ def add_dynamic_jwks_validator_to_config_xml(
 
     with And("check that handle was updated"):
         curl_command = f"curl http://jwks_server:8080/.well-known/jwks.json"
-        result = node.command(curl_command)
-        note(result.output)
         note(jwks_content)
         for retry in retries(10, delay=1):
             with retry:
+                result = node.command(curl_command)
+                note(result.output)
                 assert result.output == json.dumps(jwks_content), error()
 
 

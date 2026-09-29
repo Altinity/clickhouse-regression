@@ -15,6 +15,8 @@ import urllib.error
 
 from testflows.core import *
 
+from lts.steps.docker import screenshots_dir
+
 
 # ---------------------------------------------------------------------------
 # WebDriver
@@ -67,14 +69,11 @@ def create_webdriver(self, hub_url=None, timeout=120):
 
 @TestStep(When)
 def take_screenshot(self, driver, name="screenshot"):
-    """Save a browser screenshot under ``lts/superset/screenshots/``."""
+    """Save a browser screenshot to ``lts/_instances/superset/screenshots/``,
+    where CI collects it as evidence, and record it as a metric."""
     time.sleep(0.3)
 
-    screenshots_dir = os.path.join(current().context.configs_dir, "..", "screenshots")
-    os.makedirs(screenshots_dir, exist_ok=True)
-
-    filename = f"{name}.png"
-    filepath = os.path.join(screenshots_dir, filename)
+    filepath = os.path.join(screenshots_dir("superset"), f"{name}.png")
 
     driver.save_screenshot(filepath)
     note(f"Screenshot saved: {filepath}")
@@ -206,14 +205,22 @@ def _auth_headers(tokens):
 def _sqlalchemy_uri(driver, scheme):
     """Compose a Superset-compatible SQLAlchemy URI for ClickHouse.
 
-    The Superset container reaches ClickHouse at ``clickhouse:8123`` (HTTP)
-    or ``clickhouse:8443`` (HTTPS) on the shared Docker network.
+    The Superset container reaches ClickHouse at ``clickhouse:8123`` (HTTP),
+    ``clickhouse:8443`` (HTTPS) or ``clickhouse:9000`` (native) on the shared
+    Docker network. Returns ``None`` for a combination the driver does not
+    support: clickhouse-connect speaks HTTP(S) only.
     """
     if driver == "clickhouse-sqlalchemy":
+        if scheme == "native":
+            return "clickhouse+native://default:@clickhouse:9000/default"
         if scheme == "https":
-            return "clickhouse+https://default:@clickhouse:8443/default?verify=false"
+            # clickhouse-sqlalchemy has no clickhouse+https scheme; HTTPS is
+            # the http driver with protocol=https.
+            return "clickhouse+http://default:@clickhouse:8443/default?protocol=https&verify=false"
         return "clickhouse+http://default:@clickhouse:8123/default"
 
+    if scheme == "native":
+        return None
     if scheme == "https":
         return "clickhousedb+connect://default:@clickhouse:8443/default?secure=true&verify=false"
     return "clickhousedb+connect://default:@clickhouse:8123/default"
@@ -489,47 +496,92 @@ def run_sql_in_editor(self, driver, query):
         note("Triggered Run via Ctrl+Enter")
 
     WebDriverWait(driver, 60).until(
-        EC.any_of(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "[data-test='table-container'] table")
-            ),
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, ".filterable-table-container table")
-            ),
-            EC.presence_of_element_located(
-                (By.XPATH, "//*[contains(@class,'ant-table')]//table")
-            ),
-        )
+        lambda d: d.find_elements(By.CSS_SELECTOR, ".virtual-table-cell")
+        or _sql_lab_error(d)
     )
-    note("Result table rendered")
+    error = _sql_lab_error(driver)
+    if error:
+        take_screenshot(driver=driver, name="sql_lab_error")
+        fail(f"SQL Lab showed an error: {error}")
+    note("Result cells rendered")
+
+
+def _sql_lab_error(driver):
+    """Return the text of a visible SQL Lab error alert, or ``None``."""
+    from selenium.webdriver.common.by import By
+
+    for alert in driver.find_elements(By.CSS_SELECTOR, "[role='alert']"):
+        if alert.is_displayed() and alert.text.strip():
+            return alert.text.strip()
+    return None
 
 
 @TestStep(Then)
-def get_sql_lab_result_text(self, driver):
-    """Return the visible text of the SQL Lab result panel for assertions."""
+def get_sql_lab_result_rows(self, driver, columns):
+    """Return the SQL Lab result grid as rows of ``columns`` cell texts.
+
+    Reads only the result grid cells, never the page or editor text, so that
+    the query text itself cannot satisfy a check.
+    """
     from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
 
-    wait = WebDriverWait(driver, 30)
-    selectors = [
-        "[data-test='table-container']",
-        ".filterable-table-container",
-        ".ant-table-wrapper",
+    cells = [
+        e.text.strip()
+        for e in driver.find_elements(By.CSS_SELECTOR, ".virtual-table-cell")
     ]
-    for sel in selectors:
-        try:
-            el = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, sel)))
-            text = el.text
-            if text and text.strip():
-                note(
-                    f"SQL Lab result text (via {sel}): "
-                    f"{text[:300]}{'...' if len(text) > 300 else ''}"
-                )
-                return text
-        except Exception:
-            continue
+    if not cells:
+        take_screenshot(driver=driver, name="sql_lab_result_missing")
+        fail("the SQL Lab result grid has no cells")
+    if len(cells) % columns:
+        fail(
+            f"{len(cells)} result cells do not form rows of {columns} columns: {cells}"
+        )
+    rows = [cells[i : i + columns] for i in range(0, len(cells), columns)]
+    note(f"SQL Lab result rows: {rows}")
+    return rows
 
-    body = driver.find_element(By.TAG_NAME, "body").text
-    note(f"Falling back to body text (truncated): {body[:500]}")
-    return body
+
+@TestStep(Then)
+def check_database_connection(self, scheme):
+    """Test a ClickHouse connection over ``scheme`` (http, https or native)
+    through Superset's test-connection API, which is what the Test Connection
+    button in the database form calls. Fails unless Superset reports OK."""
+    tokens = _api_login(self)
+    uri = _sqlalchemy_uri(self.context.clickhouse_driver, scheme)
+    if uri is None:
+        fail(f"{self.context.clickhouse_driver} does not support {scheme}")
+
+    status, body = _http(
+        "POST",
+        f"{_superset_host_url(self)}/api/v1/database/test_connection/",
+        headers=_auth_headers(tokens),
+        data={
+            "database_name": f"clickhouse-{scheme}",
+            "sqlalchemy_uri": uri,
+            "configuration_method": "sqlalchemy_form",
+        },
+    )
+    note(f"test_connection {uri}: HTTP {status}: {body[:1000]}")
+    assert (
+        status == 200 and json.loads(body).get("message") == "OK"
+    ), f"Superset could not connect to ClickHouse over {scheme}: HTTP {status}: {body[:1000]}"
+
+
+@TestStep(Then)
+def available_database_engines(self):
+    """Return the database engines Superset has drivers for, as a mapping of
+    engine name to its available drivers (``/api/v1/database/available/``)."""
+    tokens = _api_login(self)
+    status, body = _http(
+        "GET",
+        f"{_superset_host_url(self)}/api/v1/database/available/",
+        headers=_auth_headers(tokens),
+    )
+    if status != 200:
+        fail(f"could not list available database engines: HTTP {status}: {body[:1000]}")
+    data = json.loads(body)
+    # Superset returns {"databases": [...]}; older versions a bare list.
+    items = data.get("databases", []) if isinstance(data, dict) else data
+    engines = {e["engine"]: e.get("available_drivers", []) for e in items}
+    note(f"available engines: {engines}")
+    return engines

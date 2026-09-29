@@ -157,14 +157,9 @@ def check_partition_was_replaced(
     else:
         condition = "IN"
 
-    with By(
-        "selecting and saving the partition data from the source table and destination table"
-    ):
+    with By("selecting and saving the partition data from the source table"):
         partition_values_source = node.query(
             f"SELECT {column} FROM {source_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
-        partition_values_destination = node.query(
-            f"SELECT {column} FROM {destination_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*) FORMAT TabSeparated"
         )
 
     with Then(
@@ -172,6 +167,9 @@ def check_partition_was_replaced(
     ):
         for retry in retries(timeout=600, delay=30):
             with retry:
+                partition_values_destination = node.query(
+                    f"SELECT {column} FROM {destination_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert (
                     partition_values_destination.output.strip()
                     == partition_values_source.output.strip()

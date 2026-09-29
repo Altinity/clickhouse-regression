@@ -1,0 +1,35 @@
+diff --git a/tests/testcase.py b/tests/testcase.py
+index f44c902..419bb64 100644
+--- a/tests/testcase.py
++++ b/tests/testcase.py
+@@ -80,7 +80,7 @@ class BaseTestCase(BaseAbstractTestCase, TestCase):
+         version = system_native_session.execute(
+             text('SELECT version()')
+         ).fetchall()
+-        cls.server_version = tuple(int(x) for x in version[0][0].split('.'))
++        cls.server_version = tuple(int(x) for x in version[0][0].split('.')[0:-1])
+ 
+         super().setUpClass()
+ 
+@@ -110,7 +110,7 @@ class BaseAsynchTestCase(BaseTestCase):
+         version = (
+             await system_asynch_session.execute(text('SELECT version()'))
+         ).fetchall()
+-        cls.server_version = tuple(int(x) for x in version[0][0].split('.'))
++        cls.server_version = tuple(int(x) for x in version[0][0].split('.')[0:-1])
+ 
+         super(BaseTestCase, cls).setUpClass()
+ 
+diff --git a/testsrequire.py b/testsrequire.py
+index baa9d53..b4db77b 100644
+--- a/testsrequire.py
++++ b/testsrequire.py
+@@ -3,7 +3,7 @@ tests_require = [
+     'pytest',
+     'sqlalchemy>=2.0.0,<2.1.0',
+     'greenlet>=2.0.1',
+-    'alembic',
++    'alembic==1.11.1',
+     'requests',
+     'responses',
+     'parameterized'

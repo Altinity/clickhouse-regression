@@ -7,12 +7,25 @@ import urllib.request
 
 from testflows.core import *
 
-PROJECT_NAME = "grafana-lts"
+from lts.steps.docker import (
+    compose_command,
+    compose_down,
+    save_compose_logs,
+    suite_results_dir,
+)
+
+# Unique per run, so that two runs on one Docker host neither share nor tear
+# down each other's containers, networks and volumes.
+PROJECT_NAME = f"grafana-lts-{os.getpid()}"
+
+# configs/init_schema.sql seeds default.test_grafana with this many rows, one
+# every 10 seconds back from startup.
+SEEDED_ROWS = 100
 
 
 def _compose_cmd(compose_file):
     """Return the base docker compose command list."""
-    return ["docker", "compose", "-f", compose_file, "-p", PROJECT_NAME]
+    return compose_command() + ["-f", compose_file, "-p", PROJECT_NAME]
 
 
 @TestStep(Given)
@@ -30,13 +43,9 @@ def grafana_environment(
     """
     compose_file = os.path.join(configs_dir, "docker-compose.yml")
 
-    image_parts = clickhouse_image.rsplit(":", 1)
-    ch_image = image_parts[0]
-    ch_version = image_parts[1] if len(image_parts) > 1 else "latest"
-
     env = os.environ.copy()
-    env["CLICKHOUSE_IMAGE"] = ch_image
-    env["CLICKHOUSE_VERSION"] = ch_version
+    # The full reference, so registry ports and digests survive.
+    env["CLICKHOUSE_IMAGE"] = clickhouse_image
     env["GRAFANA_VERSION"] = grafana_version
     env["GRAFANA_PLUGIN_VERSION"] = grafana_plugin_version
     env["SELENIUM_VERSION"] = selenium_version
@@ -49,13 +58,18 @@ def grafana_environment(
         f"Grafana={grafana_version}, Plugin={grafana_plugin_version}"
     )
 
-    result = subprocess.run(
-        _compose_cmd(compose_file) + ["up", "-d", "--wait"],
-        cwd=configs_dir,
-        env=env,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            _compose_cmd(compose_file) + ["up", "-d", "--wait"],
+            cwd=configs_dir,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            text=True,
+            timeout=1800,
+        )
+    except subprocess.TimeoutExpired:
+        fail("docker compose up -d --wait did not finish within 30 minutes")
     if result.returncode != 0:
         note(f"stdout: {result.stdout}")
         note(f"stderr: {result.stderr}")
@@ -65,11 +79,9 @@ def grafana_environment(
         yield
     finally:
         note("Tearing down Grafana environment")
-        subprocess.run(
-            _compose_cmd(compose_file) + ["down", "--remove-orphans", "-v"],
-            cwd=configs_dir,
-            env=env,
-        )
+        logs_dir = os.path.join(suite_results_dir("grafana"), "logs")
+        save_compose_logs(_compose_cmd(compose_file), env, logs_dir)
+        compose_down(_compose_cmd(compose_file), env, logs_dir)
 
 
 def _get_compose_service_host_port(compose_file, env, service, container_port):
@@ -97,7 +109,7 @@ def _get_selenium_host_port(compose_file, env):
 def wait_for_grafana(self, timeout=180):
     """Wait until Grafana health endpoint responds.
 
-    The upstream ``grafana/grafana`` image does not ship ``curl``, so probing
+    The ``grafana/grafana`` image does not ship ``curl``, so probing
     via ``docker compose exec`` is unreliable. Instead, we discover the host
     port mapped to Grafana's container port 3000 and probe it from the host.
     Falls back to a docker-exec wget probe if no host port is published.

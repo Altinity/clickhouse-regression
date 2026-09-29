@@ -48,6 +48,8 @@ allow_drop_detached = r"""'{"default":"0"}'"""
 
 allow_dynamic_type_in_join_keys = r"""'{"default":"0"}'"""
 
+allow_executable_tables = r"""'{"default":"1"}'"""
+
 allow_execute_multiif_columnar = r"""'{"default":"1"}'"""
 
 allow_experimental_alias_table_engine = r"""'{"default":"0"}'"""

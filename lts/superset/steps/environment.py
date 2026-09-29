@@ -7,12 +7,21 @@ import urllib.request
 
 from testflows.core import *
 
-PROJECT_NAME = "superset-lts"
+from lts.steps.docker import (
+    compose_command,
+    compose_down,
+    save_compose_logs,
+    suite_results_dir,
+)
+
+# Unique per run, so that two runs on one Docker host neither share nor tear
+# down each other's containers, networks and volumes.
+PROJECT_NAME = f"superset-lts-{os.getpid()}"
 
 
 def _compose_cmd(compose_file):
     """Return the base docker compose command list with the LTS project name."""
-    return ["docker", "compose", "-f", compose_file, "-p", PROJECT_NAME]
+    return compose_command() + ["-f", compose_file, "-p", PROJECT_NAME]
 
 
 def _get_compose_service_host_port(compose_file, env, service, container_port):
@@ -54,13 +63,9 @@ def superset_environment(
     """
     compose_file = os.path.join(configs_dir, "docker-compose.yml")
 
-    image_parts = clickhouse_image.rsplit(":", 1)
-    ch_image = image_parts[0]
-    ch_version = image_parts[1] if len(image_parts) > 1 else "latest"
-
     env = os.environ.copy()
-    env["CLICKHOUSE_IMAGE"] = ch_image
-    env["CLICKHOUSE_VERSION"] = ch_version
+    # The full reference, so registry ports and digests survive.
+    env["CLICKHOUSE_IMAGE"] = clickhouse_image
     env["SUPERSET_VERSION"] = superset_version
     env["CLICKHOUSE_PYTHON_DRIVER"] = clickhouse_driver
     env["SELENIUM_VERSION"] = selenium_version
@@ -73,25 +78,35 @@ def superset_environment(
         f"Superset={superset_version}, driver={clickhouse_driver}"
     )
 
-    build = subprocess.run(
-        _compose_cmd(compose_file) + ["build", "superset"],
-        cwd=configs_dir,
-        env=env,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        build = subprocess.run(
+            _compose_cmd(compose_file) + ["build", "superset"],
+            cwd=configs_dir,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            text=True,
+            timeout=1800,
+        )
+    except subprocess.TimeoutExpired:
+        fail("docker compose build superset did not finish within 30 minutes")
     if build.returncode != 0:
         note(f"stdout: {build.stdout}")
         note(f"stderr: {build.stderr}")
         fail(f"docker compose build failed with exit code {build.returncode}")
 
-    up = subprocess.run(
-        _compose_cmd(compose_file) + ["up", "-d"],
-        cwd=configs_dir,
-        env=env,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        up = subprocess.run(
+            _compose_cmd(compose_file) + ["up", "-d"],
+            cwd=configs_dir,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            text=True,
+            timeout=1800,
+        )
+    except subprocess.TimeoutExpired:
+        fail("docker compose up -d did not finish within 30 minutes")
     if up.returncode != 0:
         note(f"stdout: {up.stdout}")
         note(f"stderr: {up.stderr}")
@@ -101,13 +116,9 @@ def superset_environment(
         yield
     finally:
         note("Tearing down Superset environment")
-        subprocess.run(
-            _compose_cmd(compose_file) + ["down", "--remove-orphans", "-v"],
-            cwd=configs_dir,
-            env=env,
-            capture_output=True,
-            text=True,
-        )
+        logs_dir = os.path.join(suite_results_dir("superset"), "logs")
+        save_compose_logs(_compose_cmd(compose_file), env, logs_dir)
+        compose_down(_compose_cmd(compose_file), env, logs_dir)
 
 
 @TestStep(Given)

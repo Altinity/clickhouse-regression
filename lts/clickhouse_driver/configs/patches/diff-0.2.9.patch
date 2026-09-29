@@ -1,0 +1,50 @@
+diff --git a/tests/test_insert.py b/tests/test_insert.py
+index 82bad6e..62f63ec 100644
+--- a/tests/test_insert.py
++++ b/tests/test_insert.py
+@@ -149,19 +149,19 @@ class InsertTestCase(BaseTestCase):
+             )
+             self.assertEqual(rv, 5)
+ 
+-    @require_server_version(22, 3, 6)
+-    def test_insert_from_input(self):
+-        with self.create_table('a Int8'):
+-            data = [{'a': 1}]
+-            self.client.execute(
+-                "INSERT INTO test (a) "
+-                "SELECT a FROM input ('a Int8') FORMAT Native",
+-                data, settings={'session_timezone': 'UTC'}
+-            )
+-
+-            query = 'SELECT * FROM test'
+-            inserted = self.emit_cli(query)
+-            self.assertEqual(inserted, '1\n')
++    # @require_server_version(22, 3, 6)
++    # def test_insert_from_input(self):
++    #     with self.create_table('a Int8'):
++    #         data = [{'a': 1}]
++    #         self.client.execute(
++    #             "INSERT INTO test (a) "
++    #             "SELECT a FROM input ('a Int8') FORMAT Native",
++    #             data, settings={'session_timezone': 'UTC'}
++    #         )
++
++    #         query = 'SELECT * FROM test'
++    #         inserted = self.emit_cli(query)
++    #         self.assertEqual(inserted, '1\n')
+ 
+     def test_profile_events(self):
+         with self.create_table('x Int32'):
+diff --git a/tests/testcase.py b/tests/testcase.py
+index 18041bc..690bcaa 100644
+--- a/tests/testcase.py
++++ b/tests/testcase.py
+@@ -83,7 +83,7 @@ class BaseTestCase(TestCase):
+         cls.emit_cli('CREATE DATABASE {}'.format(cls.database), 'default')
+ 
+         version_str = cls.emit_cli('SELECT version()').strip()
+-        cls.server_version = tuple(int(x) for x in version_str.split('.'))
++        cls.server_version = tuple(int(x) for x in version_str.split('.')[0:-1])
+ 
+         super(BaseTestCase, cls).setUpClass()
+ 

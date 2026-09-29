@@ -146,6 +146,63 @@ def cas_aws_storage_overlay(
 """
 
 
+def cas_gcs_storage_overlay(
+    s3_endpoint,
+    cas_endpoint,
+    with_cache=False,
+):
+    """Override s3_disk / cas_disk for GCS's S3-compatible XML API.
+
+    GCS requires ``<http_client>gcs_hmac</http_client>`` on every CAS disk so
+    the capability probe sees the ``x-goog-if-generation-match`` conditional
+    dialect. Without it the S3-compat layer silently ignores preconditions and
+    the mount is refused. No ``<region>`` — GCS does not use one.
+    """
+    cache_disk = ""
+    cache_policy = ""
+    if with_cache:
+        cache_disk = f"""
+            <{CAS_CACHE_DISK}>
+                <type>cache</type>
+                <disk>{CAS_DISK}</disk>
+                <path>/var/lib/clickhouse/cas_cache/</path>
+                <max_size>10Gi</max_size>
+            </{CAS_CACHE_DISK}>
+"""
+        cache_policy = f"""
+        <policies>
+            <{CAS_POLICY}>
+                <volumes>
+                    <main>
+                        <disk>{CAS_CACHE_DISK}</disk>
+                    </main>
+                </volumes>
+            </{CAS_POLICY}>
+        </policies>
+"""
+    return f"""\
+<clickhouse>
+    <storage_configuration>
+        <disks>
+            <s3_disk>
+                <endpoint>{escape(s3_endpoint)}</endpoint>
+                <access_key_id from_env="CAS_ACCESS_KEY_ID"/>
+                <secret_access_key from_env="CAS_SECRET_ACCESS_KEY"/>
+            </s3_disk>
+            <cas_disk>
+                <endpoint>{escape(cas_endpoint)}</endpoint>
+                <http_client>gcs_hmac</http_client>
+                <access_key_id from_env="CAS_ACCESS_KEY_ID"/>
+                <secret_access_key from_env="CAS_SECRET_ACCESS_KEY"/>
+            </cas_disk>
+            {cache_disk}
+        </disks>
+        {cache_policy}
+    </storage_configuration>
+</clickhouse>
+"""
+
+
 @TestStep(Given)
 def enable_cas_minio_disk(self, endpoint, with_cache=False):
     """Point the named cas_disk at ``endpoint`` before the cluster starts.
@@ -186,6 +243,35 @@ def enable_cas_aws_storage(
             s3_endpoint=s3_endpoint,
             cas_endpoint=cas_endpoint,
             region=region,
+            with_cache=with_cache,
+        )
+    )
+    if with_cache:
+        self.context.use_cas_s3_cache = True
+        self.context.cas_disk_name = CAS_CACHE_DISK
+    try:
+        yield
+    finally:
+        with Finally("reset CAS storage overlay to its placeholder"):
+            reset_cas_s3_cache_config()
+
+
+@TestStep(Given)
+def enable_cas_gcs_storage(
+    self,
+    s3_endpoint,
+    cas_endpoint,
+    with_cache=False,
+):
+    """Point the named S3 / CAS disks at GCS before the cluster starts.
+
+    Same mechanics as ``enable_cas_aws_storage`` but uses the GCS overlay
+    (``http_client = gcs_hmac``, no region).
+    """
+    cas_s3_cache_config_path().write_text(
+        cas_gcs_storage_overlay(
+            s3_endpoint=s3_endpoint,
+            cas_endpoint=cas_endpoint,
             with_cache=with_cache,
         )
     )

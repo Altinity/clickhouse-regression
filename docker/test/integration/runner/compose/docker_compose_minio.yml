@@ -4,7 +4,7 @@ services:
   minio1:
     # Newer version of minio results in such errors:
     # "AWSErrorMarshaller: Encountered AWSError 'InternalError': We encountered an internal error, please try again"
-    image: quay.io/minio/minio:RELEASE.2021-09-23T04-46-24Z
+    image: clickhouse/minio-minio:RELEASE.2026-08-04T00-00-00Z
     volumes:
       - data1-1:/data1
       - ${MINIO_CERTS_DIR:-}:/certs

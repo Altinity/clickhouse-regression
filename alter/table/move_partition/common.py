@@ -22,6 +22,29 @@ def execute_query(
     if node is None:
         node = current().context.node
 
+    if message is None and expected is None and not no_checks:
+        with Then("I check output against snapshot"):
+            with values() as that:
+                for attempt in retries(timeout=30, delay=5):
+                    with attempt:
+                        r = node.query(
+                            sql + " FORMAT " + format,
+                            exitcode=exitcode,
+                            message=message,
+                            no_checks=no_checks,
+                        )
+                        assert that(
+                            snapshot(
+                                "\n" + r.output.strip() + "\n",
+                                "tests." + current_cpu(),
+                                name=snapshot_name,
+                                path=path,
+                                encoder=str,
+                                mode=snapshot.CHECK,
+                            )
+                        ), error()
+        return
+
     with When("I execute query", description=sql):
         r = node.query(
             sql + " FORMAT " + format,
@@ -32,22 +55,6 @@ def execute_query(
         if no_checks:
             return r
 
-    if message is None:
-        if expected is not None:
-            with Then("I check output against expected"):
-                assert r.output.strip() == expected, error()
-        else:
-            with Then("I check output against snapshot"):
-                with values() as that:
-                    for attempt in retries(timeout=30, delay=5):
-                        with attempt:
-                            assert that(
-                                snapshot(
-                                    "\n" + r.output.strip() + "\n",
-                                    "tests." + current_cpu(),
-                                    name=snapshot_name,
-                                    path=path,
-                                    encoder=str,
-                                    mode=snapshot.CHECK,
-                                )
-                            ), error()
+    if message is None and expected is not None:
+        with Then("I check output against expected"):
+            assert r.output.strip() == expected, error()

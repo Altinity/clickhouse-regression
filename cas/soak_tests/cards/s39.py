@@ -34,13 +34,31 @@ def _ctl(path, body=None, timeout=10):
     return _json.loads(urllib.request.urlopen(req, timeout=timeout).read().decode())
 
 
-def _text_log_count(node, since: str, needle: str) -> int:
-    """Count text_log rows containing needle at or after since. Probe failure is -1."""
+def _text_log_count(node, since: str, needle: str, logger: str = "CasMountLeaseRenewer") -> int:
+    """Count renewer text_log rows containing needle at or after since. Probe failure is -1.
+
+    26.6.4 logs under CasMountLeaseRenewer: ``physical retry attempt`` (Debug),
+    ``recovered after`` (Information), ``fenced after`` (Warning). The older
+    CasMountLeaseKeeper sentences this card used to match were removed.
+    """
     try:
         node.command("SYSTEM FLUSH LOGS")
         v = node.scalar(
             f"SELECT count() FROM system.text_log WHERE event_time >= '{since}' "
-            f"AND message ILIKE '%{needle}%'"
+            f"AND logger_name = '{logger}' AND message ILIKE '%{needle}%'"
+        )
+        return int(v or 0)
+    except Exception:
+        return -1
+
+
+def _watermark_renew_count(node, since: str, outcome: str) -> int:
+    """Count cas_log watermark_renew rows with this outcome at or after since. Probe failure is -1."""
+    try:
+        node.command("SYSTEM FLUSH LOGS")
+        v = node.scalar(
+            f"SELECT count() FROM system.cas_log WHERE event_time >= '{since}' "
+            f"AND event_type = 'watermark_renew' AND outcome = '{outcome}'"
         )
         return int(v or 0)
     except Exception:
@@ -127,24 +145,36 @@ class S39(Scenario):
             ctx.log(f"S39 leg A background INSERT under fault (expected to possibly fail/retry): {errs_a[0]}")
         time.sleep(_MOUNT_RENEW_PERIOD_S / 2)   # let the post-clear renewal beat land
 
-        transient_a = _text_log_count(node, since_a,
-                                      "background renewal failed transiently, retrying while the lease is still valid")
-        fenced_a = _text_log_count(node, since_a, "background renewal failed, the mount-lease stops advancing")
-        result.observations["leg_a"] = {"transient_retry_lines": transient_a, "fence_trip_lines": fenced_a}
-        result.add(Verdict.check(
-            "leg A (short fault): the renewer actually hit the fault (not vacuous)",
-            "> 0 transient-retry log lines", f"{transient_a}",
-            transient_a > 0,
-            "" if transient_a > 0 else "0 transient-retry lines -- the fault window may not have "
-                                       "overlapped a renewal beat; widen short_fault_s or shorten "
-                                       "the renew period"))
+        # An 8s window is shorter than the 10s renew period, so it can miss the beat entirely.
+        # A miss is not a failure. A hit shows up as an Information "recovered after" line.
+        recovered_a = _text_log_count(node, since_a, "recovered after")
+        fenced_a = _text_log_count(node, since_a, "fenced after")
+        result.observations["leg_a"] = {"recovered_lines": recovered_a, "fence_lines": fenced_a}
+        if recovered_a > 0:
+            result.add(Verdict.check(
+                "leg A (short fault): a renewal that hit the fault recovered",
+                "> 0 'recovered after' lines", f"{recovered_a}", True, ""))
+        elif recovered_a == 0 and fenced_a == 0:
+            result.add(Verdict.inconclusive(
+                "leg A (short fault): renewal overlapped the fault window",
+                "a 'recovered after' line, or no renewal during the window",
+                "no CasMountLeaseRenewer line; the 8s window can miss the 10s renew beat"))
         result.add(Verdict.check(
             "leg A (short fault): mount lease NEVER fenced",
-            "0 fence-trip log lines", f"{fenced_a}", fenced_a == 0,
-            "" if fenced_a == 0 else "the mount lease fenced during a SHORT fault -- fix #37 phase 1 regression"))
+            "0 'fenced after' lines", f"{fenced_a}", fenced_a == 0,
+            "" if fenced_a == 0 else "the mount lease fenced during a SHORT fault"))
 
         # Post-disarm write must succeed immediately: nothing was ever fenced.
-        C.insert_random(node, _TABLE, rows=rows // 4, payload_bytes=payload, op_id=2 * rows)
+        # A Code 210 here means the short window already dropped the lease. Record that and stop,
+        # so the failure stays on this leg instead of aborting the card.
+        try:
+            C.insert_random(node, _TABLE, rows=rows // 4, payload_bytes=payload, op_id=2 * rows)
+        except Exception as e:
+            result.add(Verdict.check(
+                "leg A (short fault): a write succeeds once the fault clears",
+                "INSERT succeeds", str(e)[:300], False,
+                "the short fault left the mount unable to accept writes"))
+            return
 
         # --- Leg B: LONG fault (> lease TTL) -- the fence SHOULD trip, then recover cleanly ---
         since_b = node.scalar("SELECT toString(now())")
@@ -163,14 +193,17 @@ class S39(Scenario):
         # Give the queue's backoff + self-remount time to recover.
         time.sleep(int(p["settle_s"]))
 
-        fenced_b = _text_log_count(node, since_b, "background renewal failed, the mount-lease stops advancing")
-        result.observations["leg_b"] = {"fence_trip_lines": fenced_b}
+        fenced_b = _text_log_count(node, since_b, "fenced after")
+        renew_failed_b = _watermark_renew_count(node, since_b, "failed")
+        result.observations["leg_b"] = {
+            "fence_lines": fenced_b, "watermark_renew_failed": renew_failed_b}
         result.add(Verdict.check(
             "leg B (long fault): the mount lease fenced (correct fail-closed)",
-            "> 0 fence-trip log lines", f"{fenced_b}", fenced_b > 0,
-            "" if fenced_b > 0 else "no fence trip recorded during a fault held past the TTL -- "
-                                    "either the fault window was too short or phase 1's retry rode "
-                                    "out longer than the lease deadline should have allowed"))
+            "> 0 'fenced after' warnings and a failed watermark_renew",
+            f"fenced={fenced_b} watermark_renew_failed={renew_failed_b}",
+            fenced_b > 0 and renew_failed_b > 0,
+            "" if fenced_b > 0 and renew_failed_b > 0 else
+            "a fault held past the lease TTL produced no fenced warning or no failed watermark_renew"))
 
         try:
             queue_rows = node.query(

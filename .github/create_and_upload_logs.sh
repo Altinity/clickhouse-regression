@@ -31,6 +31,12 @@ then
     ./retry.sh 5 30 aws $aws_endpoint_args s3 cp report.html $SUITE_REPORT_BUCKET_PATH/report.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
     ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
+    # The LTS suites also keep JUnit XML and browser screenshots next to their
+    # logs in lts/_instances/<suite>/. Skip the JDBC runner's scratch directory.
+    if [[ "$SUITE" == "lts" ]]; then
+        ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive lts/_instances/ $SUITE_REPORT_BUCKET_PATH/lts/_instances/"' --exclude "*" --include "*.xml" --exclude "*/work/*" --content-type "\"text/xml; charset=utf-8\"" --no-follow-symlinks'
+        ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive lts/_instances/ $SUITE_REPORT_BUCKET_PATH/lts/_instances/"' --exclude "*" --include "*.png" --exclude "*/work/*" --content-type image/png --no-follow-symlinks'
+    fi
     # oauth (and similar suites) collect docker service logs next to the compose
     # env dir (envs/<provider>/_service_logs), not at <suite>/_service_logs.
     if [[ ! -d "$SUITE/_service_logs" ]]; then

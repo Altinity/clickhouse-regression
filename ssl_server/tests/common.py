@@ -747,6 +747,7 @@ def sign_certificate(
     days="365",
     node=None,
     use_stash=True,
+    subject_alt_name=None,
 ):
     """Sign certificate using CA certificate."""
     bash = self.context.cluster.bash(node=node)
@@ -761,6 +762,7 @@ def sign_certificate(
             type,
             hash,
             days,
+            subject_alt_name,
         ),
         use_stash=use_stash,
     ) as stash:
@@ -775,6 +777,11 @@ def sign_certificate(
                     f"openssl {type} -{hash} -req -in {csr} "
                     f"-signkey {ca_key} -out {outfile} -days {days}"
                 )
+            if subject_alt_name is not None:
+                extfile = f"{outfile}.ext"
+                with open(extfile, "w") as f:
+                    f.write(f"subjectAltName={subject_alt_name}\n")
+                command += f" -extfile {extfile}"
             print(command)
             with bash(
                 command,

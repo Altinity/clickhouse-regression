@@ -80,6 +80,7 @@ def create_node_server_certificate_with_chain_and_dh_params(
             ca_key=ca_key,
             ca_passphrase=ca_passphrase,
             use_stash=use_stash,
+            subject_alt_name=f"DNS:{node.name}",
         )
 
     with And("I create server certificate with chain"):
@@ -169,6 +170,7 @@ def create_node_server_certificate_and_dh_params(
             ca_key=ca_key,
             ca_passphrase=ca_passphrase,
             use_stash=use_stash,
+            subject_alt_name=f"DNS:{node.name}",
         )
 
     with And(

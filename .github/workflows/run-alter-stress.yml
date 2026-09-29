@@ -164,7 +164,7 @@ jobs:
     if: ${{ contains('all minio', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -187,7 +187,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: alter-stress-minio-x86-artifacts
@@ -202,7 +202,7 @@ jobs:
     if: ${{ contains('all local', inputs.storage_provider) && contains('all x86', inputs.architecture) }}
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -224,7 +224,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: alter-stress-local-x86-artifacts
@@ -239,7 +239,7 @@ jobs:
     if: ${{ contains('all minio', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -262,7 +262,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: alter-stress-minio-arm-artifacts
@@ -277,7 +277,7 @@ jobs:
     if: ${{ contains('all local', inputs.storage_provider) && contains('all ARM', inputs.architecture) }}
     steps:
       - name: ⤵️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -299,7 +299,7 @@ jobs:
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: alter-stress-local-arm-artifacts
