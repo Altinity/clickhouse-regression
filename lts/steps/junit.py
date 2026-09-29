@@ -1,6 +1,6 @@
 """Report JUnit XML results (pytest, Maven surefire/failsafe) as TestFlows tests.
 
-Every upstream testcase becomes one TestFlows scenario, so a failure points at a
+Every testcase becomes one TestFlows scenario, so a failure points at a
 named test and known failures are handled with ordinary ``xfails``.
 
 The dotted class name is split into nested features, because TestFlows replaces
@@ -19,12 +19,12 @@ ERRORED = ("error", "rerunError")
 FLAKY = ("flakyFailure", "flakyError")
 
 
-def _safe(name):
-    """Make an upstream name usable as a single TestFlows path segment."""
+def _path_segment(name):
+    """Make a JUnit name usable as a single TestFlows path segment."""
     return name.replace("/", "_").replace("\\", "_").strip() or "_"
 
 
-def _local(tag):
+def _local_name(tag):
     """Return an element tag without its XML namespace."""
     return tag.rsplit("}", 1)[-1]
 
@@ -32,7 +32,7 @@ def _local(tag):
 def _child(element, tag):
     """Return the first child with local name ``tag``, ignoring namespaces."""
     for child in element:
-        if _local(child.tag) == tag:
+        if _local_name(child.tag) == tag:
             return child
     return None
 
@@ -62,7 +62,7 @@ def parse_junit(xml_paths, strip_prefix=""):
             root = ET.parse(path).getroot()
         except ET.ParseError as error:
             raise ValueError(f"{path} is not valid JUnit XML: {error}") from None
-        for testcase in (e for e in root.iter() if _local(e.tag) == "testcase"):
+        for testcase in (e for e in root.iter() if _local_name(e.tag) == "testcase"):
             name = testcase.get("name") or "unnamed"
             classname = testcase.get("classname") or "unknown"
             if strip_prefix and classname.startswith(strip_prefix):
@@ -74,8 +74,10 @@ def parse_junit(xml_paths, strip_prefix=""):
             outcome, message, details = _outcome(testcase)
             cases.append(
                 {
-                    "path": [_safe(part) for part in classname.split(".") if part],
-                    "name": _safe(name),
+                    "path": [
+                        _path_segment(part) for part in classname.split(".") if part
+                    ],
+                    "name": _path_segment(name),
                     "time": testcase.get("time"),
                     "outcome": outcome,
                     "message": message,
@@ -86,10 +88,10 @@ def parse_junit(xml_paths, strip_prefix=""):
 
 
 @TestScenario
-def testcase(self, case):
-    """Replay the outcome of one upstream testcase."""
+def junit_testcase(self, case):
+    """Replay the outcome of one JUnit testcase."""
     if case["time"]:
-        note(f"upstream duration: {case['time']}s")
+        note(f"duration in the tool's run: {case['time']}s")
     if case["details"]:
         note(case["details"][-8000:])
     if case["outcome"] == "failed":
@@ -102,7 +104,7 @@ def testcase(self, case):
         note(f"passed on rerun after: {case['message'][:2000]}")
 
 
-def _tree(cases):
+def _group_by_class(cases):
     """Group cases into a tree of nested dicts keyed by class-name parts."""
     root = {"children": {}, "cases": []}
     for case in cases:
@@ -113,15 +115,15 @@ def _tree(cases):
     return root
 
 
-def _report(node):
+def _report_group(node):
     names = {}
     for case in node["cases"]:
         count = names[case["name"]] = names.get(case["name"], 0) + 1
         name = case["name"] if count == 1 else f"{case['name']} #{count}"
-        Scenario(name=name, test=testcase, flags=TE)(case=case)
+        Scenario(name=name, test=junit_testcase, flags=TE)(case=case)
     for part, child in node["children"].items():
         with Feature(part, flags=TE):
-            _report(child)
+            _report_group(child)
 
 
 def report_junit_results(xml_glob, strip_prefix="", min_tests=1, max_skipped=None):
@@ -147,7 +149,7 @@ def report_junit_results(xml_glob, strip_prefix="", min_tests=1, max_skipped=Non
     for case in cases:
         counts[case["outcome"]] = counts.get(case["outcome"], 0) + 1
     note(
-        f"{len(cases)} upstream tests in {len(xml_paths)} file(s): "
+        f"{len(cases)} tests in {len(xml_paths)} file(s): "
         + ", ".join(f"{n} {outcome}" for outcome, n in sorted(counts.items()))
     )
 
@@ -165,11 +167,11 @@ def report_junit_results(xml_glob, strip_prefix="", min_tests=1, max_skipped=Non
             )
         )
 
-    _report(_tree(cases))
+    _report_group(_group_by_class(cases))
 
     skipped = counts.get("skipped", 0)
     if max_skipped is not None and skipped > max_skipped:
         fail(
-            f"{skipped} upstream tests were skipped, more than the {max_skipped} "
+            f"{skipped} tests were skipped, more than the {max_skipped} "
             "expected; see the skip reasons above"
         )

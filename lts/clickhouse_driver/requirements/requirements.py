@@ -8,15 +8,15 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_103_ClickHouseDriver_UpstreamTests = Requirement(
-    name="RQ.SRS-103.ClickHouseDriver.UpstreamTests",
+RQ_SRS_103_ClickHouseDriver_TestSuite = Requirement(
+    name="RQ.SRS-103.ClickHouseDriver.TestSuite",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "The clickhouse-driver upstream test suite, at the tested release tag and with the\n"
+        "The clickhouse-driver test suite, at the tested release tag and with the\n"
         "patches in `lts/clickhouse_driver/configs/patches`, SHALL pass against a\n"
         "ClickHouse server started from the LTS image, except for failures listed as\n"
         "known issues.\n"
@@ -65,15 +65,15 @@ SRS_103_ClickHouse_Python_Driver_clickhouse_driver_LTS_Testing = Specification(
         Heading(name="Introduction", level=1, num="1"),
         Heading(name="Terminology", level=1, num="2"),
         Heading(name="Requirements", level=1, num="3"),
-        Heading(name="Upstream Tests", level=2, num="3.1"),
-        Heading(name="RQ.SRS-103.ClickHouseDriver.UpstreamTests", level=3, num="3.1.1"),
+        Heading(name="Test Suite", level=2, num="3.1"),
+        Heading(name="RQ.SRS-103.ClickHouseDriver.TestSuite", level=3, num="3.1.1"),
         Heading(name="Compatibility", level=2, num="3.2"),
         Heading(
             name="RQ.SRS-103.ClickHouseDriver.Compatibility.LTS", level=3, num="3.2.1"
         ),
     ),
     requirements=(
-        RQ_SRS_103_ClickHouseDriver_UpstreamTests,
+        RQ_SRS_103_ClickHouseDriver_TestSuite,
         RQ_SRS_103_ClickHouseDriver_Compatibility_LTS,
     ),
     content=r"""
@@ -85,8 +85,8 @@ SRS_103_ClickHouse_Python_Driver_clickhouse_driver_LTS_Testing = Specification(
 * 1 [Introduction](#introduction)
 * 2 [Terminology](#terminology)
 * 3 [Requirements](#requirements)
-    * 3.1 [Upstream Tests](#upstream-tests)
-        * 3.1.1 [RQ.SRS-103.ClickHouseDriver.UpstreamTests](#rqsrs-103clickhousedriverupstreamtests)
+    * 3.1 [Test Suite](#test-suite)
+        * 3.1.1 [RQ.SRS-103.ClickHouseDriver.TestSuite](#rqsrs-103clickhousedrivertestsuite)
     * 3.2 [Compatibility](#compatibility)
         * 3.2.1 [RQ.SRS-103.ClickHouseDriver.Compatibility.LTS](#rqsrs-103clickhousedrivercompatibilitylts)
 
@@ -99,16 +99,16 @@ own test suite is run against a server started from the LTS image.
 ## Terminology
 
 - **LTS** — Long-Term Support ClickHouse release.
-- **Upstream tests** — the test suite in the clickhouse-driver repository.
+- **Test suite** — the tests in the clickhouse-driver repository.
 
 ## Requirements
 
-### Upstream Tests
+### Test Suite
 
-#### RQ.SRS-103.ClickHouseDriver.UpstreamTests
+#### RQ.SRS-103.ClickHouseDriver.TestSuite
 version: 1.0
 
-The clickhouse-driver upstream test suite, at the tested release tag and with the
+The clickhouse-driver test suite, at the tested release tag and with the
 patches in `lts/clickhouse_driver/configs/patches`, SHALL pass against a
 ClickHouse server started from the LTS image, except for failures listed as
 known issues.

@@ -2,12 +2,12 @@
 
 This suite tests the [clickhouse-driver] Python package (native protocol)
 against a ClickHouse LTS image by running the driver's own pytest suite. It
-follows the shared conventions in [../AGENT.md](../AGENT.md); debugging is in
+follows the shared conventions in [../AGENTS.md](../AGENTS.md); debugging is in
 [../DEBUGGING.md](../DEBUGGING.md#clickhouse-driver).
 
 ## How it works
 
-`feature.py` calls `lts.steps.upstream.run_upstream_tests`, which builds
+`feature.py` calls `lts.steps.tool_tests.run_tool_tests`, which builds
 `configs/` into a runner image based on the ClickHouse image under test, runs
 it, and reports each pytest test from `junit.xml` as a TestFlows scenario under
 `/lts/clickhouse-driver/`, for example
@@ -111,7 +111,7 @@ Some changes to this suite need matching changes outside `lts/clickhouse_driver/
 - **A new or renamed option** (such as `--clickhouse-driver-release`): add it
   to `lts_argparser` and `regression()` in `lts/regression.py`, pass it to this
   suite's `Feature` call, and document it under CLI Arguments in
-  `lts/README.md` and in the CLI table in `lts/AGENT.md`.
+  `lts/README.md` and in the CLI table in `lts/AGENTS.md`.
 - **A longer run time**: raise `timeout` in `feature.py`, and `timeout_minutes`
   of `clickhouse_driver` (60 minutes) in `.github/workflows/run-lts.yml`.
 - **A new kind of evidence file**: write it under

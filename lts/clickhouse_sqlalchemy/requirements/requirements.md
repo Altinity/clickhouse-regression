@@ -6,8 +6,8 @@
 * 1 [Introduction](#introduction)
 * 2 [Terminology](#terminology)
 * 3 [Requirements](#requirements)
-    * 3.1 [Upstream Tests](#upstream-tests)
-        * 3.1.1 [RQ.SRS-104.ClickHouseSQLAlchemy.UpstreamTests](#rqsrs-104clickhousesqlalchemyupstreamtests)
+    * 3.1 [Test Suite](#test-suite)
+        * 3.1.1 [RQ.SRS-104.ClickHouseSQLAlchemy.TestSuite](#rqsrs-104clickhousesqlalchemytestsuite)
     * 3.2 [Compatibility](#compatibility)
         * 3.2.1 [RQ.SRS-104.ClickHouseSQLAlchemy.Compatibility.LTS](#rqsrs-104clickhousesqlalchemycompatibilitylts)
 
@@ -20,16 +20,16 @@ test suite is run against a server started from the LTS image.
 ## Terminology
 
 - **LTS** — Long-Term Support ClickHouse release.
-- **Upstream tests** — the test suite in the clickhouse-sqlalchemy repository.
+- **Test suite** — the tests in the clickhouse-sqlalchemy repository.
 
 ## Requirements
 
-### Upstream Tests
+### Test Suite
 
-#### RQ.SRS-104.ClickHouseSQLAlchemy.UpstreamTests
+#### RQ.SRS-104.ClickHouseSQLAlchemy.TestSuite
 version: 1.0
 
-The clickhouse-sqlalchemy upstream test suite, at the tested release tag and with the
+The clickhouse-sqlalchemy test suite, at the tested release tag and with the
 patches in `lts/clickhouse_sqlalchemy/configs/patches`, SHALL pass against a
 ClickHouse server started from the LTS image, except for failures listed as
 known issues.

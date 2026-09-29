@@ -3,7 +3,7 @@
 This suite tests the Altinity [clickhouse-grafana] datasource plugin
 (`vertamedia-clickhouse-datasource`) in Grafana against a ClickHouse LTS image,
 through a real browser. It follows the shared conventions in
-[../AGENT.md](../AGENT.md), including the test-oracle rules; debugging is in
+[../AGENTS.md](../AGENTS.md), including the test-oracle rules; debugging is in
 [../DEBUGGING.md](../DEBUGGING.md#grafana).
 
 ## How it works
@@ -23,8 +23,8 @@ query Grafana's API from the logged-in browser session.
 | `steps/environment.py` | Compose up and teardown, log capture, health waits |
 | `steps/ui.py` | Selenium and API steps: result cells, panel checks, `/api/ds/query` |
 | `tests/login.py` | Log in, then confirm the session user through `/api/user` |
-| `tests/datasource_query.py` | `SELECT version()` in Explore, one result cell |
-| `tests/panel_graph.py` | Explore count (`c = 100`); dashboard panel with time macros |
+| `tests/datasource_query.py` | Explore queries: `SELECT version()` (one result cell) and a count (`c = 100`) |
+| `tests/dashboard_panel.py` | Dashboard time-series panel with the time macros |
 | `requirements/requirements.md` | SRS-102; regenerate `requirements.py` from it |
 
 Run it:
@@ -111,7 +111,7 @@ Some changes to this suite need matching changes outside `lts/grafana/`:
 - **A new or renamed option** (such as `--grafana-version`): add it to
   `lts_argparser` and `regression()` in `lts/regression.py`, pass it to this
   suite's `Feature` call, and document it under CLI Arguments in
-  `lts/README.md` and in the CLI table in `lts/AGENT.md`.
+  `lts/README.md` and in the CLI table in `lts/AGENTS.md`.
 - **A longer run time**: raise the wait timeouts in `steps/environment.py` if
   startup is slower, and `timeout_minutes` of `grafana` (60 minutes) in
   `.github/workflows/run-lts.yml`.

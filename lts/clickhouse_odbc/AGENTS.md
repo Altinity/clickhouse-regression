@@ -2,7 +2,7 @@
 
 This suite tests the [clickhouse-odbc] driver against a ClickHouse LTS image by
 building the driver and running all of its ctest targets. It follows the shared
-conventions in [../AGENT.md](../AGENT.md); debugging is in
+conventions in [../AGENTS.md](../AGENTS.md); debugging is in
 [../DEBUGGING.md](../DEBUGGING.md#clickhouse-odbc).
 
 ## How it works
@@ -19,7 +19,7 @@ every ctest target, and each target is reported as one scenario directly under
 |---|---|
 | `configs/Dockerfile` | Cached build stage and runtime stage |
 | `configs/runner.sh` | Starts ClickHouse, runs ctest with JUnit output |
-| `configs/diff.patch` | Fixes to upstream tests, including the parametrized suite's xfail patterns |
+| `configs/diff.patch` | Fixes to the driver's tests, including the parametrized suite's xfail patterns |
 | `feature.py` | Suite entry point: 28-target floor, SRS-100 requirements |
 | `requirements/requirements.md` | SRS-100; regenerate `requirements.py` from it |
 
@@ -46,10 +46,10 @@ python3 lts/regression.py --clickhouse docker://<image> --only "/lts/clickhouse-
 - **Retry git operations** in the build stage and keep
   `git config --system protocol.version 0`. The build clones many nested
   submodules, and GitHub refuses protocol v2 from Ubuntu 22.04's git 2.34.
-- **Write upstream xfail patterns with `:` for `.`**. The parametrized suite
+- **Write the parametrized suite's xfail patterns with `:` for `.`**. The parametrized suite
   is a TestFlows run, and TestFlows replaces `.` in test names, so a pattern
   like `13.26` silently matches nothing. `diff.patch` fixes the patterns
-  upstream shipped.
+  the driver project shipped.
 - **Start ClickHouse with `/entrypoint.sh`**, never `clickhouse server --daemon`.
 
 ## Changing the driver version
@@ -66,7 +66,8 @@ python3 lts/regression.py --clickhouse docker://<image> --only "/lts/clickhouse-
 
 - **Float32 parameter check**: the parametrized suite's `datatypes/Float32`
   check selects a Float32 column with the Float64 parameter `13.26`, which
-  ClickHouse correctly does not match. Upstream lists it as a known failure;
+  ClickHouse correctly does not match. The driver project lists it as a known
+  failure;
   it shows as XFail inside the parametrized target. It fails the same way on
   25.8.
 
@@ -112,7 +113,7 @@ Some changes to this suite need matching changes outside `lts/clickhouse_odbc/`:
 - **A new or renamed option** (such as `--odbc-release`): add it to
   `lts_argparser` and `regression()` in `lts/regression.py`, pass it to this
   suite's `Feature` call, and document it under CLI Arguments in
-  `lts/README.md` and in the CLI table in `lts/AGENT.md`.
+  `lts/README.md` and in the CLI table in `lts/AGENTS.md`.
 - **A longer run time**: raise `timeout` in `feature.py`, and `timeout_minutes`
   of `clickhouse_odbc` (90 minutes) in `.github/workflows/run-lts.yml`.
 - **A new kind of evidence file**: write it under

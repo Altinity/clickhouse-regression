@@ -6,12 +6,12 @@ Runs integration tests for third-party tools against ClickHouse LTS builds.
 
 | Suite | Target | Type | Status |
 |---|---|---|---|
-| `clickhouse_odbc/` | ClickHouse ODBC driver | Upstream tests (ctest) | Active |
+| `clickhouse_odbc/` | ClickHouse ODBC driver | Tool's test suite (ctest) | Active |
 | `superset/` | Apache Superset | Web UI | Active |
 | `grafana/` | Altinity clickhouse-grafana plugin | Web UI | Active |
-| `clickhouse_driver/` | clickhouse-driver (Python, native protocol) | Upstream tests | Active |
-| `clickhouse_sqlalchemy/` | clickhouse-sqlalchemy dialect | Upstream tests | Active |
-| `clickhouse_jdbc/` | clickhouse-jdbc module of clickhouse-java | Upstream tests | Active |
+| `clickhouse_driver/` | clickhouse-driver (Python, native protocol) | Tool's test suite | Active |
+| `clickhouse_sqlalchemy/` | clickhouse-sqlalchemy dialect | Tool's test suite | Active |
+| `clickhouse_jdbc/` | clickhouse-jdbc module of clickhouse-java | Tool's test suite | Active |
 | `dbeaver/` | JDBC driver bundled with DBeaver CE (DBeaver itself is not run) | Smoke checks | Active |
 
 Tableau is still tested by hand.
@@ -129,7 +129,8 @@ version check, comes from `--clickhouse-version` or from the image tag
 
 - `--jdbc-release <tag>` — clickhouse-java git tag (default `v0.9.9`). v0.9.0
   fails against 26.x servers (`Magic is not correct` while decompressing
-  results), on both Altinity and upstream images; v0.9.9 passes.
+  results), on both Altinity and `clickhouse/clickhouse-server` images; v0.9.9
+  passes.
 - `--jdbc-maven-args "<options>"` — extra options for `mvn verify`, for example
   to run one test class.
 
@@ -141,13 +142,13 @@ version check, comes from `--clickhouse-version` or from the image tag
 
 ## Test Structure
 
-See [AGENT.md](AGENT.md) for detailed conventions on requirements, test
+See [AGENTS.md](AGENTS.md) for detailed conventions on requirements, test
 scenarios, steps, and requirement-to-scenario mapping.
 
 ```
 lts/
 ├── README.md                 # This file
-├── AGENT.md                  # Conventions shared by all suites
+├── AGENTS.md                 # Conventions shared by all suites
 ├── DEBUGGING.md              # How to debug each suite's failures
 ├── regression.py             # Single, top-level orchestrator
 ├── steps/                    # Shared: runner containers, JUnit XML reporting,
@@ -161,7 +162,7 @@ lts/
 ├── clickhouse_jdbc/          # SRS-105
 ├── dbeaver/                  # SRS-106
 │   ├── AGENTS.md             # Rules specific to the suite
-│   ├── feature.py            # Calls lts.steps.upstream.run_upstream_tests
+│   ├── feature.py            # Calls lts.steps.tool_tests.run_tool_tests
 │   ├── requirements/         # SRS (.md + generated .py)
 │   └── configs/              # Dockerfile, runner.sh, and patches/, diff.patch or Smoke.java
 │
@@ -171,7 +172,7 @@ lts/
 │   ├── feature.py
 │   ├── requirements/
 │   ├── steps/                # environment.py (Compose), ui.py (Selenium + REST API)
-│   ├── tests/                # ui_smoke.py: driver, test connections, SQL Lab
+│   ├── tests/                # clickhouse_integration.py: driver, connections, SQL Lab
 │   └── configs/              # docker-compose.yml, Dockerfile.superset,
 │                             # init_schema.sql, TLS config and certificates
 └── grafana/                  # SRS-102
@@ -179,7 +180,7 @@ lts/
     ├── feature.py
     ├── requirements/
     ├── steps/                # environment.py (Compose), ui.py (Selenium + API)
-    ├── tests/                # login, datasource_query, panel_graph
+    ├── tests/                # login, datasource_query, dashboard_panel
     └── configs/              # docker-compose.yml, init_schema.sql,
                               # provisioning/, users.xml
 ```
@@ -195,7 +196,7 @@ suite folder, for example `lts/_instances/clickhouse_odbc/`.
   the logs of every Compose service, saved before teardown, in `logs/`
   (`<service>.log`, `compose-ps.log`, `compose-down.log`).
 - **clickhouse-odbc, clickhouse-driver, clickhouse-sqlalchemy,
-  clickhouse-jdbc, dbeaver**: every upstream test is reported as its own
+  clickhouse-jdbc, dbeaver**: every test in the tool's suite is reported as its own
   TestFlows scenario, for example
   `/lts/clickhouse-driver/tests/columns/test_datetime/DateTimeTimezonesTestCase/test_use_client_timezone`.
   The folder holds the JUnit XML (`junit.xml`, or `reports/` for
