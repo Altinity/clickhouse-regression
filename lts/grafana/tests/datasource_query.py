@@ -22,25 +22,8 @@ from lts.grafana.steps.ui import (
     select_datasource,
     open_explore_with_query,
     click_run_query,
-    get_query_result_text,
+    get_result_table,
 )
-
-
-def expected_version_from_image(clickhouse_image):
-    """Extract the expected ClickHouse version from the Docker image tag.
-
-    Strips the '0-' prefix and any non-numeric suffix like '.altinitytest'.
-    """
-    tag = clickhouse_image.rsplit(":", 1)[-1] if ":" in clickhouse_image else ""
-    if tag.startswith("0-"):
-        tag = tag[2:]
-    match = re.match(r"(\d+\.\d+\.\d+\.\d+)", tag)
-    if match:
-        return match.group(1)
-    match = re.match(r"(\d+\.\d+\.\d+)", tag)
-    if match:
-        return match.group(1)
-    return tag
 
 
 @TestScenario
@@ -52,8 +35,9 @@ def select_version_via_explore(self):
     """Open Grafana Explore with SELECT version(), run it via the UI,
     and verify the result matches the expected ClickHouse version."""
 
-    clickhouse_image = self.context.clickhouse_image
-    expected_version = expected_version_from_image(clickhouse_image)
+    # From --clickhouse-version or the image tag; None for a moving tag such
+    # as latest, which says nothing about the version.
+    expected_version = self.context.clickhouse_version
 
     with Given("a WebDriver connected to Selenium Grid"):
         driver = create_webdriver()
@@ -84,19 +68,19 @@ def select_version_via_explore(self):
     with And("I take a screenshot of the query results"):
         take_screenshot(driver=driver, name="explore_query_results")
 
-    with Then("the result should contain the ClickHouse version"):
-        result_text = get_query_result_text(driver=driver)
-        assert re.search(
-            r"\d+\.\d+\.\d+", result_text
-        ), f"No version pattern found in result: {result_text}"
-
+    with Then("the result is one cell holding the ClickHouse version"):
+        headers, cells = get_result_table(driver=driver)
+        assert len(cells) == 1, f"expected one result cell, got {cells}"
+        version = cells[0]
+        assert re.fullmatch(r"\d+\.\d+\.\d+(\.\d+)?(\.\w+)?", version), (
+            f"result cell is not a ClickHouse version: {version!r}"
+        )
         if expected_version:
-            assert (
-                expected_version in result_text
-            ), f"Expected version '{expected_version}' not found in result: {result_text}"
-            note(f"Version matches: {expected_version}")
+            assert version.startswith(expected_version), (
+                f"server version {version!r} does not match {expected_version!r}"
+            )
         else:
-            note(f"Version returned: {result_text}")
+            note(f"no expected version for this image, server reports {version}")
 
 
 @TestFeature

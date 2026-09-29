@@ -192,7 +192,13 @@ def all_datatypes_with_dot_separated_columns(
 
     with And("define expeced clickhouse result"):
         expected_iceberg_result = "1\t100\t1.5\t2.5\ttrue\t2020-01-01 13:00:00.000000\t2020-01-01 12:00:00.000000\t2020-01-01\ttest1\tbinary1\t10.5\t10\ttest1\t1.1\n2\t200\t2.5\t3.5\tfalse\t2020-01-02 13:00:00.000000\t2020-01-02 12:00:00.000000\t2020-01-02\ttest2\tbinary2\t20.5\t20\ttest2\t2.2\n3\t300\t3.5\t4.5\ttrue\t2020-01-03 13:00:00.000000\t2020-01-03 12:00:00.000000\t2020-01-03\ttest3\tbinary3\t30.5\t30\ttest3\t3.3\n4\t400\t4.5\t5.5\tfalse\t2020-01-04 13:00:00.000000\t2020-01-04 12:00:00.000000\t2020-01-04\ttest1\tbinary4\t40.5\t40\ttest1\t4.4\n5\t500\t5.5\t6.5\ttrue\t2020-01-05 13:00:00.000000\t2020-01-05 12:00:00.000000\t2020-01-05\ttest2\tbinary5\t50.5\t50\ttest2\t5.5"
-        expected_result_s3_table_function = "1\t100\t1.5\t2.5\ttrue\t2020-01-01 12:00:00.000000\t2020-01-01 12:00:00.000000\t2020-01-01\ttest1\tbinary1\t10.5\t1970-01-01 12:00:00.000000\t10\ttest1\t1.1\n2\t200\t2.5\t3.5\tfalse\t2020-01-02 12:00:00.000000\t2020-01-02 12:00:00.000000\t2020-01-02\ttest2\tbinary2\t20.5\t1970-01-01 13:00:00.000000\t20\ttest2\t2.2\n3\t300\t3.5\t4.5\ttrue\t2020-01-03 12:00:00.000000\t2020-01-03 12:00:00.000000\t2020-01-03\ttest3\tbinary3\t30.5\t1970-01-01 14:00:00.000000\t30\ttest3\t3.3\n4\t400\t4.5\t5.5\tfalse\t2020-01-04 12:00:00.000000\t2020-01-04 12:00:00.000000\t2020-01-04\ttest1\tbinary4\t40.5\t1970-01-01 15:00:00.000000\t40\ttest1\t4.4\n5\t500\t5.5\t6.5\ttrue\t2020-01-05 12:00:00.000000\t2020-01-05 12:00:00.000000\t2020-01-05\ttest2\tbinary5\t50.5\t1970-01-01 16:00:00.000000\t50\ttest2\t5.5"
+        # Parquet TIME is DateTime64 before ClickHouse #106019
+        # (`1970-01-01 12:00:00.000000`) and Time64 after it (`12:00:00.000000`).
+        # The epoch date in this string is only the prefix on time.column.
+        expected_result_s3_datetime64 = "1\t100\t1.5\t2.5\ttrue\t2020-01-01 12:00:00.000000\t2020-01-01 12:00:00.000000\t2020-01-01\ttest1\tbinary1\t10.5\t1970-01-01 12:00:00.000000\t10\ttest1\t1.1\n2\t200\t2.5\t3.5\tfalse\t2020-01-02 12:00:00.000000\t2020-01-02 12:00:00.000000\t2020-01-02\ttest2\tbinary2\t20.5\t1970-01-01 13:00:00.000000\t20\ttest2\t2.2\n3\t300\t3.5\t4.5\ttrue\t2020-01-03 12:00:00.000000\t2020-01-03 12:00:00.000000\t2020-01-03\ttest3\tbinary3\t30.5\t1970-01-01 14:00:00.000000\t30\ttest3\t3.3\n4\t400\t4.5\t5.5\tfalse\t2020-01-04 12:00:00.000000\t2020-01-04 12:00:00.000000\t2020-01-04\ttest1\tbinary4\t40.5\t1970-01-01 15:00:00.000000\t40\ttest1\t4.4\n5\t500\t5.5\t6.5\ttrue\t2020-01-05 12:00:00.000000\t2020-01-05 12:00:00.000000\t2020-01-05\ttest2\tbinary5\t50.5\t1970-01-01 16:00:00.000000\t50\ttest2\t5.5"
+        expected_result_s3_time64 = expected_result_s3_datetime64.replace(
+            "1970-01-01 ", ""
+        )
 
     with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
@@ -234,7 +240,10 @@ def all_datatypes_with_dot_separated_columns(
                 ("input_format_parquet_use_native_reader_v3", "1"),
             ],
         )
-        assert result.output == expected_result_s3_table_function, error()
+        assert result.output in (
+            expected_result_s3_datetime64,
+            expected_result_s3_time64,
+        ), error()
 
 
 @TestScenario

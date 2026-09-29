@@ -1,3 +1,7 @@
+> **Automated:** this is now run by the `lts/clickhouse_driver` TestFlows suite, see
+> [lts/README.md](../../../lts/README.md). The instructions below are for
+> running it by hand.
+
 # Running clickhouse-driver tests locally
 
 clickhouse-driver: `https://github.com/mymarilyn/clickhouse-driver`

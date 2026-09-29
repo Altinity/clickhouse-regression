@@ -4,8 +4,11 @@ import os
 
 from testflows.core import *
 
+from lts.steps.docker import reset_suite_results_dir
+
 from lts.superset.requirements.requirements import (
     SRS_101_Apache_Superset_ClickHouse_Integration_LTS_Testing,
+    RQ_SRS_101_Superset_Environment,
 )
 from lts.superset.steps.environment import (
     superset_environment,
@@ -17,6 +20,7 @@ from lts.superset.steps.environment import (
 @TestFeature
 @Name("superset")
 @Specifications(SRS_101_Apache_Superset_ClickHouse_Integration_LTS_Testing)
+@Requirements(RQ_SRS_101_Superset_Environment("1.0"))
 def feature(
     self,
     superset_version="4.1.1",
@@ -24,6 +28,7 @@ def feature(
     selenium_version="4.40.0",
 ):
     """Run Superset integration tests against a ClickHouse image."""
+    reset_suite_results_dir("superset")
     suite_dir = os.path.dirname(os.path.abspath(__file__))
     configs_dir = os.path.join(suite_dir, "configs")
     clickhouse_image = self.context.clickhouse_image

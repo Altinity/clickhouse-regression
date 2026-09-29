@@ -1,0 +1,261 @@
+name: 🧰 Run LTS
+run-name: 🧰 ${{ inputs.custom_run_name || format('{0} | LTS | {1}', inputs.version || inputs.package, inputs.suite) }}
+  ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
+
+# Runs the LTS client-tool suites in lts/ (see lts/README.md) against a
+# ClickHouse Docker image. Each suite runs as its own job through
+# reusable-suite.yml, so its report, logs, JUnit XML and screenshots are
+# uploaded to their own folder, .../lts/<suite>/, like any other suite.
+# The LTS runners are x86-only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "📦 ClickHouse Docker image, as docker://<image>:<tag>. The runners need an Ubuntu-based (not Alpine) image."
+        required: true
+        type: string
+        default: docker://altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest
+      version:
+        description: "🎯 Expected version, for example 26.3.13.10001. Empty: read it from the image."
+        type: string
+        required: false
+        default: ""
+      suite:
+        description: "🧪 LTS suite to run. 'superset' runs it once per Python driver."
+        type: choice
+        options:
+          - all
+          - clickhouse-odbc
+          - superset
+          - grafana
+          - clickhouse-driver
+          - clickhouse-sqlalchemy
+          - clickhouse-jdbc
+          - dbeaver
+        required: true
+        default: all
+      artifacts:
+        description: "🏺 Artifact S3 bucket"
+        type: choice
+        options:
+          - hetzner
+      output_format:
+        description: "📜 Testflows output style."
+        type: choice
+        options:
+          - nice-new-fails
+          - brisk-new-fails
+          - plain-new-fails
+          - new-fails
+          - classic
+          - nice
+          - fails
+          - short
+          - raw
+      ref:
+        description: "🏷 Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      extra_args:
+        description: "🎛️ Extra lts/regression.py arguments, for example '--jdbc-release v0.9.8 --grafana-version 13.2.2'. Default: none."
+        type: string
+        default: ""
+      custom_run_name:
+        description: "📝 Custom run name (optional)"
+        required: false
+  workflow_call:
+    inputs:
+      package:
+        description: "📦 ClickHouse Docker image, as docker://<image>:<tag>"
+        type: string
+        required: true
+      version:
+        description: "🎯 Expected version. Empty: read it from the image."
+        type: string
+        required: false
+        default: ""
+      suite:
+        description: "🧪 LTS suite to run, or all"
+        type: string
+        required: false
+        default: all
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: string
+        required: false
+        default: hetzner
+      output_format:
+        description: "📜 Testflows output style."
+        type: string
+        required: false
+        default: nice-new-fails
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        required: false
+        default: ""
+      extra_args:
+        description: "🎛️ Extra lts/regression.py arguments."
+        type: string
+        required: false
+        default: ""
+      custom_run_name:
+        description: "📝 Custom run name (optional)"
+        type: string
+        required: false
+
+jobs:
+  clickhouse_odbc:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse-odbc' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_clickhouse_odbc
+      storage_path: /clickhouse-odbc
+      regression_args: '--only "/lts/clickhouse-odbc/*"'
+      # The driver build is cached per runner; a cold build takes longer.
+      timeout_minutes: 90
+      runner_arch: x86
+    secrets: inherit
+
+  superset_clickhouse_connect:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'superset' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_superset_clickhouse_connect
+      storage_path: /superset/clickhouse-connect
+      regression_args: '--only "/lts/superset/*" --clickhouse-driver clickhouse-connect'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit
+
+  superset_clickhouse_sqlalchemy:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'superset' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_superset_clickhouse_sqlalchemy
+      storage_path: /superset/clickhouse-sqlalchemy
+      regression_args: '--only "/lts/superset/*" --clickhouse-driver clickhouse-sqlalchemy'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit
+
+  grafana:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'grafana' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_grafana
+      storage_path: /grafana
+      regression_args: '--only "/lts/grafana/*"'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit
+
+  clickhouse_driver:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse-driver' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_clickhouse_driver
+      storage_path: /clickhouse-driver
+      regression_args: '--only "/lts/clickhouse-driver/*"'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit
+
+  clickhouse_sqlalchemy:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse-sqlalchemy' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_clickhouse_sqlalchemy
+      storage_path: /clickhouse-sqlalchemy
+      regression_args: '--only "/lts/clickhouse-sqlalchemy/*"'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit
+
+  clickhouse_jdbc:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse-jdbc' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_clickhouse_jdbc
+      storage_path: /clickhouse-jdbc
+      regression_args: '--only "/lts/clickhouse-jdbc/*"'
+      # Maven downloads its dependencies on a runner's first run.
+      timeout_minutes: 120
+      runner_arch: x86
+    secrets: inherit
+
+  dbeaver:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'dbeaver' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_dbeaver
+      storage_path: /dbeaver
+      regression_args: '--only "/lts/dbeaver/*"'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit

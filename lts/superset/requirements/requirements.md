@@ -17,29 +17,28 @@
         * 3.2.4 [RQ.SRS-101.Superset.DatabaseConnection.NativeProtocol](#rqsrs-101supersetdatabaseconnectionnativeprotocol)
     * 3.3 [SQL Lab](#sql-lab)
         * 3.3.1 [RQ.SRS-101.Superset.SQLLab.QueryExecution](#rqsrs-101supersetsqllabqueryexecution)
-        * 3.3.2 [RQ.SRS-101.Superset.SQLLab.SchemaExplorer](#rqsrs-101supersetsqllabschemaexplorer)
-    * 3.4 [Charts](#charts)
-        * 3.4.1 [RQ.SRS-101.Superset.Charts.Create](#rqsrs-101supersetchartscreate)
-        * 3.4.2 [RQ.SRS-101.Superset.Charts.DataTypes](#rqsrs-101supersetchartsdatatypes)
-    * 3.5 [Dashboards](#dashboards)
-        * 3.5.1 [RQ.SRS-101.Superset.Dashboards.Create](#rqsrs-101supersetdashboardscreate)
-        * 3.5.2 [RQ.SRS-101.Superset.Dashboards.Refresh](#rqsrs-101supersetdashboardsrefresh)
-    * 3.6 [Compatibility](#compatibility)
-        * 3.6.1 [RQ.SRS-101.Superset.Compatibility.LTS](#rqsrs-101supersetcompatibilitylts)
+    * 3.4 [Compatibility](#compatibility)
+        * 3.4.1 [RQ.SRS-101.Superset.Compatibility.LTS](#rqsrs-101supersetcompatibilitylts)
+* 4 [Not Yet Covered](#not-yet-covered)
 
 ## Introduction
 
 This SRS covers the testing requirements for Apache Superset integration with
 ClickHouse when running against Altinity ClickHouse LTS builds. The tests verify
-connectivity (via both `clickhouse-connect` and `clickhouse-sqlalchemy` drivers),
-SQL Lab functionality, chart/dashboard creation, and secure (TLS) connections.
+that Superset loads the selected ClickHouse driver, connects to ClickHouse over
+HTTP, HTTPS and, with `clickhouse-sqlalchemy`, the native protocol, and runs
+queries in SQL Lab with exact expected results.
+
+One run uses one driver, selected with `--clickhouse-driver`. Covering both
+drivers takes one run per driver.
 
 ## Terminology
 
 - **Superset** — Apache Superset, an open-source data exploration and visualization
   platform.
 - **clickhouse-connect** — ClickHouse Python driver using the HTTP interface.
-- **clickhouse-sqlalchemy** — SQLAlchemy dialect for ClickHouse.
+- **clickhouse-sqlalchemy** — SQLAlchemy dialect for ClickHouse, supporting the
+  HTTP and native protocols.
 - **LTS** — Long-Term Support ClickHouse release.
 
 ## Requirements
@@ -49,29 +48,30 @@ SQL Lab functionality, chart/dashboard creation, and secure (TLS) connections.
 #### RQ.SRS-101.Superset.Environment
 version: 1.0
 
-The test environment SHALL deploy Apache Superset and ClickHouse using
-Docker Compose with all required services (superset, superset-init,
-superset-worker, clickhouse).
+The test environment SHALL deploy Apache Superset, ClickHouse and a Selenium
+Grid node using Docker Compose (services `superset`, `clickhouse` and
+`selenium`), with ClickHouse serving HTTP, HTTPS and the native protocol.
 
 #### RQ.SRS-101.Superset.Environment.ClickHouseConnect
 version: 1.0
 
-The environment SHALL support configuring Superset with the `clickhouse-connect`
-Python driver as the database backend.
+When built with the `clickhouse-connect` driver, Superset SHALL list the
+ClickHouse Connect database engine as available.
 
 #### RQ.SRS-101.Superset.Environment.ClickHouseSQLAlchemy
 version: 1.0
 
-The environment SHALL support configuring Superset with the `clickhouse-sqlalchemy`
-Python driver as the database backend.
+When built with the `clickhouse-sqlalchemy` driver, Superset SHALL list the
+`clickhouse` database engine as available.
 
 ### Database Connection
 
 #### RQ.SRS-101.Superset.DatabaseConnection
 version: 1.0
 
-Superset SHALL successfully add a ClickHouse database connection and verify
-it via the "Test Connection" button.
+Superset SHALL add a ClickHouse database connection, show it in the Databases
+list, and report the connection as working through its test-connection API,
+which is what the "Test Connection" button in the database form calls.
 
 #### RQ.SRS-101.Superset.DatabaseConnection.HTTP
 version: 1.0
@@ -87,54 +87,33 @@ provided TLS certificates.
 #### RQ.SRS-101.Superset.DatabaseConnection.NativeProtocol
 version: 1.0
 
-Superset SHALL connect to ClickHouse over the native protocol (port 9000/9440)
-when using a driver that supports it.
+When using the `clickhouse-sqlalchemy` driver, Superset SHALL connect to
+ClickHouse over the native protocol (port 9000). `clickhouse-connect` has no
+native protocol support, so this is not tested with it.
 
 ### SQL Lab
 
 #### RQ.SRS-101.Superset.SQLLab.QueryExecution
 version: 1.0
 
-Superset SQL Lab SHALL execute queries against ClickHouse and display results
-correctly.
-
-#### RQ.SRS-101.Superset.SQLLab.SchemaExplorer
-version: 1.0
-
-Superset SQL Lab schema explorer SHALL list ClickHouse databases, tables,
-and columns.
-
-### Charts
-
-#### RQ.SRS-101.Superset.Charts.Create
-version: 1.0
-
-Superset SHALL allow creating charts from ClickHouse datasets.
-
-#### RQ.SRS-101.Superset.Charts.DataTypes
-version: 1.0
-
-Superset charts SHALL correctly render data from ClickHouse columns of
-various types (numeric, string, date/time, etc.).
-
-### Dashboards
-
-#### RQ.SRS-101.Superset.Dashboards.Create
-version: 1.0
-
-Superset SHALL allow creating dashboards that include charts backed by
-ClickHouse data.
-
-#### RQ.SRS-101.Superset.Dashboards.Refresh
-version: 1.0
-
-Superset dashboards SHALL support manual and auto-refresh of ClickHouse-backed
-charts.
+Superset SQL Lab SHALL execute queries against ClickHouse and display the
+exact results: for the seeded `lts.events` table, one row per country with
+200 events each and the expected average amount.
 
 ### Compatibility
 
 #### RQ.SRS-101.Superset.Compatibility.LTS
 version: 1.0
 
-All Superset features SHALL be verified to work against the current Altinity
+The features above SHALL be verified to work against the current Altinity
 ClickHouse LTS build.
+
+## Not Yet Covered
+
+These are part of normal Superset use but have no tests yet, so they are not
+listed as requirements:
+
+- the SQL Lab schema explorer listing ClickHouse databases, tables and columns;
+- creating charts from ClickHouse datasets, and rendering columns of the
+  common types;
+- creating dashboards with ClickHouse-backed charts, and refreshing them.

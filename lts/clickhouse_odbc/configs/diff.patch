@@ -472,3 +472,29 @@ index 4993829..7131706 100644
              with Then(f"the result is {expected}", flags=TE):
                  assert repr(rows) == expected, error("result did not match")
  
+diff --git a/test/parameterized/regression.py b/test/parameterized/regression.py
+--- a/test/parameterized/regression.py
++++ b/test/parameterized/regression.py
+@@ -43,7 +43,8 @@
+ 
+         "/regression/parameterized/*/datatypes/Float32/"
+         "PyODBC connection/parameters/table with a column of data type Float32/"
+-        "*/I select value 13.26/*":
++        # TestFlows replaces "." in test names, so ":" matches it in these patterns.
++        "*/I select value 13:26/*":
+             [(Fail, "Selecting Float32 values is not supported")],
+ 
+         "/regression/parameterized/*/datatypes/Float:/"
+@@ -62,10 +63,10 @@
+                 (Fail, "UInt64 large value not supported")
+             ],
+ 
+-        "*/I select value 9999999999999999999999999999999999.9999":
++        "*/I select value 9999999999999999999999999999999999:9999":
+             [(Fail, "Decimal128 internal overflow")],
+ 
+-        "*/I select value -9999999999999999999999999999999999.9999":
++        "*/I select value -9999999999999999999999999999999999:9999":
+             [(Fail, "Decimal128 internal overflow")],
+ 
+         "*/I run 'SELECT isNull(?)' with '印' parameter":
