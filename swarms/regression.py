@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+import random
 import sys
 from testflows.core import *
 
@@ -28,7 +30,7 @@ def argparser(parser):
         action="store",
         type=int,
         default=None,
-        help="seed for sampling the join and union combinations, default: random (printed in the log)",
+        help="seed for sampling the join and union combinations, default: $GITHUB_RUN_ID in CI, otherwise random (printed in the log)",
     )
 
 from swarms.requirements.requirements import *
@@ -103,7 +105,13 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    self.context.seed = seed
+    # One seed per CI workflow run: every job of the run, and a rerun of
+    # any of them, samples the same join and union combinations.
+    if seed is None:
+        seed = os.environ.get("GITHUB_RUN_ID")
+    if seed is None:
+        seed = random.SystemRandom().randrange(2**32)
+    self.context.seed = int(seed)
 
     minio_root_user = minio_args["minio_root_user"].value
     minio_root_password = minio_args["minio_root_password"].value
