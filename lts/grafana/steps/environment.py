@@ -7,7 +7,12 @@ import urllib.request
 
 from testflows.core import *
 
-from lts.steps.docker import compose_command, compose_down, save_compose_logs, suite_results_dir
+from lts.steps.docker import (
+    compose_command,
+    compose_down,
+    save_compose_logs,
+    suite_results_dir,
+)
 
 # Unique per run, so that two runs on one Docker host neither share nor tear
 # down each other's containers, networks and volumes.

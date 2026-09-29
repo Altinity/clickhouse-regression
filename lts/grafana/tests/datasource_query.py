@@ -72,13 +72,13 @@ def select_version_via_explore(self):
         headers, cells = get_result_table(driver=driver)
         assert len(cells) == 1, f"expected one result cell, got {cells}"
         version = cells[0]
-        assert re.fullmatch(r"\d+\.\d+\.\d+(\.\d+)?(\.\w+)?", version), (
-            f"result cell is not a ClickHouse version: {version!r}"
-        )
+        assert re.fullmatch(
+            r"\d+\.\d+\.\d+(\.\d+)?(\.\w+)?", version
+        ), f"result cell is not a ClickHouse version: {version!r}"
         if expected_version:
-            assert version.startswith(expected_version), (
-                f"server version {version!r} does not match {expected_version!r}"
-            )
+            assert version.startswith(
+                expected_version
+            ), f"server version {version!r} does not match {expected_version!r}"
         else:
             note(f"no expected version for this image, server reports {version}")
 

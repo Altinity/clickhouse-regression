@@ -146,7 +146,9 @@ def verify_logged_in(self, driver, username="admin", timeout=30):
 
     WebDriverWait(driver, timeout).until(
         lambda d: "/login" not in d.current_url
-        and d.find_elements(By.CSS_SELECTOR, "[data-testid^='data-testid navigation mega-menu']")
+        and d.find_elements(
+            By.CSS_SELECTOR, "[data-testid^='data-testid navigation mega-menu']"
+        )
     )
 
     response = driver.execute_async_script(
@@ -158,7 +160,9 @@ def verify_logged_in(self, driver, username="admin", timeout=30):
         """
     )
     user = json.loads(response)
-    assert user.get("login") == username, f"session is not logged in as {username}: {response[:500]}"
+    assert (
+        user.get("login") == username
+    ), f"session is not logged in as {username}: {response[:500]}"
     note(f"logged in as {user['login']}, current URL: {driver.current_url}")
 
 
@@ -356,7 +360,9 @@ def _visible_error(driver):
     """
     from selenium.webdriver.common.by import By
 
-    for alert in driver.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid Alert error']"):
+    for alert in driver.find_elements(
+        By.CSS_SELECTOR, "[data-testid='data-testid Alert error']"
+    ):
         if alert.is_displayed() and alert.text.strip():
             return alert.text.strip()
     return None
@@ -372,14 +378,18 @@ def click_run_query(self, driver, timeout=60):
 
     run_btn = WebDriverWait(driver, 30).until(
         EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, "button[data-testid='data-testid RefreshPicker run button']")
+            (
+                By.CSS_SELECTOR,
+                "button[data-testid='data-testid RefreshPicker run button']",
+            )
         )
     )
     run_btn.click()
     note("Clicked Run query button")
 
     WebDriverWait(driver, timeout).until(
-        lambda d: d.find_elements(By.CSS_SELECTOR, "[role='gridcell']") or _visible_error(d)
+        lambda d: d.find_elements(By.CSS_SELECTOR, "[role='gridcell']")
+        or _visible_error(d)
     )
     error = _visible_error(driver)
     if error:
@@ -441,8 +451,14 @@ def get_result_table(self, driver):
     """
     from selenium.webdriver.common.by import By
 
-    headers = [e.text.strip() for e in driver.find_elements(By.CSS_SELECTOR, "[role='columnheader']")]
-    cells = [e.text.strip() for e in driver.find_elements(By.CSS_SELECTOR, "[role='gridcell']")]
+    headers = [
+        e.text.strip()
+        for e in driver.find_elements(By.CSS_SELECTOR, "[role='columnheader']")
+    ]
+    cells = [
+        e.text.strip()
+        for e in driver.find_elements(By.CSS_SELECTOR, "[role='gridcell']")
+    ]
     note(f"Result table: headers={headers} cells={cells[:20]}")
     if not cells:
         take_screenshot(driver=driver, name="query_result_missing")
@@ -461,7 +477,9 @@ def verify_panel_rendered(self, driver, title, series, timeout=30):
     from selenium.webdriver.support.ui import WebDriverWait
 
     header = WebDriverWait(driver, timeout).until(
-        lambda d: d.find_element(By.CSS_SELECTOR, f"[data-testid='data-testid Panel header {title}']")
+        lambda d: d.find_element(
+            By.CSS_SELECTOR, f"[data-testid='data-testid Panel header {title}']"
+        )
     )
     panel = driver.execute_script(
         "return arguments[0].closest('[data-viz-panel-key]') || arguments[0].parentElement.parentElement",
@@ -469,22 +487,31 @@ def verify_panel_rendered(self, driver, title, series, timeout=30):
     )
 
     def state(_):
-        if panel.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid Panel status error']"):
+        if panel.find_elements(
+            By.CSS_SELECTOR, "[data-testid='data-testid Panel status error']"
+        ):
             return "error"
-        if panel.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid xy-canvas']"):
+        if panel.find_elements(
+            By.CSS_SELECTOR, "[data-testid='data-testid xy-canvas']"
+        ):
             return "drawn"
         return None
 
     result = WebDriverWait(driver, timeout).until(state)
     if result == "error":
         messages = [
-            e.text for e in panel.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid Panel data error message']")
+            e.text
+            for e in panel.find_elements(
+                By.CSS_SELECTOR, "[data-testid='data-testid Panel data error message']"
+            )
         ]
         fail(f"panel '{title}' shows an error: {messages or panel.text}")
 
     legend = [
         e.text.strip()
-        for e in panel.find_elements(By.CSS_SELECTOR, "[data-testid^='data-testid VizLegend series']")
+        for e in panel.find_elements(
+            By.CSS_SELECTOR, "[data-testid^='data-testid VizLegend series']"
+        )
     ]
     assert series in legend, f"panel '{title}' legend {legend} has no series '{series}'"
     note(f"panel '{title}' drew series {legend}")
@@ -523,7 +550,9 @@ def query_datasource(self, driver, target, time_from="now-24h", time_to="now"):
     for frame in result.get("frames", []):
         names = [field["name"] for field in frame["schema"]["fields"]]
         frames.append(dict(zip(names, frame["data"]["values"])))
-    note(f"/api/ds/query returned {[{k: len(v) for k, v in f.items()} for f in frames]}")
+    note(
+        f"/api/ds/query returned {[{k: len(v) for k, v in f.items()} for f in frames]}"
+    )
     return frames
 
 
@@ -548,7 +577,10 @@ def timeseries_target(query, refid="A", datasource_uid="clickhouse-direct"):
         "intervalFactor": 1,
         "intervalMs": 60000,
         "maxDataPoints": 1000,
-        "datasource": {"type": "vertamedia-clickhouse-datasource", "uid": datasource_uid},
+        "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": datasource_uid,
+        },
     }
 
 
