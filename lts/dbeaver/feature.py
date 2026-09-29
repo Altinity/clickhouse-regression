@@ -82,7 +82,10 @@ def feature(self, dbeaver_version="26.2.1", timeout=1800):
         suite="dbeaver",
         configs_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs"),
         build_args={"CLICKHOUSE_IMAGE": self.context.clickhouse_image},
-        env={"DRIVER_VERSION": driver_version, "HTTPCLIENT_VERSION": httpclient_version},
+        env={
+            "DRIVER_VERSION": driver_version,
+            "HTTPCLIENT_VERSION": httpclient_version,
+        },
         mounts={"lts-maven-cache": "/root/.m2"},
         timeout=timeout,
         # Smoke.java always reports all 18 checks.

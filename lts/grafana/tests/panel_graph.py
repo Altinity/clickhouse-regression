@@ -52,7 +52,9 @@ def explore_count_query(self):
 
     with When("I open Explore with a count query"):
         open_explore_with_query(
-            driver=driver, query="SELECT count() AS c FROM default.test_grafana", format="table"
+            driver=driver,
+            query="SELECT count() AS c FROM default.test_grafana",
+            format="table",
         )
 
     with And("I click Run query"):
@@ -95,7 +97,9 @@ def dashboard_time_series_macros(self):
         skip_password_change(driver=driver)
 
     with When("I create a dashboard with a time-series panel using the macros"):
-        uid = create_dashboard_with_timeseries_panel(driver=driver, title=title, target=target)
+        uid = create_dashboard_with_timeseries_panel(
+            driver=driver, title=title, target=target
+        )
 
     with And("I open the dashboard"):
         navigate_to_dashboard(driver=driver, uid=uid)
@@ -110,11 +114,17 @@ def dashboard_time_series_macros(self):
         frames = query_datasource(driver=driver, target=target)
         assert len(frames) == 1, f"expected one data frame, got {len(frames)}"
         buckets, counts = frames[0]["t"], frames[0]["cnt"]
-        assert sum(counts) == SEEDED_ROWS, f"bucket counts {counts} do not add up to {SEEDED_ROWS}"
+        assert (
+            sum(counts) == SEEDED_ROWS
+        ), f"bucket counts {counts} do not add up to {SEEDED_ROWS}"
         assert buckets == sorted(buckets), "time buckets are not in order"
-        assert all(t % 60000 == 0 for t in buckets), f"buckets are not whole minutes: {buckets[:5]}"
+        assert all(
+            t % 60000 == 0 for t in buckets
+        ), f"buckets are not whole minutes: {buckets[:5]}"
         # 100 rows every 10 seconds span about 17 minutes.
-        assert 15 <= len(buckets) <= 20, f"expected about 17 one-minute buckets, got {len(buckets)}"
+        assert (
+            15 <= len(buckets) <= 20
+        ), f"expected about 17 one-minute buckets, got {len(buckets)}"
 
 
 @TestFeature

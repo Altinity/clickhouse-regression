@@ -41,8 +41,14 @@ from lts.superset.steps.ui import (
 # The Superset engine each --clickhouse-driver choice provides, and the
 # requirement that checks it.
 DRIVER_ENGINES = {
-    "clickhouse-connect": ("clickhousedb", RQ_SRS_101_Superset_Environment_ClickHouseConnect),
-    "clickhouse-sqlalchemy": ("clickhouse", RQ_SRS_101_Superset_Environment_ClickHouseSQLAlchemy),
+    "clickhouse-connect": (
+        "clickhousedb",
+        RQ_SRS_101_Superset_Environment_ClickHouseConnect,
+    ),
+    "clickhouse-sqlalchemy": (
+        "clickhouse",
+        RQ_SRS_101_Superset_Environment_ClickHouseSQLAlchemy,
+    ),
 }
 
 # init_schema.sql inserts 1000 rows with country = number % 5 (US, DE, FR,
@@ -64,9 +70,9 @@ def driver_engine_available(self):
 
     with Then(f"Superset lists the {engine} engine with a driver"):
         engines = available_database_engines()
-        assert engines.get(engine), (
-            f"engine {engine} for {self.context.clickhouse_driver} is not available: {engines}"
-        )
+        assert engines.get(
+            engine
+        ), f"engine {engine} for {self.context.clickhouse_driver} is not available: {engines}"
 
 
 @TestScenario
@@ -183,5 +189,7 @@ def feature(self):
     if self.context.clickhouse_driver == "clickhouse-sqlalchemy":
         Scenario(run=test_connection_native)
     else:
-        note("clickhouse-connect has no native protocol support; native connection not tested")
+        note(
+            "clickhouse-connect has no native protocol support; native connection not tested"
+        )
     Scenario(run=ui_clickhouse_smoke)

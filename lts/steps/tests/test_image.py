@@ -7,7 +7,11 @@ Run from the repository root:
 
 import unittest
 
-from lts.steps.image import check_supported_image, clickhouse_version_from_image, split_image
+from lts.steps.image import (
+    check_supported_image,
+    clickhouse_version_from_image,
+    split_image,
+)
 
 
 class ImageTestCase(unittest.TestCase):
@@ -18,7 +22,11 @@ class ImageTestCase(unittest.TestCase):
                 "0-26.3.13.10001.altinitytest",
                 None,
             ),
-            "clickhouse/clickhouse-server": ("clickhouse/clickhouse-server", None, None),
+            "clickhouse/clickhouse-server": (
+                "clickhouse/clickhouse-server",
+                None,
+                None,
+            ),
             "registry.example:5000/team/clickhouse": (
                 "registry.example:5000/team/clickhouse",
                 None,
@@ -61,10 +69,14 @@ class ImageTestCase(unittest.TestCase):
 
     def test_alpine_is_rejected(self):
         self.assertIsNotNone(
-            check_supported_image("altinityinfra/clickhouse-server:0-26.3.13.10001.altinitystable-alpine")
+            check_supported_image(
+                "altinityinfra/clickhouse-server:0-26.3.13.10001.altinitystable-alpine"
+            )
         )
         self.assertIsNone(
-            check_supported_image("altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest")
+            check_supported_image(
+                "altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest"
+            )
         )
 
 

@@ -9,44 +9,44 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_103_ClickHouseDriver_UpstreamTests = Requirement(
-    name='RQ.SRS-103.ClickHouseDriver.UpstreamTests',
-    version='1.0',
+    name="RQ.SRS-103.ClickHouseDriver.UpstreamTests",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The clickhouse-driver upstream test suite, at the tested release tag and with the\n'
-        'patches in `lts/clickhouse_driver/configs/patches`, SHALL pass against a\n'
-        'ClickHouse server started from the LTS image, except for failures listed as\n'
-        'known issues.\n'
-        '\n'
+        "The clickhouse-driver upstream test suite, at the tested release tag and with the\n"
+        "patches in `lts/clickhouse_driver/configs/patches`, SHALL pass against a\n"
+        "ClickHouse server started from the LTS image, except for failures listed as\n"
+        "known issues.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.1.1'
+    num="3.1.1",
 )
 
 RQ_SRS_103_ClickHouseDriver_Compatibility_LTS = Requirement(
-    name='RQ.SRS-103.ClickHouseDriver.Compatibility.LTS',
-    version='1.0',
+    name="RQ.SRS-103.ClickHouseDriver.Compatibility.LTS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'clickhouse-driver SHALL be verified to work against the current Altinity\n'
-        'ClickHouse LTS build.\n'
-        '\n'
-        '[clickhouse-driver]: https://github.com/mymarilyn/clickhouse-driver\n'
+        "clickhouse-driver SHALL be verified to work against the current Altinity\n"
+        "ClickHouse LTS build.\n"
+        "\n"
+        "[clickhouse-driver]: https://github.com/mymarilyn/clickhouse-driver\n"
     ),
     link=None,
     level=3,
-    num='3.2.1'
+    num="3.2.1",
 )
 
 SRS_103_ClickHouse_Python_Driver_clickhouse_driver_LTS_Testing = Specification(
-    name='SRS-103 ClickHouse Python Driver (clickhouse-driver) LTS Testing',
+    name="SRS-103 ClickHouse Python Driver (clickhouse-driver) LTS Testing",
     description=None,
     author=None,
     date=None,
@@ -62,19 +62,21 @@ SRS_103_ClickHouse_Python_Driver_clickhouse_driver_LTS_Testing = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Introduction', level=1, num='1'),
-        Heading(name='Terminology', level=1, num='2'),
-        Heading(name='Requirements', level=1, num='3'),
-        Heading(name='Upstream Tests', level=2, num='3.1'),
-        Heading(name='RQ.SRS-103.ClickHouseDriver.UpstreamTests', level=3, num='3.1.1'),
-        Heading(name='Compatibility', level=2, num='3.2'),
-        Heading(name='RQ.SRS-103.ClickHouseDriver.Compatibility.LTS', level=3, num='3.2.1'),
+        Heading(name="Introduction", level=1, num="1"),
+        Heading(name="Terminology", level=1, num="2"),
+        Heading(name="Requirements", level=1, num="3"),
+        Heading(name="Upstream Tests", level=2, num="3.1"),
+        Heading(name="RQ.SRS-103.ClickHouseDriver.UpstreamTests", level=3, num="3.1.1"),
+        Heading(name="Compatibility", level=2, num="3.2"),
+        Heading(
+            name="RQ.SRS-103.ClickHouseDriver.Compatibility.LTS", level=3, num="3.2.1"
         ),
+    ),
     requirements=(
         RQ_SRS_103_ClickHouseDriver_UpstreamTests,
         RQ_SRS_103_ClickHouseDriver_Compatibility_LTS,
-        ),
-    content=r'''
+    ),
+    content=r"""
 # SRS-103 ClickHouse Python Driver (clickhouse-driver) LTS Testing
 # Software Requirements Specification
 
@@ -120,5 +122,5 @@ clickhouse-driver SHALL be verified to work against the current Altinity
 ClickHouse LTS build.
 
 [clickhouse-driver]: https://github.com/mymarilyn/clickhouse-driver
-'''
+""",
 )
