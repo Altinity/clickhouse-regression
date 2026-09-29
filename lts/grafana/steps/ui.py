@@ -146,7 +146,9 @@ def verify_logged_in(self, driver, username="admin", timeout=30):
 
     WebDriverWait(driver, timeout).until(
         lambda d: "/login" not in d.current_url
-        and d.find_elements(By.CSS_SELECTOR, "[data-testid^='data-testid navigation mega-menu']")
+        and d.find_elements(
+            By.CSS_SELECTOR, "[data-testid^='data-testid navigation mega-menu']"
+        )
     )
 
     response = driver.execute_async_script(
@@ -158,7 +160,9 @@ def verify_logged_in(self, driver, username="admin", timeout=30):
         """
     )
     user = json.loads(response)
-    assert user.get("login") == username, f"session is not logged in as {username}: {response[:500]}"
+    assert (
+        user.get("login") == username
+    ), f"session is not logged in as {username}: {response[:500]}"
     note(f"logged in as {user['login']}, current URL: {driver.current_url}")
 
 
@@ -192,111 +196,6 @@ def select_datasource(self, driver, datasource_name):
     )
     ds_link.click()
     note(f"Selected datasource: {datasource_name}")
-
-
-@TestStep(When)
-def click_explore_datasource(self, driver):
-    """Click the Explore button on a datasource settings page."""
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-
-    wait = WebDriverWait(driver, 30)
-    explore_link = wait.until(
-        EC.element_to_be_clickable(
-            (
-                By.CSS_SELECTOR,
-                "a[href*='/explore'][data-testid*='explore'], " "a[href*='/explore']",
-            )
-        )
-    )
-    explore_link.click()
-    time.sleep(2)
-    note("Clicked Explore on datasource page")
-
-
-_JS_FIND_BY_TEXT_IN_SHADOW = """
-function findByText(root, text) {
-    var all = root.querySelectorAll('*');
-    for (var i = 0; i < all.length; i++) {
-        var el = all[i];
-        if (el.shadowRoot) {
-            var found = findByText(el.shadowRoot, text);
-            if (found) return found;
-        }
-        var childNodes = el.childNodes;
-        for (var j = 0; j < childNodes.length; j++) {
-            if (childNodes[j].nodeType === 3 && childNodes[j].textContent.trim() === text) {
-                return el;
-            }
-        }
-    }
-    return null;
-}
-return findByText(document, arguments[0]);
-"""
-
-_JS_FIND_BY_CSS_IN_SHADOW = """
-function findByCss(root, selector) {
-    var el = root.querySelector(selector);
-    if (el) return el;
-    var all = root.querySelectorAll('*');
-    for (var i = 0; i < all.length; i++) {
-        if (all[i].shadowRoot) {
-            el = findByCss(all[i].shadowRoot, selector);
-            if (el) return el;
-        }
-    }
-    return null;
-}
-return findByCss(document, arguments[0]);
-"""
-
-_JS_LIST_SHADOW_HOSTS = """
-var hosts = [];
-document.querySelectorAll('*').forEach(function(el) {
-    if (el.shadowRoot) hosts.push(el.tagName + '.' + el.className);
-});
-return hosts;
-"""
-
-
-@TestStep(When)
-def switch_to_sql_editor(self, driver):
-    """Click the SQL Editor tab in the clickhouse-grafana query editor.
-
-    Handles Grafana 11+ Angular sandbox which renders plugin UI inside
-    Shadow DOM, making regular Selenium selectors unable to reach the elements.
-    """
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-
-    wait = WebDriverWait(driver, 5)
-    try:
-        sql_tab = wait.until(
-            EC.element_to_be_clickable(
-                (By.XPATH, "//*[contains(text(), 'SQL Editor')]")
-            )
-        )
-        sql_tab.click()
-        time.sleep(1)
-        note("Switched to SQL Editor mode via regular selector")
-        return
-    except Exception:
-        pass
-
-    shadow_hosts = driver.execute_script(_JS_LIST_SHADOW_HOSTS)
-    note(f"Shadow DOM hosts found: {shadow_hosts}")
-
-    el = driver.execute_script(_JS_FIND_BY_TEXT_IN_SHADOW, "SQL Editor")
-    if el:
-        driver.execute_script("arguments[0].click()", el)
-        time.sleep(1)
-        note("Switched to SQL Editor mode via Shadow DOM traversal")
-        return
-
-    note("SQL Editor tab not found or already active — continuing")
 
 
 @TestStep(When)
@@ -356,7 +255,9 @@ def _visible_error(driver):
     """
     from selenium.webdriver.common.by import By
 
-    for alert in driver.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid Alert error']"):
+    for alert in driver.find_elements(
+        By.CSS_SELECTOR, "[data-testid='data-testid Alert error']"
+    ):
         if alert.is_displayed() and alert.text.strip():
             return alert.text.strip()
     return None
@@ -372,54 +273,6 @@ def click_run_query(self, driver, timeout=60):
 
     run_btn = WebDriverWait(driver, 30).until(
         EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, "button[data-testid='data-testid RefreshPicker run button']")
-        )
-    )
-    run_btn.click()
-    note("Clicked Run query button")
-
-    WebDriverWait(driver, timeout).until(
-        lambda d: d.find_elements(By.CSS_SELECTOR, "[role='gridcell']") or _visible_error(d)
-    )
-    error = _visible_error(driver)
-    if error:
-        take_screenshot(driver=driver, name="query_error")
-        fail(f"Grafana showed an error for the query: {error}")
-    note("Query result cells rendered")
-
-
-@TestStep(When)
-def enter_and_run_query(self, driver, query):
-    """Enter a SQL query in the editor and click Run query.
-
-    Uses ActionChains keyboard simulation for reliable text replacement
-    in the Angular plugin's textarea editor.
-    """
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.common.keys import Keys
-    from selenium.webdriver.common.action_chains import ActionChains
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-
-    editor = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "textarea"))
-    )
-    note("Found editor textarea")
-
-    editor.click()
-    time.sleep(0.3)
-
-    actions = ActionChains(driver)
-    actions.key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL)
-    actions.pause(0.3)
-    actions.send_keys(query)
-    actions.perform()
-    time.sleep(1)
-    note(f"Entered query via ActionChains: {query}")
-
-    wait = WebDriverWait(driver, 30)
-    run_btn = wait.until(
-        EC.element_to_be_clickable(
             (
                 By.CSS_SELECTOR,
                 "button[data-testid='data-testid RefreshPicker run button']",
@@ -427,9 +280,17 @@ def enter_and_run_query(self, driver, query):
         )
     )
     run_btn.click()
-    note("Clicked Run query")
+    note("Clicked Run query button")
 
-    time.sleep(5)
+    WebDriverWait(driver, timeout).until(
+        lambda d: d.find_elements(By.CSS_SELECTOR, "[role='gridcell']")
+        or _visible_error(d)
+    )
+    error = _visible_error(driver)
+    if error:
+        take_screenshot(driver=driver, name="query_error")
+        fail(f"Grafana showed an error for the query: {error}")
+    note("Query result cells rendered")
 
 
 @TestStep(Then)
@@ -441,8 +302,14 @@ def get_result_table(self, driver):
     """
     from selenium.webdriver.common.by import By
 
-    headers = [e.text.strip() for e in driver.find_elements(By.CSS_SELECTOR, "[role='columnheader']")]
-    cells = [e.text.strip() for e in driver.find_elements(By.CSS_SELECTOR, "[role='gridcell']")]
+    headers = [
+        e.text.strip()
+        for e in driver.find_elements(By.CSS_SELECTOR, "[role='columnheader']")
+    ]
+    cells = [
+        e.text.strip()
+        for e in driver.find_elements(By.CSS_SELECTOR, "[role='gridcell']")
+    ]
     note(f"Result table: headers={headers} cells={cells[:20]}")
     if not cells:
         take_screenshot(driver=driver, name="query_result_missing")
@@ -461,7 +328,9 @@ def verify_panel_rendered(self, driver, title, series, timeout=30):
     from selenium.webdriver.support.ui import WebDriverWait
 
     header = WebDriverWait(driver, timeout).until(
-        lambda d: d.find_element(By.CSS_SELECTOR, f"[data-testid='data-testid Panel header {title}']")
+        lambda d: d.find_element(
+            By.CSS_SELECTOR, f"[data-testid='data-testid Panel header {title}']"
+        )
     )
     panel = driver.execute_script(
         "return arguments[0].closest('[data-viz-panel-key]') || arguments[0].parentElement.parentElement",
@@ -469,22 +338,31 @@ def verify_panel_rendered(self, driver, title, series, timeout=30):
     )
 
     def state(_):
-        if panel.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid Panel status error']"):
+        if panel.find_elements(
+            By.CSS_SELECTOR, "[data-testid='data-testid Panel status error']"
+        ):
             return "error"
-        if panel.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid xy-canvas']"):
+        if panel.find_elements(
+            By.CSS_SELECTOR, "[data-testid='data-testid xy-canvas']"
+        ):
             return "drawn"
         return None
 
     result = WebDriverWait(driver, timeout).until(state)
     if result == "error":
         messages = [
-            e.text for e in panel.find_elements(By.CSS_SELECTOR, "[data-testid='data-testid Panel data error message']")
+            e.text
+            for e in panel.find_elements(
+                By.CSS_SELECTOR, "[data-testid='data-testid Panel data error message']"
+            )
         ]
         fail(f"panel '{title}' shows an error: {messages or panel.text}")
 
     legend = [
         e.text.strip()
-        for e in panel.find_elements(By.CSS_SELECTOR, "[data-testid^='data-testid VizLegend series']")
+        for e in panel.find_elements(
+            By.CSS_SELECTOR, "[data-testid^='data-testid VizLegend series']"
+        )
     ]
     assert series in legend, f"panel '{title}' legend {legend} has no series '{series}'"
     note(f"panel '{title}' drew series {legend}")
@@ -523,7 +401,9 @@ def query_datasource(self, driver, target, time_from="now-24h", time_to="now"):
     for frame in result.get("frames", []):
         names = [field["name"] for field in frame["schema"]["fields"]]
         frames.append(dict(zip(names, frame["data"]["values"])))
-    note(f"/api/ds/query returned {[{k: len(v) for k, v in f.items()} for f in frames]}")
+    note(
+        f"/api/ds/query returned {[{k: len(v) for k, v in f.items()} for f in frames]}"
+    )
     return frames
 
 
@@ -548,7 +428,10 @@ def timeseries_target(query, refid="A", datasource_uid="clickhouse-direct"):
         "intervalFactor": 1,
         "intervalMs": 60000,
         "maxDataPoints": 1000,
-        "datasource": {"type": "vertamedia-clickhouse-datasource", "uid": datasource_uid},
+        "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": datasource_uid,
+        },
     }
 
 

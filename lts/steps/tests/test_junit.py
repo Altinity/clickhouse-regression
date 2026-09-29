@@ -9,7 +9,7 @@ import os
 import tempfile
 import unittest
 
-from lts.steps.junit import _tree, parse_junit
+from lts.steps.junit import _group_by_class, parse_junit
 
 PYTEST = """<?xml version="1.0" encoding="utf-8"?>
 <testsuites><testsuite name="pytest" tests="5">
@@ -87,10 +87,14 @@ class ParseJUnitTestCase(unittest.TestCase):
         failed = [case for case in cases if case["name"] == "test_fail"][0]
         self.assertEqual(failed["message"], "AssertionError: 1 != 2")
         self.assertEqual(failed["details"], "trace")
-        self.assertEqual(failed["path"], ["tests", "columns", "test_datetime", "DateTimeTestCase"])
+        self.assertEqual(
+            failed["path"], ["tests", "columns", "test_datetime", "DateTimeTestCase"]
+        )
 
     def test_namespaced_surefire(self):
-        cases = parse_junit([self.write("surefire.xml", SUREFIRE)], strip_prefix="com.clickhouse.")
+        cases = parse_junit(
+            [self.write("surefire.xml", SUREFIRE)], strip_prefix="com.clickhouse."
+        )
         self.assertEqual(
             self.outcomes(cases),
             {"testAutoCommit": "passed", "testRerun": "failed", "testFlaky": "flaky"},
@@ -101,7 +105,10 @@ class ParseJUnitTestCase(unittest.TestCase):
         cases = parse_junit([self.write("ctest.xml", CTEST)])
         self.assertEqual(
             self.outcomes(cases),
-            {"test.py-3-dsn-0": "passed", "parametrized-regression.py-3-dsn-0": "failed"},
+            {
+                "test.py-3-dsn-0": "passed",
+                "parametrized-regression.py-3-dsn-0": "failed",
+            },
         )
         # The class name repeats the test name, so there is no class path.
         self.assertEqual([case["path"] for case in cases], [[], []])
@@ -114,8 +121,10 @@ class ParseJUnitTestCase(unittest.TestCase):
 
     def test_duplicate_names_are_kept(self):
         cases = parse_junit([self.write("dup.xml", DUPLICATES)])
-        node = _tree(cases)["children"]["a"]["children"]["B"]
-        self.assertEqual([case["outcome"] for case in node["cases"]], ["passed", "failed"])
+        node = _group_by_class(cases)["children"]["a"]["children"]["B"]
+        self.assertEqual(
+            [case["outcome"] for case in node["cases"]], ["passed", "failed"]
+        )
 
     def test_malformed_xml(self):
         path = self.write("broken.xml", "<testsuite><testcase name='x'>")

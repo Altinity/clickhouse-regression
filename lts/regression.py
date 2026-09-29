@@ -110,7 +110,12 @@ xfails = {
         (Fail, issue_108038, check_clickhouse_version(">=26.3"), wrong_client_timezone)
     ],
     "/lts/clickhouse-driver/tests/numpy/columns/test_datetime/*TimezonesTestCase/test_read_tz_naive_column_with_client_timezone": [
-        (Fail, issue_108038, check_clickhouse_version(">=26.3"), naive_column_not_converted)
+        (
+            Fail,
+            issue_108038,
+            check_clickhouse_version(">=26.3"),
+            naive_column_not_converted,
+        )
     ],
 }
 ffails = {}
@@ -159,13 +164,14 @@ def regression(
     # The version gates version-specific xfails. Without --clickhouse-version it
     # comes from the image tag; a moving tag such as latest gives None, and then
     # version-specific xfails do not apply.
-    self.context.clickhouse_version = clickhouse_version or clickhouse_version_from_image(
-        self.context.clickhouse_image
+    self.context.clickhouse_version = (
+        clickhouse_version
+        or clickhouse_version_from_image(self.context.clickhouse_image)
     )
     note(f"ClickHouse version: {self.context.clickhouse_version}")
 
     Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
-        odbc_release=odbc_release,
+        release=odbc_release,
     )
     Feature(test=load("lts.superset.feature", "feature"))(
         superset_version=superset_version,

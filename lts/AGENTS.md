@@ -13,14 +13,14 @@ Sub-suites do **not** have their own `regression.py`.
 
 ```
 lts/
-├── AGENT.md                  # This file — conventions & guidelines
+├── AGENTS.md                 # This file — conventions & guidelines
 ├── README.md                 # Quick-start documentation
 ├── __init__.py
 ├── regression.py             # Single entry point — loads all sub-suite features
 │
 ├── clickhouse_odbc/          # ODBC driver tests (runs the driver's ctest targets)
 │   ├── __init__.py
-│   ├── feature.py            # Calls lts.steps.upstream.run_upstream_tests
+│   ├── feature.py            # Calls lts.steps.tool_tests.run_tool_tests
 │   ├── configs/              # Dockerfile (cached build stage), runner.sh, diff.patch
 │   └── requirements/
 │       ├── requirements.md   # Human-readable SRS document
@@ -42,7 +42,7 @@ lts/
 │   │   ├── environment.py    # Docker Compose setup/teardown + health checks
 │   │   └── ui.py             # Selenium WebDriver helpers + REST seeding fixture
 │   └── tests/
-│       └── ui_smoke.py       # End-to-end browser smoke test
+│       └── clickhouse_integration.py  # Driver, connections and SQL Lab checks
 │                             # (login -> verify DB -> SQL Lab query, with
 │                             #  screenshots saved to lts/_instances/superset/screenshots/)
 │
@@ -73,7 +73,7 @@ sets `self.context.clickhouse_image`, and loads each sub-suite feature:
 
 ```python
 Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
-    odbc_release=odbc_release,
+    release=odbc_release,
 )
 Feature(test=load("lts.superset.feature", "feature"))(
     superset_version=superset_version,
@@ -142,7 +142,7 @@ that groups related `@TestScenario` functions.
 
 `clickhouse_odbc`, `clickhouse_driver`, `clickhouse_sqlalchemy`,
 `clickhouse_jdbc` and `dbeaver` have no `steps/` or `tests/`. Their `feature.py` calls
-`lts.steps.upstream.run_upstream_tests`, which:
+`lts.steps.tool_tests.run_tool_tests`, which:
 
 1. builds `configs/` into a runner image (`--build-arg CLICKHOUSE_IMAGE=...`
    when the runner is based on the ClickHouse image);
@@ -154,7 +154,7 @@ that groups related `@TestScenario` functions.
    nested features, so `tests.test_x.SomeTestCase::test_y` is reported as
    `/lts/<suite>/tests/test_x/SomeTestCase/test_y`.
 
-Known upstream failures go into `xfails` in `lts/regression.py` using those
+Known failures of these tests go into `xfails` in `lts/regression.py` using those
 paths. Do not use `.` in an `xfails` pattern for a class name: TestFlows
 replaces `.` in test names with a look-alike character, which is why class
 names are split into features.
@@ -164,7 +164,7 @@ Rules for runners, each of which was a real hole:
 - Start ClickHouse with the image's `/entrypoint.sh`, not `clickhouse server
   --daemon`. Without `--config-file` the server ignores `/etc/clickhouse-server`
   and runs with built-in defaults, so the image's configuration is not tested.
-- Install every optional dependency the upstream tests use. Without `numpy` and
+- Install every optional dependency the tool's tests use. Without `numpy` and
   `pandas`, 108 clickhouse-driver tests were silently skipped. Every run notes
   the skip reasons; read them.
 - Exit with the test tool's exit code and pass the acceptable codes as
@@ -203,6 +203,11 @@ Shared helpers have unit tests: `python3 -m unittest discover -s lts/steps/tests
 
 [DEBUGGING.md](DEBUGGING.md) explains how to debug each suite. Update it when
 you change how a suite runs or where it writes its output.
+
+Each suite folder has an `AGENTS.md` with the rules specific to that suite:
+how it works, what not to change and why, how to bump the tool version, known
+behavior and evidence. Read it before changing the suite, and update it when
+you change what the suite does.
 
 ## CLI Arguments
 

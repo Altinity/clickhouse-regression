@@ -13,7 +13,7 @@ from lts.dbeaver.requirements.requirements import (
     RQ_SRS_106_DBeaver_SmokeChecks,
     RQ_SRS_106_DBeaver_Compatibility_LTS,
 )
-from lts.steps.upstream import run_upstream_tests
+from lts.steps.tool_tests import run_tool_tests
 
 PLUGIN_XML = (
     "https://raw.githubusercontent.com/dbeaver/dbeaver/{version}/"
@@ -78,11 +78,14 @@ def feature(self, dbeaver_version="26.2.1", timeout=1800):
             dbeaver_version=dbeaver_version
         )
 
-    run_upstream_tests(
+    run_tool_tests(
         suite="dbeaver",
         configs_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs"),
         build_args={"CLICKHOUSE_IMAGE": self.context.clickhouse_image},
-        env={"DRIVER_VERSION": driver_version, "HTTPCLIENT_VERSION": httpclient_version},
+        env={
+            "DRIVER_VERSION": driver_version,
+            "HTTPCLIENT_VERSION": httpclient_version,
+        },
         mounts={"lts-maven-cache": "/root/.m2"},
         timeout=timeout,
         # Smoke.java always reports all 18 checks.

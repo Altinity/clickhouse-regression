@@ -22,11 +22,11 @@ ai_function_embedding_default_credentials = r"""'{"default":""}'"""
 
 ai_function_embedding_max_batch_size = r"""'{"default":"100"}'"""
 
-ai_function_max_api_calls_per_query = r"""'{"default":"1000"}'"""
+ai_function_max_api_calls_per_query = r"""'{"default":"0"}'"""
 
-ai_function_max_input_tokens_per_query = r"""'{"default":"1000000"}'"""
+ai_function_max_input_tokens_per_query = r"""'{"default":"0"}'"""
 
-ai_function_max_output_tokens_per_query = r"""'{"default":"500000"}'"""
+ai_function_max_output_tokens_per_query = r"""'{"default":"0"}'"""
 
 ai_function_max_retries = r"""'{"default":"1"}'"""
 
@@ -83,6 +83,8 @@ allow_distributed_ddl = r"""'{"default":"1"}'"""
 allow_drop_detached = r"""'{"default":"0"}'"""
 
 allow_dynamic_type_in_join_keys = r"""'{"default":"0"}'"""
+
+allow_executable_tables = r"""'{"default":"1"}'"""
 
 allow_execute_multiif_columnar = r"""'{"default":"1"}'"""
 
@@ -343,6 +345,8 @@ alter_update_mode = r"""'{"default":"heavy"}'"""
 analyze_index_with_space_filling_curves = r"""'{"default":"1"}'"""
 
 analyzer_compatibility_allow_compound_identifiers_in_unflatten_nested = r"""'{"default":"1"}'"""
+
+analyzer_compatibility_allow_cte_redefinition = r"""'{"default":"0"}'"""
 
 analyzer_compatibility_allow_non_aggregate_in_having = r"""'{"default":"0"}'"""
 
@@ -1416,11 +1420,15 @@ iceberg_expire_default_max_snapshot_age_ms = r"""'{"default":"432000000"}'"""
 
 iceberg_expire_default_min_snapshots_to_keep = r"""'{"default":"1"}'"""
 
+iceberg_file_entries_queue_size = r"""'{"default":"100"}'"""
+
 iceberg_insert_max_bytes_in_data_file = r"""'{"default":"1073741824"}'"""
 
 iceberg_insert_max_partitions = r"""'{"default":"100"}'"""
 
 iceberg_insert_max_rows_in_data_file = r"""'{"default":"1000000"}'"""
+
+iceberg_manifest_decode_concurrency = r"""'{"default":"4"}'"""
 
 iceberg_manifest_min_count_to_compact = r"""'{"default":"30"}'"""
 
@@ -1437,6 +1445,8 @@ iceberg_orphan_files_older_than_seconds = r"""'{"default":"259200"}'"""
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
+
+iceberg_tolerate_conflicting_manifest_schemas = r"""'{"default":"1"}'"""
 
 idle_connection_timeout = r"""'{"default":"3600"}'"""
 
@@ -1922,7 +1932,7 @@ materialized_views_populate_atomically = r"""'{"default":"1"}'"""
 
 materialized_views_squash_parallel_inserts = r"""'{"default":"1"}'"""
 
-max_alter_threads = r"""'{"default":"auto(14)"}'"""
+max_alter_threads = r"""'{"default":"auto(16)"}'"""
 
 max_analyze_depth = r"""'{"default":"5000"}'"""
 
@@ -2002,7 +2012,7 @@ max_expanded_ast_elements = r"""'{"default":"500000"}'"""
 
 max_fetch_partition_retries_count = r"""'{"default":"5"}'"""
 
-max_final_threads = r"""'{"default":"auto(14)"}'"""
+max_final_threads = r"""'{"default":"auto(16)"}'"""
 
 max_http_get_redirects = r"""'{"default":"0"}'"""
 
@@ -2018,7 +2028,7 @@ max_insert_block_size_rows = r"""'{"default":"1048449"}'"""
 
 max_insert_delayed_streams_for_parallel_write = r"""'{"default":"0"}'"""
 
-max_insert_threads = r"""'{"default":"auto(14)"}'"""
+max_insert_threads = r"""'{"default":"auto(16)"}'"""
 
 max_insert_threads_min_free_memory_per_thread = r"""'{"default":"4294967296"}'"""
 
@@ -2064,7 +2074,7 @@ max_parser_backtracks = r"""'{"default":"1000000"}'"""
 
 max_parser_depth = r"""'{"default":"1000"}'"""
 
-max_parsing_threads = r"""'{"default":"auto(14)"}'"""
+max_parsing_threads = r"""'{"default":"auto(16)"}'"""
 
 max_partition_size_to_drop = r"""'{"default":"50000000000"}'"""
 
@@ -2166,7 +2176,7 @@ max_temporary_data_on_disk_size_for_user = r"""'{"default":"0"}'"""
 
 max_temporary_non_const_columns = r"""'{"default":"0"}'"""
 
-max_threads = r"""'{"default":"auto(14)"}'"""
+max_threads = r"""'{"default":"auto(16)"}'"""
 
 max_threads_for_annoy_index_creation = r"""'{"default":"4"}'"""
 

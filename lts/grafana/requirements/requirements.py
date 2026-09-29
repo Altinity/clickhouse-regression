@@ -9,132 +9,132 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_102_Grafana_Environment = Requirement(
-    name='RQ.SRS-102.Grafana.Environment',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.Environment",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The test environment SHALL deploy Grafana with the Altinity ClickHouse\n'
-        'datasource plugin and a ClickHouse server using Docker Compose, along with\n'
-        'a Selenium Grid node for browser-based testing.\n'
-        '\n'
+        "The test environment SHALL deploy Grafana with the Altinity ClickHouse\n"
+        "datasource plugin and a ClickHouse server using Docker Compose, along with\n"
+        "a Selenium Grid node for browser-based testing.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.1.1'
+    num="3.1.1",
 )
 
 RQ_SRS_102_Grafana_Environment_SeleniumGrid = Requirement(
-    name='RQ.SRS-102.Grafana.Environment.SeleniumGrid',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.Environment.SeleniumGrid",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The test environment SHALL include a Selenium Grid hub with Chrome browser\n'
-        'support for automated UI testing of the Grafana web interface.\n'
-        '\n'
+        "The test environment SHALL include a Selenium Grid hub with Chrome browser\n"
+        "support for automated UI testing of the Grafana web interface.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.1.2'
+    num="3.1.2",
 )
 
 RQ_SRS_102_Grafana_Login = Requirement(
-    name='RQ.SRS-102.Grafana.Login',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.Login",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Grafana SHALL allow logging in with default admin credentials (admin/admin)\n'
-        'and SHALL display the home page after successful authentication.\n'
-        '\n'
+        "Grafana SHALL allow logging in with default admin credentials (admin/admin)\n"
+        "and SHALL display the home page after successful authentication.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.2.1'
+    num="3.2.1",
 )
 
 RQ_SRS_102_Grafana_DatasourceQuery = Requirement(
-    name='RQ.SRS-102.Grafana.DatasourceQuery',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.DatasourceQuery",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Grafana SHALL be able to execute SQL queries against ClickHouse through the\n'
-        'Altinity clickhouse-grafana datasource plugin and SHALL display the exact\n'
-        'query results in the Explore view with Table format, for example the server\n'
-        'version for `SELECT version()` and `100` for the row count of the seeded\n'
-        '`default.test_grafana` table.\n'
-        '\n'
+        "Grafana SHALL be able to execute SQL queries against ClickHouse through the\n"
+        "Altinity clickhouse-grafana datasource plugin and SHALL display the exact\n"
+        "query results in the Explore view with Table format, for example the server\n"
+        "version for `SELECT version()` and `100` for the row count of the seeded\n"
+        "`default.test_grafana` table.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.3.1'
+    num="3.3.1",
 )
 
 RQ_SRS_102_Grafana_PanelVisualization = Requirement(
-    name='RQ.SRS-102.Grafana.PanelVisualization',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.PanelVisualization",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Grafana SHALL render a time-series dashboard panel from data queried from\n'
-        'ClickHouse through the Altinity clickhouse-grafana datasource plugin. The\n'
+        "Grafana SHALL render a time-series dashboard panel from data queried from\n"
+        "ClickHouse through the Altinity clickhouse-grafana datasource plugin. The\n"
         "panel SHALL show no error and SHALL draw the queried series, and the panel's\n"
-        'query SHALL return the seeded data.\n'
-        '\n'
+        "query SHALL return the seeded data.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.4.1'
+    num="3.4.1",
 )
 
 RQ_SRS_102_Grafana_Macros_TimeSeries = Requirement(
-    name='RQ.SRS-102.Grafana.Macros.TimeSeries',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.Macros.TimeSeries",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The plugin SHALL expand the `$timeSeriesMs` and `$timeFilterMs` macros for a\n'
-        '`DateTime` timestamp column, so that a panel query using them returns the\n'
-        'seeded rows grouped into time buckets within the dashboard time range.\n'
-        '\n'
+        "The plugin SHALL expand the `$timeSeriesMs` and `$timeFilterMs` macros for a\n"
+        "`DateTime` timestamp column, so that a panel query using them returns the\n"
+        "seeded rows grouped into time buckets within the dashboard time range.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='3.4.2'
+    num="3.4.2",
 )
 
 RQ_SRS_102_Grafana_Compatibility_LTS = Requirement(
-    name='RQ.SRS-102.Grafana.Compatibility.LTS',
-    version='1.0',
+    name="RQ.SRS-102.Grafana.Compatibility.LTS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'All Grafana plugin features SHALL be verified to work against the current\n'
-        'Altinity ClickHouse LTS build.\n'
+        "All Grafana plugin features SHALL be verified to work against the current\n"
+        "Altinity ClickHouse LTS build.\n"
     ),
     link=None,
     level=3,
-    num='3.5.1'
+    num="3.5.1",
 )
 
 SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
-    name='SRS-102 Altinity Grafana ClickHouse Plugin LTS Testing',
+    name="SRS-102 Altinity Grafana ClickHouse Plugin LTS Testing",
     description=None,
     author=None,
     date=None,
@@ -150,22 +150,24 @@ SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Introduction', level=1, num='1'),
-        Heading(name='Terminology', level=1, num='2'),
-        Heading(name='Requirements', level=1, num='3'),
-        Heading(name='Environment Setup', level=2, num='3.1'),
-        Heading(name='RQ.SRS-102.Grafana.Environment', level=3, num='3.1.1'),
-        Heading(name='RQ.SRS-102.Grafana.Environment.SeleniumGrid', level=3, num='3.1.2'),
-        Heading(name='Login', level=2, num='3.2'),
-        Heading(name='RQ.SRS-102.Grafana.Login', level=3, num='3.2.1'),
-        Heading(name='Datasource Query', level=2, num='3.3'),
-        Heading(name='RQ.SRS-102.Grafana.DatasourceQuery', level=3, num='3.3.1'),
-        Heading(name='Panel Visualization', level=2, num='3.4'),
-        Heading(name='RQ.SRS-102.Grafana.PanelVisualization', level=3, num='3.4.1'),
-        Heading(name='RQ.SRS-102.Grafana.Macros.TimeSeries', level=3, num='3.4.2'),
-        Heading(name='Compatibility', level=2, num='3.5'),
-        Heading(name='RQ.SRS-102.Grafana.Compatibility.LTS', level=3, num='3.5.1'),
+        Heading(name="Introduction", level=1, num="1"),
+        Heading(name="Terminology", level=1, num="2"),
+        Heading(name="Requirements", level=1, num="3"),
+        Heading(name="Environment Setup", level=2, num="3.1"),
+        Heading(name="RQ.SRS-102.Grafana.Environment", level=3, num="3.1.1"),
+        Heading(
+            name="RQ.SRS-102.Grafana.Environment.SeleniumGrid", level=3, num="3.1.2"
         ),
+        Heading(name="Login", level=2, num="3.2"),
+        Heading(name="RQ.SRS-102.Grafana.Login", level=3, num="3.2.1"),
+        Heading(name="Datasource Query", level=2, num="3.3"),
+        Heading(name="RQ.SRS-102.Grafana.DatasourceQuery", level=3, num="3.3.1"),
+        Heading(name="Panel Visualization", level=2, num="3.4"),
+        Heading(name="RQ.SRS-102.Grafana.PanelVisualization", level=3, num="3.4.1"),
+        Heading(name="RQ.SRS-102.Grafana.Macros.TimeSeries", level=3, num="3.4.2"),
+        Heading(name="Compatibility", level=2, num="3.5"),
+        Heading(name="RQ.SRS-102.Grafana.Compatibility.LTS", level=3, num="3.5.1"),
+    ),
     requirements=(
         RQ_SRS_102_Grafana_Environment,
         RQ_SRS_102_Grafana_Environment_SeleniumGrid,
@@ -174,8 +176,8 @@ SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
         RQ_SRS_102_Grafana_PanelVisualization,
         RQ_SRS_102_Grafana_Macros_TimeSeries,
         RQ_SRS_102_Grafana_Compatibility_LTS,
-        ),
-    content=r'''
+    ),
+    content=r"""
 # SRS-102 Altinity Grafana ClickHouse Plugin LTS Testing
 # Software Requirements Specification
 
@@ -276,5 +278,5 @@ version: 1.0
 
 All Grafana plugin features SHALL be verified to work against the current
 Altinity ClickHouse LTS build.
-'''
+""",
 )

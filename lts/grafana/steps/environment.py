@@ -7,11 +7,20 @@ import urllib.request
 
 from testflows.core import *
 
-from lts.steps.docker import compose_command, compose_down, save_compose_logs, suite_results_dir
+from lts.steps.docker import (
+    compose_command,
+    compose_down,
+    save_compose_logs,
+    suite_results_dir,
+)
 
 # Unique per run, so that two runs on one Docker host neither share nor tear
 # down each other's containers, networks and volumes.
 PROJECT_NAME = f"grafana-lts-{os.getpid()}"
+
+# configs/init_schema.sql seeds default.test_grafana with this many rows, one
+# every 10 seconds back from startup.
+SEEDED_ROWS = 100
 
 
 def _compose_cmd(compose_file):
@@ -100,7 +109,7 @@ def _get_selenium_host_port(compose_file, env):
 def wait_for_grafana(self, timeout=180):
     """Wait until Grafana health endpoint responds.
 
-    The upstream ``grafana/grafana`` image does not ship ``curl``, so probing
+    The ``grafana/grafana`` image does not ship ``curl``, so probing
     via ``docker compose exec`` is unreliable. Instead, we discover the host
     port mapped to Grafana's container port 3000 and probe it from the host.
     Falls back to a docker-exec wget probe if no host port is published.

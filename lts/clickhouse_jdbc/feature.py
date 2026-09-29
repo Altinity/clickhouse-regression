@@ -7,23 +7,23 @@ from testflows.core import *
 
 from lts.clickhouse_jdbc.requirements.requirements import (
     SRS_105_ClickHouse_JDBC_Driver_clickhouse_jdbc_LTS_Testing,
-    RQ_SRS_105_ClickHouseJDBC_UpstreamTests,
+    RQ_SRS_105_ClickHouseJDBC_TestSuite,
     RQ_SRS_105_ClickHouseJDBC_Compatibility_LTS,
 )
 from lts.steps.docker import pull_image, suite_results_dir
-from lts.steps.upstream import run_upstream_tests
+from lts.steps.tool_tests import run_tool_tests
 
 
 @TestFeature
 @Name("clickhouse-jdbc")
 @Specifications(SRS_105_ClickHouse_JDBC_Driver_clickhouse_jdbc_LTS_Testing)
 @Requirements(
-    RQ_SRS_105_ClickHouseJDBC_UpstreamTests("1.0"),
+    RQ_SRS_105_ClickHouseJDBC_TestSuite("1.0"),
     RQ_SRS_105_ClickHouseJDBC_Compatibility_LTS("1.0"),
 )
 def feature(self, release="v0.9.9", maven_args="", timeout=7200):
     """Run the clickhouse-jdbc module tests of clickhouse-java at tag ``release``
-    and report each upstream test.
+    and report each test.
 
     The tests start ClickHouse from the image themselves through the host
     Docker socket, so the runner uses the host network, and its work
@@ -44,7 +44,7 @@ def feature(self, release="v0.9.9", maven_args="", timeout=7200):
     ).stdout.strip()
     note(f"host Docker API version: {docker_api_version}")
 
-    run_upstream_tests(
+    run_tool_tests(
         suite="clickhouse_jdbc",
         configs_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs"),
         env={

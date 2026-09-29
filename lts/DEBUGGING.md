@@ -27,7 +27,7 @@ python3 lts/regression.py \
 tfs show fails test.log        # failed, errored and known (xfail) tests
 tfs transform fails test.log   # the same, one line per test with the reason
 tfs show totals test.log       # counts per test type
-tfs show messages --log test.log '/lts/grafana/panel graph/explore count query'
+tfs show messages --log test.log '/lts/grafana/datasource query/explore count query'
 ```
 
 `tfs show messages` prints every step of one test, including its notes, so
@@ -43,7 +43,7 @@ python3 lts/regression.py \
 
 `--only` takes TestFlows test paths, down to a single test:
 `"/lts/clickhouse-driver/tests/columns/test_datetime/*"` or
-`"/lts/grafana/panel graph/*"`. For the suites that run a tool's own tests,
+`"/lts/grafana/dashboard panel/*"`. For the suites that run a tool's own tests,
 the runner still runs all of them, and `--only` selects which are reported.
 
 TestFlows replaces `.`, `[` and `:` in test names with look-alike characters,
@@ -78,7 +78,7 @@ problem, or the environment. Two comparisons settle most cases:
 
 - **Run the same suite against the previous LTS image.** A test that fails on
   both is not a regression in the new build.
-- **Run it against the upstream image of the same version**, for example
+- **Run it against ClickHouse's own image of the same version**, for example
   `clickhouse/clickhouse-server:26.3`. A test that fails on both is not
   specific to the Altinity build.
 
@@ -109,7 +109,7 @@ These come from the shared runner in `lts/steps/` rather than from one test.
 | `the runner wrote no JUnit XML (...), so the tests did not run` | The runner stopped before the tests: a clone, patch, install or server start failed. | The message ends with the tail of `logs/test.log`; the first error in it is the cause. |
 | `the runner exited with code N, expected one of [...]` | The test tool itself failed: pytest exit 2 to 5, a Maven error such as a crashed test JVM, or ctest other than 0 or 8. Any JUnit XML is partial. | Read the end of `logs/test.log`. |
 | `expected at least N tests, found M` | Fewer tests ran than the suite's known count, usually because a dependency is missing or discovery broke. | Check `logs/test.log` for collection errors. If a new tool release really has fewer tests, lower `min_tests` in the suite's `feature.py`. |
-| `N upstream tests were skipped, more than the M expected` | More tests were skipped than the known budget. | The run notes the skip reasons, grouped by count, just before this message. A reason such as `Numpy package is not installed` means a dependency is missing from the runner. |
+| `N tests were skipped, more than the M expected` | More tests were skipped than the known budget. | The run notes the skip reasons, grouped by count, just before this message. A reason such as `Numpy package is not installed` means a dependency is missing from the runner. |
 | `docker build of lts-<suite>-runner failed` | The runner image did not build. | Read `logs/build.log`. |
 | `<image> is an Alpine image` | The runners need an Ubuntu-based ClickHouse image with `apt-get` and `/entrypoint.sh`. | Use the Ubuntu variant of the image. |
 | `lts-<suite>-<pid> did not finish within Ns` | The runner hit the suite's timeout and was removed. | Read `logs/test.log` for where it stopped. |
@@ -163,7 +163,7 @@ scenario directly under `/lts/clickhouse-odbc/`, for example
 - **A `parametrized-regression.py` target fails.** This target is itself a
   TestFlows run, one per DSN, covering data types and parameter binding. Search
   `logs/ctest-detailed.log` for its `Failing` section to find the inner test.
-  Upstream's known failures are the `xfails` in
+  The driver project's own known failures are the `xfails` in
   `test/parameterized/regression.py`, extended in `configs/diff.patch`. Their
   patterns must use `:` wherever the test name contains `.`, for the reason in
   [step 3](#3-rerun-only-what-failed).
@@ -214,7 +214,7 @@ Each pytest test is one scenario, for example
 
 Works like [clickhouse-driver](#clickhouse-driver), with `RELEASE=0.3.2` and the
 pytest output in `logs/test.log`. The runner pins `asynch`, `alembic` and
-`pytest-asyncio`. If a test fails right after one of those changed upstream,
+`pytest-asyncio`. If a test fails right after one of those had a new release,
 compare the versions `pip` installed in `logs/test.log` with a passing run.
 
 ## clickhouse-jdbc
@@ -245,7 +245,8 @@ Docker socket, from the image under test. Unit tests are reported from
 - **`Magic is not correct - expect [-126] but got [...]`**. The client could
   not decompress the server's response. clickhouse-jdbc v0.9.0 does this with
   26.x servers, while later 0.9.x releases work. Try another `--jdbc-release`
-  and compare with the upstream image before calling it a ClickHouse bug.
+  and compare with the `clickhouse/clickhouse-server` image before calling it a
+  ClickHouse bug.
 - **Leftover containers.** Testcontainers' cleanup container removes its
   containers when Maven exits. If Maven was killed, remove them with
   `docker rm -f $(docker ps -aq --filter label=org.testcontainers)`. That filter

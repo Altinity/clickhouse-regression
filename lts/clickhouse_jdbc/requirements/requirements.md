@@ -6,8 +6,8 @@
 * 1 [Introduction](#introduction)
 * 2 [Terminology](#terminology)
 * 3 [Requirements](#requirements)
-    * 3.1 [Upstream Tests](#upstream-tests)
-        * 3.1.1 [RQ.SRS-105.ClickHouseJDBC.UpstreamTests](#rqsrs-105clickhousejdbcupstreamtests)
+    * 3.1 [Test Suite](#test-suite)
+        * 3.1.1 [RQ.SRS-105.ClickHouseJDBC.TestSuite](#rqsrs-105clickhousejdbctestsuite)
     * 3.2 [Compatibility](#compatibility)
         * 3.2.1 [RQ.SRS-105.ClickHouseJDBC.Compatibility.LTS](#rqsrs-105clickhousejdbccompatibilitylts)
 
@@ -21,14 +21,14 @@ the integration tests starting ClickHouse from the LTS image.
 ## Terminology
 
 - **LTS** — Long-Term Support ClickHouse release.
-- **Upstream tests** — the surefire and failsafe tests of the `clickhouse-jdbc`
+- **Test suite** — the surefire and failsafe tests of the `clickhouse-jdbc`
   module in the clickhouse-java repository.
 
 ## Requirements
 
-### Upstream Tests
+### Test Suite
 
-#### RQ.SRS-105.ClickHouseJDBC.UpstreamTests
+#### RQ.SRS-105.ClickHouseJDBC.TestSuite
 version: 1.0
 
 The `clickhouse-jdbc` module tests, at the tested clickhouse-java release tag,

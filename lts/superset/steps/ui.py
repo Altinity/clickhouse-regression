@@ -496,7 +496,8 @@ def run_sql_in_editor(self, driver, query):
         note("Triggered Run via Ctrl+Enter")
 
     WebDriverWait(driver, 60).until(
-        lambda d: d.find_elements(By.CSS_SELECTOR, ".virtual-table-cell") or _sql_lab_error(d)
+        lambda d: d.find_elements(By.CSS_SELECTOR, ".virtual-table-cell")
+        or _sql_lab_error(d)
     )
     error = _sql_lab_error(driver)
     if error:
@@ -524,19 +525,24 @@ def get_sql_lab_result_rows(self, driver, columns):
     """
     from selenium.webdriver.common.by import By
 
-    cells = [e.text.strip() for e in driver.find_elements(By.CSS_SELECTOR, ".virtual-table-cell")]
+    cells = [
+        e.text.strip()
+        for e in driver.find_elements(By.CSS_SELECTOR, ".virtual-table-cell")
+    ]
     if not cells:
         take_screenshot(driver=driver, name="sql_lab_result_missing")
         fail("the SQL Lab result grid has no cells")
     if len(cells) % columns:
-        fail(f"{len(cells)} result cells do not form rows of {columns} columns: {cells}")
+        fail(
+            f"{len(cells)} result cells do not form rows of {columns} columns: {cells}"
+        )
     rows = [cells[i : i + columns] for i in range(0, len(cells), columns)]
     note(f"SQL Lab result rows: {rows}")
     return rows
 
 
 @TestStep(Then)
-def test_database_connection(self, scheme):
+def check_database_connection(self, scheme):
     """Test a ClickHouse connection over ``scheme`` (http, https or native)
     through Superset's test-connection API, which is what the Test Connection
     button in the database form calls. Fails unless Superset reports OK."""
@@ -556,9 +562,9 @@ def test_database_connection(self, scheme):
         },
     )
     note(f"test_connection {uri}: HTTP {status}: {body[:1000]}")
-    assert status == 200 and json.loads(body).get("message") == "OK", (
-        f"Superset could not connect to ClickHouse over {scheme}: HTTP {status}: {body[:1000]}"
-    )
+    assert (
+        status == 200 and json.loads(body).get("message") == "OK"
+    ), f"Superset could not connect to ClickHouse over {scheme}: HTTP {status}: {body[:1000]}"
 
 
 @TestStep(Then)

@@ -5,7 +5,7 @@ import os
 from testflows.core import *
 
 from lts.clickhouse_odbc.requirements.requirements import *
-from lts.steps.upstream import run_upstream_tests
+from lts.steps.tool_tests import run_tool_tests
 
 
 @TestFeature
@@ -41,19 +41,19 @@ from lts.steps.upstream import run_upstream_tests
     RQ_SRS_100_ODBC_ParameterizedQueries_Null("1.0"),
     RQ_SRS_100_ODBC_Compatibility_LTS("1.0"),
 )
-def feature(self, odbc_release="v1.2.1.20220905", timeout=3600):
+def feature(self, release="v1.2.1.20220905", timeout=3600):
     """Run the clickhouse-odbc ctest targets against the ClickHouse image and
     report each target.
 
     The driver is compiled in a build stage that does not depend on the
     ClickHouse image, so it is cached across ClickHouse releases.
     """
-    run_upstream_tests(
+    run_tool_tests(
         suite="clickhouse_odbc",
         configs_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs"),
         build_args={
             "CLICKHOUSE_IMAGE": self.context.clickhouse_image,
-            "ODBC_RELEASE": odbc_release,
+            "ODBC_RELEASE": release,
         },
         env={},
         timeout=timeout,

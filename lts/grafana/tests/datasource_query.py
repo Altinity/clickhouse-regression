@@ -24,6 +24,7 @@ from lts.grafana.steps.ui import (
     click_run_query,
     get_result_table,
 )
+from lts.grafana.steps.environment import SEEDED_ROWS
 
 
 @TestScenario
@@ -72,15 +73,51 @@ def select_version_via_explore(self):
         headers, cells = get_result_table(driver=driver)
         assert len(cells) == 1, f"expected one result cell, got {cells}"
         version = cells[0]
-        assert re.fullmatch(r"\d+\.\d+\.\d+(\.\d+)?(\.\w+)?", version), (
-            f"result cell is not a ClickHouse version: {version!r}"
-        )
+        assert re.fullmatch(
+            r"\d+\.\d+\.\d+(\.\d+)?(\.\w+)?", version
+        ), f"result cell is not a ClickHouse version: {version!r}"
         if expected_version:
-            assert version.startswith(expected_version), (
-                f"server version {version!r} does not match {expected_version!r}"
-            )
+            assert version.startswith(
+                expected_version
+            ), f"server version {version!r} does not match {expected_version!r}"
         else:
             note(f"no expected version for this image, server reports {version}")
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_102_Grafana_DatasourceQuery("1.0"),
+    RQ_SRS_102_Grafana_Compatibility_LTS("1.0"),
+)
+def explore_count_query(self):
+    """Run a count query against the seeded table in Explore and check that
+    the result table shows exactly the seeded row count."""
+
+    with Given("a WebDriver connected to Selenium Grid"):
+        driver = create_webdriver()
+
+    with And("I am logged into Grafana"):
+        open_grafana(driver=driver)
+        login(driver=driver, username="admin", password="admin")
+        skip_password_change(driver=driver)
+
+    with When("I open Explore with a count query"):
+        open_explore_with_query(
+            driver=driver,
+            query="SELECT count() AS c FROM default.test_grafana",
+            format="table",
+        )
+
+    with And("I click Run query"):
+        click_run_query(driver=driver)
+
+    with And("I take a screenshot of the result"):
+        take_screenshot(driver=driver, name="explore_count_result")
+
+    with Then(f"the result table has one column c with the value {SEEDED_ROWS}"):
+        headers, cells = get_result_table(driver=driver)
+        assert headers == ["c"], f"unexpected columns {headers}"
+        assert cells == [str(SEEDED_ROWS)], f"unexpected cells {cells}"
 
 
 @TestFeature
@@ -88,3 +125,4 @@ def select_version_via_explore(self):
 def feature(self):
     """Test querying ClickHouse through the Grafana datasource plugin."""
     Scenario(run=select_version_via_explore)
+    Scenario(run=explore_count_query)
