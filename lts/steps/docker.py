@@ -1,4 +1,4 @@
-"""Docker steps shared by LTS sub-suites that run an upstream test suite in a runner container."""
+"""Docker and Compose steps shared by the LTS sub-suites."""
 
 import os
 import shutil
@@ -96,7 +96,7 @@ def build_runner_image(self, context_dir, tag, build_args=None, log_path=None):
 
 
 @TestStep(When)
-def run_runner_container(
+def run_container(
     self,
     image,
     name,
@@ -109,7 +109,7 @@ def run_runner_container(
     """Run a runner container to completion and return its exit code.
 
     The container's combined output is written to ``log_path``. A non-zero exit
-    code is returned, not treated as a failure, because an upstream test
+    code is returned, not treated as a failure, because a test
     runner exits non-zero whenever any test fails; the caller decides from the
     test results. The container is always force-removed afterwards, including
     on timeout, since killing ``docker run`` does not stop the container.

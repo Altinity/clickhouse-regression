@@ -2,7 +2,7 @@
 
 This suite tests the `clickhouse-jdbc` module of [clickhouse-java] against a
 ClickHouse LTS image by running the module's own unit and integration tests.
-It follows the shared conventions in [../AGENT.md](../AGENT.md); debugging is
+It follows the shared conventions in [../AGENTS.md](../AGENTS.md); debugging is
 in [../DEBUGGING.md](../DEBUGGING.md#clickhouse-jdbc).
 
 ## How it works
@@ -62,7 +62,8 @@ python3 lts/regression.py --clickhouse docker://<image> --only "/lts/clickhouse-
 
 - **v0.9.0 fails against 26.x servers** with `Magic is not correct - expect
   [-126]` in 8 of 9 `ClickHouseConnectionTest` tests, on both Altinity and
-  upstream images. It passes on 25.8, and v0.9.9 passes on 26.3. The 26.3
+  `clickhouse/clickhouse-server` images. It passes on 25.8, and v0.9.9 passes
+  on 26.3. The 26.3
   release report says 0.9.0 passed, but the manual script never checked out
   the tag.
 - **A class whose setup fails** shows one failure and many skips: TestNG skips
@@ -108,7 +109,7 @@ Some changes to this suite need matching changes outside `lts/clickhouse_jdbc/`:
   `--jdbc-maven-args`): add it to `lts_argparser` and `regression()` in
   `lts/regression.py`, pass it to this suite's `Feature` call, and document it
   under CLI Arguments in `lts/README.md` and in the CLI table in
-  `lts/AGENT.md`.
+  `lts/AGENTS.md`.
 - **A longer run time**: raise `timeout` in `feature.py`, and `timeout_minutes`
   of `clickhouse_jdbc` (120 minutes) in `.github/workflows/run-lts.yml`.
 - **A new kind of evidence file**: write it under

@@ -6,23 +6,23 @@ from testflows.core import *
 
 from lts.clickhouse_sqlalchemy.requirements.requirements import (
     SRS_104_ClickHouse_SQLAlchemy_Dialect_clickhouse_sqlalchemy_LTS_Testing,
-    RQ_SRS_104_ClickHouseSQLAlchemy_UpstreamTests,
+    RQ_SRS_104_ClickHouseSQLAlchemy_TestSuite,
     RQ_SRS_104_ClickHouseSQLAlchemy_Compatibility_LTS,
 )
-from lts.steps.upstream import run_upstream_tests
+from lts.steps.tool_tests import run_tool_tests
 
 
 @TestFeature
 @Name("clickhouse-sqlalchemy")
 @Specifications(SRS_104_ClickHouse_SQLAlchemy_Dialect_clickhouse_sqlalchemy_LTS_Testing)
 @Requirements(
-    RQ_SRS_104_ClickHouseSQLAlchemy_UpstreamTests("1.0"),
+    RQ_SRS_104_ClickHouseSQLAlchemy_TestSuite("1.0"),
     RQ_SRS_104_ClickHouseSQLAlchemy_Compatibility_LTS("1.0"),
 )
 def feature(self, release="0.3.2", timeout=3600):
     """Run the clickhouse-sqlalchemy test suite at tag ``release`` against the
-    ClickHouse image and report each upstream test."""
-    run_upstream_tests(
+    ClickHouse image and report each test."""
+    run_tool_tests(
         suite="clickhouse_sqlalchemy",
         configs_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs"),
         build_args={"CLICKHOUSE_IMAGE": self.context.clickhouse_image},

@@ -56,4 +56,4 @@ def feature(
     with And("Selenium Grid is ready"):
         wait_for_selenium()
 
-    Feature(run=load("lts.superset.tests.ui_smoke", "feature"))
+    Feature(run=load("lts.superset.tests.clickhouse_integration", "feature"))

@@ -3,7 +3,7 @@
 This suite tests [Apache Superset] with ClickHouse against a ClickHouse LTS
 image: the ClickHouse driver loads, connections work over HTTP, HTTPS and the
 native protocol, and SQL Lab returns the exact results in a real browser. It
-follows the shared conventions in [../AGENT.md](../AGENT.md), including the
+follows the shared conventions in [../AGENTS.md](../AGENTS.md), including the
 test-oracle rules; debugging is in [../DEBUGGING.md](../DEBUGGING.md#superset).
 
 ## How it works
@@ -22,8 +22,8 @@ drives the browser. One run tests one driver, selected with
 | `configs/default_user.xml` | `default` user reachable from the Compose network |
 | `configs/init_schema.sql` | `lts.events`: 1000 rows, `country` from `number % 5`, `amount = number * 0.5` |
 | `steps/environment.py` | Compose build, up and teardown, log capture, health waits |
-| `steps/ui.py` | Selenium steps, REST API helpers, `test_database_connection()` |
-| `tests/ui_smoke.py` | Driver engine, connection tests, SQL Lab exact rows |
+| `steps/ui.py` | Selenium steps, REST API helpers, `check_database_connection()` |
+| `tests/clickhouse_integration.py` | Driver engine, connection tests, SQL Lab exact rows |
 | `requirements/requirements.md` | SRS-101; regenerate `requirements.py` from it |
 
 Run it, once per driver:
@@ -45,7 +45,7 @@ python3 lts/regression.py --clickhouse docker://<image> --only "/lts/superset/*"
   country codes, for example `DE` inside `ORDER`.
 - **Keep `ORDER BY country`** in the SQL Lab query so the row order is fixed.
 - **Fail on a visible SQL Lab error** (`[role='alert']` with text).
-- **Test connections through `test_database_connection()`**, which calls
+- **Test connections through `check_database_connection()`**, which calls
   `/api/v1/database/test_connection/`, the endpoint behind the Test Connection
   button. Check its result, not just that a connection was saved.
 - **Use each driver's own URIs.** clickhouse-connect: `clickhousedb+connect://`,
@@ -54,7 +54,7 @@ python3 lts/regression.py --clickhouse docker://<image> --only "/lts/superset/*"
   `clickhouse+http://...:8443/...?protocol=https&verify=false` (there is no
   `clickhouse+https` scheme), native as `clickhouse+native://...:9000`.
 - **Don't `skip()` a scenario that doesn't apply to the driver**: a skip marks
-  its requirements unsatisfied. `feature()` in `tests/ui_smoke.py` doesn't run
+  its requirements unsatisfied. `feature()` in `tests/clickhouse_integration.py` doesn't run
   the native check for clickhouse-connect, and attaches the driver environment
   requirement to match the driver.
 - **Pin the drivers** in `Dockerfile.superset` (`clickhouse-connect==1.3.0`,
@@ -81,11 +81,11 @@ python3 lts/regression.py --clickhouse docker://<image> --only "/lts/superset/*"
 1. Add the requirement to `requirements/requirements.md` first, then regenerate
    `requirements.py`. To cover an item from "Not Yet Covered", move it into the
    requirements in the same change as its test.
-2. Add a `@TestScenario` with `@Requirements(...)` to `tests/ui_smoke.py`, and
+2. Add a `@TestScenario` with `@Requirements(...)` to `tests/clickhouse_integration.py`, and
    run it from `feature()`. If it only applies to one driver, run it only for
    that driver there; don't `skip()` it.
 3. Use the existing steps in `steps/ui.py`: `run_sql_in_editor` and
-   `get_sql_lab_result_rows` for SQL Lab, `test_database_connection` and the
+   `get_sql_lab_result_rows` for SQL Lab, `check_database_connection` and the
    `_http`/`_api_login` helpers for the REST API. Take a screenshot at each UI
    step.
 4. Assert exact values derived from `configs/init_schema.sql`, as
@@ -117,7 +117,7 @@ Some changes to this suite need matching changes outside `lts/superset/`:
   `--clickhouse-driver`): add it to `lts_argparser` and `regression()` in
   `lts/regression.py`, pass it to this suite's `Feature` call, and document it
   under CLI Arguments in `lts/README.md` and in the CLI table in
-  `lts/AGENT.md`.
+  `lts/AGENTS.md`.
 - **A longer run time**: raise `wait_for_superset`'s timeout in
   `steps/environment.py` if startup is slower, and `timeout_minutes` of
   `superset_clickhouse_connect` (60 minutes) and
@@ -132,7 +132,7 @@ Some changes to this suite need matching changes outside `lts/superset/`:
 - **Changed commands, logs or failure messages**: update this suite's section
   of `lts/DEBUGGING.md`.
 - **A new driver**: add it to `--clickhouse-driver`'s choices, to
-  `DRIVER_ENGINES` in `tests/ui_smoke.py`, to `_sqlalchemy_uri()` in
+  `DRIVER_ENGINES` in `tests/clickhouse_integration.py`, to `_sqlalchemy_uri()` in
   `steps/ui.py`, to `Dockerfile.superset`, and as a job in `run-lts.yml`.
 
 ## Evidence

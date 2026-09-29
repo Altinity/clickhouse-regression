@@ -8,8 +8,8 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_105_ClickHouseJDBC_UpstreamTests = Requirement(
-    name="RQ.SRS-105.ClickHouseJDBC.UpstreamTests",
+RQ_SRS_105_ClickHouseJDBC_TestSuite = Requirement(
+    name="RQ.SRS-105.ClickHouseJDBC.TestSuite",
     version="1.0",
     priority=None,
     group=None,
@@ -64,15 +64,15 @@ SRS_105_ClickHouse_JDBC_Driver_clickhouse_jdbc_LTS_Testing = Specification(
         Heading(name="Introduction", level=1, num="1"),
         Heading(name="Terminology", level=1, num="2"),
         Heading(name="Requirements", level=1, num="3"),
-        Heading(name="Upstream Tests", level=2, num="3.1"),
-        Heading(name="RQ.SRS-105.ClickHouseJDBC.UpstreamTests", level=3, num="3.1.1"),
+        Heading(name="Test Suite", level=2, num="3.1"),
+        Heading(name="RQ.SRS-105.ClickHouseJDBC.TestSuite", level=3, num="3.1.1"),
         Heading(name="Compatibility", level=2, num="3.2"),
         Heading(
             name="RQ.SRS-105.ClickHouseJDBC.Compatibility.LTS", level=3, num="3.2.1"
         ),
     ),
     requirements=(
-        RQ_SRS_105_ClickHouseJDBC_UpstreamTests,
+        RQ_SRS_105_ClickHouseJDBC_TestSuite,
         RQ_SRS_105_ClickHouseJDBC_Compatibility_LTS,
     ),
     content=r"""
@@ -84,8 +84,8 @@ SRS_105_ClickHouse_JDBC_Driver_clickhouse_jdbc_LTS_Testing = Specification(
 * 1 [Introduction](#introduction)
 * 2 [Terminology](#terminology)
 * 3 [Requirements](#requirements)
-    * 3.1 [Upstream Tests](#upstream-tests)
-        * 3.1.1 [RQ.SRS-105.ClickHouseJDBC.UpstreamTests](#rqsrs-105clickhousejdbcupstreamtests)
+    * 3.1 [Test Suite](#test-suite)
+        * 3.1.1 [RQ.SRS-105.ClickHouseJDBC.TestSuite](#rqsrs-105clickhousejdbctestsuite)
     * 3.2 [Compatibility](#compatibility)
         * 3.2.1 [RQ.SRS-105.ClickHouseJDBC.Compatibility.LTS](#rqsrs-105clickhousejdbccompatibilitylts)
 
@@ -99,14 +99,14 @@ the integration tests starting ClickHouse from the LTS image.
 ## Terminology
 
 - **LTS** — Long-Term Support ClickHouse release.
-- **Upstream tests** — the surefire and failsafe tests of the `clickhouse-jdbc`
+- **Test suite** — the surefire and failsafe tests of the `clickhouse-jdbc`
   module in the clickhouse-java repository.
 
 ## Requirements
 
-### Upstream Tests
+### Test Suite
 
-#### RQ.SRS-105.ClickHouseJDBC.UpstreamTests
+#### RQ.SRS-105.ClickHouseJDBC.TestSuite
 version: 1.0
 
 The `clickhouse-jdbc` module tests, at the tested clickhouse-java release tag,

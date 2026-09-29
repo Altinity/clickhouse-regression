@@ -34,7 +34,7 @@ from lts.superset.steps.ui import (
     navigate_to_sql_lab,
     run_sql_in_editor,
     get_sql_lab_result_rows,
-    test_database_connection,
+    check_database_connection,
     available_database_engines,
 )
 
@@ -81,10 +81,10 @@ def driver_engine_available(self):
     RQ_SRS_101_Superset_DatabaseConnection_HTTP("1.0"),
     RQ_SRS_101_Superset_Compatibility_LTS("1.0"),
 )
-def test_connection_http(self):
+def connection_http(self):
     """Test the HTTP connection through Superset's test-connection API."""
     with Then("Superset reports the HTTP connection as working"):
-        test_database_connection(scheme="http")
+        check_database_connection(scheme="http")
 
 
 @TestScenario
@@ -92,10 +92,10 @@ def test_connection_http(self):
     RQ_SRS_101_Superset_DatabaseConnection_HTTPS("1.0"),
     RQ_SRS_101_Superset_Compatibility_LTS("1.0"),
 )
-def test_connection_https(self):
+def connection_https(self):
     """Test the HTTPS connection through Superset's test-connection API."""
     with Then("Superset reports the HTTPS connection as working"):
-        test_database_connection(scheme="https")
+        check_database_connection(scheme="https")
 
 
 @TestScenario
@@ -103,11 +103,11 @@ def test_connection_https(self):
     RQ_SRS_101_Superset_DatabaseConnection_NativeProtocol("1.0"),
     RQ_SRS_101_Superset_Compatibility_LTS("1.0"),
 )
-def test_connection_native(self):
+def connection_native(self):
     """Test the native-protocol connection through Superset's test-connection
     API. Only clickhouse-sqlalchemy supports the native protocol."""
     with Then("Superset reports the native connection as working"):
-        test_database_connection(scheme="native")
+        check_database_connection(scheme="native")
 
 
 @TestScenario
@@ -116,7 +116,7 @@ def test_connection_native(self):
     RQ_SRS_101_Superset_SQLLab_QueryExecution("1.0"),
     RQ_SRS_101_Superset_Compatibility_LTS("1.0"),
 )
-def ui_clickhouse_smoke(self):
+def sql_lab_query(self):
     """In the browser, find the ClickHouse connection and run a query in SQL
     Lab, checking the exact result rows."""
 
@@ -171,7 +171,7 @@ def ui_clickhouse_smoke(self):
 
 
 @TestFeature
-@Name("ui smoke")
+@Name("clickhouse integration")
 def feature(self):
     """Superset + ClickHouse driver, connection and SQL Lab tests."""
     _, driver_requirement = DRIVER_ENGINES[self.context.clickhouse_driver]
@@ -182,14 +182,14 @@ def feature(self):
             RQ_SRS_101_Superset_Compatibility_LTS("1.0"),
         ],
     )
-    Scenario(run=test_connection_http)
-    Scenario(run=test_connection_https)
+    Scenario(run=connection_http)
+    Scenario(run=connection_https)
     # Not run, rather than skipped, for clickhouse-connect: a skipped test
     # marks its requirements unsatisfied, while this one is just not tested.
     if self.context.clickhouse_driver == "clickhouse-sqlalchemy":
-        Scenario(run=test_connection_native)
+        Scenario(run=connection_native)
     else:
         note(
             "clickhouse-connect has no native protocol support; native connection not tested"
         )
-    Scenario(run=ui_clickhouse_smoke)
+    Scenario(run=sql_lab_query)

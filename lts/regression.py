@@ -171,7 +171,7 @@ def regression(
     note(f"ClickHouse version: {self.context.clickhouse_version}")
 
     Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
-        odbc_release=odbc_release,
+        release=odbc_release,
     )
     Feature(test=load("lts.superset.feature", "feature"))(
         superset_version=superset_version,

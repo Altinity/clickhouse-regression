@@ -66,4 +66,4 @@ def feature(
 
     Feature(run=load("lts.grafana.tests.login", "feature"))
     Feature(run=load("lts.grafana.tests.datasource_query", "feature"))
-    Feature(run=load("lts.grafana.tests.panel_graph", "feature"))
+    Feature(run=load("lts.grafana.tests.dashboard_panel", "feature"))

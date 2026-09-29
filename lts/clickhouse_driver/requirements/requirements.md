@@ -6,8 +6,8 @@
 * 1 [Introduction](#introduction)
 * 2 [Terminology](#terminology)
 * 3 [Requirements](#requirements)
-    * 3.1 [Upstream Tests](#upstream-tests)
-        * 3.1.1 [RQ.SRS-103.ClickHouseDriver.UpstreamTests](#rqsrs-103clickhousedriverupstreamtests)
+    * 3.1 [Test Suite](#test-suite)
+        * 3.1.1 [RQ.SRS-103.ClickHouseDriver.TestSuite](#rqsrs-103clickhousedrivertestsuite)
     * 3.2 [Compatibility](#compatibility)
         * 3.2.1 [RQ.SRS-103.ClickHouseDriver.Compatibility.LTS](#rqsrs-103clickhousedrivercompatibilitylts)
 
@@ -20,16 +20,16 @@ own test suite is run against a server started from the LTS image.
 ## Terminology
 
 - **LTS** — Long-Term Support ClickHouse release.
-- **Upstream tests** — the test suite in the clickhouse-driver repository.
+- **Test suite** — the tests in the clickhouse-driver repository.
 
 ## Requirements
 
-### Upstream Tests
+### Test Suite
 
-#### RQ.SRS-103.ClickHouseDriver.UpstreamTests
+#### RQ.SRS-103.ClickHouseDriver.TestSuite
 version: 1.0
 
-The clickhouse-driver upstream test suite, at the tested release tag and with the
+The clickhouse-driver test suite, at the tested release tag and with the
 patches in `lts/clickhouse_driver/configs/patches`, SHALL pass against a
 ClickHouse server started from the LTS image, except for failures listed as
 known issues.

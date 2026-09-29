@@ -1,4 +1,4 @@
-"""Run a tool's own upstream test suite in a runner container and report each test."""
+"""Run a tool's own test suite in a runner container and report each test."""
 
 import glob
 import os
@@ -8,14 +8,14 @@ from testflows.core import *
 
 from lts.steps.docker import (
     build_runner_image,
-    run_runner_container,
+    run_container,
     suite_results_dir,
     tail,
 )
 from lts.steps.junit import report_junit_results
 
 
-def run_upstream_tests(
+def run_tool_tests(
     suite,
     configs_dir,
     env,
@@ -64,9 +64,9 @@ def run_upstream_tests(
         )
 
     # And after Given makes this a setup step too. TestFlows never skips
-    # setup steps, so --only can select single upstream tests.
-    with And("upstream tests run in the runner container"):
-        exitcode = run_runner_container(
+    # setup steps, so --only can select single tests.
+    with And("the tool's tests run in the runner container"):
+        exitcode = run_container(
             image=image,
             name=f"lts-{suite}-{os.getpid()}",
             log_path=os.path.join(logs_dir, "test.log"),

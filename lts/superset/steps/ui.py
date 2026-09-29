@@ -542,7 +542,7 @@ def get_sql_lab_result_rows(self, driver, columns):
 
 
 @TestStep(Then)
-def test_database_connection(self, scheme):
+def check_database_connection(self, scheme):
     """Test a ClickHouse connection over ``scheme`` (http, https or native)
     through Superset's test-connection API, which is what the Test Connection
     button in the database form calls. Fails unless Superset reports OK."""

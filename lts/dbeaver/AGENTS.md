@@ -3,7 +3,7 @@
 This suite checks that the ClickHouse JDBC driver bundled with [DBeaver]
 Community Edition, and the SQL DBeaver sends, work against a ClickHouse LTS
 image. DBeaver itself is not run. It follows the shared conventions in
-[../AGENT.md](../AGENT.md); debugging is in
+[../AGENTS.md](../AGENTS.md); debugging is in
 [../DEBUGGING.md](../DEBUGGING.md#dbeaver).
 
 ## How it works
@@ -90,7 +90,7 @@ Some changes to this suite need matching changes outside `lts/dbeaver/`:
 - **A new or renamed option** (such as `--dbeaver-version`): add it to
   `lts_argparser` and `regression()` in `lts/regression.py`, pass it to this
   suite's `Feature` call, and document it under CLI Arguments in
-  `lts/README.md` and in the CLI table in `lts/AGENT.md`.
+  `lts/README.md` and in the CLI table in `lts/AGENTS.md`.
 - **A longer run time**: raise `timeout` in `feature.py`, and `timeout_minutes`
   of `dbeaver` (60 minutes) in `.github/workflows/run-lts.yml`.
 - **A new kind of evidence file**: write it under `lts/_instances/dbeaver/`,

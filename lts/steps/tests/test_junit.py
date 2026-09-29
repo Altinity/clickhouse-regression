@@ -9,7 +9,7 @@ import os
 import tempfile
 import unittest
 
-from lts.steps.junit import _tree, parse_junit
+from lts.steps.junit import _group_by_class, parse_junit
 
 PYTEST = """<?xml version="1.0" encoding="utf-8"?>
 <testsuites><testsuite name="pytest" tests="5">
@@ -121,7 +121,7 @@ class ParseJUnitTestCase(unittest.TestCase):
 
     def test_duplicate_names_are_kept(self):
         cases = parse_junit([self.write("dup.xml", DUPLICATES)])
-        node = _tree(cases)["children"]["a"]["children"]["B"]
+        node = _group_by_class(cases)["children"]["a"]["children"]["B"]
         self.assertEqual(
             [case["outcome"] for case in node["cases"]], ["passed", "failed"]
         )
