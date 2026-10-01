@@ -16,7 +16,9 @@ def datatype(self, func, table, col_name):
 @TestScenario
 @Name("any")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Any("1.0"))
-def scenario(self, func="any({params})", table=None, snapshot_id=None):
+def scenario(
+    self, func="any({params})", table=None, snapshot_id=None, datatype_filter=None
+):
     """Check any aggregate function."""
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=">=23.2", add_analyzer=True
@@ -84,6 +86,9 @@ def scenario(self, func="any({params})", table=None, snapshot_id=None):
 
     with Pool(5) as executor:
         for column in table.columns:
+            if datatype_filter is not None and not datatype_filter(column.datatype):
+                continue
+
             Check(
                 f"{column.datatype.name}",
                 test=datatype,

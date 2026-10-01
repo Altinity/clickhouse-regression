@@ -114,9 +114,37 @@ def regression(
     if check_clickhouse_version("<22.4")(self):
         skip(reason="only supported on ClickHouse version >= 22.4")
 
+    # ClickHouse #117822 refuses BEGIN TRANSACTION unless Keeper advertises
+    # LIST_WITH_STAT_AND_DATA, FILTERED_LIST, MULTI_READ, and CHECK_STAT.
+    # Apache ZooKeeper cannot advertise those flags.
+    if not cluster_args["use_keeper"] and check_clickhouse_version(">=26.10")(self):
+        skip(
+            reason=(
+                "transactions require ClickHouse Keeper since "
+                "https://github.com/ClickHouse/ClickHouse/pull/117822; "
+                "rerun with --use-keeper"
+            )
+        )
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
+    # 26.10 defaults async_insert_select_as_async_insert to 1. INSERT SELECT
+    # then takes the async insert queue, which throws inside BEGIN TRANSACTION.
+    # Older servers do not have the setting.
+    with And("I keep INSERT SELECT synchronous when the server would make it async"):
+        setting_name = "async_insert_select_as_async_insert"
+        if (
+            get_settings_value(
+                node=cluster.node("clickhouse1"),
+                setting_name=setting_name,
+            )
+            == "1"
+        ):
+            getsattr(self.context, "default_query_settings", []).append(
+                (setting_name, 0)
+            )
 
     with And("I create configs"):
         create_transactions_configuration()

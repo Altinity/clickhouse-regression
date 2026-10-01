@@ -1191,13 +1191,25 @@ def flask_server(self, server_path, port, protocol, ciphers):
                     bash.send("\x03\r", eol="")
 
                 with And(f"Checking that port {port} is free"):
-                    for retry in retries(timeout=5, delay=0.5):
-                        with retry:
-                            r = node.command(
-                                f"ss -ltnup | grep '{port} ' --color=never",
+                    try:
+                        for retry in retries(timeout=5, delay=0.5):
+                            with retry:
+                                r = node.command(
+                                    f"ss -ltnup | grep '{port} ' --color=never",
+                                    no_checks=True,
+                                )
+                                assert r.output == "", error(r.output)
+                    finally:
+                        # The server sometimes survives ctrl-c and keeps the port,
+                        # which fails every later check that needs it. Kill it here
+                        # so only this check fails.
+                        with By(f"killing any process still listening on port {port}"):
+                            node.command(
+                                f"ss -ltnup | grep '{port} ' --color=never"
+                                " | sed -n 's/.*pid=\\([0-9]*\\),.*/\\1/p'"
+                                " | xargs -r kill -9",
                                 no_checks=True,
                             )
-                            assert r.output == "", error(r.output)
 
 
 @TestStep(Then)

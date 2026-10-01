@@ -298,6 +298,8 @@
                 * 3.1.4.35.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousanalysisofvariance)
             * 3.1.4.36 [flameGraph](#flamegraph)
                 * 3.1.4.36.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousflamegraph)
+            * 3.1.4.37 [uniqApacheHLL](#uniqapachehll)
+                * 3.1.4.37.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqApacheHLL](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousuniqapachehll)
         * 3.1.5 [Parametric Functions](#parametric-functions)
             * 3.1.5.1 [histogram](#histogram)
                 * 3.1.5.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -1416,6 +1418,13 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support [flameGraph] aggregate function.
+
+##### uniqApacheHLL
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqApacheHLL
+version: 1.0
+
+[ClickHouse] SHALL support `uniqApacheHLL` aggregate function.
 
 #### Parametric Functions
 

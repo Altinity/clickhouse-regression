@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.241127.1225014.
+# document by TestFlows v2.0.250110.1002922.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -2241,6 +2241,21 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FlameGraph = Requirement(
     num="3.1.4.36.1",
 )
 
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_UniqApacheHLL = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqApacheHLL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support `uniqApacheHLL` aggregate function.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.1.4.37.1",
+)
+
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram = Requirement(
     name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram",
     version="1.0",
@@ -3973,6 +3988,12 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
             level=5,
             num="3.1.4.36.1",
         ),
+        Heading(name="uniqApacheHLL", level=4, num="3.1.4.37"),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqApacheHLL",
+            level=5,
+            num="3.1.4.37.1",
+        ),
         Heading(name="Parametric Functions", level=3, num="3.1.5"),
         Heading(name="histogram", level=4, num="3.1.5.1"),
         Heading(
@@ -4351,6 +4372,7 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_TheilsU,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_AnalysisOfVariance,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FlameGraph,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_UniqApacheHLL,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_sequenceMatchEvents,
@@ -4688,6 +4710,8 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
                 * 3.1.4.35.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AnalysisOfVariance](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousanalysisofvariance)
             * 3.1.4.36 [flameGraph](#flamegraph)
                 * 3.1.4.36.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FlameGraph](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousflamegraph)
+            * 3.1.4.37 [uniqApacheHLL](#uniqapachehll)
+                * 3.1.4.37.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqApacheHLL](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousuniqapachehll)
         * 3.1.5 [Parametric Functions](#parametric-functions)
             * 3.1.5.1 [histogram](#histogram)
                 * 3.1.5.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -5806,6 +5830,13 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support [flameGraph] aggregate function.
+
+##### uniqApacheHLL
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqApacheHLL
+version: 1.0
+
+[ClickHouse] SHALL support `uniqApacheHLL` aggregate function.
 
 #### Parametric Functions
 
