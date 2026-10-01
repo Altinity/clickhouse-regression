@@ -176,6 +176,7 @@ aggregate_functions = [
     "uniqCombined64",
     "uniqExact",
     "uniqHLL12",
+    "uniqApacheHLL",
     "uniqTheta",
     "uniqUpTo",
     "varPop",

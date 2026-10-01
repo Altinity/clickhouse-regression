@@ -863,6 +863,18 @@ ffails = {
         Skip,
         "groupFormat test is not implemented",
     ),
+    "/aggregate functions/part */uniqApacheHLL": (
+        Skip,
+        "uniqApacheHLL is introduced in Antalya 26.6",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.6")(test),
+    ),
+    "/aggregate functions/part */:/uniqApacheHLL:": (
+        Skip,
+        "uniqApacheHLL is introduced in Antalya 26.6",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.6")(test),
+    ),
 }
 
 
