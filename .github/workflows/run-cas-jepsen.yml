@@ -1,25 +1,25 @@
-name: CAS Jepsen
-run-name: CAS Jepsen | ${{ inputs.custom_run_name || format('{0} | {1}m × {2}', inputs.version || inputs.package, inputs.minutes, inputs.test_count) }}
+name: ⚡ CAS Jepsen
+run-name: ⚡ CAS Jepsen | ${{ inputs.custom_run_name || format('{0} | {1}m × {2}', inputs.version || inputs.package, inputs.minutes, inputs.test_count) }}
 
 on:
   workflow_dispatch:
     inputs:
       package:
-        description: "Package. Either 'docker://' or 'https://'. Example: 'docker://altinity/clickhouse-server:…' or 'https://…/clickhouse'"
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'docker://altinity/clickhouse-server:…' or 'https://…/clickhouse'"
         required: true
         type: string
       minutes:
-        description: "Per-scenario Jepsen time-limit in minutes"
+        description: "⏱️ Per-scenario Jepsen time-limit in minutes"
         required: true
         type: number
         default: 5
       version:
-        description: "Expected version label (optional)"
+        description: "🎯 Expected version label (optional)"
         required: false
         type: string
         default: ""
       arch:
-        description: "Runner architecture"
+        description: "🖥 Runner architecture"
         type: choice
         options:
           - x86
@@ -27,38 +27,38 @@ on:
         required: true
         default: x86
       test_count:
-        description: "Number of scenarios (test-all count; 8 = all server nemeses)"
+        description: "🧪 Number of scenarios (test-all count; 8 = all server nemeses)"
         required: true
         type: number
         default: 8
       concurrency:
-        description: "Jepsen client concurrency"
+        description: "👥 Jepsen client concurrency"
         required: true
         type: number
         default: 12
       rate:
-        description: "Approximate ops per second per thread"
+        description: "📈 Approximate ops per second per thread"
         required: true
         type: number
         default: 10
       timeout_minutes:
-        description: "Job timeout in minutes. Should be >= (minutes * test_count) + setup/teardown overhead (~60)."
+        description: "⏰ Job timeout in minutes. Should be >= (minutes * test_count) + setup/teardown overhead (~60)."
         required: true
         type: number
         default: 180
       ref:
-        description: "Commit SHA to checkout. Default: current (empty string)."
+        description: "🏷 Commit SHA to checkout. Default: current (empty string)."
         type: string
         default: ""
       custom_run_name:
-        description: "Custom run name (optional)"
+        description: "📝 Custom run name (optional)"
         required: false
         type: string
         default: ""
 
 jobs:
   cas_jepsen:
-    name: cas/jepsen
+    name: ⚡ cas/jepsen
     runs-on: ${{ inputs.arch == 'arm64' && fromJSON('["self-hosted","arm64","type-cax31-cax41","image-arm64-app-docker-ce"]') || fromJSON('["self-hosted","x86","type-cx43-cx53-cpx42","image-x86-app-docker-ce"]') }}
     timeout-minutes: ${{ fromJSON(inputs.timeout_minutes) }}
     env:
@@ -66,12 +66,12 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
       COMPOSE_PROJECT_NAME: jepsen-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Install JVM, Leiningen, and gnuplot
+      - name: ☕ Install JVM, Leiningen, and gnuplot
         run: |
           set -euo pipefail
           sudo apt-get update -qq
@@ -94,7 +94,7 @@ jobs:
           lein version
           gnuplot --version
 
-      - name: Run CAS Jepsen
+      - name: 🧪 Run CAS Jepsen
         env:
           PACKAGE: ${{ inputs.package }}
           MINUTES: ${{ inputs.minutes }}
@@ -110,7 +110,7 @@ jobs:
             --concurrency "$CONCURRENCY" \
             --rate "$RATE"
 
-      - name: Upload artifacts
+      - name: 📤 Upload artifacts
         if: always()
         uses: actions/upload-artifact@v7
         with:

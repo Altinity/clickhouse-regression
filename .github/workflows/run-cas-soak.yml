@@ -1,18 +1,18 @@
-name: CAS soak
-run-name: CAS soak | ${{ inputs.custom_run_name || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.architecture) }}
+name: 💧 CAS soak
+run-name: 💧 CAS soak | ${{ inputs.custom_run_name || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.architecture) }}
 on:
   workflow_dispatch:
     inputs:
       package:
-        description: "Package. Either 'docker://' or 'https://'. Example: 'docker://altinity/clickhouse-server:26.6…' or a .deb URL"
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'docker://altinity/clickhouse-server:26.6…' or a .deb URL"
         required: true
         type: string
       version:
-        description: "Expected ClickHouse version"
+        description: "🎯 Expected ClickHouse version"
         required: true
         type: string
       suite:
-        description: "Soak suites to run (default: all)"
+        description: "🧪 Soak suites to run (default: all)"
         type: choice
         options:
           - all
@@ -25,7 +25,7 @@ on:
           - unit,phase1,phase2,phase3
         default: all
       architecture:
-        description: "Runner architecture"
+        description: "🖥 Runner architecture"
         type: choice
         options:
           - x86
@@ -33,13 +33,13 @@ on:
           - all
         default: x86
       artifacts:
-        description: "Artifact S3 bucket"
+        description: "🏺 Artifact S3 bucket"
         type: choice
         options:
           - internal
         default: internal
       output_format:
-        description: "Testflows output style"
+        description: "📜 Testflows output style"
         type: choice
         options:
           - classic
@@ -51,15 +51,15 @@ on:
           - raw
         default: classic
       ref:
-        description: "Commit SHA to checkout. Default: current (empty string)."
+        description: "🏷 Commit SHA to checkout. Default: current (empty string)."
         type: string
         default: ""
       extra_args:
-        description: "Extra test program arguments (seed, durations, scenario filters, …)."
+        description: "🎛️ Extra test program arguments (seed, durations, scenario filters, …)."
         type: string
         default: ""
       custom_run_name:
-        description: "Custom run name (optional)"
+        description: "📝 Custom run name (optional)"
         required: false
 
 env:
@@ -100,6 +100,7 @@ env:
 
 jobs:
   cas_soak_x86:
+    name: 💧 cas/soak x86
     runs-on: [self-hosted, x86, type-cx53, image-x86-app-docker-ce]
     timeout-minutes: 10000
     env:
@@ -107,38 +108,40 @@ jobs:
       STORAGE: /cas_soak_x86
     if: ${{ contains('all x86', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Cache Python dependencies
+      - name: ♻️ Cache Python dependencies
         uses: ./.github/actions/cache-setup
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Install soak Python deps
+      - name: 📦 Install soak Python deps
         run: pip install -r cas/soak/requirements.txt
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v7
+      - name: 📤 Upload artifacts
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: cas-soak-x86-artifacts
           path: ${{ env.artifact_paths }}
 
   cas_soak_arm:
+    name: 💧 cas/soak arm
     runs-on: [self-hosted, arm64, type-cax31-cax41, image-arm64-app-docker-ce]
     timeout-minutes: 10000
     env:
@@ -146,32 +149,33 @@ jobs:
       STORAGE: /cas_soak_arm
     if: ${{ contains('all ARM', inputs.architecture) }}
     steps:
-      - name: Checkout
+      - name: ⤵️ Checkout
         uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Cache Python dependencies
+      - name: ♻️ Cache Python dependencies
         uses: ./.github/actions/cache-setup
 
-      - name: Setup
+      - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Install soak Python deps
+      - name: 📦 Install soak Python deps
         run: pip install -r cas/soak/requirements.txt
 
-      - name: Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
-      - name: Create and upload logs
+      - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-      - uses: actions/upload-artifact@v7
+      - name: 📤 Upload artifacts
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: cas-soak-arm-artifacts
