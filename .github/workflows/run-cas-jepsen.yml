@@ -55,6 +55,48 @@ on:
         required: false
         type: string
         default: ""
+  workflow_call:
+    inputs:
+      package:
+        description: "Package. Either 'docker://' or 'https://'."
+        required: true
+        type: string
+      minutes:
+        description: "Per-scenario Jepsen time-limit in minutes"
+        type: string
+        default: "5"
+      version:
+        description: "Expected version label"
+        type: string
+        default: ""
+      arch:
+        description: "Runner architecture: x86 or arm64"
+        type: string
+        default: x86
+      test_count:
+        description: "Number of scenarios (8 = all server nemeses)"
+        type: string
+        default: "8"
+      concurrency:
+        description: "Jepsen client concurrency"
+        type: string
+        default: "12"
+      rate:
+        description: "Approximate ops per second per thread"
+        type: string
+        default: "10"
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        type: string
+        default: "180"
+      ref:
+        description: "Commit SHA to checkout. Default: current."
+        type: string
+        default: ""
+      custom_run_name:
+        description: "Custom run name (optional)"
+        type: string
+        default: ""
 
 jobs:
   cas_jepsen:

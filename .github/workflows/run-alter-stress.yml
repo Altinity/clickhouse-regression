@@ -114,6 +114,56 @@ on:
       custom_run_name:
         description: '📝 Custom run name (optional)'
         required: false
+  workflow_call:
+    inputs:
+      package:
+        description: "Package. Either 'docker://' or 'https://'."
+        required: true
+        type: string
+      version:
+        description: "Expected ClickHouse version"
+        required: true
+        type: string
+      scenario:
+        description: "Scenario to run. all = every combinations scenario."
+        type: string
+        default: sanity
+      storage_provider:
+        description: "Storage provider: minio, local, or all"
+        type: string
+        default: minio
+      cas_mode:
+        description: "CAS overlay for minio jobs: off, --cas, or --cas-s3-cache"
+        type: string
+        default: "off"
+      architecture:
+        description: "Runner architecture: x86, ARM, or all"
+        type: string
+        default: x86
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: string
+        default: hetzner
+      output_format:
+        description: "Testflows output style"
+        type: string
+        default: new-fails
+      ref:
+        description: "Commit SHA to checkout. Default: current."
+        type: string
+        default: ""
+      extra_args:
+        description: "Extra test program arguments"
+        type: string
+        default: ""
+      stress:
+        description: "Pass --stress (unbounded combination count)"
+        type: boolean
+        default: false
+      custom_run_name:
+        description: "Custom run name (optional)"
+        type: string
+        default: ""
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}

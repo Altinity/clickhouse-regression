@@ -1,0 +1,99 @@
+name: 🧪 CAS checks
+run-name: 🧪 CAS checks | ${{ inputs.version }} | ${{ inputs.architecture }}
+
+# One dispatch for every CAS check. Package and version are the only required
+# inputs. Architecture defaults to x86.
+#
+# Soak runs every soak suite. Jepsen runs all eight server nemeses.
+# Alter stress runs every combinations scenario on MinIO with --cas
+# (20 groups per scenario). Regression suite cas_all runs the CAS suite,
+# the CAS suite with --cas-s3-cache, and every other suite that has a
+# --cas or --cas-s3-cache variant.
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'docker://altinity/clickhouse-server:26.6…' or a .deb URL"
+        required: true
+        type: string
+      version:
+        description: "🎯 Expected ClickHouse version"
+        required: true
+        type: string
+      architecture:
+        description: "🖥 Runner architecture (default: x86)"
+        type: choice
+        options:
+          - x86
+          - arm64
+          - all
+        default: x86
+
+jobs:
+  soak:
+    name: CAS soak
+    uses: ./.github/workflows/run-cas-soak.yml
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      suite: all
+      architecture: ${{ inputs.architecture == 'arm64' && 'ARM' || inputs.architecture }}
+    secrets: inherit
+
+  jepsen_x86:
+    name: CAS Jepsen x86
+    if: ${{ inputs.architecture == 'x86' || inputs.architecture == 'all' }}
+    uses: ./.github/workflows/run-cas-jepsen.yml
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      arch: x86
+    secrets: inherit
+
+  jepsen_arm:
+    name: CAS Jepsen arm64
+    if: ${{ inputs.architecture == 'arm64' || inputs.architecture == 'all' }}
+    uses: ./.github/workflows/run-cas-jepsen.yml
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      arch: arm64
+    secrets: inherit
+
+  alter_stress:
+    name: Alter stress with CAS
+    uses: ./.github/workflows/run-alter-stress.yml
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      scenario: all
+      storage_provider: minio
+      cas_mode: "--cas"
+      architecture: ${{ inputs.architecture == 'arm64' && 'ARM' || inputs.architecture }}
+      output_format: new-fails
+    secrets: inherit
+
+  cas_suites_x86:
+    name: Suites with CAS x86
+    if: ${{ inputs.architecture == 'x86' || inputs.architecture == 'all' }}
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      arch: x86
+      suite: cas_all
+      flags: none
+    secrets: inherit
+
+  cas_suites_arm:
+    name: Suites with CAS arm64
+    if: ${{ inputs.architecture == 'arm64' || inputs.architecture == 'all' }}
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      arch: arm64
+      suite: cas_all
+      flags: none
+    secrets: inherit
