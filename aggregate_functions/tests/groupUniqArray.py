@@ -15,7 +15,11 @@ from aggregate_functions.tests.groupArray import scenario as checks
 def scenario(self, func="groupUniqArray({params})", table=None, snapshot_id=None):
     """Check groupUniqArray aggregate function by using the same tests as for groupArray."""
 
-    if check_clickhouse_version(">=26.8")(self):
+    if check_clickhouse_version(">=26.9")(self):
+        clickhouse_version = (
+            ">=26.9"  # https://github.com/ClickHouse/ClickHouse/pull/116880
+        )
+    elif check_clickhouse_version(">=26.8")(self):
         clickhouse_version = (
             ">=26.8"  # https://github.com/ClickHouse/ClickHouse/pull/110917
         )

@@ -17,9 +17,14 @@ def scenario(
     """Check argMax aggregate function by using the same tests as for argMin."""
     # https://github.com/ClickHouse/ClickHouse/pull/58139
 
-    clickhouse_version = (
-        ">=23.2" if check_clickhouse_version("<23.12")(self) else ">=23.12"
-    )
+    if check_clickhouse_version(">=26.10")(self):
+        clickhouse_version = (
+            ">=26.10"  # https://github.com/ClickHouse/ClickHouse/pull/122892
+        )
+    elif check_clickhouse_version(">=23.12")(self):
+        clickhouse_version = ">=23.12"
+    else:
+        clickhouse_version = ">=23.2"
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id,
