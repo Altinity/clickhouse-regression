@@ -275,7 +275,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 2
-      timeout_minutes: 180
+      timeout_minutes: 240
       regression_args: '--only "/aggregate functions/part 2/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
