@@ -1,4 +1,5 @@
 from testflows.core import *
+from helpers.common import check_clickhouse_version
 
 from window_functions.requirements import *
 from window_functions.tests.common import *
@@ -62,7 +63,10 @@ def error_missing_order_by_with_partition_by_clause(self):
 def error_range_over_non_numerical_column(self):
     """Check that range over non numerical column returns an error."""
     exitcode = 48
-    message = "DB::Exception: The RANGE OFFSET frame for 'DB::ColumnLowCardinality' ORDER BY column is not implemented"
+    if check_clickhouse_version(">=26.10")(self):
+        message = "DB::Exception: The RANGE OFFSET frame for 'LowCardinality(String)' ORDER BY column is not implemented"
+    else:
+        message = "DB::Exception: The RANGE OFFSET frame for 'DB::ColumnLowCardinality' ORDER BY column is not implemented"
 
     sql = (
         "select sum(salary) over (order by depname range between 1 preceding and 2 following) as sum, "
