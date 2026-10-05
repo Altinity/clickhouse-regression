@@ -1392,6 +1392,8 @@ http_wait_end_of_query = r"""'{"default":"0"}'"""
 
 http_write_exception_in_output_format = r"""'{"default":"0"}'"""
 
+http_x_clickhouse_format_overrides_output_format = r"""'{"default":"1"}'"""
+
 http_zlib_compression_level = r"""'{"default":"3"}'"""
 
 iceberg_compaction_commit_batch_size = r"""'{"default":"100"}'"""
