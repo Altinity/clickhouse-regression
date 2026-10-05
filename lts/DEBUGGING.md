@@ -62,6 +62,7 @@ the next run of that suite:
 | clickhouse-driver, clickhouse-sqlalchemy | `junit.xml`; `logs/build.log`, `logs/test.log` (pytest output), `logs/clickhouse-server.log` |
 | clickhouse-jdbc | `reports/surefire-*.xml`, `reports/failsafe-*.xml`; `logs/build.log`, `logs/test.log` (Maven output) |
 | dbeaver | `junit.xml`; `logs/build.log`, `logs/test.log` (one `OK` or `FAIL` line per check, with the stack trace) |
+| dbeaver_ui | `screenshots/NN_<step>.png`; `logs/build.log`, `logs/clickhouse-server.log`, `logs/dbeaver.log`, `logs/dbeaver-debug.log`, `logs/container.log` |
 | grafana, superset | `logs/<service>.log` for each Compose service, `logs/compose-ps.log`, `logs/compose-down.log`; `screenshots/*.png` |
 
 `logs/build.log` is the runner image build. `logs/test.log` is everything the
@@ -275,6 +276,29 @@ that is.
 
   Edit `/Smoke.java` inside the container to try a change, then copy it back to
   `lts/dbeaver/configs/Smoke.java`.
+
+## dbeaver-ui
+
+The suite runs DBeaver under Xvfb in one container with the ClickHouse server,
+and drives it through AT-SPI and xdotool (see `lts/dbeaver_ui/AGENTS.md`).
+
+- **Look at the last screenshot** in `lts/_instances/dbeaver_ui/screenshots/`.
+  A step that times out takes one (`connection_test_timeout`,
+  `connection_error`), and every message lists the windows that were open.
+- **`<role> '<name>' ... did not show`.** The widget was not on the screen, or
+  DBeaver renamed it. Dump what AT-SPI sees and compare names:
+
+  ```bash
+  docker exec <container> bash -c 'source /tmp/desktop.env; python3 /desktop.py elements' \
+      | python3 -c "import json,sys; [print(e['window'], '|', e['role'], '|', e['name']) for e in json.load(sys.stdin) if e['name']]"
+  ```
+
+- **No Connection test result.** The driver download from Maven Central is
+  slow or failing; `logs/dbeaver.log` lists every URL DBeaver opened.
+- **Look at a running session.** The container is removed at the end of the
+  run. While the run is in progress, its name is in the
+  `container lts-dbeaver-ui-<pid>` note; run the dump above against it, or save
+  a screenshot with `python3 /desktop.py screenshot /results/now.png`.
 
 ## grafana
 
