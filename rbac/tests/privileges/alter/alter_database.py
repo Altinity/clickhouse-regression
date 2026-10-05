@@ -1,3 +1,5 @@
+from testflows.asserts import error
+
 from rbac.requirements import *
 from rbac.helper.common import *
 import rbac.helper.errors as errors
@@ -75,16 +77,57 @@ def privilege_check(grant_target_name, user_name, node=None):
                 )
 
             with Then("I attempt to alter a database"):
+                if check_clickhouse_version(">=26.9")(current()):
+                    # from 26.9 (ClickHouse #115202) Atomic supports altering
+                    # max_tables and rejects any other setting
+                    exitcode_alter, message_alter = (
+                        36,
+                        "DB::Exception: Database engine Atomic does not support altering setting `engine`",
+                    )
+                else:
+                    exitcode_alter, message_alter = (
+                        48,
+                        "DB::Exception: Database engine Atomic either does not support settings",
+                    )
                 node.query(
                     f"ALTER DATABASE {db_name} MODIFY SETTING engine='Lazy'",
                     settings=[("user", user_name)],
-                    exitcode=48,
-                    message="DB::Exception: Database engine Atomic either does not support settings",
+                    exitcode=exitcode_alter,
+                    message=message_alter,
                 )
 
         finally:
             with Finally("I drop the database"):
                 node.query(f"DROP DATABASE IF EXISTS {db_name}")
+
+    if check_clickhouse_version(">=26.9")(current()):
+        with Scenario("user with privilege alters max_tables"):
+            db_name = f"db_{getuid()}"
+
+            try:
+                with Given("I have a database"):
+                    node.query(f"CREATE DATABASE {db_name}")
+
+                with When(f"I grant {current().context.privilege} privilege"):
+                    node.query(
+                        f"GRANT {current().context.privilege} ON *.* TO {grant_target_name}"
+                    )
+
+                with Then("I alter the max_tables setting of the database"):
+                    node.query(
+                        f"ALTER DATABASE {db_name} MODIFY SETTING max_tables = 100",
+                        settings=[("user", user_name)],
+                    )
+
+                with And("I check the setting was changed"):
+                    output = node.query(
+                        f"SELECT engine_full LIKE '%max_tables = 100%' FROM system.databases WHERE name = '{db_name}'"
+                    ).output
+                    assert output == "1", error()
+
+            finally:
+                with Finally("I drop the database"):
+                    node.query(f"DROP DATABASE IF EXISTS {db_name}")
 
     with Scenario("user with revoked privilege"):
         db_name = f"db_{getuid()}"
