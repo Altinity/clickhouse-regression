@@ -170,6 +170,10 @@ _aggregate_functions_finalizeAggregation_uniqApacheHLLfinalizeAggregation_LowCar
 {"finalizeAggregation(CAST(unhex('300301070C0508000109000000C3F0030AA4E2F0046504C50528674F17692CC7086C95BA0E50C94D05F3E62005B5467004'), 'AggregateFunction(uniqApacheHLL, LowCardinality(UUID))'))":"9"}
 """
 
+_aggregate_functions_finalizeAggregation_uniqApacheHLLfinalizeAggregation_NULL_for_all_rows_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(uniqApacheHLL, Nullable(Nothing))'))":"0"}
+"""
+
 _aggregate_functions_finalizeAggregation_uniqApacheHLLfinalizeAggregation_Nullable_Bool__0 = r"""
 {"finalizeAggregation(CAST(unhex('01100201070C030802002BF2FB06CBD7C204'), 'AggregateFunction(uniqApacheHLL, Nullable(Bool))'))":"2"}
 """

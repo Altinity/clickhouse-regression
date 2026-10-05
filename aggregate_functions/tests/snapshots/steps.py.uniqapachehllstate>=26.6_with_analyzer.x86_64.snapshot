@@ -170,6 +170,10 @@ _aggregate_functions_state_uniqApacheHLLState_LowCardinality_UUID_ = r"""
 {"hex(uniqApacheHLLState(lowcardinality_uuid_))":"300301070C0508000109000000C3F0030AA4E2F0046504C50528674F17692CC7086C95BA0E50C94D05F3E62005B5467004","any(toTypeName(lowcardinality_uuid_))":"LowCardinality(UUID)"}
 """
 
+_aggregate_functions_state_uniqApacheHLLState_NULL_for_all_rows = r"""
+{"hex(uniqApacheHLLStateDistinct(if(modulo(number, 2), NULL, NULL)))":"00","any(toTypeName(NULL))":"Nullable(Nothing)"}
+"""
+
 _aggregate_functions_state_uniqApacheHLLState_Nullable_Bool_ = r"""
 {"hex(uniqApacheHLLState(nullable_bool_))":"01100201070C030802002BF2FB06CBD7C204","any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
 """
