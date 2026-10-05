@@ -71,6 +71,7 @@ def wait_for(self, role=None, name=None, window=None, name_prefix=None, timeout=
         if matches:
             return matches[0]
         if time.time() > deadline:
+            screenshot(name="wait_timeout")
             fail(f"{describe(role, name, window, name_prefix)} did not show within {timeout}s; "
                  f"open windows: {desktop('windows')}")
         time.sleep(1)

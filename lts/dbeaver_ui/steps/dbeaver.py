@@ -1,11 +1,11 @@
 """Steps for what a user does in DBeaver: start it, create a connection, run SQL
 in the SQL editor, read the result grid and browse the navigator."""
 
-import re
 import time
 
 from testflows.core import *
 
+from lts.dbeaver_ui.steps.environment import clickhouse_query
 from lts.dbeaver_ui.steps.desktop import (
     click,
     click_element,
@@ -25,7 +25,6 @@ from lts.dbeaver_ui.steps.desktop import (
 )
 
 WIZARD = "Connect to a database"
-FETCHED = re.compile(r"\d+ row\(s\) fetched")
 
 
 @TestStep(Given)
@@ -160,7 +159,7 @@ def finish_wizard(self, name="localhost"):
 def open_sql_editor(self, connection="localhost"):
     """Select the connection in the navigator and open a SQL editor for it
     with Ctrl+]."""
-    click_element(role="table cell", name=connection)
+    select_node(wait_for(role="table cell", name=connection))
     press("ctrl+bracketright")
     wait_for(role="page tab", name_prefix=f"<{connection}> Script")
 
@@ -176,12 +175,31 @@ def editor():
     return min(texts, key=lambda e: e["box"][1])
 
 
-def fetched_status():
-    """Return the result panel's ``N row(s) fetched ...`` status line, or None."""
-    for element in find(role="label"):
-        if FETCHED.match(element["name"]):
-            return element["name"]
-    return None
+def results_panel():
+    """Return the results panel: the tab list below the SQL editor, in the
+    main window, that is lowest on the screen."""
+    panels = [e for e in find(role="page tab list")
+              if 480 < e["box"][0] < 1490 and e["box"][1] > 300 and e["box"][2] > 500]
+    if not panels:
+        fail("no results panel is showing below the SQL editor")
+    return max(panels, key=lambda e: e["box"][1])
+
+
+def copy_grid():
+    """Copy the result grid with Ctrl+A, Ctrl+C and return the clipboard. A
+    click in the upper part of the results panel lands in the grid."""
+    x, y = results_panel()["box"][:2]
+    desktop("click", str(x + 100), str(y + 110))
+    press("ctrl+a", "ctrl+c")
+    time.sleep(0.5)
+    return clipboard()
+
+
+# The grid copied for the previous query. A query's result is ready when the
+# grid's copy differs from it, so two queries in a row must not return the
+# same rows.
+last_grid = [None]
+query_number = [0]
 
 
 @TestStep(When)
@@ -189,19 +207,24 @@ def run_query(self, sql, timeout=120):
     """Replace the SQL editor's text with ``sql``, run it with Ctrl+Enter, and
     return the result grid as a list of rows of strings.
 
-    The rows are copied from the grid with Ctrl+A, Ctrl+C: the grid is drawn by
-    DBeaver and its cells are not accessible.
+    The query is tagged with ``SETTINGS log_comment``, so the server's
+    ``system.query_log`` shows when DBeaver sent it and when it finished. The
+    rows are then copied from the grid with Ctrl+A, Ctrl+C, because the grid is
+    drawn by DBeaver and its cells are not accessible.
     """
-    before = fetched_status()
+    query_number[0] += 1
+    marker = f"lts-dbeaver-ui-{query_number[0]}"
     click(element=editor())
     press("ctrl+a")
-    paste(sql)
+    paste(f"{sql} SETTINGS log_comment = '{marker}'")
     press("ctrl+Return")
 
     deadline = time.time() + timeout
     while True:
-        status = fetched_status()
-        if status is not None and status != before:
+        finished = clickhouse_query(
+            "SYSTEM FLUSH LOGS; SELECT type FROM system.query_log "
+            f"WHERE log_comment = '{marker}' AND type != 'QueryStart' FORMAT TSV")
+        if finished:
             break
         errors = [e for e in elements() if e["name"].startswith("SQL Error")
                   or e["text"].startswith("SQL Error")]
@@ -209,28 +232,20 @@ def run_query(self, sql, timeout=120):
             fail(f"DBeaver reports an error for {sql!r}: {errors[0]['name'] or errors[0]['text']}")
         if time.time() > deadline:
             screenshot(name="query_timeout")
-            bottom = [f"{e['role']} {e['name'] or e['text']!r}" for e in elements()
-                      if e["box"][1] > 900 and (e["name"] or e["text"])]
-            fail(f"no result for {sql!r} within {timeout}s; at the bottom of the screen: {bottom}")
+            fail(f"the server did not finish {sql!r} from DBeaver within {timeout}s")
         time.sleep(1)
-    note(status)
+    if finished != "QueryFinish":
+        fail(f"the server reports {finished} for {sql!r}")
 
-    # The results panel is the tab list below the editor that holds the
-    # Refresh button. A click in its upper part lands in the grid.
-    refresh = wait_for(role="push button", name="Refresh")
-    rx, ry = refresh["box"][0], refresh["box"][1]
-    panels = [e for e in find(role="page tab list")
-              if e["box"][0] <= rx and e["box"][1] < ry < e["box"][1] + e["box"][3]]
-    if not panels:
-        fail("no result panel holds the Refresh button")
-    panel = max(panels, key=lambda e: e["box"][1])
-    x, y = panel["box"][0], panel["box"][1]
-    desktop("click", str(x + 100), str(y + 110))
-    press("ctrl+a", "ctrl+c")
-    time.sleep(0.5)
-    text = clipboard()
-    if text == sql:
-        fail("copying the result grid did not change the clipboard")
+    while True:
+        text = copy_grid()
+        if text != last_grid[0] and not text.endswith(f"'{marker}'"):
+            break
+        if time.time() > deadline:
+            screenshot(name="grid_timeout")
+            fail(f"the result grid still shows the previous result {text!r}")
+        time.sleep(1)
+    last_grid[0] = text
     return [line.split("\t") for line in text.split("\n")]
 
 
@@ -256,11 +271,25 @@ def run_script(self, sql, timeout=300):
         time.sleep(1)
 
 
+def select_node(node):
+    """Click a navigator node on its name. A tree cell spans the whole width
+    of the navigator, and a click on the empty space right of the name does
+    not select the row."""
+    x, y, width, height = node["box"]
+    desktop("click", str(x + min(20, width // 2)), str(y + height // 2))
+    for _ in range(10):
+        if any("selected" in e["states"] for e in find(role="table cell", name=node["name"])):
+            return
+        time.sleep(0.5)
+    screenshot(name="node_not_selected")
+    fail(f"clicking navigator node {node['name']!r} at {node['box']} did not select it")
+
+
 @TestStep(When)
 def expand_node(self, name, timeout=60):
     """Select a navigator node and expand it with the Right key."""
     node = wait_for(role="table cell", name=name, timeout=timeout)
-    click(element=node)
+    select_node(node)
     press("Right")
     return node
 
@@ -268,5 +297,5 @@ def expand_node(self, name, timeout=60):
 @TestStep(When)
 def refresh_node(self, name):
     """Select a navigator node and refresh it with F5."""
-    click_element(role="table cell", name=name)
+    select_node(wait_for(role="table cell", name=name))
     press("F5")

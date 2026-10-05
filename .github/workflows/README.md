@@ -24,7 +24,8 @@ Artifacts: Specify whether to upload to internal or public s3 bucket. 'altinity-
 ### Run LTS client-tool tests
 
 To test a ClickHouse LTS build with client tools (ODBC, Superset, Grafana,
-clickhouse-driver, clickhouse-sqlalchemy, clickhouse-jdbc and DBeaver), run
+clickhouse-driver, clickhouse-sqlalchemy, clickhouse-jdbc, DBeaver's JDBC
+driver, and DBeaver itself through its user interface), run
 the `🧰 Run LTS` workflow (`run-lts.yml`). Specify:
 
 * **package**: the ClickHouse Docker image, as `docker://<image>:<tag>`. The
@@ -34,7 +35,7 @@ the `🧰 Run LTS` workflow (`run-lts.yml`). Specify:
 * **extra_args**: tool version overrides, for example `--jdbc-release v0.9.8`.
 
 Each suite runs as its own x86 job and uploads its report, logs, JUnit XML and
-browser screenshots to `.../lts/<suite>/` in the artifact bucket, and as the
+screenshots to `.../lts/<suite>/` in the artifact bucket, and as the
 job's GitHub artifact. See [lts/README.md](../../lts/README.md) and
 [lts/DEBUGGING.md](../../lts/DEBUGGING.md).
 

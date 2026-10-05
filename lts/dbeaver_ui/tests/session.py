@@ -150,9 +150,10 @@ def navigator(self):
         expand_node(name="events")
         expand_node(name="Columns")
 
-    with Then("the table's columns show"):
-        for column in ("id", "name", "created", "score", "tags"):
-            wait_for(role="table cell", name=column)
+    with Then("the table's columns show with their types"):
+        for column in ("id (UInt64)", "name (String)", "created (DateTime)",
+                       "score (Nullable(Float64))", "tags (Array(String))"):
+            wait_for(role="table cell", name=column, timeout=30)
         screenshot(name="navigator")
 
 

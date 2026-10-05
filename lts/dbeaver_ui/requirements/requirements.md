@@ -70,7 +70,9 @@ AT-SPI:
   driver name into its search box and move the focus to the gallery, which
   selects the first match, then check the `Driver name` the next page shows;
 - the result grid: the tests copy the grid with Ctrl+A, Ctrl+C and compare the
-  clipboard.
+  clipboard. Each query is tagged with `SETTINGS log_comment`, and the tests
+  wait until the server's `system.query_log` shows it finished before reading
+  the grid, so a query DBeaver never sent cannot pass.
 
 Keys are pressed and text is typed with xdotool. SQL is pasted rather than
 typed, because typing goes through the editor's autocomplete.
@@ -143,8 +145,9 @@ rows in the result grid for:
 version: 1.0
 
 After a refresh, the navigator SHALL show the database `lts_dbeaver_ui`, its
-table `events` and the table's columns `id`, `name`, `created`, `score` and
-`tags`.
+table `events` and the table's columns with their types: `id (UInt64)`,
+`name (String)`, `created (DateTime)`, `score (Nullable(Float64))` and
+`tags (Array(String))`.
 
 ### Screenshots
 

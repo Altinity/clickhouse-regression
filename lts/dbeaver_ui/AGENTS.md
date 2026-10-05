@@ -43,14 +43,21 @@ shared with the driver-level suite.
 ## Rules
 
 - **Find widgets by role and name, never by fixed coordinates.** The only
-  computed click is into the result grid, relative to the results panel found
-  through its Refresh button.
+  computed clicks are into the result grid, 100x110 px into the results panel
+  (the lowest tab list below the editor), and on a navigator node's name, 20 px
+  into its cell: a tree cell spans the whole navigator, and a click on the empty
+  space right of the name selects nothing.
 - **What AT-SPI does not show, and what to do instead:**
   - The driver gallery of the New Database Connection wizard is drawn by
     DBeaver. Type the driver name, wait for the filter, press Tab (selects the
     first match), press Next, then check `Driver name:` on the next page.
   - The result grid is drawn by DBeaver. Copy it with Ctrl+A, Ctrl+C and
-    compare the clipboard with exact rows.
+    compare the clipboard with exact rows. The results toolbar and its
+    `N row(s) fetched` line are not always shown, so don't wait for them:
+    `run_query` tags the query with `SETTINGS log_comment`, waits until
+    `system.query_log` shows it finished, then copies the grid until it differs
+    from the previous query's. So two queries in a row must not return the same
+    rows.
   - Input fields have no name. Find the text field right of its label
     (`field_for_label`).
   - Toolbar icons have no names. Use the menu or keyboard shortcuts.
@@ -71,6 +78,7 @@ shared with the driver-level suite.
 
 - A new workspace shows the Product Configuration wizard first; the suite
   presses Apply.
+- The navigator shows columns with their type, for example `id (UInt64)`.
 - DBeaver downloads the ClickHouse JDBC driver from Maven Central on the first
   Test Connection. It needs internet access and can take minutes on a slow
   connection; `test_connection` allows 10 minutes.
@@ -79,9 +87,12 @@ shared with the driver-level suite.
 
 1. Run the suite against the default image. All scenarios pass, and
    `lts/_instances/dbeaver_ui/screenshots/` has a screenshot of each step.
-2. Show that a new or changed check can fail. Run against an image whose
-   `users.d` profile sets a silent `<limit>5</limit>`, or `<readonly>1</readonly>`
-   (see [../DEBUGGING.md](../DEBUGGING.md#proving-that-a-check-can-fail)).
+2. Show that a new or changed check can fail. Run with `--test-to-end` against
+   an image whose `users.d` profile sets a silent `<limit>3</limit>`, or
+   `<readonly>1</readonly>` (see
+   [../DEBUGGING.md](../DEBUGGING.md#proving-that-a-check-can-fail)). With
+   `limit=3`, `create dataset`, all six queries and `navigator` fail (the limit
+   also cuts DBeaver's database list), and `start` and `create connection` pass.
 3. Regenerate `requirements.py` if you changed `requirements.md`.
 4. Update this file if a rule or known behavior changed.
 
