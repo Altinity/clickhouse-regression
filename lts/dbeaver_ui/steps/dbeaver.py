@@ -271,18 +271,27 @@ def run_script(self, sql, timeout=300):
         time.sleep(1)
 
 
-def select_node(node):
-    """Click a navigator node on its name. A tree cell spans the whole width
-    of the navigator, and a click on the empty space right of the name does
-    not select the row."""
-    x, y, width, height = node["box"]
-    desktop("click", str(x + min(20, width // 2)), str(y + height // 2))
-    for _ in range(10):
-        if any("selected" in e["states"] for e in find(role="table cell", name=node["name"])):
-            return
-        time.sleep(0.5)
+def select_node(node, attempts=5):
+    """Click a navigator node on its name until it is selected.
+
+    A tree cell spans the whole width of the navigator, and a click on the
+    empty space right of the name does not select the row. A refresh (F5)
+    that is still running rebuilds the tree and drops the selection, so the
+    node is found again and clicked again until the selection sticks.
+    """
+    name = node["name"]
+    for attempt in range(1, attempts + 1):
+        x, y, width, height = node["box"]
+        desktop("click", str(x + min(20, width // 2)), str(y + height // 2))
+        for _ in range(6):
+            time.sleep(0.5)
+            matches = find(role="table cell", name=name)
+            if any("selected" in e["states"] for e in matches):
+                return
+        note(f"navigator node {name!r} at {node['box']} not selected after click {attempt}")
+        node = wait_for(role="table cell", name=name)
     screenshot(name="node_not_selected")
-    fail(f"clicking navigator node {node['name']!r} at {node['box']} did not select it")
+    fail(f"clicking navigator node {name!r} {attempts} times did not select it")
 
 
 @TestStep(When)
