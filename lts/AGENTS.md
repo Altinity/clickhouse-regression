@@ -223,7 +223,7 @@ you change what the suite does.
 | `--sqlalchemy-release <tag>` | 0.3.2 | clickhouse-sqlalchemy git tag |
 | `--jdbc-release <tag>` | v0.9.9 | clickhouse-java git tag (clickhouse-jdbc module) |
 | `--jdbc-maven-args "<opts>"` | | Extra `mvn verify` options, e.g. one test class |
-| `--dbeaver-version <tag>` | 26.2.1 | DBeaver CE tag whose bundled JDBC driver is used |
+| `--dbeaver-version <tag>` | 26.2.1 | DBeaver CE tag: its bundled JDBC driver (dbeaver) and the release that is run (dbeaver-ui) |
 
 ## Running Tests
 

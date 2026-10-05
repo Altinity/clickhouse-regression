@@ -87,8 +87,9 @@ def lts_argparser(parser):
         type=str,
         dest="dbeaver_version",
         help=(
-            "DBeaver CE release tag whose bundled ClickHouse JDBC driver is used "
-            "by the DBeaver smoke checks, default: 26.2.1"
+            "DBeaver CE release tag: its bundled ClickHouse JDBC driver is used "
+            "by the DBeaver smoke checks, and the release itself is run by the "
+            "DBeaver UI checks, default: 26.2.1"
         ),
         default="26.2.1",
     )
@@ -192,6 +193,9 @@ def regression(
         maven_args=jdbc_maven_args,
     )
     Feature(test=load("lts.dbeaver.feature", "feature"))(
+        dbeaver_version=dbeaver_version,
+    )
+    Feature(test=load("lts.dbeaver_ui.feature", "feature"))(
         dbeaver_version=dbeaver_version,
     )
 
