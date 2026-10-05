@@ -127,7 +127,7 @@ _aggregate_functions_uniqApacheHLL_LowCardinality_Nullable_Int8__ = r"""
 """
 
 _aggregate_functions_uniqApacheHLL_LowCardinality_Nullable_String__ = r"""
-{"uniqApacheHLL(lowcardinality_nullable_string__)":"8","any(toTypeName(lowcardinality_nullable_string__))":"LowCardinality(Nullable(String))"}
+{"uniqApacheHLL(lowcardinality_nullable_string__)":"7","any(toTypeName(lowcardinality_nullable_string__))":"LowCardinality(Nullable(String))"}
 """
 
 _aggregate_functions_uniqApacheHLL_LowCardinality_Nullable_UInt16__ = r"""
@@ -151,7 +151,7 @@ _aggregate_functions_uniqApacheHLL_LowCardinality_Nullable_UUID__ = r"""
 """
 
 _aggregate_functions_uniqApacheHLL_LowCardinality_String_ = r"""
-{"uniqApacheHLL(lowcardinality_string_)":"9","any(toTypeName(lowcardinality_string_))":"LowCardinality(String)"}
+{"uniqApacheHLL(lowcardinality_string_)":"8","any(toTypeName(lowcardinality_string_))":"LowCardinality(String)"}
 """
 
 _aggregate_functions_uniqApacheHLL_LowCardinality_UInt16_ = r"""
@@ -223,7 +223,7 @@ _aggregate_functions_uniqApacheHLL_Nullable_Int8_ = r"""
 """
 
 _aggregate_functions_uniqApacheHLL_Nullable_String_ = r"""
-{"uniqApacheHLL(nullable_string_)":"9","any(toTypeName(nullable_string_))":"Nullable(String)"}
+{"uniqApacheHLL(nullable_string_)":"8","any(toTypeName(nullable_string_))":"Nullable(String)"}
 """
 
 _aggregate_functions_uniqApacheHLL_Nullable_UInt16_ = r"""
@@ -247,7 +247,7 @@ _aggregate_functions_uniqApacheHLL_Nullable_UUID_ = r"""
 """
 
 _aggregate_functions_uniqApacheHLL_String = r"""
-{"uniqApacheHLL(string)":"9","any(toTypeName(string))":"String"}
+{"uniqApacheHLL(string)":"8","any(toTypeName(string))":"String"}
 """
 
 _aggregate_functions_uniqApacheHLL_UInt16 = r"""
@@ -279,11 +279,11 @@ _aggregate_functions_uniqApacheHLL_constant = r"""
 """
 
 _aggregate_functions_uniqApacheHLL_empty_string = r"""
-{"uniqApacheHLL(x)":"1","any(toTypeName(x))":"String"}
+{"uniqApacheHLL(x)":"0","any(toTypeName(x))":"String"}
 """
 
 _aggregate_functions_uniqApacheHLL_empty_string_with_non_empty_string = r"""
-{"uniqApacheHLL(x)":"2","any(toTypeName(x))":"String"}
+{"uniqApacheHLL(x)":"1","any(toTypeName(x))":"String"}
 """
 
 _aggregate_functions_uniqApacheHLL_estimation_mode = r"""
