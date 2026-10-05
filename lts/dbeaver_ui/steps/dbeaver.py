@@ -208,7 +208,10 @@ def run_query(self, sql, timeout=120):
         if errors:
             fail(f"DBeaver reports an error for {sql!r}: {errors[0]['name'] or errors[0]['text']}")
         if time.time() > deadline:
-            fail(f"no result for {sql!r} within {timeout}s")
+            screenshot(name="query_timeout")
+            bottom = [f"{e['role']} {e['name'] or e['text']!r}" for e in elements()
+                      if e["box"][1] > 900 and (e["name"] or e["text"])]
+            fail(f"no result for {sql!r} within {timeout}s; at the bottom of the screen: {bottom}")
         time.sleep(1)
     note(status)
 
