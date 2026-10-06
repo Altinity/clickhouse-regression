@@ -520,6 +520,282 @@ def alter_column_first_and_after(self, minio_root_user, minio_root_password):
         assert result.output == "20\tAlice\t\\N\t\\N", error()
 
 
+NOT_IMPLEMENTED = 48
+DUPLICATE_COLUMN = 15
+BAD_ARGUMENTS = 36
+
+
+def _create_name_value_table(self, minio_root_user, minio_root_password):
+    """Create an unpartitioned `(name, value)` table with one row.
+
+    The ClickHouse database is attached by the caller, after any catalog-side
+    schema change, so the first ClickHouse read sees that change.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"datalake_db_{getuid()}"
+    clickhouse_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
+
+    catalog = catalog_steps.create_catalog(
+        s3_endpoint="http://localhost:9002",
+        s3_access_key_id=minio_root_user,
+        s3_secret_access_key=minio_root_password,
+    )
+    catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+    table = catalog_steps.create_iceberg_table(
+        catalog=catalog,
+        namespace=namespace,
+        table_name=table_name,
+        schema=Schema(
+            NestedField(1, "name", StringType(), required=False),
+            NestedField(2, "value", LongType(), required=False),
+        ),
+        location=catalog_steps.table_s3_location(namespace, table_name),
+        partition_spec=PartitionSpec(),
+        sort_order=SortOrder(),
+    )
+    table.append(pa.Table.from_pylist([{"name": "Alice", "value": 20}]))
+    return (
+        self.context.node,
+        catalog,
+        namespace,
+        table_name,
+        database_name,
+        clickhouse_table_name,
+        table,
+    )
+
+
+def _schema_id(catalog, namespace, table_name):
+    return catalog.load_table(f"{namespace}.{table_name}").metadata.current_schema_id
+
+
+# Clauses Iceberg metadata cannot store. Comment, default, alias, codec, and
+# column settings are rejected in checkAlterIsPossible. TTL is rejected by the
+# engine before that check. None of these statements may change the schema.
+_UNRECORDED_CLAUSE_ALTERS = (
+    (
+        "MODIFY COLUMN value COMMENT 'x' FIRST",
+        NOT_IMPLEMENTED,
+        "Changing the comment of column 'value' is not supported by Iceberg storage",
+    ),
+    (
+        "MODIFY COLUMN value Nullable(Int64) DEFAULT 1 AFTER name",
+        NOT_IMPLEMENTED,
+        "Changing the default expression of column 'value' is not supported by Iceberg storage",
+    ),
+    (
+        "MODIFY COLUMN value Nullable(Int64) CODEC(ZSTD) FIRST",
+        NOT_IMPLEMENTED,
+        "Changing the codec of column 'value' is not supported by Iceberg storage",
+    ),
+    (
+        "MODIFY COLUMN value Nullable(Int64) TTL toDate('2020-01-01')",
+        BAD_ARGUMENTS,
+        "Engine IcebergS3 doesn't support TTL clause",
+    ),
+    (
+        "MODIFY COLUMN value MODIFY SETTING max_compress_block_size = 8192",
+        NOT_IMPLEMENTED,
+        "Changing the settings of column 'value' is not supported by Iceberg storage",
+    ),
+    (
+        "ADD COLUMN extra Nullable(String) DEFAULT 'x' FIRST",
+        NOT_IMPLEMENTED,
+        "Setting the default expression of column 'extra' is not supported by Iceberg storage",
+    ),
+    (
+        "ADD COLUMN extra Nullable(String) ALIAS name AFTER name",
+        NOT_IMPLEMENTED,
+        "Setting the default expression of column 'extra' is not supported by Iceberg storage",
+    ),
+    (
+        "ADD COLUMN extra Nullable(String) COMMENT 'x' FIRST",
+        NOT_IMPLEMENTED,
+        "Setting the comment of column 'extra' is not supported by Iceberg storage",
+    ),
+    (
+        "ADD COLUMN extra Nullable(String) CODEC(ZSTD) AFTER name",
+        NOT_IMPLEMENTED,
+        "Setting the codec of column 'extra' is not supported by Iceberg storage",
+    ),
+)
+
+
+@TestScenario
+def alter_add_column_position_must_match(self, minio_root_user, minio_root_password):
+    """An ADD COLUMN that names a column already in the schema must not move it.
+
+    ClickHouse rejects the statement with DUPLICATE_COLUMN before the Iceberg
+    commit, and the column stays where the other writer put it. A commit that
+    did apply FIRST or AFTER and was reported as failed must be treated as
+    done, with the column still in that position.
+    """
+    with Given("create a two-column Iceberg table and insert one row"):
+        (
+            node,
+            catalog,
+            namespace,
+            table_name,
+            database_name,
+            clickhouse_table_name,
+            table,
+        ) = _create_name_value_table(
+            self, minio_root_user, minio_root_password
+        )
+
+    with And("another writer appends extra at the end"):
+        with table.update_schema() as update:
+            update.add_column("extra", StringType(), required=False)
+        schema_id = _schema_id(catalog, namespace, table_name)
+
+    with And("attach the DataLakeCatalog database"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    for clause in ("FIRST", "AFTER name"):
+        with When(f"ADD COLUMN extra Nullable(String) {clause}"):
+            node.query(
+                "SET allow_insert_into_iceberg = 1; "
+                f"ALTER TABLE {clickhouse_table_name} "
+                f"ADD COLUMN extra Nullable(String) {clause}",
+                exitcode=DUPLICATE_COLUMN,
+                message=(
+                    "DB::Exception: Cannot add column `extra`: "
+                    "column with this name already exists"
+                ),
+            )
+
+    with Then("extra stays last and the schema id is unchanged"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["name", "value", "extra"],
+        )
+        assert _schema_id(catalog, namespace, table_name) == schema_id, error()
+        result = node.query(
+            f"SELECT name, value FROM {clickhouse_table_name} FORMAT TabSeparated"
+        )
+        assert result.output == "Alice\t20", error()
+
+    if self.context.catalog not in ("rest", "ice"):
+        note(
+            "commit-unknown recovery is injected via RestCatalog failpoint "
+            f"{COMMIT_UNKNOWN_FAILPOINT}"
+        )
+        return
+
+    with Given(f"arm {COMMIT_UNKNOWN_FAILPOINT} if this build registers it"):
+        enable = node.query(
+            f"SYSTEM ENABLE FAILPOINT {COMMIT_UNKNOWN_FAILPOINT}",
+            no_checks=True,
+        )
+        if enable.exitcode != 0:
+            note(
+                f"Build does not register failpoint {COMMIT_UNKNOWN_FAILPOINT}: "
+                f"{enable.output}"
+            )
+            return
+
+    try:
+        with When("ADD COLUMN leading FIRST, with the commit reported as failed"):
+            node.query(
+                "SET allow_insert_into_iceberg = 1; "
+                f"ALTER TABLE {clickhouse_table_name} "
+                "ADD COLUMN leading Nullable(String) FIRST"
+            )
+        with When("ADD COLUMN mid AFTER name, with the commit reported as failed"):
+            node.query(
+                f"SYSTEM ENABLE FAILPOINT {COMMIT_UNKNOWN_FAILPOINT}",
+                no_checks=True,
+            )
+            node.query(
+                "SET allow_insert_into_iceberg = 1; "
+                f"ALTER TABLE {clickhouse_table_name} "
+                "ADD COLUMN mid Nullable(Int32) AFTER name"
+            )
+    finally:
+        with Finally(f"disable {COMMIT_UNKNOWN_FAILPOINT}"):
+            node.query(
+                f"SYSTEM DISABLE FAILPOINT {COMMIT_UNKNOWN_FAILPOINT}",
+                no_checks=True,
+            )
+
+    with Then("the retry kept leading first and mid after name"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["leading", "name", "mid", "value", "extra"],
+        )
+
+
+@TestScenario
+def alter_rejects_clauses_iceberg_schema_cannot_store(
+    self, minio_root_user, minio_root_password
+):
+    """Reject ADD and MODIFY clauses Iceberg metadata cannot record.
+
+    The schema stores the type and the field order. Comment, default, alias,
+    codec, TTL, and column settings must be rejected, including when the
+    statement also says FIRST or AFTER. The column order stays `(name, value)`.
+    """
+    with Given("create a two-column Iceberg table and insert one row"):
+        (
+            node,
+            catalog,
+            namespace,
+            table_name,
+            database_name,
+            clickhouse_table_name,
+            _table,
+        ) = _create_name_value_table(
+            self, minio_root_user, minio_root_password
+        )
+
+    with And("attach the DataLakeCatalog database"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+        schema_id = _schema_id(catalog, namespace, table_name)
+
+    for statement, exitcode, expected in _UNRECORDED_CLAUSE_ALTERS:
+        with When(statement):
+            node.query(
+                "SET allow_insert_into_iceberg = 1; "
+                f"ALTER TABLE {clickhouse_table_name} {statement}",
+                exitcode=exitcode,
+                message=f"DB::Exception: {expected}",
+            )
+
+    with Then("the schema and the row are unchanged"):
+        _assert_column_order(
+            node,
+            catalog,
+            clickhouse_table_name,
+            namespace,
+            table_name,
+            ["name", "value"],
+        )
+        assert _schema_id(catalog, namespace, table_name) == schema_id, error()
+        result = node.query(
+            f"SELECT name, value FROM {clickhouse_table_name} FORMAT TabSeparated"
+        )
+        assert result.output == "Alice\t20", error()
+
+
 @TestFeature
 @Name("alter support")
 def feature(self, minio_root_user, minio_root_password):
@@ -538,5 +814,11 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=alter_column_first_and_after)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=alter_add_column_position_must_match)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=alter_rejects_clauses_iceberg_schema_cannot_store)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
