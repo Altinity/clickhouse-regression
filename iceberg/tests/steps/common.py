@@ -512,3 +512,22 @@ def drop_all_caches(self, node=None):
     else:
         for node in self.context.nodes:
             node.query(query)
+
+
+def assert_partition_command_rejected(output):
+    """A partition ALTER that Iceberg still rejects.
+
+    Builds from before Iceberg ``DROP PARTITION`` say the engine does not
+    support partitioning. Builds with that statement say the particular
+    command is not supported, or, for ``DROP PARTITION ALL``, that ALL is
+    not supported. Exit code 48 (``NOT_IMPLEMENTED``) is required either way.
+    """
+    assert output.exitcode == 48, error()
+    accepted = (
+        "doesn't support partitioning",
+        "is not supported by storage",
+        "DROP PARTITION ALL is not supported for Iceberg tables",
+    )
+    assert any(fragment in output.output for fragment in accepted), error(
+        output.output
+    )
