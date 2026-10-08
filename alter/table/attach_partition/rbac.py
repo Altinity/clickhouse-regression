@@ -10,6 +10,7 @@ from helpers.common import (
     detach_partition,
     attach_part,
     detach_part,
+    check_clickhouse_version,
 )
 from helpers.rbac import *
 from helpers.tables import create_table_partitioned_by_column
@@ -142,15 +143,17 @@ def user_attach_partition_from_with_privileges(
             privileges=source_table_privileges
         )
 
-        if ("select_privileges" in source_privileges) and (
-            (
-                "alter_privileges" in destination_privileges
-                and "insert_privileges" in destination_privileges
-            )
-            or (
-                "alter_table_privileges" in destination_privileges
-                and "insert_privileges" in destination_privileges
-            )
+        # Since 26.10.1.1518 (ClickHouse#117936), INSERT on the destination is
+        # enough. Older servers also need ALTER or ALTER TABLE.
+        destination_can_alter = (
+            "alter_privileges" in destination_privileges
+            or "alter_table_privileges" in destination_privileges
+        )
+        insert_is_enough = check_clickhouse_version(">=26.10.1.1518")(self)
+        if (
+            "select_privileges" in source_privileges
+            and "insert_privileges" in destination_privileges
+            and (destination_can_alter or insert_is_enough)
         ):
             with Then(
                 f"I check that attaching partition is possible to the destination table when the user has enough privileges"
