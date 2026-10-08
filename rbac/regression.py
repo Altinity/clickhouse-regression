@@ -451,6 +451,11 @@ ffails = {
         "multiple authentication methods were introduced in 24.12",
         check_clickhouse_version("<24.12"),
     ),
+    "/rbac/part 3/multiple authentication methods/valid until/check independency of expiration and auth methods limit": (
+        Skip,
+        "expired auth methods are dropped on ALTER USER and no longer count against the limit, https://github.com/ClickHouse/ClickHouse/pull/118880",
+        check_clickhouse_version(">=26.10"),
+    ),
     "/rbac/part 1/privileges/check table": (
         Skip,
         "check privilege was introduced in 25.1",
