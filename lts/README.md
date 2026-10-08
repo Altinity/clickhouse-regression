@@ -13,6 +13,7 @@ Runs integration tests for third-party tools against ClickHouse LTS builds.
 | `clickhouse_sqlalchemy/` | clickhouse-sqlalchemy dialect | Tool's test suite | Active |
 | `clickhouse_jdbc/` | clickhouse-jdbc module of clickhouse-java | Tool's test suite | Active |
 | `dbeaver/` | JDBC driver bundled with DBeaver CE (DBeaver itself is not run) | Smoke checks | Active |
+| `dbeaver_ui/` | DBeaver CE itself, driven through its user interface | Desktop UI | Active |
 
 Tableau is still tested by hand.
 
@@ -68,7 +69,8 @@ python3 lts/regression.py --clickhouse $IMAGE --only "/lts/clickhouse-jdbc/*" --
 
 The `--only` paths for the suites are `/lts/clickhouse-odbc/*`,
 `/lts/superset/*`, `/lts/grafana/*`, `/lts/clickhouse-driver/*`,
-`/lts/clickhouse-sqlalchemy/*`, `/lts/clickhouse-jdbc/*` and `/lts/dbeaver/*`.
+`/lts/clickhouse-sqlalchemy/*`, `/lts/clickhouse-jdbc/*`, `/lts/dbeaver/*` and
+`/lts/dbeaver-ui/*`.
 
 Always pass `--clickhouse`. Without it the suites fall back to an old 25.8 image.
 
@@ -140,6 +142,13 @@ version check, comes from `--clickhouse-version` or from the image tag
   checks use the clickhouse-jdbc and httpclient5 versions that this DBeaver
   release's ClickHouse plugin declares.
 
+### dbeaver-ui
+
+- `--dbeaver-version <tag>` — the DBeaver CE release that is installed and run
+  (default `26.2.1`), the same option as for `dbeaver`. DBeaver downloads its
+  ClickHouse driver from Maven Central during the run, so the host needs
+  internet access.
+
 ## Test Structure
 
 See [AGENTS.md](AGENTS.md) for detailed conventions on requirements, test
@@ -183,6 +192,15 @@ lts/
     ├── tests/                # login, datasource_query, dashboard_panel
     └── configs/              # docker-compose.yml, init_schema.sql,
                               # provisioning/, users.xml
+│
+│   # Desktop suite (DBeaver under Xvfb, driven through AT-SPI and xdotool):
+└── dbeaver_ui/               # SRS-107
+    ├── AGENTS.md
+    ├── feature.py
+    ├── requirements/
+    ├── steps/                # environment.py (container), desktop.py (AT-SPI), dbeaver.py
+    ├── tests/                # session.py: start, connection, dataset, queries, navigator
+    └── configs/              # Dockerfile, start.sh, desktop.py
 ```
 
 The layout shown for `dbeaver/` is the same for the other four runner suites.
@@ -192,6 +210,8 @@ The layout shown for `dbeaver/` is the same for the other four runner suites.
 Each suite keeps its evidence in `lts/_instances/<suite>/`, named after the
 suite folder, for example `lts/_instances/clickhouse_odbc/`.
 
+- **dbeaver_ui**: a numbered screenshot of every step in `screenshots/`, and
+  `logs/` with the image build, ClickHouse and DBeaver logs.
 - **grafana, superset**: screenshots of every UI step in `screenshots/`, and
   the logs of every Compose service, saved before teardown, in `logs/`
   (`<service>.log`, `compose-ps.log`, `compose-down.log`).

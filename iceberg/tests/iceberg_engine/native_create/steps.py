@@ -1053,6 +1053,7 @@ def catalog_and_database(
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
+            clean_up_minio_bucket=kwargs.pop("clean_up_minio_bucket", True),
         )
     with By("create DataLakeCatalog database"):
         database_name = f"datalake_db_{getuid()}"

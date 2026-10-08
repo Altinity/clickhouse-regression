@@ -3,6 +3,7 @@ from testflows.core import *
 
 import rbac.tests.multiple_auth_methods.actions as actions
 
+from helpers.common import check_clickhouse_version
 from helpers.sql.create_user import CreateUser
 from helpers.sql.alter_user import AlterUser
 from helpers.sql.drop_user import DropUser
@@ -18,6 +19,16 @@ class States:
 
 class Model:
     """Multiple user authentication methods model."""
+
+    def drop_expired(self, auth_methods):
+        """Methods a user keeps when ALTER USER ... ADD IDENTIFIED runs.
+
+        From 26.10 (ClickHouse #118880) the statement drops the methods the
+        user already had whose VALID UNTIL has passed.
+        """
+        if check_clickhouse_version("<26.10")(current()):
+            return auth_methods
+        return [m for m in auth_methods if not actions.password_has_expired(m)]
 
     def expect_ok(self, behavior):
         """Expect no error."""
@@ -61,50 +72,45 @@ class Model:
 
         for node in current().context.nodes:
             if isinstance(current_, States.CreateUser):
-                auth_methods[node] = [
-                    auth_method.method for auth_method in current_.identification[node]
-                ]
+                auth_methods[node] = list(current_.identification[node])
 
             elif isinstance(current_, States.AlterUser):
                 if current_.identification[node]:
-                    auth_methods[node] = [
-                        auth_method.method
-                        for auth_method in current_.identification[node]
-                    ]
+                    auth_methods[node] = list(current_.identification[node])
 
                 if current_.add_identification[node]:
                     for state in behavior[:-1]:
                         if isinstance(state, States.CreateUser) and not state.errored:
-                            auth_methods[node] = [
-                                auth_method.method
-                                for auth_method in state.identification[node]
-                            ]
+                            auth_methods[node] = list(state.identification[node])
                         elif isinstance(state, States.DropUser) and not state.errored:
                             auth_methods = {
                                 node: [] for node in current().context.nodes
                             }
                         elif isinstance(state, States.AlterUser) and not state.errored:
                             if state.identification[node]:
-                                auth_methods[node] = [
-                                    auth_method.method
-                                    for auth_method in state.identification[node]
-                                ]
+                                auth_methods[node] = list(state.identification[node])
                             elif state.add_identification[node]:
                                 auth_methods_ = []
                                 for auth_method_ in state.add_identification[node]:
                                     if auth_method_.method != "no_password":
                                         auth_methods_.append(auth_method_)
-                                auth_methods[node] += auth_methods_
+                                auth_methods[node] = (
+                                    self.drop_expired(auth_methods[node])
+                                    + auth_methods_
+                                )
                             elif state.reset_auth_methods_to_new[node]:
                                 auth_methods[node] = [auth_methods[node][-1]]
                             else:
                                 raise ValueError("Unexpected alter user state")
 
-                    auth_methods[node] += current_.add_identification[node]
+                    auth_methods[node] = self.drop_expired(auth_methods[node]) + list(
+                        current_.add_identification[node]
+                    )
             else:
                 return
 
-            if "no_password" in auth_methods[node] and len(auth_methods[node]) > 1:
+            methods = [auth_method.method for auth_method in auth_methods[node]]
+            if "no_password" in methods and len(methods) > 1:
                 return actions.expect_no_password_auth_cannot_coexist_with_others_error
 
     def expect_no_password_cannot_be_used_with_add_keyword_error(self, behavior, node):

@@ -5,6 +5,8 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 from helpers.common import getuid, check_clickhouse_version
 
+from iceberg.tests.steps.common import assert_partition_command_rejected
+
 
 @TestScenario
 def alter_column(self, minio_root_user, minio_root_password, node=None):
@@ -92,8 +94,11 @@ def alter_column(self, minio_root_user, minio_root_password, node=None):
 
 @TestScenario
 def alter_partitions(self, minio_root_user, minio_root_password, node=None):
-    """Check that different partitioning operations are not supported for
-    tables from Iceberg database.
+    """Partition commands other than a valued ``DROP PARTITION`` stay rejected.
+
+    The error text is the pre-DROP-PARTITION engine message on older builds,
+    and the command-specific ``NOT_IMPLEMENTED`` text once Iceberg accepts
+    ``ALTER TABLE ... DROP PARTITION``.
     """
     if node is None:
         node = self.context.node
@@ -104,25 +109,18 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
             minio_root_password=minio_root_password,
         )
 
-    with And("expected exitcode and message for partitioning"):
-        exitcode = 48
-        message = "DB::Exception: Table engine IcebergS3 doesn't support partitioning. (NOT_IMPLEMENTED)"
-        message2 = "DB::Exception: Table engine Iceberg doesn't support partitioning. (NOT_IMPLEMENTED)"
-
     with Then("try to use DROP PARTITION/PART on ClickHouse table with Iceberg engine"):
         output1 = node.query(
             f"ALTER TABLE {iceberg_table_name} DROP PARTITION ALL",
             no_checks=True,
         )
-        assert output1.exitcode == exitcode, error()
-        assert message in output1.output or message2 in output1.output, error()
+        assert_partition_command_rejected(output1)
 
         output2 = node.query(
             f"ALTER TABLE {iceberg_table_name} DROP PART '1'",
             no_checks=True,
         )
-        assert output2.exitcode == exitcode, error()
-        assert message in output2.output or message2 in output2.output, error()
+        assert_partition_command_rejected(output2)
 
     with And(
         "try to use DETACH PARTITION/PART from ClickHouse table with Iceberg engine"
@@ -131,15 +129,13 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
             f"ALTER TABLE {iceberg_table_name} DETACH PARTITION 'all_2_2_0'",
             no_checks=True,
         )
-        assert output1.exitcode == exitcode, error()
-        assert message in output1.output or message2 in output1.output, error()
+        assert_partition_command_rejected(output1)
 
         output2 = node.query(
             f"ALTER TABLE {iceberg_table_name} DETACH PART 'all_2_2_0'",
             no_checks=True,
         )
-        assert output2.exitcode == exitcode, error()
-        assert message in output2.output or message2 in output2.output, error()
+        assert_partition_command_rejected(output2)
 
     with And(
         "try to DROP DETACHED PARTITION/PART from ClickHouse table with Iceberg engine"
@@ -148,85 +144,74 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
             f"ALTER TABLE {iceberg_table_name} DROP DETACHED PARTITION ALL",
             no_checks=True,
         )
-        assert output1.exitcode == exitcode, error()
-        assert message in output1.output or message2 in output1.output, error()
+        assert_partition_command_rejected(output1)
 
         output2 = node.query(
             f"ALTER TABLE {iceberg_table_name} DROP DETACHED PART '1'",
             no_checks=True,
         )
-        assert output2.exitcode == exitcode, error()
-        assert message in output2.output or message2 in output2.output, error()
+        assert_partition_command_rejected(output2)
 
     with And("try to FORGET PARTITION from ClickHouse table with Iceberg engine"):
         output = node.query(
             f"ALTER TABLE {iceberg_table_name} FORGET PARTITION 'all_2_2_0'",
             no_checks=True,
         )
-        assert output.exitcode == exitcode, error()
-        assert message in output.output or message2 in output.output, error()
+        assert_partition_command_rejected(output)
 
     with And("try to ATTACH PARTITION/PART to ClickHouse table with Iceberg engine"):
         output1 = node.query(
             f"ALTER TABLE {iceberg_table_name} ATTACH PARTITION 'all_2_2_0'",
             no_checks=True,
         )
-        assert output1.exitcode == exitcode, error()
-        assert message in output1.output or message2 in output1.output, error()
+        assert_partition_command_rejected(output1)
 
         output2 = node.query(
             f"ALTER TABLE {iceberg_table_name} ATTACH PART 'all_2_2_0'",
             no_checks=True,
         )
-        assert output2.exitcode == exitcode, error()
-        assert message in output2.output or message2 in output2.output, error()
+        assert_partition_command_rejected(output2)
 
     with And("try to REPLACE PARTITION in ClickHouse table with Iceberg engine"):
         output = node.query(
             f"ALTER TABLE {iceberg_table_name} REPLACE PARTITION 'all_2_2_0' FROM some_table",
             no_checks=True,
         )
-        assert output.exitcode == exitcode, error()
-        assert message in output.output or message2 in output.output, error()
+        assert_partition_command_rejected(output)
 
     with And("try to MOVE PARTITION in ClickHouse table with Iceberg engine"):
         output = node.query(
             f"ALTER TABLE {iceberg_table_name} MOVE PARTITION 'all_2_2_0' TO TABLE some_table",
             no_checks=True,
         )
-        assert output.exitcode == exitcode, error()
-        assert message in output.output or message2 in output.output, error()
+        assert_partition_command_rejected(output)
 
     with And("try to FREEZE PARTITION in ClickHouse table with Iceberg engine"):
         output = node.query(
             f"ALTER TABLE {iceberg_table_name} FREEZE PARTITION 'all_2_2_0'",
             no_checks=True,
         )
-        assert output.exitcode == exitcode, error()
-        assert message in output.output or message2 in output.output, error()
+        assert_partition_command_rejected(output)
 
     with And("try to UNFREEZE PARTITION in ClickHouse table with Iceberg engine"):
         output = node.query(
             f"ALTER TABLE {iceberg_table_name} UNFREEZE PARTITION 'all_2_2_0' WITH NAME 'backup_name'",
             no_checks=True,
         )
-        assert output.exitcode == exitcode, error()
-        assert message in output.output or message2 in output.output, error()
+        assert_partition_command_rejected(output)
 
     with And("try to FETCH PARTITION|PART in ClickHouse table with Iceberg engine"):
         output1 = node.query(
             f"ALTER TABLE {iceberg_table_name} FETCH PARTITION 'all_2_2_0' FROM 'some_path'",
             no_checks=True,
         )
-        assert output1.exitcode == exitcode, error()
-        assert message in output1.output or message2 in output1.output, error()
+        assert_partition_command_rejected(output1)
 
         output2 = node.query(
             f"ALTER TABLE {iceberg_table_name} FETCH PART 'all_2_2_0' FROM 'some_path'",
             no_checks=True,
         )
-        assert output2.exitcode == exitcode, error()
-        assert message in output2.output or message2 in output2.output, error()
+        assert_partition_command_rejected(output2)
 
     with And(
         "try to MOVE PARTITION|PART TO DISK in ClickHouse table with Iceberg engine"
@@ -235,15 +220,13 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
             f"ALTER TABLE {iceberg_table_name} MOVE PARTITION 'all_2_2_0' TO DISK 'some_disk_name'",
             no_checks=True,
         )
-        assert output1.exitcode == exitcode, error()
-        assert message in output1.output or message2 in output1.output, error()
+        assert_partition_command_rejected(output1)
 
         output2 = node.query(
             f"ALTER TABLE {iceberg_table_name} MOVE PART 'all_2_2_0' TO DISK 'some_disk_name'",
             no_checks=True,
         )
-        assert output2.exitcode == exitcode, error()
-        assert message in output2.output or message2 in output2.output, error()
+        assert_partition_command_rejected(output2)
 
     with And("try to UPDATE PARTITION in ClickHouse table with Iceberg engine"):
         exitcode = 48

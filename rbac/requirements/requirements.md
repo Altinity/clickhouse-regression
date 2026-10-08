@@ -1559,6 +1559,32 @@ version: 1.0
 
 [ClickHouse] SHALL reflect the expiration date in the `SHOW CREATE USER` statement.
 
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL remove the user's existing authentication methods whose
+`VALID UNTIL` date has passed when an `ALTER USER` statement adds a new authentication method
+(PR #118880).
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AlterWithoutAuthentication
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL remove the user's existing authentication methods whose
+`VALID UNTIL` date has passed on an `ALTER USER` statement that does not change authentication
+(PR #118880).
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AddedByStatement
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL keep an authentication method whose `VALID UNTIL` date
+has already passed when the same `ALTER USER` statement adds it (PR #118880).
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.LastMethodKept
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL NOT remove expired authentication methods if that would
+leave the user with no authentication method (PR #118880).
+
 
 ### Role
 

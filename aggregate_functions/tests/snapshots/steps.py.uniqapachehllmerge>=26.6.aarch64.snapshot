@@ -83,71 +83,71 @@ _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Int8__0 = r"""
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Bool___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01100201070C030802002BF2FB06CBD7C204'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Bool)))'))":"2"}
+{"uniqApacheHLLMerge(CAST(unhex('100201070C030802002BF2FB06CBD7C204'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Bool)))'))":"2"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_DateTime___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000400CEF04225EC804C4B470058A6DA616CBD7C204AC8F820C1822BF0CDAD864087EEDB90B'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(DateTime)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000400CEF04225EC804C4B470058A6DA616CBD7C204AC8F820C1822BF0CDAD864087EEDB90B'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(DateTime)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Date___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000021E95F12C5F46B05E607250FE8445805CBD7C2040FBF540890610709710BB407F6EECC0A'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Date)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000021E95F12C5F46B05E607250FE8445805CBD7C2040FBF540890610709710BB407F6EECC0A'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Date)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_FixedString_51____0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000027C8600768AAFF09ABC9050A2F3C8D0EF02F8509967AF2069B2C19069C33B4101DDEF812'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(FixedString(51))))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000027C8600768AAFF09ABC9050A2F3C8D0EF02F8509967AF2069B2C19069C33B4101DDEF812'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(FixedString(51))))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Float32___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000E6EC4D0607F5D40B8834D904AFD6820499713A0DF40A32063905AC119D1913071FBC6A23'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Float32)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000E6EC4D0607F5D40B8834D904AFD6820499713A0DF40A32063905AC119D1913071FBC6A23'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Float32)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Float64___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000093019E0406EC56052802CF06690E080B8F9FEE05AFA744061187B404D3769C07BD8B9E08'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Float64)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000093019E0406EC56052802CF06690E080B8F9FEE05AFA744061187B404D3769C07BD8B9E08'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Float64)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Int16___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000E1D52B0826276604A82F2604DC39C90A2C45A30B2F5F480DD6755607DC56D205BE5EF212'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int16)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000E1D52B0826276604A82F2604DC39C90A2C45A30B2F5F480DD6755607DC56D205BE5EF212'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int16)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Int32___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000047E5A70868A27404AA1554044BEDE10F507EE50711A56B0CB2C33505D16E740E3F53B008'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int32)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000047E5A70868A27404AA1554044BEDE10F507EE50711A56B0CB2C33505D16E740E3F53B008'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int32)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Int64___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000E9EF220CF34AA6067519C20CF76ACF3A3F0718053780BE041AA0E508BEB5B30BFFBAB40D'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int64)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000E9EF220CF34AA6067519C20CF76ACF3A3F0718053780BE041AA0E508BEB5B30BFFBAB40D'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int64)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_Int8___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000014D5670BA84EED042F53761334A2610E88855D047D233C0ADD9F7A0B1E3DB1051FABB112'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int8)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000014D5670BA84EED042F53761334A2610E88855D047D233C0ADD9F7A0B1E3DB1051FABB112'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(Int8)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_String___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('012C0301070C05080001080000006A0F730E6A8F9104EA13F905D52FCD07B81A5D12B91B490A9B2C19061F36A50F'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(String)))'))":"8"}
+{"uniqApacheHLLMerge(CAST(unhex('240201070C030807009B2C19061F36A50FB81A5D12D52FCD07EA13F9056A8F91046A0F730E'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(String)))'))":"7"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_UInt16___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000A5214608C729F01ACB0B4E05CBD7C204710BB40731341F06D59F7607172F6A0F9F60F111'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt16)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000A5214608C729F01ACB0B4E05CBD7C204710BB40731341F06D59F7607172F6A0F9F60F111'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt16)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_UInt32___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000047BDA2062A8A6709CBD7C2040E28440A30C57131323816054A5DF507B7943A08271D3305'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt32)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000047BDA2062A8A6709CBD7C2040E28440A30C57131323816054A5DF507B7943A08271D3305'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt32)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_UInt64___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000039497B06449C820545C5FE07CBD7C204E4D9ED0B764E7A0ED8CF5409D964E70BFCF54405'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt64)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000039497B06449C820545C5FE07CBD7C204E4D9ED0B764E7A0ED8CF5409D964E70BFCF54405'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt64)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_UInt8___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000A93BB507E9D22805CBD7C204AEE34205547B470FB395F01034F7530A5362BA041F788207'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt8)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000A93BB507E9D22805CBD7C204AEE34205547B470FB395F01034F7530A5362BA041F788207'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UInt8)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_Nullable_UUID___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000059E5D2046603E70A09B7A8066C95BA0E50C94D05D8BDD70FF95398041D75EE0BFEC7BA05'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UUID)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000059E5D2046603E70A09B7A8066C95BA0E50C94D05D8BDD70FF95398041D75EE0BFEC7BA05'), 'AggregateFunction(uniqApacheHLL, LowCardinality(Nullable(UUID)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_String__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000607E6A07A315250AEB88D1068EFDF606D01A3B1E99F37804B91B490A9B2C1906BE097114'), 'AggregateFunction(uniqApacheHLL, LowCardinality(String))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('2C0301070C0508000108000000607E6A07A315250AEB88D1068EFDF606D01A3B1E99F378049B2C1906BE097114'), 'AggregateFunction(uniqApacheHLL, LowCardinality(String))'))":"8"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_UInt16__0 = r"""
@@ -170,76 +170,80 @@ _aggregate_functions_merge_uniqApacheHLLMerge_LowCardinality_UUID__0 = r"""
 {"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000C3F0030AA4E2F0046504C50528674F17692CC7086C95BA0E50C94D05F3E62005B5467004'), 'AggregateFunction(uniqApacheHLL, LowCardinality(UUID))'))":"9"}
 """
 
+_aggregate_functions_merge_uniqApacheHLLMerge_NULL_for_all_rows_0 = r"""
+{"uniqApacheHLLMerge(CAST(unhex('00'), 'AggregateFunction(uniqApacheHLL, Nullable(Nothing))'))":"0"}
+"""
+
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Bool__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01100201070C030802002BF2FB06CBD7C204'), 'AggregateFunction(uniqApacheHLL, Nullable(Bool))'))":"2"}
+{"uniqApacheHLLMerge(CAST(unhex('100201070C030802002BF2FB06CBD7C204'), 'AggregateFunction(uniqApacheHLL, Nullable(Bool))'))":"2"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_DateTime64_3____22_8_0__22_8 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000005F770A45BF52072C543717113DC205354084095AE89909BD252B0835DD0B0ADF607A08'), 'AggregateFunction(uniqApacheHLL, Nullable(DateTime64(3)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000005F770A45BF52072C543717113DC205354084095AE89909BD252B0835DD0B0ADF607A08'), 'AggregateFunction(uniqApacheHLL, Nullable(DateTime64(3)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_DateTime__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000043F19A0B65FAAC0E082C4F07CBD7C204909178137603DE06976F170DDAD86408DEB0B507'), 'AggregateFunction(uniqApacheHLL, Nullable(DateTime))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000043F19A0B65FAAC0E082C4F07CBD7C204909178137603DE06976F170DDAD86408DEB0B507'), 'AggregateFunction(uniqApacheHLL, Nullable(DateTime))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Date__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000E4A4A109C8C5CE11CBD7C2048C40300C710BB407F2D2541335FBEB0AB6C092055A5CEC13'), 'AggregateFunction(uniqApacheHLL, Nullable(Date))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000E4A4A109C8C5CE11CBD7C2048C40300C710BB407F2D2541335FBEB0AB6C092055A5CEC13'), 'AggregateFunction(uniqApacheHLL, Nullable(Date))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_FixedString_51___0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000E29C18064312320666F02109CCE4EE16B3272312967AF206A32A2D08E3D6F8079B2C1906'), 'AggregateFunction(uniqApacheHLL, Nullable(FixedString(51)))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000E29C18064312320666F02109CCE4EE16B3272312967AF206A32A2D08E3D6F8079B2C1906'), 'AggregateFunction(uniqApacheHLL, Nullable(FixedString(51)))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Float32__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000C537F60A85BBEF0C6891CD044AA01C0648E02D0E0C8A4C0AAFD682047E810A0E1FBC6A23'), 'AggregateFunction(uniqApacheHLL, Nullable(Float32))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000C537F60A85BBEF0C6891CD044AA01C0648E02D0E0C8A4C0AAFD682047E810A0E1FBC6A23'), 'AggregateFunction(uniqApacheHLL, Nullable(Float32))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Float64__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000046F71B062802CF06A9970A0B0ED69505AFA74406531F2004E8E03704D90AA50973750812'), 'AggregateFunction(uniqApacheHLL, Nullable(Float64))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000046F71B062802CF06A9970A0B0ED69505AFA74406531F2004E8E03704D90AA50973750812'), 'AggregateFunction(uniqApacheHLL, Nullable(Float64))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Int16__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000245EAE0426276604C8A7DA04A82F26044A375F0A11781E097134B404F50EA008B92F7D0F'), 'AggregateFunction(uniqApacheHLL, Nullable(Int16))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000245EAE0426276604C8A7DA04A82F26044A375F0A11781E097134B404F50EA008B92F7D0F'), 'AggregateFunction(uniqApacheHLL, Nullable(Int16))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Int32__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000040AC260547E5A708E95FE807AB9AA70874330D0A15F64116571113073D9BBF083F53B008'), 'AggregateFunction(uniqApacheHLL, Nullable(Int32))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000040AC260547E5A708E95FE807AB9AA70874330D0A15F64116571113073D9BBF083F53B008'), 'AggregateFunction(uniqApacheHLL, Nullable(Int32))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Int64__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000AA17BA0775835208718A73077519C20CDF32EE073787E904F8E4B507FEB2E90DFFBAB40D'), 'AggregateFunction(uniqApacheHLL, Nullable(Int64))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000AA17BA0775835208718A73077519C20CDF32EE073787E904F8E4B507FEB2E90DFFBAB40D'), 'AggregateFunction(uniqApacheHLL, Nullable(Int64))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_Int8__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C05080001090000002F1A130781BC5D062F5376131FBA2208D14F7B0534041D06587FD504983CF2041FABB112'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C05080001090000002F1A130781BC5D062F5376131FBA2208D14F7B0534041D06587FD504983CF2041FABB112'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_String__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000063FB5C052C7A63055171ED07B26D5609B3C75721D5EF3D0CB6DEBF0DB91B490A9B2C1906'), 'AggregateFunction(uniqApacheHLL, Nullable(String))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('2C0301070C050800010800000063FB5C052C7A63055171ED07B26D5609B3C75721D5EF3D0CB6DEBF0D9B2C1906'), 'AggregateFunction(uniqApacheHLL, Nullable(String))'))":"8"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_UInt16__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000A31DAF09CBD7C204757F4C06710BB40735A4B104DF9E5207991E82049019AC0A3F8F8804'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt16))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000A31DAF09CBD7C204757F4C06710BB40735A4B104DF9E5207991E82049019AC0A3F8F8804'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt16))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_UInt32__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000828DC30785A0D80507FA1305CBD7C204AC356307B0461F0411222B0494494A05B7943A08'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt32))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000828DC30785A0D80507FA1305CBD7C204AC356307B0461F0411222B0494494A05B7943A08'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt32))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_UInt64__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C0508000109000000A64B520CCBD7C20453045110F4B7EE04B669E104D964E70B9A3677065CC02907BD677A10'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt64))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000A64B520CCBD7C20453045110F4B7EE04B669E104D964E70B9A3677065CC02907BD677A10'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt64))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_UInt8__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C050800010900000035A931044A2CF304CBD7C2048F2E2C1EDB522D0434F7530AD59714073BBDBD0CEF9DF310'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt8))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C050800010900000035A931044A2CF304CBD7C2048F2E2C1EDB522D0434F7530AD59714073BBDBD0CEF9DF310'), 'AggregateFunction(uniqApacheHLL, Nullable(UInt8))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_Nullable_UUID__0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01300301070C05080001090000006183AF048130E6056C95BA0E8DEAB31650C94D057428B70B97E80D04DCA217055E9FD712'), 'AggregateFunction(uniqApacheHLL, Nullable(UUID))'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('300301070C05080001090000006183AF048130E6056C95BA0E8DEAB31650C94D057428B70B97E80D04DCA217055E9FD712'), 'AggregateFunction(uniqApacheHLL, Nullable(UUID))'))":"9"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_String_0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('300301070C0508000109000000E4CEEA0D399B57048D316C06EE8D5206B040A206728EBF0F98B4B910B91B490A9B2C1906'), 'AggregateFunction(uniqApacheHLL, String)'))":"9"}
+{"uniqApacheHLLMerge(CAST(unhex('2C0301070C0508000108000000E4CEEA0D8D316C06EE8D5206B040A206728EBF0F98B4B910399B57049B2C1906'), 'AggregateFunction(uniqApacheHLL, String)'))":"8"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_UInt16_0 = r"""
@@ -271,11 +275,11 @@ _aggregate_functions_merge_uniqApacheHLLMerge_constant_0 = r"""
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_empty_string_0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('0C0201070C03080100B91B490A'), 'AggregateFunction(uniqApacheHLL, String)'))":"1"}
+{"uniqApacheHLLMerge(CAST(unhex('080201070C030C0000'), 'AggregateFunction(uniqApacheHLL, String)'))":"0"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_empty_string_with_non_empty_string_0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('100201070C03080200B91B490A2F823B04'), 'AggregateFunction(uniqApacheHLL, String)'))":"2"}
+{"uniqApacheHLLMerge(CAST(unhex('0C0201070C030801002F823B04'), 'AggregateFunction(uniqApacheHLL, String)'))":"1"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_estimation_mode_0 = r"""
@@ -283,7 +287,7 @@ _aggregate_functions_merge_uniqApacheHLLMerge_estimation_mode_0 = r"""
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_first_non_NULL_value_0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01140201070C030803007581660781BC5D067B65E608'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"3"}
+{"uniqApacheHLLMerge(CAST(unhex('140201070C030803007581660781BC5D067B65E608'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"3"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_inf_0 = r"""
@@ -319,19 +323,19 @@ _aggregate_functions_merge_uniqApacheHLLMerge_string_that_ends_with__0_0 = r"""
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_with_another_aggregate_function_0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('01140201070C030803002BF2FB06758166077B65E608'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"3"}
+{"uniqApacheHLLMerge(CAST(unhex('140201070C030803002BF2FB06758166077B65E608'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"3"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_with_another_aggregate_function_and_group_by_0 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('010C0201070C030801002BF2FB06'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"1"}
+{"uniqApacheHLLMerge(CAST(unhex('0C0201070C030801002BF2FB06'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"1"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_with_another_aggregate_function_and_group_by_1 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('010C0201070C0308010075816607'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"1"}
+{"uniqApacheHLLMerge(CAST(unhex('0C0201070C0308010075816607'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"1"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_with_another_aggregate_function_and_group_by_2 = r"""
-{"uniqApacheHLLMerge(CAST(unhex('010C0201070C030801007B65E608'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"1"}
+{"uniqApacheHLLMerge(CAST(unhex('0C0201070C030801007B65E608'), 'AggregateFunction(uniqApacheHLL, Nullable(Int8))'))":"1"}
 """
 
 _aggregate_functions_merge_uniqApacheHLLMerge_with_group_by_0 = r"""

@@ -33,6 +33,7 @@ on:
           - clickhouse-sqlalchemy
           - clickhouse-jdbc
           - dbeaver
+          - dbeaver-ui
         required: true
         default: all
       artifacts:
@@ -256,6 +257,27 @@ jobs:
       job_name: lts_dbeaver
       storage_path: /dbeaver
       regression_args: '--only "/lts/dbeaver/*"'
+      timeout_minutes: 60
+      runner_arch: x86
+    secrets: inherit
+
+  # Runs DBeaver itself under Xvfb. DBeaver downloads its ClickHouse JDBC
+  # driver from Maven Central during the run.
+  dbeaver_ui:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'dbeaver-ui' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: none
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      suite_name: lts
+      job_name: lts_dbeaver_ui
+      storage_path: /dbeaver_ui
+      regression_args: '--only "/lts/dbeaver-ui/*"'
       timeout_minutes: 60
       runner_arch: x86
     secrets: inherit

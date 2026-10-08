@@ -29,7 +29,11 @@ def scenario(
 ):
     """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
     # https://github.com/ClickHouse/ClickHouse/pull/58139
-    if check_clickhouse_version(">=24.8")(self):
+    if check_clickhouse_version(">=26.10")(self):
+        clickhouse_version = (
+            ">=26.10"  # https://github.com/ClickHouse/ClickHouse/pull/122892
+        )
+    elif check_clickhouse_version(">=24.8")(self):
         clickhouse_version = (
             ">=24.8"  # https://github.com/ClickHouse/ClickHouse/issues/69518
         )

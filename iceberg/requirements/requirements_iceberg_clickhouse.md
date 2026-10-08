@@ -18,23 +18,25 @@
         * 2.3.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.SchemaEvolution](#rqsrs-045clickhouseicebergdatabaseengineschemaevolution)
     * 2.4 [Partition evolution](#partition-evolution)
         * 2.4.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.PartitionEvolution](#rqsrs-045clickhouseicebergdatabaseenginepartitionevolution)
-    * 2.5 [Pruning](#pruning)
-        * 2.5.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.IcebergPartitionPruning](#rqsrs-045clickhouseicebergdatabaseenginepruningicebergpartitionpruning)
-        * 2.5.2 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.IcebergPartitionPruning.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseenginepruningicebergpartitionpruningprofileevents)
-        * 2.5.3 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.MinMax](#rqsrs-045clickhouseicebergdatabaseenginepruningminmax)
-        * 2.5.4 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.MinMax.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseenginepruningminmaxprofileevents)
-        * 2.5.5 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.ParquetFilterPushDown](#rqsrs-045clickhouseicebergdatabaseenginepruningparquetfilterpushdown)
-        * 2.5.6 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.ParquetBloomFilter](#rqsrs-045clickhouseicebergdatabaseenginepruningparquetbloomfilter)
-    * 2.6 [Caching](#caching)
-        * 2.6.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.MetadataCache](#rqsrs-045clickhouseicebergdatabaseenginemetadatacache)
-        * 2.6.2 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.MetadataCache.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseenginemetadatacacheprofileevents)
-        * 2.6.3 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.ParquetMetadataCache](#rqsrs-045clickhouseicebergdatabaseengineparquetmetadatacache)
-        * 2.6.4 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.ParquetMetadataCache.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseengineparquetmetadatacacheprofileevents)
+    * 2.5 [Drop partition](#drop-partition)
+        * 2.5.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.DropPartition](#rqsrs-045clickhouseicebergdatabaseenginedroppartition)
+    * 2.6 [Pruning](#pruning)
+        * 2.6.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.IcebergPartitionPruning](#rqsrs-045clickhouseicebergdatabaseenginepruningicebergpartitionpruning)
+        * 2.6.2 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.IcebergPartitionPruning.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseenginepruningicebergpartitionpruningprofileevents)
+        * 2.6.3 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.MinMax](#rqsrs-045clickhouseicebergdatabaseenginepruningminmax)
+        * 2.6.4 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.MinMax.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseenginepruningminmaxprofileevents)
+        * 2.6.5 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.ParquetFilterPushDown](#rqsrs-045clickhouseicebergdatabaseenginepruningparquetfilterpushdown)
+        * 2.6.6 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.Pruning.ParquetBloomFilter](#rqsrs-045clickhouseicebergdatabaseenginepruningparquetbloomfilter)
+    * 2.7 [Caching](#caching)
+        * 2.7.1 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.MetadataCache](#rqsrs-045clickhouseicebergdatabaseenginemetadatacache)
+        * 2.7.2 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.MetadataCache.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseenginemetadatacacheprofileevents)
+        * 2.7.3 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.ParquetMetadataCache](#rqsrs-045clickhouseicebergdatabaseengineparquetmetadatacache)
+        * 2.7.4 [RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.ParquetMetadataCache.ProfileEvents](#rqsrs-045clickhouseicebergdatabaseengineparquetmetadatacacheprofileevents)
 
 
 ## Introduction
 
-This Software Requirements Specification (SRS) defines the requirements for ClickHouse's read-only integration with existing Apache Iceberg tables through three different interfaces: Iceberg Database Engine, Iceberg Table Engine, and Iceberg Table Function, supporting tables stored in Amazon S3, Azure, HDFS, and local filesystem storage.
+This Software Requirements Specification (SRS) defines the requirements for ClickHouse's integration with Apache Iceberg tables through the Iceberg database engine, the Iceberg table engine, and the Iceberg table function, for tables stored in Amazon S3, Azure, HDFS, and the local filesystem. The database engine sections cover reading existing tables and `ALTER TABLE ... DROP PARTITION`.
 
 
 ## Iceberg Database Engine
@@ -183,6 +185,23 @@ version: 1.0
 Possible partition evolution operations:
 - Add partition field
 - Remove partition field
+
+
+### Drop partition
+
+#### RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.DropPartition
+version: 1.0
+
+[ClickHouse] SHALL support `ALTER TABLE ... DROP PARTITION` on an Iceberg table reached through a `DataLakeCatalog` database or `IcebergS3`. The statement takes partition values, applies the table's partition transforms, and commits a snapshot with operation `DELETE` that no longer references the data files of that partition. A partition value that matches no file SHALL leave the current snapshot unchanged.
+
+`iceberg_delete_data_on_drop` (SRS-049) SHALL decide whether those data files are removed from object storage after the snapshot commits. When the setting is off, the files stay in object storage.
+
+The statement SHALL require `allow_insert_into_iceberg`. It SHALL apply to Iceberg format version 2. Format version 1 and format version 3 SHALL be rejected. `DROP PARTITION ALL`, `DROP PARTITION ID`, and a drop on an unpartitioned table SHALL be rejected.
+
+Example:
+```sql
+ALTER TABLE datalake.`namespace.table` DROP PARTITION '2024-01-15';
+```
 
 
 ### Pruning

@@ -4,6 +4,7 @@ from testflows.core import *
 
 import rbac.helper.errors as errors
 from rbac.requirements import *
+from helpers.common import check_clickhouse_version
 
 
 @TestFeature
@@ -75,14 +76,19 @@ def feature(self, node="clickhouse1"):
                     message=message,
                 )
 
-    # in SET DEFAULT ROLE, the nonexistent user is noticed first and becomes the thrown exception
+    # in SET DEFAULT ROLE, the nonexistent user is noticed first and becomes the thrown exception;
+    # from 26.10 (ClickHouse #118429) the roles are resolved first, so the nonexistent role is reported
     with Scenario(
         "I set default a nonexistent role to a nonexistent user",
         requirements=[RQ_SRS_006_RBAC_SetDefaultRole("1.0")],
     ):
         with setup(0, 0):
             with When("I set default nonexistent role to a nonexistent user"):
-                exitcode, message = errors.user_not_found_in_disk(name="user0")
+                exitcode, message = (
+                    errors.role_not_found_in_disk(name="role0")
+                    if check_clickhouse_version(">=26.10")(self)
+                    else errors.user_not_found_in_disk(name="user0")
+                )
                 node.query(
                     "SET DEFAULT ROLE role0 TO user0",
                     exitcode=exitcode,

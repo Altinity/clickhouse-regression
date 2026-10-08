@@ -188,7 +188,7 @@ def access_failed(self):
         }
 
     if self.context.storage == "azure":
-        message = "Server failed to authenticate"
+        message = "This request is not authorized to perform this operation"
     elif self.context.storage == "hetzner":
         message = "The AWS Access Key Id you provided does not exist in our records"
     else:
@@ -356,7 +356,7 @@ def access_default(self):
         }
 
     if self.context.storage == "azure":
-        message = "Server failed to authenticate"
+        message = "This request is not authorized to perform this operation"
     elif self.context.storage == "hetzner":
         message = "The AWS Access Key Id you provided does not exist in our records"
     else:

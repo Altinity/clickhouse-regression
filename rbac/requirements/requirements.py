@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.241127.1225014.
+# document by TestFlows v2.0.250110.1002922.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -2020,11 +2020,81 @@ RQ_SRS_006_RBAC_User_ValidUntil_ShowCreateUser = Requirement(
         "\n"
         "[ClickHouse] SHALL reflect the expiration date in the `SHOW CREATE USER` statement.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=4,
     num="5.3.20.11",
+)
+
+RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved = Requirement(
+    name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "From version 26.10, [ClickHouse] SHALL remove the user's existing authentication methods whose\n"
+        "`VALID UNTIL` date has passed when an `ALTER USER` statement adds a new authentication method\n"
+        "(PR #118880).\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.20.12",
+)
+
+RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_AlterWithoutAuthentication = Requirement(
+    name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AlterWithoutAuthentication",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "From version 26.10, [ClickHouse] SHALL remove the user's existing authentication methods whose\n"
+        "`VALID UNTIL` date has passed on an `ALTER USER` statement that does not change authentication\n"
+        "(PR #118880).\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.20.13",
+)
+
+RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_AddedByStatement = Requirement(
+    name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AddedByStatement",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "From version 26.10, [ClickHouse] SHALL keep an authentication method whose `VALID UNTIL` date\n"
+        "has already passed when the same `ALTER USER` statement adds it (PR #118880).\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.20.14",
+)
+
+RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_LastMethodKept = Requirement(
+    name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.LastMethodKept",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "From version 26.10, [ClickHouse] SHALL NOT remove expired authentication methods if that would\n"
+        "leave the user with no authentication method (PR #118880).\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.3.20.15",
 )
 
 RQ_SRS_006_RBAC_Role = Requirement(
@@ -12191,6 +12261,26 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
             level=4,
             num="5.3.20.11",
         ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved",
+            level=4,
+            num="5.3.20.12",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AlterWithoutAuthentication",
+            level=4,
+            num="5.3.20.13",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AddedByStatement",
+            level=4,
+            num="5.3.20.14",
+        ),
+        Heading(
+            name="RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.LastMethodKept",
+            level=4,
+            num="5.3.20.15",
+        ),
         Heading(name="Role", level=2, num="5.4"),
         Heading(name="RQ.SRS-006.RBAC.Role", level=3, num="5.4.1"),
         Heading(name="RQ.SRS-006.RBAC.Role.Privileges", level=3, num="5.4.2"),
@@ -13857,6 +13947,10 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_User_ValidUntil_TimezoneEffect,
         RQ_SRS_006_RBAC_User_ValidUntil_InvalidValues,
         RQ_SRS_006_RBAC_User_ValidUntil_ShowCreateUser,
+        RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved,
+        RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_AlterWithoutAuthentication,
+        RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_AddedByStatement,
+        RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_LastMethodKept,
         RQ_SRS_006_RBAC_Role,
         RQ_SRS_006_RBAC_Role_Privileges,
         RQ_SRS_006_RBAC_Role_Variables,
@@ -15942,6 +16036,32 @@ The above query should throw an error.
 version: 1.0  
 
 [ClickHouse] SHALL reflect the expiration date in the `SHOW CREATE USER` statement.
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL remove the user's existing authentication methods whose
+`VALID UNTIL` date has passed when an `ALTER USER` statement adds a new authentication method
+(PR #118880).
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AlterWithoutAuthentication
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL remove the user's existing authentication methods whose
+`VALID UNTIL` date has passed on an `ALTER USER` statement that does not change authentication
+(PR #118880).
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.AddedByStatement
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL keep an authentication method whose `VALID UNTIL` date
+has already passed when the same `ALTER USER` statement adds it (PR #118880).
+
+##### RQ.SRS-006.RBAC.User.ValidUntil.ExpiredMethodsRemoved.LastMethodKept
+version: 1.0
+
+From version 26.10, [ClickHouse] SHALL NOT remove expired authentication methods if that would
+leave the user with no authentication method (PR #118880).
 
 
 ### Role
