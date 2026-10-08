@@ -382,11 +382,11 @@ def check_attach_partition_from(
         """
     ):
         if valid:
-            source_partition_data = get_node(self, "source").query(
-                f"SELECT * FROM {source_table_name} ORDER BY time,date,extra FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=600, delay=20):
                 with attempt:
+                    source_partition_data = get_node(self, "source").query(
+                        f"SELECT * FROM {source_table_name} ORDER BY time,date,extra FORMAT TabSeparated"
+                    )
                     destination_partition_data = get_node(self, "destination").query(
                         f"SELECT * FROM {destination_table_name} ORDER BY time,date,extra FORMAT TabSeparated"
                     )
