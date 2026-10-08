@@ -17,9 +17,7 @@ def scenario(
     self, func="quantilesDeterministic({params})", table=None, snapshot_id=None
 ):
     """Check quantilesDeterministic aggregate function by using the same tests as for quantileDeterministic."""
-    if check_clickhouse_version(">=26.10")(self) and (
-        "State" in self.name or "Merge" in self.name
-    ):
+    if check_clickhouse_version(">=26.10")(self) and "State" in self.name:
         clickhouse_version = (
             ">=26.10"  # https://github.com/ClickHouse/ClickHouse/pull/115393
         )
