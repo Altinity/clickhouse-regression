@@ -81,7 +81,7 @@ CATALOG_PARTITION_SPEC = PartitionSpec(
 
 
 NO_CATALOG_MODES = ("no",)
-EXTERNAL_CATALOG_MODES = ("ice", "glue")
+EXTERNAL_CATALOG_MODES = ("ice", "glue", "unity")
 ICE_CATALOG_MODES = ("ice",)
 
 

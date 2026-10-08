@@ -477,6 +477,18 @@ xfails = {
             check_clickhouse_version(">=26.1"),
         )
     ],
+    "/iceberg/iceberg engine/unity catalog/predicate push down/check input format parquet filter push down": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/predicate push down/check input format parquet filter push down/*": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        )
+    ],
     "/iceberg/iceberg engine/: catalog/feature/select from system databases/*": [
         (
             Fail,
@@ -756,6 +768,12 @@ ffails = {
         Skip,
         "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
         "ice-rest-catalog); Glue/LocalStack DataLakeCatalog is out of scope.",
+        lambda test: True,
+    ),
+    "/iceberg/export partition/unity catalog/*/casting": (
+        Skip,
+        "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
+        "ice-rest-catalog); Unity DataLakeCatalog is out of scope.",
         lambda test: True,
     ),
     "/iceberg/hybrid": (

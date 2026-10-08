@@ -331,7 +331,8 @@ def create_iceberg_destination(
 
     * ``"no"``           -> :func:`create_iceberg_s3_destination` (returns a
       ``table_name`` string).
-    * ``"ice"`` / ``"glue"`` -> :func:`create_pyiceberg_catalog_destination`
+    * ``"ice"`` / ``"glue"`` / ``"unity"`` ->
+      :func:`create_pyiceberg_catalog_destination`
       after translating ``columns`` / ``partition_by`` into an explicit
       PyIceberg ``Schema`` + ``PartitionSpec`` via
       :mod:`iceberg.tests.export_partition.steps.pyiceberg_schema`.
@@ -362,7 +363,7 @@ def create_iceberg_destination(
             **kwargs,
         )
 
-    if catalog not in ("ice", "glue"):
+    if catalog not in ("ice", "glue", "unity"):
         raise ValueError(f"Unsupported catalog mode: {catalog!r}")
 
     # ``query_settings`` / ``extra_settings`` that only hold the PyIceberg

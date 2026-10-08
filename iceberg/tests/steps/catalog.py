@@ -150,6 +150,47 @@ def create_glue_catalog(
 
 
 @TestStep(Given)
+def create_unity_catalog(
+    self,
+    s3_access_key_id,
+    s3_secret_access_key,
+    name=None,
+    uri="http://localhost:8085/api/2.1/unity-catalog/iceberg-rest",
+    warehouse="unity",
+    s3_endpoint="http://localhost:9002",
+    clean_up_minio_bucket=True,
+):
+    """Create a PyIceberg client for Unity's Iceberg REST endpoint."""
+    if name is None:
+        name = f"unity_catalog_{getuid()}"
+
+    try:
+        catalog = load_catalog(
+            name,
+            type="rest",
+            uri=uri,
+            warehouse=warehouse,
+            **{
+                "s3.endpoint": s3_endpoint,
+                "s3.access-key-id": s3_access_key_id,
+                "s3.secret-access-key": s3_secret_access_key,
+                "s3.region": "us-east-1",
+            },
+        )
+        yield catalog
+
+    finally:
+        with Finally("drop catalog"):
+            if clean_up_minio_bucket:
+                clean_minio_bucket(
+                    bucket_name="warehouse",
+                    s3_endpoint=s3_endpoint,
+                    s3_access_key_id=s3_access_key_id,
+                    s3_secret_access_key=s3_secret_access_key,
+                )
+
+
+@TestStep(Given)
 def create_catalog(self, **kwargs):
     # ``"rest"`` and ``"ice"`` both route to ``ice-rest-catalog`` (the
     # Altinity REST Catalog implementation that the existing REST
@@ -157,11 +198,15 @@ def create_catalog(self, **kwargs):
     # exist so that the export_partition suite, which ONLY exercises
     # ice-rest-catalog under its "rest" mode today, can self-document by
     # spelling its mode ``"ice"`` while sibling iceberg suites that talk
-    # generically to "a REST catalog" keep using ``"rest"``.
+    # generically to "a REST catalog" keep using ``"rest"``. Unity also uses
+    # PyIceberg's REST client, but points it at Unity's Iceberg compatibility
+    # endpoint and supplies the Unity catalog name as ``warehouse``.
     if self.context.catalog in ("rest", "ice"):
         return create_rest_catalog(**kwargs)
     elif self.context.catalog == "glue":
         return create_glue_catalog(**kwargs)
+    elif self.context.catalog == "unity":
+        return create_unity_catalog(**kwargs)
     else:
         raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
 
@@ -255,6 +300,8 @@ def create_iceberg_table(
 ):
     """Create iceberg table."""
     table_properties["format-version"] = format_version
+    if self.context.catalog == "unity" and location == "s3://warehouse/data":
+        location = f"{location}/{namespace}/{table_name}"
 
     try:
         table = catalog.create_table(

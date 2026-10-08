@@ -129,13 +129,13 @@ RQ_Iceberg_NativeCreateDrop_SupportedCatalogs = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support native `CREATE TABLE` and `DROP TABLE` for Iceberg REST catalogs\n"
-        "(including OneLake, BigLake, and Delta Sharing variants) and for the AWS Glue catalog. For any\n"
-        "other catalog type of a `DataLakeCatalog` database (Unity, Hive Metastore, Paimon REST) both\n"
+        "(including OneLake, BigLake, and Delta Sharing variants), AWS Glue, and Unity Catalog v2. For any\n"
+        "other catalog type of a `DataLakeCatalog` database (Hive Metastore, Paimon REST) both\n"
         "statements SHALL fail with `NOT_IMPLEMENTED` and an error message that names the supported\n"
         "catalog types, and SHALL NOT partially register or partially delete anything.\n"
         "\n"
-        "The regression environment exercises the REST (`ice-rest-catalog`) and Glue (LocalStack)\n"
-        "branches; every requirement in this specification applies to both unless it says otherwise.\n"
+        "The regression environment exercises REST (`ice-rest-catalog`), Glue (LocalStack), and Unity\n"
+        "branches; every requirement in this specification applies to all three unless it says otherwise.\n"
         "\n"
     ),
     link=None,
@@ -1681,13 +1681,13 @@ SETTINGS allow_experimental_insert_into_iceberg = 1;
 version: 1.0
 
 [ClickHouse] SHALL support native `CREATE TABLE` and `DROP TABLE` for Iceberg REST catalogs
-(including OneLake, BigLake, and Delta Sharing variants) and for the AWS Glue catalog. For any
-other catalog type of a `DataLakeCatalog` database (Unity, Hive Metastore, Paimon REST) both
+(including OneLake, BigLake, and Delta Sharing variants), AWS Glue, and Unity Catalog v2. For any
+other catalog type of a `DataLakeCatalog` database (Hive Metastore, Paimon REST) both
 statements SHALL fail with `NOT_IMPLEMENTED` and an error message that names the supported
 catalog types, and SHALL NOT partially register or partially delete anything.
 
-The regression environment exercises the REST (`ice-rest-catalog`) and Glue (LocalStack)
-branches; every requirement in this specification applies to both unless it says otherwise.
+The regression environment exercises REST (`ice-rest-catalog`), Glue (LocalStack), and Unity
+branches; every requirement in this specification applies to all three unless it says otherwise.
 
 ## Table Definition
 
