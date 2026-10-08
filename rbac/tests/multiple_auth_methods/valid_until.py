@@ -306,6 +306,132 @@ def check_independency_of_expiration_and_auth_methods_limit(self):
             self.context.node.query(query, exitcode=exitcode, message=message)
 
 
+@TestScenario
+@Requirements(RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved("1.0"))
+def expired_auth_methods_removed_on_add(self):
+    """Check that ALTER USER ... ADD IDENTIFIED drops the expired methods the
+    user already had and keeps the valid ones."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+
+    try:
+        with Given("a user with one expired and one valid password"):
+            node.query(
+                f"CREATE USER {user_name} IDENTIFIED BY 'old' VALID UNTIL '2000-01-01', "
+                "plaintext_password BY 'current'"
+            )
+
+        with When("I add a new password"):
+            node.query(f"ALTER USER {user_name} ADD IDENTIFIED BY 'new'")
+
+        with Then("only the expired password is dropped"):
+            common.check_changes_reflected_in_system_table(
+                user_name=user_name, correct_passwords=["current", "new"]
+            )
+            common.login(user_name=user_name, password="current")
+            common.login(user_name=user_name, password="new")
+
+    finally:
+        with Finally("drop user"):
+            common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_AlterWithoutAuthentication(
+        "1.0"
+    )
+)
+def expired_auth_methods_removed_on_alter_without_authentication(self):
+    """Check that an ALTER USER that does not change authentication also drops
+    the expired methods the user already had."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+
+    try:
+        with Given("a user with one expired and one valid password"):
+            node.query(
+                f"CREATE USER {user_name} IDENTIFIED BY 'old' VALID UNTIL '2000-01-01', "
+                "plaintext_password BY 'current'"
+            )
+
+        with When("I change only a setting of the user"):
+            node.query(f"ALTER USER {user_name} SETTINGS max_threads = 1")
+
+        with Then("the expired password is dropped"):
+            common.check_changes_reflected_in_system_table(
+                user_name=user_name, correct_passwords=["current"]
+            )
+            common.login(user_name=user_name, password="current")
+
+    finally:
+        with Finally("drop user"):
+            common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_AddedByStatement("1.0")
+)
+def expired_auth_methods_removed_keeps_method_added_by_statement(self):
+    """Check that an already expired method is kept by the statement that adds it."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+
+    try:
+        with Given("a user with one valid password"):
+            node.query(f"CREATE USER {user_name} IDENTIFIED BY 'current'")
+
+        with When("I add a password that is already expired"):
+            node.query(
+                f"ALTER USER {user_name} ADD IDENTIFIED BY 'dead' "
+                "VALID UNTIL '2000-01-01'"
+            )
+
+        with Then("the expired password is kept"):
+            common.check_changes_reflected_in_system_table(
+                user_name=user_name, correct_passwords=["current", "dead"]
+            )
+
+    finally:
+        with Finally("drop user"):
+            common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_006_RBAC_User_ValidUntil_ExpiredMethodsRemoved_LastMethodKept("1.0")
+)
+def expired_auth_methods_removed_keeps_last_method(self):
+    """Check that a user whose every method is expired keeps them, so it is
+    not left with no authentication method."""
+    node = self.context.node
+    user_name = f"user_{getuid()}"
+
+    try:
+        with Given("a user whose only password is expired"):
+            node.query(
+                f"CREATE USER {user_name} IDENTIFIED BY 'old' VALID UNTIL '2000-01-01'"
+            )
+
+        with When("I change only a setting of the user"):
+            node.query(f"ALTER USER {user_name} SETTINGS max_threads = 1")
+
+        with Then("the expired password is kept and login still fails"):
+            common.check_changes_reflected_in_system_table(
+                user_name=user_name, correct_passwords=["old"]
+            )
+            common.login(
+                user_name=user_name,
+                password="old",
+                expected=errors.wrong_password(user_name),
+            )
+
+    finally:
+        with Finally("drop user"):
+            common.execute_query(query=f"DROP USER IF EXISTS {user_name}")
+
+
 @TestFeature
 @Name("valid until")
 def feature(self):
