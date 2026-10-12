@@ -16,7 +16,13 @@ _VICTIM_SRID = os.environ.get("CA_SOAK_TESTS_VICTIM_SRID", "ca_soak_clickhouse2"
 _TABLE_PREFIX = "s45_victim"
 _CH1 = os.environ.get("CA_SOAK_TESTS_NODE1_CONTAINER", "soak_tests_env-clickhouse1-1")
 _CH2 = os.environ.get("CA_SOAK_TESTS_NODE2_CONTAINER", "soak_tests_env-clickhouse2-1")
-_LEASE_WAIT_BOUND_S = 60.0
+# Defaults from ContentAddressedSettings: cas_mount_lease_ttl_ms=30000, cas_mount_renew_period_ms=10000.
+# GC fences a stable mount after ttl + ttl/20 + one renew period. Background GC is every 60s;
+# this card drives the rounds itself, so the bound is the observation window plus one interval.
+_LEASE_TTL_S = 30.0
+_LEASE_RENEW_S = 10.0
+_OBSERVATION_S = _LEASE_TTL_S + _LEASE_TTL_S / 20.0 + _LEASE_RENEW_S
+_FENCE_WAIT_BOUND_S = _OBSERVATION_S + 60.0 + 15.0
 _LEASE_POLL_INTERVAL_S = 5.0
 
 
@@ -46,15 +52,27 @@ def _run_drop_member(container, srid, timeout_s=300.0):
     return out
 
 
-def _run_drop_member_after_lease_lapses(container, srid):
-    deadline = time.monotonic() + _LEASE_WAIT_BOUND_S
+def _run_drop_member_after_fence(container, srid, gc_node, log):
+    """Retry until GC fences the killed member, or the observation window has passed.
+
+    cas-drop-member does not treat expires_at_ms as proof of death. A killed process
+    leaves an unfenced lease. claimMount reclaims that lease once GC has seen the same
+    mount token hold still for the observation threshold. Driving GC on the survivor
+    is what starts and completes that window.
+    """
+    deadline = time.monotonic() + _FENCE_WAIT_BOUND_S
     last = _run_drop_member(container, srid)
-    while (
-        last.get("exit_code") != 0
-        and "alive or contended" in (last.get("stderr") or "")
-        and time.monotonic() < deadline
-    ):
-        time.sleep(_LEASE_POLL_INTERVAL_S)
+    while last.get("exit_code") != 0 and "alive or contended" in (last.get("stderr") or ""):
+        if time.monotonic() >= deadline:
+            break
+        try:
+            C.gc_round(gc_node, timeout=120)
+        except Exception as e:
+            log(f"S45 GC while waiting for the mount fence: {e}")
+        remain = deadline - time.monotonic()
+        if remain <= 0:
+            break
+        time.sleep(min(_LEASE_POLL_INTERVAL_S, remain))
         last = _run_drop_member(container, srid)
     return last
 
@@ -111,7 +129,7 @@ class S45(Scenario):
             )
             return
         try:
-            report = _run_drop_member_after_lease_lapses(_CH1, _VICTIM_SRID)
+            report = _run_drop_member_after_fence(_CH1, _VICTIM_SRID, node, ctx.log)
             result.observations["drop_member_report"] = {
                 k: v for k, v in report.items() if k not in ("stdout", "stderr")
             }

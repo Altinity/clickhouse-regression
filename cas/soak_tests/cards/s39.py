@@ -52,6 +52,23 @@ def _text_log_count(node, since: str, needle: str, logger: str = "CasMountLeaseR
         return -1
 
 
+def _across(nodes, since: str, needle: str, counter) -> tuple[int | None, dict]:
+    """Sum one log counter across every replica.
+
+    A probe failure (-1) on any replica makes the total None. Treating that as
+    zero let a fenced replica pass when the card only asked the first node.
+    """
+    per = {}
+    total = 0
+    for n in nodes:
+        count = counter(n, since, needle)
+        per[n.container] = count
+        if count < 0:
+            return None, per
+        total += count
+    return total, per
+
+
 def _watermark_renew_count(node, since: str, outcome: str) -> int:
     """Count cas_log watermark_renew rows with this outcome at or after since. Probe failure is -1."""
     try:
@@ -147,33 +164,53 @@ class S39(Scenario):
 
         # An 8s window is shorter than the 10s renew period, so it can miss the beat entirely.
         # A miss is not a failure. A hit shows up as an Information "recovered after" line.
-        recovered_a = _text_log_count(node, since_a, "recovered after")
-        fenced_a = _text_log_count(node, since_a, "fenced after")
-        result.observations["leg_a"] = {"recovered_lines": recovered_a, "fence_lines": fenced_a}
-        if recovered_a > 0:
+        # Count every replica. A run where clickhouse2 fenced and clickhouse1 recovered
+        # used to pass, because this card only read the first node's text_log.
+        nodes = cl.nodes()
+        recovered_a, rec_per = _across(nodes, since_a, "recovered after", _text_log_count)
+        fenced_a, fence_per = _across(nodes, since_a, "fenced after", _text_log_count)
+        result.observations["leg_a"] = {
+            "recovered_lines": recovered_a,
+            "fence_lines": fenced_a,
+            "recovered_per_replica": rec_per,
+            "fence_per_replica": fence_per,
+        }
+        if recovered_a is None or fenced_a is None:
+            result.add(Verdict.inconclusive(
+                "leg A (short fault): renewal overlapped the fault window",
+                "a readable text_log on every replica",
+                f"recovered={rec_per} fenced={fence_per}"))
+        elif recovered_a > 0:
             result.add(Verdict.check(
                 "leg A (short fault): a renewal that hit the fault recovered",
-                "> 0 'recovered after' lines", f"{recovered_a}", True, ""))
-        elif recovered_a == 0 and fenced_a == 0:
+                "> 0 'recovered after' lines", f"{rec_per}", True, ""))
+        elif fenced_a == 0:
             result.add(Verdict.inconclusive(
                 "leg A (short fault): renewal overlapped the fault window",
                 "a 'recovered after' line, or no renewal during the window",
-                "no CasMountLeaseRenewer line; the 8s window can miss the 10s renew beat"))
+                "no CasMountLeaseRenewer line on any replica; the 8s window can miss the 10s renew beat"))
         result.add(Verdict.check(
             "leg A (short fault): mount lease NEVER fenced",
-            "0 'fenced after' lines", f"{fenced_a}", fenced_a == 0,
-            "" if fenced_a == 0 else "the mount lease fenced during a SHORT fault"))
+            "0 'fenced after' lines on every replica", f"{fence_per}",
+            fenced_a == 0,
+            "" if fenced_a == 0 else (
+                "could not read text_log on every replica"
+                if fenced_a is None else "the mount lease fenced during a SHORT fault")))
 
-        # Post-disarm write must succeed immediately: nothing was ever fenced.
-        # A Code 210 here means the short window already dropped the lease. Record that and stop,
+        # Post-disarm write must succeed on every replica: a fenced peer still
+        # refuses writes after the writer has recovered. Record that and stop,
         # so the failure stays on this leg instead of aborting the card.
-        try:
-            C.insert_random(node, _TABLE, rows=rows // 4, payload_bytes=payload, op_id=2 * rows)
-        except Exception as e:
+        write_errs = []
+        for i, n in enumerate(nodes):
+            try:
+                C.insert_random(n, _TABLE, rows=rows // 4, payload_bytes=payload, op_id=2 * rows + i)
+            except Exception as e:
+                write_errs.append(f"{n.container}: {e}")
+        if write_errs:
             result.add(Verdict.check(
                 "leg A (short fault): a write succeeds once the fault clears",
-                "INSERT succeeds", str(e)[:300], False,
-                "the short fault left the mount unable to accept writes"))
+                "INSERT succeeds on every replica", "; ".join(write_errs)[:300], False,
+                "the short fault left a replica unable to accept writes"))
             return
 
         # --- Leg B: LONG fault (> lease TTL) -- the fence SHOULD trip, then recover cleanly ---
@@ -193,16 +230,24 @@ class S39(Scenario):
         # Give the queue's backoff + self-remount time to recover.
         time.sleep(int(p["settle_s"]))
 
-        fenced_b = _text_log_count(node, since_b, "fenced after")
-        renew_failed_b = _watermark_renew_count(node, since_b, "failed")
+        fenced_b, fence_b_per = _across(nodes, since_b, "fenced after", _text_log_count)
+        renew_failed_b, renew_per = _across(nodes, since_b, "failed", _watermark_renew_count)
         result.observations["leg_b"] = {
-            "fence_lines": fenced_b, "watermark_renew_failed": renew_failed_b}
+            "fence_lines": fenced_b,
+            "watermark_renew_failed": renew_failed_b,
+            "fence_per_replica": fence_b_per,
+            "watermark_renew_failed_per_replica": renew_per,
+        }
+        leg_b_ok = (
+            fenced_b is not None and renew_failed_b is not None
+            and fenced_b > 0 and renew_failed_b > 0
+        )
         result.add(Verdict.check(
             "leg B (long fault): the mount lease fenced (correct fail-closed)",
-            "> 0 'fenced after' warnings and a failed watermark_renew",
-            f"fenced={fenced_b} watermark_renew_failed={renew_failed_b}",
-            fenced_b > 0 and renew_failed_b > 0,
-            "" if fenced_b > 0 and renew_failed_b > 0 else
+            "> 0 'fenced after' warnings and a failed watermark_renew on the cluster",
+            f"fenced={fence_b_per} watermark_renew_failed={renew_per}",
+            leg_b_ok,
+            "" if leg_b_ok else
             "a fault held past the lease TTL produced no fenced warning or no failed watermark_renew"))
 
         try:
