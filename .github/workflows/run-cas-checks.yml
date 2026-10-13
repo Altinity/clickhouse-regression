@@ -4,6 +4,10 @@ run-name: 🧪 CAS checks | ${{ inputs.version }} | ${{ inputs.architecture }}
 # One dispatch for every CAS check. Package and version are the only required
 # inputs. Architecture defaults to x86.
 #
+# When the package URL contains /PRs/<number>/, the run title includes that
+# number, for example "PR 2440". A job reads the path because the run title
+# is fixed before an expression can read a path segment.
+#
 # Soak runs every soak suite. Jepsen runs all eight server nemeses.
 # Alter stress runs every combinations scenario on MinIO with --cas
 # (20 groups per scenario). Regression suite cas_all runs the CAS suite,
@@ -31,6 +35,33 @@ on:
         default: x86
 
 jobs:
+  run_name:
+    name: Set run name
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    continue-on-error: true
+    steps:
+      - name: Add the PR number from the package URL
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+          ARCH: ${{ inputs.architecture }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          pr=$(printf '%s\n' "$PACKAGE" | sed -n 's|.*/PRs/\([0-9][0-9]*\)/.*|\1|p')
+          if [ -z "$pr" ]; then
+            echo "No /PRs/<number>/ segment in the package URL. Leaving the run name unchanged."
+            exit 0
+          fi
+          name="🧪 CAS checks | PR ${pr} | ${VERSION} | ${ARCH}"
+          echo "Run name: ${name}"
+          jq -n --arg name "$name" '{name:$name}' | gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --input -
+
   soak:
     name: CAS soak
     uses: ./.github/workflows/run-cas-soak.yml
