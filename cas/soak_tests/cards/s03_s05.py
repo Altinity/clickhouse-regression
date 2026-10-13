@@ -274,6 +274,11 @@ class S04(Scenario):
         )
         smp = C.RssSampler(cl, interval_s=2.0)
         counters = C.counters_window(cl)
+        # Prefill inserts also run GC. Score replaced/spared on the drain only.
+        try:
+            drain_since = cl.node1.scalar("SELECT toString(now())")
+        except Exception:
+            drain_since = ctx.extra.get("since_event_time")
         smp.start()
         tg = time.monotonic()
         try:
@@ -284,7 +289,7 @@ class S04(Scenario):
         result.observations["drain_residual_unreachable"] = residual
         delta = counters().get("_total", {})
         result.observations["drain_counters"] = delta
-        gc_all = O.gc_log_all(cl, ctx.extra.get("since_event_time"))
+        gc_all = O.gc_log_all(cl, drain_since)
         summary = gc_all.get("summary", {})
         durs = O.finish_durations(gc_all)
         deleted_total = int(summary.get("deleted_total", 0))

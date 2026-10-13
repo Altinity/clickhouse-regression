@@ -41,6 +41,25 @@ def _s3_api_ops(delta):
     return {k: int(delta.get(k, 0)) for k in _S3_API_OPS if int(delta.get(k, 0)) > 0}
 
 
+def _idle_rounds(cluster, minutes, minute_s, log):
+    """One explicit GC round per scaled minute. Returns the per-round S3 op counts."""
+    per_minute = []
+    for minute in range(minutes):
+        before = C.cluster_events_snapshot(cluster)
+        t0 = time.monotonic()
+        C.gc_drive_round(cluster, log_fn=log)
+        wall = time.monotonic() - t0
+        after = C.cluster_events_snapshot(cluster)
+        ops = _s3_api_ops(cluster_events_delta(before, after).get("_total", {}))
+        per_minute.append(
+            {"minute": minute, "wall_s": round(wall, 2), "s3_ops": int(sum(ops.values())), "s3_api": ops}
+        )
+        rest = minute_s - wall
+        if rest > 0:
+            time.sleep(rest)
+    return per_minute
+
+
 def _list_ca_tables(node):
     try:
         txt = node.query(
@@ -76,30 +95,16 @@ class S23(Scenario):
             "idle_minutes": idle_minutes,
             "minute_s": minute_s,
             "per_round_s3_budget": budget,
-            "servers": 2,
+            "servers": "1, 2, and 10",
         }
         result.add(
             Verdict(
                 "scale used",
                 "spec asks for 1-, 2-, and 10-server variants over a 15-minute idle window",
-                f"2-server compose, {idle_minutes} idle 'minutes' x {minute_s}s "
-                f"(scale={ctx.scale})",
+                f"1-server (clickhouse1 only), 2-server, and 10-server; "
+                f"{idle_minutes} idle 'minutes' x {minute_s}s (scale={ctx.scale})",
                 "pass",
                 "dev/ci shorten the idle window; only --scenario-scale full approaches 15 minutes",
-            )
-        )
-        result.add(
-            Verdict.inconclusive(
-                "1-server idle baseline",
-                "1-server config measured",
-                "compose fixed at 2 servers",
-            )
-        )
-        result.add(
-            Verdict.inconclusive(
-                "10-server idle baseline",
-                "10-server config measured",
-                "compose fixed at 2 servers",
             )
         )
 
@@ -273,6 +278,55 @@ class S23(Scenario):
                     "could not read MemoryTracking before and after the idle window",
                 )
             )
+
+        # 1-server: drive and count clickhouse1 only. clickhouse2 stays up, but its
+        # profile events are not in this window. That is the baseline the card used
+        # to skip with "compose fixed at 2 servers".
+        one = C.ClusterView([cl.node1])
+        one_rounds = _idle_rounds(one, idle_minutes, minute_s, ctx.log)
+        result.observations["one_server_idle_gc"] = one_rounds
+        one_ops = [m["s3_ops"] for m in one_rounds]
+        result.add(Verdict.check(
+            "1-server idle baseline",
+            "explicit GC rounds recorded on clickhouse1 alone",
+            f"per-round: {one_ops}",
+            bool(one_ops),
+        ))
+
+        # 10-server: the same compose S12 uses. Restore the 2-node shape before
+        # the end checkpoint, which reads the default cluster.
+        ten_ops = None
+        ten_err = None
+        from testflows.core import current
+        from cas.soak_tests.steps.variants import activate, ten_nodes
+        try:
+            activate(current().context, "tenreplicas")
+            ten_rounds = _idle_rounds(ten_nodes(), idle_minutes, minute_s, ctx.log)
+            result.observations["ten_server_idle_gc"] = ten_rounds
+            ten_ops = [m["s3_ops"] for m in ten_rounds]
+        except Exception as e:
+            ten_err = f"{type(e).__name__}: {e}"[:300]
+        finally:
+            try:
+                activate(current().context, None)
+            except Exception as e:
+                restore_err = f"restore: {type(e).__name__}: {e}"[:200]
+                ten_err = f"{ten_err}; {restore_err}" if ten_err else restore_err
+        if ten_ops:
+            result.add(Verdict.check(
+                "10-server idle baseline",
+                "explicit GC rounds recorded on 10 replicas",
+                f"per-round: {ten_ops}",
+                True,
+            ))
+        else:
+            result.add(Verdict.check(
+                "10-server idle baseline",
+                "explicit GC rounds recorded on 10 replicas",
+                ten_err or "no rounds",
+                False,
+                "the 10-replica idle window was not measured",
+            ))
 
         end = C.standard_end(cluster=cl, result=result, tables=[])
         O.assert_fsck_clean(

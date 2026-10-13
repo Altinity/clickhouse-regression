@@ -137,8 +137,10 @@ def run_card(self, card_cls):
                     "fail",
                 )
             )
-        apply_card_result(result)
     except Exception as e:
+        # activate() and the cluster swap live in this try. A FAIL verdict is
+        # applied below, outside it: apply_card_result raises, and catching that
+        # here recorded the card's own failure as "variant switch raised Fail".
         note(f"{card.name} variant switch raised {type(e).__name__}: {e}")
         result.note_anomaly(f"variant switch raised {type(e).__name__}: {e}")
         result.add(
@@ -149,12 +151,12 @@ def run_card(self, card_cls):
                 "fail",
             )
         )
-        apply_card_result(result)
     finally:
         for name in list(result.observations.get("tables", []) or []):
             drop_table_both(cluster, name)
         for like in _CLEANUP_LIKE:
             drop_tables_like(cluster, like)
+    apply_card_result(result)
 
 
 @TestFeature

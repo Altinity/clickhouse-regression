@@ -630,6 +630,8 @@ cross_join_min_rows_to_compress = r"""'{"default":"10000000"}'"""
 
 cross_to_inner_join_rewrite = r"""'{"default":"1"}'"""
 
+data_lake_delete_data_on_drop = r"""'{"default":"0"}'"""
+
 data_type_default_nullable = r"""'{"default":"0"}'"""
 
 database_atomic_wait_for_drop_and_detach_synchronously = r"""'{"default":"0"}'"""
@@ -653,6 +655,8 @@ database_replicated_enforce_synchronous_settings = r"""'{"default":"0"}'"""
 database_replicated_initial_query_timeout_sec = r"""'{"default":"300"}'"""
 
 database_shared_drop_table_delay_seconds = r"""'{"default":"28800"}'"""
+
+datalake_ignore_unsupported_table_properties = r"""'{"default":"0"}'"""
 
 date_time_64_output_format_cut_trailing_zeros_align_to_groups_of_thousands = r"""'{"default":"0"}'"""
 
@@ -1358,6 +1362,8 @@ iceberg_insert_max_partitions = r"""'{"default":"100"}'"""
 
 iceberg_insert_max_rows_in_data_file = r"""'{"default":"1000000"}'"""
 
+iceberg_manifest_min_count_to_compact = r"""'{"default":"30"}'"""
+
 iceberg_max_number_datafiles_to_compact = r"""'{"default":"1000"}'"""
 
 iceberg_metadata_compression_method = r"""'{"default":""}'"""
@@ -1587,6 +1593,8 @@ input_format_parquet_enable_json_parsing = r"""'{"default":"1"}'"""
 input_format_parquet_enable_row_group_prefetch = r"""'{"default":"1"}'"""
 
 input_format_parquet_filter_push_down = r"""'{"default":"1"}'"""
+
+input_format_parquet_footer_read_size = r"""'{"default":"0"}'"""
 
 input_format_parquet_import_nested = r"""'{"default":"0"}'"""
 
@@ -2245,6 +2253,8 @@ number_of_mutations_to_delay = r"""'{"default":"0"}'"""
 number_of_mutations_to_throw = r"""'{"default":"0"}'"""
 
 object_storage_cluster = r"""'{"default":""}'"""
+
+object_storage_cluster_fallback_to_local_if_empty = r"""'{"default":"0"}'"""
 
 object_storage_cluster_join_mode = r"""'{"default":"allow"}'"""
 

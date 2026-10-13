@@ -11,6 +11,48 @@ MIB = 1024 * 1024
 GIB = 1024 * 1024 * 1024
 
 
+_TRACKING_SQL = (
+    "SELECT value FROM system.metrics WHERE metric = 'MemoryTracking' FORMAT TabSeparated"
+)
+
+
+def _memory_tracking(node):
+    """Allocator memory. Unlike MemoryResident, this updates as the insert allocates."""
+    try:
+        value = node.scalar(_TRACKING_SQL)
+        return int(value) if value not in (None, "") else None
+    except Exception:
+        return None
+
+
+def _writer_growth(node, work):
+    """Peak MemoryTracking on `node` while `work()` runs, minus the sample taken just before it."""
+    baseline = _memory_tracking(node)
+    peak = baseline or 0
+    stop = threading.Event()
+
+    def poll():
+        nonlocal peak
+        while not stop.is_set():
+            sample = _memory_tracking(node)
+            if sample is not None:
+                peak = max(peak, sample)
+            stop.wait(0.05)
+        sample = _memory_tracking(node)
+        if sample is not None:
+            peak = max(peak, sample)
+
+    thread = threading.Thread(target=poll, daemon=True)
+    thread.start()
+    try:
+        work()
+    finally:
+        stop.set()
+        thread.join(timeout=5)
+    growth = None if baseline is None else peak - baseline
+    return baseline, peak if baseline is not None else None, growth
+
+
 def _insert_one_big_part(node, name, *, rows, payload_bytes, op_id=0, timeout=2400.0, log_fn=print):
     """Bounded inserts (~1 GiB each) then OPTIMIZE FINAL to one huge part."""
     batch_rows = max(1, GIB // payload_bytes)
@@ -56,12 +98,48 @@ class S01(Scenario):
         result.observations["target_blob_bytes"] = actual_bytes
         ctx.log(f"S01: one part of ~{actual_bytes / GIB:.3f} GiB ({rows} rows x {payload_bytes} B)")
 
+        # The INSERT holds the blob. A same-sized MergeTree insert on the local disk is what
+        # that costs without CAS. putBlob streams the staged file, so CAS should not add another
+        # full copy on top of that.
+        local = "s01_local"
+        local_growth = None
+        try:
+            cl.node1.command(
+                f"CREATE TABLE {local} (id UInt64, payload String) ENGINE = MergeTree ORDER BY id "
+                "SETTINGS min_bytes_for_wide_part = 0, min_rows_for_wide_part = 0",
+                timeout=60,
+            )
+            _, local_peak, local_growth = _writer_growth(
+                cl.node1,
+                lambda: _insert_one_big_part(
+                    cl.node1, local, rows=rows, payload_bytes=payload_bytes, log_fn=ctx.log
+                ),
+            )
+            result.observations["local_rss_peak"] = local_peak
+            result.observations["local_rss_growth"] = local_growth
+        except Exception as e:
+            ctx.log(f"S01 local control: {e}")
+        finally:
+            try:
+                cl.node1.command(f"DROP TABLE IF EXISTS {local} SYNC", timeout=120)
+            except Exception as e:
+                ctx.log(f"S01 drop local: {e}")
+
         C.create_ca_table(cl.node1, table)
-        baseline = C.cluster_rss_peak(cl)
-        result.observations["baseline_rss"] = baseline
+        baseline = _memory_tracking(cl.node1)
+        result.observations["baseline_memory_tracking"] = baseline
 
         counters = C.counters_window(cl)
-        smp = C.RssSampler(cl, interval_s=2.0)
+        smp = C.RssSampler(cl, interval_s=0.25)
+        tracking_peak = {"n": baseline or 0}
+        stop_tracking = threading.Event()
+
+        def _poll_tracking():
+            while not stop_tracking.is_set():
+                sample = _memory_tracking(cl.node1)
+                if sample is not None:
+                    tracking_peak["n"] = max(tracking_peak["n"], sample)
+                stop_tracking.wait(0.05)
         mid_gc_ran = {"n": 0}
         stop_gc = threading.Event()
 
@@ -76,7 +154,9 @@ class S01(Scenario):
                     pass
 
         gc_thread = threading.Thread(target=_mid_gc, daemon=True) if p.get("mid_write_gc") else None
+        tracking_thread = threading.Thread(target=_poll_tracking, daemon=True)
         smp.start()
+        tracking_thread.start()
         if gc_thread:
             gc_thread.start()
         t0 = time.monotonic()
@@ -86,8 +166,10 @@ class S01(Scenario):
             )
         finally:
             stop_gc.set()
+            stop_tracking.set()
             if gc_thread:
                 gc_thread.join(timeout=10)
+            tracking_thread.join(timeout=5)
             smp.stop()
         result.timings["insert_s"] = round(time.monotonic() - t0, 1)
 
@@ -96,32 +178,40 @@ class S01(Scenario):
         result.observations["counters"] = total
         result.observations["mid_write_gc_rounds"] = mid_gc_ran["n"]
 
-        peak = C.record_peak_memory(result, smp, label="peak MemoryResident during upload")
-        if peak is not None and baseline is not None:
-            mem_growth = peak - baseline
-            result.observations["rss_growth_during_upload"] = mem_growth
+        C.record_peak_memory(result, smp, label="peak MemoryResident during upload")
+        writer_peak = tracking_peak["n"] if baseline is not None else None
+        if writer_peak is not None and baseline is not None:
+            mem_growth = writer_peak - baseline
+            result.observations["memory_tracking_growth"] = mem_growth
             attributable = actual_bytes >= 128 * MIB
-            ok = mem_growth < actual_bytes
             if not attributable:
                 result.add(
                     Verdict.inconclusive(
-                        "RSS growth < blob size",
-                        f"< {actual_bytes / GIB:.3f} GiB",
-                        f"observed {mem_growth / MIB:.0f} MiB growth, but blob "
-                        f"{actual_bytes / MIB:.0f} MiB < 128 MiB is too small to attribute "
-                        "RSS growth — rerun at --scenario-scale ci/full",
+                        "CAS memory growth < local insert + one blob",
+                        "no extra full copy",
+                        f"blob {actual_bytes / MIB:.0f} MiB < 128 MiB is too small to separate "
+                        "an extra copy from the insert block — rerun at --scenario-scale ci/full",
+                    )
+                )
+            elif local_growth is None or local_growth < actual_bytes // 2:
+                result.add(
+                    Verdict.inconclusive(
+                        "CAS memory growth < local insert + one blob",
+                        "no extra full copy",
+                        f"local control growth={local_growth} did not observe the insert block",
                     )
                 )
             else:
+                limit = local_growth + actual_bytes
                 result.add(
                     Verdict.check(
-                        "RSS growth < blob size",
-                        f"< {actual_bytes / GIB:.3f} GiB",
-                        f"{mem_growth / GIB:.3f} GiB",
-                        ok,
+                        "CAS memory growth < local insert + one blob",
+                        f"< {limit / GIB:.3f} GiB",
+                        f"cas={mem_growth / GIB:.3f} GiB local={local_growth / GIB:.3f} GiB",
+                        mem_growth < limit,
                         ""
-                        if ok
-                        else "process memory grew by ~blob size — blob likely materialized in memory",
+                        if mem_growth < limit
+                        else "writer RSS grew by a full extra blob over the same insert on local disk",
                     )
                 )
 
