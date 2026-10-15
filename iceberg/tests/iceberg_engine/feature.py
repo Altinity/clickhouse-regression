@@ -1,5 +1,31 @@
 from testflows.core import *
-import os
+
+from helpers.common import check_clickhouse_version
+
+
+UNITY_MODULES = (
+    "sanity",
+    "alter",
+    "column_rbac",
+    "predicate_push_down",
+    "rbac",
+    "row_policy",
+    "sql_clauses",
+    "equality_deletes",
+    "position_delete_reads",
+    "overwrite",
+    "schema_evolution",
+    "swarm_examples",
+    "nested_datatypes",
+    "partition_evolution",
+    "use_iceberg_partition_pruning",
+    "check_datatypes",
+    "iceberg_iterator_race_condition",
+    "dot_separated_column_names",
+    "show_data_lake_catalogs_repro",
+)
+
+
 
 
 @TestFeature
@@ -91,6 +117,17 @@ def feature(self, minio_root_user, minio_root_password):
         # Feature(
         #     test=load("iceberg.tests.iceberg_engine.alter_support", "feature"),
         # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    if check_clickhouse_version(">=26.10")(self):
+        with Feature("unity catalog"):
+            self.context.catalog = "unity"
+            for module in UNITY_MODULES:
+                Feature(
+                    test=load(f"iceberg.tests.iceberg_engine.{module}", "feature"),
+                )(
+                    minio_root_user=minio_root_user,
+                    minio_root_password=minio_root_password,
+                )
 
     with Feature("glue catalog"):
         self.context.catalog = "glue"
