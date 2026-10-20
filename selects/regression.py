@@ -172,11 +172,21 @@ xfails = {
 
 xflags = {}
 
+ffails = {
+    "/selects/final/force/concurrent/joins": (
+        Skip,
+        "exhausts ephemeral ports and drops the CAS mount lease "
+        "https://github.com/ClickHouse/ClickHouse/issues/122103",
+        check_cas_mode,
+    ),
+}
+
 
 @TestModule
 @ArgumentParser(argparser)
 @XFails(xfails)
 @XFlags(xflags)
+@FFails(ffails)
 @Name("selects")
 @Specifications()
 @CaptureClusterArgs
