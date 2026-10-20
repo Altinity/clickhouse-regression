@@ -48,6 +48,8 @@ allow_drop_detached = r"""'{"default":"0"}'"""
 
 allow_dynamic_type_in_join_keys = r"""'{"default":"0"}'"""
 
+allow_executable_tables = r"""'{"default":"1"}'"""
+
 allow_execute_multiif_columnar = r"""'{"default":"1"}'"""
 
 allow_experimental_alias_table_engine = r"""'{"default":"0"}'"""
@@ -786,6 +788,14 @@ do_not_merge_across_partitions_select_final = r"""'{"default":"0"}'"""
 
 drain_timeout = r"""'{"default":"3"}'"""
 
+dynamic_disk_allow_from_env = r"""'{"default":"0"}'"""
+
+dynamic_disk_allow_from_zk = r"""'{"default":"0"}'"""
+
+dynamic_disk_allow_include = r"""'{"default":"0"}'"""
+
+dynamic_throw_on_type_mismatch = r"""'{"default":"1"}'"""
+
 empty_result_for_aggregation_by_constant_keys_on_empty_set = r"""'{"default":"1"}'"""
 
 empty_result_for_aggregation_by_empty_set = r"""'{"default":"0"}'"""
@@ -928,11 +938,15 @@ export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
 
 export_merge_tree_part_filename_pattern = r"""'{"default":"{part_name}_{checksum}"}'"""
 
+export_merge_tree_part_ignore_extra_source_columns = r"""'{"default":"0"}'"""
+
 export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_schema_match_mode = r"""'{"default":"POSITION"}'"""
 
 export_merge_tree_part_throw_on_pending_mutations = r"""'{"default":"1"}'"""
 
@@ -945,6 +959,10 @@ export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
 export_merge_tree_partition_manifest_ttl = r"""'{"default":"86400"}'"""
 
 export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
+
+export_merge_tree_partition_retry_initial_backoff_seconds = r"""'{"default":"5"}'"""
+
+export_merge_tree_partition_retry_max_backoff_seconds = r"""'{"default":"300"}'"""
 
 export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"86400"}'"""
 
@@ -987,6 +1005,8 @@ filesystem_cache_reserve_space_wait_lock_timeout_milliseconds = r"""'{"default":
 filesystem_cache_segments_batch_size = r"""'{"default":"20"}'"""
 
 filesystem_cache_skip_download_if_exceeds_per_query_cache_write_limit = r"""'{"default":"1"}'"""
+
+filesystem_cache_wait_for_concurrent_download_timeout_milliseconds = r"""'{"default":"1000"}'"""
 
 filesystem_prefetch_max_memory_usage = r"""'{"default":"1073741824"}'"""
 
@@ -1696,7 +1716,7 @@ materialized_views_ignore_errors = r"""'{"default":"0"}'"""
 
 materialized_views_squash_parallel_inserts = r"""'{"default":"1"}'"""
 
-max_alter_threads = r"""'{"default":"\'auto(14)\'"}'"""
+max_alter_threads = r"""'{"default":"\'auto(16)\'"}'"""
 
 max_analyze_depth = r"""'{"default":"5000"}'"""
 
@@ -1768,7 +1788,7 @@ max_expanded_ast_elements = r"""'{"default":"500000"}'"""
 
 max_fetch_partition_retries_count = r"""'{"default":"5"}'"""
 
-max_final_threads = r"""'{"default":"\'auto(14)\'"}'"""
+max_final_threads = r"""'{"default":"\'auto(16)\'"}'"""
 
 max_http_get_redirects = r"""'{"default":"0"}'"""
 
@@ -1824,7 +1844,7 @@ max_parser_backtracks = r"""'{"default":"1000000"}'"""
 
 max_parser_depth = r"""'{"default":"1000"}'"""
 
-max_parsing_threads = r"""'{"default":"\'auto(14)\'"}'"""
+max_parsing_threads = r"""'{"default":"\'auto(16)\'"}'"""
 
 max_partition_size_to_drop = r"""'{"default":"50000000000"}'"""
 
@@ -1916,7 +1936,7 @@ max_temporary_data_on_disk_size_for_user = r"""'{"default":"0"}'"""
 
 max_temporary_non_const_columns = r"""'{"default":"0"}'"""
 
-max_threads = r"""'{"default":"\'auto(14)\'"}'"""
+max_threads = r"""'{"default":"\'auto(16)\'"}'"""
 
 max_threads_for_annoy_index_creation = r"""'{"default":"4"}'"""
 
@@ -2894,7 +2914,7 @@ show_data_lake_catalogs_in_system_tables = r"""'{"default":"0"}'"""
 
 show_processlist_include_internal = r"""'{"default":"1"}'"""
 
-show_remote_databases_in_system_tables = r"""'{"default":"0"}'"""
+show_remote_databases_in_system_tables = r"""'{"default":"1"}'"""
 
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
@@ -2959,6 +2979,8 @@ throw_if_deduplication_in_dependent_materialized_views_enabled_with_async_insert
 throw_if_no_data_to_insert = r"""'{"default":"1"}'"""
 
 throw_on_error_from_cache_on_write_operations = r"""'{"default":"0"}'"""
+
+throw_on_hive_partitioning_resolution_failure = r"""'{"default":"0"}'"""
 
 throw_on_max_partitions_per_insert_block = r"""'{"default":"1"}'"""
 
@@ -3105,6 +3127,8 @@ validate_experimental_and_suspicious_types_inside_nested_types = r"""'{"default"
 validate_mutation_query = r"""'{"default":"1"}'"""
 
 validate_polygons = r"""'{"default":"1"}'"""
+
+variant_throw_on_type_mismatch = r"""'{"default":"1"}'"""
 
 vector_search_filter_strategy = r"""'{"default":"auto"}'"""
 

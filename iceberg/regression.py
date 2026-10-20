@@ -610,6 +610,16 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
     ),
+    "/iceberg/iceberg engine/rest catalog/drop partition": (
+        Skip,
+        "ALTER TABLE DROP PARTITION for Iceberg is not in a released build yet "
+        "(Altinity/ClickHouse#2613). Delete this entry to run it.",
+    ),
+    "/iceberg/iceberg engine/glue catalog/drop partition": (
+        Skip,
+        "ALTER TABLE DROP PARTITION for Iceberg is not in a released build yet "
+        "(Altinity/ClickHouse#2613). Delete this entry to run it.",
+    ),
     "/iceberg/iceberg engine/: catalog/dot separated column names/*": (
         Skip,
         "dot-separated column names broken before 25.7 and in 25.11-26.1 (https://github.com/ClickHouse/ClickHouse/issues/94196)",
@@ -631,6 +641,13 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
     ),
+    # "/iceberg/export ttl": (
+    #     Skip,
+    #     "TTL EXPORT TO TABLE is not in a released build yet "
+    #     "(Altinity/ClickHouse#2442). Delete this entry to run it against that PR. "
+    #     "Existing export-partition tests keep the released system tables and behavior.",
+    #     lambda test: True,
+    # ),
     "/iceberg/export partition/: catalog/*/schema evolution/rename column between exports": (
         Skip,
         "RENAME COLUMN on IcebergS3 destination is NOT_IMPLEMENTED before 26.3",
@@ -891,6 +908,10 @@ def regression(
     Feature(
         test=load("iceberg.tests.export_partition.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    # Feature(
+    #     test=load("iceberg.tests.export_ttl.feature", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     # Feature(
     #     test=load("iceberg.tests.deletion_vectors.feature", "feature"),
