@@ -13,6 +13,7 @@ from helpers.common import *
 from selects.requirements import *
 from helpers.cas_storage import add_cas_arguments
 from selects.cas_mode import (
+    check_cas_mode,
     enable_cas_default_storage,
     reset_cas_config,
 )
