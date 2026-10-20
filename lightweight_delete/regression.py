@@ -74,6 +74,14 @@ xfails = {
             check_clickhouse_version(">=25.7"),
         )
     ],
+    "concurrent delete/MergeTree/random delete : without overlap": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/122083",
+            lambda test: check_clickhouse_version(">=26")(test)
+            and check_cas_mode(test),
+        )
+    ],
 }
 
 xflags = {}
