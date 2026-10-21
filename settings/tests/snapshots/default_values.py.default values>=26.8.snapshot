@@ -490,6 +490,8 @@ azure_upload_part_size_multiply_parts_count_threshold = r"""'{"default":"500"}'"
 
 azure_use_adaptive_timeouts = r"""'{"default":"1"}'"""
 
+azure_validate_etag_on_read = r"""'{"default":"1"}'"""
+
 background_buffer_flush_schedule_pool_size = r"""'{"default":"16"}'"""
 
 background_common_pool_size = r"""'{"default":"8"}'"""
@@ -539,6 +541,8 @@ backup_restore_s3_retry_initial_backoff_ms = r"""'{"default":"25"}'"""
 backup_restore_s3_retry_jitter_factor = r"""'{"default":"0.1"}'"""
 
 backup_restore_s3_retry_max_backoff_ms = r"""'{"default":"5000"}'"""
+
+backup_s3_expired_token_retry_timeout_ms = r"""'{"default":"120000"}'"""
 
 backup_slow_all_threads_after_retryable_s3_error = r"""'{"default":"0"}'"""
 
@@ -2952,6 +2956,8 @@ query_plan_execute_functions_after_sorting = r"""'{"default":"1"}'"""
 
 query_plan_filter_push_down = r"""'{"default":"1"}'"""
 
+query_plan_filter_push_down_below_limit_by = r"""'{"default":"1"}'"""
+
 query_plan_join_shard_by_pk_ranges = r"""'{"default":"0"}'"""
 
 query_plan_join_swap_table = r"""'{"default":"auto"}'"""
@@ -3453,6 +3459,8 @@ update_sequential_consistency = r"""'{"default":"1"}'"""
 url_base = r"""'{"default":""}'"""
 
 url_wildcard_max_directories_to_read = r"""'{"default":"100000"}'"""
+
+use_aggregation_memory_tracker = r"""'{"default":"0"}'"""
 
 use_async_executor_for_materialized_views = r"""'{"default":"0"}'"""
 

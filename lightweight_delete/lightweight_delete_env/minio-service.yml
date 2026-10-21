@@ -2,7 +2,7 @@ services:
   # RustFS rather than MinIO: CAS commits objects with conditional writes
   # (If-Match/If-None-Match), which the pinned MinIO release does not support.
   minio:
-    image: rustfs/rustfs:1.0.0-beta.12
+    image: rustfs/rustfs:1.0.3
     container_name: lightweight_delete_rustfs
     ports:
       - "9001:9001"

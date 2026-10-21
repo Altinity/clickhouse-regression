@@ -82,6 +82,14 @@ xfails = {
             and check_cas_mode(test),
         )
     ],
+    "concurrent delete/:/concurrent delete without overlap with alter delete": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/122083",
+            lambda test: check_clickhouse_version(">=26")(test)
+            and check_cas_mode(test),
+        )
+    ],
 }
 
 xflags = {}
