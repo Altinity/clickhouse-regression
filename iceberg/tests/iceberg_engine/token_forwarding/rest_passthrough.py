@@ -1,10 +1,15 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_REST_Passthrough("1.0"),
+    RQ_Iceberg_TokenForwarding_Propagation_EveryCatalogRequest("1.0"),
+)
 def each_user_reaches_the_catalog_as_themselves(self):
     """Check that ClickHouse SHALL present each querying user's own token, so
     queries from different users on one database reach the catalog as different principals.
@@ -31,6 +36,7 @@ def each_user_reaches_the_catalog_as_themselves(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_PerUserAuthorization("1.0"))
 def catalog_authorization_applies_per_user(self):
     """Check that the catalog's per-principal authorization SHALL apply to
     each ClickHouse user: users see and read only the namespaces the catalog grants them.
@@ -77,6 +83,7 @@ def catalog_authorization_applies_per_user(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_NoServiceFallback("1.0"))
 def no_fallback_to_the_service_credential(self):
     """Check that ClickHouse SHALL NOT fall back to `catalog_credential` when
     the session has no token, nor use it alongside a forwarded token."""
@@ -109,6 +116,7 @@ def no_fallback_to_the_service_credential(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Passthrough_NoRetry("1.0"))
 def rejected_token_is_not_retried(self):
     """Check that in passthrough mode a catalog rejection SHALL be reported to
     the user without retrying with another credential."""
@@ -136,6 +144,7 @@ def rejected_token_is_not_retried(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Config("1.0"))
 def config_is_loaded_with_the_first_user_token(self):
     """Check that ClickHouse SHALL NOT call `/v1/config` when the database is
     created, and SHALL load it with the token of the first querying user."""
@@ -159,6 +168,7 @@ def config_is_loaded_with_the_first_user_token(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Passthrough("1.0"))
 def a_new_token_replaces_the_old_one(self):
     """Check that in passthrough mode ClickHouse SHALL present the token of the
     current session, not one cached from an earlier session of the same user."""
@@ -182,6 +192,7 @@ def a_new_token_replaces_the_old_one(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Propagation_Concurrency("1.0"))
 def concurrent_users_keep_their_identities(self):
     """Check that concurrent queries from different users SHALL each reach the
     catalog with their own token (no cross-user leakage under concurrency)."""

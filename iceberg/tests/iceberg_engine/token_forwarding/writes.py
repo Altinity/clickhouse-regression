@@ -3,6 +3,7 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 
@@ -17,6 +18,10 @@ def commit_requests(namespace, table):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Writes_Insert("1.0"),
+    RQ_Iceberg_TokenForwarding_Propagation_EveryCatalogRequest("1.0"),
+)
 def insert_commits_as_the_querying_user(self):
     """Check that an INSERT into a forwarding database SHALL commit to the
     catalog with the inserting user's token."""
@@ -48,6 +53,7 @@ def insert_commits_as_the_querying_user(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Writes_AsyncInsert("1.0"))
 def async_insert_keeps_the_querying_user_token(self):
     """Check that an asynchronous INSERT SHALL commit with the inserting
     user's token even when the queue is flushed by a session without a token."""
@@ -92,6 +98,7 @@ def async_insert_keeps_the_querying_user_token(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Writes_AsyncInsert("1.0"))
 def async_inserts_of_different_users_are_not_merged(self):
     """Check that asynchronous INSERTs from different users SHALL NOT be
     flushed together under one user's token."""
@@ -137,6 +144,10 @@ def async_inserts_of_different_users_are_not_merged(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Writes_DropTable("1.0"),
+    RQ_Iceberg_TokenForwarding_Propagation_EveryCatalogRequest("1.0"),
+)
 def drop_table_reaches_the_catalog_as_the_querying_user(self):
     """Check that DROP TABLE in a forwarding database SHALL reach the catalog
     with the querying user's token and SHALL NOT request a service token."""

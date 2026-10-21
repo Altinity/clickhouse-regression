@@ -3,6 +3,7 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 
@@ -23,6 +24,10 @@ def password_user(self, node=None):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Capture_NativeJWT("1.0"),
+    RQ_Iceberg_TokenForwarding_REST_Passthrough("1.0"),
+)
 def native_jwt_is_forwarded(self):
     """Check that ClickHouse SHALL present the querying user's own token to
     the catalog when the user connects over the native protocol with `--jwt`."""
@@ -46,6 +51,10 @@ def native_jwt_is_forwarded(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Capture_HTTPBearer("1.0"),
+    RQ_Iceberg_TokenForwarding_REST_Passthrough("1.0"),
+)
 def http_bearer_is_forwarded(self):
     """Check that ClickHouse SHALL present the querying user's own token to
     the catalog when the user authenticates over HTTP with `Authorization: Bearer`."""
@@ -70,6 +79,11 @@ def http_bearer_is_forwarded(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Capture_NonTokenUsers("1.0"),
+    RQ_Iceberg_TokenForwarding_REST_NoServiceFallback("1.0"),
+    RQ_Iceberg_TokenForwarding_Observability_ErrorMessages("1.0"),
+)
 def password_user_is_denied(self):
     """Check that ClickHouse SHALL refuse catalog access with
     CATALOG_USER_TOKEN_NOT_AVAILABLE for a user that authenticated with a
@@ -102,6 +116,10 @@ def password_user_is_denied(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Capture_NonTokenUsers("1.0"),
+    RQ_Iceberg_TokenForwarding_REST_NoServiceFallback("1.0"),
+)
 def default_user_is_denied(self):
     """Check that ClickHouse SHALL refuse catalog access for the passwordless
     `default` user instead of falling back to anonymous catalog requests."""
@@ -123,6 +141,7 @@ def default_user_is_denied(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Capture_VerifiedTokensOnly("1.0"))
 def invalid_token_never_reaches_the_catalog(self):
     """Check that ClickHouse SHALL only forward tokens it has verified: a
     token signed with an unknown key fails authentication before any catalog call."""
@@ -146,6 +165,11 @@ def invalid_token_never_reaches_the_catalog(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_ServerSetting("1.0"),
+    RQ_Iceberg_TokenForwarding_ServerSetting_HotReload("1.0"),
+    RQ_Iceberg_TokenForwarding_Observability_ErrorMessages("1.0"),
+)
 def disabled_server_setting_denies_forwarding(self):
     """Check that with `enable_token_forwarding = 0` ClickHouse SHALL refuse
     catalog access for token users with CATALOG_USER_TOKEN_NOT_AVAILABLE and
@@ -172,6 +196,7 @@ def disabled_server_setting_denies_forwarding(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_ServerSetting_HotReload("1.0"))
 def reenabled_server_setting_restores_forwarding(self):
     """Check that `enable_token_forwarding` SHALL be hot-reloadable: after it is
     turned back on, new connections forward their tokens again."""
@@ -193,6 +218,7 @@ def reenabled_server_setting_restores_forwarding(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_ServerSetting_ReportedAsHotReloadable("1.0"))
 def server_setting_is_reported_as_hot_reloadable(self):
     """Check that `system.server_settings` SHALL report `enable_token_forwarding`
     as changeable without restart, matching its SYSTEM RELOAD CONFIG behaviour."""
@@ -210,6 +236,7 @@ def server_setting_is_reported_as_hot_reloadable(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_OptIn("1.0"))
 def databases_without_forwarding_are_unaffected(self):
     """Check that forwarding SHALL be opt-in per database: a REST database
     without `oauth_forward_user_token` never receives the user's token."""

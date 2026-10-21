@@ -6,6 +6,7 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 ROLE_SESSION_NAME = re.compile(r"^[\w+=,.@-]{2,64}$")
@@ -17,6 +18,7 @@ def glue_reachable():
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Glue_AssumeRoleWithWebIdentity("1.0"))
 def each_user_assumes_the_role_with_their_token(self):
     """Check that ClickHouse SHALL call AssumeRoleWithWebIdentity with the
     configured role, the querying user's token and a role session name derived
@@ -48,6 +50,10 @@ def each_user_assumes_the_role_with_their_token(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Glue_ClientCache("1.0"),
+    RQ_Iceberg_TokenForwarding_Observability_ProfileEvents("1.0"),
+)
 def assumed_role_client_is_cached_per_token(self):
     """Check that ClickHouse SHALL reuse the assumed-role client for repeated
     queries with the same token and count `DataLakeGlueCatalogUserClientCacheHits`."""
@@ -81,6 +87,10 @@ def assumed_role_client_is_cached_per_token(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Glue_RejectedToken("1.0"),
+    RQ_Iceberg_TokenForwarding_Observability_ProfileEvents("1.0"),
+)
 def rejected_token_does_not_fall_back(self):
     """Check that when STS rejects the user's token ClickHouse SHALL fail with
     CATALOG_USER_TOKEN_NOT_AVAILABLE naming the role, SHALL NOT fall back to
@@ -122,6 +132,7 @@ def rejected_token_does_not_fall_back(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Glue_NonTokenUsers("1.0"))
 def password_user_is_denied(self):
     """Check that a Glue forwarding database SHALL refuse users without a
     token and SHALL NOT call STS."""
@@ -142,6 +153,7 @@ def password_user_is_denied(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Glue_RoleSessionName("1.0"))
 def role_session_name_is_sanitized(self):
     """Check that a user name with characters AWS does not allow SHALL be
     turned into a valid role session name that is unique per user."""

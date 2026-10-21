@@ -2,6 +2,9 @@ from testflows.core import *
 
 from helpers.common import check_clickhouse_version, check_if_antalya_build
 
+from iceberg.requirements.token_forwarding import (
+    SRS_050_ClickHouse_Forwarding_User_Tokens_to_Data_Lake_Catalogs,
+)
 from iceberg.tests.iceberg_engine.token_forwarding.steps import (
     ALLOWED_HOSTS,
     feature_available,
@@ -23,6 +26,7 @@ MODULES = [
 
 @TestFeature
 @Name("token forwarding")
+@Specifications(SRS_050_ClickHouse_Forwarding_User_Tokens_to_Data_Lake_Catalogs)
 def feature(self, minio_root_user, minio_root_password):
     """Forwarding the querying user's bearer token to Iceberg REST and Glue
     catalogs (`oauth_forward_user_token`, Altinity/ClickHouse#2329)."""

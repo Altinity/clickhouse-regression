@@ -5,10 +5,15 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_REST_Exchange_Request("1.0"),
+    RQ_Iceberg_TokenForwarding_REST_Exchange_CatalogReceivesExchangedToken("1.0"),
+)
 def exchange_request_follows_rfc_8693(self):
     """Check that ClickHouse SHALL exchange the user token with an RFC 8693
     form POST carrying the token exchange grant, the user token as
@@ -51,6 +56,7 @@ def exchange_request_follows_rfc_8693(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_Request("1.0"))
 def configured_token_types_and_scope_are_sent(self):
     """Check that `oauth_subject_token_type`, `oauth_requested_token_type` and
     `auth_scope` SHALL be sent as `subject_token_type`, `requested_token_type`
@@ -76,6 +82,7 @@ def configured_token_types_and_scope_are_sent(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_ActorToken("1.0"))
 def actor_token_is_the_service_principal_token(self):
     """Check that with `oauth_forward_actor_token = 1` ClickHouse SHALL obtain
     a service token with the catalog credential and send it as `actor_token`
@@ -103,6 +110,10 @@ def actor_token_is_the_service_principal_token(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_REST_Exchange_Cache("1.0"),
+    RQ_Iceberg_TokenForwarding_Observability_ProfileEvents("1.0"),
+)
 def exchanged_token_is_cached_per_user_token(self):
     """Check that ClickHouse SHALL cache exchanged tokens per user token: the
     same token is exchanged once, while another user or another token of the
@@ -151,6 +162,7 @@ def exchanged_token_is_cached_per_user_token(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_CacheLifetime("1.0"))
 def zero_cache_ttl_exchanges_every_time(self):
     """Check that `oauth_user_token_cache_ttl = 0` SHALL disable the
     exchanged-token cache."""
@@ -171,6 +183,7 @@ def zero_cache_ttl_exchanges_every_time(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_CacheLifetime("1.0"))
 def cache_ttl_bounds_the_exchanged_token_lifetime(self):
     """Check that an exchanged token SHALL NOT be reused after
     `oauth_user_token_cache_ttl` seconds even if the endpoint grants a longer lifetime.
@@ -192,6 +205,7 @@ def cache_ttl_bounds_the_exchanged_token_lifetime(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_CacheLifetime("1.0"))
 def expires_in_bounds_the_exchanged_token_lifetime(self):
     """Check that an exchanged token SHALL NOT be reused after the
     `expires_in` returned by the token endpoint."""
@@ -215,6 +229,7 @@ def expires_in_bounds_the_exchanged_token_lifetime(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_CacheLifetime("1.0"))
 def missing_expires_in_is_bounded_by_the_cache_ttl(self):
     """Check that when the token endpoint omits `expires_in` the exchanged
     token SHALL still expire after `oauth_user_token_cache_ttl`."""
@@ -238,6 +253,7 @@ def missing_expires_in_is_bounded_by_the_cache_ttl(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_Failure("1.0"))
 def failed_exchange_does_not_fall_back(self):
     """Check that a failed exchange SHALL fail the query without contacting the
     catalog with the user token or the service credential, and SHALL count
@@ -275,6 +291,10 @@ def failed_exchange_does_not_fall_back(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_REST_Exchange_Failure("1.0"),
+    RQ_Iceberg_TokenForwarding_Propagation_Confidentiality("1.0"),
+)
 def wrong_catalog_credential_fails_the_exchange(self):
     """Check that a catalog credential the token endpoint rejects SHALL fail
     the query and SHALL NOT expose the user token."""
@@ -299,6 +319,10 @@ def wrong_catalog_credential_fails_the_exchange(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_REST_Exchange_Failure("1.0"),
+    RQ_Iceberg_TokenForwarding_Propagation_Confidentiality("1.0"),
+)
 def error_bodies_do_not_leak_the_subject_token(self):
     """Check that ClickHouse SHALL NOT include the token endpoint's error body
     in errors or logs, since it may echo the user token."""
@@ -326,6 +350,7 @@ def error_bodies_do_not_leak_the_subject_token(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_REST_Exchange_RetryOnUnauthorized("1.0"))
 def unauthorized_catalog_response_triggers_a_new_exchange(self):
     """Check that when the catalog answers 401 to an exchanged token ClickHouse
     SHALL exchange the user token again and retry once."""
@@ -355,6 +380,10 @@ def unauthorized_catalog_response_triggers_a_new_exchange(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Observability_ProfileEvents("1.0"),
+    RQ_Iceberg_TokenForwarding_Observability_Metrics("1.0"),
+)
 def exchange_metrics_and_profile_events(self):
     """Check that ClickHouse SHALL count exchanges in
     `DataLakeRestCatalogTokenExchange`, cache entries in

@@ -1,6 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 
@@ -14,6 +15,7 @@ def vended(access_key, secret_key):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_VendedCredentials_PerUser("1.0"))
 def vended_credentials_are_isolated_per_user(self):
     """Check that storage credentials vended for one user SHALL NOT be reused
     for another user's query on the same table, in either order."""

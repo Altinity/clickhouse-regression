@@ -3,6 +3,7 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 REST_INVALID = [
@@ -118,6 +119,7 @@ def create_and_expect_error(catalog, settings, message, forwarding=True):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_InvalidRESTSettings("1.0"))
 def invalid_rest_settings_are_rejected(self):
     """Check that CREATE DATABASE SHALL reject invalid token forwarding
     settings for a REST catalog with BAD_ARGUMENTS."""
@@ -127,6 +129,9 @@ def invalid_rest_settings_are_rejected(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_TokenForwarding_Database_ExchangeSettingsRequireForwarding("1.0")
+)
 def exchange_settings_require_forwarding(self):
     """Check that CREATE DATABASE SHALL reject exchange-only settings when
     `oauth_forward_user_token` is not enabled."""
@@ -146,6 +151,7 @@ def exchange_settings_require_forwarding(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_SupportedCatalogs("1.0"))
 def unsupported_catalog_type_is_rejected(self):
     """Check that `oauth_forward_user_token` SHALL be rejected for catalog
     types other than REST and Glue."""
@@ -162,6 +168,7 @@ def unsupported_catalog_type_is_rejected(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_InvalidGlueSettings("1.0"))
 def invalid_glue_settings_are_rejected(self):
     """Check that CREATE DATABASE SHALL reject invalid token forwarding
     settings for a Glue catalog with BAD_ARGUMENTS."""
@@ -171,6 +178,7 @@ def invalid_glue_settings_are_rejected(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_TokenTypes("1.0"))
 def all_rfc_8693_token_types_are_accepted(self):
     """Check that every RFC 8693 token type URN SHALL be accepted as the
     subject and requested token type."""
@@ -184,6 +192,7 @@ def all_rfc_8693_token_types_are_accepted(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_HostFilter("1.0"))
 def sts_endpoint_must_pass_the_host_filter(self):
     """Check that `aws_sts_endpoint` SHALL be checked against
     `remote_url_allow_hosts`."""
@@ -207,6 +216,7 @@ def sts_endpoint_must_pass_the_host_filter(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_HostFilter("1.0"))
 def token_exchange_uri_must_pass_the_host_filter(self):
     """Check that ClickHouse SHALL NOT send user tokens to an
     `oauth_token_exchange_uri` host outside `remote_url_allow_hosts`."""
@@ -250,6 +260,7 @@ def token_exchange_uri_must_pass_the_host_filter(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_HostFilter("1.0"))
 def catalog_url_must_pass_the_host_filter(self):
     """Check that a forwarding database SHALL NOT send user tokens to a catalog
     host outside `remote_url_allow_hosts`."""
@@ -288,6 +299,7 @@ def catalog_url_must_pass_the_host_filter(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Database_DetachAttach("1.0"))
 def detach_and_attach_keep_forwarding(self):
     """Check that a forwarding database SHALL keep forwarding user tokens after
     DETACH DATABASE and ATTACH DATABASE."""
@@ -310,6 +322,7 @@ def detach_and_attach_keep_forwarding(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_CredentialRotation("1.0"))
 def credential_rotation_clears_the_token_cache(self):
     """Check that changing `catalog_credential` with ALTER DATABASE SHALL
     require a token, SHALL validate the new credential, and SHALL make later

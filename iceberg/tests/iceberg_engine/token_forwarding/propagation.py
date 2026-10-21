@@ -3,6 +3,7 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+from iceberg.requirements.token_forwarding import *
 from iceberg.tests.iceberg_engine.token_forwarding.steps import *
 
 
@@ -26,6 +27,7 @@ def impersonated_user(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Propagation_ExecuteAs("1.0"))
 def execute_as_does_not_carry_the_token(self):
     """Check that a query run with EXECUTE AS another user SHALL NOT use the
     caller's token for catalog access."""
@@ -62,6 +64,7 @@ def database_on_two_nodes(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Propagation_LocalNodeOnly("1.0"))
 def token_does_not_leave_the_node(self):
     """Check that a query that reaches another node with `remote()` SHALL NOT
     send the user's token to that node, so the remote catalog access fails."""
@@ -84,6 +87,7 @@ def token_does_not_leave_the_node(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Propagation_RemoteNodeError("1.0"))
 def remote_node_reports_the_missing_token(self):
     """Check that when a remote node cannot reach a forwarding catalog for
     lack of a token it SHALL report CATALOG_USER_TOKEN_NOT_AVAILABLE to the
@@ -105,6 +109,7 @@ def remote_node_reports_the_missing_token(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Propagation_Confidentiality("1.0"))
 def tokens_are_not_logged(self):
     """Check that neither the user token nor the exchanged token SHALL appear
     in server logs, `system.query_log` or `system.text_log`."""
@@ -137,6 +142,7 @@ def tokens_are_not_logged(self):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_TokenForwarding_Propagation_HTTPSession("1.0"))
 def http_session_uses_the_current_token(self):
     """Check that within one named HTTP session ClickHouse SHALL forward the
     token presented with the current request."""
