@@ -1,6 +1,6 @@
 services:
   minio:
-    image: rustfs/rustfs:1.0.0-beta.12
+    image: rustfs/rustfs:1.0.3
     container_name: cas_soak_tests_rustfs
     environment:
       - RUSTFS_ACCESS_KEY=${MINIO_ROOT_USER:-}
