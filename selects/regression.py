@@ -179,6 +179,12 @@ ffails = {
         "https://github.com/ClickHouse/ClickHouse/issues/122103",
         check_cas_mode,
     ),
+    "/selects/final/force/concurrent/SELECT PREWHERE parallel inserts, deletes, updates": (
+        Skip,
+        "exhausts ephemeral ports and drops the CAS mount lease "
+        "https://github.com/ClickHouse/ClickHouse/issues/122103",
+        check_cas_mode,
+    ),
 }
 
 
