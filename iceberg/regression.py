@@ -23,6 +23,24 @@ from helpers.common import (
 
 
 xfails = {
+    "/iceberg/token forwarding/capture/server setting is reported as hot reloadable": [
+        (
+            Fail,
+            "`enable_token_forwarding` is re-read on SYSTEM RELOAD CONFIG (AccessControl::setExternalAuthenticatorsConfig), "
+            "but system.server_settings reports changeable_without_restart = No. Altinity/ClickHouse#2329. "
+            "iceberg/tests/iceberg_engine/token_forwarding/findings.md finding 2.",
+        )
+    ],
+    "/iceberg/token forwarding/propagation/remote node reports the missing token": [
+        (
+            Fail,
+            "The remote node answers the initiator's table status request through DatabaseDataLake::tryGetTable, "
+            "which throws CATALOG_USER_TOKEN_NOT_AVAILABLE instead of returning nothing; the exception escapes "
+            "TCPHandler::runImpl and the connection is dropped, so the initiator reports ATTEMPT_TO_READ_AFTER_EOF / "
+            "'All connection tries failed'. Altinity/ClickHouse#2329. "
+            "iceberg/tests/iceberg_engine/token_forwarding/findings.md finding 1.",
+        )
+    ],
     "/iceberg/native create/*/idempotency/concurrent creators on three nodes*/one table, one initial metadata file, visible everywhere": [
         (
             Fail,
@@ -551,6 +569,14 @@ ffails = {
             check_if_antalya_build(test) and check_clickhouse_version(">=26.6")(test)
         ),
     ),
+    "/iceberg/token forwarding": (
+        Skip,
+        "Forwarding user tokens to data lake catalogs is an Antalya feature "
+        "introduced in Antalya 26.6 (Altinity/ClickHouse#2329)",
+        lambda test: not (
+            check_if_antalya_build(test) and check_clickhouse_version(">=26.6")(test)
+        ),
+    ),
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",
@@ -887,6 +913,10 @@ def regression(
 
     Feature(
         test=load("iceberg.tests.iceberg_engine.native_create.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    Feature(
+        test=load("iceberg.tests.iceberg_engine.token_forwarding.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     Feature(
