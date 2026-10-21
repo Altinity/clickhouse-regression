@@ -10,7 +10,7 @@ description: >-
 
 Choose taxonomy leaves for a change, then name the regression tests those leaves map to. Report the selection. Do not start CI.
 
-Read [taxonomy.md](taxonomy.md) and [mapping.md](mapping.md) before choosing. The taxonomy file is the only legal set of leaf ids. The mapping file is the only source of test paths.
+Read [taxonomy.yaml](taxonomy.yaml) before choosing a feature. Read [mapping.md](mapping.md) before naming tests.
 
 ## Get the change
 
@@ -21,31 +21,30 @@ Use whatever the user handed you.
 
 ## Choose leaves
 
-Pick the most specific leaf the change actually implements or breaks.
+Name the big feature first, then a medium feature when taxonomy.yaml has one. Match each changed file to the longest `sources` prefix in that file. The longest prefix wins across the whole file, so `src/Processors/Formats/` is `formats`, not `query`.
 
-- Use an id from taxonomy.md. Do not invent one, and do not rename one.
-- A parent id includes every child. Use the parent when the change is the feature as a whole. Use the child when the change is that child.
-- When a child fits, do not also emit its parent.
+If the winning entry is a medium feature, report its parent big feature too. If the winning entry is a big feature with no medium child for that path, stop there and say the section is not expanded. Do not invent a medium feature.
+
+- When several leaves list the same file, select every one of them. A diff that names a single registered layout or source, such as `sparse_hashed` or `postgresql`, selects that leaf only.
 - A docs-only, changelog-only, or comment-only change selects nothing.
+- A change under a suite directory in this repository selects the leaf whose mapping lists that path.
 - `runtime.common` means the broad profile. That profile has no suite list yet. Say so. Do not expand it into every suite.
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
 - `--with-analyzer` and `--use-keeper` are run flags. Do not treat either as a leaf.
-- `storage.cas` and `storage.cas.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.md. Copy the flag and any `--only` or `--skip` with the path. Do not add soak, Jepsen, or alter stress.
+- `storage.cas` and `storage.disk.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.md. Copy the flag and any `--only` or `--skip` with the path. Do not add soak, Jepsen, or alter stress.
 
 ## Map leaves to tests
 
-For each chosen leaf, copy the test paths from mapping.md.
-
-- Recommend only paths the mapping marks as run by the suite.
-- If the mapping says a path exists but the suite does not run it, put that path under "Not part of the default run".
-- If the leaf has no regression coverage, say so. Do not borrow a neighboring suite.
-- Union the paths when several leaves are chosen. List each path once, with every leaf that selected it.
+mapping.md is organized by test directory. A directory lists the leaves it covers. Find every directory that lists a chosen leaf and run that directory. When the leaf names a file or a flag under the directory, run that file with that flag. Do not run a neighboring directory that does not list the leaf.
 
 ## Report
 
 Use this shape:
 
 ```markdown
+## Big feature
+- `name` — the files that put the change here
+
 ## Leaves
 - `leaf.id` — why, with the files that decided it
 
