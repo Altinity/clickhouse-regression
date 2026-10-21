@@ -26,19 +26,13 @@ xfails = {
     "/iceberg/token forwarding/capture/server setting is reported as hot reloadable": [
         (
             Fail,
-            "`enable_token_forwarding` is re-read on SYSTEM RELOAD CONFIG (AccessControl::setExternalAuthenticatorsConfig), "
-            "but system.server_settings reports changeable_without_restart = No. Altinity/ClickHouse#2329. "
-            "iceberg/tests/iceberg_engine/token_forwarding/findings.md finding 2.",
+            "https://github.com/Altinity/ClickHouse/issues/2626",
         )
     ],
     "/iceberg/token forwarding/propagation/remote node reports the missing token": [
         (
             Fail,
-            "The remote node answers the initiator's table status request through DatabaseDataLake::tryGetTable, "
-            "which throws CATALOG_USER_TOKEN_NOT_AVAILABLE instead of returning nothing; the exception escapes "
-            "TCPHandler::runImpl and the connection is dropped, so the initiator reports ATTEMPT_TO_READ_AFTER_EOF / "
-            "'All connection tries failed'. Altinity/ClickHouse#2329. "
-            "iceberg/tests/iceberg_engine/token_forwarding/findings.md finding 1.",
+            "https://github.com/Altinity/ClickHouse/issues/2625",
         )
     ],
     "/iceberg/native create/*/idempotency/concurrent creators on three nodes*/one table, one initial metadata file, visible everywhere": [
