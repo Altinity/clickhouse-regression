@@ -1,7 +1,7 @@
-# Big features, then medium features.
+# Parent features, then child features.
 # Match a changed file to the longest sources prefix in this file.
-# Report the big feature and, when a medium feature matches, that medium feature.
-# A big feature with no medium entry yet stops at the big feature.
+# Report the parent and, when a child matches, that child.
+# A match that stops at the parent has no child. There is no level below a child.
 
 match: longest_source_prefix
 
@@ -15,7 +15,7 @@ features:
       - src/Interpreters/
       - src/Processors/
       - src/QueryPipeline/
-    medium:
+    children:
       - id: query.lexer
         description: Tokens and the parse driver.
         sources:
@@ -269,7 +269,7 @@ features:
       - src/Functions/
       - src/AggregateFunctions/
       - src/TableFunctions/
-    medium:
+    children:
       - id: functions.ai
         description: AI functions.
         sources:
@@ -1410,7 +1410,7 @@ features:
     sources:
       - src/DataTypes/
       - src/Columns/
-    medium:
+    children:
       - id: types.number
         description: Integers and floats, including BFloat16 and 128-bit and 256-bit numbers.
         sources:
@@ -1662,7 +1662,7 @@ features:
     sources:
       - src/Storages/
       - src/Processors/TTL/
-    medium:
+    children:
       - id: engines.mergetree
         description: MergeTree family. MergeTree, Replacing, Summing, Aggregating, Collapsing, VersionedCollapsing, Coalescing, and Graphite, plus their Replicated forms, are registered together.
         sources:
@@ -1927,7 +1927,7 @@ features:
       - src/Disks/
       - src/IO/S3/
       - src/IO/AzureBlobStorage/
-    medium:
+    children:
       - id: storage.disk.local
         description: Local disk. The default disk type.
         sources:
@@ -2072,7 +2072,7 @@ features:
     sources:
       - src/Storages/ObjectStorage/DataLakes/
       - src/Databases/DataLake/
-    medium:
+    children:
       - id: lakes.iceberg
         description: Iceberg reads. Metadata, snapshots, and iterators.
         sources:
@@ -2240,7 +2240,7 @@ features:
     sources:
       - src/Formats/
       - src/Processors/Formats/
-    medium:
+    children:
       - id: formats.csv
         description: CSV.
         sources:
@@ -2508,7 +2508,7 @@ features:
     description: Database engines.
     sources:
       - src/Databases/
-    medium:
+    children:
       - id: databases.atomic
         description: Atomic database. The default engine.
         sources:
@@ -2610,7 +2610,7 @@ features:
       - src/Interpreters/DDLTask.cpp
       - src/Storages/AlterCommands.cpp
       - src/Storages/PartitionCommands.cpp
-    medium:
+    children:
       - id: ddl.create
         description: CREATE for databases, tables, and views.
         sources:
@@ -2752,7 +2752,7 @@ features:
       - src/Common/ZooKeeper/
       - src/Storages/StorageReplicatedMergeTree.cpp
       - src/Storages/MergeTree/ReplicatedMergeTree
-    medium:
+    children:
       - id: coordination.keeper.server
         description: The Keeper process and its dispatcher.
         sources:
@@ -2956,7 +2956,7 @@ features:
       - src/Access/
       - src/Interpreters/Access/
       - src/Parsers/Access/
-    medium:
+    children:
       - id: access.user
         description: Users, including users.xml.
         sources:
@@ -3112,7 +3112,7 @@ features:
     description: Dictionary layouts and sources.
     sources:
       - src/Dictionaries/
-    medium:
+    children:
       - id: dictionaries.layout.flat
         description: LAYOUT(FLAT()).
         sources:
@@ -3324,7 +3324,7 @@ features:
       - src/Backups/
       - src/Storages/Freeze.cpp
       - src/Interpreters/InterpreterBackupQuery.cpp
-    medium:
+    children:
       - id: backup.statement
         description: The BACKUP and RESTORE statement entry point.
         sources:
@@ -3540,7 +3540,7 @@ features:
     sources:
       - src/Server/
       - src/Client/
-    medium:
+    children:
       - id: interfaces.native
         description: The native TCP protocol.
         sources:
@@ -3701,7 +3701,7 @@ features:
       - src/Storages/System/
       - src/Interpreters/Cache/
       - src/Interpreters/FileCache/
-    medium:
+    children:
       - id: ops.system
         description: System tables. A more specific ops.system feature wins when one matches.
         sources:
@@ -3865,7 +3865,7 @@ features:
       - src/IO/
       - src/Daemon/
       - src/Loggers/
-    medium:
+    children:
       - id: runtime.memory
         description: Memory tracking and allocation.
         sources:
