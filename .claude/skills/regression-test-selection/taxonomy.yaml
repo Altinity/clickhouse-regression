@@ -1,0 +1,4100 @@
+# Parent features, then child features.
+# Match a changed file to the longest sources prefix in this file.
+# Report the parent and, when a child matches, that child.
+# A match that stops at the parent has no child. There is no level below a child.
+
+match: longest_source_prefix
+
+features:
+  - id: query
+    description: Parsing and running a query.
+    sources:
+      - src/Parsers/
+      - src/Analyzer/
+      - src/Planner/
+      - src/Interpreters/
+      - src/Processors/
+      - src/QueryPipeline/
+    children:
+      - id: query.lexer
+        description: Tokens and the parse driver.
+        sources:
+          - src/Parsers/Lexer.cpp
+          - src/Parsers/TokenIterator.cpp
+          - src/Parsers/parseQuery.cpp
+          - src/Parsers/IParser.cpp
+          - src/Parsers/IParserBase.cpp
+
+      - id: query.expression
+        description: Expressions, literals, identifiers, and function calls in the AST.
+        sources:
+          - src/Parsers/ExpressionElementParsers.cpp
+          - src/Parsers/ExpressionListParsers.cpp
+          - src/Parsers/ASTFunction.cpp
+          - src/Parsers/ASTLiteral.cpp
+          - src/Parsers/ASTIdentifier.cpp
+          - src/Parsers/IAST.cpp
+
+      - id: query.select
+        description: SELECT, UNION, INTERSECT, and EXCEPT.
+        sources:
+          - src/Parsers/ASTSelectQuery.cpp
+          - src/Parsers/ASTSelectWithUnionQuery.cpp
+          - src/Parsers/ASTSelectIntersectExceptQuery.cpp
+          - src/Parsers/ASTTablesInSelectQuery.cpp
+          - src/Parsers/ParserUnionQueryElement.cpp
+          - src/Parsers/SelectUnionMode.cpp
+
+      - id: query.insert
+        description: INSERT.
+        sources:
+          - src/Parsers/ASTInsertQuery.cpp
+          - src/Parsers/ParserInsertQuery.cpp
+          - src/Parsers/getInsertQuery.cpp
+
+      - id: query.parse.ddl
+        description: The text of CREATE, ALTER, DROP, ATTACH, RENAME, EXCHANGE, and UNDROP. Execution of those statements is ddl.
+        sources:
+          - src/Parsers/ParserCreateQuery.cpp
+          - src/Parsers/ParserAlterQuery.cpp
+          - src/Parsers/ParserDropQuery.cpp
+          - src/Parsers/ASTCreateQuery.cpp
+          - src/Parsers/ASTAlterQuery.cpp
+          - src/Parsers/ASTDropQuery.cpp
+          - src/Parsers/ASTUndropQuery.cpp
+          - src/Parsers/ParserUndropQuery.cpp
+
+      - id: query.parse.optimize
+        description: OPTIMIZE.
+        sources:
+          - src/Parsers/ParserOptimizeQuery.cpp
+          - src/Parsers/ASTOptimizeQuery.cpp
+
+      - id: query.parse.system
+        description: SYSTEM.
+        sources:
+          - src/Parsers/ASTSystemQuery.cpp
+
+      - id: query.parse.kill
+        description: KILL QUERY and KILL MUTATION.
+        sources:
+          - src/Parsers/ParserKillQueryQuery.cpp
+          - src/Parsers/ASTKillQueryQuery.cpp
+
+      - id: query.parse.explain
+        description: EXPLAIN.
+        sources:
+          - src/Parsers/ParserExplainQuery.cpp
+
+      - id: query.parse.check
+        description: CHECK TABLE.
+        sources:
+          - src/Parsers/ParserCheckQuery.cpp
+
+      - id: query.parse.transaction
+        description: BEGIN, COMMIT, and ROLLBACK.
+        sources:
+          - src/Parsers/ParserTransactionControl.cpp
+          - src/Parsers/ASTTransactionControl.cpp
+
+      - id: query.parse.set
+        description: SET and USE.
+        sources:
+          - src/Parsers/ASTSetQuery.cpp
+          - src/Parsers/ParserUseQuery.cpp
+
+      - id: query.dialect.mysql
+        description: MySQL dialect.
+        sources:
+          - src/Parsers/MySQL/
+
+      - id: query.dialect.kusto
+        description: Kusto dialect.
+        sources:
+          - src/Parsers/Kusto/
+
+      - id: query.dialect.prql
+        description: PRQL dialect.
+        sources:
+          - src/Parsers/PRQL/
+
+      - id: query.dialect.prometheus
+        description: PromQL dialect.
+        sources:
+          - src/Parsers/Prometheus/
+
+      - id: query.dialect.polyglot
+        description: Polyglot parser.
+        sources:
+          - src/Parsers/Polyglot/
+
+      - id: query.analyzer.tree
+        description: The query tree.
+        sources:
+          - src/Analyzer/QueryTreeBuilder.cpp
+          - src/Analyzer/QueryNode.cpp
+          - src/Analyzer/QueryTreePassManager.cpp
+          - src/Analyzer/IQueryTreeNode.cpp
+
+      - id: query.analyzer.resolve
+        description: Name and function resolution.
+        sources:
+          - src/Analyzer/Resolve/
+
+      - id: query.analyzer.passes
+        description: Rewrite passes. Individual passes are not split yet.
+        sources:
+          - src/Analyzer/Passes/
+
+      - id: query.analyzer.cte
+        description: CTEs, including recursive CTEs.
+        sources:
+          - src/Analyzer/RecursiveCTE.cpp
+          - src/Analyzer/inlineMaterializedCTEIfNeeded.cpp
+
+      - id: query.planner
+        description: The plan driver.
+        sources:
+          - src/Planner/Planner.cpp
+          - src/Planner/PlannerContext.cpp
+
+      - id: query.planner.joins
+        description: Join planning.
+        sources:
+          - src/Planner/PlannerJoins.cpp
+          - src/Planner/PlannerJoinsLogical.cpp
+          - src/Planner/PlannerJoinTree.cpp
+
+      - id: query.planner.aggregation
+        description: GROUP BY planning.
+        sources:
+          - src/Planner/PlannerAggregation.cpp
+
+      - id: query.planner.sorting
+        description: ORDER BY and LIMIT planning.
+        sources:
+          - src/Planner/PlannerSorting.cpp
+
+      - id: query.planner.windows
+        description: Window planning.
+        sources:
+          - src/Planner/PlannerWindowFunctions.cpp
+
+      - id: query.planner.subqueries
+        description: Correlated subqueries and IN sets.
+        sources:
+          - src/Planner/PlannerCorrelatedSubqueries.cpp
+          - src/Planner/CollectSets.cpp
+
+      - id: query.planner.parallel_replicas
+        description: Deciding parallel-replica reads.
+        sources:
+          - src/Planner/findParallelReplicasQuery.cpp
+          - src/Processors/QueryPlan/ReadFromParallelReplicasStep.cpp
+
+      - id: query.pipeline
+        description: The pipeline that runs a plan.
+        sources:
+          - src/QueryPipeline/
+
+      - id: query.executor
+        description: The thread pool that pulls the pipeline.
+        sources:
+          - src/Processors/Executors/
+
+      - id: query.plan
+        description: Query plan steps.
+        sources:
+          - src/Processors/QueryPlan/
+
+      - id: query.plan.optimizations
+        description: Plan-level rewrites.
+        sources:
+          - src/Processors/QueryPlan/Optimizations/
+
+      - id: query.transforms
+        description: Expression, filter, sort, aggregate, and window transforms.
+        sources:
+          - src/Processors/Transforms/
+
+      - id: query.joins
+        description: Join algorithms at runtime.
+        sources:
+          - src/Interpreters/HashJoin/
+          - src/Interpreters/Join.cpp
+
+      - id: query.read
+        description: Reading blocks into a pipeline.
+        sources:
+          - src/Processors/Sources/
+
+      - id: query.write
+        description: Writing blocks out of a pipeline.
+        sources:
+          - src/Processors/Sinks/
+
+      - id: query.sorted_merge
+        description: Merging sorted streams. Background part merges use this code too.
+        sources:
+          - src/Processors/Merges/
+
+      - id: query.distributed
+        description: Queries and inserts sent to other shards.
+        sources:
+          - src/Interpreters/ClusterProxy/
+          - src/QueryPipeline/RemoteQueryExecutor.cpp
+          - src/QueryPipeline/RemoteQueryExecutorReadContext.cpp
+          - src/QueryPipeline/DistributedPlanExecutor.cpp
+          - src/QueryPipeline/RemoteInserter.cpp
+          - src/QueryPipeline/UnavailableShardTracker.cpp
+
+      - id: query.jit
+        description: Compiling expressions.
+        sources:
+          - src/Interpreters/JIT/
+
+      - id: query.wasm
+        description: Wasm functions.
+        sources:
+          - src/Interpreters/WebAssembly/
+
+      - id: query.transactions
+        description: MergeTree transactions.
+        sources:
+          - src/Interpreters/MergeTreeTransaction/
+
+  - id: functions
+    description: Ordinary functions, aggregate functions, and table functions.
+    sources:
+      - src/Functions/
+      - src/AggregateFunctions/
+      - src/TableFunctions/
+    children:
+      - id: functions.ai
+        description: AI functions.
+        sources:
+          - src/Functions/AI/
+          - src/Functions/aiClassify.cpp
+          - src/Functions/aiEmbed.cpp
+          - src/Functions/aiExtract.cpp
+          - src/Functions/aiGenerate.cpp
+          - src/Functions/aiTranslate.cpp
+
+      - id: functions.arithmetic
+        description: Arithmetic functions.
+        sources:
+          - src/Functions/abs.cpp
+          - src/Functions/avg2.cpp
+          - src/Functions/byteSwap.cpp
+          - src/Functions/divide.cpp
+          - src/Functions/divideDecimal.cpp
+          - src/Functions/gcd.cpp
+          - src/Functions/ifNotFinite.cpp
+          - src/Functions/intDiv.cpp
+          - src/Functions/intDivOrZero.cpp
+          - src/Functions/isFinite.cpp
+          - src/Functions/isInfinite.cpp
+          - src/Functions/isNaN.cpp
+          - src/Functions/lcm.cpp
+          - src/Functions/max2.cpp
+          - src/Functions/midpoint.cpp
+          - src/Functions/min2.cpp
+          - src/Functions/minus.cpp
+          - src/Functions/modulo.cpp
+          - src/Functions/moduloOrNull.cpp
+          - src/Functions/moduloOrZero.cpp
+          - src/Functions/multiply.cpp
+          - src/Functions/multiplyDecimal.cpp
+          - src/Functions/negate.cpp
+          - src/Functions/plus.cpp
+
+      - id: functions.array
+        description: Array functions.
+        sources:
+          - src/Functions/GatherUtils/
+          - src/Functions/array/
+          - src/Functions/array/array.cpp
+          - src/Functions/array/arrayAUC.cpp
+          - src/Functions/array/arrayAggregation.cpp
+          - src/Functions/array/arrayAll.cpp
+          - src/Functions/array/arrayAutocorrelation.cpp
+          - src/Functions/array/arrayCompact.cpp
+          - src/Functions/array/arrayConcat.cpp
+          - src/Functions/array/arrayCount.cpp
+          - src/Functions/array/arrayCumSum.cpp
+          - src/Functions/array/arrayCumSumNonNegative.cpp
+          - src/Functions/array/arrayDifference.cpp
+          - src/Functions/array/arrayDistinct.cpp
+          - src/Functions/array/arrayDotProduct.cpp
+          - src/Functions/array/arrayElement.cpp
+          - src/Functions/array/arrayEnumerate.cpp
+          - src/Functions/array/arrayEnumerateDense.cpp
+          - src/Functions/array/arrayEnumerateDenseRanked.cpp
+          - src/Functions/array/arrayEnumerateUniq.cpp
+          - src/Functions/array/arrayEnumerateUniqRanked.cpp
+          - src/Functions/array/arrayExcept.cpp
+          - src/Functions/array/arrayExists.cpp
+          - src/Functions/array/arrayFill.cpp
+          - src/Functions/array/arrayFilter.cpp
+          - src/Functions/array/arrayFirstLast.cpp
+          - src/Functions/array/arrayFirstLastIndex.cpp
+          - src/Functions/array/arrayFlatten.cpp
+          - src/Functions/array/arrayFold.cpp
+          - src/Functions/array/arrayIntersect.cpp
+          - src/Functions/array/arrayJaccardIndex.cpp
+          - src/Functions/array/arrayJoin.cpp
+          - src/Functions/array/arrayLevenshtein.cpp
+          - src/Functions/array/arrayMap.cpp
+          - src/Functions/array/arrayNormalizedGini.cpp
+          - src/Functions/array/arrayPopBack.cpp
+          - src/Functions/array/arrayPopFront.cpp
+          - src/Functions/array/arrayPushBack.cpp
+          - src/Functions/array/arrayPushFront.cpp
+          - src/Functions/array/arrayRandomSample.cpp
+          - src/Functions/array/arrayReduce.cpp
+          - src/Functions/array/arrayReduceInRanges.cpp
+          - src/Functions/array/arrayRemove.cpp
+          - src/Functions/array/arrayResize.cpp
+          - src/Functions/array/arrayReverse.cpp
+          - src/Functions/array/arrayShiftRotate.cpp
+          - src/Functions/array/arrayShingles.cpp
+          - src/Functions/array/arrayShuffle.cpp
+          - src/Functions/array/arraySlice.cpp
+          - src/Functions/array/arraySort.cpp
+          - src/Functions/array/arraySplit.cpp
+          - src/Functions/array/arrayTopK.cpp
+          - src/Functions/array/arrayTranspose.cpp
+          - src/Functions/array/arrayUniq.cpp
+          - src/Functions/array/arrayWithConstant.cpp
+          - src/Functions/array/arrayZip.cpp
+          - src/Functions/array/countEqual.cpp
+          - src/Functions/array/emptyArray.cpp
+          - src/Functions/array/emptyArrayToSingle.cpp
+          - src/Functions/array/has.cpp
+          - src/Functions/array/hasAll.cpp
+          - src/Functions/array/hasAny.cpp
+          - src/Functions/array/hasSubstr.cpp
+          - src/Functions/array/indexOf.cpp
+          - src/Functions/array/indexOfAssumeSorted.cpp
+          - src/Functions/array/length.cpp
+          - src/Functions/array/range.cpp
+          - src/Functions/empty.cpp
+          - src/Functions/replicate.cpp
+          - src/Functions/reverse.cpp
+
+      - id: functions.bit
+        description: Bit functions.
+        sources:
+          - src/Functions/bitAnd.cpp
+          - src/Functions/bitCount.cpp
+          - src/Functions/bitHammingDistance.cpp
+          - src/Functions/bitNot.cpp
+          - src/Functions/bitOr.cpp
+          - src/Functions/bitRotateLeft.cpp
+          - src/Functions/bitRotateRight.cpp
+          - src/Functions/bitShiftLeft.cpp
+          - src/Functions/bitShiftRight.cpp
+          - src/Functions/bitSlice.cpp
+          - src/Functions/bitTest.cpp
+          - src/Functions/bitTestAll.cpp
+          - src/Functions/bitTestAny.cpp
+          - src/Functions/bitXor.cpp
+
+      - id: functions.bitmap
+        description: Bitmap functions.
+        sources:
+          - src/Functions/FunctionsBitmap.cpp
+
+      - id: functions.comparison
+        description: Comparison functions, including IN.
+        sources:
+          - src/Functions/equals.cpp
+          - src/Functions/greater.cpp
+          - src/Functions/greaterOrEquals.cpp
+          - src/Functions/in.cpp
+          - src/Functions/isDistinctFrom.cpp
+          - src/Functions/isNotDistinctFrom.cpp
+          - src/Functions/less.cpp
+          - src/Functions/lessOrEquals.cpp
+          - src/Functions/notEquals.cpp
+
+      - id: functions.conditional
+        description: Conditional functions.
+        sources:
+          - src/Functions/caseWithExpression.cpp
+          - src/Functions/clamp.cpp
+          - src/Functions/greatest.cpp
+          - src/Functions/if.cpp
+          - src/Functions/least.cpp
+          - src/Functions/multiIf.cpp
+
+      - id: functions.date_time
+        description: Date and time functions.
+        sources:
+          - src/Functions/DateTimeTransforms.cpp
+          - src/Functions/FunctionUnixTimestamp64.cpp
+          - src/Functions/FunctionsConversion_reg.cpp
+          - src/Functions/FunctionsOpDate.cpp
+          - src/Functions/UTCTimestamp.cpp
+          - src/Functions/UTCTimestampTransform.cpp
+          - src/Functions/addDays.cpp
+          - src/Functions/addHours.cpp
+          - src/Functions/addMicroseconds.cpp
+          - src/Functions/addMilliseconds.cpp
+          - src/Functions/addMinutes.cpp
+          - src/Functions/addMonths.cpp
+          - src/Functions/addNanoseconds.cpp
+          - src/Functions/addQuarters.cpp
+          - src/Functions/addSeconds.cpp
+          - src/Functions/addWeeks.cpp
+          - src/Functions/addYears.cpp
+          - src/Functions/changeDate.cpp
+          - src/Functions/dateDiff.cpp
+          - src/Functions/dateName.cpp
+          - src/Functions/date_trunc.cpp
+          - src/Functions/formatDateTime.cpp
+          - src/Functions/fromDaysSinceYearZero.cpp
+          - src/Functions/fromModifiedJulianDay.cpp
+          - src/Functions/localtime.cpp
+          - src/Functions/makeDate.cpp
+          - src/Functions/monthName.cpp
+          - src/Functions/now.cpp
+          - src/Functions/now64.cpp
+          - src/Functions/nowInBlock.cpp
+          - src/Functions/nowInBlock64.cpp
+          - src/Functions/serverConstants.cpp
+          - src/Functions/subtractDays.cpp
+          - src/Functions/subtractHours.cpp
+          - src/Functions/subtractMicroseconds.cpp
+          - src/Functions/subtractMilliseconds.cpp
+          - src/Functions/subtractMinutes.cpp
+          - src/Functions/subtractMonths.cpp
+          - src/Functions/subtractNanoseconds.cpp
+          - src/Functions/subtractQuarters.cpp
+          - src/Functions/subtractSeconds.cpp
+          - src/Functions/subtractWeeks.cpp
+          - src/Functions/subtractYears.cpp
+          - src/Functions/timeSlot.cpp
+          - src/Functions/timeSlots.cpp
+          - src/Functions/timestamp.cpp
+          - src/Functions/timezoneOf.cpp
+          - src/Functions/timezoneOffset.cpp
+          - src/Functions/toCustomWeek.cpp
+          - src/Functions/toDayOfMonth.cpp
+          - src/Functions/toDayOfWeek.cpp
+          - src/Functions/toDayOfYear.cpp
+          - src/Functions/toDaysInMonth.cpp
+          - src/Functions/toDaysSinceYearZero.cpp
+          - src/Functions/toHour.cpp
+          - src/Functions/toISOWeek.cpp
+          - src/Functions/toISOYear.cpp
+          - src/Functions/toLastDayOfMonth.cpp
+          - src/Functions/toMicrosecond.cpp
+          - src/Functions/toMillisecond.cpp
+          - src/Functions/toMinute.cpp
+          - src/Functions/toModifiedJulianDay.cpp
+          - src/Functions/toMonday.cpp
+          - src/Functions/toMonth.cpp
+          - src/Functions/toMonthNumSinceEpoch.cpp
+          - src/Functions/toNanosecond.cpp
+          - src/Functions/toQuarter.cpp
+          - src/Functions/toRelativeDayNum.cpp
+          - src/Functions/toRelativeHourNum.cpp
+          - src/Functions/toRelativeMinuteNum.cpp
+          - src/Functions/toRelativeMonthNum.cpp
+          - src/Functions/toRelativeQuarterNum.cpp
+          - src/Functions/toRelativeSecondNum.cpp
+          - src/Functions/toRelativeWeekNum.cpp
+          - src/Functions/toRelativeYearNum.cpp
+          - src/Functions/toSecond.cpp
+          - src/Functions/toStartOfDay.cpp
+          - src/Functions/toStartOfFifteenMinutes.cpp
+          - src/Functions/toStartOfFiveMinutes.cpp
+          - src/Functions/toStartOfHour.cpp
+          - src/Functions/toStartOfISOYear.cpp
+          - src/Functions/toStartOfInterval.cpp
+          - src/Functions/toStartOfMinute.cpp
+          - src/Functions/toStartOfMonth.cpp
+          - src/Functions/toStartOfQuarter.cpp
+          - src/Functions/toStartOfSecond.cpp
+          - src/Functions/toStartOfSubsecond.cpp
+          - src/Functions/toStartOfTenMinutes.cpp
+          - src/Functions/toStartOfYear.cpp
+          - src/Functions/toTime.cpp
+          - src/Functions/toTimezone.cpp
+          - src/Functions/toYYYYMM.cpp
+          - src/Functions/toYYYYMMDD.cpp
+          - src/Functions/toYYYYMMDDhhmmss.cpp
+          - src/Functions/toYear.cpp
+          - src/Functions/toYearNumSinceEpoch.cpp
+          - src/Functions/today.cpp
+          - src/Functions/vectorFunctions.cpp
+          - src/Functions/yesterday.cpp
+
+      - id: functions.dictionary
+        description: Dictionary functions.
+        sources:
+          - src/Functions/FunctionDictGetKeys.cpp
+          - src/Functions/FunctionsExternalDictionaries.cpp
+
+      - id: functions.distance
+        description: Distance functions.
+        sources:
+          - src/Functions/vectorFunctions.cpp
+
+      - id: functions.embedded_dictionary
+        description: Embedded geo dictionary functions.
+        sources:
+          - src/Functions/FunctionsEmbeddedDictionaries.cpp
+
+      - id: functions.geo
+        description: Geo functions, including H3 and S2.
+        sources:
+          - src/Functions/MVTBoundingBox.cpp
+          - src/Functions/area.cpp
+          - src/Functions/geoToH3.cpp
+          - src/Functions/geoToS2.cpp
+          - src/Functions/geohashDecode.cpp
+          - src/Functions/geohashEncode.cpp
+          - src/Functions/geohashesInBox.cpp
+          - src/Functions/greatCircleDistance.cpp
+          - src/Functions/h3CellAreaM2.cpp
+          - src/Functions/h3CellAreaRads2.cpp
+          - src/Functions/h3Distance.cpp
+          - src/Functions/h3EdgeAngle.cpp
+          - src/Functions/h3EdgeLengthKm.cpp
+          - src/Functions/h3EdgeLengthM.cpp
+          - src/Functions/h3ExactEdgeLengthKm.cpp
+          - src/Functions/h3ExactEdgeLengthM.cpp
+          - src/Functions/h3ExactEdgeLengthRads.cpp
+          - src/Functions/h3GetBaseCell.cpp
+          - src/Functions/h3GetDestinationIndexFromUnidirectionalEdge.cpp
+          - src/Functions/h3GetFaces.cpp
+          - src/Functions/h3GetIndexesFromUnidirectionalEdge.cpp
+          - src/Functions/h3GetOriginIndexFromUnidirectionalEdge.cpp
+          - src/Functions/h3GetPentagonIndexes.cpp
+          - src/Functions/h3GetRes0Indexes.cpp
+          - src/Functions/h3GetResolution.cpp
+          - src/Functions/h3GetUnidirectionalEdge.cpp
+          - src/Functions/h3GetUnidirectionalEdgeBoundary.cpp
+          - src/Functions/h3GetUnidirectionalEdgesFromHexagon.cpp
+          - src/Functions/h3HexAreaKm2.cpp
+          - src/Functions/h3HexAreaM2.cpp
+          - src/Functions/h3HexRing.cpp
+          - src/Functions/h3IndexesAreNeighbors.cpp
+          - src/Functions/h3IsPentagon.cpp
+          - src/Functions/h3IsResClassIII.cpp
+          - src/Functions/h3IsValid.cpp
+          - src/Functions/h3Line.cpp
+          - src/Functions/h3NumHexagons.cpp
+          - src/Functions/h3PointDist.cpp
+          - src/Functions/h3PolygonToCells.cpp
+          - src/Functions/h3PolygonToCellsWithContainment.cpp
+          - src/Functions/h3ToCenterChild.cpp
+          - src/Functions/h3ToChildren.cpp
+          - src/Functions/h3ToGeoBoundary.cpp
+          - src/Functions/h3ToParent.cpp
+          - src/Functions/h3ToString.cpp
+          - src/Functions/h3UnidirectionalEdgeIsValid.cpp
+          - src/Functions/h3kRing.cpp
+          - src/Functions/h3toGeo.cpp
+          - src/Functions/perimeter.cpp
+          - src/Functions/pointInEllipses.cpp
+          - src/Functions/pointInPolygon.cpp
+          - src/Functions/polygonsIntersect.cpp
+          - src/Functions/readWkb.cpp
+          - src/Functions/readWkt.cpp
+          - src/Functions/s2CapContains.cpp
+          - src/Functions/s2CapUnion.cpp
+          - src/Functions/s2CellsIntersect.cpp
+          - src/Functions/s2GetNeighbors.cpp
+          - src/Functions/s2RectAdd.cpp
+          - src/Functions/s2RectContains.cpp
+          - src/Functions/s2RectIntersection.cpp
+          - src/Functions/s2RectUnion.cpp
+          - src/Functions/s2ToGeo.cpp
+          - src/Functions/stringToH3.cpp
+          - src/Functions/svg.cpp
+          - src/Functions/wkb.cpp
+          - src/Functions/wkt.cpp
+
+      - id: functions.geo.polygon
+        description: Polygon functions.
+        sources:
+          - src/Functions/MVTEncodeGeom.cpp
+          - src/Functions/polygonArea.cpp
+          - src/Functions/polygonConvexHull.cpp
+          - src/Functions/polygonPerimeter.cpp
+          - src/Functions/polygonsDistance.cpp
+          - src/Functions/polygonsEquals.cpp
+          - src/Functions/polygonsIntersection.cpp
+          - src/Functions/polygonsSymDifference.cpp
+          - src/Functions/polygonsUnion.cpp
+          - src/Functions/polygonsWithin.cpp
+          - src/Functions/readWkb.cpp
+          - src/Functions/readWkt.cpp
+
+      - id: functions.encoding
+        description: Encoding functions, including base58 and base64.
+        sources:
+          - src/Functions/FunctionChar.cpp
+          - src/Functions/FunctionsBinaryRepresentation.cpp
+          - src/Functions/FunctionsBitToArray.cpp
+          - src/Functions/bech32.cpp
+          - src/Functions/hilbertDecode.cpp
+          - src/Functions/hilbertEncode.cpp
+          - src/Functions/mortonDecode.cpp
+          - src/Functions/mortonEncode.cpp
+          - src/Functions/sqid.cpp
+
+      - id: functions.encryption
+        description: Encryption functions.
+        sources:
+          - src/Functions/FunctionsAES.cpp
+          - src/Functions/HMAC.cpp
+          - src/Functions/aes_decrypt_mysql.cpp
+          - src/Functions/aes_encrypt_mysql.cpp
+          - src/Functions/decrypt.cpp
+          - src/Functions/encrypt.cpp
+          - src/Functions/tryDecrypt.cpp
+
+      - id: functions.financial
+        description: Financial functions.
+        sources:
+          - src/Functions/financial.cpp
+
+      - id: functions.hash
+        description: Hash functions.
+        sources:
+          - src/Functions/FunctionMD5.cpp
+          - src/Functions/FunctionSHA1.cpp
+          - src/Functions/FunctionsHashingInt.cpp
+          - src/Functions/FunctionsHashingMisc.cpp
+          - src/Functions/FunctionsHashingMurmur.cpp
+          - src/Functions/FunctionsStringHash.cpp
+          - src/Functions/FunctionsStringHashFixedString.cpp
+          - src/Functions/icebergBucketTransform.cpp
+          - src/Functions/jumpConsistentHash.cpp
+          - src/Functions/kostikConsistentHash.cpp
+
+      - id: functions.ip
+        description: IP address functions.
+        sources:
+          - src/Functions/FunctionsCodingIP.cpp
+          - src/Functions/FunctionsConversion_reg.cpp
+          - src/Functions/castOrDefault.cpp
+          - src/Functions/isIPAddressInRange.cpp
+
+      - id: functions.introspection
+        description: Introspection functions.
+        sources:
+          - src/Functions/FunctionsMergeTreePartInfo.cpp
+          - src/Functions/addressToLine.cpp
+          - src/Functions/addressToLineWithInlines.cpp
+          - src/Functions/addressToSymbol.cpp
+          - src/Functions/coverage.cpp
+          - src/Functions/demangle.cpp
+          - src/Functions/logTrace.cpp
+          - src/Functions/tid.cpp
+
+      - id: functions.json
+        description: JSON functions.
+        sources:
+          - src/Functions/FunctionSQLJSON.cpp
+          - src/Functions/FunctionsJSON.cpp
+          - src/Functions/JSONAllValues.cpp
+          - src/Functions/JSONArrayLength.cpp
+          - src/Functions/JSONPath/
+          - src/Functions/JSONPaths.cpp
+          - src/Functions/dynamicElement.cpp
+          - src/Functions/dynamicType.cpp
+          - src/Functions/jsonMergePatch.cpp
+          - src/Functions/prettyPrintJSON.cpp
+          - src/Functions/toJSONString.cpp
+          - src/Functions/visitParamExtractBool.cpp
+          - src/Functions/visitParamExtractFloat.cpp
+          - src/Functions/visitParamExtractInt.cpp
+          - src/Functions/visitParamExtractRaw.cpp
+          - src/Functions/visitParamExtractString.cpp
+          - src/Functions/visitParamExtractUInt.cpp
+          - src/Functions/visitParamHas.cpp
+
+      - id: functions.logical
+        description: Logical functions.
+        sources:
+          - src/Functions/FunctionsLogical.cpp
+
+      - id: functions.machine_learning
+        description: Machine learning functions.
+        sources:
+          - src/Functions/FunctionNaiveBayesClassifier.cpp
+          - src/Functions/evalMLMethod.cpp
+
+      - id: functions.map
+        description: Map functions.
+        sources:
+          - src/Functions/array/FunctionsMapMiscellaneous.cpp
+          - src/Functions/array/mapOp.cpp
+          - src/Functions/array/mapPopulateSeries.cpp
+          - src/Functions/extractKeyValuePairs.cpp
+          - src/Functions/map.cpp
+
+      - id: functions.mathematical
+        description: Mathematical functions.
+        sources:
+          - src/Functions/acos.cpp
+          - src/Functions/acosh.cpp
+          - src/Functions/asin.cpp
+          - src/Functions/asinh.cpp
+          - src/Functions/atan.cpp
+          - src/Functions/atan2.cpp
+          - src/Functions/atanh.cpp
+          - src/Functions/cbrt.cpp
+          - src/Functions/cos.cpp
+          - src/Functions/cosh.cpp
+          - src/Functions/degrees.cpp
+          - src/Functions/erf.cpp
+          - src/Functions/erfc.cpp
+          - src/Functions/exp.cpp
+          - src/Functions/exp10.cpp
+          - src/Functions/exp2.cpp
+          - src/Functions/factorial.cpp
+          - src/Functions/hypot.cpp
+          - src/Functions/intExp10.cpp
+          - src/Functions/intExp2.cpp
+          - src/Functions/isPrime.cpp
+          - src/Functions/isProbablePrime.cpp
+          - src/Functions/lgamma.cpp
+          - src/Functions/log.cpp
+          - src/Functions/log10.cpp
+          - src/Functions/log1p.cpp
+          - src/Functions/log2.cpp
+          - src/Functions/mathConstants.cpp
+          - src/Functions/pow.cpp
+          - src/Functions/radians.cpp
+          - src/Functions/sigmoid.cpp
+          - src/Functions/sign.cpp
+          - src/Functions/sin.cpp
+          - src/Functions/sinh.cpp
+          - src/Functions/sqrt.cpp
+          - src/Functions/tan.cpp
+          - src/Functions/tanh.cpp
+          - src/Functions/tgamma.cpp
+          - src/Functions/widthBucket.cpp
+          - src/Functions/ztest.cpp
+
+      - id: functions.nlp
+        description: Natural language functions.
+        sources:
+          - src/Functions/FunctionsCharsetClassification.cpp
+          - src/Functions/FunctionsLanguageClassification.cpp
+          - src/Functions/FunctionsTonalityClassification.cpp
+          - src/Functions/lemmatize.cpp
+          - src/Functions/stem.cpp
+          - src/Functions/synonyms.cpp
+
+      - id: functions.null
+        description: Nullable functions.
+        sources:
+          - src/Functions/assumeNotNull.cpp
+          - src/Functions/coalesce.cpp
+          - src/Functions/firstNonDefault.cpp
+          - src/Functions/ifNull.cpp
+          - src/Functions/isNotNull.cpp
+          - src/Functions/isNull.cpp
+          - src/Functions/isNullable.cpp
+          - src/Functions/isZeroOrNull.cpp
+          - src/Functions/nullIf.cpp
+          - src/Functions/toNullable.cpp
+
+      - id: functions.numeric_indexed_vector
+        description: Numeric indexed vector functions.
+        sources:
+          - src/Functions/FunctionsNumericIndexedVector.cpp
+
+      - id: functions.other
+        description: Functions documented in the Other category.
+        sources:
+          - src/Functions/FunctionFQDN.cpp
+          - src/Functions/FunctionFile.cpp
+          - src/Functions/FunctionGenerateRandomStructure.cpp
+          - src/Functions/FunctionJoinGet.cpp
+          - src/Functions/FunctionShowCertificate.cpp
+          - src/Functions/FunctionsCodingIP.cpp
+          - src/Functions/FunctionsTransactionCounters.cpp
+          - src/Functions/UniqTheta/FunctionsUniqTheta.cpp
+          - src/Functions/authenticatedUser.cpp
+          - src/Functions/bar.cpp
+          - src/Functions/blockNumber.cpp
+          - src/Functions/blockSerializedSize.cpp
+          - src/Functions/blockSize.cpp
+          - src/Functions/byteSize.cpp
+          - src/Functions/catboostEvaluate.cpp
+          - src/Functions/colorOKLABToSRGB.cpp
+          - src/Functions/colorOKLCHToSRGB.cpp
+          - src/Functions/colorSRGBToOKLAB.cpp
+          - src/Functions/colorSRGBToOKLCH.cpp
+          - src/Functions/connectionId.cpp
+          - src/Functions/countDigits.cpp
+          - src/Functions/currentDatabase.cpp
+          - src/Functions/currentProfiles.cpp
+          - src/Functions/currentQueryID.cpp
+          - src/Functions/currentRoles.cpp
+          - src/Functions/currentSchemas.cpp
+          - src/Functions/currentUser.cpp
+          - src/Functions/defaultValueOfArgumentType.cpp
+          - src/Functions/defaultValueOfTypeName.cpp
+          - src/Functions/dumpColumnStructure.cpp
+          - src/Functions/errorCodeToName.cpp
+          - src/Functions/filesystem.cpp
+          - src/Functions/finalizeAggregation.cpp
+          - src/Functions/flipCoordinates.cpp
+          - src/Functions/formatQuery.cpp
+          - src/Functions/formatReadableDecimalSize.cpp
+          - src/Functions/formatReadableQuantity.cpp
+          - src/Functions/formatReadableSize.cpp
+          - src/Functions/formatReadableTimeDelta.cpp
+          - src/Functions/fuzzQuery.cpp
+          - src/Functions/generateSerialID.cpp
+          - src/Functions/getClientHTTPHeader.cpp
+          - src/Functions/getMacro.cpp
+          - src/Functions/getMaxTableNameLength.cpp
+          - src/Functions/getMergeTreeSetting.cpp
+          - src/Functions/getScalar.cpp
+          - src/Functions/getServerPort.cpp
+          - src/Functions/getServerSetting.cpp
+          - src/Functions/getSetting.cpp
+          - src/Functions/getSizeOfEnumType.cpp
+          - src/Functions/getSubcolumn.cpp
+          - src/Functions/getTypeSerializationStreams.cpp
+          - src/Functions/globalVariable.cpp
+          - src/Functions/hasColumnInTable.cpp
+          - src/Functions/hasThreadFuzzer.cpp
+          - src/Functions/highlightQuery.cpp
+          - src/Functions/icebergBucketTransform.cpp
+          - src/Functions/icebergTruncate.cpp
+          - src/Functions/identity.cpp
+          - src/Functions/ignore.cpp
+          - src/Functions/indexHint.cpp
+          - src/Functions/initialQueryID.cpp
+          - src/Functions/initialQueryStartTime.cpp
+          - src/Functions/initializeAggregation.cpp
+          - src/Functions/isConstant.cpp
+          - src/Functions/isDecimalOverflow.cpp
+          - src/Functions/lowCardinalityIndices.cpp
+          - src/Functions/lowCardinalityKeys.cpp
+          - src/Functions/materialize.cpp
+          - src/Functions/minSampleSize.cpp
+          - src/Functions/neighbor.cpp
+          - src/Functions/normalizeQuery.cpp
+          - src/Functions/normalizedQueryHash.cpp
+          - src/Functions/obfuscateQuery.cpp
+          - src/Functions/parseReadableSize.cpp
+          - src/Functions/parseTimeDelta.cpp
+          - src/Functions/partitionId.cpp
+          - src/Functions/queryID.cpp
+          - src/Functions/rowNumberInAllBlocks.cpp
+          - src/Functions/rowNumberInBlock.cpp
+          - src/Functions/runningAccumulate.cpp
+          - src/Functions/runningConcurrency.cpp
+          - src/Functions/runningDifference.cpp
+          - src/Functions/runningDifferenceStartingWithFirstValue.cpp
+          - src/Functions/serverConstants.cpp
+          - src/Functions/sleep.cpp
+          - src/Functions/structureToFormatSchema.cpp
+          - src/Functions/throwIf.cpp
+          - src/Functions/toColumnTypeName.cpp
+          - src/Functions/toTypeName.cpp
+          - src/Functions/tokenizeQuery.cpp
+          - src/Functions/transform.cpp
+          - src/Functions/variantElement.cpp
+          - src/Functions/variantType.cpp
+          - src/Functions/visibleWidth.cpp
+
+      - id: functions.qbit
+        description: QBit functions.
+        sources:
+          - src/Functions/quantizeBFloat16ToInt8.cpp
+
+      - id: functions.random
+        description: Random number functions.
+        sources:
+          - src/Functions/fuzzBits.cpp
+          - src/Functions/rand.cpp
+          - src/Functions/rand64.cpp
+          - src/Functions/randCanonical.cpp
+          - src/Functions/randConstant.cpp
+          - src/Functions/randDistribution.cpp
+          - src/Functions/randomFixedString.cpp
+          - src/Functions/randomPrintableASCII.cpp
+          - src/Functions/randomString.cpp
+          - src/Functions/randomStringUTF8.cpp
+
+      - id: functions.rounding
+        description: Rounding functions.
+        sources:
+          - src/Functions/FunctionsRound.cpp
+          - src/Functions/roundAge.cpp
+          - src/Functions/roundDuration.cpp
+          - src/Functions/roundToExp2.cpp
+
+      - id: functions.string
+        description: String functions.
+        sources:
+          - src/Functions/CRC.cpp
+          - src/Functions/FunctionsStringDistance.cpp
+          - src/Functions/URL/basename.cpp
+          - src/Functions/appendTrailingCharIfAbsent.cpp
+          - src/Functions/ascii.cpp
+          - src/Functions/base32Decode.cpp
+          - src/Functions/base32Encode.cpp
+          - src/Functions/base58Decode.cpp
+          - src/Functions/base58Encode.cpp
+          - src/Functions/base64Decode.cpp
+          - src/Functions/base64Encode.cpp
+          - src/Functions/base64URLDecode.cpp
+          - src/Functions/base64URLEncode.cpp
+          - src/Functions/compareSubstrings.cpp
+          - src/Functions/concat.cpp
+          - src/Functions/concatWithSeparator.cpp
+          - src/Functions/conv.cpp
+          - src/Functions/convertCharset.cpp
+          - src/Functions/decodeHTMLComponent.cpp
+          - src/Functions/decodeXMLComponent.cpp
+          - src/Functions/empty.cpp
+          - src/Functions/encodeXMLComponent.cpp
+          - src/Functions/endsWith.cpp
+          - src/Functions/endsWithUTF8.cpp
+          - src/Functions/extractTextFromHTML.cpp
+          - src/Functions/firstLine.cpp
+          - src/Functions/foldString.cpp
+          - src/Functions/idna.cpp
+          - src/Functions/initcap.cpp
+          - src/Functions/initcapUTF8.cpp
+          - src/Functions/isValidASCII.cpp
+          - src/Functions/isValidUTF8.cpp
+          - src/Functions/left.cpp
+          - src/Functions/lengthUTF8.cpp
+          - src/Functions/lower.cpp
+          - src/Functions/lowerUTF8.cpp
+          - src/Functions/naturalSortKey.cpp
+          - src/Functions/normalizeString.cpp
+          - src/Functions/padString.cpp
+          - src/Functions/punycode.cpp
+          - src/Functions/regexpExtract.cpp
+          - src/Functions/regexpPosition.cpp
+          - src/Functions/repeat.cpp
+          - src/Functions/reverseUTF8.cpp
+          - src/Functions/right.cpp
+          - src/Functions/soundex.cpp
+          - src/Functions/space.cpp
+          - src/Functions/sparseGrams.cpp
+          - src/Functions/sparseGramsHashes.cpp
+          - src/Functions/startsWith.cpp
+          - src/Functions/startsWithUTF8.cpp
+          - src/Functions/stringBytesEntropy.cpp
+          - src/Functions/stringBytesUniq.cpp
+          - src/Functions/substring.cpp
+          - src/Functions/substringIndex.cpp
+          - src/Functions/toValidUTF8.cpp
+          - src/Functions/trim.cpp
+          - src/Functions/tryBase32Decode.cpp
+          - src/Functions/tryBase58Decode.cpp
+          - src/Functions/tryBase64Decode.cpp
+          - src/Functions/tryBase64URLDecode.cpp
+          - src/Functions/upper.cpp
+          - src/Functions/upperUTF8.cpp
+
+      - id: functions.string.replace
+        description: String replacement functions.
+        sources:
+          - src/Functions/format.cpp
+          - src/Functions/overlay.cpp
+          - src/Functions/printf.cpp
+          - src/Functions/regexpQuoteMeta.cpp
+          - src/Functions/replaceAll.cpp
+          - src/Functions/replaceOne.cpp
+          - src/Functions/replaceRegexpAll.cpp
+          - src/Functions/replaceRegexpOne.cpp
+          - src/Functions/translate.cpp
+
+      - id: functions.string.search
+        description: String search functions.
+        sources:
+          - src/Functions/FunctionsStringSimilarity.cpp
+          - src/Functions/countMatches.cpp
+          - src/Functions/countSubstrings.cpp
+          - src/Functions/countSubstringsCaseInsensitive.cpp
+          - src/Functions/countSubstringsCaseInsensitiveUTF8.cpp
+          - src/Functions/extract.cpp
+          - src/Functions/extractAll.cpp
+          - src/Functions/extractAllGroupsHorizontal.cpp
+          - src/Functions/extractGroups.cpp
+          - src/Functions/hasAnyAllTokens.cpp
+          - src/Functions/hasPhrase.cpp
+          - src/Functions/hasSubsequence.cpp
+          - src/Functions/hasSubsequenceCaseInsensitive.cpp
+          - src/Functions/hasSubsequenceCaseInsensitiveUTF8.cpp
+          - src/Functions/hasSubsequenceUTF8.cpp
+          - src/Functions/hasToken.cpp
+          - src/Functions/hasTokenCaseInsensitive.cpp
+          - src/Functions/highlight.cpp
+          - src/Functions/ilike.cpp
+          - src/Functions/like.cpp
+          - src/Functions/locate.cpp
+          - src/Functions/match.cpp
+          - src/Functions/multiFuzzyMatchAllIndices.cpp
+          - src/Functions/multiFuzzyMatchAny.cpp
+          - src/Functions/multiFuzzyMatchAnyIndex.cpp
+          - src/Functions/multiMatchAllIndices.cpp
+          - src/Functions/multiMatchAny.cpp
+          - src/Functions/multiMatchAnyIndex.cpp
+          - src/Functions/multiSearchAllPositions.cpp
+          - src/Functions/multiSearchAllPositionsCaseInsensitive.cpp
+          - src/Functions/multiSearchAllPositionsCaseInsensitiveUTF8.cpp
+          - src/Functions/multiSearchAllPositionsUTF8.cpp
+          - src/Functions/multiSearchAny.cpp
+          - src/Functions/multiSearchAnyCaseInsensitive.cpp
+          - src/Functions/multiSearchAnyCaseInsensitiveUTF8.cpp
+          - src/Functions/multiSearchAnyUTF8.cpp
+          - src/Functions/multiSearchFirstIndex.cpp
+          - src/Functions/multiSearchFirstIndexCaseInsensitive.cpp
+          - src/Functions/multiSearchFirstIndexCaseInsensitiveUTF8.cpp
+          - src/Functions/multiSearchFirstIndexUTF8.cpp
+          - src/Functions/multiSearchFirstPosition.cpp
+          - src/Functions/multiSearchFirstPositionCaseInsensitive.cpp
+          - src/Functions/multiSearchFirstPositionCaseInsensitiveUTF8.cpp
+          - src/Functions/multiSearchFirstPositionUTF8.cpp
+          - src/Functions/notILike.cpp
+          - src/Functions/notLike.cpp
+          - src/Functions/position.cpp
+          - src/Functions/positionCaseInsensitive.cpp
+          - src/Functions/positionCaseInsensitiveUTF8.cpp
+          - src/Functions/positionUTF8.cpp
+
+      - id: functions.string.split
+        description: String splitting functions.
+        sources:
+          - src/Functions/FunctionReverseBySeparator.cpp
+          - src/Functions/alphaTokens.cpp
+          - src/Functions/arrayStringConcat.cpp
+          - src/Functions/extractAllGroupsVertical.cpp
+          - src/Functions/ngrams.cpp
+          - src/Functions/splitByChar.cpp
+          - src/Functions/splitByNonAlpha.cpp
+          - src/Functions/splitByRegexp.cpp
+          - src/Functions/splitByString.cpp
+          - src/Functions/splitByWhitespace.cpp
+          - src/Functions/tokens.cpp
+
+      - id: functions.timeseries
+        description: Time series functions.
+        sources:
+          - src/Functions/TimeSeries/
+          - src/Functions/TimeSeries/timeSeriesCopyTag.cpp
+          - src/Functions/TimeSeries/timeSeriesCopyTags.cpp
+          - src/Functions/TimeSeries/timeSeriesExtractTag.cpp
+          - src/Functions/TimeSeries/timeSeriesGroupToSamplingKey.cpp
+          - src/Functions/TimeSeries/timeSeriesGroupToTags.cpp
+          - src/Functions/TimeSeries/timeSeriesIdToGroup.cpp
+          - src/Functions/TimeSeries/timeSeriesIdToTags.cpp
+          - src/Functions/TimeSeries/timeSeriesJoinTags.cpp
+          - src/Functions/TimeSeries/timeSeriesRange.cpp
+          - src/Functions/TimeSeries/timeSeriesRemoveAllTagsExcept.cpp
+          - src/Functions/TimeSeries/timeSeriesRemoveTag.cpp
+          - src/Functions/TimeSeries/timeSeriesRemoveTags.cpp
+          - src/Functions/TimeSeries/timeSeriesReplaceTag.cpp
+          - src/Functions/TimeSeries/timeSeriesStoreTags.cpp
+          - src/Functions/TimeSeries/timeSeriesTagsToGroup.cpp
+          - src/Functions/TimeSeries/timeSeriesThrowDuplicateSeriesIf.cpp
+          - src/Functions/seriesDecomposeSTL.cpp
+          - src/Functions/seriesOutliersDetectTukey.cpp
+          - src/Functions/seriesPeriodDetectFFT.cpp
+
+      - id: functions.time_window
+        description: Time window functions.
+        sources:
+          - src/Functions/FunctionsTimeWindow.cpp
+
+      - id: functions.tuple
+        description: Tuple functions.
+        sources:
+          - src/Functions/flattenTuple.cpp
+          - src/Functions/tuple.cpp
+          - src/Functions/tupleConcat.cpp
+          - src/Functions/tupleElement.cpp
+          - src/Functions/tupleHammingDistance.cpp
+          - src/Functions/tupleNames.cpp
+          - src/Functions/tupleToNameValuePairs.cpp
+          - src/Functions/vectorFunctions.cpp
+
+      - id: functions.type_conversion
+        description: CAST and other type conversion.
+        sources:
+          - src/Functions/CastOverloadResolver.cpp
+          - src/Functions/FunctionsConversion.cpp
+          - src/Functions/FunctionsConversion_impl00.cpp
+          - src/Functions/FunctionsConversion_impl01.cpp
+          - src/Functions/FunctionsConversion_impl02.cpp
+          - src/Functions/FunctionsConversion_impl03.cpp
+          - src/Functions/FunctionsConversion_impl04.cpp
+          - src/Functions/FunctionsConversion_impl05.cpp
+          - src/Functions/FunctionsConversion_impl06.cpp
+          - src/Functions/FunctionsConversion_impl07.cpp
+          - src/Functions/FunctionsConversion_impl08.cpp
+          - src/Functions/FunctionsConversion_impl09.cpp
+          - src/Functions/FunctionsConversion_impl1.cpp
+          - src/Functions/FunctionsConversion_impl10.cpp
+          - src/Functions/FunctionsConversion_impl11.cpp
+          - src/Functions/FunctionsConversion_impl12.cpp
+          - src/Functions/FunctionsConversion_impl13.cpp
+          - src/Functions/FunctionsConversion_impl14.cpp
+          - src/Functions/FunctionsConversion_impl15.cpp
+          - src/Functions/FunctionsConversion_impl16.cpp
+          - src/Functions/FunctionsConversion_impl17.cpp
+          - src/Functions/FunctionsConversion_impl18.cpp
+          - src/Functions/FunctionsConversion_impl19.cpp
+          - src/Functions/FunctionsConversion_impl2.cpp
+          - src/Functions/FunctionsConversion_impl20.cpp
+          - src/Functions/FunctionsConversion_impl21.cpp
+          - src/Functions/FunctionsConversion_impl22.cpp
+          - src/Functions/FunctionsConversion_impl23.cpp
+          - src/Functions/FunctionsConversion_impl24.cpp
+          - src/Functions/FunctionsConversion_impl25.cpp
+          - src/Functions/FunctionsConversion_impl26.cpp
+          - src/Functions/FunctionsConversion_impl27.cpp
+          - src/Functions/FunctionsConversion_impl28.cpp
+          - src/Functions/FunctionsConversion_impl3.cpp
+          - src/Functions/FunctionsConversion_reg.cpp
+          - src/Functions/castOrDefault.cpp
+          - src/Functions/formatRow.cpp
+          - src/Functions/fromUnixTimestamp64Micro.cpp
+          - src/Functions/fromUnixTimestamp64Milli.cpp
+          - src/Functions/fromUnixTimestamp64Nano.cpp
+          - src/Functions/fromUnixTimestamp64Second.cpp
+          - src/Functions/parseDateTime.cpp
+          - src/Functions/reinterpretAs.cpp
+          - src/Functions/toBool.cpp
+          - src/Functions/toDecimalString.cpp
+          - src/Functions/toFixedString.cpp
+          - src/Functions/toInterval.cpp
+          - src/Functions/toLowCardinality.cpp
+          - src/Functions/toStringCutToZero.cpp
+          - src/Functions/toUnixTimestamp64Micro.cpp
+          - src/Functions/toUnixTimestamp64Milli.cpp
+          - src/Functions/toUnixTimestamp64Nano.cpp
+          - src/Functions/toUnixTimestamp64Second.cpp
+
+      - id: functions.ulid
+        description: ULID functions.
+        sources:
+          - src/Functions/ULIDStringToDateTime.cpp
+          - src/Functions/generateULID.cpp
+
+      - id: functions.url
+        description: URL functions.
+        sources:
+          - src/Functions/URL/
+          - src/Functions/URL/URLHierarchy.cpp
+          - src/Functions/URL/URLPathHierarchy.cpp
+          - src/Functions/URL/cutFragment.cpp
+          - src/Functions/URL/cutQueryString.cpp
+          - src/Functions/URL/cutQueryStringAndFragment.cpp
+          - src/Functions/URL/cutToFirstSignificantSubdomain.cpp
+          - src/Functions/URL/cutToFirstSignificantSubdomainCustom.cpp
+          - src/Functions/URL/cutURLParameter.cpp
+          - src/Functions/URL/cutWWW.cpp
+          - src/Functions/URL/decodeURLComponent.cpp
+          - src/Functions/URL/domain.cpp
+          - src/Functions/URL/domainWithoutWWW.cpp
+          - src/Functions/URL/extractURLParameter.cpp
+          - src/Functions/URL/extractURLParameterNames.cpp
+          - src/Functions/URL/extractURLParameters.cpp
+          - src/Functions/URL/firstSignificantSubdomain.cpp
+          - src/Functions/URL/firstSignificantSubdomainCustom.cpp
+          - src/Functions/URL/fragment.cpp
+          - src/Functions/URL/netloc.cpp
+          - src/Functions/URL/path.cpp
+          - src/Functions/URL/pathFull.cpp
+          - src/Functions/URL/port.cpp
+          - src/Functions/URL/protocol.cpp
+          - src/Functions/URL/queryString.cpp
+          - src/Functions/URL/queryStringAndFragment.cpp
+          - src/Functions/URL/topLevelDomain.cpp
+
+      - id: functions.uuid
+        description: UUID functions.
+        sources:
+          - src/Functions/FunctionsCodingUUID.cpp
+          - src/Functions/FunctionsConversion_reg.cpp
+          - src/Functions/castOrDefault.cpp
+          - src/Functions/dateTimeToSnowflakeID.cpp
+          - src/Functions/dateTimeToUUIDv7.cpp
+          - src/Functions/generateSnowflakeID.cpp
+          - src/Functions/generateUUIDv4.cpp
+          - src/Functions/generateUUIDv7.cpp
+          - src/Functions/snowflake.cpp
+          - src/Functions/snowflakeIDToDateTime.cpp
+
+      - id: functions.uniq_theta
+        description: UniqTheta functions.
+        sources:
+          - src/Functions/UniqTheta/
+
+      - id: functions.keyvaluepair
+        description: Key-value pair extraction.
+        sources:
+          - src/Functions/keyvaluepair/
+
+      - id: functions.user_defined
+        description: User-defined functions.
+        sources:
+          - src/Functions/UserDefined/
+
+      - id: functions.aggregate
+        description: Aggregate function definitions.
+        sources:
+          - src/AggregateFunctions/
+
+      - id: functions.aggregate.combinators
+        description: Aggregate combinators such as If, Array, Distinct, Merge, and State.
+        sources:
+          - src/AggregateFunctions/Combinators/
+
+      - id: functions.aggregate.ddsketch
+        description: DDSketch aggregate functions.
+        sources:
+          - src/AggregateFunctions/DDSketch/
+
+      - id: functions.aggregate.timeseries
+        description: Time series aggregate functions.
+        sources:
+          - src/AggregateFunctions/TimeSeries/
+
+      - id: functions.table.object_storage
+        description: Table functions that read object storage, including s3, azure, hdfs, and iceberg.
+        sources:
+          - src/TableFunctions/TableFunctionObjectStorage.cpp
+          - src/TableFunctions/TableFunctionObjectStorageCluster.cpp
+          - src/TableFunctions/TableFunctionObjectStorageClusterFallback.cpp
+
+      - id: functions.table.file
+        description: file and filesystem table functions.
+        sources:
+          - src/TableFunctions/TableFunctionFile.cpp
+          - src/TableFunctions/TableFunctionFileCluster.cpp
+          - src/TableFunctions/TableFunctionFilesystem.cpp
+
+      - id: functions.table.url
+        description: url table function.
+        sources:
+          - src/TableFunctions/TableFunctionURL.cpp
+          - src/TableFunctions/TableFunctionURLCluster.cpp
+
+      - id: functions.table.remote
+        description: remote and cluster table functions.
+        sources:
+          - src/TableFunctions/TableFunctionRemote.cpp
+
+      - id: functions.table.numbers
+        description: numbers, zeros, primes, and generateSeries.
+        sources:
+          - src/TableFunctions/TableFunctionNumbers.cpp
+          - src/TableFunctions/TableFunctionZeros.cpp
+          - src/TableFunctions/TableFunctionPrimes.cpp
+          - src/TableFunctions/TableFunctionGenerateSeries.cpp
+
+      - id: functions.table.external
+        description: External database table functions.
+        sources:
+          - src/TableFunctions/TableFunctionMySQL.cpp
+          - src/TableFunctions/TableFunctionPostgreSQL.cpp
+          - src/TableFunctions/TableFunctionMongoDB.cpp
+          - src/TableFunctions/TableFunctionSQLite.cpp
+          - src/TableFunctions/TableFunctionRedis.cpp
+          - src/TableFunctions/TableFunctionYtsaurus.cpp
+          - src/TableFunctions/Hive/
+
+      - id: functions.table.merge
+        description: merge table function.
+        sources:
+          - src/TableFunctions/TableFunctionMerge.cpp
+
+      - id: functions.table.view
+        description: view and viewIfPermitted table functions.
+        sources:
+          - src/TableFunctions/TableFunctionView.cpp
+          - src/TableFunctions/TableFunctionViewIfPermitted.cpp
+
+      - id: functions.table.dictionary
+        description: dictionary table function.
+        sources:
+          - src/TableFunctions/TableFunctionDictionary.cpp
+
+      - id: functions.table.executable
+        description: executable table function.
+        sources:
+          - src/TableFunctions/TableFunctionExecutable.cpp
+
+      - id: functions.table.format
+        description: format table function.
+        sources:
+          - src/TableFunctions/TableFunctionFormat.cpp
+
+      - id: functions.table.generate
+        description: generateRandom table function.
+        sources:
+          - src/TableFunctions/TableFunctionGenerateRandom.cpp
+
+      - id: functions.table.mergetree_index
+        description: MergeTree index inspection table functions.
+        sources:
+          - src/TableFunctions/TableFunctionMergeTreeAnalyzeIndexes.cpp
+          - src/TableFunctions/TableFunctionMergeTreeIndex.cpp
+          - src/TableFunctions/TableFunctionMergeTreeTextIndex.cpp
+
+      - id: functions.table.timeseries
+        description: Time series table functions.
+        sources:
+          - src/TableFunctions/TableFunctionTimeSeries.cpp
+          - src/TableFunctions/TableFunctionTimeSeriesSelector.cpp
+
+      - id: functions.table.prometheus
+        description: prometheusQuery table function.
+        sources:
+          - src/TableFunctions/TableFunctionPrometheusQuery.cpp
+
+      - id: functions.table.arrowflight
+        description: arrowFlight table function.
+        sources:
+          - src/TableFunctions/TableFunctionArrowFlight.cpp
+
+      - id: functions.table.explain
+        description: explain table function.
+        sources:
+          - src/TableFunctions/TableFunctionExplain.cpp
+
+      - id: functions.table.fuzz
+        description: fuzzJSON and fuzzQuery table functions.
+        sources:
+          - src/TableFunctions/TableFunctionFuzzJSON.cpp
+          - src/TableFunctions/TableFunctionFuzzQuery.cpp
+
+      - id: functions.table.values
+        description: values table function.
+        sources:
+          - src/TableFunctions/TableFunctionValues.cpp
+
+      - id: functions.table.input
+        description: input table function.
+        sources:
+          - src/TableFunctions/TableFunctionInput.cpp
+
+      - id: functions.table.null
+        description: null table function.
+        sources:
+          - src/TableFunctions/TableFunctionNull.cpp
+
+      - id: functions.table.loop
+        description: loop table function.
+        sources:
+          - src/TableFunctions/TableFunctionLoop.cpp
+
+      - id: functions.table.projection
+        description: projection table function.
+        sources:
+          - src/TableFunctions/TableFunctionProjection.cpp
+
+  - id: types
+    description: Data types and columns.
+    sources:
+      - src/DataTypes/
+      - src/Columns/
+    children:
+      - id: types.number
+        description: Integers and floats, including BFloat16 and 128-bit and 256-bit numbers.
+        sources:
+          - src/DataTypes/DataTypesNumber.cpp
+          - src/DataTypes/DataTypeNumberBase.cpp
+          - src/Columns/ColumnVector.cpp
+          - src/DataTypes/Serializations/SerializationNumber.cpp
+
+      - id: types.bool
+        description: Bool, a named domain over UInt8.
+        sources:
+          - src/DataTypes/DataTypeDomainBool.cpp
+          - src/DataTypes/Serializations/SerializationBool.cpp
+
+      - id: types.decimal
+        description: Decimal, Decimal32, Decimal64, Decimal128, and Decimal256.
+        sources:
+          - src/DataTypes/DataTypesDecimal.cpp
+          - src/DataTypes/DataTypeDecimalBase.cpp
+          - src/Columns/ColumnDecimal.cpp
+          - src/DataTypes/Serializations/SerializationDecimal.cpp
+          - src/DataTypes/Serializations/SerializationDecimalBase.cpp
+
+      - id: types.string
+        description: String.
+        sources:
+          - src/DataTypes/DataTypeString.cpp
+          - src/Columns/ColumnString.cpp
+          - src/DataTypes/Serializations/SerializationString.cpp
+          - src/DataTypes/Serializations/SerializationStringSize.cpp
+
+      - id: types.fixed_string
+        description: FixedString.
+        sources:
+          - src/DataTypes/DataTypeFixedString.cpp
+          - src/Columns/ColumnFixedString.cpp
+          - src/DataTypes/Serializations/SerializationFixedString.cpp
+
+      - id: types.date
+        description: Date and Date32.
+        sources:
+          - src/DataTypes/DataTypeDate.cpp
+          - src/DataTypes/DataTypeDate32.cpp
+          - src/DataTypes/Serializations/SerializationDate.cpp
+          - src/DataTypes/Serializations/SerializationDate32.cpp
+
+      - id: types.datetime
+        description: DateTime, DateTime32, and DateTime64.
+        sources:
+          - src/DataTypes/DataTypeDateTime.cpp
+          - src/DataTypes/DataTypeDateTime64.cpp
+          - src/DataTypes/registerDataTypeDateTime.cpp
+          - src/DataTypes/Serializations/SerializationDateTime.cpp
+          - src/DataTypes/Serializations/SerializationDateTime64.cpp
+
+      - id: types.time
+        description: Time and Time64.
+        sources:
+          - src/DataTypes/DataTypeTime.cpp
+          - src/DataTypes/DataTypeTime64.cpp
+          - src/DataTypes/registerDataTypeDateTime.cpp
+          - src/DataTypes/Serializations/SerializationTime.cpp
+          - src/DataTypes/Serializations/SerializationTime64.cpp
+
+      - id: types.interval
+        description: Interval types.
+        sources:
+          - src/DataTypes/DataTypeInterval.cpp
+          - src/DataTypes/Serializations/SerializationInterval.cpp
+
+      - id: types.enum
+        description: Enum, Enum8, and Enum16.
+        sources:
+          - src/DataTypes/DataTypeEnum.cpp
+          - src/DataTypes/Serializations/SerializationEnum.cpp
+
+      - id: types.uuid
+        description: UUID.
+        sources:
+          - src/DataTypes/DataTypeUUID.cpp
+          - src/DataTypes/Serializations/SerializationUUID.cpp
+
+      - id: types.ip
+        description: IPv4 and IPv6.
+        sources:
+          - src/DataTypes/DataTypeIPv4andIPv6.cpp
+          - src/DataTypes/Serializations/SerializationIPv4andIPv6.cpp
+
+      - id: types.array
+        description: Array.
+        sources:
+          - src/DataTypes/DataTypeArray.cpp
+          - src/Columns/ColumnArray.cpp
+          - src/DataTypes/Serializations/SerializationArray.cpp
+          - src/DataTypes/Serializations/SerializationArrayOffsets.cpp
+
+      - id: types.tuple
+        description: Tuple.
+        sources:
+          - src/DataTypes/DataTypeTuple.cpp
+          - src/Columns/ColumnTuple.cpp
+          - src/DataTypes/Serializations/SerializationTuple.cpp
+
+      - id: types.map
+        description: Map.
+        sources:
+          - src/DataTypes/DataTypeMap.cpp
+          - src/DataTypes/DataTypeMapHelpers.cpp
+          - src/Columns/ColumnMap.cpp
+          - src/DataTypes/Serializations/SerializationMap.cpp
+          - src/DataTypes/Serializations/SerializationMapKeyValue.cpp
+          - src/DataTypes/Serializations/SerializationMapKeysOrValues.cpp
+          - src/DataTypes/Serializations/SerializationMapSize.cpp
+
+      - id: types.nested
+        description: Nested. Stored as nested arrays of a shared length.
+        sources:
+          - src/DataTypes/DataTypeNested.cpp
+
+      - id: types.nullable
+        description: Nullable.
+        sources:
+          - src/DataTypes/DataTypeNullable.cpp
+          - src/Columns/ColumnNullable.cpp
+          - src/DataTypes/Serializations/SerializationNullable.cpp
+          - src/DataTypes/Serializations/SerializationNullableWithParentNullMap.cpp
+
+      - id: types.low_cardinality
+        description: LowCardinality.
+        sources:
+          - src/DataTypes/DataTypeLowCardinality.cpp
+          - src/DataTypes/DataTypeLowCardinalityHelpers.cpp
+          - src/Columns/ColumnLowCardinality.cpp
+          - src/Columns/ColumnUnique.cpp
+          - src/DataTypes/Serializations/SerializationLowCardinality.cpp
+
+      - id: types.variant
+        description: Variant.
+        sources:
+          - src/DataTypes/DataTypeVariant.cpp
+          - src/Columns/ColumnVariant.cpp
+          - src/DataTypes/Serializations/SerializationVariant.cpp
+          - src/DataTypes/Serializations/SerializationVariantElement.cpp
+          - src/DataTypes/Serializations/SerializationVariantElementNullMap.cpp
+
+      - id: types.dynamic
+        description: Dynamic.
+        sources:
+          - src/DataTypes/DataTypeDynamic.cpp
+          - src/Columns/ColumnDynamic.cpp
+          - src/DataTypes/Serializations/SerializationDynamic.cpp
+          - src/DataTypes/Serializations/SerializationDynamicElement.cpp
+          - src/DataTypes/Serializations/SerializationDynamicHelpers.cpp
+
+      - id: types.json
+        description: JSON. Implemented as Object with typed and dynamic paths.
+        sources:
+          - src/DataTypes/DataTypeObject.cpp
+          - src/Columns/ColumnObject.cpp
+          - src/DataTypes/Serializations/SerializationObject.cpp
+          - src/DataTypes/Serializations/SerializationObjectCombinedPath.cpp
+          - src/DataTypes/Serializations/SerializationObjectDistinctPaths.cpp
+          - src/DataTypes/Serializations/SerializationObjectDynamicPath.cpp
+          - src/DataTypes/Serializations/SerializationObjectHelpers.cpp
+          - src/DataTypes/Serializations/SerializationObjectPool.cpp
+          - src/DataTypes/Serializations/SerializationObjectSharedData.cpp
+          - src/DataTypes/Serializations/SerializationObjectSharedDataPath.cpp
+          - src/DataTypes/Serializations/SerializationObjectTypedPath.cpp
+          - src/DataTypes/Serializations/SerializationJSON.cpp
+          - src/DataTypes/Serializations/SerializationSubObject.cpp
+          - src/DataTypes/Serializations/SerializationSubObjectSharedData.cpp
+
+      - id: types.aggregate_function
+        description: AggregateFunction state type.
+        sources:
+          - src/DataTypes/DataTypeAggregateFunction.cpp
+          - src/Columns/ColumnAggregateFunction.cpp
+          - src/DataTypes/Serializations/SerializationAggregateFunction.cpp
+
+      - id: types.simple_aggregate_function
+        description: SimpleAggregateFunction.
+        sources:
+          - src/DataTypes/DataTypeCustomSimpleAggregateFunction.cpp
+
+      - id: types.nothing
+        description: Nothing.
+        sources:
+          - src/DataTypes/DataTypeNothing.cpp
+          - src/DataTypes/Serializations/SerializationNothing.cpp
+
+      - id: types.geo
+        description: Point, Ring, Polygon, LineString, and MultiPolygon.
+        sources:
+          - src/DataTypes/DataTypeCustomGeo.cpp
+
+      - id: types.qbit
+        description: QBit.
+        sources:
+          - src/DataTypes/DataTypeQBit.cpp
+          - src/Columns/ColumnQBit.cpp
+          - src/DataTypes/Serializations/SerializationQBit.cpp
+
+      - id: types.function
+        description: The internal type of a lambda.
+        sources:
+          - src/DataTypes/DataTypeFunction.cpp
+          - src/Columns/ColumnFunction.cpp
+
+      - id: types.column.const
+        description: Const column wrapper.
+        sources:
+          - src/Columns/ColumnConst.cpp
+
+      - id: types.column.sparse
+        description: Sparse column encoding.
+        sources:
+          - src/Columns/ColumnSparse.cpp
+          - src/DataTypes/Serializations/SerializationSparse.cpp
+
+      - id: types.column.compressed
+        description: Compressed column wrapper.
+        sources:
+          - src/Columns/ColumnCompressed.cpp
+
+      - id: types.column.replicated
+        description: Replicated column wrapper.
+        sources:
+          - src/Columns/ColumnReplicated.cpp
+          - src/DataTypes/Serializations/SerializationReplicated.cpp
+
+      - id: types.serialization
+        description: Shared serialization, not one type.
+        sources:
+          - src/DataTypes/Serializations/ISerialization.cpp
+          - src/DataTypes/Serializations/SerializationInfo.cpp
+          - src/DataTypes/Serializations/SerializationInfoSettings.cpp
+          - src/DataTypes/Serializations/SerializationInfoTuple.cpp
+          - src/DataTypes/Serializations/SerializationNamed.cpp
+          - src/DataTypes/Serializations/SerializationWrapper.cpp
+          - src/DataTypes/Serializations/SerializationDetached.cpp
+          - src/DataTypes/Serializations/getSubcolumnsDeserializationOrder.cpp
+          - src/DataTypes/DataTypesBinaryEncoding.cpp
+          - src/DataTypes/DataTypesCache.cpp
+          - src/DataTypes/DataTypeFactory.cpp
+
+
+  - id: engines
+    description: Table engines, including MergeTree.
+    sources:
+      - src/Storages/
+      - src/Processors/TTL/
+    children:
+      - id: engines.mergetree
+        description: MergeTree family. MergeTree, Replacing, Summing, Aggregating, Collapsing, VersionedCollapsing, Coalescing, and Graphite, plus their Replicated forms, are registered together.
+        sources:
+          - src/Storages/MergeTree/
+          - src/Storages/StorageMergeTree.cpp
+          - src/Storages/MergeTree/registerStorageMergeTree.cpp
+
+      - id: engines.mergetree.compaction
+        description: Part merges and merge selection.
+        sources:
+          - src/Storages/MergeTree/Compaction/
+
+      - id: engines.mergetree.mutations
+        description: ALTER UPDATE and ALTER DELETE mutations, including patch parts.
+        sources:
+          - src/Storages/MergeTree/PatchParts/
+          - src/Storages/MutationCommands.cpp
+          - src/Interpreters/MutationsInterpreter.cpp
+
+      - id: engines.mergetree.lightweight_delete
+        description: DELETE that writes a row mask instead of a mutation.
+        sources:
+          - src/Interpreters/InterpreterDeleteQuery.cpp
+
+      - id: engines.mergetree.replication
+        description: ReplicatedMergeTree.
+        sources:
+          - src/Storages/StorageReplicatedMergeTree.cpp
+
+      - id: engines.mergetree.projections
+        description: Projections.
+        sources:
+          - src/Storages/MergeTree/ProjectionIndex/
+          - src/Storages/ProjectionsDescription.cpp
+
+      - id: engines.mergetree.indexes
+        description: Skipping indexes, text indexes, and statistics.
+        sources:
+          - src/Storages/Statistics/
+          - src/Storages/StorageMergeTreeIndex.cpp
+          - src/Storages/StorageMergeTreeTextIndex.cpp
+          - src/Storages/IndicesDescription.cpp
+
+      - id: engines.mergetree.unique_key
+        description: Unique key.
+        sources:
+          - src/Storages/MergeTree/UniqueKey/
+
+      - id: engines.mergetree.ttl
+        description: Column and table TTL.
+        sources:
+          - src/Processors/TTL/
+          - src/Storages/TTLDescription.cpp
+
+      - id: engines.mergetree.streaming
+        description: Streaming reads from MergeTree.
+        sources:
+          - src/Storages/MergeTree/Streaming/
+
+      - id: engines.log
+        description: Log and TinyLog.
+        sources:
+          - src/Storages/StorageLog.cpp
+
+      - id: engines.stripe_log
+        description: StripeLog.
+        sources:
+          - src/Storages/StorageStripeLog.cpp
+
+      - id: engines.view
+        description: View.
+        sources:
+          - src/Storages/StorageView.cpp
+
+      - id: engines.view.materialized
+        description: MaterializedView, including refreshable views.
+        sources:
+          - src/Storages/StorageMaterializedView.cpp
+          - src/Storages/MaterializedView/
+
+      - id: engines.view.live
+        description: WindowView.
+        sources:
+          - src/Storages/WindowView/
+
+      - id: engines.distributed
+        description: Distributed.
+        sources:
+          - src/Storages/StorageDistributed.cpp
+          - src/Storages/Distributed/
+
+      - id: engines.hybrid
+        description: Hybrid. Registered in StorageDistributed.cpp. Segment pruning is separate.
+        sources:
+          - src/Storages/HybridSegmentPruner.cpp
+
+      - id: engines.merge
+        description: Merge.
+        sources:
+          - src/Storages/StorageMerge.cpp
+
+      - id: engines.memory
+        description: Memory.
+        sources:
+          - src/Storages/StorageMemory.cpp
+
+      - id: engines.buffer
+        description: Buffer.
+        sources:
+          - src/Storages/StorageBuffer.cpp
+
+      - id: engines.set
+        description: Set.
+        sources:
+          - src/Storages/StorageSet.cpp
+
+      - id: engines.join
+        description: Join.
+        sources:
+          - src/Storages/StorageJoin.cpp
+
+      - id: engines.null
+        description: Null.
+        sources:
+          - src/Storages/StorageNull.cpp
+
+      - id: engines.file
+        description: File and Filesystem.
+        sources:
+          - src/Storages/StorageFile.cpp
+          - src/Storages/StorageFileCluster.cpp
+          - src/Storages/StorageFilesystem.cpp
+
+      - id: engines.url
+        description: URL.
+        sources:
+          - src/Storages/StorageURL.cpp
+          - src/Storages/StorageURLCluster.cpp
+
+      - id: engines.executable
+        description: Executable and ExecutablePool.
+        sources:
+          - src/Storages/StorageExecutable.cpp
+
+      - id: engines.generate_random
+        description: GenerateRandom.
+        sources:
+          - src/Storages/StorageGenerateRandom.cpp
+
+      - id: engines.dictionary
+        description: Dictionary table engine.
+        sources:
+          - src/Storages/StorageDictionary.cpp
+
+      - id: engines.alias
+        description: Alias.
+        sources:
+          - src/Storages/StorageAlias.cpp
+
+      - id: engines.loop
+        description: Loop.
+        sources:
+          - src/Storages/StorageLoop.cpp
+
+      - id: engines.mysql
+        description: MySQL.
+        sources:
+          - src/Storages/StorageMySQL.cpp
+          - src/Storages/MySQL/
+
+      - id: engines.postgresql
+        description: PostgreSQL.
+        sources:
+          - src/Storages/StoragePostgreSQL.cpp
+          - src/Storages/PostgreSQL/
+
+      - id: engines.mongodb
+        description: MongoDB.
+        sources:
+          - src/Storages/StorageMongoDB.cpp
+
+      - id: engines.sqlite
+        description: SQLite.
+        sources:
+          - src/Storages/StorageSQLite.cpp
+
+      - id: engines.redis
+        description: Redis.
+        sources:
+          - src/Storages/StorageRedis.cpp
+
+      - id: engines.hive
+        description: Hive.
+        sources:
+          - src/Storages/Hive/
+
+      - id: engines.kafka
+        description: Kafka.
+        sources:
+          - src/Storages/Kafka/
+
+      - id: engines.nats
+        description: NATS.
+        sources:
+          - src/Storages/NATS/
+
+      - id: engines.rabbitmq
+        description: RabbitMQ.
+        sources:
+          - src/Storages/RabbitMQ/
+
+      - id: engines.filelog
+        description: FileLog.
+        sources:
+          - src/Storages/FileLog/
+
+      - id: engines.keepermap
+        description: KeeperMap.
+        sources:
+          - src/Storages/StorageKeeperMap.cpp
+
+      - id: engines.rocksdb
+        description: EmbeddedRocksDB.
+        sources:
+          - src/Storages/RocksDB/
+
+      - id: engines.timeseries
+        description: TimeSeries.
+        sources:
+          - src/Storages/TimeSeries/
+          - src/Storages/StorageTimeSeries.cpp
+
+      - id: engines.arrowflight
+        description: ArrowFlight.
+        sources:
+          - src/Storages/ArrowFlight/
+
+      - id: engines.ytsaurus
+        description: YTsaurus.
+        sources:
+          - src/Storages/YTsaurus/
+
+      - id: engines.object_storage
+        description: S3, GCS, Azure, HDFS, COSN, and OSS table engines. Lake implementations under DataLakes stay in lakes.
+        sources:
+          - src/Storages/ObjectStorage/
+
+      - id: engines.object_storage_queue
+        description: ObjectStorageQueue.
+        sources:
+          - src/Storages/ObjectStorageQueue/
+
+      - id: engines.streaming
+        description: Streaming subscriptions.
+        sources:
+          - src/Storages/Streaming/
+
+
+  - id: storage
+    description: Disks, object storage, and storage policies.
+    sources:
+      - src/Disks/
+      - src/IO/S3/
+      - src/IO/AzureBlobStorage/
+    children:
+      - id: storage.disk.local
+        description: Local disk. The default disk type.
+        sources:
+          - src/Disks/DiskLocal.cpp
+          - src/Disks/loadLocalDiskConfig.cpp
+          - src/Disks/DiskLocalCheckThread.cpp
+
+      - id: storage.disk.encrypted
+        description: Encrypted disk. Wraps another disk and encrypts data at rest.
+        sources:
+          - src/Disks/DiskEncrypted.cpp
+          - src/Disks/DiskEncryptedTransaction.cpp
+
+      - id: storage.disk.cache
+        description: Cache disk. A local cache in front of an object-storage disk.
+        sources:
+          - src/Disks/DiskObjectStorage/RegisterDiskCache.cpp
+
+      - id: storage.disk.object_storage
+        description: Object-storage disk. Combines an object-storage backend with a metadata layout.
+        sources:
+          - src/Disks/DiskObjectStorage/RegisterDiskObjectStorage.cpp
+          - src/Disks/DiskObjectStorage/DiskObjectStorage.cpp
+          - src/Disks/DiskObjectStorage/MetadataStorageFromDisk.cpp
+
+      - id: storage.s3
+        description: S3 object storage. Also the types s3_with_keeper, s3_plain, and s3_plain_rewritable.
+        sources:
+          - src/Disks/DiskObjectStorage/ObjectStorages/S3/
+          - src/IO/S3/
+
+      - id: storage.gcs
+        description: GCS, through the S3 client with Google request signing.
+        sources:
+          - src/IO/S3/GCSConditionalDialect.cpp
+          - src/IO/S3/GOOG4Signer.cpp
+
+      - id: storage.s3.auth
+        description: S3 credentials.
+        sources:
+          - src/IO/S3/Credentials.cpp
+
+      - id: storage.azure
+        description: Azure Blob Storage. Also azure_plain and azure_plain_rewritable.
+        sources:
+          - src/Disks/DiskObjectStorage/ObjectStorages/AzureBlobStorage/
+          - src/IO/AzureBlobStorage/
+
+      - id: storage.hdfs
+        description: HDFS object storage.
+        sources:
+          - src/Disks/DiskObjectStorage/ObjectStorages/HDFS/
+
+      - id: storage.web
+        description: Web object storage, read-only HTTP.
+        sources:
+          - src/Disks/DiskObjectStorage/ObjectStorages/Web/
+          - src/Disks/DiskObjectStorage/MetadataStorages/Web/
+
+      - id: storage.local_blob
+        description: Local blob object storage. Types local, local_plain, and local_plain_rewritable.
+        sources:
+          - src/Disks/DiskObjectStorage/ObjectStorages/Local/
+
+      - id: storage.object_cache
+        description: Cached object storage wrapper.
+        sources:
+          - src/Disks/DiskObjectStorage/ObjectStorages/Cached/
+
+      - id: storage.metadata.local
+        description: Metadata stored on a local disk.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/Local/
+
+      - id: storage.metadata.keeper
+        description: Metadata stored in Keeper.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/Keeper/
+
+      - id: storage.metadata.plain
+        description: Plain metadata layout.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/Plain/
+
+      - id: storage.metadata.plain_rewritable
+        description: Plain rewritable metadata layout.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/PlainRewritable/
+
+      - id: storage.cas
+        description: Content-addressed metadata. Disk metadata type cas.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/
+
+      - id: storage.cas.parts
+        description: CAS part metadata.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/Parts/
+
+      - id: storage.cas.pool
+        description: CAS pool.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/Pool/
+
+      - id: storage.cas.backend
+        description: CAS backend.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/Backend/
+
+      - id: storage.cas.gc
+        description: CAS garbage collection.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/Gc/
+
+      - id: storage.cas.formats
+        description: CAS on-disk formats.
+        sources:
+          - src/Disks/DiskObjectStorage/MetadataStorages/ContentAddressed/Formats/
+
+      - id: storage.zero_copy
+        description: Replication of blobs across object-storage locations.
+        sources:
+          - src/Disks/DiskObjectStorage/Replication/
+
+      - id: storage.policy
+        description: Storage policies and disk selection.
+        sources:
+          - src/Disks/StoragePolicy.cpp
+          - src/Disks/IStoragePolicy.cpp
+          - src/Disks/DiskSelector.cpp
+
+      - id: storage.volume
+        description: Volumes, including JBOD.
+        sources:
+          - src/Disks/VolumeJBOD.cpp
+          - src/Disks/IVolume.cpp
+          - src/Disks/createVolume.cpp
+
+
+  - id: lakes
+    description: Iceberg, Delta Lake, Hudi, Paimon, and data lake catalogs.
+    sources:
+      - src/Storages/ObjectStorage/DataLakes/
+      - src/Databases/DataLake/
+    children:
+      - id: lakes.iceberg
+        description: Iceberg reads. Metadata, snapshots, and iterators.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/
+
+      - id: lakes.iceberg.writes
+        description: Iceberg writes and native CREATE.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/IcebergWrites.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/MetadataGenerator.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/MultipleFileWriter.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/ChunkPartitioner.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/FileNamesGenerator.cpp
+
+      - id: lakes.iceberg.manifests
+        description: Iceberg manifest files and manifest pruning.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/ManifestFile.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/ManifestFileIterator.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/ManifestFilesPruning.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/SnapshotFilesTraversal.cpp
+
+      - id: lakes.iceberg.schema
+        description: Iceberg schema conversion.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/SchemaProcessor.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/ComplexTypeSchemaProcessorFunctions.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/IcebergFieldParseHelpers.cpp
+
+      - id: lakes.iceberg.deletion_vectors
+        description: Iceberg deletion vectors and position deletes.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/IcebergDeletionVector.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/PositionDeleteTransform.cpp
+          - src/Storages/ObjectStorage/DataLakes/DeletionVectorTransform.cpp
+          - src/Storages/ObjectStorage/DataLakes/PuffinDeletionVectorReader.cpp
+          - src/Storages/ObjectStorage/DataLakes/PuffinFilesCache.cpp
+
+      - id: lakes.iceberg.mutations
+        description: Iceberg mutations.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/Mutations.cpp
+
+      - id: lakes.iceberg.compaction
+        description: Iceberg compaction.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/Compaction.cpp
+
+      - id: lakes.iceberg.expire_snapshots
+        description: Expiring Iceberg snapshots.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/ExpireSnapshotsExecute.cpp
+
+      - id: lakes.iceberg.orphans
+        description: Removing orphan Iceberg files.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/RemoveOrphanFilesExecute.cpp
+
+      - id: lakes.iceberg.cache
+        description: Iceberg metadata file cache.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/StatelessMetadataFileGetter.cpp
+
+      - id: lakes.iceberg.statistics
+        description: Iceberg data file statistics and snapshot summaries.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/DataFileStatistics.cpp
+          - src/Storages/ObjectStorage/DataLakes/Iceberg/SnapshotSummary.cpp
+
+      - id: lakes.delta
+        description: Delta Lake reads and metadata.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/
+          - src/Storages/ObjectStorage/DataLakes/DeltaLakeMetadata.cpp
+          - src/Storages/ObjectStorage/DataLakes/DeltaLakeMetadataDeltaKernel.cpp
+
+      - id: lakes.delta.writes
+        description: Delta Lake writes.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/DeltaLakeSink.cpp
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/DeltaLakePartitionedSink.cpp
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/WriteTransaction.cpp
+
+      - id: lakes.delta.changes
+        description: Delta Lake change data feed.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/TableChanges.cpp
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/ReadFromTableChangesStep.cpp
+
+      - id: lakes.delta.partition_pruning
+        description: Delta Lake partition pruning.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/PartitionPruner.cpp
+          - src/Storages/ObjectStorage/DataLakes/DeltaLake/EnginePredicate.cpp
+
+      - id: lakes.hudi
+        description: Hudi.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/HudiMetadata.cpp
+
+      - id: lakes.paimon
+        description: Paimon.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Paimon/
+
+      - id: lakes.paimon.schema
+        description: Paimon schema.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Paimon/PaimonSchemaProcessor.cpp
+          - src/Storages/ObjectStorage/DataLakes/Paimon/PaimonTableSchema.cpp
+
+      - id: lakes.paimon.partition_pruning
+        description: Paimon partition pruning.
+        sources:
+          - src/Storages/ObjectStorage/DataLakes/Paimon/PartitionPruner.cpp
+
+      - id: lakes.catalog
+        description: DataLakeCatalog and Iceberg database engines.
+        sources:
+          - src/Databases/DataLake/DatabaseDataLake.cpp
+          - src/Databases/DataLake/DatabaseDataLakeSettings.cpp
+          - src/Databases/DataLake/ICatalog.cpp
+          - src/Databases/DataLake/Common.cpp
+
+      - id: lakes.catalog.rest
+        description: Iceberg REST catalog.
+        sources:
+          - src/Databases/DataLake/RestCatalog.cpp
+
+      - id: lakes.catalog.glue
+        description: AWS Glue catalog.
+        sources:
+          - src/Databases/DataLake/GlueCatalog.cpp
+
+      - id: lakes.catalog.hive
+        description: Hive metastore catalog.
+        sources:
+          - src/Databases/DataLake/HiveCatalog.cpp
+
+      - id: lakes.catalog.unity
+        description: Databricks Unity catalog.
+        sources:
+          - src/Databases/DataLake/UnityCatalog.cpp
+
+      - id: lakes.catalog.s3tables
+        description: S3 Tables catalog.
+        sources:
+          - src/Databases/DataLake/S3TablesCatalog.cpp
+          - src/Databases/DataLake/S3TablesCredentialRefresh.cpp
+
+      - id: lakes.catalog.paimon
+        description: Paimon REST catalog.
+        sources:
+          - src/Databases/DataLake/PaimonRestCatalog.cpp
+
+      - id: lakes.catalog.auth
+        description: Catalog request signing.
+        sources:
+          - src/Databases/DataLake/AWSV4Signer.cpp
+          - src/Databases/DataLake/HTTPBasedCatalogUtils.cpp
+
+
+  - id: formats
+    description: Input and output formats.
+    sources:
+      - src/Formats/
+      - src/Processors/Formats/
+    children:
+      - id: formats.csv
+        description: CSV.
+        sources:
+          - src/Processors/Formats/Impl/CSV
+
+      - id: formats.tsv
+        description: TabSeparated and CustomSeparated.
+        sources:
+          - src/Processors/Formats/Impl/TabSeparated
+          - src/Processors/Formats/Impl/CustomSeparated
+
+      - id: formats.values
+        description: Values.
+        sources:
+          - src/Processors/Formats/Impl/Values
+
+      - id: formats.tskv
+        description: TSKV.
+        sources:
+          - src/Processors/Formats/Impl/TSKV
+
+      - id: formats.json
+        description: JSON and JSONAsString.
+        sources:
+          - src/Processors/Formats/Impl/JSONRow
+          - src/Processors/Formats/Impl/JSONAs
+          - src/Formats/JSONUtils.cpp
+          - src/Formats/JSONExtractTree.cpp
+
+      - id: formats.json.each_row
+        description: JSONEachRow and JSONObjectEachRow.
+        sources:
+          - src/Processors/Formats/Impl/JSONEachRow
+          - src/Processors/Formats/Impl/JSONObjectEachRow
+
+      - id: formats.json.columns
+        description: JSONColumns and JSONColumnsWithMetadata.
+        sources:
+          - src/Processors/Formats/Impl/JSONColumns
+
+      - id: formats.json.columns_with_metadata
+        description: JSONColumnsWithMetadata.
+        sources:
+          - src/Processors/Formats/Impl/JSONColumnsWithMetadata
+
+      - id: formats.json.compact
+        description: JSONCompact.
+        sources:
+          - src/Processors/Formats/Impl/JSONCompact
+
+      - id: formats.json.compact_each_row
+        description: JSONCompactEachRow.
+        sources:
+          - src/Processors/Formats/Impl/JSONCompactEachRow
+
+      - id: formats.json.compact_columns
+        description: JSONCompactColumns.
+        sources:
+          - src/Processors/Formats/Impl/JSONCompactColumns
+
+      - id: formats.regexp
+        description: Regexp.
+        sources:
+          - src/Processors/Formats/Impl/Regexp
+
+      - id: formats.template
+        description: Template.
+        sources:
+          - src/Processors/Formats/Impl/Template
+          - src/Formats/ParsedTemplateFormatString.cpp
+
+      - id: formats.line_as_string
+        description: LineAsString.
+        sources:
+          - src/Processors/Formats/Impl/LineAsString
+
+      - id: formats.form
+        description: Form.
+        sources:
+          - src/Processors/Formats/Impl/FormRow
+
+      - id: formats.hive_text
+        description: Hive text.
+        sources:
+          - src/Processors/Formats/Impl/HiveText
+
+      - id: formats.binary
+        description: RowBinary.
+        sources:
+          - src/Processors/Formats/Impl/BinaryRow
+
+      - id: formats.native
+        description: Native.
+        sources:
+          - src/Processors/Formats/Impl/NativeFormat.cpp
+          - src/Formats/NativeReader.cpp
+          - src/Formats/NativeWriter.cpp
+          - src/Formats/IndexForNativeFormat.cpp
+
+      - id: formats.parquet
+        description: Parquet.
+        sources:
+          - src/Processors/Formats/Impl/Parquet
+
+      - id: formats.parquet.v3
+        description: Parquet reader v3.
+        sources:
+          - src/Processors/Formats/Impl/ParquetV3
+
+      - id: formats.parquet.cache
+        description: Parquet metadata cache.
+        sources:
+          - src/Processors/Formats/Impl/ParquetMetadataCache.cpp
+
+      - id: formats.orc
+        description: ORC, including the native ORC reader.
+        sources:
+          - src/Processors/Formats/Impl/ORC
+          - src/Processors/Formats/Impl/NativeORC
+
+      - id: formats.arrow
+        description: Arrow.
+        sources:
+          - src/Processors/Formats/Impl/Arrow
+          - src/Processors/Formats/Impl/CHColumnToArrow
+          - src/Processors/Formats/Impl/ArrowColumnToCHColumn.cpp
+
+      - id: formats.avro
+        description: Avro.
+        sources:
+          - src/Processors/Formats/Impl/Avro
+
+      - id: formats.capnproto
+        description: Cap'n Proto.
+        sources:
+          - src/Processors/Formats/Impl/CapnProto
+          - src/Formats/CapnProto
+
+      - id: formats.protobuf
+        description: Protobuf.
+        sources:
+          - src/Processors/Formats/Impl/Protobuf
+          - src/Formats/Protobuf
+
+      - id: formats.msgpack
+        description: MessagePack.
+        sources:
+          - src/Processors/Formats/Impl/MsgPack
+          - src/Formats/MsgPackExtensionTypes.h
+
+      - id: formats.bson
+        description: BSONEachRow.
+        sources:
+          - src/Processors/Formats/Impl/BSON
+          - src/Formats/BSONTypes.cpp
+
+      - id: formats.pretty
+        description: Pretty output formats.
+        sources:
+          - src/Processors/Formats/Impl/Pretty
+          - src/Formats/PrettyFormatHelpers.cpp
+
+      - id: formats.vertical
+        description: Vertical.
+        sources:
+          - src/Processors/Formats/Impl/Vertical
+
+      - id: formats.xml
+        description: XML.
+        sources:
+          - src/Processors/Formats/Impl/XML
+
+      - id: formats.markdown
+        description: Markdown.
+        sources:
+          - src/Processors/Formats/Impl/Markdown
+
+      - id: formats.prometheus
+        description: Prometheus text.
+        sources:
+          - src/Processors/Formats/Impl/Prometheus
+
+      - id: formats.mysql
+        description: MySQL dump input and MySQL wire output.
+        sources:
+          - src/Processors/Formats/Impl/MySQL
+
+      - id: formats.postgresql
+        description: PostgreSQL wire output.
+        sources:
+          - src/Processors/Formats/Impl/PostgreSQL
+
+      - id: formats.odbc
+        description: ODBCDriver2.
+        sources:
+          - src/Processors/Formats/Impl/ODBC
+
+      - id: formats.dwarf
+        description: DWARF.
+        sources:
+          - src/Processors/Formats/Impl/DWARF
+
+      - id: formats.npy
+        description: NumPy.
+        sources:
+          - src/Processors/Formats/Impl/Npy
+          - src/Formats/NumpyDataTypes.h
+
+      - id: formats.png
+        description: PNG.
+        sources:
+          - src/Processors/Formats/Impl/PNG
+          - src/Formats/PNG
+
+      - id: formats.geojson
+        description: GeoJSON.
+        sources:
+          - src/Processors/Formats/Impl/GeoJSON
+
+      - id: formats.puffin
+        description: Puffin.
+        sources:
+          - src/Processors/Formats/Impl/Puffin
+
+      - id: formats.one
+        description: One.
+        sources:
+          - src/Processors/Formats/Impl/OneFormat.cpp
+
+      - id: formats.null
+        description: Null.
+        sources:
+          - src/Processors/Formats/Impl/NullFormat.cpp
+
+      - id: formats.raw_blob
+        description: RawBLOB.
+        sources:
+          - src/Processors/Formats/Impl/RawBLOB
+
+      - id: formats.sql_insert
+        description: SQLInsert.
+        sources:
+          - src/Processors/Formats/Impl/SQLInsert
+
+      - id: formats.hash
+        description: Hash output.
+        sources:
+          - src/Processors/Formats/Impl/HashOutput
+
+      - id: formats.schema_inference
+        description: Schema inference shared by row formats.
+        sources:
+          - src/Formats/SchemaInferenceUtils.cpp
+          - src/Formats/ReadSchemaUtils.cpp
+          - src/Formats/FormatSchemaInfo.cpp
+
+      - id: formats.parallel
+        description: Parallel parsing and formatting.
+        sources:
+          - src/Processors/Formats/Impl/ParallelFormattingOutputFormat.cpp
+          - src/Processors/Formats/Impl/ParallelParsingInputFormat.cpp
+
+
+  - id: databases
+    description: Database engines.
+    sources:
+      - src/Databases/
+    children:
+      - id: databases.atomic
+        description: Atomic database. The default engine.
+        sources:
+          - src/Databases/DatabaseAtomic.cpp
+
+      - id: databases.ordinary
+        description: Ordinary database.
+        sources:
+          - src/Databases/DatabaseOrdinary.cpp
+
+      - id: databases.on_disk
+        description: Shared code for databases stored on disk. Used by Atomic and Ordinary.
+        sources:
+          - src/Databases/DatabaseOnDisk.cpp
+          - src/Databases/DatabaseMetadataDiskSettings.cpp
+
+      - id: databases.replicated
+        description: Replicated database.
+        sources:
+          - src/Databases/DatabaseReplicated.cpp
+          - src/Databases/DatabaseReplicatedHelpers.cpp
+          - src/Databases/DatabaseReplicatedSettings.cpp
+          - src/Databases/DatabaseReplicatedWorker.cpp
+
+      - id: databases.memory
+        description: Memory database.
+        sources:
+          - src/Databases/DatabaseMemory.cpp
+
+      - id: databases.filesystem
+        description: Filesystem database.
+        sources:
+          - src/Databases/DatabaseFilesystem.cpp
+
+      - id: databases.s3
+        description: S3 database.
+        sources:
+          - src/Databases/DatabaseS3.cpp
+
+      - id: databases.hdfs
+        description: HDFS database.
+        sources:
+          - src/Databases/DatabaseHDFS.cpp
+
+      - id: databases.dictionary
+        description: Dictionary database.
+        sources:
+          - src/Databases/DatabaseDictionary.cpp
+
+      - id: databases.backup
+        description: Backup database engine. Reads tables from a backup. Not the BACKUP statement.
+        sources:
+          - src/Databases/DatabaseBackup.cpp
+
+      - id: databases.mysql
+        description: MySQL database.
+        sources:
+          - src/Databases/MySQL/
+
+      - id: databases.postgresql
+        description: PostgreSQL database.
+        sources:
+          - src/Databases/PostgreSQL/DatabasePostgreSQL.cpp
+          - src/Databases/PostgreSQL/fetchPostgreSQLTableStructure.cpp
+
+      - id: databases.materialized_postgresql
+        description: MaterializedPostgreSQL database.
+        sources:
+          - src/Databases/PostgreSQL/DatabaseMaterializedPostgreSQL.cpp
+
+      - id: databases.sqlite
+        description: SQLite database.
+        sources:
+          - src/Databases/SQLite/
+
+      - id: databases.loader
+        description: Loading tables and tracking dependencies between them.
+        sources:
+          - src/Databases/TablesLoader.cpp
+          - src/Databases/TablesDependencyGraph.cpp
+          - src/Databases/DDLDependencyVisitor.cpp
+          - src/Databases/DDLLoadingDependencyVisitor.cpp
+          - src/Databases/DDLRenamingVisitor.cpp
+
+
+  - id: ddl
+    description: CREATE, ALTER, DROP, ATTACH, and distributed DDL.
+    sources:
+      - src/Interpreters/InterpreterCreateQuery.cpp
+      - src/Interpreters/InterpreterDropQuery.cpp
+      - src/Interpreters/InterpreterAlterQuery.cpp
+      - src/Interpreters/InterpreterAttachQuery.cpp
+      - src/Interpreters/InterpreterRenameQuery.cpp
+      - src/Interpreters/InterpreterUndropQuery.cpp
+      - src/Interpreters/InterpreterOptimizeQuery.cpp
+      - src/Interpreters/InterpreterUpdateQuery.cpp
+      - src/Interpreters/InterpreterInsertQuery.cpp
+      - src/Interpreters/DDLWorker.cpp
+      - src/Interpreters/DDLTask.cpp
+      - src/Storages/AlterCommands.cpp
+      - src/Storages/PartitionCommands.cpp
+    children:
+      - id: ddl.create
+        description: CREATE for databases, tables, and views.
+        sources:
+          - src/Interpreters/InterpreterCreateQuery.cpp
+
+      - id: ddl.create.function
+        description: CREATE FUNCTION.
+        sources:
+          - src/Interpreters/InterpreterCreateFunctionQuery.cpp
+
+      - id: ddl.create.index
+        description: CREATE INDEX.
+        sources:
+          - src/Interpreters/InterpreterCreateIndexQuery.cpp
+
+      - id: ddl.create.named_collection
+        description: CREATE NAMED COLLECTION.
+        sources:
+          - src/Interpreters/InterpreterCreateNamedCollectionQuery.cpp
+
+      - id: ddl.create.workload
+        description: CREATE WORKLOAD.
+        sources:
+          - src/Interpreters/InterpreterCreateWorkloadQuery.cpp
+
+      - id: ddl.create.resource
+        description: CREATE RESOURCE.
+        sources:
+          - src/Interpreters/InterpreterCreateResourceQuery.cpp
+
+      - id: ddl.drop
+        description: DROP for databases and tables.
+        sources:
+          - src/Interpreters/InterpreterDropQuery.cpp
+
+      - id: ddl.drop.function
+        description: DROP FUNCTION.
+        sources:
+          - src/Interpreters/InterpreterDropFunctionQuery.cpp
+
+      - id: ddl.drop.index
+        description: DROP INDEX.
+        sources:
+          - src/Interpreters/InterpreterDropIndexQuery.cpp
+
+      - id: ddl.drop.named_collection
+        description: DROP NAMED COLLECTION.
+        sources:
+          - src/Interpreters/InterpreterDropNamedCollectionQuery.cpp
+
+      - id: ddl.drop.workload
+        description: DROP WORKLOAD.
+        sources:
+          - src/Interpreters/InterpreterDropWorkloadQuery.cpp
+
+      - id: ddl.drop.resource
+        description: DROP RESOURCE.
+        sources:
+          - src/Interpreters/InterpreterDropResourceQuery.cpp
+
+      - id: ddl.alter
+        description: ALTER entry point.
+        sources:
+          - src/Interpreters/InterpreterAlterQuery.cpp
+
+      - id: ddl.alter_columns
+        description: Column, constraint, and setting changes inside ALTER.
+        sources:
+          - src/Storages/AlterCommands.cpp
+
+      - id: ddl.alter.named_collection
+        description: ALTER NAMED COLLECTION.
+        sources:
+          - src/Interpreters/InterpreterAlterNamedCollectionQuery.cpp
+
+      - id: ddl.partition
+        description: ALTER PARTITION, including ATTACH, DETACH, DROP, MOVE, REPLACE, and FETCH.
+        sources:
+          - src/Storages/PartitionCommands.cpp
+
+      - id: ddl.attach
+        description: ATTACH and DETACH.
+        sources:
+          - src/Interpreters/InterpreterAttachQuery.cpp
+
+      - id: ddl.rename
+        description: RENAME and EXCHANGE.
+        sources:
+          - src/Interpreters/InterpreterRenameQuery.cpp
+
+      - id: ddl.undrop
+        description: UNDROP.
+        sources:
+          - src/Interpreters/InterpreterUndropQuery.cpp
+
+      - id: ddl.optimize
+        description: OPTIMIZE.
+        sources:
+          - src/Interpreters/InterpreterOptimizeQuery.cpp
+
+      - id: ddl.update
+        description: ALTER UPDATE entry point. The mutation itself is engines.mergetree.mutations.
+        sources:
+          - src/Interpreters/InterpreterUpdateQuery.cpp
+
+      - id: ddl.insert
+        description: INSERT execution, including atomic insert.
+        sources:
+          - src/Interpreters/InterpreterInsertQuery.cpp
+          - src/Interpreters/InsertDependenciesBuilder.cpp
+
+      - id: ddl.export_part
+        description: EXPORT PART.
+        sources:
+          - src/Storages/MergeTree/ExportPart
+
+      - id: ddl.export_partition
+        description: EXPORT PARTITION.
+        sources:
+          - src/Storages/MergeTree/ExportPartition
+
+      - id: ddl.export
+        description: Shared export bookkeeping.
+        sources:
+          - src/Storages/MergeTree/ExportList.cpp
+
+      - id: ddl.on_cluster
+        description: Distributed DDL. ON CLUSTER tasks and the worker that runs them.
+        sources:
+          - src/Interpreters/DDLWorker.cpp
+          - src/Interpreters/DDLTask.cpp
+          - src/Interpreters/DDLOnClusterQueryStatusSource.cpp
+
+
+  - id: coordination
+    description: Keeper, the ZooKeeper client, and replicated table coordination.
+    sources:
+      - src/Coordination/
+      - src/Common/ZooKeeper/
+      - src/Storages/StorageReplicatedMergeTree.cpp
+      - src/Storages/MergeTree/ReplicatedMergeTree
+    children:
+      - id: coordination.keeper.server
+        description: The Keeper process and its dispatcher.
+        sources:
+          - src/Coordination/KeeperServer.cpp
+          - src/Coordination/KeeperDispatcher.cpp
+          - src/Coordination/KeeperContext.cpp
+          - src/Coordination/KeeperCommon.cpp
+          - src/Coordination/KeeperConstants.cpp
+
+      - id: coordination.keeper.storage
+        description: The in-memory Keeper tree.
+        sources:
+          - src/Coordination/KeeperStorage.cpp
+          - src/Coordination/CompactChildrenSet.cpp
+
+      - id: coordination.keeper.statemachine
+        description: The Raft state machine.
+        sources:
+          - src/Coordination/KeeperStateMachine.cpp
+          - src/Coordination/SummingStateMachine.cpp
+          - src/Coordination/KeeperStateManager.cpp
+
+      - id: coordination.keeper.log
+        description: The Raft log.
+        sources:
+          - src/Coordination/KeeperLogStore.cpp
+          - src/Coordination/InMemoryLogStore.cpp
+          - src/Coordination/Changelog.cpp
+          - src/Coordination/WriteBufferFromNuraftBuffer.cpp
+
+      - id: coordination.keeper.snapshot
+        description: Keeper snapshots, including snapshots stored in S3.
+        sources:
+          - src/Coordination/KeeperSnapshotManager.cpp
+          - src/Coordination/KeeperSnapshotManagerS3.cpp
+
+      - id: coordination.keeper.reconfiguration
+        description: Changing Keeper membership.
+        sources:
+          - src/Coordination/KeeperReconfiguration.cpp
+          - src/Coordination/RaftServerConfig.cpp
+
+      - id: coordination.keeper.requests
+        description: Dispatching Keeper requests.
+        sources:
+          - src/Coordination/KeeperRequestDispatcher.cpp
+          - src/Coordination/KeeperRequestDispatcherOld.cpp
+          - src/Coordination/KeeperReadThreadPool.cpp
+
+      - id: coordination.keeper.sessions
+        description: Session expiry.
+        sources:
+          - src/Coordination/SessionExpiryQueue.cpp
+
+      - id: coordination.keeper.four_letter
+        description: Four-letter commands.
+        sources:
+          - src/Coordination/FourLetterCommand.cpp
+
+      - id: coordination.keeper.settings
+        description: Keeper settings.
+        sources:
+          - src/Coordination/CoordinationSettings.cpp
+
+      - id: coordination.keeper.acl
+        description: Keeper ACLs.
+        sources:
+          - src/Coordination/ACLMap.cpp
+
+      - id: coordination.keeper.metrics
+        description: Keeper metrics and connection stats.
+        sources:
+          - src/Coordination/KeeperAsynchronousMetrics.cpp
+          - src/Coordination/KeeperConnectionStats.cpp
+
+      - id: coordination.keeper.migration
+        description: Reading ZooKeeper data into Keeper.
+        sources:
+          - src/Coordination/ZooKeeperDataReader.cpp
+
+      - id: coordination.keeper_failover
+        description: Keeper failover. Membership changes and state recovery.
+        sources:
+          - src/Coordination/KeeperReconfiguration.cpp
+          - src/Coordination/KeeperStateManager.cpp
+
+      - id: coordination.zookeeper
+        description: The ZooKeeper client protocol.
+        sources:
+          - src/Common/ZooKeeper/ZooKeeper.cpp
+          - src/Common/ZooKeeper/ZooKeeperImpl.cpp
+          - src/Common/ZooKeeper/ZooKeeperIO.cpp
+          - src/Common/ZooKeeper/ZooKeeperCommon.cpp
+          - src/Common/ZooKeeper/ZooKeeperArgs.cpp
+          - src/Common/ZooKeeper/ZooKeeperConstants.cpp
+
+      - id: coordination.zookeeper.lock
+        description: ZooKeeper locks.
+        sources:
+          - src/Common/ZooKeeper/ZooKeeperLock.cpp
+
+      - id: coordination.zookeeper.cache
+        description: Caching ZooKeeper nodes.
+        sources:
+          - src/Common/ZooKeeper/ZooKeeperNodeCache.cpp
+          - src/Common/ZooKeeper/ZooKeeperCachingGetter.cpp
+
+      - id: coordination.zookeeper.fault_injection
+        description: Fault injection around the ZooKeeper client.
+        sources:
+          - src/Common/ZooKeeper/ZooKeeperWithFaultInjection.cpp
+
+      - id: coordination.keeper_client
+        description: The Keeper client used in place of ZooKeeper.
+        sources:
+          - src/Common/ZooKeeper/IKeeper.cpp
+          - src/Common/ZooKeeper/KeeperOverDispatcher.cpp
+          - src/Common/ZooKeeper/KeeperException.cpp
+          - src/Common/ZooKeeper/KeeperFeatureFlags.cpp
+          - src/Common/ZooKeeper/KeeperSpans.cpp
+          - src/Common/ZooKeeper/TestKeeper.cpp
+
+      - id: coordination.keeper_cli
+        description: The keeper-client command line.
+        sources:
+          - src/Common/ZooKeeper/KeeperClientCLI/
+
+      - id: coordination.replication
+        description: ReplicatedMergeTree.
+        sources:
+          - src/Storages/StorageReplicatedMergeTree.cpp
+
+      - id: coordination.replication.queue
+        description: The replication queue.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeQueue.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreeLogEntry.cpp
+
+      - id: coordination.replication.fetch
+        description: Fetches from other replicas.
+        sources:
+          - src/Storages/MergeTree/ReplicatedFetchList.cpp
+
+      - id: coordination.replication.merges
+        description: Replicated merges.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeMutateTaskBase.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreeMergePredicate.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreeMergeStrategyPicker.cpp
+
+      - id: coordination.replication.mutations
+        description: Replicated mutations and the ALTER sequence.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeMutationEntry.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreeAltersSequence.cpp
+
+      - id: coordination.replication.cleanup
+        description: Cleaning old parts and log entries.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeCleanupThread.cpp
+
+      - id: coordination.replication.restart
+        description: Restarting a replicated table.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeRestartingThread.cpp
+
+      - id: coordination.replication.part_check
+        description: Checking parts against other replicas.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreePartCheckThread.cpp
+
+      - id: coordination.replication.attach
+        description: Attaching parts on a replica.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeAttachThread.cpp
+
+      - id: coordination.replication.quorum
+        description: Quorum inserts.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeQuorumEntry.h
+          - src/Storages/MergeTree/ReplicatedMergeTreeQuorumAddedParts.h
+
+      - id: coordination.replication.sink
+        description: Inserts into a replicated table.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeSink.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreeSinkPatch.cpp
+
+      - id: coordination.replication.metadata
+        description: Replicated table metadata and part headers.
+        sources:
+          - src/Storages/MergeTree/ReplicatedMergeTreeTableMetadata.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreePartHeader.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreeAddress.cpp
+          - src/Storages/MergeTree/ReplicatedMergeTreePartsCollector.cpp
+
+
+  - id: access
+    description: Users, privileges, authentication, and TLS.
+    sources:
+      - src/Access/
+      - src/Interpreters/Access/
+      - src/Parsers/Access/
+    children:
+      - id: access.user
+        description: Users, including users.xml.
+        sources:
+          - src/Access/User.cpp
+          - src/Access/UsersConfigAccessStorage.cpp
+          - src/Access/UsersConfigParser.cpp
+          - src/Interpreters/Access/InterpreterCreateUserQuery.cpp
+          - src/Parsers/Access/ParserCreateUserQuery.cpp
+          - src/Parsers/Access/ASTCreateUserQuery.cpp
+          - src/Parsers/Access/parseUserName.cpp
+          - src/Parsers/Access/ParserUserNameWithHost.cpp
+
+      - id: access.role
+        description: Roles.
+        sources:
+          - src/Access/Role.cpp
+          - src/Access/GrantedRoles.cpp
+          - src/Access/EnabledRoles.cpp
+          - src/Access/RolesOrUsersSet.cpp
+          - src/Interpreters/Access/InterpreterCreateRoleQuery.cpp
+          - src/Interpreters/Access/InterpreterSetRoleQuery.cpp
+          - src/Parsers/Access/ParserCreateRoleQuery.cpp
+          - src/Parsers/Access/ParserSetRoleQuery.cpp
+
+      - id: access.grant
+        description: Grants and privilege checks.
+        sources:
+          - src/Access/AccessRights.cpp
+          - src/Access/ContextAccess.cpp
+          - src/Access/CachedAccessChecking.cpp
+          - src/Interpreters/Access/InterpreterGrantQuery.cpp
+          - src/Interpreters/Access/InterpreterCheckGrantQuery.cpp
+          - src/Interpreters/Access/InterpreterShowGrantsQuery.cpp
+          - src/Interpreters/Access/InterpreterShowPrivilegesQuery.cpp
+          - src/Parsers/Access/ParserGrantQuery.cpp
+          - src/Parsers/Access/parseAccessRightsElements.cpp
+
+      - id: access.row_policy
+        description: Row policies.
+        sources:
+          - src/Access/RowPolicy.cpp
+          - src/Access/EnabledRowPolicies.cpp
+          - src/Access/RowPolicyCache.cpp
+          - src/Interpreters/Access/InterpreterCreateRowPolicyQuery.cpp
+          - src/Parsers/Access/ParserCreateRowPolicyQuery.cpp
+
+      - id: access.quota
+        description: Quotas.
+        sources:
+          - src/Access/Quota.cpp
+          - src/Access/EnabledQuota.cpp
+          - src/Access/QuotaUsage.cpp
+          - src/Access/QuotaCache.cpp
+          - src/Interpreters/Access/InterpreterCreateQuotaQuery.cpp
+          - src/Parsers/Access/ParserCreateQuotaQuery.cpp
+
+      - id: access.settings_profile
+        description: Settings profiles and constraints.
+        sources:
+          - src/Access/SettingsProfile.cpp
+          - src/Access/SettingsProfileElement.cpp
+          - src/Access/SettingsConstraints.cpp
+          - src/Access/EnabledSettings.cpp
+          - src/Access/SettingsProfilesCache.cpp
+          - src/Interpreters/Access/InterpreterCreateSettingsProfileQuery.cpp
+          - src/Parsers/Access/ParserCreateSettingsProfileQuery.cpp
+
+      - id: access.masking_policy
+        description: Masking policies.
+        sources:
+          - src/Interpreters/Access/InterpreterCreateMaskingPolicyQuery.cpp
+          - src/Parsers/Access/ParserCreateMaskingPolicyQuery.cpp
+
+      - id: access.sql_security
+        description: SQL security definers on views.
+        sources:
+          - src/Access/ViewDefinerDependencies.cpp
+          - src/Access/Common/SQLSecurityDefs.h
+          - src/Parsers/ASTSQLSecurity.cpp
+
+      - id: access.execute_as
+        description: EXECUTE AS.
+        sources:
+          - src/Interpreters/Access/InterpreterExecuteAsQuery.cpp
+          - src/Parsers/Access/ParserExecuteAsQuery.cpp
+
+      - id: access.storage
+        description: Where users and roles are stored. Memory, disk, and users.xml.
+        sources:
+          - src/Access/IAccessStorage.cpp
+          - src/Access/MemoryAccessStorage.cpp
+          - src/Access/DiskAccessStorage.cpp
+          - src/Access/MultipleAccessStorage.cpp
+          - src/Access/AccessEntityIO.cpp
+          - src/Access/AccessControl.cpp
+
+      - id: access.storage.replicated
+        description: Replicated access storage.
+        sources:
+          - src/Access/ReplicatedAccessStorage.cpp
+          - src/Access/ZooKeeperReplicator.cpp
+
+      - id: access.auth
+        description: Password authentication and multiple authentication methods.
+        sources:
+          - src/Access/Authentication.cpp
+          - src/Access/AuthenticationData.cpp
+          - src/Access/Credentials.cpp
+
+      - id: access.auth.ldap
+        description: LDAP.
+        sources:
+          - src/Access/LDAPAccessStorage.cpp
+          - src/Access/LDAPClient.cpp
+
+      - id: access.auth.kerberos
+        description: Kerberos.
+        sources:
+          - src/Access/KerberosInit.cpp
+          - src/Access/GSSAcceptor.cpp
+
+      - id: access.auth.jwt
+        description: JWT.
+        sources:
+          - src/Access/TokenProcessorsJWT.cpp
+
+      - id: access.auth.oauth
+        description: OAuth opaque tokens.
+        sources:
+          - src/Access/TokenProcessorsOpaque.cpp
+
+      - id: access.auth.external
+        description: Dispatch to LDAP and other external authenticators.
+        sources:
+          - src/Access/ExternalAuthenticators.cpp
+          - src/Access/SettingsAuthResponseParser.cpp
+
+      - id: access.auth.ssh
+        description: SSH public keys.
+        sources:
+          - src/Access/SSH/
+          - src/Parsers/Access/ParserPublicSSHKey.cpp
+          - src/Parsers/Access/ASTPublicSSHKey.cpp
+
+      - id: access.tls
+        description: Server TLS and certificate reload.
+        sources:
+          - src/Server/TLSHandler.cpp
+          - src/Server/CertificateReloader.cpp
+
+
+  - id: dictionaries
+    description: Dictionary layouts and sources.
+    sources:
+      - src/Dictionaries/
+    children:
+      - id: dictionaries.layout.flat
+        description: LAYOUT(FLAT()).
+        sources:
+          - src/Dictionaries/FlatDictionary.cpp
+
+      - id: dictionaries.layout.hashed
+        description: LAYOUT(HASHED()).
+        sources:
+          - src/Dictionaries/HashedDictionary.cpp
+          - src/Dictionaries/registerHashedDictionary.cpp
+
+      - id: dictionaries.layout.sparse_hashed
+        description: LAYOUT(SPARSE_HASHED()).
+        sources:
+          - src/Dictionaries/HashedDictionary.cpp
+          - src/Dictionaries/SparseHashedDictionary.cpp
+
+      - id: dictionaries.layout.complex_key_hashed
+        description: LAYOUT(COMPLEX_KEY_HASHED()).
+        sources:
+          - src/Dictionaries/HashedDictionary.cpp
+
+      - id: dictionaries.layout.complex_key_sparse_hashed
+        description: LAYOUT(COMPLEX_KEY_SPARSE_HASHED()).
+        sources:
+          - src/Dictionaries/HashedDictionary.cpp
+          - src/Dictionaries/SparseHashedDictionary.cpp
+
+      - id: dictionaries.layout.hashed_array
+        description: LAYOUT(HASHED_ARRAY()).
+        sources:
+          - src/Dictionaries/HashedArrayDictionary.cpp
+
+      - id: dictionaries.layout.complex_key_hashed_array
+        description: LAYOUT(COMPLEX_KEY_HASHED_ARRAY()).
+        sources:
+          - src/Dictionaries/HashedArrayDictionary.cpp
+
+      - id: dictionaries.layout.range_hashed
+        description: LAYOUT(RANGE_HASHED()).
+        sources:
+          - src/Dictionaries/RangeHashedDictionary.cpp
+          - src/Dictionaries/registerRangeHashedDictionary.cpp
+
+      - id: dictionaries.layout.complex_key_range_hashed
+        description: LAYOUT(COMPLEX_KEY_RANGE_HASHED()).
+        sources:
+          - src/Dictionaries/RangeHashedDictionary.cpp
+
+      - id: dictionaries.layout.cache
+        description: LAYOUT(CACHE()). Fixed-size in-memory cache.
+        sources:
+          - src/Dictionaries/CacheDictionary.cpp
+          - src/Dictionaries/registerCacheDictionaries.cpp
+          - src/Dictionaries/CacheDictionaryUpdateQueue.cpp
+
+      - id: dictionaries.layout.complex_key_cache
+        description: LAYOUT(COMPLEX_KEY_CACHE()).
+        sources:
+          - src/Dictionaries/CacheDictionary.cpp
+          - src/Dictionaries/registerCacheDictionaries.cpp
+
+      - id: dictionaries.layout.ssd_cache
+        description: LAYOUT(SSD_CACHE()). Cache stored on local disk.
+        sources:
+          - src/Dictionaries/CacheDictionary.cpp
+          - src/Dictionaries/SSDCacheDictionaryStorage.h
+          - src/Dictionaries/registerCacheDictionaries.cpp
+
+      - id: dictionaries.layout.complex_key_ssd_cache
+        description: LAYOUT(COMPLEX_KEY_SSD_CACHE()).
+        sources:
+          - src/Dictionaries/CacheDictionary.cpp
+          - src/Dictionaries/SSDCacheDictionaryStorage.h
+
+      - id: dictionaries.layout.direct
+        description: LAYOUT(DIRECT()). Reads the source on each lookup.
+        sources:
+          - src/Dictionaries/DirectDictionary.cpp
+
+      - id: dictionaries.layout.complex_key_direct
+        description: LAYOUT(COMPLEX_KEY_DIRECT()).
+        sources:
+          - src/Dictionaries/DirectDictionary.cpp
+
+      - id: dictionaries.layout.ip_trie
+        description: LAYOUT(IP_TRIE()).
+        sources:
+          - src/Dictionaries/IPAddressDictionary.cpp
+
+      - id: dictionaries.layout.regexp_tree
+        description: LAYOUT(REGEXP_TREE()).
+        sources:
+          - src/Dictionaries/RegExpTreeDictionary.cpp
+
+      - id: dictionaries.layout.polygon
+        description: LAYOUT(POLYGON()). Alias of the cell index.
+        sources:
+          - src/Dictionaries/PolygonDictionary.cpp
+          - src/Dictionaries/PolygonDictionaryImplementations.cpp
+
+      - id: dictionaries.layout.polygon_simple
+        description: LAYOUT(POLYGON_SIMPLE()).
+        sources:
+          - src/Dictionaries/PolygonDictionaryImplementations.cpp
+
+      - id: dictionaries.layout.polygon_index_each
+        description: LAYOUT(POLYGON_INDEX_EACH()).
+        sources:
+          - src/Dictionaries/PolygonDictionaryImplementations.cpp
+
+      - id: dictionaries.layout.polygon_index_cell
+        description: LAYOUT(POLYGON_INDEX_CELL()).
+        sources:
+          - src/Dictionaries/PolygonDictionaryImplementations.cpp
+
+      - id: dictionaries.embedded
+        description: Embedded region hierarchies and names used by ip_trie and the polygon layouts.
+        sources:
+          - src/Dictionaries/Embedded/
+
+      - id: dictionaries.source.null
+        description: Null dictionary source.
+        sources:
+          - src/Dictionaries/NullDictionarySource.cpp
+
+      - id: dictionaries.source.file
+        description: File dictionary source.
+        sources:
+          - src/Dictionaries/FileDictionarySource.cpp
+
+      - id: dictionaries.source.clickhouse
+        description: ClickHouse dictionary source.
+        sources:
+          - src/Dictionaries/ClickHouseDictionarySource.cpp
+
+      - id: dictionaries.source.mysql
+        description: MySQL dictionary source.
+        sources:
+          - src/Dictionaries/MySQLDictionarySource.cpp
+
+      - id: dictionaries.source.postgresql
+        description: PostgreSQL dictionary source.
+        sources:
+          - src/Dictionaries/PostgreSQLDictionarySource.cpp
+
+      - id: dictionaries.source.mongodb
+        description: MongoDB dictionary source.
+        sources:
+          - src/Dictionaries/MongoDBDictionarySource.cpp
+
+      - id: dictionaries.source.cassandra
+        description: Cassandra dictionary source.
+        sources:
+          - src/Dictionaries/CassandraDictionarySource.cpp
+          - src/Dictionaries/CassandraSource.cpp
+          - src/Dictionaries/CassandraHelpers.cpp
+
+      - id: dictionaries.source.redis
+        description: Redis dictionary source.
+        sources:
+          - src/Dictionaries/RedisDictionarySource.cpp
+          - src/Dictionaries/RedisSource.cpp
+
+      - id: dictionaries.source.odbc
+        description: ODBC dictionary source.
+        sources:
+          - src/Dictionaries/XDBCDictionarySource.cpp
+
+      - id: dictionaries.source.jdbc
+        description: JDBC dictionary source.
+        sources:
+          - src/Dictionaries/XDBCDictionarySource.cpp
+
+      - id: dictionaries.source.http
+        description: HTTP dictionary source.
+        sources:
+          - src/Dictionaries/HTTPDictionarySource.cpp
+
+      - id: dictionaries.source.executable
+        description: Executable dictionary source.
+        sources:
+          - src/Dictionaries/ExecutableDictionarySource.cpp
+
+      - id: dictionaries.source.executable_pool
+        description: Executable pool dictionary source.
+        sources:
+          - src/Dictionaries/ExecutablePoolDictionarySource.cpp
+
+      - id: dictionaries.source.library
+        description: Library dictionary source.
+        sources:
+          - src/Dictionaries/LibraryDictionarySource.cpp
+
+      - id: dictionaries.source.yamlregexptree
+        description: YAML regexp tree dictionary source.
+        sources:
+          - src/Dictionaries/YAMLRegExpTreeDictionarySource.cpp
+
+      - id: dictionaries.source.ytsaurus
+        description: YTsaurus dictionary source.
+        sources:
+          - src/Dictionaries/YTsaurusDictionarySource.cpp
+
+
+  - id: backup
+    description: BACKUP, RESTORE, and FREEZE.
+    sources:
+      - src/Backups/
+      - src/Storages/Freeze.cpp
+      - src/Interpreters/InterpreterBackupQuery.cpp
+    children:
+      - id: backup.statement
+        description: The BACKUP and RESTORE statement entry point.
+        sources:
+          - src/Interpreters/InterpreterBackupQuery.cpp
+
+      - id: backup.engine.file
+        description: BACKUP TO File.
+        sources:
+          - src/Backups/BackupIO_File.cpp
+          - src/Backups/registerBackupEnginesFileAndDisk.cpp
+
+      - id: backup.engine.disk
+        description: BACKUP TO Disk.
+        sources:
+          - src/Backups/BackupIO_Disk.cpp
+          - src/Backups/registerBackupEnginesFileAndDisk.cpp
+
+      - id: backup.engine.s3
+        description: BACKUP TO S3.
+        sources:
+          - src/Backups/registerBackupEngineS3.cpp
+          - src/Backups/BackupIO_S3.cpp
+
+      - id: backup.engine.azure
+        description: BACKUP TO AzureBlobStorage.
+        sources:
+          - src/Backups/registerBackupEngineAzureBlobStorage.cpp
+          - src/Backups/BackupIO_AzureBlobStorage.cpp
+
+      - id: backup.engine.memory
+        description: In-memory backup.
+        sources:
+          - src/Backups/BackupIO_Memory.cpp
+          - src/Backups/BackupInMemory.cpp
+          - src/Backups/BackupsInMemoryHolder.cpp
+
+      - id: backup.engine.null
+        description: Null backup.
+        sources:
+          - src/Backups/BackupIO_Null.cpp
+
+      - id: backup.impl
+        description: The backup archive.
+        sources:
+          - src/Backups/BackupImpl.cpp
+
+      - id: backup.factory
+        description: Backup engine lookup.
+        sources:
+          - src/Backups/BackupFactory.cpp
+
+      - id: backup.info
+        description: The engine clause of a BACKUP or RESTORE statement.
+        sources:
+          - src/Backups/BackupInfo.cpp
+
+      - id: backup.settings
+        description: BACKUP settings.
+        sources:
+          - src/Backups/BackupSettings.cpp
+
+      - id: backup.restore_settings
+        description: RESTORE settings.
+        sources:
+          - src/Backups/RestoreSettings.cpp
+
+      - id: backup.status
+        description: Backup and restore status.
+        sources:
+          - src/Backups/BackupStatus.cpp
+
+      - id: backup.worker
+        description: Asynchronous BACKUP and RESTORE jobs.
+        sources:
+          - src/Backups/BackupsWorker.cpp
+
+      - id: backup.metadata
+        description: Finding and reading backup metadata.
+        sources:
+          - src/Backups/BackupMetadataFinder.cpp
+          - src/Backups/BackupMetadataHandler.cpp
+
+      - id: backup.filename
+        description: Data file names inside a backup.
+        sources:
+          - src/Backups/getBackupDataFileName.cpp
+          - src/Backups/BackupDataFileNameGeneratorType.cpp
+
+      - id: backup.ddl_adjust
+        description: Rewriting DDL while restoring.
+        sources:
+          - src/Backups/DDLAdjustingForBackupVisitor.cpp
+
+      - id: backup.concurrency
+        description: Limiting concurrent backups.
+        sources:
+          - src/Backups/BackupConcurrencyCheck.cpp
+
+      - id: backup.retries
+        description: Retrying backup IO.
+        sources:
+          - src/Backups/WithRetries.cpp
+
+      - id: backup.keeper_settings
+        description: Keeper settings for cluster backups.
+        sources:
+          - src/Backups/BackupKeeperSettings.cpp
+
+      - id: backup.entries
+        description: Deciding which files belong in a backup.
+        sources:
+          - src/Backups/BackupEntriesCollector.cpp
+
+      - id: backup.entry.immutable
+        description: An immutable file entry.
+        sources:
+          - src/Backups/BackupEntryFromImmutableFile.cpp
+
+      - id: backup.entry.append_only
+        description: An append-only file entry.
+        sources:
+          - src/Backups/BackupEntryFromAppendOnlyFile.cpp
+
+      - id: backup.entry.small_file
+        description: A small file entry.
+        sources:
+          - src/Backups/BackupEntryFromSmallFile.cpp
+
+      - id: backup.entry.memory
+        description: An in-memory entry.
+        sources:
+          - src/Backups/BackupEntryFromMemory.cpp
+
+      - id: backup.entry.reference
+        description: A file stored once and referenced again.
+        sources:
+          - src/Backups/BackupEntryReference.cpp
+
+      - id: backup.entry.checksum
+        description: Checksums on backup entries.
+        sources:
+          - src/Backups/BackupEntryWithChecksumCalculation.cpp
+
+      - id: backup.coordination.local
+        description: Backup coordination on one node.
+        sources:
+          - src/Backups/BackupCoordinationLocal.cpp
+
+      - id: backup.coordination.on_cluster
+        description: Backup coordination for ON CLUSTER.
+        sources:
+          - src/Backups/BackupCoordinationOnCluster.cpp
+
+      - id: backup.coordination.stage
+        description: Stage barriers between replicas.
+        sources:
+          - src/Backups/BackupCoordinationStage.cpp
+          - src/Backups/BackupCoordinationStageSync.cpp
+
+      - id: backup.coordination.replicated_tables
+        description: Coordinating replicated tables in a backup.
+        sources:
+          - src/Backups/BackupCoordinationReplicatedTables.cpp
+
+      - id: backup.coordination.replicated_access
+        description: Coordinating replicated access entities in a backup.
+        sources:
+          - src/Backups/BackupCoordinationReplicatedAccess.cpp
+
+      - id: backup.coordination.replicated_sql_objects
+        description: Coordinating replicated SQL objects in a backup.
+        sources:
+          - src/Backups/BackupCoordinationReplicatedSQLObjects.cpp
+
+      - id: backup.coordination.keeper_map
+        description: Coordinating KeeperMap tables in a backup.
+        sources:
+          - src/Backups/BackupCoordinationKeeperMapTables.cpp
+
+      - id: backup.coordination.file_infos
+        description: Sharing file info across replicas during a backup.
+        sources:
+          - src/Backups/BackupCoordinationFileInfos.cpp
+
+      - id: backup.coordination.cleaner
+        description: Cleaning coordination data after a backup.
+        sources:
+          - src/Backups/BackupCoordinationCleaner.cpp
+
+      - id: backup.restore
+        description: Rebuilding databases and tables from a backup.
+        sources:
+          - src/Backups/RestorerFromBackup.cpp
+
+      - id: backup.restore.coordination.local
+        description: Restore coordination on one node.
+        sources:
+          - src/Backups/RestoreCoordinationLocal.cpp
+
+      - id: backup.restore.coordination.on_cluster
+        description: Restore coordination for ON CLUSTER.
+        sources:
+          - src/Backups/RestoreCoordinationOnCluster.cpp
+
+      - id: backup.freeze
+        description: FREEZE and UNFREEZE.
+        sources:
+          - src/Storages/Freeze.cpp
+
+
+  - id: interfaces
+    description: Client protocols.
+    sources:
+      - src/Server/
+      - src/Client/
+    children:
+      - id: interfaces.native
+        description: The native TCP protocol.
+        sources:
+          - src/Server/TCPHandler.cpp
+          - src/Server/TCPServer.cpp
+
+      - id: interfaces.http
+        description: The HTTP interface.
+        sources:
+          - src/Server/HTTP/
+          - src/Server/HTTPHandler.cpp
+          - src/Server/HTTPHandlerFactory.cpp
+          - src/Server/HTTPHandlerRequestFilter.cpp
+          - src/Server/HTTPRequestHandlerFactoryMain.cpp
+          - src/Server/HTTPResponseHeaderWriter.cpp
+          - src/Server/HTTPPathHints.cpp
+          - src/Server/StaticRequestHandler.cpp
+          - src/Server/IndexRequestHandler.cpp
+          - src/Server/NotFoundHandler.cpp
+          - src/Server/WebUIRequestHandler.cpp
+          - src/Server/WebTerminalRequestHandler.cpp
+
+      - id: interfaces.interserver
+        description: HTTP between servers.
+        sources:
+          - src/Server/InterserverIOHTTPHandler.cpp
+
+      - id: interfaces.mysql
+        description: The MySQL wire protocol.
+        sources:
+          - src/Server/MySQLHandler.cpp
+          - src/Server/MySQLHandlerFactory.cpp
+
+      - id: interfaces.postgresql
+        description: The PostgreSQL wire protocol.
+        sources:
+          - src/Server/PostgreSQLHandler.cpp
+          - src/Server/PostgreSQLHandlerFactory.cpp
+
+      - id: interfaces.grpc
+        description: gRPC.
+        sources:
+          - src/Server/GRPCServer.cpp
+          - src/Server/grpc_protos/
+
+      - id: interfaces.arrowflight
+        description: The Arrow Flight server.
+        sources:
+          - src/Server/ArrowFlight/
+
+      - id: interfaces.ssh
+        description: The SSH server.
+        sources:
+          - src/Server/SSH/
+
+      - id: interfaces.prometheus
+        description: The Prometheus metrics endpoint.
+        sources:
+          - src/Server/PrometheusRequestHandler.cpp
+          - src/Server/PrometheusRequestHandlerFactory.cpp
+          - src/Server/PrometheusMetricsWriter.cpp
+
+      - id: interfaces.proxy
+        description: PROXY protocol v1.
+        sources:
+          - src/Server/ProxyV1Handler.cpp
+
+      - id: interfaces.keeper
+        description: Keeper's TCP and HTTP endpoints.
+        sources:
+          - src/Server/KeeperTCPHandler.cpp
+          - src/Server/KeeperHTTPHandlerFactory.cpp
+          - src/Server/KeeperHTTPStorageHandler.cpp
+          - src/Server/KeeperDashboardRequestHandler.cpp
+          - src/Server/KeeperReadinessHandler.cpp
+          - src/Server/KeeperJemallocHandler.cpp
+          - src/Server/KeeperNotFoundHandler.cpp
+
+      - id: interfaces.distributed
+        description: The server side of distributed query execution.
+        sources:
+          - src/Server/DistributedQuery/
+
+      - id: interfaces.acme
+        description: ACME certificate issuance.
+        sources:
+          - src/Server/ACME/
+
+      - id: interfaces.stateless_worker
+        description: Stateless worker mode.
+        sources:
+          - src/Server/StatelessWorker/
+
+      - id: interfaces.server
+        description: Starting and stopping protocol servers.
+        sources:
+          - src/Server/createServer.cpp
+          - src/Server/stopServers.cpp
+          - src/Server/waitServersToFinish.cpp
+          - src/Server/socketBindListen.cpp
+          - src/Server/ProtocolServerAdapter.cpp
+
+      - id: interfaces.client
+        description: clickhouse-client.
+        sources:
+          - src/Client/ClientBase.cpp
+          - src/Client/ClientBaseHelpers.cpp
+          - src/Client/ClientApplicationBase.cpp
+          - src/Client/ClientApplicationBaseParser.cpp
+          - src/Client/LineReader.cpp
+          - src/Client/ReplxxLineReader.cpp
+          - src/Client/Suggest.cpp
+          - src/Client/ProgressTable.cpp
+          - src/Server/ClientEmbedded/
+
+      - id: interfaces.client.connection
+        description: Native protocol connections from the client.
+        sources:
+          - src/Client/Connection.cpp
+          - src/Client/ConnectionEstablisher.cpp
+          - src/Client/ConnectionParameters.cpp
+          - src/Client/ConnectionString.cpp
+          - src/Client/ConnectionPool.cpp
+          - src/Client/ConnectionPoolWithFailover.cpp
+          - src/Client/HedgedConnections.cpp
+          - src/Client/HedgedConnectionsFactory.cpp
+          - src/Client/MultiplexedConnections.cpp
+          - src/Client/LocalConnection.cpp
+          - src/Client/PacketReceiver.cpp
+
+      - id: interfaces.client.oauth
+        description: OAuth login in the client.
+        sources:
+          - src/Client/OAuthFlowRunner.cpp
+          - src/Client/OAuthJWTProvider.cpp
+          - src/Client/OAuthLogin.cpp
+          - src/Client/OAuthProviderPolicy.cpp
+
+      - id: interfaces.client.jwt
+        description: JWT providers in the client.
+        sources:
+          - src/Client/JWTProvider.cpp
+          - src/Client/CloudJWTProvider.cpp
+          - src/Client/CommandJWTProvider.cpp
+
+      - id: interfaces.client.ai
+        description: AI commands in the client.
+        sources:
+          - src/Client/AI/
+
+      - id: interfaces.clients
+        description: ODBC, JDBC, and the other drivers and tools in the regression suite. No server source tree.
+
+
+  - id: ops
+    description: System tables, caches, and background work.
+    sources:
+      - src/Storages/System/
+      - src/Interpreters/Cache/
+      - src/Interpreters/FileCache/
+    children:
+      - id: ops.system
+        description: System tables. A more specific ops.system feature wins when one matches.
+        sources:
+          - src/Storages/System/
+
+      - id: ops.system.processes
+        description: system.processes and system.user_processes.
+        sources:
+          - src/Storages/System/StorageSystemProcesses.cpp
+          - src/Storages/System/StorageSystemUserProcesses.cpp
+
+      - id: ops.system.metrics
+        description: Metrics, events, and errors.
+        sources:
+          - src/Storages/System/StorageSystemMetrics.cpp
+          - src/Storages/System/StorageSystemEvents.cpp
+          - src/Storages/System/StorageSystemAsynchronousMetrics.cpp
+          - src/Storages/System/StorageSystemHistogramMetrics.cpp
+          - src/Storages/System/StorageSystemDimensionalMetrics.cpp
+          - src/Storages/System/StorageSystemInstrumentation.cpp
+          - src/Storages/System/StorageSystemErrors.cpp
+          - src/Storages/System/StorageSystemWarnings.cpp
+
+      - id: ops.system.parts
+        description: Parts, detached parts, and dropped tables.
+        sources:
+          - src/Storages/System/StorageSystemParts
+          - src/Storages/System/StorageSystemDetached
+          - src/Storages/System/StorageSystemDroppedTables
+          - src/Storages/System/StorageSystemProjectionParts
+
+      - id: ops.system.merges
+        description: Merges, mutations, and moves.
+        sources:
+          - src/Storages/System/StorageSystemMerges.cpp
+          - src/Storages/System/StorageSystemMutations.cpp
+          - src/Storages/System/StorageSystemMoves.cpp
+
+      - id: ops.system.replication
+        description: Replicas, the replication queue, and fetches.
+        sources:
+          - src/Storages/System/StorageSystemReplicas.cpp
+          - src/Storages/System/StorageSystemReplicationQueue.cpp
+          - src/Storages/System/StorageSystemReplicatedFetches.cpp
+          - src/Storages/System/StorageSystemDatabaseReplicas.cpp
+          - src/Storages/System/StorageSystemDistributionQueue.cpp
+          - src/Storages/System/StorageSystemPartMovesBetweenShards.cpp
+
+      - id: ops.system.keeper
+        description: system.zookeeper and system.keeper tables.
+        sources:
+          - src/Storages/System/StorageSystemZooKeeper
+          - src/Storages/System/StorageSystemKeeper
+
+      - id: ops.system.disks
+        description: Disks, storage policies, and filesystem cache tables.
+        sources:
+          - src/Storages/System/StorageSystemDisks.cpp
+          - src/Storages/System/StorageSystemDiskTypes.cpp
+          - src/Storages/System/StorageSystemStoragePolicies.cpp
+          - src/Storages/System/StorageSystemFilesystemCache.cpp
+          - src/Storages/System/StorageSystemContentAddressedMounts.cpp
+
+      - id: ops.system.access
+        description: Users, roles, grants, quotas, and row policies.
+        sources:
+          - src/Storages/System/StorageSystemUsers.cpp
+          - src/Storages/System/StorageSystemRoles.cpp
+          - src/Storages/System/StorageSystemGrants.cpp
+          - src/Storages/System/StorageSystemPrivileges.cpp
+          - src/Storages/System/StorageSystemQuotas
+          - src/Storages/System/StorageSystemRowPolicies.cpp
+          - src/Storages/System/StorageSystemSettingsProfiles
+          - src/Storages/System/StorageSystemCurrentRoles.cpp
+          - src/Storages/System/StorageSystemEnabledRoles.cpp
+
+      - id: ops.system.backups
+        description: Backups and partition exports.
+        sources:
+          - src/Storages/System/StorageSystemBackups.cpp
+          - src/Storages/System/StorageSystemExports.cpp
+          - src/Storages/System/StorageSystemPartitionExports.cpp
+
+      - id: ops.system.iceberg
+        description: Iceberg system tables.
+        sources:
+          - src/Storages/System/StorageSystemIceberg
+
+      - id: ops.system.kafka
+        description: Kafka consumers.
+        sources:
+          - src/Storages/System/StorageSystemKafkaConsumers.cpp
+
+      - id: ops.query_log
+        description: Query log and the other system logs.
+        sources:
+          - src/Interpreters/SystemLog.cpp
+          - src/Interpreters/QueryLog.cpp
+
+      - id: ops.async_insert
+        description: The asynchronous insert queue.
+        sources:
+          - src/Interpreters/AsynchronousInsertQueue.cpp
+          - src/Storages/System/StorageSystemAsynchronousInserts.cpp
+
+      - id: ops.background
+        description: The background schedule pool.
+        sources:
+          - src/Core/BackgroundSchedulePool.cpp
+          - src/Storages/System/StorageSystemBackgroundSchedulePool.cpp
+
+      - id: ops.cache.query_result
+        description: Query result cache.
+        sources:
+          - src/Interpreters/Cache/QueryResultCache.cpp
+          - src/Storages/System/StorageSystemQueryResultCache.cpp
+
+      - id: ops.cache.query_condition
+        description: Query condition cache.
+        sources:
+          - src/Interpreters/Cache/QueryConditionCache.cpp
+          - src/Storages/System/StorageSystemQueryConditionCache.cpp
+
+      - id: ops.cache.schema_inference
+        description: Schema inference cache.
+        sources:
+          - src/Storages/System/StorageSystemSchemaInferenceCache.cpp
+
+      - id: ops.cache.filesystem
+        description: Filesystem cache used in front of remote disks.
+        sources:
+          - src/Interpreters/FileCache/
+
+      - id: ops.cache.filesystem.lru
+        description: LRU eviction for the filesystem cache.
+        sources:
+          - src/Interpreters/FileCache/LRUFileCachePriority.cpp
+
+      - id: ops.cache.filesystem.slru
+        description: SLRU eviction for the filesystem cache.
+        sources:
+          - src/Interpreters/FileCache/SLRUFileCachePriority.cpp
+
+      - id: ops.cache.mark
+        description: Mark cache.
+        sources:
+          - src/Storages/MarkCache.cpp
+
+      - id: ops.cache.uncompressed
+        description: Uncompressed cache.
+        sources:
+          - src/IO/UncompressedCache.cpp
+
+
+  - id: runtime
+    description: Shared infrastructure.
+    sources:
+      - src/Common/
+      - src/Core/
+      - src/Compression/
+      - src/IO/
+      - src/Daemon/
+      - src/Loggers/
+    children:
+      - id: runtime.memory
+        description: Memory tracking and allocation.
+        sources:
+          - src/Common/MemoryTracker.cpp
+          - src/Common/CurrentMemoryTracker.cpp
+          - src/Common/memory.cpp
+          - src/Common/Allocator.cpp
+          - src/Common/AllocatorWithMemoryTracking.cpp
+          - src/Common/MemoryWorker.cpp
+          - src/Common/MemorySpillScheduler.cpp
+          - src/Common/CgroupsMemoryUsageObserver.cpp
+          - src/Common/OOMCanary/
+
+      - id: runtime.jemalloc
+        description: Jemalloc integration.
+        sources:
+          - src/Common/Jemalloc.cpp
+          - src/Common/JemallocCacheAllocator.cpp
+          - src/Common/JemallocCacheArena.cpp
+          - src/Common/JemallocJITArena.cpp
+          - src/Common/JemallocMergeTreeArena.cpp
+
+      - id: runtime.threads
+        description: Thread pools and the current thread.
+        sources:
+          - src/Common/ThreadPool.cpp
+          - src/Common/CurrentThread.cpp
+          - src/Common/ThreadStatus.cpp
+          - src/Common/setThreadName.cpp
+          - src/Common/ThreadFuzzer.cpp
+
+      - id: runtime.metrics
+        description: Profile events and current metrics.
+        sources:
+          - src/Common/ProfileEvents.cpp
+          - src/Common/CurrentMetrics.cpp
+          - src/Common/AsynchronousMetrics.cpp
+          - src/Common/HistogramMetrics.cpp
+          - src/Common/DimensionalMetrics.cpp
+          - src/Common/AggregatedMetrics.cpp
+          - src/Common/ProcfsMetricsProvider.cpp
+
+      - id: runtime.dns
+        description: DNS resolution.
+        sources:
+          - src/Common/DNSResolver.cpp
+          - src/Common/DNSPTRResolverProvider.cpp
+          - src/Common/HostResolvePool.cpp
+
+      - id: runtime.exception
+        description: Exceptions, stack traces, and signal handlers.
+        sources:
+          - src/Common/Exception.cpp
+          - src/Common/ExceptionExt.cpp
+          - src/Common/StackTrace.cpp
+          - src/Common/SignalHandlers.cpp
+
+      - id: runtime.trace
+        description: Query profiler and OpenTelemetry traces.
+        sources:
+          - src/Common/QueryProfiler.cpp
+          - src/Common/OpenTelemetryTraceContext.cpp
+          - src/Common/TraceSender.cpp
+
+      - id: runtime.logging
+        description: Server logs.
+        sources:
+          - src/Loggers/
+          - src/Common/Logger.cpp
+
+      - id: runtime.config
+        description: Configuration loading.
+        sources:
+          - src/Common/Config/
+
+      - id: runtime.crypto
+        description: Shared cryptographic helpers.
+        sources:
+          - src/Common/Crypto/
+
+      - id: runtime.hash_table
+        description: Hash tables.
+        sources:
+          - src/Common/HashTable/
+
+      - id: runtime.columns_hashing
+        description: Column hashing.
+        sources:
+          - src/Common/ColumnsHashing/
+
+      - id: runtime.json_parser
+        description: The low-level JSON parser.
+        sources:
+          - src/Common/JSONParsers/
+
+      - id: runtime.named_collections
+        description: Named collections.
+        sources:
+          - src/Common/NamedCollections/
+
+      - id: runtime.scheduler
+        description: The resource scheduler.
+        sources:
+          - src/Common/Scheduler/
+
+      - id: runtime.settings
+        description: Server and query settings.
+        sources:
+          - src/Core/Settings.cpp
+          - src/Core/SettingsChangesHistory.cpp
+          - src/Core/ServerSettings.cpp
+          - src/Core/BaseSettings.cpp
+          - src/Core/SettingsFields.cpp
+
+      - id: runtime.protocol
+        description: The native protocol revision.
+        sources:
+          - src/Core/Protocol.cpp
+          - src/Core/AntalyaProtocol.cpp
+
+      - id: runtime.block
+        description: Blocks and fields passed between processors.
+        sources:
+          - src/Core/Block.cpp
+          - src/Core/Field.cpp
+
+      - id: runtime.compression.lz4
+        description: LZ4 codec.
+        sources:
+          - src/Compression/CompressionCodecLZ4.cpp
+
+      - id: runtime.compression.zstd
+        description: ZSTD codec.
+        sources:
+          - src/Compression/CompressionCodecZSTD.cpp
+
+      - id: runtime.compression.delta
+        description: Delta codec.
+        sources:
+          - src/Compression/CompressionCodecDelta.cpp
+
+      - id: runtime.compression.double_delta
+        description: Double-delta codec.
+        sources:
+          - src/Compression/CompressionCodecDoubleDelta.cpp
+
+      - id: runtime.compression.gorilla
+        description: Gorilla codec.
+        sources:
+          - src/Compression/CompressionCodecGorilla.cpp
+
+      - id: runtime.compression.t64
+        description: T64 codec.
+        sources:
+          - src/Compression/CompressionCodecT64.cpp
+
+      - id: runtime.compression.encrypted
+        description: Encrypted codec.
+        sources:
+          - src/Compression/CompressionCodecEncrypted.cpp
+
+      - id: runtime.compression.none
+        description: None codec.
+        sources:
+          - src/Compression/CompressionCodecNone.cpp
+
+      - id: runtime.compression.multiple
+        description: Multiple codec.
+        sources:
+          - src/Compression/CompressionCodecMultiple.cpp
+
+      - id: runtime.compression.alp
+        description: ALP codec.
+        sources:
+          - src/Compression/CompressionCodecALP.cpp
+
+      - id: runtime.compression.fpc
+        description: FPC codec.
+        sources:
+          - src/Compression/CompressionCodecFPC.cpp
+
+      - id: runtime.compression.gcd
+        description: GCD codec.
+        sources:
+          - src/Compression/CompressionCodecGCD.cpp
+
+      - id: runtime.compression
+        description: Compressed read and write buffers and the codec factory.
+        sources:
+          - src/Compression/CompressedReadBuffer.cpp
+          - src/Compression/CompressedWriteBuffer.cpp
+          - src/Compression/ParallelCompressedWriteBuffer.cpp
+          - src/Compression/CompressionFactory.cpp
+
+      - id: runtime.io.archives
+        description: Zip, tar, and other archive readers and writers.
+        sources:
+          - src/IO/Archives/
+
+      - id: runtime.io.protobuf
+        description: Protobuf IO helpers.
+        sources:
+          - src/IO/Protobuf/
+
+      - id: runtime.io.http
+        description: HTTP buffers and request throttling.
+        sources:
+          - src/IO/HTTPCommon.cpp
+          - src/IO/HTTPChunkedReadBuffer.cpp
+          - src/IO/HTTPRequestThrottler.cpp
+          - src/IO/GCPOAuth.cpp
+
+      - id: runtime.io.encryption
+        description: File encryption shared by encrypted disks.
+        sources:
+          - src/IO/FileEncryptionCommon.cpp
+
+      - id: runtime.daemon
+        description: The server process.
+        sources:
+          - src/Daemon/BaseDaemon.cpp
+
+      - id: runtime.crash
+        description: Writing a crash report.
+        sources:
+          - src/Daemon/CrashWriter.cpp
+
+      - id: runtime.graphite
+        description: Sending metrics to Graphite.
+        sources:
+          - src/Daemon/GraphiteWriter.cpp
+

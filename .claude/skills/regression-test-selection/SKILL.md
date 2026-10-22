@@ -3,14 +3,14 @@ name: regression-test-selection
 description: >-
   Select Altinity regression tests for a ClickHouse pull request from a fixed
   feature taxonomy. Use when the user gives a PR, diff, or change and asks
-  which regression suites, taxonomy leaves, or TestFlows tests to run.
+  which regression suites, parent or child features, or TestFlows tests to run.
 ---
 
 # Regression test selection
 
-Choose taxonomy leaves for a change, then name the regression tests those leaves map to. Report the selection. Do not start CI.
+Choose parent and child features for a change, then name the regression tests those features map to. Report the selection. Do not start CI.
 
-Read [taxonomy.md](taxonomy.md) and [mapping.md](mapping.md) before choosing. The taxonomy file is the only legal set of leaf ids. The mapping file is the only source of test paths.
+Read [taxonomy.yaml](taxonomy.yaml) before choosing a feature. Read [mapping.md](mapping.md) before naming tests.
 
 ## Get the change
 
@@ -19,47 +19,46 @@ Use whatever the user handed you.
 - A pasted diff or file list is the change. Do not fetch anything else.
 - A pull request number or URL: load the title, body, and changed-file list with `gh`. The server repository is `Altinity/ClickHouse`. This repository is `Altinity/clickhouse-regression`. Read the diff for files whose path does not already name the feature.
 
-## Choose leaves
+## Choose features
 
-Pick the most specific leaf the change actually implements or breaks.
+Name the parent, then the child when one matches. Match each changed file to the longest `sources` prefix in taxonomy.yaml. The longest prefix wins across the whole file, so `src/Processors/Formats/` is `formats`, not `query`.
 
-- Use an id from taxonomy.md. Do not invent one, and do not rename one.
-- A parent id includes every child. Use the parent when the change is the feature as a whole. Use the child when the change is that child.
-- When a child fits, do not also emit its parent.
+If a child wins, report that child and its parent. If only the parent matches, report the parent. There is no level below a child. Do not invent one.
+
+- When several features list the same file, select every one of them. A diff that names a single registered layout or source, such as `sparse_hashed` or `postgresql`, selects that feature only.
 - A docs-only, changelog-only, or comment-only change selects nothing.
-- `runtime.common` means the broad profile. That profile has no suite list yet. Say so. Do not expand it into every suite.
+- A change under a suite directory in this repository selects the feature whose mapping lists that path.
+- A match that stops at the parent has no child. Look up that parent id in mapping.md. If no directory lists it, record the gap. Do not run every suite.
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
-- `--with-analyzer` and `--use-keeper` are run flags. Do not treat either as a leaf.
-- `storage.cas` and `storage.cas.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.md. Copy the flag and any `--only` or `--skip` with the path. Do not add soak, Jepsen, or alter stress.
+- `--with-analyzer` and `--use-keeper` are run flags. Do not treat either as a feature.
+- `storage.cas` and `storage.disk.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.md. Copy the flag and any `--only` or `--skip` with the path. Do not add soak, Jepsen, or alter stress.
 
-## Map leaves to tests
+## Map features to tests
 
-For each chosen leaf, copy the test paths from mapping.md.
-
-- Recommend only paths the mapping marks as run by the suite.
-- If the mapping says a path exists but the suite does not run it, put that path under "Not part of the default run".
-- If the leaf has no regression coverage, say so. Do not borrow a neighboring suite.
-- Union the paths when several leaves are chosen. List each path once, with every leaf that selected it.
+mapping.md is organized by test directory. A directory lists the child features it covers, and every id there is a child from taxonomy.yaml. Find every directory that lists a chosen feature and run that directory. When the feature names a file or a flag under the directory, run that file with that flag. Do not run a neighboring directory that does not list the feature. A path marked "not started" or "not in the default CI split" goes in the report under "Not part of the default run".
 
 ## Report
 
 Use this shape:
 
 ```markdown
-## Leaves
-- `leaf.id` — why, with the files that decided it
+## Parent
+- `name` — the files that put the change here
+
+## Children
+- `child.id` — why, with the files that decided it
 
 ## Tests
-- `path` — leaf ids
+- `path` — feature ids
 
 ## Not part of the default run
 - `path` — the suite does not start it
 
 ## Considered and left out
-- `leaf.id` — why it lost
+- `feature.id` — why it lost
 
 ## Gaps
-- Leaves with no regression coverage, or `runtime.common` with no broad profile
+- Features with no regression coverage
 ```
 
-Omit an empty section. The "Considered and left out" section is required whenever you chose among nearby leaves. Name the leaves you almost picked.
+Omit an empty section. The "Considered and left out" section is required whenever you chose among nearby features. Name the features you almost picked.

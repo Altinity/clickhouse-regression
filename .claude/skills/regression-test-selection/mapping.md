@@ -1,616 +1,353 @@
 # Taxonomy to regression tests
 
-Paths under "Runs" are started by the suite. Paths under "Not started" exist on disk and are not part of the default run. Recommend "Runs" only.
+Each heading is a test directory. The entries under it are features from [taxonomy.yaml](taxonomy.yaml) that the directory exercises. An id is a child. A directory covers many children.
 
-MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same `s3` tests. A `storage.gcs` or `storage.azure` selection still names those shared paths, and names the backend.
+To select tests, find every directory that lists the chosen feature. Run that directory. When a feature names a file or a flag, run that file with that flag.
 
-## query.aggregates
+A feature that appears in no directory has no regression test. Paths marked "not started" exist on disk and the suite does not run them. Paths marked "not in the default CI split" are loaded by `regression.py` and skipped by the workflow `--only`.
 
-Runs:
+`storage.cas` and `storage.disk.cache` are listed on every directory CI runs with `--cas` or `--cas-s3-cache`. Copy the flag and any `--only` or `--skip`. Do not add `cas/soak/`, `cas/jepsen/`, or `alter/stress/`. Those are manual workflows.
 
-- `aggregate_functions/tests/function_list.py`
-- `aggregate_functions/tests/run_with_extra_data`
-- `aggregate_functions/tests/state`
-- `aggregate_functions/tests/merge`
+MinIO, AWS, and Hetzner are run targets of the same S3 tests. `storage.gcs` and `storage.azure` name the jobs that talk to those backends.
 
-## query.window_functions
+## aggregate_functions/
 
-Runs:
+- `functions.aggregate` — part 1 (`tests/function_list.py` and the per-function scenarios) and part 2 (`tests/finalizeAggregation`, `tests/run_with_extra_data`)
+- `functions.aggregate.combinators` — part 3, `tests/state` and `tests/merge` (`-State` and `-Merge`)
+- `types.aggregate_function` — the same part 3 tests
+- `query.planner.windows` — `tests/window_functions`
+- `query.transforms` — `tests/window_functions`
+- `storage.cas` — `--cas`, one job per `--only "/aggregate functions/part 1/*"`, `part 2`, `part 3`
+- `storage.disk.cache` — the same three jobs with `--cas-s3-cache`
 
-- `window_functions/`
-- `aggregate_functions/tests/window_functions`
+## window_functions/
 
-## query.functions
+- `query.planner.windows`
+- `query.transforms`
 
-Runs:
+## functions/
 
-- `functions/tests/plus.py`
-- `functions/tests/insert`
-- `functions/tests/math_functions`
-- `functions/tests/throwIf_function`
-- `base_58/`
-- `key_value/`
-- `session_timezone/tests/date_functions.py`
+- `functions.arithmetic` — `tests/plus.py`
+- `functions.mathematical` — `tests/math_functions.py`
+- `functions.other` — `tests/throwIf_function`. `throwIf.cpp` is in the Other category.
+- `engines.mergetree` — `tests/merge.py` is CollapsingMergeTree
+- `engines.mergetree.replication` — `tests/insert.py` (ReplicatedMergeTree and ReplicatedSummingMergeTree)
+- `engines.mergetree.ttl` — `tests/insert.py`
+- `engines.mergetree.projections` — `tests/projection_optimization`
 
-## query.functions.aggregate
+## base_58/
 
-Runs:
+- `functions.encoding`
 
-- `aggregate_functions/`
+## key_value/
 
-## query.settings
+- `functions.keyvaluepair`
 
-Runs:
+## session_timezone/
 
-- `settings/tests/default_values`
+- `types.datetime` — `tests/sanity`, `tests/basic`, `tests/clickhouse_local`, `tests/tables_with_date_columns.py`
+- `functions.date_time` — `tests/date_functions.py`
+- `functions.type_conversion` — `toDate`, `toDate32`, `toDateTime`, `toDateTime32`, and `toDateTime64` in `tests/date_functions.py`
 
-## query.execution
+## settings/
 
-Runs:
+- `runtime.settings` — `tests/default_values`
 
-- `selects/tests/final` — the FINAL modifier only
+## selects/
 
-## query.distributed
+- `query.plan` — `tests/final`. FINAL is applied in `ReadFromMergeTree`. `tests/final/modifier.py` is an xfail and does not run.
+- `engines.mergetree` — `tests/final/force`
+- `engines.alias` — `tests/final/force/alias`
+- `access.grant` — `tests/final/force/user_rights`
+- `storage.cas` — `--cas`
+- `storage.disk.cache` — `--cas-s3-cache`
 
-Runs:
+## data_types/
 
-- `atomic_insert/tests/distributed_table`
-- `lightweight_delete/tests/distributed_tables`
-- `kafka/tests/distributed`
-- `clickhouse_keeper/tests/alter_column_distributed`
+- `types.map` — `tests/map`
 
-No Distributed-engine suite.
+## json_data_type/
 
-## types.composite
+- `types.json`
 
-Runs:
+## datetime64_extended_range/
 
-- `data_types/tests/map` — Map only
+- `types.datetime`
 
-## types.json
+## extended_precision_data_types/
 
-Runs:
+- `types.decimal`
 
-- `json_data_type/`
+## engines/
 
-## types.datetime64
+- `engines.mergetree` — `tests/replacing_merge_tree/replacing_merge_tree.py`, `tests/summing_merge_tree/`
+- `engines.mergetree.replication` — `tests/replacing_merge_tree/replicated_replacing_merge_tree.py`
+- `storage.cas` — `--cas`
+- `storage.disk.cache` — `--cas-s3-cache`
 
-Runs:
+## lightweight_delete/
 
-- `datetime64_extended_range/`
-- `session_timezone/`
+- `engines.mergetree.lightweight_delete` — `tests/acceptance.py`, `basic_checks.py`, `specific_deletes.py`, `invalid_where_clause.py`, `immediate_removal.py`, `multiple_delete_limitations.py`, `drop_empty_part.py`, `efficient_physical_data_removal.py`, `compatibility.py`, `nondeterministic_functions.py`, `ontime_tests.py`, `performance.py`, `load.py`, `hard_restart.py`, and the replicated files below
+- `engines.mergetree.replication` — `tests/replicated_tables.py`, `replicated_tables_concurrent_deletes.py`, `replicated_table_with_concurrent_alter_and_delete.py`, `replicated_table_with_alter_after_delete_on_single_node.py`, `zookeeper_load.py`
+- `coordination.replication.queue` — `tests/replication_queue.py`
+- `engines.mergetree.mutations` — `tests/alter_after_delete.py`, `concurrent_alter_and_delete.py`, `random_concurrent_alter.py`
+- `engines.mergetree.ttl` — `tests/acceptance_column_ttl.py`, `delete_and_column_ttl.py`, `acceptance_tiered_storage_ttl.py`, `delete_and_tiered_storage_ttl.py`
+- `engines.mergetree.projections` — `tests/projections.py`
+- `engines.view` — normal views in `tests/views.py`
+- `engines.view.materialized` — materialized views in `tests/views.py`
+- `engines.view.live` — window views in `tests/views.py`. The live view scenario has no child.
+- `engines.distributed` — `tests/distributed_tables.py`
+- `storage.policy` — `tests/multi_disk.py`, `disk_space.py`, `lack_of_disk_space.py`
+- `storage.disk.encrypted` — `tests/encrypted_disk.py`
+- `storage.s3` — `tests/s3.py`
+- `backup.statement` — `tests/backup.py`
+- `backup.restore` — `tests/backup.py`
+- `storage.cas` — four jobs: `--cas --only "/lightweight delete/disk space/*"`, `--cas --only "/lightweight delete/hard restart/*"`, `--cas --skip` of disk space, hard restart, alter after delete, concurrent alter and delete, concurrent delete, basic checks, performance, and ontime tests, and `--cas --only` of that same skipped group
+- `storage.disk.cache` — the same four jobs with `--cas-s3-cache`
+
+## alter/
+
+- `ddl.partition` — `table/replace_partition`, `table/attach_partition`, `table/move_partition`
+- `storage.cas` — `--cas` on replace partition, attach partition parts 1–3, and move partition
+- `storage.disk.cache` — the same five jobs with `--cas-s3-cache`
+
+`alter/stress/` covers `engines.mergetree.mutations` and `ops.background`. It is a manual workflow. Do not select it with `--cas`.
+
+## attach/
+
+- `databases.atomic` — `tests/active_path`
+- `ddl.attach` — `tests/active_path`
+- `engines.mergetree.replication` — `tests/replica_path`
+
+## atomic_insert/
+
+- `ddl.insert` — `tests/sanity`, `block_fail`, `insert_settings`, `dependent_tables`, `transaction`, `hard_restart`
+- `engines.view.materialized` — `tests/dependent_tables`
+- `query.transactions` — `tests/transaction`
+- `query.distributed` — `tests/distributed_table`
+- `access.grant` — `tests/user_rights`
+- `storage.cas` — `--cas`
+- `storage.disk.cache` — `--cas-s3-cache`
+
+## tiered_storage/
+
+- `storage.policy` — `tests/keep_free_space`, `round_robin`, `jbod_overflow`, `max_data_part_size`, `alter_table_policy`, `startup_and_queries`, `metadata`, `query_parser`, `no_changes_to_queries`
+- `storage.volume` — `tests/alter_move`, `background_move`, `manual_move_with_downtime`, `merge_parts_different_volumes`, `merge_parts_different_volumes_no_space`, `volume_config_either_max_data_part_size_bytes_or_ratio`
+- `storage.disk.object_storage` — the `--with-minio`, `--with-s3amazon`, and `--with-s3hetzner` jobs
+- `storage.s3` — those same three jobs
+- `storage.gcs` — the `--with-s3gcs` job
+- `engines.mergetree.ttl` — `tests/ttl_moves`
+- `engines.mergetree.replication` — `tests/simple_replication_and_moves`, `download_appropriate_disk`, `download_appropriate_disk_advanced`, `download_appropriate_disk_max_data_part_size`
+- `engines.mergetree.mutations` — `tests/mutate_to_another_disk`
+- `ddl.partition` — `tests/attach_or_replace_partition_different_policies`
+- `ddl.rename` — `tests/rename`
+- `backup.freeze` — `tests/freeze`
+- `ops.system.parts` — `tests/system_tables`, `system_detached_parts`
+- `ops.background` — `tests/background_move`, `start_stop_moves`
+- `storage.cas` — `--with-cas`. There is no `--cas-s3-cache` job.
+
+## disk_level_encryption/
+
+- `storage.disk.encrypted` — the suite
+- `engines.mergetree.ttl` — `tests/column_ttl`
+- `engines.distributed` — `tests/distributed_table`
+- `engines.mergetree.replication` — `tests/replicated_table`
+- `storage.policy` — `tests/multi_volume_policy`
+- `storage.volume` — `tests/multi_disk_volume`
+
+## s3/
+
+- `storage.s3` — `tests/sanity.py`, `combinatoric_table.py`, `settings.py`, `reconnect.py`, `orphans.py`, `cit.py`, `hive_partitioning.py`
+- `storage.disk.object_storage` — `tests/disk.py`, `disk_invalid.py`, `reconnect.py`, `orphans.py`, `cit.py`
+- `engines.object_storage` — `tests/sanity.py`, `combinatoric_table.py`, `hive_partitioning.py`
+- `functions.table.object_storage` — `tests/table_function.py`, `table_function_invalid.py`, `table_function_performance.py`, `remote_s3_function.py`
+- `storage.gcs` — the GCS job of the disk, table-function, backup, and alter tests
+- `storage.azure` — the Azure job of those tests
+- `storage.zero_copy` — `tests/zero_copy_replication.py`
+- `ddl.alter` — `tests/alter.py`
+- `ddl.alter_columns` — `tests/alter.py`
+- `ddl.partition` — detach, drop, move, fetch, attach, replace, and freeze in `tests/alter.py`
+- `ddl.create.index` — index clauses in `tests/alter.py`
+- `engines.mergetree.indexes` — index clauses in `tests/alter.py`
+- `engines.mergetree.projections` — projection clauses in `tests/alter.py`
+- `engines.mergetree.mutations` — `ALTER UPDATE` and `ALTER DELETE` in `tests/alter.py`
+- `backup.freeze` — `FREEZE` in `tests/alter.py`
+- `backup.statement` — `tests/backup.py`
+- `backup.engine.s3` — `tests/backup.py` on MinIO, AWS, and Hetzner
+- `backup.engine.azure` — `tests/backup.py` on Azure
+- `backup.restore` — `tests/backup.py`
+- `ddl.export_part` — `tests/export_part/`
+- `ddl.export_partition` — `tests/export_partition/`
+- `ops.system.parts` — system-table checks inside `tests/export_part` and `tests/export_partition`
+
+Not started: `tests/iam_auth.py`, `tests/ec2.py` (`storage.s3.auth`).
+
+`tests/hive_partitioning.py` and `hive_partitioning/` also exercise Hive-style paths. `src/Storages/HivePartitioningUtils.cpp` is the parent `engines` and has no child, so a change that matches only that parent does not select these tests.
+
+## iceberg/
+
+Default CI runs two jobs:
+
+- `--only "/iceberg/iceberg engine/rest catalog/*" "/iceberg/s3 table function/*" "/iceberg/icebergS3 table function/*" "/iceberg/iceberg cache/*"`
+- `--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*" "/iceberg/export partition/*"`
+
+- `lakes.catalog` — `tests/iceberg_engine/`
+- `lakes.catalog.rest` — the rest catalog half of `tests/iceberg_engine/`
+- `lakes.catalog.glue` — the glue catalog half of `tests/iceberg_engine/`
+- `lakes.iceberg` — `tests/iceberg_engine/`, `tests/iceberg_table_engine/`, `tests/icebergS3_table_function/`
+- `lakes.iceberg.schema` — `schema_evolution`, `partition_evolution`, `nested_datatypes`, `check_datatypes`, `dot_separated_column_names` inside `tests/iceberg_engine/`
+- `lakes.iceberg.writes` — `overwrite` inside `tests/iceberg_engine/`, `tests/export_partition/`, and `tests/iceberg_engine/native_create/`
+- `lakes.iceberg.deletion_vectors` — `equality_deletes` and `position_delete_reads` inside `tests/iceberg_engine/`
+- `lakes.iceberg.cache` — `tests/cache/`
+- `functions.table.object_storage` — `tests/s3_table_function/`, `tests/icebergS3_table_function/`
+- `ddl.export_partition` — `tests/export_partition/`
+- `access.grant` — `rbac` and `column_rbac` inside `tests/iceberg_engine/`
+- `access.row_policy` — `row_policy` inside `tests/iceberg_engine/`
+- `query.distributed` — `swarm_examples` inside `tests/iceberg_engine/`
+- `lakes.iceberg.expire_snapshots` — `tests/export_ttl/`. Not in the default CI split.
+- `lakes.catalog.auth` — `tests/iceberg_engine/token_forwarding/`. Not in the default CI split. It also hits `lakes.catalog.rest` and `lakes.catalog.glue`.
 
-## types.decimal
+`tests/iceberg_engine/native_create/` is not in the default CI split.
 
-Runs:
+Not started: `tests/catalogs/` (`lakes.catalog` beyond the engine tests above, including `lakes.catalog.hive`), `tests/deletion_vectors/` (`lakes.delta` as well as `lakes.iceberg.deletion_vectors`), `tests/hybrid/` (`engines.hybrid`), `row_lineage`, `timestamp_ns_pruning`, `alter_support`, `cluster_join_filter`.
 
-- `extended_precision_data_types/`
+## ice/
 
-## types.aggregate_state
+- `lakes.iceberg` — the Ice CLI
 
-Runs:
+## hive_partitioning/
 
-- `aggregate_functions/tests/state`
-- `aggregate_functions/tests/merge`
+- `storage.s3`
+- `engines.object_storage`
+- `functions.table.object_storage` — writes through the S3 table engine and the `s3` table function
 
-## engines.mergetree
+Hive partitioning itself has no child. See the note under `s3/`.
 
-Runs:
+## parquet/
 
-- `engines/tests/replacing_merge_tree/`
-- `engines/tests/summing_merge_tree/`
-- `functions/tests/merge.py` — a CollapsingMergeTree merge
+- `formats.parquet` — `tests/file`, `query`, `read_and_write`, `columns`, `broken`, `datatypes`, `complex_datatypes`, `int_list_multiple_chunks`, `chunked_array`, `encoding`, `compression`, `rowgroups`, `url`, `remote`, `glob`, `encrypted`, `fastparquet`, `multi_chunk_upload`, and `performance/`
+- `formats.parquet.cache` — `tests/cache`
+- `formats.parquet.v3` — the same started tests with `--native-parquet-reader-v3`. Scheduled runs turn this on. A pull request does not, unless the workflow input `parquet_native_v3` is set.
+- `engines.mysql` — `tests/mysql.py`. This is the MySQL table engine, not the MySQL wire protocol.
+- `engines.postgresql` — `tests/postgresql.py`. This is the PostgreSQL table engine, not the PostgreSQL wire protocol.
+- `storage.s3` — `tests/s3` on the MinIO, AWS, and Hetzner jobs
 
-## engines.mergetree.mutations
+Not started: `tests/indexing`, `native_reader`, `metadata`, `data_conversion`.
 
-Runs:
+## cas/
 
-- `alter/stress/`
-- `lightweight_delete/tests/alter_after_delete`
+- `storage.cas` — `tests/ref_collision.py` and `tests/export.py`. The CI job passes no extra flag.
+- `storage.disk.cache` — `--cas-s3-cache`
+- `ddl.export_partition` — `tests/export.py`
+- `lakes.iceberg.writes` — `tests/export.py`
 
-Not started:
+Not started: `cas/tests/alter/`. Those files cover `engines.mergetree.mutations`, `engines.mergetree.ttl`, `engines.mergetree.projections`, `engines.mergetree.indexes`, `ddl.alter_columns`, `ddl.alter`, and `ddl.create.index`.
 
-- `cas/tests/alter/mutations.py` — `cas/regression.py` does not start `cas/tests/alter/`
+## kafka/
 
-## engines.mergetree.lightweight_delete
+- `engines.kafka` — `tests/non_replicated`, `non_replicated_4_consumers`, `non_replicated_target_table_not_writable`, `replicated_stop_and_restart`, `non_replicated_clickhouse_restart`, `non_replicated_4_consumers_restart`
+- `query.distributed` — `tests/distributed`
 
-Runs:
+## clickhouse_keeper/
 
-- `lightweight_delete/`
+- `coordination.keeper.server` — `tests/sanity`, `synchronization`, `keeper_cluster_tests`, `servers_start_up`
+- `coordination.keeper_cli` — `tests/cli`, `cli_converter`
+- `coordination.keeper.settings` — `tests/coordination_settings`
+- `coordination.keeper.migration` — `tests/migration`
+- `coordination.keeper.four_letter` — `tests/four_letter_word_commands`
+- `coordination.replication` — `tests/non_distributed_ddl_queries`
+- `ddl.rename` — `tests/non_distributed_ddl_queries`
+- `ddl.on_cluster` — `tests/alter_column_distributed`, `alter_partition_distributed`
+- `ddl.alter_columns` — `tests/alter_column_distributed`
+- `ddl.partition` — `tests/alter_partition_distributed`
+- `access.tls` — `tests/ports_ssl_fips`, `fips`, and the `--ssl` jobs
 
-## engines.mergetree.replication
+## clickhouse_keeper_failover/
 
-Runs:
+- `coordination.keeper_failover`
 
-- `engines/tests/replacing_merge_tree/replicated_replacing_merge_tree.py`
-- `lightweight_delete/tests/replicated_tables`
-- `attach/tests/replica_path`
-- `tiered_storage/tests/simple_replication_and_moves`
+## swarms/
 
-## engines.mergetree.partitioning
+- `query.distributed` — swarm dispatch lives in `src/Interpreters/ClusterProxy/`
+- `functions.table.object_storage` — `icebergS3` and `icebergS3Cluster`
+- `lakes.iceberg` — the Iceberg reads in the swarm scenarios
+- `query.joins` — `tests/joins`, `tests/swarm_join_sanity`
 
-Runs:
+Not started: `tests/swarm_iceberg_partition_pruning`, `performance`, `schema_evolution`.
 
-- `alter/table/replace_partition`
-- `alter/table/attach_partition`
-- `alter/table/move_partition`
+The swarm on/off flag in `src/Interpreters/Context.cpp` is the parent `query` and has no child. `src/Storages/IStorageCluster.cpp` is the parent `engines` and has no child. A change that matches only one of those parents does not select this directory.
 
-## engines.mergetree.ttl
+## rbac/
 
-Runs:
+CI splits the suite into part 1 (syntax, privileges, views), part 2 (`sql_security`), and part 3 (`multiple_auth_methods`).
 
-- `lightweight_delete/tests/acceptance_column_ttl`
-- `lightweight_delete/tests/delete_and_column_ttl`
-- `disk_level_encryption/tests/column_ttl`
-- `tiered_storage/tests/ttl_moves`
+- `access.user` — `tests/syntax/create_user`, `alter_user`, `drop_user`, `show_create_user`; `tests/privileges/create/create_user.py`, `alter/alter_user.py`, `drop/drop_user.py`, `show/show_users.py`
+- `access.role` — `tests/syntax/create_role`, `alter_role`, `drop_role`, `show_create_role`, `grant_role`, `revoke_role`, `set_role`, `set_default_role`; `tests/privileges/create/create_role.py`, `alter/alter_role.py`, `drop/drop_role.py`, `show/show_roles.py`, `role_admin.py`, `orphaned_role.py`, `all_role.py`
+- `access.grant` — `tests/syntax/grant_privilege`, `revoke_privilege`, `show_grants`; `tests/privileges/`
+- `access.row_policy` — `tests/syntax/create_row_policy`, `alter_row_policy`, `drop_row_policy`, `show_create_row_policy`, `show_row_policies`; `tests/privileges/row_policy.py`, `create/create_row_policy.py`, `alter/alter_row_policy.py`, `drop/drop_row_policy.py`, `show/show_row_policies.py`
+- `access.quota` — `tests/syntax/create_quota`, `alter_quota`, `drop_quota`, `show_create_quota`, `show_quotas`; `tests/privileges/create/create_quota.py`, `alter/alter_quota.py`, `drop/drop_quota.py`, `show/show_quotas.py`
+- `access.settings_profile` — `tests/syntax/create_settings_profile`, `alter_settings_profile`, `drop_settings_profile`, `show_create_settings_profile`; `tests/privileges/create/create_settings_profile.py`, `alter/alter_settings_profile.py`, `drop/drop_settings_profile.py`, `show/show_settings_profiles.py`
+- `access.sql_security` — `tests/sql_security`, `tests/views`
+- `engines.view.materialized` — `tests/views/materialized_view.py`
+- `access.auth` — `tests/multiple_auth_methods`
 
-Not started:
+## ldap/
 
-- `cas/tests/alter/ttl.py`
+- `access.auth.ldap` — `authentication/`, `external_user_directory/`, `role_mapping/`
+- `access.role` — `role_mapping/`
 
-## engines.mergetree.projections
+## kerberos/
 
-Runs:
+- `access.auth.kerberos`
 
-- `functions/tests/projection_optimization`
-- `lightweight_delete/tests/projections`
+## jwt_authentication/
 
-Not started:
+- `access.auth.jwt`
 
-- `cas/tests/alter/projection.py`
+## oauth/
 
-## engines.mergetree.indexes
+- `access.auth.oauth`
 
-Not started:
+## ssl_server/
 
-- `cas/tests/alter/index.py`
-- `cas/tests/alter/statistics.py`
+CI splits the suite into parts 1, 2, and 3.
 
-## engines.kafka
+- `access.tls` — the suite
+- `functions.table.url` — `tests/url_table_function` (part 1)
+- `dictionaries.source.http` — `tests/dictionary` (part 2)
+- `coordination.zookeeper` — `tests/zookeeper` (part 3)
 
-Runs:
+## ssl_keeper/
 
-- `kafka/`
+- `access.tls` — `tests/sanity`, `tests/fips_ssl_140_3`
 
-## engines.external
+No workflow job starts this directory.
 
-Runs:
+## aes_encryption/
 
-- `parquet/tests/mysql.py` — Parquet round-trip through the MySQL engine
-- `parquet/tests/postgresql.py` — Parquet round-trip through the PostgreSQL engine
+- `functions.encryption`
 
-These do not test the MySQL or PostgreSQL wire protocols.
+## part_moves_between_shards/
 
-## engines.hybrid
+- `ddl.partition` — `tests/part_moves`, `tests/sanity`, `tests/deduplication`
+- `ops.system.parts` — `tests/system_table`
 
-Not started:
+## lts/
 
-- `iceberg/tests/hybrid/` — `iceberg/regression.py` does not run it
+- `interfaces.clients` — `clickhouse_odbc`, `clickhouse_jdbc`, `clickhouse_driver`, `clickhouse_sqlalchemy`, `superset`, `grafana`, `dbeaver`, `dbeaver_ui`
 
-## databases.atomic
+## memory/
 
-Runs:
+- `runtime.memory` — `tests/test_memory_leak`
 
-- `attach/`
-- `atomic_insert/`
+## dns/
 
-## databases.catalog
+- `runtime.dns`
 
-Not started:
+## Not a feature selection
 
-- `iceberg/tests/catalogs/`
+`ontime_benchmark/` is a query benchmark against object storage. Do not select it for a feature.
 
-## storage.s3
+`version/` checks the build version string. `example/` is a template. Neither covers a feature.
 
-Runs:
-
-- `s3/tests/sanity.py`
-- `s3/tests/table_function.py`
-- `s3/tests/disk.py`
-- `s3/tests/settings.py`
-- `s3/tests/reconnect.py`
-- `s3/tests/orphans.py`
-- `s3/tests/cit.py`
-- `s3/tests/combinatoric_table.py`
-- `s3/tests/remote_s3_function.py`
-
-## storage.s3.iam
-
-Not started:
-
-- `s3/tests/iam_auth.py`
-- `s3/tests/ec2.py`
-
-## storage.gcs
-
-Runs: the GCS target of the `storage.s3` paths.
-
-## storage.azure
-
-Runs: the Azure target of the `storage.s3` paths.
-
-## storage.policies
-
-Runs:
-
-- `tiered_storage/tests/keep_free_space`
-- `tiered_storage/tests/round_robin`
-- `tiered_storage/tests/jbod_overflow`
-- `tiered_storage/tests/max_data_part_size`
-- `tiered_storage/tests/alter_table_policy`
-
-## storage.tiered
-
-Runs:
-
-- `tiered_storage/tests/alter_move`
-- `tiered_storage/tests/background_move`
-- `tiered_storage/tests/ttl_moves`
-- `tiered_storage/tests/manual_move_with_downtime`
-- `tiered_storage/tests/merge_parts_different_volumes`
-
-## storage.zero_copy
-
-Runs:
-
-- `s3/tests/zero_copy_replication.py`
-
-## storage.disk_encryption
-
-Runs:
-
-- `disk_level_encryption/`
-- `lightweight_delete/tests/encrypted_disk`
-
-## storage.cas
-
-These are the `--cas` jobs in `run-regression.yml`. Scheduled Antalya runs start them with `run_cas_suites`. `tiered_storage` uses `--with-cas` and starts on every full regression. Do not recommend `cas/soak/`, `cas/jepsen/`, or `alter/stress/`. Those workflows are manual.
-
-Runs:
-
-- `cas/` — the CAS suite. The CI job passes no extra flag.
-- `aggregate_functions/` with `--cas --only "/aggregate functions/part 1/*"`
-- `aggregate_functions/` with `--cas --only "/aggregate functions/part 2/*"`
-- `aggregate_functions/` with `--cas --only "/aggregate functions/part 3/*"`
-- `atomic_insert/` with `--cas`
-- `alter/` with `--cas --only "/alter/replace partition/*"`
-- `alter/` with `--cas --only "/alter/attach partition/part 1/*"`
-- `alter/` with `--cas --only "/alter/attach partition/part 2/*"`
-- `alter/` with `--cas --only "/alter/attach partition/part 3/*"`
-- `alter/` with `--cas --only "/alter/move partition/*"`
-- `engines/` with `--cas`
-- `lightweight_delete/` with `--cas --only "/lightweight delete/disk space/*"`
-- `lightweight_delete/` with `--cas --only "/lightweight delete/hard restart/*"`
-- `lightweight_delete/` with `--cas --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"`
-- `lightweight_delete/` with `--cas --only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"`
-- `selects/` with `--cas`
-- `tiered_storage/` with `--with-cas`
-
-## storage.cas.cache
-
-The same CI jobs as `storage.cas`, with `--cas-s3-cache` instead of `--cas`. `tiered_storage` has no cache job.
-
-Runs:
-
-- `cas/` with `--cas-s3-cache`
-- `aggregate_functions/` with `--cas-s3-cache --only "/aggregate functions/part 1/*"`
-- `aggregate_functions/` with `--cas-s3-cache --only "/aggregate functions/part 2/*"`
-- `aggregate_functions/` with `--cas-s3-cache --only "/aggregate functions/part 3/*"`
-- `atomic_insert/` with `--cas-s3-cache`
-- `alter/` with `--cas-s3-cache --only "/alter/replace partition/*"`
-- `alter/` with `--cas-s3-cache --only "/alter/attach partition/part 1/*"`
-- `alter/` with `--cas-s3-cache --only "/alter/attach partition/part 2/*"`
-- `alter/` with `--cas-s3-cache --only "/alter/attach partition/part 3/*"`
-- `alter/` with `--cas-s3-cache --only "/alter/move partition/*"`
-- `engines/` with `--cas-s3-cache`
-- `lightweight_delete/` with `--cas-s3-cache --only "/lightweight delete/disk space/*"`
-- `lightweight_delete/` with `--cas-s3-cache --only "/lightweight delete/hard restart/*"`
-- `lightweight_delete/` with `--cas-s3-cache --skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"`
-- `lightweight_delete/` with `--cas-s3-cache --only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"`
-- `selects/` with `--cas-s3-cache`
-
-## storage.iceberg
-
-Runs:
-
-- `iceberg/tests/iceberg_engine/`
-- `iceberg/tests/icebergS3_table_function/`
-- `ice/` — the Ice CLI
-
-## storage.iceberg.engine
-
-Runs:
-
-- `iceberg/tests/iceberg_table_engine/`
-
-## storage.iceberg.writes
-
-Runs:
-
-- `iceberg/tests/iceberg_engine/native_create/`
-
-## storage.iceberg.cache
-
-Runs:
-
-- `iceberg/tests/cache/`
-
-## storage.iceberg.catalog
-
-Not started:
-
-- `iceberg/tests/catalogs/`
-
-## storage.iceberg.deletion_vectors
-
-Not started:
-
-- `iceberg/tests/deletion_vectors/`
-
-## storage.iceberg.export
-
-Runs:
-
-- `iceberg/tests/export_partition/`
-
-## storage.iceberg.export_ttl
-
-Runs:
-
-- `iceberg/tests/export_ttl/`
-
-## storage.delta
-
-Not started:
-
-- `iceberg/tests/deletion_vectors/` — the Delta feature there is commented out
-
-## storage.hive_partitioning
-
-Runs:
-
-- `hive_partitioning/`
-- `s3/tests/hive_partitioning.py`
-
-## storage.parquet
-
-Runs:
-
-- `parquet/tests/`
-- `parquet/performance/`
-
-## formats.columnar
-
-Runs:
-
-- `parquet/` — Parquet only. ORC, Arrow, and Native have no suite.
-
-## ddl.alter_columns
-
-Runs:
-
-- `alter/stress/`
-
-Not started:
-
-- `cas/tests/alter/column.py`
-- `cas/tests/alter/constraint.py`
-- `cas/tests/alter/keys.py`
-
-## ddl.attach
-
-Runs:
-
-- `attach/`
-- `alter/table/attach_partition`
-
-## ddl.partition
-
-Runs:
-
-- `alter/table/replace_partition`
-- `alter/table/attach_partition`
-- `alter/table/move_partition`
-
-## ddl.partition.move_between_shards
-
-Runs:
-
-- `part_moves_between_shards/`
-
-## ddl.export_part
-
-Runs:
-
-- `s3/tests/export_part/`
-
-## ddl.export_partition
-
-Runs:
-
-- `s3/tests/export_partition/`
-
-## ddl.on_cluster
-
-Runs:
-
-- `clickhouse_keeper/tests/alter_column_distributed`
-
-## ddl.atomic_insert
-
-Runs:
-
-- `atomic_insert/`
-
-## coordination.keeper
-
-Runs:
-
-- `clickhouse_keeper/`
-
-## coordination.keeper_failover
-
-Runs:
-
-- `clickhouse_keeper_failover/`
-
-## coordination.replication_queue
-
-Runs:
-
-- `lightweight_delete/tests/replication_queue`
-
-## cluster.swarm
-
-Runs:
-
-- `swarms/`
-
-## access.rbac
-
-Runs:
-
-- `rbac/tests/syntax`
-
-## access.rbac.privileges
-
-Runs:
-
-- `rbac/tests/privileges`
-
-## access.rbac.row_policies
-
-Runs:
-
-- `rbac/tests/privileges/show/show_row_policies.py`
-
-Other row-policy privilege checks live in `rbac/tests/privileges`.
-
-## access.sql_security
-
-Runs:
-
-- `rbac/tests/sql_security`
-- `rbac/tests/views`
-
-## access.auth.ldap
-
-Runs:
-
-- `ldap/authentication`
-- `ldap/external_user_directory`
-- `ldap/role_mapping`
-
-## access.auth.kerberos
-
-Runs:
-
-- `kerberos/`
-
-## access.auth.jwt
-
-Runs:
-
-- `jwt_authentication/`
-
-## access.auth.oauth
-
-Runs:
-
-- `oauth/`
-
-## access.auth.multiple
-
-Runs:
-
-- `rbac/tests/multiple_auth_methods`
-
-## access.tls
-
-Runs:
-
-- `ssl_server/`
-- `ssl_keeper/`
-- `clickhouse_keeper/tests/ports_ssl_fips`
-
-## access.encryption
-
-Runs:
-
-- `aes_encryption/`
-
-## backup.backup_restore
-
-Runs:
-
-- `s3/tests/backup.py`
-- `lightweight_delete/tests/backup`
-
-## backup.freeze
-
-Runs:
-
-- `tiered_storage/tests/freeze`
-
-## interfaces.clients
-
-Runs:
-
-- `lts/clickhouse_odbc`
-- `lts/clickhouse_jdbc`
-- `lts/clickhouse_driver`
-- `lts/clickhouse_sqlalchemy`
-- `lts/superset`
-- `lts/grafana`
-- `lts/dbeaver`
-- `lts/dbeaver_ui`
-
-## ops.system_tables
-
-Runs:
-
-- `part_moves_between_shards/tests/system_table`
-- `tiered_storage/tests/system_tables`
-- system-table checks inside `s3/tests/export_part` and `s3/tests/export_partition`
-
-## ops.deduplication
-
-Runs:
-
-- `part_moves_between_shards/tests/deduplication`
-
-## ops.background
-
-Runs:
-
-- `tiered_storage/tests/background_move`
-- `alter/stress/`
-
-## ops.crash_recovery
-
-Runs:
-
-- `atomic_insert/tests/hard_restart`
-- `lightweight_delete/tests/hard_restart`
-
-Restart cases inside `kafka/` and `clickhouse_keeper/tests/servers_start_up` cover those features, not general crash recovery.
-
-## runtime.common
-
-Runs:
-
-- `memory/tests/test_memory_leak`
-
-This is not the broad profile. A change whose only leaf is `runtime.common` still has no suite list.
-
-## runtime.dns
-
-Runs:
-
-- `dns/`
-
-## No regression coverage
-
-`query.parser`, `query.analyzer`, `query.planner`, `query.joins`, `query.subqueries`, `query.views`, `query.views.materialized`, `query.views.live`, `query.views.refreshable`, `query.parallel_replicas`, `types.core`, `types.geo`, `types.domain`, `engines.log`, `engines.special`, `engines.dictionary`, `engines.queues`, `engines.keepermap`, `engines.rocksdb`, `engines.timeseries`, `engines.arrowflight`, `engines.ytsaurus`, `engines.mergetree.unique_key`, `engines.mergetree.parts`, `databases.replicated`, `databases.external`, `databases.lazy`, `storage.hdfs`, `storage.hudi`, `storage.paimon`, `storage.cas.gc`, `formats.row`, `formats.inference`, `formats.output`, `ddl.create`, `coordination.zookeeper`, `access.auth.password`, `dictionaries.sources`, `dictionaries.layouts`, `interfaces.native`, `interfaces.http`, `interfaces.mysql`, `interfaces.postgresql`, `interfaces.grpc`, `ops.caches`, `ops.async_insert`, `ops.metrics`, `runtime.compression`, `runtime.io`.
-
-`version/` checks the build version string. `example/` is a template. Neither is a leaf.
+`integration/` is not a suite job in the regression workflow.
