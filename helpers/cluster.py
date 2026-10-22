@@ -1,25 +1,22 @@
-import os
-import uuid
-import time
-import inspect
 import hashlib
-import threading
-import tempfile
-import re
+import inspect
 import json
+import os
+import re
 import shutil
+import tempfile
+import threading
+import time
+import uuid
 from contextlib import contextmanager
 from urllib.parse import unquote
 
-from testflows._core.cli.arg.common import description
-
 import testflows.settings as settings
-
-from testflows.core import *
 from testflows.asserts import error
 from testflows.connect import Shell as ShellBase
+from testflows.core import *
 from testflows.uexpect import ExpectTimeoutError
-from testflows._core.testtype import TestSubType
+
 from helpers.common import check_clickhouse_version, current_cpu
 
 MINIMUM_COMPOSE_VERSION = "2.23.1"
@@ -2221,6 +2218,123 @@ class Cluster(object):
         """Return absolute temporary file path."""
         return f"{os.path.join(self.temp_path(), name)}"
 
+    def image_exists(self, tag, timeout=60):
+        """Whether the daemon already holds this image."""
+        cmd = self.command(
+            None,
+            f"docker image inspect {tag} > /dev/null 2>&1",
+            no_checks=True,
+            steps=False,
+            timeout=timeout,
+        )
+        return cmd.exitcode == 0
+
+    def build_image(self, tag, base_os_name, timeout=30 * 60):
+        """Build `clickhouse-regression/{tag}`, unless the daemon has it.
+
+        Skipped when it is already there, so a prepared machine neither
+        rebuilds nor needs a registry. A configuration that must be rebuilt
+        removes the image first, which is what the local-binary path does.
+        """
+        if self.image_exists(f"clickhouse-regression/{tag}"):
+            with By(f"reusing clickhouse-regression/{tag}"):
+                return True
+        with By(f"building clickhouse-regression/{tag}"):
+            for build_attempt in retries(count=3, delay=10):
+                with build_attempt:
+                    cmd = self.command(
+                        None,
+                        f"docker build "
+                        f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
+                        f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
+                        f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
+                        f"-t clickhouse-regression/{tag} "
+                        f"-f {current_dir()}/../docker-compose/base_os/{base_os_name}.Dockerfile "
+                        f"{current_dir()}/../",
+                        no_checks=True,
+                        timeout=timeout,
+                    )
+                    assert cmd.exitcode == 0, error(cmd.output)
+                    return True
+        return False
+
+    def build_images(self, timeout=30 * 60):
+        """Every image this configuration builds. True when they are all there."""
+        if not self.image_exists(
+            f"clickhouse-regression/{self.environ['CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME']}"
+        ) or (
+            self.clickhouse_docker_image_name != self.keeper_docker_image_name
+            and not self.image_exists(
+                f"clickhouse-regression/{self.environ['CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE']}"
+            )
+        ):
+            # Only when something will actually be built: bootstrapping a
+            # builder pulls an image of its own, which a prepared machine has
+            # no reason to fetch.
+            with By("creating a unique builder for the images being built"):
+                self.command(
+                    None,
+                    "docker buildx create --use --bootstrap --node clickhouse-regression-builder",
+                    exitcode=0,
+                )
+
+        if not self.build_image(
+            self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"],
+            self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] or "clickhouse",
+            timeout=timeout,
+        ):
+            return False
+
+        if self.clickhouse_docker_image_name != self.keeper_docker_image_name:
+            if not self.build_image(
+                self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"],
+                self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] or "clickhouse",
+                timeout=timeout,
+            ):
+                return False
+        return True
+
+    def pull_images(self, timeout=30 * 60):
+        """Fetch what the project names, and tolerate what cannot be fetched.
+
+        `--policy missing` skips an image the daemon already holds, and
+        `--ignore-pull-failures` is what makes a prepared machine work with no
+        registry at all: a service whose image is already loaded but carries no
+        `pull_policy` is still attempted, and the attempt fails with
+        `dial tcp: lookup registry-1.docker.io: no such host`.
+
+        Judged by the exit code alone. The old check also refused any output
+        containing "Error", which is how an offline run died on an image it
+        already had -- and `up` refuses on its own, by name, if one is really
+        missing.
+        """
+        with By("pulling images for all the services"):
+            for pull_attempt in retries(count=5, delay=10):
+                with pull_attempt:
+                    cmd = self.command(
+                        None,
+                        f"set -o pipefail && {self.docker_compose} pull"
+                        f" --policy missing --ignore-pull-failures 2>&1 | tee",
+                        no_checks=True,
+                        timeout=timeout,
+                    )
+                    assert cmd.exitcode == 0, error(cmd.output)
+                    return True
+        return False
+
+    def prepare(self, timeout=30 * 60):
+        """Everything this configuration needs in the daemon, and nothing more.
+
+        Idempotent, so `up()` calls it on every start and a machine that was
+        prepared earlier neither builds nor pulls. `regression.py
+        --prepare-env` is this and then nothing: prepare once per
+        configuration, run the suites against it, and a run needs no registry.
+        """
+        with Given("preparing the images this configuration needs"):
+            if not self.build_images(timeout=timeout):
+                return False
+            return self.pull_images(timeout=timeout)
+
     def up(self, timeout=30 * 60):
         """Bring cluster up."""
         if self.local:
@@ -2288,22 +2402,7 @@ class Cluster(object):
 
         def start_cluster(max_up_attempts=3):
             if not self.reuse_env:
-                with By("pulling images for all the services"):
-                    for pull_attempt in retries(count=5, delay=10):
-                        with pull_attempt:
-                            cmd = self.command(
-                                None,
-                                f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
-                                no_checks=True,
-                                timeout=timeout,
-                            )
-                            assert cmd.exitcode == 0, error(cmd.output)
-                            assert "Error" not in cmd.output, error(cmd.output)
-                            break
-                    else:
-                        return False
-
-                with And("checking if any containers are already running"):
+                with By("checking if any containers are already running"):
                     self.command(
                         None, f"set -o pipefail && {self.docker_compose} ps | tee"
                     )
@@ -2323,55 +2422,8 @@ class Cluster(object):
                         None, f"set -o pipefail && {self.docker_compose} ps | tee"
                     )
 
-                with And(
-                    "creating a unique builder just in case docker-compose needs to build images"
-                ):
-                    self.command(
-                        None,
-                        f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
-                        exitcode=0,
-                    )
-
-            with By("building the clickhouse image"):
-                for build_attempt in retries(count=3, delay=10):
-                    with build_attempt:
-                        cmd = self.command(
-                            None,
-                            f"docker build "
-                            f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
-                            f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
-                            f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
-                            f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]} '
-                            f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] else "clickhouse"}.Dockerfile '
-                            f"{current_dir()}/../",
-                            no_checks=True,
-                            timeout=timeout,
-                        )
-                        assert cmd.exitcode == 0, error(cmd.output)
-                        break
-                else:
-                    return False
-
-            if self.clickhouse_docker_image_name != self.keeper_docker_image_name:
-                with By("building the keeper image"):
-                    for build_attempt in retries(count=3, delay=10):
-                        with build_attempt:
-                            cmd = self.command(
-                                None,
-                                f"docker build "
-                                f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
-                                f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
-                                f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
-                                f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"]} '
-                                f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] else "clickhouse"}.Dockerfile '
-                                f"{current_dir()}/../",
-                                no_checks=True,
-                                timeout=timeout,
-                            )
-                            assert cmd.exitcode == 0, error(cmd.output)
-                            break
-                    else:
-                        return False
+            if not self.prepare(timeout=timeout):
+                return False
 
             with By("executing docker-compose up"):
                 up_args = (
