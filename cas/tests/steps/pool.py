@@ -275,13 +275,42 @@ def cleanup_cas_storage(self, cluster=None):
     )
 
 
-def backup_manifest_keys(snapshot, backup_name):
+def _shadow_marker(backup_name):
+    return f"/shadow/{backup_name}/"
+
+
+def backup_manifest_keys(snapshot, backup_name, server_root_id=None):
     """Return the part manifests a FREEZE published for ``backup_name``.
 
     A manifest key spells out the namespace that owns it. Live parts land under
-    ``cas/manifests/<server_root_id>/...``; frozen parts land under
-    ``cas/manifests/shadow/<backup name>/...``, with no server in the path.
+    ``cas/manifests/<server_root_id>/store/...``; frozen parts land under
+    ``cas/manifests/<server_root_id>/shadow/<backup name>/store/...``, so the
+    server that froze them is part of the path. ``server_root_id`` restricts
+    the result to one server's snapshots.
     """
-    backup_path = f"{MANIFEST_PREFIX}shadow/{backup_name}/"
+    marker = _shadow_marker(backup_name)
+    wanted = (
+        f"{MANIFEST_PREFIX}{server_root_id}{marker}"
+        if server_root_id is not None
+        else None
+    )
 
-    return sorted(key for key in snapshot if key.startswith(backup_path))
+    return sorted(
+        key
+        for key in snapshot
+        if key.startswith(MANIFEST_PREFIX)
+        and marker in key
+        and (wanted is None or key.startswith(wanted))
+    )
+
+
+def backup_server_roots(snapshot, backup_name):
+    """Return the server roots holding shadow manifests for ``backup_name``."""
+    marker = _shadow_marker(backup_name)
+
+    return sorted(
+        {
+            key[len(MANIFEST_PREFIX) : key.index(marker)]
+            for key in backup_manifest_keys(snapshot, backup_name)
+        }
+    )

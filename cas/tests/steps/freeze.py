@@ -14,6 +14,19 @@ def freeze_table(self, table_name, backup_name, node=None):
 
 
 @TestStep(When)
+@Name("freeze one partition under a backup name")
+def freeze_partition(self, table_name, partition, backup_name, node=None):
+    """Freeze a single partition of ``table_name`` as backup ``backup_name``."""
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"ALTER TABLE {table_name} FREEZE PARTITION {partition} "
+        f"WITH NAME '{backup_name}'"
+    )
+
+
+@TestStep(When)
 @Name("release a table backup name")
 def unfreeze_table(self, table_name, backup_name, node=None, no_checks=False):
     """Release backup ``backup_name`` of ``table_name``.
@@ -27,6 +40,22 @@ def unfreeze_table(self, table_name, backup_name, node=None, no_checks=False):
 
     return node.query(
         f"ALTER TABLE {table_name} UNFREEZE WITH NAME '{backup_name}'",
+        no_checks=no_checks,
+    )
+
+
+@TestStep(When)
+@Name("release one partition of a table backup name")
+def unfreeze_partition(
+    self, table_name, partition, backup_name, node=None, no_checks=False
+):
+    """Release partition ``partition`` of backup ``backup_name``."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition} "
+        f"WITH NAME '{backup_name}'",
         no_checks=no_checks,
     )
 

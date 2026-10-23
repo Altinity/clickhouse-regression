@@ -187,6 +187,11 @@ def assert_active_part_count(self, table_name, count, node=None):
     )
 
 
+def cas_server_root_id(table_name, node):
+    """Return the ``cas_server_root_id`` a per-pool table uses on ``node``."""
+    return f"cas-{table_name}-{node.name}"
+
+
 @TestStep(Given)
 def create_replicated_cas_table(
     self,
@@ -226,7 +231,7 @@ def create_replicated_cas_table(
             settings = storage_settings(
                 self,
                 pool_prefix=pool_prefix,
-                server_root_id=f"cas-{table_name}-{node.name}",
+                server_root_id=cas_server_root_id(table_name, node),
                 node=node,
                 disk_name=disk_name,
             )
@@ -333,6 +338,7 @@ def create_replicated_cas_table_on_cluster(
     policy="cas_policy",
     replication_path=None,
     drop_sync=True,
+    extra_settings=None,
 ):
     """Create one ReplicatedMergeTree across ``cluster`` in a single DDL.
 
@@ -351,6 +357,8 @@ def create_replicated_cas_table_on_cluster(
         replication_path = f"/clickhouse/tables/{table_name}"
 
     settings = storage_settings(self, policy=policy)
+    if extra_settings:
+        settings = f"{settings}, {', '.join(extra_settings)}"
 
     node.query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster} SYNC")
     node.query(

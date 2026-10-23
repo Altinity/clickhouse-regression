@@ -6,10 +6,13 @@ from testflows.core import *
 def feature(self):
     """Content-addressed storage test suite."""
     # Feature(run=load("cas.tests.sanity", "feature"))
+    # Feature(run=load("cas.tests.alter.feature", "feature"))
+    # Feature(run=load("cas.tests.export", "feature"))
+    Feature(run=load("cas.tests.materialized_view", "feature"))
+    Feature(run=load("cas.tests.freeze_isolation", "feature"))
     # Feature(run=load("cas.tests.partition", "feature"))
     # Feature(run=load("cas.tests.concurrent_attach", "feature"))
     # Feature(run=load("cas.tests.pool_corruption", "feature"))
-    Feature(run=load("cas.tests.ref_collision", "feature"))
-    Feature(run=load("cas.tests.export", "feature"))
     # Feature(run=load("cas.tests.server_root_id_unique", "feature"))
     # Feature(run=load("cas.tests.stress_create_drop", "feature"))
+    # Feature(run=load("cas.tests.ref_collision", "feature"))

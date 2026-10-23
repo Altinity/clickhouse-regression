@@ -35,11 +35,29 @@ def inner_id_engine(self):
     )
 
 
-def assert_rows(table_name, expected, node=None):
+def assert_rows(table_name, expected, node=None, settings=None):
     """``SELECT * FROM table ORDER BY id`` returns ``expected``."""
     assert_query_result(
-        query=f"SELECT * FROM {table_name} ORDER BY id", expected=expected, node=node
+        query=f"SELECT * FROM {table_name} ORDER BY id",
+        expected=expected,
+        node=node,
+        settings=settings,
     )
+
+
+# A lightweight update stores a patch part. ``apply_patch_parts = 0`` reads the
+# part that was inserted, without that patch.
+BASE_PART = [("apply_patch_parts", 0)]
+BLOCK_NUMBER = [
+    "enable_block_number_column = 1",
+    "enable_block_offset_column = 1",
+]
+
+
+def assert_patch(table_name, patched, base, node=None):
+    """``table_name`` reads ``patched``, and without its patch parts reads ``base``."""
+    assert_rows(table_name, patched, node=node)
+    assert_rows(table_name, base, node=node, settings=BASE_PART)
 
 
 def skip_without_table_exchange():
@@ -89,7 +107,7 @@ def cross_disk(self, source_where, destination_where):
         )
 
 
-def open_payload_view(self, suffix, select, shared_pool):
+def open_payload_view(self, suffix, select, shared_pool, extra_settings=None):
     """Create a payload source, destination, and ``TO`` view.
 
     ``select`` is a format string with ``{source}``. ``shared_pool`` puts both
@@ -103,8 +121,12 @@ def open_payload_view(self, suffix, select, shared_pool):
     if shared_pool:
         pool = f"data/mv_{suffix}_{uid}"
         disk = f"mv_{suffix}_{uid}"
-        create_payload_table(table_name=src, pool_prefix=pool, disk_name=disk)
-        create_payload_table(table_name=dst, pool_prefix=pool, disk_name=disk)
+        create_payload_table(
+            table_name=src, pool_prefix=pool, disk_name=disk, extra_settings=extra_settings
+        )
+        create_payload_table(
+            table_name=dst, pool_prefix=pool, disk_name=disk, extra_settings=extra_settings
+        )
         src_pool = dst_pool = pool
         src_disk = dst_disk = disk
     else:
@@ -112,8 +134,18 @@ def open_payload_view(self, suffix, select, shared_pool):
         dst_pool = f"data/mv_dst_{suffix}_{uid}"
         src_disk = f"mv_src_{suffix}_{uid}"
         dst_disk = f"mv_dst_{suffix}_{uid}"
-        create_payload_table(table_name=src, pool_prefix=src_pool, disk_name=src_disk)
-        create_payload_table(table_name=dst, pool_prefix=dst_pool, disk_name=dst_disk)
+        create_payload_table(
+            table_name=src,
+            pool_prefix=src_pool,
+            disk_name=src_disk,
+            extra_settings=extra_settings,
+        )
+        create_payload_table(
+            table_name=dst,
+            pool_prefix=dst_pool,
+            disk_name=dst_disk,
+            extra_settings=extra_settings,
+        )
 
     create_materialized_view(
         view_name=view,
@@ -1711,6 +1743,303 @@ def replicated_inner_table(self):
 
 
 @TestScenario
+@Name("lightweight update on the source")
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
+    RQ_SRS_048_CAS_MergeTree_PatchParts("1.0"),
+)
+def lightweight_update_on_the_source(self):
+    """A lightweight UPDATE patches the CAS source and leaves the destination."""
+    uid = getuid()
+    src, dst = f"mv_src_{uid}", f"mv_dst_{uid}"
+
+    with Given("a view from a CAS source to a CAS destination, already filled"):
+        create_id_table(table_name=src, where="cas", extra_settings=BLOCK_NUMBER)
+        create_id_table(table_name=dst, where="cas", extra_settings=BLOCK_NUMBER)
+        create_materialized_view(
+            view_name=f"mv_{uid}",
+            to_table=dst,
+            select=f"SELECT id, v * 2 AS v FROM {src}",
+        )
+        insert_values(table_name=src, values="(1, 10), (2, 20)")
+
+    with When("I lightweight-update one source row"):
+        lightweight_update(table_name=src, assignments="v = v + 1", condition="id = 1")
+
+    with Then("the source is patched and the destination still has the inserted values"):
+        assert_patch(src, "1\t11\n2\t20", "1\t10\n2\t20")
+        assert_rows(dst, DOUBLED)
+        assert_patch_part_count(table_name=src, count=1)
+        assert_patch_part_count(table_name=dst, count=0)
+        assert_active_parts_on_disk(
+            table_name=src, disk_name=self.context.cas_disk_name
+        )
+
+    with When("I insert another source row"):
+        insert_values(table_name=src, values="(3, 30)")
+
+    with Then("the view writes that row and the patch stays on the source"):
+        assert_patch(src, "1\t11\n2\t20\n3\t30", "1\t10\n2\t20\n3\t30")
+        assert_rows(dst, "1\t20\n2\t40\n3\t60")
+
+
+@TestScenario
+@Name("lightweight update on the destination")
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
+    RQ_SRS_048_CAS_MergeTree_PatchParts("1.0"),
+    RQ_SRS_048_CAS_MergeTree_Alter_ApplyPatches("1.0"),
+)
+def lightweight_update_on_the_destination(self):
+    """A lightweight UPDATE patches the CAS destination. APPLY PATCHES folds it in."""
+    uid = getuid()
+    src, dst = f"mv_src_{uid}", f"mv_dst_{uid}"
+    patched = "1\t21\n2\t40\n3\t60"
+
+    with Given("a filled view between two CAS tables"):
+        create_id_table(table_name=src, where="cas", extra_settings=BLOCK_NUMBER)
+        create_id_table(table_name=dst, where="cas", extra_settings=BLOCK_NUMBER)
+        create_materialized_view(
+            view_name=f"mv_{uid}",
+            to_table=dst,
+            select=f"SELECT id, v * 2 AS v FROM {src}",
+        )
+        insert_values(table_name=src, values="(1, 10), (2, 20)")
+
+    with When("I lightweight-update one destination row"):
+        lightweight_update(table_name=dst, assignments="v = v + 1", condition="id = 1")
+
+    with Then("the destination is patched and the source is unchanged"):
+        assert_rows(src, "1\t10\n2\t20")
+        assert_patch(dst, "1\t21\n2\t40", DOUBLED)
+        assert_patch_part_count(table_name=dst, count=1)
+        assert_active_parts_on_disk(
+            table_name=dst, disk_name=self.context.cas_disk_name
+        )
+
+    with When("I insert another source row"):
+        insert_values(table_name=src, values="(3, 30)")
+
+    with Then("the new row arrives unpatched"):
+        assert_patch(dst, patched, "1\t20\n2\t40\n3\t60")
+
+    with When("I apply the patches"):
+        apply_patches(table_name=dst)
+
+    with Then("the patched values are in the data part"):
+        assert_patch_part_count(table_name=dst, count=0)
+        assert_rows(dst, patched, settings=BASE_PART)
+        assert_active_parts_on_disk(
+            table_name=dst, disk_name=self.context.cas_disk_name
+        )
+        assert_check_table(table_name=dst)
+
+
+@TestScenario
+@Name("lightweight update on the inner table")
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
+    RQ_SRS_048_CAS_MergeTree_PatchParts("1.0"),
+    RQ_SRS_048_CAS_MergeTree_Alter_ApplyPatches("1.0"),
+)
+def lightweight_update_on_the_inner_table(self):
+    """A lightweight UPDATE patches the CAS inner table of a view."""
+    uid = getuid()
+    src, view = f"mv_src_{uid}", f"mv_{uid}"
+    patched = "1\t21\n2\t40"
+
+    with Given("an inner-engine view on CAS with two rows"):
+        create_id_table(table_name=src, where="cas")
+        create_materialized_view(
+            view_name=view,
+            engine=(
+                inner_id_engine(self)
+                + ", enable_block_number_column = 1, enable_block_offset_column = 1"
+            ),
+            select=f"SELECT id, v * 2 AS v FROM {src}",
+        )
+        insert_values(table_name=src, values="(1, 10), (2, 20)")
+        inner = inner_table_name(view_name=view)
+
+    with When("I lightweight-update one row of the inner table"):
+        lightweight_update(
+            table_name=quote_identifier(inner),
+            assignments="v = v + 1",
+            condition="id = 1",
+        )
+
+    with Then("the view reads the patch and the inserted part is unchanged"):
+        assert_patch(view, patched, DOUBLED)
+        assert_patch_part_count(table_name=inner, count=1)
+        assert_active_parts_on_disk(
+            table_name=inner, disk_name=self.context.cas_disk_name
+        )
+
+    with When("I apply the patches"):
+        apply_patches(table_name=quote_identifier(inner))
+
+    with Then("the view reads the patched values from the data part"):
+        assert_patch_part_count(table_name=inner, count=0)
+        assert_rows(view, patched, settings=BASE_PART)
+        assert_check_table(table_name=inner)
+
+
+@TestScenario
+@Name("patch leaves the shared blob")
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
+    RQ_SRS_048_CAS_MergeTree_PatchParts("1.0"),
+    RQ_SRS_048_CAS_MergeTree_Alter_ApplyPatches("1.0"),
+    RQ_SRS_048_CAS_ObjectModel_Blobs("1.0"),
+    RQ_SRS_048_CAS_GC_NoLoss("1.0"),
+)
+def patch_leaves_the_shared_blob(self):
+    """Patching the destination does not rewrite the payload blob it shares.
+
+    The inserted part still holds the original bytes. APPLY PATCHES writes
+    the patched column as its own blob and leaves the source reading the
+    original one.
+    """
+    node = self.context.node
+
+    with Given("an identity view on one pool, with background GC stopped"):
+        opened = open_payload_view(
+            self,
+            "patch",
+            "SELECT p, i, payload FROM {source}",
+            shared_pool=True,
+            extra_settings=BLOCK_NUMBER,
+        )
+        stop_garbage_collection(disk=opened.src_disk, nodes=[node])
+
+    with When("I insert one wide part"):
+        insert_cas_payload_rows(table_name=opened.src, seed=1)
+
+    with Then("both tables share one payload blob"):
+        checksum = assert_payload_checksums_match(left=opened.src, right=opened.dst)
+        assert_payload_blob_count(pool_prefix=opened.src_pool, count=1)
+
+    with When("I lightweight-update one destination payload"):
+        lightweight_update(
+            table_name=opened.dst,
+            assignments="payload = 'patched'",
+            condition="i = 0",
+        )
+
+    with Then("the inserted part is untouched and the source still reads it"):
+        base = payload_table_checksum(node, opened.dst, settings=BASE_PART)
+        assert base == checksum, error(f"base part {base}, inserted {checksum}")
+        source = payload_table_checksum(node, opened.src)
+        assert source == checksum, error(f"source {source}, inserted {checksum}")
+        patched = payload_table_checksum(node, opened.dst)
+        assert patched != checksum, error("patch did not change the destination")
+        assert_patch_part_count(table_name=opened.dst, count=1)
+        assert_payload_blob_count(pool_prefix=opened.src_pool, count=1)
+
+    with When("I collect garbage and apply the patches"):
+        collect_garbage(disk=opened.src_disk, nodes=[node], rounds=GC_ROUNDS)
+        apply_patches(table_name=opened.dst)
+        collect_garbage(disk=opened.src_disk, nodes=[node], rounds=GC_ROUNDS)
+
+    with Then("the source keeps the original blob and the destination has its own"):
+        source = payload_table_checksum(node, opened.src)
+        assert source == checksum, error(f"source after apply {source}, was {checksum}")
+        materialized = payload_table_checksum(node, opened.dst, settings=BASE_PART)
+        assert materialized == patched, error(
+            f"materialized {materialized}, patched {patched}"
+        )
+        assert_patch_part_count(table_name=opened.dst, count=0)
+        assert_payload_blob_count(pool_prefix=opened.src_pool, count=2)
+        assert_check_table(table_name=opened.src)
+        assert_check_table(table_name=opened.dst)
+
+
+@TestScenario
+@Name("patch survives restart")
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
+    RQ_SRS_048_CAS_MergeTree_PatchParts("1.0"),
+    RQ_SRS_048_CAS_MergeTree_RestartDurability("1.0"),
+)
+def patch_survives_restart(self):
+    """A patch part written to a CAS destination is still applied after restart."""
+    uid = getuid()
+    src, dst = f"mv_src_{uid}", f"mv_dst_{uid}"
+
+    with Given("a filled view and a lightweight update of the destination"):
+        create_id_table(table_name=src, where="cas", extra_settings=BLOCK_NUMBER)
+        create_id_table(table_name=dst, where="cas", extra_settings=BLOCK_NUMBER)
+        create_materialized_view(
+            view_name=f"mv_{uid}",
+            to_table=dst,
+            select=f"SELECT id, v * 2 AS v FROM {src}",
+        )
+        insert_values(table_name=src, values="(1, 10), (2, 20)")
+        lightweight_update(table_name=dst, assignments="v = v + 1", condition="id = 1")
+
+    with When("I restart the server"):
+        restart_server()
+
+    with Then("the patch is still there and the inserted part is unchanged"):
+        assert_patch(dst, "1\t21\n2\t40", DOUBLED)
+        assert_patch_part_count(table_name=dst, count=1)
+        assert_active_parts_on_disk(
+            table_name=dst, disk_name=self.context.cas_disk_name
+        )
+        assert_check_table(table_name=dst)
+
+    with When("I apply the patches"):
+        apply_patches(table_name=dst)
+
+    with Then("the data part has the patched values"):
+        assert_patch_part_count(table_name=dst, count=0)
+        assert_rows(dst, "1\t21\n2\t40", settings=BASE_PART)
+
+
+@TestScenario
+@Name("replicated lightweight update")
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
+    RQ_SRS_048_CAS_MergeTree_PatchParts("1.0"),
+    RQ_SRS_048_CAS_MergeTree_Replicated("1.0"),
+)
+def replicated_lightweight_update(self):
+    """A lightweight UPDATE on one replica is visible on every replica."""
+    uid = getuid()
+    src, dst = f"mv_src_{uid}", f"mv_dst_{uid}"
+
+    with Given("replicated CAS tables, a view on every replica, and one insert"):
+        for table_name in (src, dst):
+            create_replicated_cas_table_on_cluster(
+                table_name=table_name,
+                columns=ID_COLUMNS,
+                partition_by="tuple()",
+                order_by="id",
+                extra_settings=BLOCK_NUMBER,
+            )
+        create_materialized_view(
+            view_name=f"mv_{uid}",
+            to_table=dst,
+            on_cluster=REPLICATED_CLUSTER,
+            select=f"SELECT id, v * 2 AS v FROM {src}",
+        )
+        insert_values(table_name=src, values="(1, 10), (2, 20)")
+        sync_replicas(table_name=dst)
+
+    with When("I lightweight-update the destination on the first replica"):
+        lightweight_update(table_name=dst, assignments="v = v + 1", condition="id = 1")
+        sync_replicas(table_name=dst)
+
+    with Then("every replica reads the patch and still has the inserted part"):
+        for replica in self.context.nodes:
+            assert_patch(dst, "1\t21\n2\t40", DOUBLED, node=replica)
+            assert_patch_part_count(table_name=dst, count=1, node=replica)
+            assert_active_parts_on_disk(
+                table_name=dst, disk_name=self.context.cas_disk_name, node=replica
+            )
+
+
+@TestScenario
 @Name("distributed insert feeds every shard's view")
 @Requirements(
     RQ_SRS_048_CAS_MergeTree_MaterializedView("1.0"),
@@ -1814,4 +2143,10 @@ def feature(self):
     Scenario(run=garbage_collection_during_view_inserts)
     Scenario(run=replicated_insert_retry_is_deduplicated)
     Scenario(run=replicated_inner_table)
+    Scenario(run=lightweight_update_on_the_source)
+    Scenario(run=lightweight_update_on_the_destination)
+    Scenario(run=lightweight_update_on_the_inner_table)
+    Scenario(run=patch_leaves_the_shared_blob)
+    Scenario(run=patch_survives_restart)
+    Scenario(run=replicated_lightweight_update)
     Scenario(run=distributed_insert_feeds_every_shard)

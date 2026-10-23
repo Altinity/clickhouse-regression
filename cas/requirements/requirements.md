@@ -1200,6 +1200,18 @@ Logical results SHALL match non-CAS [MergeTree].
   Refreshing identical bytes SHALL keep sharing one blob through [GC].
 * `ALTER TABLE ... UPDATE`, `ALTER TABLE ... DELETE`, and lightweight
   `DELETE` on the source SHALL leave rows the view already wrote unchanged.
+* Lightweight `UPDATE` SHALL write a patch part on the [CAS] table it
+  targets, whether that is the source, the `TO` destination, or the inner
+  table, and SHALL NOT change the other side. The table needs
+  `enable_block_number_column` and `enable_block_offset_column`, matching
+  non-CAS [MergeTree]. A read SHALL return the
+  patched values. The same read with `apply_patch_parts = 0` SHALL return
+  the part as it was inserted. `ALTER TABLE ... APPLY PATCHES` SHALL fold
+  the patch into a data part on [CAS]. The patch part SHALL survive a
+  server restart. Patching a column SHALL NOT rewrite a blob the other
+  table still shares
+  ([RQ.SRS-048.CAS.MergeTree.PatchParts](#rqsrs-048casmergetreepatchparts),
+  [RQ.SRS-048.CAS.MergeTree.Alter.ApplyPatches](#rqsrs-048casmergetreealterapplypatches)).
 * With `check_referential_table_dependencies` enabled, `DROP` of the
   source or the destination SHALL be rejected while the view still
   references that table. With the setting left at its default, that `DROP`

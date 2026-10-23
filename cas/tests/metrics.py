@@ -32,7 +32,7 @@ from cas.tests.steps import (
 @TestScenario
 @Requirements(
     RQ_SRS_048_CAS_Observability("1.0"),
-    RQ_SRS_048_CAS_Observability_ProfileEvents("1.0"),
+    RQ_SRS_048_CAS_Observability_ProfileEvents("2.0"),
 )
 def cas_metric_registry_matches_binary(self):
     """Fail if this binary added or removed a CAS* event or gauge.
@@ -64,7 +64,7 @@ def cas_metric_registry_matches_binary(self):
 @TestScenario
 @Requirements(
     RQ_SRS_048_CAS_Observability("1.0"),
-    RQ_SRS_048_CAS_Observability_ProfileEvents("1.0"),
+    RQ_SRS_048_CAS_Observability_ProfileEvents("2.0"),
 )
 def check_cas_metrics(self):
     """Check that CAS write-path counters move after insert and update, and that GC counters move after drop."""
@@ -163,7 +163,7 @@ def check_cas_metrics(self):
 @TestScenario
 @Requirements(
     RQ_SRS_048_CAS_Observability("1.0"),
-    RQ_SRS_048_CAS_Observability_ProfileEvents("1.0"),
+    RQ_SRS_048_CAS_Observability_ProfileEvents("2.0"),
     RQ_SRS_048_CAS_MergeTree_Replicated("1.0"),
     RQ_SRS_048_CAS_Relink("1.0"),
     RQ_SRS_048_CAS_Relink_HappyPath("1.0"),
