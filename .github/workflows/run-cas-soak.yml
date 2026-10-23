@@ -121,6 +121,8 @@ env:
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log
     --suite ${{ inputs.suite }}
+    --scenario all
+    --scenario-scale ci
     ${{ inputs.extra_args }}
   artifact_paths: |
     ./report.html
@@ -131,18 +133,15 @@ env:
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
-    ./cas/soak/runs/**
-    ./cas/soak/scenarios/runs/**
-    ./cas/soak/failure.json
-    ./cas/soak/soak.db
+    ./cas/soak_tests/_instances/**/*.log
 
 jobs:
   cas_soak_x86:
-    name: 💧 cas/soak x86
+    name: 💧 cas/soak_tests x86
     runs-on: [self-hosted, x86, type-cx53, image-x86-app-docker-ce]
     timeout-minutes: 10000
     env:
-      SUITE: cas/soak
+      SUITE: cas/soak_tests
       STORAGE: /cas_soak_x86
     if: ${{ contains('all x86', inputs.architecture) }}
     steps:
@@ -156,9 +155,6 @@ jobs:
 
       - name: 🛠️ Setup
         run: .github/setup.sh
-
-      - name: 📦 Install soak Python deps
-        run: pip install -r cas/soak/requirements.txt
 
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
@@ -179,11 +175,11 @@ jobs:
           path: ${{ env.artifact_paths }}
 
   cas_soak_arm:
-    name: 💧 cas/soak arm
+    name: 💧 cas/soak_tests arm
     runs-on: [self-hosted, arm64, type-cax31-cax41, image-arm64-app-docker-ce]
     timeout-minutes: 10000
     env:
-      SUITE: cas/soak
+      SUITE: cas/soak_tests
       STORAGE: /cas_soak_arm
     if: ${{ contains('all ARM', inputs.architecture) }}
     steps:
@@ -197,9 +193,6 @@ jobs:
 
       - name: 🛠️ Setup
         run: .github/setup.sh
-
-      - name: 📦 Install soak Python deps
-        run: pip install -r cas/soak/requirements.txt
 
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3

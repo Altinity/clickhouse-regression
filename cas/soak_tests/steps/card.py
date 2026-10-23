@@ -7,6 +7,7 @@ import os
 import subprocess
 import threading
 import time
+from pathlib import Path
 
 from testflows.core import *
 from testflows.asserts import error
@@ -535,3 +536,23 @@ def apply_card_result(result):
     if result.status == FAIL:
         fail(f"{result.scenario} status=FAIL")
     return result
+
+
+def attach_server_err_tails(result, cluster, lines=200):
+    """Keep the tail of each node's server error log on a failed card.
+
+    The bind-mounted log rotates during a long run. The tail is copied into the
+    scenario observations before that happens.
+    """
+    root = Path(__file__).resolve().parents[1] / "_instances"
+    tails = {}
+    for node in cluster.nodes():
+        path = root / node.container / "logs" / "clickhouse-server.err.log"
+        try:
+            text = path.read_text(errors="replace")
+        except OSError as e:
+            tails[node.container] = f"unavailable: {e}"
+            continue
+        kept = text.splitlines()[-lines:]
+        tails[node.container] = "\n".join(kept)
+    result.observations["server_err_log_tail"] = tails

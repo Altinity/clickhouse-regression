@@ -7,9 +7,10 @@ from testflows.core import *
 from testflows.asserts import error
 
 from cas.soak_tests.cards import select
-from cas.soak_tests.oracle.verdict import ScenarioResult, Verdict
+from cas.soak_tests.oracle.verdict import FAIL, ScenarioResult, Verdict
 from cas.soak_tests.steps.card import (
     apply_card_result,
+    attach_server_err_tails,
     cluster_from_context,
     drop_table_both,
     drop_tables_like,
@@ -156,6 +157,12 @@ def run_card(self, card_cls):
             drop_table_both(cluster, name)
         for like in _CLEANUP_LIKE:
             drop_tables_like(cluster, like)
+    result.finalize()
+    if result.status == FAIL:
+        try:
+            attach_server_err_tails(result, cluster)
+        except Exception as e:
+            result.note_anomaly(f"server err log tail: {e}")
     apply_card_result(result)
 
 

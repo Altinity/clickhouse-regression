@@ -13,6 +13,21 @@ AGGREGATE_SQL = (
 )
 
 PIPELINE_CLASSES = ("unreachable", "pending-gc", "awaiting-gc")
+# Summary counters for those classes. cas-gc-dryrun over-reports until they are
+# all zero: it does not fold new owner events, so the subset check holds only
+# at quiescence.
+PIPELINE_SUMMARY_KEYS = ("unreachable", "pending_gc", "awaiting_gc")
+
+
+def deletion_pipeline_idle(fsck_result: dict) -> bool:
+    """True when fsck shows no blobs left in the deletion pipeline."""
+    for key in PIPELINE_SUMMARY_KEYS:
+        try:
+            if int(fsck_result.get(key) or 0) != 0:
+                return False
+        except (TypeError, ValueError):
+            return False
+    return True
 
 
 def parse_aggregates(tsv: str) -> dict:

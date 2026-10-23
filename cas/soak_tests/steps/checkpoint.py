@@ -7,6 +7,7 @@ from cas.soak_tests.oracle.checker import (
     AGGREGATE_SQL,
     CheckpointFailure,
     compare_aggregates,
+    deletion_pipeline_idle,
     dryrun_subset_check,
     gc_fixpoint_reached,
     is_genuine_hang,
@@ -165,6 +166,30 @@ def _drain(self, table, stage_label, timeout_s, no_progress_grace_s, absolute_ca
         time.sleep(1)
 
 
+def _query_until_writable(self, node, sql, timeout_s):
+    """Retry while a restarted replica is still read-only.
+
+    ``SELECT`` succeeds in that state, so ``wait_for_healthy`` returns, and the
+    next ``SYSTEM SYNC REPLICA`` would otherwise fail the checkpoint at once.
+    A replica that stays read-only for the whole timeout is a real failure.
+    """
+    deadline = time.time() + timeout_s
+    last = ""
+    while True:
+        result = node.query(sql, timeout=timeout_s, no_checks=True)
+        output = result.output or ""
+        if result.exitcode == 0 and "Exception:" not in output:
+            return
+        last = output
+        readonly = "TABLE_IS_READ_ONLY" in output or "Table is in readonly mode" in output
+        if not readonly or time.time() >= deadline:
+            raise CheckpointFailure(
+                f"{getattr(node, 'name', node)}: {sql} failed: {output[:400]}"
+            )
+        note(f"{getattr(node, 'name', node)} is read-only; retrying {sql}")
+        time.sleep(2)
+
+
 @TestStep(When)
 def quiesce(
     self,
@@ -179,12 +204,14 @@ def quiesce(
     Returns server ``toUnixTimestamp(now())`` after convergence.
     """
     for node in _nodes(self):
-        node.query(f"SYSTEM SYNC REPLICA {table}", timeout=timeout_s)
+        _query_until_writable(self, node, f"SYSTEM SYNC REPLICA {table}", timeout_s)
     _drain(self, table, "initial drain", timeout_s, no_progress_grace_s, absolute_cap_s)
     for node in _nodes(self):
-        node.query(f"OPTIMIZE TABLE {table} FINAL", timeout=timeout_s)
+        _query_until_writable(self, node, f"OPTIMIZE TABLE {table} FINAL", timeout_s)
         if materialize_ttl:
-            node.query(f"ALTER TABLE {table} MATERIALIZE TTL", timeout=timeout_s)
+            _query_until_writable(
+                self, node, f"ALTER TABLE {table} MATERIALIZE TTL", timeout_s
+            )
     _drain(
         self,
         table,
@@ -236,6 +263,17 @@ def cas_fsck(*, node=None, disk=FSCK_DISK, detail=True, timeout=600):
     output = dumped.output or ""
     result = parse_fsck_stdout(output, exit_code=exit_code, detail=detail)
     result["stderr"] = output
+    if detail:
+        stale = _node_command_retry(
+            self,
+            node,
+            f"grep -a -F 'stale-edge' {remote} | head -n 80",
+            timeout,
+        )
+        sample = (stale.output or "").strip()
+        if sample:
+            result["stale_edge_sample"] = sample
+            note("stale-edge detail sample:\n" + sample[:4000])
     return result
 
 
@@ -401,11 +439,18 @@ def assert_pool_is_clean(fsck_result, dryrun_result, *, detail=True):
     assert dangling == 0, error(f"fsck dangling={dangling} (INV-NO-LOSS)")
     try:
         require_clean_stale_edge(fsck_result, detail=detail)
-        if detail:
+        if detail and deletion_pipeline_idle(fsck_result):
             dryrun_subset_check(
                 fsck_result.get("detail") or [],
                 dryrun_result.get("entries") or [],
                 log_fn=note,
+            )
+        elif detail:
+            note(
+                "dryrun subset skipped: cas-gc-dryrun over-reports away from quiescence "
+                f"(unreachable={fsck_result.get('unreachable')} "
+                f"pending_gc={fsck_result.get('pending_gc')} "
+                f"awaiting_gc={fsck_result.get('awaiting_gc')})"
             )
     except CheckpointFailure as e:
         assert False, error(str(e))
