@@ -27,6 +27,10 @@ LIGHTWEIGHT_DELETE_SETTINGS = [
     ("mutations_sync", 2),
     ("allow_experimental_lightweight_delete", 1),
 ]
+LIGHTWEIGHT_UPDATE_SETTINGS = [
+    ("mutations_sync", 2),
+    ("allow_experimental_lightweight_update", 1),
+]
 
 
 def payload_blob_count(snapshot):
@@ -94,7 +98,9 @@ def create_id_table(
 
 @TestStep(Given)
 @Name("create a wide payload table on its own CAS pool")
-def create_payload_table(self, table_name, pool_prefix, disk_name, node=None):
+def create_payload_table(
+    self, table_name, pool_prefix, disk_name, node=None, extra_settings=None
+):
     """Create ``p, i, payload`` MergeTree on an inline CAS disk.
 
     Wide parts are forced so the payload column is one file whose bytes can
@@ -106,7 +112,7 @@ def create_payload_table(self, table_name, pool_prefix, disk_name, node=None):
         order_by="(p, i)",
         pool_prefix=pool_prefix,
         disk_name=disk_name,
-        extra_settings=WIDE_PART_SETTINGS,
+        extra_settings=WIDE_PART_SETTINGS + list(extra_settings or ()),
         node=node,
     )
     return table_name
@@ -292,6 +298,56 @@ def lightweight_delete(self, table_name, condition, node=None):
     _node(self, node).query(
         f"DELETE FROM {table_name} WHERE {condition}",
         settings=LIGHTWEIGHT_DELETE_SETTINGS,
+    )
+
+
+@TestStep(When)
+@Name("lightweight update")
+def lightweight_update(self, table_name, assignments, condition, node=None):
+    """``UPDATE table SET assignments WHERE condition`` and wait for it.
+
+    This writes a patch part. It does not rewrite the part the row was
+    inserted in. ``table_name`` may already be quoted.
+    """
+    _node(self, node).query(
+        f"UPDATE {table_name} SET {assignments} WHERE {condition}",
+        settings=LIGHTWEIGHT_UPDATE_SETTINGS,
+    )
+
+
+@TestStep(When)
+@Name("apply patches")
+def apply_patches(self, table_name, node=None):
+    """``ALTER TABLE ... APPLY PATCHES`` and wait for the mutation.
+
+    The patch part stays active afterwards, on CAS and on a local disk.
+    ``table_name`` may already be quoted.
+    """
+    _node(self, node).query(
+        f"ALTER TABLE {table_name} APPLY PATCHES",
+        settings=[("mutations_sync", 2)],
+    )
+
+
+@TestStep(Then)
+@Name("patch part count")
+def assert_patch_part_count(self, table_name, count, node=None):
+    """``table_name`` has exactly ``count`` active patch parts.
+
+    A patch part is named ``patch-...``. Its ``part_type`` stays Compact or
+    Wide, the same as any other part.
+    """
+    actual = (
+        _node(self, node)
+        .query(
+            "SELECT count() FROM system.parts "
+            "WHERE database = currentDatabase() "
+            f"AND table = '{table_name}' AND active AND startsWith(name, 'patch-')"
+        )
+        .output.strip()
+    )
+    assert actual == str(count), error(
+        f"{table_name} has {actual} patch parts, expected {count}"
     )
 
 

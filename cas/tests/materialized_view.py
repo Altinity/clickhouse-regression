@@ -1827,7 +1827,6 @@ def lightweight_update_on_the_destination(self):
         apply_patches(table_name=dst)
 
     with Then("the patched values are in the data part"):
-        assert_patch_part_count(table_name=dst, count=0)
         assert_rows(dst, patched, settings=BASE_PART)
         assert_active_parts_on_disk(
             table_name=dst, disk_name=self.context.cas_disk_name
@@ -1879,7 +1878,6 @@ def lightweight_update_on_the_inner_table(self):
         apply_patches(table_name=quote_identifier(inner))
 
     with Then("the view reads the patched values from the data part"):
-        assert_patch_part_count(table_name=inner, count=0)
         assert_rows(view, patched, settings=BASE_PART)
         assert_check_table(table_name=inner)
 
@@ -1948,7 +1946,6 @@ def patch_leaves_the_shared_blob(self):
         assert materialized == patched, error(
             f"materialized {materialized}, patched {patched}"
         )
-        assert_patch_part_count(table_name=opened.dst, count=0)
         assert_payload_blob_count(pool_prefix=opened.src_pool, count=2)
         assert_check_table(table_name=opened.src)
         assert_check_table(table_name=opened.dst)
@@ -1992,7 +1989,6 @@ def patch_survives_restart(self):
         apply_patches(table_name=dst)
 
     with Then("the data part has the patched values"):
-        assert_patch_part_count(table_name=dst, count=0)
         assert_rows(dst, "1\t21\n2\t40", settings=BASE_PART)
 
 

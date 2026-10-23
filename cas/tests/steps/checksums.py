@@ -17,11 +17,12 @@ def table_checksum(node, table_name):
     ).output.strip()
 
 
-def payload_table_checksum(node, table_name):
+def payload_table_checksum(node, table_name, settings=None):
     """Checksum that also covers the ``payload`` column contents."""
     return node.query(
         f"SELECT count(), sum(i), groupBitXor(i), "
-        f"groupBitXor(cityHash64(payload)) FROM {table_name}"
+        f"groupBitXor(cityHash64(payload)) FROM {table_name}",
+        settings=settings,
     ).output.strip()
 
 

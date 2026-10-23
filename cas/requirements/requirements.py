@@ -1724,7 +1724,8 @@ RQ_SRS_048_CAS_MergeTree_MaterializedView = Requirement(
         '  non-CAS [MergeTree]. A read SHALL return the\n'
         '  patched values. The same read with `apply_patch_parts = 0` SHALL return\n'
         '  the part as it was inserted. `ALTER TABLE ... APPLY PATCHES` SHALL fold\n'
-        '  the patch into a data part on [CAS]. The patch part SHALL survive a\n'
+        '  the patch into a data part on [CAS]. The patch part MAY stay active\n'
+        '  afterwards, matching non-CAS [MergeTree]. The patch part SHALL survive a\n'
         '  server restart. Patching a column SHALL NOT rewrite a blob the other\n'
         '  table still shares\n'
         '  ([RQ.SRS-048.CAS.MergeTree.PatchParts](#rqsrs-048casmergetreepatchparts),\n'
@@ -5316,7 +5317,8 @@ Logical results SHALL match non-CAS [MergeTree].
   non-CAS [MergeTree]. A read SHALL return the
   patched values. The same read with `apply_patch_parts = 0` SHALL return
   the part as it was inserted. `ALTER TABLE ... APPLY PATCHES` SHALL fold
-  the patch into a data part on [CAS]. The patch part SHALL survive a
+  the patch into a data part on [CAS]. The patch part MAY stay active
+  afterwards, matching non-CAS [MergeTree]. The patch part SHALL survive a
   server restart. Patching a column SHALL NOT rewrite a blob the other
   table still shares
   ([RQ.SRS-048.CAS.MergeTree.PatchParts](#rqsrs-048casmergetreepatchparts),
