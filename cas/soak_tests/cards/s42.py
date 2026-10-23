@@ -4,6 +4,7 @@ import threading
 import time
 
 from cas.soak_tests.oracle.chaos import Fault, FaultAction, FaultTarget
+from cas.soak_tests.oracle.lease import is_mount_lease_drop, mount_lease_verdict
 from cas.soak_tests.oracle.scenario import Scenario, register
 from cas.soak_tests.oracle.verdict import Verdict
 from cas.soak_tests.steps import card as C
@@ -167,8 +168,15 @@ class S42(Scenario):
         block_lock = threading.Lock()
         injected_client_failures = [0]
         retry_later = [0]
+        lease_count = [0]
+        lease_sample = []
         other_count = [0]
         other_sample = []
+
+        def _keep_sample(bucket, body):
+            snippet = str(body)[:240]
+            if len(bucket) < 3 and snippet not in bucket:
+                bucket.append(snippet)
         select_faults = [0]
         max_query_s = [0.0]
         stop_at = [time.time() + float(p["workload_s"])]
@@ -190,11 +198,12 @@ class S42(Scenario):
                 # throwCasWriteRetryLater. The caller is told to retry; the consistency checks
                 # are what decide whether the durable state survived.
                 retry_later[0] += 1
+            elif is_mount_lease_drop(body):
+                lease_count[0] += 1
+                _keep_sample(lease_sample, body)
             else:
                 other_count[0] += 1
-                snippet = body[:180]
-                if len(other_sample) < 3 and snippet not in other_sample:
-                    other_sample.append(snippet)
+                _keep_sample(other_sample, body)
 
         def writer():
             while time.time() < stop_at[0]:
@@ -392,12 +401,13 @@ class S42(Scenario):
                 "Code 210 'could not be committed' is throwCasWriteRetryLater",
             )
         )
+        result.add(mount_lease_verdict(lease_count[0], lease_sample))
+        other_shown = " | ".join(other_sample)
         result.add(
             Verdict.check(
                 "statements failed only with the injected allocation error or a retry-later",
                 "0 statement failures of any other kind",
-                f"{other_count[0]} other failures"
-                + (f"; sample: {other_sample[0]}" if other_sample else ""),
+                f"{other_count[0]} other failures" + (f" | {other_shown}" if other_shown else ""),
                 other_count[0] == 0,
             )
         )

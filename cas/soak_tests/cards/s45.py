@@ -16,14 +16,15 @@ _VICTIM_SRID = os.environ.get("CA_SOAK_TESTS_VICTIM_SRID", "ca_soak_clickhouse2"
 _TABLE_PREFIX = "s45_victim"
 _CH1 = os.environ.get("CA_SOAK_TESTS_NODE1_CONTAINER", "soak_tests_env-clickhouse1-1")
 _CH2 = os.environ.get("CA_SOAK_TESTS_NODE2_CONTAINER", "soak_tests_env-clickhouse2-1")
-# Defaults from ContentAddressedSettings: cas_mount_lease_ttl_ms=30000, cas_mount_renew_period_ms=10000.
-# GC fences a stable mount after ttl + ttl/20 + one renew period. Background GC is every 60s;
-# this card drives the rounds itself, so the bound is the observation window plus one interval.
-_LEASE_TTL_S = 30.0
-_LEASE_RENEW_S = 10.0
-_OBSERVATION_S = _LEASE_TTL_S + _LEASE_TTL_S / 20.0 + _LEASE_RENEW_S
-_FENCE_WAIT_BOUND_S = _OBSERVATION_S + 60.0 + 15.0
+# Code defaults: cas_mount_lease_ttl_ms=30000, cas_mount_renew_period_ms=10000.
+# GC fences a stable mount after ttl + ttl/20 + one renew period. The card drives the
+# rounds, then allows one configured GC interval plus a short slack for a slow round.
+_DEFAULT_LEASE_TTL_MS = 30_000
+_DEFAULT_LEASE_RENEW_MS = 10_000
+_DEFAULT_GC_INTERVAL_S = 60
+_FENCE_SLACK_S = 15.0
 _LEASE_POLL_INTERVAL_S = 5.0
+_DISK_CONFIG = "/etc/clickhouse-server/config.xml"
 
 
 def _run_drop_member(container, srid, timeout_s=300.0):
@@ -52,7 +53,50 @@ def _run_drop_member(container, srid, timeout_s=300.0):
     return out
 
 
-def _run_drop_member_after_fence(container, srid, gc_node, log):
+def _disk_config_int(container, key, default):
+    """Read one integer from the server's merged disk config. Absent keys use `default`."""
+    cmd = [
+        "docker",
+        "exec",
+        container,
+        "clickhouse",
+        "extract-from-config",
+        "--config-file",
+        _DISK_CONFIG,
+        "--key",
+        key,
+    ]
+    try:
+        completed = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+    except Exception:
+        return default
+    text = (completed.stdout or "").strip()
+    if completed.returncode != 0 or not text:
+        return default
+    try:
+        return int(text)
+    except ValueError:
+        return default
+
+
+def _fence_wait_s(container):
+    """Observation window from the server's lease TTL and renew period, plus one GC interval."""
+    prefix = "storage_configuration.disks.ca"
+    ttl_ms = _disk_config_int(container, f"{prefix}.cas_mount_lease_ttl_ms", _DEFAULT_LEASE_TTL_MS)
+    renew_ms = _disk_config_int(container, f"{prefix}.cas_mount_renew_period_ms", _DEFAULT_LEASE_RENEW_MS)
+    gc_s = _disk_config_int(container, f"{prefix}.cas_gc_interval_sec", _DEFAULT_GC_INTERVAL_S)
+    ttl_s = ttl_ms / 1000.0
+    renew_s = renew_ms / 1000.0
+    observation_s = ttl_s + ttl_s / 20.0 + renew_s
+    return {
+        "ttl_ms": ttl_ms,
+        "renew_ms": renew_ms,
+        "gc_interval_s": gc_s,
+        "bound_s": observation_s + gc_s + _FENCE_SLACK_S,
+    }
+
+
+def _run_drop_member_after_fence(container, srid, gc_node, log, bound_s):
     """Retry until GC fences the killed member, or the observation window has passed.
 
     cas-drop-member does not treat expires_at_ms as proof of death. A killed process
@@ -60,7 +104,7 @@ def _run_drop_member_after_fence(container, srid, gc_node, log):
     mount token hold still for the observation threshold. Driving GC on the survivor
     is what starts and completes that window.
     """
-    deadline = time.monotonic() + _FENCE_WAIT_BOUND_S
+    deadline = time.monotonic() + bound_s
     last = _run_drop_member(container, srid)
     while last.get("exit_code") != 0 and "alive or contended" in (last.get("stderr") or ""):
         if time.monotonic() >= deadline:
@@ -118,6 +162,13 @@ class S45(Scenario):
                 ctx.log(f"S45 DROP on victim {t}: {e}")
         result.observations["tables"] = []
         ctx.log(f"S45: killing victim {_CH2}")
+        timing = _fence_wait_s(_CH1)
+        result.observations["fence_wait"] = timing
+        ctx.log(
+            "S45 fence wait: "
+            f"ttl_ms={timing['ttl_ms']} renew_ms={timing['renew_ms']} "
+            f"gc_interval_s={timing['gc_interval_s']} bound_s={timing['bound_s']:.1f}"
+        )
         killed = subprocess.run(["docker", "kill", _CH2], capture_output=True, text=True, timeout=60)
         if killed.returncode != 0:
             result.add(
@@ -129,7 +180,7 @@ class S45(Scenario):
             )
             return
         try:
-            report = _run_drop_member_after_fence(_CH1, _VICTIM_SRID, node, ctx.log)
+            report = _run_drop_member_after_fence(_CH1, _VICTIM_SRID, node, ctx.log, timing["bound_s"])
             result.observations["drop_member_report"] = {
                 k: v for k, v in report.items() if k not in ("stdout", "stderr")
             }

@@ -4,6 +4,7 @@ import threading
 import time
 
 from cas.soak_tests.cards._p1 import scale_verdict
+from cas.soak_tests.oracle.lease import is_mount_lease_drop, mount_lease_verdict
 from cas.soak_tests.oracle.scenario import Scenario, register
 from cas.soak_tests.oracle.verdict import Verdict
 from cas.soak_tests.steps import card as C
@@ -43,6 +44,7 @@ class S28(Scenario):
             C.create_ca_table(cl.node1, t)
         lock = threading.Lock()
         errors = []
+        lease_drops = []
         barrier = threading.Barrier(conc)
         sampler = C.RssSampler(cl, interval_s=1.0)
 
@@ -58,7 +60,10 @@ class S28(Scenario):
                 )
             except Exception as e:
                 with lock:
-                    errors.append((idx, str(e)[:200]))
+                    text = str(e)
+                    errors.append((idx, text[:240]))
+                    if is_mount_lease_drop(e):
+                        lease_drops.append(text)
 
         sampler.start()
         threads = [threading.Thread(target=worker, args=(i,), daemon=True) for i in range(conc)]
@@ -67,14 +72,17 @@ class S28(Scenario):
         for th in threads:
             th.join(timeout=2400)
         sampler.stop()
+        sample = errors[0][1] if errors else ""
         result.add(
             Verdict.check(
                 "all concurrent inserts completed",
                 f"{conc} inserts finish without error",
-                f"errors={len(errors)}",
+                f"errors={len(errors)}" + (f" | {sample}" if sample else ""),
                 not errors,
             )
         )
+        if lease_drops:
+            result.add(mount_lease_verdict(len(lease_drops), lease_drops))
         peak = C.record_peak_memory(result, sampler, label="scratch ~ concurrent RSS (proxy)")
         if peak is None:
             result.add(

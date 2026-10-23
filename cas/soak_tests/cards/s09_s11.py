@@ -2,6 +2,7 @@
 
 import time
 
+from cas.soak_tests.oracle.lease import is_mount_lease_drop, mount_lease_verdict
 from cas.soak_tests.oracle.scenario import Scenario, register
 from cas.soak_tests.oracle.verdict import Verdict
 from cas.soak_tests.steps import card as C
@@ -417,6 +418,8 @@ class S11(Scenario):
         peak_mut_depth = 0
         peak_merges = 0
         latencies = []
+        lease_drops = []
+        skip_inserts = False
         for rnd in range(delete_rounds):
             bucket = rnd % buckets
             node = cl.node1 if (rnd % 2 == 0) else cl.node2
@@ -425,18 +428,29 @@ class S11(Scenario):
                 node.command(f"ALTER TABLE {table} DELETE WHERE bucket = {bucket}", timeout=600)
                 deleted_buckets.add(bucket)
             except Exception as e:
-                result.note_anomaly(f"S11 ALTER DELETE bucket={bucket} failed: {e}")
-            if rnd % 3 == 0 and (buckets // 2) >= 2:
-                C.insert_random(
-                    cl.node1,
-                    table,
-                    rows=rows_per_part,
-                    payload_bytes=payload_bytes,
-                    extra_cols_select=f"((number % {buckets // 2}) + {buckets // 2}) AS bucket",
-                    op_id=next_id,
-                    settings={"max_partitions_per_insert_block": buckets + 16},
-                )
-                next_id += rows_per_part
+                if is_mount_lease_drop(e):
+                    lease_drops.append(str(e))
+                    ctx.log(f"S11 ALTER DELETE bucket={bucket}: mount lease dropped: {e}")
+                else:
+                    result.note_anomaly(f"S11 ALTER DELETE bucket={bucket} failed: {e}")
+            if rnd % 3 == 0 and (buckets // 2) >= 2 and not skip_inserts:
+                try:
+                    C.insert_random(
+                        cl.node1,
+                        table,
+                        rows=rows_per_part,
+                        payload_bytes=payload_bytes,
+                        extra_cols_select=f"((number % {buckets // 2}) + {buckets // 2}) AS bucket",
+                        op_id=next_id,
+                        settings={"max_partitions_per_insert_block": buckets + 16},
+                    )
+                    next_id += rows_per_part
+                except Exception as e:
+                    if not is_mount_lease_drop(e):
+                        raise
+                    lease_drops.append(str(e))
+                    skip_inserts = True
+                    ctx.log(f"S11 insert: mount lease dropped: {e}")
             if do_optimize and rnd % 2 == 1:
                 try:
                     cl.node1.command(f"OPTIMIZE TABLE {table}", timeout=600)
@@ -452,6 +466,8 @@ class S11(Scenario):
             drained, peak = _wait_mutations_done(cl, table, timeout_s=600)
             peak_mut_depth = max(peak_mut_depth, peak)
             latencies.append(round(time.monotonic() - t0, 3))
+        if lease_drops:
+            result.add(mount_lease_verdict(len(lease_drops), lease_drops))
         result.observations["peak_mutation_queue_depth"] = peak_mut_depth
         result.observations["peak_active_merges"] = peak_merges
         drained, _ = _wait_mutations_done(cl, table, timeout_s=600)
