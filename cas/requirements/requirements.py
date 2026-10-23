@@ -155,6 +155,107 @@ RQ_SRS_048_CAS_Disk_ServerRootId_Unique = Requirement(
     num='4.2.4'
 )
 
+RQ_SRS_048_CAS_Disk_ServerRootId_Validation = Requirement(
+    name='RQ.SRS-048.CAS.Disk.ServerRootId.Validation',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL require a `cas_server_root_id` to be a single path\n'
+        'component, and SHALL reject an id that is empty, exceeds 255 bytes, contains\n'
+        '`/`, or equals `.`, `..`, `_files`, or `_manifests`. Validation SHALL run after\n'
+        'macro expansion, so a template that expands to a value containing `/` SHALL be\n'
+        'rejected. An id containing `/` SHALL be rejected even when it already owns its\n'
+        'owner object in the pool: the disk SHALL refuse to open, and `SYSTEM CAS DROP\n'
+        'POOL MEMBER` and `clickhouse-disks cas-drop-member` SHALL refuse it as a\n'
+        'victim. Invalid syntax SHALL fail with `BAD_ARGUMENTS`.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.5'
+)
+
+RQ_SRS_048_CAS_Disk_ServerRootId_Ownership = Requirement(
+    name='RQ.SRS-048.CAS.Disk.ServerRootId.Ownership',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL bind each `cas_server_root_id` to one durable\n'
+        '`server_uuid` through an owner claim. A different UUID or a lost owner identity\n'
+        'over non-empty state SHALL fail closed with `CORRUPTED_DATA`. A tombstoned\n'
+        'owner SHALL refuse to mount, except through the documented rejoin of\n'
+        '[RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin](#rqsrs-048casdiskserverrootidrejoin).\n'
+        '\n'
+        'The owner object SHALL carry an `owner_life` counter that every owner write\n'
+        'bumps with `If-Match`, plus a `retirement_verified` flag. A mount SHALL record\n'
+        'the life it started under and SHALL re-read the owner after every slot claim —\n'
+        'at start and at self-remount — requiring its own UUID, that same life, and no\n'
+        'tombstone; otherwise it SHALL fence its own slot body and fail. A self-remount\n'
+        'that finds the owner at another life SHALL end the remount loop in\n'
+        '`identity_lost` without allocating a writer epoch, and only a restart SHALL\n'
+        'pick up the current life. A starter MAY reclaim a foreign terminal slot body\n'
+        'only after a fresh owner read shows its own UUID, the recorded life, and no\n'
+        'tombstone; a live foreign body SHALL stay refused as a foreign owner.\n'
+        '\n'
+        'Writer-epoch allocation SHALL be unique between two processes that share one\n'
+        '`server_uuid`: every counter write SHALL carry a fresh allocation nonce, so an\n'
+        "ambiguous write SHALL NOT be adopted as the other process's write by byte\n"
+        'equality. Epochs SHALL be strictly increasing per `cas_server_root_id` across\n'
+        'lives. A member whose epoch counter is missing SHALL be refused rather than\n'
+        'repaired.\n'
+        '\n'
+        '`owner_life`, `retirement_verified`, and the allocation nonce SHALL be optional\n'
+        'plain keys that an older reader skips; an owner without `owner_life` SHALL read\n'
+        'as life 0.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.6'
+)
+
+RQ_SRS_048_CAS_Disk_ServerRootId_Rejoin = Requirement(
+    name='RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL let a `cas_server_root_id` retired by\n'
+        '`SYSTEM CAS DROP POOL MEMBER` rejoin its pool as an **empty** member on the\n'
+        'next server start, under the same or a new `server_uuid`, without a hand-edited\n'
+        'owner object. The rejoin SHALL move the owner to a new life with `If-Match`,\n'
+        'SHALL continue the existing epoch counter, and SHALL log a warning naming the\n'
+        'old and new UUID and life. With a new `server_uuid`, the mount body SHALL be\n'
+        'rewritten for that UUID before the owner is claimed. Local table definitions of\n'
+        'a rejoined member SHALL attach with no rows.\n'
+        '\n'
+        'Rejoin SHALL be refused, with a message that names the cause and the\n'
+        'recovery, when any of these holds: the caller is a self-remount; the\n'
+        '`server_uuid` is zero; the `epoch` or `mount` object is absent (checked first,\n'
+        'so such an id is never offered a decommission rerun); the retirement is not\n'
+        'verified; the slot is still held; data of the previous life remains; or the\n'
+        'owner or slot changes on every decision. A refusal for remaining data SHALL\n'
+        'name the part left behind and, for catalog rows and manifests, SHALL point at\n'
+        '`SYSTEM CAS GC RUN` on the [GC] leader. An id whose control objects are gone\n'
+        'SHALL require a new `cas_server_root_id`.\n'
+        '\n'
+        "Decommission SHALL therefore be permanent for the member's **data**, not for\n"
+        'its identity.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.7'
+)
+
 RQ_SRS_048_CAS_Disk_Pool = Requirement(
     name='RQ.SRS-048.CAS.Disk.Pool',
     version='1.0',
@@ -171,12 +272,12 @@ RQ_SRS_048_CAS_Disk_Pool = Requirement(
     ),
     link=None,
     level=3,
-    num='4.2.5'
+    num='4.2.8'
 )
 
 RQ_SRS_048_CAS_Disk_Inline = Requirement(
     name='RQ.SRS-048.CAS.Disk.Inline',
-    version='1.0',
+    version='1.1',
     priority=None,
     group=None,
     type=None,
@@ -185,10 +286,17 @@ RQ_SRS_048_CAS_Disk_Inline = Requirement(
         '[ClickHouse] SHALL support selecting a [CAS] disk via the inline `disk = disk(...)`\n'
         'table setting as well as via a named disk in storage configuration.\n'
         '\n'
+        'Creating a custom disk SHALL NOT block other disk creations or disk and\n'
+        'storage-policy lookups, so several [CAS] custom disks that each wait out a\n'
+        'stale mount lease at server start SHALL wait in parallel rather than one after\n'
+        'another, and a `system.disks` read during such a wait SHALL still answer.\n'
+        'Concurrent requests for one custom disk SHALL share a single open, and a failed\n'
+        'creation SHALL NOT be cached: the next request SHALL create the disk again.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num='4.2.6'
+    num='4.2.9'
 )
 
 RQ_SRS_048_CAS_Policy = Requirement(
@@ -207,7 +315,7 @@ RQ_SRS_048_CAS_Policy = Requirement(
     ),
     link=None,
     level=3,
-    num='4.2.7'
+    num='4.2.10'
 )
 
 RQ_SRS_048_CAS_Disk_Settings = Requirement(
@@ -228,7 +336,121 @@ RQ_SRS_048_CAS_Disk_Settings = Requirement(
     ),
     link=None,
     level=3,
-    num='4.2.8'
+    num='4.2.11'
+)
+
+RQ_SRS_048_CAS_Disk_CoreSettings = Requirement(
+    name='RQ.SRS-048.CAS.Disk.CoreSettings',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support the documented core [CAS] disk settings:\n'
+        '\n'
+        '* `cas_scratch_path`\n'
+        '* `cas_gc_enabled` and `cas_gc_interval_sec`\n'
+        '* `cas_mount_lease_ttl_ms` and `cas_mount_renew_period_ms`\n'
+        '* `cas_gc_snapshot_generations_to_keep` and `cas_gc_shards`\n'
+        '* `cas_part_folder_cache_bytes`, `cas_part_folder_cache_max_entries`, and\n'
+        '  `cas_part_folder_cache_max_entry_bytes`\n'
+        '* `cas_manifest_decode_cache_bytes`\n'
+        '* `cas_gc_meta_pool_size` and `cas_gc_io_concurrency`\n'
+        '* `cas_attempt_timeout_ms` and `cas_lease_safety_margin_ms`\n'
+        '* `cas_unsafe_remount_no_delay`\n'
+        '* `cas_staging_backend`\n'
+        '\n'
+        'The server-wide `cas_blob_upload_pool_size` setting SHALL control parallel blob\n'
+        'uploads and SHALL reject zero. `cas_gc_read_concurrency` SHALL be rejected\n'
+        'without an alias; the supported name is `cas_gc_io_concurrency`.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.12'
+)
+
+RQ_SRS_048_CAS_Disk_LeaseTiming = Requirement(
+    name='RQ.SRS-048.CAS.Disk.LeaseTiming',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL validate mount-lease timing before opening a writable disk.\n'
+        'With `cap` equal to `cas_attempt_timeout_ms` when `connect_timeout_ms = 0`, or\n'
+        'otherwise `min(connect_timeout_ms, cas_attempt_timeout_ms)`, and\n'
+        '`envelope = cas_attempt_timeout_ms + 2 * cap`, both of these conditions SHALL\n'
+        'hold:\n'
+        '\n'
+        '* `envelope + cas_lease_safety_margin_ms < cas_mount_lease_ttl_ms`\n'
+        '* `cas_mount_renew_period_ms + 2 * envelope + cas_lease_safety_margin_ms <\n'
+        '  cas_mount_lease_ttl_ms`\n'
+        '\n'
+        '`cas_mount_lease_ttl_ms` SHALL be a per-server setting: how long this server\n'
+        'may keep writing after its last confirmed renewal. Every observer of a mount\n'
+        'slot — the [GC] floor, a same-server restart, and a self-remount reclaim —\n'
+        'SHALL wait at least the lease the holder declares in its slot body before\n'
+        'treating an unchanged slot token as a dead holder, so a server configured with\n'
+        'a longer TTL SHALL NOT be fenced inside its own right to write by an observer\n'
+        'configured with a shorter one. A slot body whose timestamps are missing,\n'
+        'equal, or reversed SHALL declare a lease of zero, so no observer waits less\n'
+        'than its own rule. Mixed values SHALL be safe in any order and SHALL NOT\n'
+        'require stopping every pool member to change.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.13'
+)
+
+RQ_SRS_048_CAS_Disk_Staging = Requirement(
+    name='RQ.SRS-048.CAS.Disk.Staging',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support `cas_staging_backend = local` and\n'
+        '`cas_staging_backend = s3`. S3 staging SHALL require native same-store copy on\n'
+        'a writable mount and SHALL fail closed rather than silently fall back to local\n'
+        'staging when that capability is unavailable.\n'
+        '\n'
+        'An aborted transaction SHALL delete its S3 staging object on a best-effort\n'
+        'basis, as a commit does, instead of leaving it until the next mount of the same\n'
+        '`cas_server_root_id`. An S3 staging key SHALL carry the writer epoch\n'
+        '(`staging/<cas_server_root_id>/<epoch>/<random>.tmp`), and the startup sweep\n'
+        'SHALL delete only earlier epochs, so a paused older process SHALL NOT delete\n'
+        "its successor's staging. An upload killed mid-way is invisible to object `LIST`\n"
+        "and is never swept by [CAS]; operators SHALL configure the bucket's\n"
+        '`AbortIncompleteMultipartUpload` lifecycle rule.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.14'
+)
+
+RQ_SRS_048_CAS_Disk_ConnectionReuse = Requirement(
+    name='RQ.SRS-048.CAS.Disk.ConnectionReuse',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL accept generic object-storage connection settings in a [CAS]\n'
+        'disk block. The documented production configuration SHOULD use\n'
+        '`http_keep_alive_timeout = 30` and `http_keep_alive_max_requests = 10000` to\n'
+        'avoid exhausting ephemeral ports during wide-part and merge workloads.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.2.15'
 )
 
 RQ_SRS_048_CAS_Disk_BlobHash = Requirement(
@@ -248,7 +470,7 @@ RQ_SRS_048_CAS_Disk_BlobHash = Requirement(
     ),
     link=None,
     level=3,
-    num='4.2.9'
+    num='4.2.16'
 )
 
 RQ_SRS_048_CAS_Disk_Backends = Requirement(
@@ -270,7 +492,7 @@ RQ_SRS_048_CAS_Disk_Backends = Requirement(
     ),
     link=None,
     level=3,
-    num='4.2.10'
+    num='4.2.17'
 )
 
 RQ_SRS_048_CAS_ObjectModel = Requirement(
@@ -335,9 +557,11 @@ RQ_SRS_048_CAS_ObjectModel_Refs = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL maintain mutable refs under each server's ownership namespace\n"
-        'that map part names to manifests. Refs SHALL be the mutable layer that changes\n'
-        'when parts are created, merged, mutated, or dropped.\n'
+        '[ClickHouse] SHALL maintain logical mutable refs that map part names to\n'
+        'manifests. Refs SHALL be the mutable layer that changes when parts are created,\n'
+        'merged, mutated, or dropped. Their physical state SHALL use the append-only\n'
+        'ref-stream representation specified by\n'
+        '[RQ.SRS-048.CAS.ObjectModel.PhysicalRefs](#rqsrs-048casobjectmodelphysicalrefs).\n'
         '\n'
     ),
     link=None,
@@ -363,6 +587,400 @@ RQ_SRS_048_CAS_ObjectModel_Immutability = Requirement(
     num='4.3.5'
 )
 
+RQ_SRS_048_CAS_ObjectModel_PhysicalRefs = Requirement(
+    name='RQ.SRS-048.CAS.ObjectModel.PhysicalRefs',
+    version='1.1',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL persist logical refs as append-only `_log` records with\n'
+        'compacted `_snap` snapshots and `_ckpt` checkpoints under opaque namespace\n'
+        '`life_id` values. Dropping and recreating a logical namespace name SHALL mint a\n'
+        'new `life_id`; an old physical life SHALL NOT alias the new namespace.\n'
+        '`cas_server_root_id` SHALL root ownership, manifest, loose-root, and staging\n'
+        'subtrees, but SHALL NOT be embedded in ref-stream keys.\n'
+        '\n'
+        'A namespace runtime admitted from a cold path SHALL NOT be published for a\n'
+        'life retired while that admission was in flight, and a runtime whose recovered\n'
+        'state is terminal SHALL be refused. A retirement observed during a cold\n'
+        'admission SHALL make the admission fail with a retryable error that re-reads\n'
+        'the catalog, so a table dropped and re-created under the same UUID SHALL NOT\n'
+        'acknowledge files into a dead life that the janitor then deletes.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.3.6'
+)
+
+RQ_SRS_048_CAS_ObjectModel_Catalog = Requirement(
+    name='RQ.SRS-048.CAS.ObjectModel.Catalog',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL keep one pool-wide namespace catalog object as the sole\n'
+        'authority for which namespaces exist, read on every [GC] fold round and every\n'
+        'ref-table recovery and mutated by one token-compare-and-swap write per\n'
+        'lifecycle transition. Its entries SHALL be canonically ordered by namespace\n'
+        'bytes, strictly ascending and without a duplicate name, enforced by both the\n'
+        'encoder and the decoder, so an out-of-order or duplicate-keyed catalog SHALL\n'
+        'NOT become durable.\n'
+        '\n'
+        'Each row SHALL carry the namespace name, a state of `Creating`, `Live`, or\n'
+        "`Removing`, a nonzero never-reused `life_id`, the creating writer's fence\n"
+        'identity (required for `Creating`, forbidden otherwise), and the [GC] round\n'
+        'observed when removal began (required for `Removing`, absent otherwise). State\n'
+        'values SHALL be append-only on the wire, never renumbered or repurposed, so a\n'
+        'catalog written by one build stays readable by another.\n'
+        '\n'
+        'A row SHALL advance `Creating` to `Live` to `Removing` to absent. A stalled\n'
+        '`Creating` row SHALL NOT be stolen while its creator fence is still live, and\n'
+        'SHALL be completed by a fresh opener only once that fence is provably dead. A\n'
+        'namespace name SHALL become creatable again only after its previous row is\n'
+        'completely gone, and SHALL then take a brand-new `life_id`.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.3.7'
+)
+
+RQ_SRS_048_CAS_ObjectModel_FormatGeneration = Requirement(
+    name='RQ.SRS-048.CAS.ObjectModel.FormatGeneration',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL record a `min_reader_generation` in the pool and SHALL\n'
+        'refuse to mount a pool whose recorded generation is newer than the generation\n'
+        'this build can read. A ref log that carries a record of a generation above 1\n'
+        '(currently `Move`, see\n'
+        '[RQ.SRS-048.CAS.Write.PartRename](#rqsrs-048caswritepartrename)) SHALL be\n'
+        'stamped with that generation, and the first writable mount by a build that\n'
+        "emits it SHALL raise the pool's `min_reader_generation` once. Raising the\n"
+        'generation SHALL be one-way, so a build that predates it can no longer mount\n'
+        'that pool and operators SHALL upgrade every server in a pool before the first\n'
+        'writable mount.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.3.8'
+)
+
+RQ_SRS_048_CAS_ObjectModel_ManifestLimits = Requirement(
+    name='RQ.SRS-048.CAS.ObjectModel.ManifestLimits',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL apply write-path backpressure before publishing a part\n'
+        'manifest and reject one that exceeds any documented limit: 1,048,576 entries,\n'
+        '256 MiB of encoded text, 16 MiB of total inline content, or 1 MiB for one\n'
+        'inline entry.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.3.9'
+)
+
+RQ_SRS_048_CAS_Write_Publish = Requirement(
+    name='RQ.SRS-048.CAS.Write.Publish',
+    version='1.1',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL publish one logical part in this durable order:\n'
+        '\n'
+        '1. stage and create the immutable manifest;\n'
+        '2. append the ref precommit;\n'
+        '3. materialize or adopt every required blob;\n'
+        '4. promote the precommit to a committed ref.\n'
+        '\n'
+        'Promotion SHALL validate the live precommit and its dependency proofs. It\n'
+        'SHALL reuse the proof recorded when the manifest was staged instead of reading\n'
+        'the manifest back, and cleanup of an abandoned staged manifest SHALL delete it\n'
+        'by the recorded incarnation without a preliminary `HEAD`. Manifest staging\n'
+        'SHALL NOT race the orphan sweep into deleting a committed manifest. An\n'
+        'unresolved append or promotion SHALL be treated as an uncertain outcome and\n'
+        'reconciled or retried; it SHALL NOT be treated as proof that the write did not\n'
+        'land. Which of the three commit outcomes a failure reports is specified by\n'
+        '[RQ.SRS-048.CAS.Write.CommitOutcome](#rqsrs-048caswritecommitoutcome).\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.4.1'
+)
+
+RQ_SRS_048_CAS_Write_BlobMaterialization = Requirement(
+    name='RQ.SRS-048.CAS.Write.BlobMaterialization',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL begin each blob materialization attempt with `HEAD` and\n'
+        'SHALL adopt a present body only when the freshness marker read after that\n'
+        '`HEAD` reads `Clean`. A present body whose marker is absent SHALL be\n'
+        'republished like an absent body and SHALL NOT be adopted by backfilling the\n'
+        'marker: [GC] can delete a body and then its marker between the two reads, so\n'
+        'an absent marker is not proof that the body is live. A `Condemned` body SHALL\n'
+        'be republished under a new incarnation. An absent body SHALL be published\n'
+        'unconditionally, and a retry SHALL restart from `HEAD`. A backend token used\n'
+        'for exact deletion SHALL continue to identify the same content for that\n'
+        'incarnation (`TOKEN` implies `CONTENT`). A publication started on an absent\n'
+        'marker SHALL be counted in `CASMetaAbsentRepublish`.\n'
+        '\n'
+        '[GC] SHALL remove a condemned marker together with its body even when the\n'
+        'graduation gate re-stamped that marker at a later round, so a marker SHALL NOT\n'
+        'outlive the body it describes.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.4.2'
+)
+
+RQ_SRS_048_CAS_Write_BlobPublishRetries = Requirement(
+    name='RQ.SRS-048.CAS.Write.BlobPublishRetries',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL send each object-creating request of a blob publication at\n'
+        'most once. `PutObject`, `CopyObject`, and `CompleteMultipartUpload` SHALL NOT\n'
+        'be resent by the object-storage client, because a resend carries the same\n'
+        'bytes and therefore the same backend token, which can resurrect an incarnation\n'
+        'that [GC] has already condemned and deleted and leave a committed reference\n'
+        'without data. `CreateMultipartUpload`, `UploadPart`, and `UploadPartCopy`\n'
+        'SHALL keep their ordinary retries, so a large multipart blob still survives\n'
+        'throttling. A copy made under the single-attempt rule SHALL use native\n'
+        'same-store copy only and SHALL reject any other copy mode with\n'
+        '`BAD_ARGUMENTS`.\n'
+        '\n'
+        'Retry SHALL happen one level up: the [CAS] publish loop SHALL re-observe the\n'
+        'key per\n'
+        '[RQ.SRS-048.CAS.Write.BlobMaterialization](#rqsrs-048caswriteblobmaterialization)\n'
+        'and publish a fresh envelope under a new incarnation tag. Each failed attempt\n'
+        'SHALL be counted in `CASBlobPublishAttemptFailed`, and a publication that ends\n'
+        'in an exception after a failed attempt in `CASBlobPublishGaveUp`. The first\n'
+        'failed attempt SHALL be logged below `Warning`, so a single retried failure\n'
+        'does not reach a client that requested warning-level logs.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.4.3'
+)
+
+RQ_SRS_048_CAS_Write_CommitOutcome = Requirement(
+    name='RQ.SRS-048.CAS.Write.CommitOutcome',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL state, in the error of a failed ref-log commit, which of\n'
+        'three outcomes applies, so a client can tell whether retrying may duplicate\n'
+        'the write:\n'
+        '\n'
+        '* the transaction is durable and only the `_ckpt` frontier publish failed;\n'
+        '* the outcome is unknown;\n'
+        '* the write is not durable.\n'
+        '\n'
+        'The original error SHALL be kept inside that message. A give-up while\n'
+        'publishing the checkpoint SHALL report its real cause — policy deadline,\n'
+        'lease deadline, or unresolved — rather than a generic contention message.\n'
+        'This requirement constrains the message, not the behavior: error codes for\n'
+        '`DB::Exception` SHALL be unchanged.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.4.4'
+)
+
+RQ_SRS_048_CAS_Write_PartRename = Requirement(
+    name='RQ.SRS-048.CAS.Write.PartRename',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL rename a committed part on a [CAS] disk with a single\n'
+        'ref-log owner `Move` record rather than by republishing the part manifest, so\n'
+        'a rename costs no additional manifest write and no ref drop. A ref log that\n'
+        'carries a `Move` SHALL be stamped manifest format generation 2 per\n'
+        '[RQ.SRS-048.CAS.ObjectModel.FormatGeneration](#rqsrs-048casobjectmodelformatgeneration).\n'
+        'An ownership conflict raised on that path SHALL use `CAS_OWNERSHIP_CONFLICT`\n'
+        'and SHALL be counted in `CASOwnershipConflict`.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.4.5'
+)
+
+RQ_SRS_048_CAS_Write_HashCollision = Requirement(
+    name='RQ.SRS-048.CAS.Write.HashCollision',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL use hash equality as blob identity and SHALL NOT claim that a\n'
+        '`HEAD`-only adoption compares the stored body with the incoming payload.\n'
+        '`cityhash128` SHALL remain the compatibility default, while `sha256` SHALL be\n'
+        'the documented choice when mutually untrusted writers share a pool or\n'
+        'collision resistance is required.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.4.6'
+)
+
+RQ_SRS_048_CAS_Read = Requirement(
+    name='RQ.SRS-048.CAS.Read',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL resolve a part ref to its immutable manifest and serve each\n'
+        'file from its manifest entry. Inline entries SHALL require no additional\n'
+        'object-store request. Blob entries SHALL use a ranged `GET` bounded to the blob\n'
+        'payload, excluding the blob envelope. Verbatim files SHALL use a plain object\n'
+        'read.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.5.1'
+)
+
+RQ_SRS_048_CAS_Read_ManifestValidation = Requirement(
+    name='RQ.SRS-048.CAS.Read.ManifestValidation',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL read and validate a manifest body before caching it. A live\n'
+        'ref naming a missing manifest SHALL raise `FILE_DOESNT_EXIST`; a manifest whose\n'
+        'decoded `ref` or `root_namespace_id` does not match the requested manifest key\n'
+        'SHALL raise `CORRUPTED_DATA`.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.5.2'
+)
+
+RQ_SRS_048_CAS_Read_Caches = Requirement(
+    name='RQ.SRS-048.CAS.Read.Caches',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL cache decoded manifests by immutable `ManifestId` and\n'
+        'part-folder views by part-ref key. A validated cache hit SHALL perform no\n'
+        'object-store request. Setting `cas_manifest_decode_cache_bytes = 0` or\n'
+        '`cas_part_folder_cache_bytes = 0` SHALL disable the corresponding retention\n'
+        'without weakening validation. Promote and repoint SHALL invalidate the\n'
+        'part-folder view, and concurrent cold readers of one view SHALL coalesce into a\n'
+        'single build.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.5.3'
+)
+
+RQ_SRS_048_CAS_Read_DirectoryProbes = Requirement(
+    name='RQ.SRS-048.CAS.Read.DirectoryProbes',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL answer `existsDirectory` and `listDirectory` inside a\n'
+        'resolved part from the part manifest: a plain file is not a directory, while a\n'
+        'nested directory exists and lists its children. These probes SHALL NOT issue\n'
+        'an object-store `LIST`. Paths that cannot be resolved as a part MAY use the\n'
+        'ordinary listing fallback. Part-load listing cost SHALL not grow with the\n'
+        'number of files in each part.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.5.4'
+)
+
+RQ_SRS_048_CAS_Read_InFlight = Requirement(
+    name='RQ.SRS-048.CAS.Read.InFlight',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'A part still inside an open write transaction SHALL NOT be visible through the\n'
+        'ordinary ref resolve. [ClickHouse] SHALL serve a read of such a part through\n'
+        'the explicit read-your-writes overlay of that transaction, so a writer sees its\n'
+        'own uncommitted files while other readers do not. The bare part directory\n'
+        'SHALL report as absent in that overlay, so cleanup of a rejected temporary part\n'
+        'is never mistaken for a real, resolvable part.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.5.5'
+)
+
+RQ_SRS_048_CAS_Read_ReadOnly = Requirement(
+    name='RQ.SRS-048.CAS.Read.ReadOnly',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'A read-only or diagnostic [CAS] opener SHALL NOT claim mount ownership,\n'
+        'schedule [GC], or mint writer state. The backend SHALL reject mutating metadata\n'
+        'operations with a `READONLY`-class error even when a caller bypasses an\n'
+        'ordinary facade check.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.5.6'
+)
+
 RQ_SRS_048_CAS_MergeTree = Requirement(
     name='RQ.SRS-048.CAS.MergeTree',
     version='1.0',
@@ -377,7 +995,7 @@ RQ_SRS_048_CAS_MergeTree = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.1'
+    num='4.6.1'
 )
 
 RQ_SRS_048_CAS_MergeTree_Transparency = Requirement(
@@ -397,7 +1015,7 @@ RQ_SRS_048_CAS_MergeTree_Transparency = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.2'
+    num='4.6.2'
 )
 
 RQ_SRS_048_CAS_MergeTree_Engines = Requirement(
@@ -422,7 +1040,7 @@ RQ_SRS_048_CAS_MergeTree_Engines = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.3'
+    num='4.6.3'
 )
 
 RQ_SRS_048_CAS_MergeTree_InsertSelect = Requirement(
@@ -440,7 +1058,7 @@ RQ_SRS_048_CAS_MergeTree_InsertSelect = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.4'
+    num='4.6.4'
 )
 
 RQ_SRS_048_CAS_MergeTree_Merge = Requirement(
@@ -458,7 +1076,7 @@ RQ_SRS_048_CAS_MergeTree_Merge = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.5'
+    num='4.6.5'
 )
 
 RQ_SRS_048_CAS_MergeTree_Replicated = Requirement(
@@ -476,25 +1094,25 @@ RQ_SRS_048_CAS_MergeTree_Replicated = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.6'
+    num='4.6.6'
 )
 
 RQ_SRS_048_CAS_MergeTree_PartTypes = Requirement(
     name='RQ.SRS-048.CAS.MergeTree.PartTypes',
-    version='1.0',
+    version='2.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Wide and Compact [MergeTree] parts on a [CAS] disk.\n'
-        'Projections, patch parts, detached parts, temporary parts, and frozen/shadow\n'
-        'parts SHALL be representable in the [CAS] object model.\n'
+        '[ClickHouse] SHALL support Wide, Compact, and Packed [MergeTree] parts on a\n'
+        '[CAS] disk. Projections, patch parts, detached parts, temporary parts, and\n'
+        'frozen/shadow parts SHALL be representable in the [CAS] object model.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.4.7'
+    num='4.6.7'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Schema = Requirement(
@@ -515,7 +1133,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Schema = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.8'
+    num='4.6.8'
 )
 
 RQ_SRS_048_CAS_MergeTree_Mutations = Requirement(
@@ -533,7 +1151,7 @@ RQ_SRS_048_CAS_MergeTree_Mutations = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.9'
+    num='4.6.9'
 )
 
 RQ_SRS_048_CAS_MergeTree_LightweightDelete = Requirement(
@@ -550,7 +1168,7 @@ RQ_SRS_048_CAS_MergeTree_LightweightDelete = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.10'
+    num='4.6.10'
 )
 
 RQ_SRS_048_CAS_MergeTree_PatchParts = Requirement(
@@ -567,7 +1185,7 @@ RQ_SRS_048_CAS_MergeTree_PatchParts = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.11'
+    num='4.6.11'
 )
 
 RQ_SRS_048_CAS_MergeTree_Projections = Requirement(
@@ -586,7 +1204,7 @@ RQ_SRS_048_CAS_MergeTree_Projections = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.12'
+    num='4.6.12'
 )
 
 RQ_SRS_048_CAS_MergeTree_TTL = Requirement(
@@ -605,7 +1223,7 @@ RQ_SRS_048_CAS_MergeTree_TTL = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.13'
+    num='4.6.13'
 )
 
 RQ_SRS_048_CAS_MergeTree_Transactions = Requirement(
@@ -624,7 +1242,7 @@ RQ_SRS_048_CAS_MergeTree_Transactions = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.14'
+    num='4.6.14'
 )
 
 RQ_SRS_048_CAS_MergeTree_RestartDurability = Requirement(
@@ -641,7 +1259,26 @@ RQ_SRS_048_CAS_MergeTree_RestartDurability = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.15'
+    num='4.6.15'
+)
+
+RQ_SRS_048_CAS_MergeTree_Rename = Requirement(
+    name='RQ.SRS-048.CAS.MergeTree.Rename',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support `RENAME TABLE` by republishing every ref and\n'
+        'verbatim file into the destination namespace and then dropping the old\n'
+        'namespace. The operation SHALL be idempotent and re-drivable after failure, but\n'
+        'need not be atomic across the two namespaces.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.6.16'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter = Requirement(
@@ -672,7 +1309,7 @@ RQ_SRS_048_CAS_MergeTree_Alter = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.16'
+    num='4.6.17'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Column = Requirement(
@@ -707,7 +1344,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Column = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.17'
+    num='4.6.18'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Update = Requirement(
@@ -731,7 +1368,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Update = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.18'
+    num='4.6.19'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Delete = Requirement(
@@ -756,7 +1393,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Delete = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.19'
+    num='4.6.20'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_OrderBy = Requirement(
@@ -775,7 +1412,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_OrderBy = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.20'
+    num='4.6.21'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_SampleBy = Requirement(
@@ -794,7 +1431,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_SampleBy = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.21'
+    num='4.6.22'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Index = Requirement(
@@ -820,7 +1457,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Index = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.22'
+    num='4.6.23'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Projection = Requirement(
@@ -852,7 +1489,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Projection = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.23'
+    num='4.6.24'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Constraint = Requirement(
@@ -881,7 +1518,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Constraint = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.24'
+    num='4.6.25'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_TTL = Requirement(
@@ -909,7 +1546,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_TTL = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.25'
+    num='4.6.26'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Statistics = Requirement(
@@ -935,7 +1572,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Statistics = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.26'
+    num='4.6.27'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Setting = Requirement(
@@ -958,7 +1595,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Setting = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.27'
+    num='4.6.28'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_Comment = Requirement(
@@ -977,7 +1614,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_Comment = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.28'
+    num='4.6.29'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_ApplyDeletedMask = Requirement(
@@ -1001,7 +1638,7 @@ RQ_SRS_048_CAS_MergeTree_Alter_ApplyDeletedMask = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.29'
+    num='4.6.30'
 )
 
 RQ_SRS_048_CAS_MergeTree_Alter_ApplyPatches = Requirement(
@@ -1025,12 +1662,101 @@ RQ_SRS_048_CAS_MergeTree_Alter_ApplyPatches = Requirement(
     ),
     link=None,
     level=3,
-    num='4.4.30'
+    num='4.6.31'
+)
+
+RQ_SRS_048_CAS_MergeTree_MaterializedView = Requirement(
+    name='RQ.SRS-048.CAS.MergeTree.MaterializedView',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support materialized views when the source table, the\n'
+        "`TO` destination, or the view's inner [MergeTree] is stored on a [CAS] disk.\n"
+        'Logical results SHALL match non-CAS [MergeTree].\n'
+        '\n'
+        '* `INSERT` into the source SHALL apply the view `SELECT` and write that\n'
+        '  result to the `TO` table, or to the inner table when the view declares\n'
+        "  its own `ENGINE`. Parts SHALL land on the destination table's disk or\n"
+        '  storage policy, which MAY differ from the source.\n'
+        '* `POPULATE` SHALL load rows already in the source into a view that\n'
+        '  declares its own `ENGINE`. A later `INSERT` SHALL append only the new\n'
+        '  result. Declaring both `TO` and `POPULATE` SHALL be rejected, matching\n'
+        '  non-CAS [MergeTree].\n'
+        '* A `SELECT` that filters, rewrites, or joins another [CAS] table SHALL\n'
+        '  write that result, including aggregate states into an\n'
+        '  `AggregatingMergeTree` destination. `SummingMergeTree` and\n'
+        '  `ReplacingMergeTree` destinations SHALL collapse view-written rows on\n'
+        '  merge, and a destination projection SHALL be built for view-written parts.\n'
+        "* Several views on one source, and a view whose source is another view's\n"
+        '  destination, SHALL each receive the insert, with or without\n'
+        '  `parallel_view_processing`.\n'
+        '* A multi-block `INSERT ... SELECT` and concurrent inserts into the source\n'
+        '  SHALL write every row to the destination exactly once.\n'
+        '* If the view `SELECT` throws, the `INSERT` SHALL fail and the destination\n'
+        '  SHALL not receive that block. The source keeps the block, matching\n'
+        '  non-CAS [MergeTree]. With `materialized_views_ignore_errors` the insert\n'
+        '  SHALL succeed without writing to the failing view. Both tables SHALL pass\n'
+        '  `CHECK TABLE` afterwards.\n'
+        '* A retried insert that the source deduplicates (by\n'
+        '  `insert_deduplication_token` with `non_replicated_deduplication_window`,\n'
+        '  or by a `ReplicatedMergeTree` retry on another replica) SHALL NOT write\n'
+        '  the block to the destination again.\n'
+        '* `ALTER TABLE ... MODIFY QUERY` SHALL change what later inserts write.\n'
+        '  `DETACH` / `ATTACH` and `RENAME` of the view, and a server restart, SHALL\n'
+        '  keep the rows on its [CAS] storage and SHALL keep later inserts\n'
+        '  propagating\n'
+        '  ([RQ.SRS-048.CAS.MergeTree.RestartDurability](#rqsrs-048casmergetreerestartdurability),\n'
+        '  [RQ.SRS-048.CAS.MergeTree.Rename](#rqsrs-048casmergetreerename)).\n'
+        '* `DETACH`, `ATTACH`, `MOVE PARTITION ... TO TABLE`, and `DROP PARTITION`\n'
+        '  on a [CAS] destination SHALL work while the view keeps writing to it.\n'
+        '* A refreshable view SHALL replace a [CAS] `TO` table or inner table with\n'
+        '  the current result on each refresh, or add the result with `APPEND`.\n'
+        '  Refreshing identical bytes SHALL keep sharing one blob through [GC].\n'
+        '* `ALTER TABLE ... UPDATE`, `ALTER TABLE ... DELETE`, and lightweight\n'
+        '  `DELETE` on the source SHALL leave rows the view already wrote unchanged.\n'
+        '* With `check_referential_table_dependencies` enabled, `DROP` of the\n'
+        '  source or the destination SHALL be rejected while the view still\n'
+        '  references that table. With the setting left at its default, that `DROP`\n'
+        '  is allowed, matching non-CAS [MergeTree]. `DROP` of the view SHALL stop\n'
+        '  later inserts from propagating and SHALL leave both tables queryable.\n'
+        '  After the view is gone, `DROP` of the source SHALL leave the destination\n'
+        '  readable.\n'
+        '* Identical column bytes the view writes into the same pool SHALL share a\n'
+        '  blob with the source\n'
+        '  ([RQ.SRS-048.CAS.ObjectModel.Blobs](#rqsrs-048casobjectmodelblobs)).\n'
+        '  Different bytes SHALL be stored again. [GC] SHALL NOT delete a blob the\n'
+        '  destination still names\n'
+        '  ([RQ.SRS-048.CAS.GC.NoLoss](#rqsrs-048casgcnoloss)), and SHALL reclaim it\n'
+        '  after the last owner is dropped\n'
+        '  ([RQ.SRS-048.CAS.GC.ReclaimAfterDrop](#rqsrs-048casgcreclaimafterdrop)),\n'
+        '  including after `TRUNCATE` and after `DROP` of a view, which drops its\n'
+        '  inner table. A blob that [GC] has condemned but not yet deleted SHALL be\n'
+        '  kept when the view writes the same bytes again, and [GC] rounds that\n'
+        '  overlap inserts through the view SHALL NOT lose data.\n'
+        '  A view that writes into a different pool SHALL publish into that pool,\n'
+        "  and reclaiming one pool SHALL leave the other pool's copy readable.\n"
+        '* With `ReplicatedMergeTree` source and destination, creating the view on\n'
+        '  every replica SHALL make an `INSERT` on one replica visible in the\n'
+        '  destination on every replica after replication. A replicated inner\n'
+        '  table on [CAS] SHALL replicate the same way.\n'
+        "* An `INSERT` through a `Distributed` table SHALL run each shard's view on\n"
+        '  the rows routed to that shard.\n'
+        '\n'
+        'Merges of parts the view wrote are specified by\n'
+        '[RQ.SRS-048.CAS.MergeTree.Merge](#rqsrs-048casmergetreemerge).\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.6.32'
 )
 
 RQ_SRS_048_CAS_Partition_AlterAllowList = Requirement(
     name='RQ.SRS-048.CAS.Partition.AlterAllowList',
-    version='1.0',
+    version='1.1',
     priority=None,
     group=None,
     type=None,
@@ -1049,6 +1775,8 @@ RQ_SRS_048_CAS_Partition_AlterAllowList = Requirement(
         '* `FETCH PARTITION` / `FETCH PART`\n'
         '* `FREEZE PARTITION` / `FREEZE`\n'
         '* `UNFREEZE PARTITION` / `UNFREEZE`\n'
+        '* `EXPORT PART` / `EXPORT PARTITION`\n'
+        '  ([RQ.SRS-048.CAS.Partition.Export](#rqsrs-048caspartitionexport))\n'
         '\n'
         '`DROP` / `DETACH` / `ATTACH` / `ATTACH FROM` SHALL accept `PARTITION ALL`\n'
         'where upstream [MergeTree] does. Partition-scoped mutations\n'
@@ -1059,7 +1787,7 @@ RQ_SRS_048_CAS_Partition_AlterAllowList = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.1'
+    num='4.7.1'
 )
 
 RQ_SRS_048_CAS_Partition_Replace = Requirement(
@@ -1078,7 +1806,7 @@ RQ_SRS_048_CAS_Partition_Replace = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.2'
+    num='4.7.2'
 )
 
 RQ_SRS_048_CAS_Partition_AttachFrom = Requirement(
@@ -1096,7 +1824,7 @@ RQ_SRS_048_CAS_Partition_AttachFrom = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.3'
+    num='4.7.3'
 )
 
 RQ_SRS_048_CAS_Partition_Attach = Requirement(
@@ -1114,7 +1842,7 @@ RQ_SRS_048_CAS_Partition_Attach = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.4'
+    num='4.7.4'
 )
 
 RQ_SRS_048_CAS_Partition_Detach = Requirement(
@@ -1133,7 +1861,7 @@ RQ_SRS_048_CAS_Partition_Detach = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.5'
+    num='4.7.5'
 )
 
 RQ_SRS_048_CAS_Partition_DetachAttach = Requirement(
@@ -1150,7 +1878,7 @@ RQ_SRS_048_CAS_Partition_DetachAttach = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.6'
+    num='4.7.6'
 )
 
 RQ_SRS_048_CAS_Partition_MoveToTable = Requirement(
@@ -1168,7 +1896,7 @@ RQ_SRS_048_CAS_Partition_MoveToTable = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.7'
+    num='4.7.7'
 )
 
 RQ_SRS_048_CAS_Partition_Drop = Requirement(
@@ -1188,7 +1916,7 @@ RQ_SRS_048_CAS_Partition_Drop = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.8'
+    num='4.7.8'
 )
 
 RQ_SRS_048_CAS_Partition_DropDetached = Requirement(
@@ -1206,7 +1934,7 @@ RQ_SRS_048_CAS_Partition_DropDetached = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.9'
+    num='4.7.9'
 )
 
 RQ_SRS_048_CAS_Partition_Forget = Requirement(
@@ -1225,7 +1953,7 @@ RQ_SRS_048_CAS_Partition_Forget = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.10'
+    num='4.7.10'
 )
 
 RQ_SRS_048_CAS_Partition_Fetch = Requirement(
@@ -1245,7 +1973,7 @@ RQ_SRS_048_CAS_Partition_Fetch = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.11'
+    num='4.7.11'
 )
 
 RQ_SRS_048_CAS_Partition_Freeze = Requirement(
@@ -1257,16 +1985,15 @@ RQ_SRS_048_CAS_Partition_Freeze = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support `ALTER TABLE ... FREEZE PARTITION` / `FREEZE` on a\n'
-        '[CAS]-backed table by publishing shadow-namespace refs that share live blobs\n'
-        '(no freeze-time byte copy of pool blobs), such that backup consumers can read\n'
-        'frozen file bytes through the disk API. The shadow namespace SHALL be scoped\n'
-        "under the creating server's `cas_server_root_id` so one server's `UNFREEZE`\n"
-        "cannot reach another server's snapshots in the same pool.\n"
+        '[CAS]-backed table by materializing readable file bytes in a separate shadow\n'
+        'namespace. The shadow namespace SHALL be a [GC] reachability root scoped under\n'
+        "the creating server's `cas_server_root_id`, so one server's `UNFREEZE` cannot\n"
+        "reach another server's snapshots in the same pool.\n"
         '\n'
     ),
     link=None,
     level=3,
-    num='4.5.12'
+    num='4.7.12'
 )
 
 RQ_SRS_048_CAS_Partition_Unfreeze = Requirement(
@@ -1284,7 +2011,7 @@ RQ_SRS_048_CAS_Partition_Unfreeze = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.13'
+    num='4.7.13'
 )
 
 RQ_SRS_048_CAS_Partition_Clone = Requirement(
@@ -1296,13 +2023,15 @@ RQ_SRS_048_CAS_Partition_Clone = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support partition / part clone paths used by attach, replace,\n'
-        'and freeze on [CAS] as ref publication (content-identical clones share blob\n'
-        'identity) rather than requiring a full byte copy of already-present content.\n'
+        'and cross-disk operations as one whole-part disk transaction. Same-pool attach\n'
+        'and replace paths MAY republish refs over shared blobs. `FREEZE` SHALL follow\n'
+        '[RQ.SRS-048.CAS.Partition.Freeze](#rqsrs-048caspartitionfreeze) and materialize\n'
+        'its separate shadow namespace.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.5.14'
+    num='4.7.14'
 )
 
 RQ_SRS_048_CAS_Partition_ClearColumn = Requirement(
@@ -1321,7 +2050,7 @@ RQ_SRS_048_CAS_Partition_ClearColumn = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.15'
+    num='4.7.15'
 )
 
 RQ_SRS_048_CAS_Partition_ClearIndex = Requirement(
@@ -1340,7 +2069,7 @@ RQ_SRS_048_CAS_Partition_ClearIndex = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.16'
+    num='4.7.16'
 )
 
 RQ_SRS_048_CAS_Partition_RewriteParts = Requirement(
@@ -1359,7 +2088,7 @@ RQ_SRS_048_CAS_Partition_RewriteParts = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.17'
+    num='4.7.17'
 )
 
 RQ_SRS_048_CAS_Partition_Update = Requirement(
@@ -1378,7 +2107,7 @@ RQ_SRS_048_CAS_Partition_Update = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.18'
+    num='4.7.18'
 )
 
 RQ_SRS_048_CAS_Partition_Delete = Requirement(
@@ -1397,7 +2126,7 @@ RQ_SRS_048_CAS_Partition_Delete = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.19'
+    num='4.7.19'
 )
 
 RQ_SRS_048_CAS_Partition_MoveToDisk = Requirement(
@@ -1420,7 +2149,27 @@ RQ_SRS_048_CAS_Partition_MoveToDisk = Requirement(
     ),
     link=None,
     level=3,
-    num='4.5.20'
+    num='4.7.20'
+)
+
+RQ_SRS_048_CAS_Partition_Export = Requirement(
+    name='RQ.SRS-048.CAS.Partition.Export',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support `ALTER TABLE ... EXPORT PART` and\n'
+        '`ALTER TABLE ... EXPORT PARTITION` from a [CAS]-backed `ReplicatedMergeTree`\n'
+        'source to a supported destination such as Iceberg, with the same exported rows\n'
+        'as from a non-CAS disk. `partition_exports` SHALL be a reserved table-level\n'
+        'directory, so its descriptor SHALL NOT be parsed as a part name.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.7.21'
 )
 
 RQ_SRS_048_CAS_Backup = Requirement(
@@ -1440,7 +2189,7 @@ RQ_SRS_048_CAS_Backup = Requirement(
     ),
     link=None,
     level=3,
-    num='4.6.1'
+    num='4.8.1'
 )
 
 RQ_SRS_048_CAS_Restore = Requirement(
@@ -1458,7 +2207,30 @@ RQ_SRS_048_CAS_Restore = Requirement(
     ),
     link=None,
     level=3,
-    num='4.6.2'
+    num='4.8.2'
+)
+
+RQ_SRS_048_CAS_Backup_SameEndpointCopy = Requirement(
+    name='RQ.SRS-048.CAS.Backup.SameEndpointCopy',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL back up a [CAS]-backed table to an `S3(...)` or `Disk(...)`\n'
+        'destination that sits on the same S3 endpoint as the pool. Because a blob\n'
+        'entry is a range inside a blob envelope rather than a whole object, the backup\n'
+        'SHALL copy the payload with a ranged server-side copy rather than copying the\n'
+        'envelope. A blob payload of 5 MiB or smaller SHALL fall back to a buffered\n'
+        'read-and-write copy, since S3 ranged part copy has a 5 MiB minimum part size.\n'
+        'Restored contents SHALL match\n'
+        '[RQ.SRS-048.CAS.Restore](#rqsrs-048casrestore).\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.8.3'
 )
 
 RQ_SRS_048_CAS_SharedPool = Requirement(
@@ -1475,7 +2247,7 @@ RQ_SRS_048_CAS_SharedPool = Requirement(
     ),
     link=None,
     level=3,
-    num='4.7.1'
+    num='4.9.1'
 )
 
 RQ_SRS_048_CAS_SharedPool_Deduplication = Requirement(
@@ -1493,7 +2265,7 @@ RQ_SRS_048_CAS_SharedPool_Deduplication = Requirement(
     ),
     link=None,
     level=3,
-    num='4.7.2'
+    num='4.9.2'
 )
 
 RQ_SRS_048_CAS_SharedPool_IndependentRefs = Requirement(
@@ -1510,7 +2282,7 @@ RQ_SRS_048_CAS_SharedPool_IndependentRefs = Requirement(
     ),
     link=None,
     level=3,
-    num='4.7.3'
+    num='4.9.3'
 )
 
 RQ_SRS_048_CAS_SharedPool_NodeCrash = Requirement(
@@ -1528,7 +2300,47 @@ RQ_SRS_048_CAS_SharedPool_NodeCrash = Requirement(
     ),
     link=None,
     level=3,
-    num='4.7.4'
+    num='4.9.4'
+)
+
+RQ_SRS_048_CAS_SharedPool_MountRecovery = Requirement(
+    name='RQ.SRS-048.CAS.SharedPool.MountRecovery',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL fence local writes when mount-lease renewal reaches a\n'
+        'terminal or unresolved outcome, enter the `TransientNotLive` lifecycle, and\n'
+        'schedule self-remount under a fresh `writer_epoch`. Every durable write or\n'
+        'delete SHALL recheck its captured fence generation before completion. A\n'
+        'confirmed foreign holder, successor, same-pair conflict, or fenced epoch SHALL\n'
+        "fail closed and SHALL NOT be adopted as this process's renewal.\n"
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.9.5'
+)
+
+RQ_SRS_048_CAS_SharedPool_TerminalLifecycle = Requirement(
+    name='RQ.SRS-048.CAS.SharedPool.TerminalLifecycle',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL treat `identity_lost`, `vanished(replaced)`, and\n'
+        '`vanished(forgotten)` as terminal, absorbing pool lifecycles. A transient\n'
+        'remount SHALL retry with bounded backoff when the probe is inconclusive and\n'
+        'return to `live` only after a valid claim and renewal under the fresh epoch.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.9.6'
 )
 
 RQ_SRS_048_CAS_Relink = Requirement(
@@ -1542,13 +2354,14 @@ RQ_SRS_048_CAS_Relink = Requirement(
         '[ClickHouse] SHALL support fetch-by-relink for `ReplicatedMergeTree` replicas\n'
         'that mount the same [CAS] pool: a receiving replica MAY publish a local ref to\n'
         "the sender's manifest instead of transferring all part bytes, when the relink\n"
-        "protocol succeeds. The sender SHALL offer relink only when the receiver's\n"
-        "advertised `cas_pool_uuid` equals the sender disk's pool uuid.\n"
+        'protocol succeeds. The receiver SHALL advertise the `cas_pool_uuid` of every\n'
+        'writable [CAS] pool in its storage policy, and the sender SHALL offer relink\n'
+        "only when its disk's pool uuid occurs in that set.\n"
         '\n'
     ),
     link=None,
     level=3,
-    num='4.8.1'
+    num='4.10.1'
 )
 
 RQ_SRS_048_CAS_Relink_HappyPath = Requirement(
@@ -1568,7 +2381,7 @@ RQ_SRS_048_CAS_Relink_HappyPath = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.2'
+    num='4.10.2'
 )
 
 RQ_SRS_048_CAS_Relink_DetachedFetch = Requirement(
@@ -1586,7 +2399,7 @@ RQ_SRS_048_CAS_Relink_DetachedFetch = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.3'
+    num='4.10.3'
 )
 
 RQ_SRS_048_CAS_Relink_CrossPool_ByteFallback = Requirement(
@@ -1598,14 +2411,19 @@ RQ_SRS_048_CAS_Relink_CrossPool_ByteFallback = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL fall back to ordinary byte fetch when sender and receiver do\n'
-        'not share the same [CAS] `cas_pool_uuid` (or relink confirmation is unavailable),\n'
-        'and SHALL not incorrectly claim a metadata-only relink in that case.\n'
-        'Byte-fetched files SHALL still content-address and deduplicate on arrival.\n'
+        'not share the same [CAS] `cas_pool_uuid`, when the sender predates the confirm\n'
+        'protocol, or when a mechanism failure proves that promotion did not commit\n'
+        '(for example an absent precommit or ref conflict). It SHALL not claim a\n'
+        'metadata-only relink in those cases. An unavailable or unproven confirmation is\n'
+        'an uncertain outcome governed by\n'
+        '[RQ.SRS-048.CAS.Relink.ConfirmRace](#rqsrs-048casrelinkconfirmrace), not a byte\n'
+        'fallback. Byte-fetched files SHALL still content-address and deduplicate on\n'
+        'arrival.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.8.4'
+    num='4.10.4'
 )
 
 RQ_SRS_048_CAS_Relink_AttachPartitionFrom = Requirement(
@@ -1623,7 +2441,7 @@ RQ_SRS_048_CAS_Relink_AttachPartitionFrom = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.5'
+    num='4.10.5'
 )
 
 RQ_SRS_048_CAS_Relink_ReplacePartition = Requirement(
@@ -1641,7 +2459,7 @@ RQ_SRS_048_CAS_Relink_ReplacePartition = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.6'
+    num='4.10.6'
 )
 
 RQ_SRS_048_CAS_Relink_VersionMix = Requirement(
@@ -1659,7 +2477,7 @@ RQ_SRS_048_CAS_Relink_VersionMix = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.7'
+    num='4.10.7'
 )
 
 RQ_SRS_048_CAS_Relink_ConfirmRace = Requirement(
@@ -1678,7 +2496,7 @@ RQ_SRS_048_CAS_Relink_ConfirmRace = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.8'
+    num='4.10.8'
 )
 
 RQ_SRS_048_CAS_Relink_StalledPublish = Requirement(
@@ -1695,7 +2513,7 @@ RQ_SRS_048_CAS_Relink_StalledPublish = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.9'
+    num='4.10.9'
 )
 
 RQ_SRS_048_CAS_Relink_RecursionBrake = Requirement(
@@ -1713,7 +2531,105 @@ RQ_SRS_048_CAS_Relink_RecursionBrake = Requirement(
     ),
     link=None,
     level=3,
-    num='4.8.10'
+    num='4.10.10'
+)
+
+RQ_SRS_048_CAS_Relink_OfferIntegrity = Requirement(
+    name='RQ.SRS-048.CAS.Relink.OfferIntegrity',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL resolve the sender manifest bytes and confirmation token\n'
+        'from one source-ref view. The receiver SHALL trust only the decoded manifest\n'
+        'entry list from the wire; it SHALL derive the destination namespace and ref\n'
+        "locally and ignore the sender's manifest id, namespace, and payload digest.\n"
+        'Protocol version 11 SHALL mean that the receiver promises to confirm before\n'
+        'promotion.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.10.11'
+)
+
+RQ_SRS_048_CAS_Relink_Placement = Requirement(
+    name='RQ.SRS-048.CAS.Relink.Placement',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'For a same-pool offer, [ClickHouse] SHALL place the fetched part on the first\n'
+        'writable policy disk that belongs to the offered pool, ahead of ordinary volume\n'
+        'order, JBOD balancing, `max_data_part_size_bytes`, and TTL destination rules.\n'
+        'TTL placement SHALL be deferred to the background mover. A read-only pool SHALL\n'
+        'be advertised only when another disk for that pool is writable.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.10.12'
+)
+
+RQ_SRS_048_CAS_Relink_UnavailableTarget = Requirement(
+    name='RQ.SRS-048.CAS.Relink.UnavailableTarget',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'When relink placement selects a pool disk whose mount is not live, [ClickHouse]\n'
+        'SHALL fail the fetch and let the replication queue retry. It SHALL NOT silently\n'
+        'choose a different disk and transfer bytes. A peer that predates multi-pool\n'
+        'advertisement MAY use byte fetch during a rolling upgrade.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.10.13'
+)
+
+RQ_SRS_048_CAS_Relink_FormatVersion = Requirement(
+    name='RQ.SRS-048.CAS.Relink.FormatVersion',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL fail closed when a relink offer uses an unknown newer\n'
+        'manifest format. Until a documented compatibility path exists, it SHALL NOT\n'
+        'silently degrade that offer to byte fetch.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.10.14'
+)
+
+RQ_SRS_048_CAS_Relink_GCBackstop = Requirement(
+    name='RQ.SRS-048.CAS.Relink.GCBackstop',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'A successful confirmation SHALL prove only that the source held the exact\n'
+        'manifest at confirm time; it SHALL NOT be interpreted as proof that a later\n'
+        "[GC] fold observed the receiver's new edge through an eventually consistent\n"
+        'listing. `cas-fsck` SHALL detect and report a reachable-but-absent object as the\n'
+        'operator backstop for that documented gap.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.10.15'
 )
 
 RQ_SRS_048_CAS_GC = Requirement(
@@ -1730,7 +2646,7 @@ RQ_SRS_048_CAS_GC = Requirement(
     ),
     link=None,
     level=3,
-    num='4.9.1'
+    num='4.11.1'
 )
 
 RQ_SRS_048_CAS_GC_NoLoss = Requirement(
@@ -1748,7 +2664,7 @@ RQ_SRS_048_CAS_GC_NoLoss = Requirement(
     ),
     link=None,
     level=3,
-    num='4.9.2'
+    num='4.11.2'
 )
 
 RQ_SRS_048_CAS_GC_ReclaimAfterDrop = Requirement(
@@ -1769,7 +2685,7 @@ RQ_SRS_048_CAS_GC_ReclaimAfterDrop = Requirement(
     ),
     link=None,
     level=3,
-    num='4.9.3'
+    num='4.11.3'
 )
 
 RQ_SRS_048_CAS_GC_Run = Requirement(
@@ -1788,13 +2704,18 @@ RQ_SRS_048_CAS_GC_Run = Requirement(
         '\n'
         'When `disk_name` is omitted, one round SHALL run on every [CAS] disk on the\n'
         'node. A manual run SHALL execute even if `SYSTEM CAS GC STOP` has paused the\n'
-        'background scheduler. The command SHALL return one row per disk it ran on\n'
-        '(the `cas_gc_log` `Finish` shape).\n'
+        'background scheduler. It MAY acquire or renew GC leadership but SHALL NOT steal\n'
+        'leadership from a live leader. The command SHALL return one row per disk with\n'
+        '`disk`, `acquired_lease`, `deferred`, `round`, `candidates_marked`,\n'
+        '`objects_deleted`, `objects_absent`, `objects_replaced`, `objects_spared`,\n'
+        '`manifests_deleted`, `entries_condemned`, `entries_graduated`,\n'
+        '`entries_redeleted`, `entries_redelete_failed`, `fence_outs`, `anomalies`, and\n'
+        '`pending_candidates`, `pending_condemned`, and `pending_retired`.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.9.4'
+    num='4.11.4'
 )
 
 RQ_SRS_048_CAS_GC_Rebuild = Requirement(
@@ -1817,12 +2738,14 @@ RQ_SRS_048_CAS_GC_Rebuild = Requirement(
         "(regardless of `FORCE`) when another GC leader holds the disk's lease.\n"
         'Rebuild SHALL write only the GC plane and SHALL fail closed rather than delete\n'
         'uncertain content; temporary over-protection (leaks) is preferred over data\n'
-        'loss.\n'
+        'loss. Rebuild SHALL be documented as disaster recovery: it does not directly\n'
+        'delete blobs, but incorrect rebuilt bookkeeping can authorize deletion in later\n'
+        'ordinary rounds.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.9.5'
+    num='4.11.5'
 )
 
 RQ_SRS_048_CAS_GC_Sharded = Requirement(
@@ -1842,7 +2765,7 @@ RQ_SRS_048_CAS_GC_Sharded = Requirement(
     ),
     link=None,
     level=3,
-    num='4.9.6'
+    num='4.11.6'
 )
 
 RQ_SRS_048_CAS_GC_RefSnaplog = Requirement(
@@ -1860,7 +2783,7 @@ RQ_SRS_048_CAS_GC_RefSnaplog = Requirement(
     ),
     link=None,
     level=3,
-    num='4.9.7'
+    num='4.11.7'
 )
 
 RQ_SRS_048_CAS_GC_StopStart = Requirement(
@@ -1882,11 +2805,190 @@ RQ_SRS_048_CAS_GC_StopStart = Requirement(
         '`disk_name` SHALL be required. `STOP` SHALL be idempotent, SHALL stop in place\n'
         '(the same scheduler instance resumes on `START`), and SHALL NOT stop a manual\n'
         '`SYSTEM CAS GC RUN`. `START` SHALL NOT automatically restore GC leadership.\n'
+        '`STOP` SHALL work on a sick or non-live disk and return no result set. `START`\n'
+        'SHALL reject a decommissioned or uncertain pool with a typed error.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.9.8'
+    num='4.11.8'
+)
+
+RQ_SRS_048_CAS_GC_Phases = Requirement(
+    name='RQ.SRS-048.CAS.GC.Phases',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL expose the current GC pipeline through ordered `Phase` rows\n'
+        'using these documented phase values:\n'
+        '\n'
+        '1. `lease`\n'
+        '2. `pre_fold_ref_drain`\n'
+        '3. `heartbeat_floor`\n'
+        '4. `defer_decision`\n'
+        '5. `parent_seal_read`\n'
+        '6. `fold_ref_group`\n'
+        '7. `fold_seal_read`\n'
+        '8. `fold_ref_intake`\n'
+        '9. `fold_reduce`\n'
+        '10. `fold_seal_write`\n'
+        '11. `pending_deletes`\n'
+        '12. `meta_pool_wait`\n'
+        '13. `round_commit`\n'
+        '14. `handoff_reclaim`\n'
+        '15. `manifest_deletes`\n'
+        '16. `namespace_cleanup`\n'
+        '17. `ref_object_cleanup`\n'
+        '18. `orphan_sweep`\n'
+        '\n'
+        'A follower SHALL emit only the phases it reaches and stop after `lease`. A\n'
+        'deferred leader round SHALL still drain eligible pre-fold work and run one\n'
+        'suppressed namespace-cleanup page, but SHALL not publish a fold generation.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.11.9'
+)
+
+RQ_SRS_048_CAS_GC_Budgets = Requirement(
+    name='RQ.SRS-048.CAS.GC.Budgets',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support the documented GC work controls:\n'
+        '\n'
+        '* `cas_manifest_sweep_list_budget_keys`\n'
+        '* `cas_manifest_sweep_delete_budget_keys`\n'
+        '* `cas_gc_bulk_delete_chunk_keys`\n'
+        '* `cas_gc_round_graduation_budget`\n'
+        '* `cas_gc_round_redelete_budget`\n'
+        '* `cas_gc_round_sweep_namespace_budget`\n'
+        '* `cas_gc_round_sweep_recovery_op_budget`\n'
+        '* `cas_gc_round_ref_cleanup_budget`\n'
+        '* `cas_gc_round_prefix_wholesale_budget`\n'
+        '* `cas_gc_round_handoff_prefix_wholesale_budget`\n'
+        '* `cas_gc_round_outcome_entry_budget`\n'
+        '\n'
+        'For `cas_gc_round_*` budgets, zero SHALL mean unbounded. For the manifest sweep,\n'
+        'a zero list budget SHALL disable the sweep and a zero delete budget SHALL permit\n'
+        'listing without nomination. `cas_gc_meta_pool_size` and\n'
+        '`cas_gc_bulk_delete_chunk_keys` SHALL reject zero.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.11.10'
+)
+
+RQ_SRS_048_CAS_GC_ReadAhead = Requirement(
+    name='RQ.SRS-048.CAS.GC.ReadAhead',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[GC] read-ahead SHALL cache results, never decisions: every take, decode,\n'
+        'counter, hold, and event SHALL stay at its own site, and a round run at\n'
+        '`cas_gc_io_concurrency = 1` SHALL reach the same verdicts as the same round run\n'
+        "concurrently. Read-ahead SHALL hint only ref-log ids that the round's own\n"
+        '`LIST` returned, so it SHALL NOT request the positions past an epoch seal,\n'
+        'which never exist. A log written after that `LIST` SHALL be taken inline, with\n'
+        'the same decision. Wasted hints SHALL be counted in `CASGCReadAheadWasted` and\n'
+        'useful ones in `CASGCReadAheadHit`.\n'
+        '\n'
+        "A namespace's mount floor SHALL be resolved only from the server roots the\n"
+        'caller already listed under `gc/server-roots/`, instead of probing every `/`\n'
+        'prefix of the namespace name. A mount created after that listing SHALL be seen\n'
+        'only on the next listing, which is the conservative direction: an unresolved\n'
+        'floor SHALL retain, keep the barrier, or over-protect.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.11.11'
+)
+
+RQ_SRS_048_CAS_GC_OrphanManifests = Requirement(
+    name='RQ.SRS-048.CAS.GC.OrphanManifests',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL reclaim never-precommitted manifest bodies through the\n'
+        'orphan-manifest sweep. Eligibility SHALL use namespace watermarks and mount\n'
+        'floors, not object age alone. A namespace without deletion authority from a\n'
+        'valid mount lease SHALL retain its candidate manifests.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.11.12'
+)
+
+RQ_SRS_048_CAS_GC_NamespaceJanitor = Requirement(
+    name='RQ.SRS-048.CAS.GC.NamespaceJanitor',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL run a perpetual namespace janitor that reclaims the ref\n'
+        'stream and state objects (`_log`, `_snap`, `_ckpt`, `_files`) left under a dead\n'
+        '`life_id`. It SHALL work in bounded `LIST` pages under a per-round time budget,\n'
+        'and SHALL act whenever it next lists a key whose `life_id` a fresh catalog cut\n'
+        'no longer names, independently of and not gated on deletion of the catalog row.\n'
+        '\n'
+        'The janitor SHALL be leak-only: it SHALL NOT fail a [GC] round, SHALL NOT block\n'
+        'round progress on an unreadable key, and a crash mid-page SHALL leave debris for\n'
+        'its next page rather than lose a live object. Its outstanding work SHALL be\n'
+        'observable as the `janitor-pending` state in `cas-fsck` and the\n'
+        '`namespace_janitor_pending`, `namespace_janitor_pending_bytes`, and\n'
+        '`namespace_janitor_pending_lives` counters of\n'
+        '[RQ.SRS-048.CAS.Fsck.Online](#rqsrs-048casfsckonline).\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.11.13'
+)
+
+RQ_SRS_048_CAS_GC_DeleteAuthority = Requirement(
+    name='RQ.SRS-048.CAS.GC.DeleteAuthority',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[GC] SHALL be the only component that deletes blob bodies and the only\n'
+        'reachability-driven deleter of manifest bodies. A writer MAY exact-delete its\n'
+        'own never-precommitted manifest. Pool-member decommission MAY remove that\n'
+        "member's manifest debris, staging objects, and roots, but SHALL NOT\n"
+        "synchronously reclaim shared blob bodies, and SHALL keep the member's `owner`,\n"
+        '`epoch`, and `mount` control objects per\n'
+        '[RQ.SRS-048.CAS.DropPoolMember](#rqsrs-048casdroppoolmember).\n'
+        '\n'
+        "Every delete of a retired blob body SHALL carry that object's backend token, so\n"
+        "a body replaced by a newer incarnation is never removed by an older round's\n"
+        'delete. On S3 those deletes MAY be issued as batched `DeleteObjects` requests\n'
+        'that carry a per-object `ETag`, bounded by `cas_gc_bulk_delete_chunk_keys`; a\n'
+        'batch SHALL NOT weaken the exact-token rule.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.11.14'
 )
 
 RQ_SRS_048_CAS_GC_DryRun = Requirement(
@@ -1905,7 +3007,7 @@ RQ_SRS_048_CAS_GC_DryRun = Requirement(
     ),
     link=None,
     level=3,
-    num='4.9.9'
+    num='4.11.15'
 )
 
 RQ_SRS_048_CAS_Fsck = Requirement(
@@ -1917,18 +3019,19 @@ RQ_SRS_048_CAS_Fsck = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL provide an offline filesystem check\n'
-        '(`clickhouse-disks ... cas-fsck [--detail]`) that classifies reachable,\n'
-        'dangling, pending-gc, awaiting-gc, and related object states for a [CAS] pool\n'
-        'without mutating the pool. The tool SHALL open the disk read-only and MUST NOT\n'
-        "claim a live server's mount. `dangling` SHALL be the class that means data\n"
-        'loss; `unreachable` / `pending_gc` / `awaiting_gc` SHALL mean objects still\n'
-        'moving through the condemn / graduate / delete pipeline. `--detail` SHALL be\n'
-        'the per-object listing; the SQL form is summary-only.\n'
+        '(`clickhouse-disks ... cas-fsck [--detail] [--timeout ...] [--namespace ...]\n'
+        '[--partial]`) that classifies `reachable`, `dangling`, `unreachable`,\n'
+        '`pending-gc`, `awaiting-gc`, `unaccounted`, `stale-edge`, `corrupted-run`,\n'
+        '`chain-broken`, `unchecked`, `lifeless-key`, `janitor-pending`, and related\n'
+        'object states for a [CAS] pool without mutating it. The tool SHALL open the disk\n'
+        "read-only and MUST NOT claim a live server's mount. Only `dangling` SHALL\n"
+        'directly mean data loss. `--detail` SHALL be the per-object listing; the SQL\n'
+        'form SHALL be summary-only.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.9.10'
+    num='4.11.16'
 )
 
 RQ_SRS_048_CAS_Fsck_Online = Requirement(
@@ -1949,17 +3052,21 @@ RQ_SRS_048_CAS_Fsck_Online = Requirement(
         '`disk_name` SHALL be required. The scan SHALL re-validate findings against a\n'
         'fresh authoritative read and SHALL need no quiesce. The command SHALL return\n'
         'one summary row including at least `reachable`, `dangling`, `unreachable`,\n'
-        '`pending_gc`, and `awaiting_gc`.\n'
+        '`pending_gc`, `awaiting_gc`, `unaccounted`, `stale_edge`, `corrupted_runs`,\n'
+        '`chain_broken`, `unchecked`, `lifeless_keys`, `namespace_janitor_pending`,\n'
+        '`namespace_janitor_pending_bytes`, `namespace_janitor_pending_lives`,\n'
+        '`ref_records_walked`, `physical_bytes`, `referenced_logical_bytes`,\n'
+        '`distinct_blobs`, and `total_blob_refs`.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.9.11'
+    num='4.11.17'
 )
 
 RQ_SRS_048_CAS_DropPoolMember = Requirement(
     name='RQ.SRS-048.CAS.DropPoolMember',
-    version='1.0',
+    version='2.0',
     priority=None,
     group=None,
     type=None,
@@ -1972,18 +3079,48 @@ RQ_SRS_048_CAS_DropPoolMember = Requirement(
         '```\n'
         '\n'
         'and the offline twin `clickhouse-disks ... cas-drop-member <server_root_id>`.\n'
-        'The command SHALL refuse immediately if the member is still alive, SHALL fence\n'
-        "that `cas_server_root_id` from writing again, SHALL drop the member's table\n"
-        'namespaces, and SHALL retire the mount slot only after drains are confirmed.\n'
-        'It SHALL emit ordinary ref-edge deltas rather than inventing GC transitions,\n'
-        'and SHALL NOT synchronously reclaim shared blob content. The operation SHALL\n'
-        "be resumable. After `slot_removed = true` with no warnings, the member's\n"
-        '`cas_server_root_id` SHALL no longer appear in `system.cas_mounts` on any peer.\n'
+        "The command SHALL claim the member's mount slot without waiting and SHALL\n"
+        'accept only a terminal slot: `terminated` (the member stopped cleanly) or\n'
+        "`fenced` (the disk's GC leader fenced its lease). A `live` or `expired` slot\n"
+        'SHALL be refused, so a hard-killed member SHALL NOT be removable until it is\n'
+        'fenced; the refusal SHALL name that wait — about one lease TTL plus one renew\n'
+        'period after the leader first saw the lease. The command SHALL fence that\n'
+        "`cas_server_root_id` from writing again, SHALL drop the member's table\n"
+        'namespaces, and SHALL mark the retirement verified only after drains are\n'
+        'confirmed. It SHALL emit ordinary ref-edge deltas rather than inventing GC\n'
+        'transitions, and SHALL NOT synchronously reclaim shared blob content.\n'
+        '\n'
+        "The run SHALL delete only the member's **data**, and SHALL keep its `owner`,\n"
+        '`epoch`, and `mount` objects, so writer epochs stay strictly increasing per\n'
+        '`cas_server_root_id` across lives and a late tombstone cannot land on a live\n'
+        "successor. It SHALL proceed as: claim the victim's slot; tombstone the owner\n"
+        "at a new life on the admin's fenced mount plane, so no attempt is sent past the\n"
+        "admin's lease deadline; confirm the claim still holds, otherwise roll the\n"
+        'tombstone back on the unfenced control plane unless the owner was already\n'
+        'retired; drain the data on the fenced plane; write the farewell; then verify\n'
+        "the slot and owner and mark the retirement verified. When the tombstone's\n"
+        'outcome is unknown and the owner does not read back as tombstoned, the run\n'
+        'SHALL fail **without** writing its clean farewell, so the victim restarts only\n'
+        'after [GC] fences the slot rather than reclaiming it at once.\n'
+        '\n'
+        'The operation SHALL be resumable and SHALL return `server_root_id`,\n'
+        '`namespaces_removed`, `namespaces_already_removed`, `committed_refs_removed`,\n'
+        '`precommits_removed`, `manifest_debris_removed`, `staging_objects_removed`,\n'
+        '`mountpoint_objects_removed`, `member_retired`, `warnings`, and\n'
+        '`namespaces_pending_gc`. `member_retired` SHALL be true only for a verified\n'
+        'mark; an owner that moved on to a later unretired life SHALL report false with\n'
+        'its own warning. Rows still removing after the drain SHALL be reported in\n'
+        '`namespaces_pending_gc`, which [GC] clears without a rerun. Non-empty\n'
+        '`warnings` SHALL leave the slot as a resumable anchor. A rerun SHALL be\n'
+        'advised only for a `retired` member whose retirement is not verified.\n'
+        '\n'
+        'Whether the retired identity can come back is specified by\n'
+        '[RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin](#rqsrs-048casdiskserverrootidrejoin).\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.10.1'
+    num='4.12.1'
 )
 
 RQ_SRS_048_CAS_DropPoolMember_ReadonlyRejected = Requirement(
@@ -2002,7 +3139,7 @@ RQ_SRS_048_CAS_DropPoolMember_ReadonlyRejected = Requirement(
     ),
     link=None,
     level=3,
-    num='4.10.2'
+    num='4.12.2'
 )
 
 RQ_SRS_048_CAS_Forget = Requirement(
@@ -2029,7 +3166,7 @@ RQ_SRS_048_CAS_Forget = Requirement(
     ),
     link=None,
     level=3,
-    num='4.10.3'
+    num='4.12.3'
 )
 
 RQ_SRS_048_CAS_Tools = Requirement(
@@ -2048,7 +3185,7 @@ RQ_SRS_048_CAS_Tools = Requirement(
     ),
     link=None,
     level=3,
-    num='4.10.4'
+    num='4.12.4'
 )
 
 RQ_SRS_048_CAS_Fault_LostPartRecovery = Requirement(
@@ -2067,27 +3204,30 @@ RQ_SRS_048_CAS_Fault_LostPartRecovery = Requirement(
     ),
     link=None,
     level=3,
-    num='4.11.1'
+    num='4.13.1'
 )
 
 RQ_SRS_048_CAS_Fault_LazyLoad_S3Outage = Requirement(
     name='RQ.SRS-048.CAS.Fault.LazyLoad.S3Outage',
-    version='1.0',
+    version='2.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL NOT automatically requeue a lazily loaded [CAS] table's\n"
-        'AsyncLoader job after a transient object-store error during first build. The\n'
-        'job MAY remain `FAILED`; operators SHALL recover by restarting the server or\n'
-        'issuing a fresh load for the table. This matches the documented one-shot\n'
-        'AsyncLoader design (not a [CAS]-specific retry path).\n'
+        '[ClickHouse] SHALL retry table construction during asynchronous loading when\n'
+        'it fails on a transient [CAS] mount failure, so tables become available again\n'
+        'once the mount recovers, without a server restart. A permanent failure SHALL\n'
+        'stay terminal, lease fencing SHALL be preserved, and shutdown SHALL be able to\n'
+        'interrupt the recovery rather than wait indefinitely. This is the one\n'
+        '[CAS]-specific departure from the one-shot AsyncLoader design: a job that fails\n'
+        'for any other reason SHALL still remain `FAILED` until the server restarts or a\n'
+        'fresh load is issued for that table.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.11.2'
+    num='4.13.2'
 )
 
 RQ_SRS_048_CAS_Fault_FailClosed = Requirement(
@@ -2105,7 +3245,7 @@ RQ_SRS_048_CAS_Fault_FailClosed = Requirement(
     ),
     link=None,
     level=3,
-    num='4.11.3'
+    num='4.13.3'
 )
 
 RQ_SRS_048_CAS_Cache = Requirement(
@@ -2125,7 +3265,7 @@ RQ_SRS_048_CAS_Cache = Requirement(
     ),
     link=None,
     level=3,
-    num='4.12.1'
+    num='4.14.1'
 )
 
 RQ_SRS_048_CAS_Cache_Hits = Requirement(
@@ -2143,7 +3283,7 @@ RQ_SRS_048_CAS_Cache_Hits = Requirement(
     ),
     link=None,
     level=3,
-    num='4.12.2'
+    num='4.14.2'
 )
 
 RQ_SRS_048_CAS_Observability = Requirement(
@@ -2162,7 +3302,7 @@ RQ_SRS_048_CAS_Observability = Requirement(
     ),
     link=None,
     level=3,
-    num='4.13.1'
+    num='4.15.1'
 )
 
 RQ_SRS_048_CAS_Observability_SystemTables = Requirement(
@@ -2176,8 +3316,7 @@ RQ_SRS_048_CAS_Observability_SystemTables = Requirement(
         '[ClickHouse] SHALL provide:\n'
         '\n'
         '* `system.cas_mounts` — live per-mount view of every `cas_server_root_id` in\n'
-        '  the pool (not only the local server), including lease state and process-local\n'
-        '  GC-health columns (`is_leader` and related fields `NULL` on peer rows).\n'
+        '  the pool (not only the local server), including lease and lifecycle state.\n'
         '* `system.cas_gc_log` — per-round `Start` / `Finish` / `Phase` rows correlated\n'
         '  by `round_id`, for both scheduled and manual (`SYSTEM CAS GC RUN`) rounds.\n'
         '* `system.cas_log` — per-decision event log (blob puts, dedup adoptions, ref\n'
@@ -2189,12 +3328,89 @@ RQ_SRS_048_CAS_Observability_SystemTables = Requirement(
     ),
     link=None,
     level=3,
-    num='4.13.2'
+    num='4.15.2'
+)
+
+RQ_SRS_048_CAS_Observability_Mounts = Requirement(
+    name='RQ.SRS-048.CAS.Observability.Mounts',
+    version='2.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '`system.cas_mounts` SHALL read live backend state on each query and skip a disk\n'
+        'whose backend read fails without hiding other disks. It SHALL expose mount\n'
+        'states `live`, `expired`, `terminated`, `fenced`, `retired`, and `corrupt`;\n'
+        'lifecycle states `live`, `not_live`, `identity_lost`, `vanished`,\n'
+        '`constructing`, and `shutdown`; vanish reasons `replaced` and `forgotten`; and\n'
+        '`lifecycle_detail` / `lifecycle_since`. Process-local columns including\n'
+        '`is_leader`, `pending_reclaim`, `last_success_age_seconds`, and\n'
+        '`wedged_namespace_count` SHALL be `NULL` on peer rows.\n'
+        '\n'
+        'The table SHALL report a mount-lease renewal while it runs, so an operator can\n'
+        'tell a renewal retrying through an object-store outage from a renewal thread\n'
+        'that has died: `renewal_in_progress` (a renewal call is running),\n'
+        '`renewal_attempts` (physical `PUT`s sent by the current call), and\n'
+        '`last_renewal_error` (verb, key, and error class of the last refused request,\n'
+        'carrying no credentials and no bodies). A local failure of the resolve read,\n'
+        'which is not a request to the store, SHALL NOT be published there.\n'
+        '\n'
+        'A decommissioned member SHALL read as `retired`, with `retirement_verified`\n'
+        'reporting 1 once the retirement is verified and 0 otherwise. There SHALL be no\n'
+        '`retiring` state.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.15.3'
+)
+
+RQ_SRS_048_CAS_Observability_GCLog = Requirement(
+    name='RQ.SRS-048.CAS.Observability.GCLog',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '`system.cas_gc_log` SHALL expose outcomes `Unknown`, `Success`, `NotALeader`,\n'
+        '`Deferred`, `Aborted`, `Stopped`, and `Error`; correlate rows with `round_id`;\n'
+        'and expose `phase`, `phase_duration_microseconds`, `phase_metrics`, and\n'
+        'per-row `ProfileEvents`. Monitoring SHALL key failures on `error_code` rather\n'
+        'than parsing `error` text. Work performed by helper threads MAY be absent from\n'
+        "one phase row's `ProfileEvents` and SHALL remain attributable through the\n"
+        'documented phase metrics and finish-row totals.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.15.4'
+)
+
+RQ_SRS_048_CAS_Observability_EventLog = Requirement(
+    name='RQ.SRS-048.CAS.Observability.EventLog',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '`system.cas_log` SHALL expose per-decision events including `blob_put`,\n'
+        '`blob_reuse_adopt`, `root_remove`, `indegree_zero`, `gc_retire_decision`,\n'
+        '`gc_recheck_verdict`, `blob_delete`, `dangling_access`, `corrupt_dangle`,\n'
+        '`watermark_renew`, and `mount_remount`, with the relevant pool, namespace,\n'
+        'object, token, and decision context.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.15.5'
 )
 
 RQ_SRS_048_CAS_Observability_ProfileEvents = Requirement(
     name='RQ.SRS-048.CAS.Observability.ProfileEvents',
-    version='1.0',
+    version='2.0',
     priority=None,
     group=None,
     type=None,
@@ -2203,12 +3419,27 @@ RQ_SRS_048_CAS_Observability_ProfileEvents = Requirement(
         '[ClickHouse] SHALL expose [CAS]-related `ProfileEvents` under the uppercase\n'
         '`CAS` / `CASGC` prefix (blob, manifest, ref, mount-renewal/remount, and GC\n'
         'counters) so operators can attribute pool I/O and diagnose mount-lease\n'
-        'recovery without reading server logs alone.\n'
+        'recovery without reading server logs alone. The surface SHALL include ref\n'
+        'append/recovery failures, GC fence and anomaly counters, rollback cleanup\n'
+        'failures, and mount renewal/remount attempt, retry, success, loss, deadline,\n'
+        'and failure counters. Mount renewal attempts and retries SHALL be counted per\n'
+        'sent attempt rather than derived from the result of the call.\n'
+        '\n'
+        'The surface SHALL include at least `CASMetaAbsentRepublish`\n'
+        '([RQ.SRS-048.CAS.Write.BlobMaterialization](#rqsrs-048caswriteblobmaterialization)),\n'
+        '`CASBlobPublishAttemptFailed` and `CASBlobPublishGaveUp`\n'
+        '([RQ.SRS-048.CAS.Write.BlobPublishRetries](#rqsrs-048caswriteblobpublishretries)),\n'
+        '`CASGCReadAheadWasted` and `CASGCReadAheadHit`\n'
+        '([RQ.SRS-048.CAS.GC.ReadAhead](#rqsrs-048casgcreadahead)), and `CASRefMove`\n'
+        'and `CASOwnershipConflict`\n'
+        '([RQ.SRS-048.CAS.Write.PartRename](#rqsrs-048caswritepartrename)).\n'
+        '`CASMetaAdoptBackfill` SHALL be gone; a dashboard that read it SHALL read\n'
+        '`CASMetaAbsentRepublish` instead.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.13.3'
+    num='4.15.6'
 )
 
 RQ_SRS_048_CAS_Access = Requirement(
@@ -2227,12 +3458,12 @@ RQ_SRS_048_CAS_Access = Requirement(
     ),
     link=None,
     level=3,
-    num='4.13.4'
+    num='4.15.7'
 )
 
 RQ_SRS_048_CAS_Restrictions_BackendCapabilities = Requirement(
     name='RQ.SRS-048.CAS.Restrictions.BackendCapabilities',
-    version='1.0',
+    version='1.1',
     priority=None,
     group=None,
     type=None,
@@ -2243,9 +3474,12 @@ RQ_SRS_048_CAS_Restrictions_BackendCapabilities = Requirement(
         'at every writable mount. Required capabilities include read-after-write,\n'
         'conditional create (`If-None-Match: *`) for manifests and control objects,\n'
         'conditional overwrite (`If-Match`) for mount leases and `gc/state`,\n'
-        'unconditional blob publication, exact-token delete, ranged `GET`, and\n'
-        'resumable `LIST`. Bucket versioning SHALL be disabled (a versioned or\n'
-        'unanswerable versioning probe SHALL refuse a writable generation-token mount).\n'
+        'unconditional blob publication, exact-token delete (single or batched, per\n'
+        '[RQ.SRS-048.CAS.GC.DeleteAuthority](#rqsrs-048casgcdeleteauthority)), ranged\n'
+        '`GET`, and resumable `LIST`. Bucket versioning SHALL be disabled (a versioned or\n'
+        'confirmed-enabled versioning probe SHALL refuse a writable generation-token\n'
+        'mount). An inconclusive GCS versioning probe SHALL warn and continue, leaving\n'
+        'verification to the operator.\n'
         'Object soft-delete MUST be disabled by the operator (not verified at mount).\n'
         'When those capabilities are absent, mount SHALL fail closed rather than\n'
         'silently run an unsafe configuration. `skip_access_check = true` SHALL be\n'
@@ -2254,7 +3488,49 @@ RQ_SRS_048_CAS_Restrictions_BackendCapabilities = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.1'
+    num='4.16.1'
+)
+
+RQ_SRS_048_CAS_Restrictions_ConditionalWriteRetries = Requirement(
+    name='RQ.SRS-048.CAS.Restrictions.ConditionalWriteRetries',
+    version='1.1',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'Before admitting a writable mount, [ClickHouse] SHALL verify that the\n'
+        'object-storage client supports a single-HTTP-attempt retry profile for\n'
+        'conditional writes. A client with hidden conditional-write retries SHALL be\n'
+        'rejected because a retry can outlive the mount lease and obscure whether the\n'
+        'operation committed. Conditional retries SHALL occur only as explicit [CAS]\n'
+        'state-machine transitions. The same single-attempt rule applies per verb to\n'
+        'the unconditional object-creating requests of blob publication, specified by\n'
+        '[RQ.SRS-048.CAS.Write.BlobPublishRetries](#rqsrs-048caswriteblobpublishretries).\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.16.2'
+)
+
+RQ_SRS_048_CAS_Restrictions_BackendToken = Requirement(
+    name='RQ.SRS-048.CAS.Restrictions.BackendToken',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'The object store SHALL preserve `TOKEN` implies `CONTENT`: one observed ETag or\n'
+        'generation token SHALL NOT name different object content over time. Because the\n'
+        'mount capability probe cannot prove this property, operators SHALL use only a\n'
+        'backend whose token and exact-delete semantics satisfy the documented contract.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.16.3'
 )
 
 RQ_SRS_048_CAS_Restrictions_ZeroCopy = Requirement(
@@ -2275,7 +3551,7 @@ RQ_SRS_048_CAS_Restrictions_ZeroCopy = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.2'
+    num='4.16.4'
 )
 
 RQ_SRS_048_CAS_Restrictions_UniqueKey = Requirement(
@@ -2293,7 +3569,7 @@ RQ_SRS_048_CAS_Restrictions_UniqueKey = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.3'
+    num='4.16.5'
 )
 
 RQ_SRS_048_CAS_Restrictions_NonMergeTree = Requirement(
@@ -2312,7 +3588,7 @@ RQ_SRS_048_CAS_Restrictions_NonMergeTree = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.4'
+    num='4.16.6'
 )
 
 RQ_SRS_048_CAS_Restrictions_Backup_TempHardLinks = Requirement(
@@ -2330,7 +3606,7 @@ RQ_SRS_048_CAS_Restrictions_Backup_TempHardLinks = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.5'
+    num='4.16.7'
 )
 
 RQ_SRS_048_CAS_Restrictions_Backup_NativeSnapshot = Requirement(
@@ -2351,7 +3627,7 @@ RQ_SRS_048_CAS_Restrictions_Backup_NativeSnapshot = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.6'
+    num='4.16.8'
 )
 
 RQ_SRS_048_CAS_Restrictions_Encryption = Requirement(
@@ -2371,7 +3647,7 @@ RQ_SRS_048_CAS_Restrictions_Encryption = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.7'
+    num='4.16.9'
 )
 
 RQ_SRS_048_CAS_Restrictions_Azure = Requirement(
@@ -2389,7 +3665,7 @@ RQ_SRS_048_CAS_Restrictions_Azure = Requirement(
     ),
     link=None,
     level=3,
-    num='4.14.8'
+    num='4.16.10'
 )
 
 RQ_SRS_048_CAS_Restrictions_GCS = Requirement(
@@ -2403,12 +3679,52 @@ RQ_SRS_048_CAS_Restrictions_GCS = Requirement(
         "Google Cloud Storage's generation-token implementation is present, but the\n"
         'credentialed real-GCS release gate is pending. Suites against a fake GCS\n'
         "service SHALL NOT be treated as proof of Google's multipart, native-copy, or\n"
-        'exact-delete wire behavior.\n'
+        'exact-delete wire behavior. The GCS HMAC path SHALL reject server-side\n'
+        'encryption headers and unknown custom `x-amz-*` headers rather than guessing\n'
+        '`x-goog-*` equivalents. Operators SHALL account for GCS per-object-name write\n'
+        'limits on hot checkpoint and ref-catalog objects.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='4.14.9'
+    num='4.16.11'
+)
+
+RQ_SRS_048_CAS_Restrictions_LocalBackend = Requirement(
+    name='RQ.SRS-048.CAS.Restrictions.LocalBackend',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'The `local` object-storage backend SHALL be treated as a single-node,\n'
+        'best-effort development backend. Blob publication MAY materialize a complete\n'
+        'blob in memory and serialize publication; it SHALL NOT be used as evidence of\n'
+        'production object-store concurrency or failure semantics.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.16.12'
+)
+
+RQ_SRS_048_CAS_Restrictions_WideParts = Requirement(
+    name='RQ.SRS-048.CAS.Restrictions.WideParts',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'Operators SHALL account for one object-store request per blob-backed column\n'
+        'file when opening wide parts. Very wide merges MAY exhaust local ephemeral\n'
+        'ports unless connection reuse and concurrency are configured appropriately.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.16.13'
 )
 
 SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
@@ -2440,128 +3756,177 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         Heading(name='RQ.SRS-048.CAS.Disk.MetadataType', level=3, num='4.2.2'),
         Heading(name='RQ.SRS-048.CAS.Disk.ServerRootId', level=3, num='4.2.3'),
         Heading(name='RQ.SRS-048.CAS.Disk.ServerRootId.Unique', level=3, num='4.2.4'),
-        Heading(name='RQ.SRS-048.CAS.Disk.Pool', level=3, num='4.2.5'),
-        Heading(name='RQ.SRS-048.CAS.Disk.Inline', level=3, num='4.2.6'),
-        Heading(name='RQ.SRS-048.CAS.Policy', level=3, num='4.2.7'),
-        Heading(name='RQ.SRS-048.CAS.Disk.Settings', level=3, num='4.2.8'),
-        Heading(name='RQ.SRS-048.CAS.Disk.BlobHash', level=3, num='4.2.9'),
-        Heading(name='RQ.SRS-048.CAS.Disk.Backends', level=3, num='4.2.10'),
+        Heading(name='RQ.SRS-048.CAS.Disk.ServerRootId.Validation', level=3, num='4.2.5'),
+        Heading(name='RQ.SRS-048.CAS.Disk.ServerRootId.Ownership', level=3, num='4.2.6'),
+        Heading(name='RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin', level=3, num='4.2.7'),
+        Heading(name='RQ.SRS-048.CAS.Disk.Pool', level=3, num='4.2.8'),
+        Heading(name='RQ.SRS-048.CAS.Disk.Inline', level=3, num='4.2.9'),
+        Heading(name='RQ.SRS-048.CAS.Policy', level=3, num='4.2.10'),
+        Heading(name='RQ.SRS-048.CAS.Disk.Settings', level=3, num='4.2.11'),
+        Heading(name='RQ.SRS-048.CAS.Disk.CoreSettings', level=3, num='4.2.12'),
+        Heading(name='RQ.SRS-048.CAS.Disk.LeaseTiming', level=3, num='4.2.13'),
+        Heading(name='RQ.SRS-048.CAS.Disk.Staging', level=3, num='4.2.14'),
+        Heading(name='RQ.SRS-048.CAS.Disk.ConnectionReuse', level=3, num='4.2.15'),
+        Heading(name='RQ.SRS-048.CAS.Disk.BlobHash', level=3, num='4.2.16'),
+        Heading(name='RQ.SRS-048.CAS.Disk.Backends', level=3, num='4.2.17'),
         Heading(name='Object Model', level=2, num='4.3'),
         Heading(name='RQ.SRS-048.CAS.ObjectModel', level=3, num='4.3.1'),
         Heading(name='RQ.SRS-048.CAS.ObjectModel.Blobs', level=3, num='4.3.2'),
         Heading(name='RQ.SRS-048.CAS.ObjectModel.Manifests', level=3, num='4.3.3'),
         Heading(name='RQ.SRS-048.CAS.ObjectModel.Refs', level=3, num='4.3.4'),
         Heading(name='RQ.SRS-048.CAS.ObjectModel.Immutability', level=3, num='4.3.5'),
-        Heading(name='MergeTree Compatibility', level=2, num='4.4'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree', level=3, num='4.4.1'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Transparency', level=3, num='4.4.2'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Engines', level=3, num='4.4.3'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.InsertSelect', level=3, num='4.4.4'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Merge', level=3, num='4.4.5'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Replicated', level=3, num='4.4.6'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.PartTypes', level=3, num='4.4.7'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Schema', level=3, num='4.4.8'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Mutations', level=3, num='4.4.9'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.LightweightDelete', level=3, num='4.4.10'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.PatchParts', level=3, num='4.4.11'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Projections', level=3, num='4.4.12'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.TTL', level=3, num='4.4.13'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Transactions', level=3, num='4.4.14'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.RestartDurability', level=3, num='4.4.15'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter', level=3, num='4.4.16'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Column', level=3, num='4.4.17'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Update', level=3, num='4.4.18'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Delete', level=3, num='4.4.19'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.OrderBy', level=3, num='4.4.20'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.SampleBy', level=3, num='4.4.21'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Index', level=3, num='4.4.22'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Projection', level=3, num='4.4.23'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Constraint', level=3, num='4.4.24'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.TTL', level=3, num='4.4.25'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Statistics', level=3, num='4.4.26'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Setting', level=3, num='4.4.27'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Comment', level=3, num='4.4.28'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.ApplyDeletedMask', level=3, num='4.4.29'),
-        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.ApplyPatches', level=3, num='4.4.30'),
-        Heading(name='Partition And Part Operations', level=2, num='4.5'),
-        Heading(name='RQ.SRS-048.CAS.Partition.AlterAllowList', level=3, num='4.5.1'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Replace', level=3, num='4.5.2'),
-        Heading(name='RQ.SRS-048.CAS.Partition.AttachFrom', level=3, num='4.5.3'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Attach', level=3, num='4.5.4'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Detach', level=3, num='4.5.5'),
-        Heading(name='RQ.SRS-048.CAS.Partition.DetachAttach', level=3, num='4.5.6'),
-        Heading(name='RQ.SRS-048.CAS.Partition.MoveToTable', level=3, num='4.5.7'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Drop', level=3, num='4.5.8'),
-        Heading(name='RQ.SRS-048.CAS.Partition.DropDetached', level=3, num='4.5.9'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Forget', level=3, num='4.5.10'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Fetch', level=3, num='4.5.11'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Freeze', level=3, num='4.5.12'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Unfreeze', level=3, num='4.5.13'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Clone', level=3, num='4.5.14'),
-        Heading(name='RQ.SRS-048.CAS.Partition.ClearColumn', level=3, num='4.5.15'),
-        Heading(name='RQ.SRS-048.CAS.Partition.ClearIndex', level=3, num='4.5.16'),
-        Heading(name='RQ.SRS-048.CAS.Partition.RewriteParts', level=3, num='4.5.17'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Update', level=3, num='4.5.18'),
-        Heading(name='RQ.SRS-048.CAS.Partition.Delete', level=3, num='4.5.19'),
-        Heading(name='RQ.SRS-048.CAS.Partition.MoveToDisk', level=3, num='4.5.20'),
-        Heading(name='Backup And Restore', level=2, num='4.6'),
-        Heading(name='RQ.SRS-048.CAS.Backup', level=3, num='4.6.1'),
-        Heading(name='RQ.SRS-048.CAS.Restore', level=3, num='4.6.2'),
-        Heading(name='Shared Pool', level=2, num='4.7'),
-        Heading(name='RQ.SRS-048.CAS.SharedPool', level=3, num='4.7.1'),
-        Heading(name='RQ.SRS-048.CAS.SharedPool.Deduplication', level=3, num='4.7.2'),
-        Heading(name='RQ.SRS-048.CAS.SharedPool.IndependentRefs', level=3, num='4.7.3'),
-        Heading(name='RQ.SRS-048.CAS.SharedPool.NodeCrash', level=3, num='4.7.4'),
-        Heading(name='Replication Relink', level=2, num='4.8'),
-        Heading(name='RQ.SRS-048.CAS.Relink', level=3, num='4.8.1'),
-        Heading(name='RQ.SRS-048.CAS.Relink.HappyPath', level=3, num='4.8.2'),
-        Heading(name='RQ.SRS-048.CAS.Relink.DetachedFetch', level=3, num='4.8.3'),
-        Heading(name='RQ.SRS-048.CAS.Relink.CrossPool.ByteFallback', level=3, num='4.8.4'),
-        Heading(name='RQ.SRS-048.CAS.Relink.AttachPartitionFrom', level=3, num='4.8.5'),
-        Heading(name='RQ.SRS-048.CAS.Relink.ReplacePartition', level=3, num='4.8.6'),
-        Heading(name='RQ.SRS-048.CAS.Relink.VersionMix', level=3, num='4.8.7'),
-        Heading(name='RQ.SRS-048.CAS.Relink.ConfirmRace', level=3, num='4.8.8'),
-        Heading(name='RQ.SRS-048.CAS.Relink.StalledPublish', level=3, num='4.8.9'),
-        Heading(name='RQ.SRS-048.CAS.Relink.RecursionBrake', level=3, num='4.8.10'),
-        Heading(name='Garbage Collection', level=2, num='4.9'),
-        Heading(name='RQ.SRS-048.CAS.GC', level=3, num='4.9.1'),
-        Heading(name='RQ.SRS-048.CAS.GC.NoLoss', level=3, num='4.9.2'),
-        Heading(name='RQ.SRS-048.CAS.GC.ReclaimAfterDrop', level=3, num='4.9.3'),
-        Heading(name='RQ.SRS-048.CAS.GC.Run', level=3, num='4.9.4'),
-        Heading(name='RQ.SRS-048.CAS.GC.Rebuild', level=3, num='4.9.5'),
-        Heading(name='RQ.SRS-048.CAS.GC.Sharded', level=3, num='4.9.6'),
-        Heading(name='RQ.SRS-048.CAS.GC.RefSnaplog', level=3, num='4.9.7'),
-        Heading(name='RQ.SRS-048.CAS.GC.StopStart', level=3, num='4.9.8'),
-        Heading(name='RQ.SRS-048.CAS.GC.DryRun', level=3, num='4.9.9'),
-        Heading(name='RQ.SRS-048.CAS.Fsck', level=3, num='4.9.10'),
-        Heading(name='RQ.SRS-048.CAS.Fsck.Online', level=3, num='4.9.11'),
-        Heading(name='Day-2 Operations', level=2, num='4.10'),
-        Heading(name='RQ.SRS-048.CAS.DropPoolMember', level=3, num='4.10.1'),
-        Heading(name='RQ.SRS-048.CAS.DropPoolMember.ReadonlyRejected', level=3, num='4.10.2'),
-        Heading(name='RQ.SRS-048.CAS.Forget', level=3, num='4.10.3'),
-        Heading(name='RQ.SRS-048.CAS.Tools', level=3, num='4.10.4'),
-        Heading(name='Fault Recovery', level=2, num='4.11'),
-        Heading(name='RQ.SRS-048.CAS.Fault.LostPartRecovery', level=3, num='4.11.1'),
-        Heading(name='RQ.SRS-048.CAS.Fault.LazyLoad.S3Outage', level=3, num='4.11.2'),
-        Heading(name='RQ.SRS-048.CAS.Fault.FailClosed', level=3, num='4.11.3'),
-        Heading(name='Cache', level=2, num='4.12'),
-        Heading(name='RQ.SRS-048.CAS.Cache', level=3, num='4.12.1'),
-        Heading(name='RQ.SRS-048.CAS.Cache.Hits', level=3, num='4.12.2'),
-        Heading(name='Observability And Access', level=2, num='4.13'),
-        Heading(name='RQ.SRS-048.CAS.Observability', level=3, num='4.13.1'),
-        Heading(name='RQ.SRS-048.CAS.Observability.SystemTables', level=3, num='4.13.2'),
-        Heading(name='RQ.SRS-048.CAS.Observability.ProfileEvents', level=3, num='4.13.3'),
-        Heading(name='RQ.SRS-048.CAS.Access', level=3, num='4.13.4'),
-        Heading(name='Restrictions And Non-Goals', level=2, num='4.14'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.BackendCapabilities', level=3, num='4.14.1'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.ZeroCopy', level=3, num='4.14.2'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.UniqueKey', level=3, num='4.14.3'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.NonMergeTree', level=3, num='4.14.4'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.Backup.TempHardLinks', level=3, num='4.14.5'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.Backup.NativeSnapshot', level=3, num='4.14.6'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.Encryption', level=3, num='4.14.7'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.Azure', level=3, num='4.14.8'),
-        Heading(name='RQ.SRS-048.CAS.Restrictions.GCS', level=3, num='4.14.9'),
+        Heading(name='RQ.SRS-048.CAS.ObjectModel.PhysicalRefs', level=3, num='4.3.6'),
+        Heading(name='RQ.SRS-048.CAS.ObjectModel.Catalog', level=3, num='4.3.7'),
+        Heading(name='RQ.SRS-048.CAS.ObjectModel.FormatGeneration', level=3, num='4.3.8'),
+        Heading(name='RQ.SRS-048.CAS.ObjectModel.ManifestLimits', level=3, num='4.3.9'),
+        Heading(name='Write Path', level=2, num='4.4'),
+        Heading(name='RQ.SRS-048.CAS.Write.Publish', level=3, num='4.4.1'),
+        Heading(name='RQ.SRS-048.CAS.Write.BlobMaterialization', level=3, num='4.4.2'),
+        Heading(name='RQ.SRS-048.CAS.Write.BlobPublishRetries', level=3, num='4.4.3'),
+        Heading(name='RQ.SRS-048.CAS.Write.CommitOutcome', level=3, num='4.4.4'),
+        Heading(name='RQ.SRS-048.CAS.Write.PartRename', level=3, num='4.4.5'),
+        Heading(name='RQ.SRS-048.CAS.Write.HashCollision', level=3, num='4.4.6'),
+        Heading(name='Read Path', level=2, num='4.5'),
+        Heading(name='RQ.SRS-048.CAS.Read', level=3, num='4.5.1'),
+        Heading(name='RQ.SRS-048.CAS.Read.ManifestValidation', level=3, num='4.5.2'),
+        Heading(name='RQ.SRS-048.CAS.Read.Caches', level=3, num='4.5.3'),
+        Heading(name='RQ.SRS-048.CAS.Read.DirectoryProbes', level=3, num='4.5.4'),
+        Heading(name='RQ.SRS-048.CAS.Read.InFlight', level=3, num='4.5.5'),
+        Heading(name='RQ.SRS-048.CAS.Read.ReadOnly', level=3, num='4.5.6'),
+        Heading(name='MergeTree Compatibility', level=2, num='4.6'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree', level=3, num='4.6.1'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Transparency', level=3, num='4.6.2'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Engines', level=3, num='4.6.3'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.InsertSelect', level=3, num='4.6.4'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Merge', level=3, num='4.6.5'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Replicated', level=3, num='4.6.6'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.PartTypes', level=3, num='4.6.7'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Schema', level=3, num='4.6.8'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Mutations', level=3, num='4.6.9'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.LightweightDelete', level=3, num='4.6.10'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.PatchParts', level=3, num='4.6.11'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Projections', level=3, num='4.6.12'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.TTL', level=3, num='4.6.13'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Transactions', level=3, num='4.6.14'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.RestartDurability', level=3, num='4.6.15'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Rename', level=3, num='4.6.16'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter', level=3, num='4.6.17'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Column', level=3, num='4.6.18'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Update', level=3, num='4.6.19'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Delete', level=3, num='4.6.20'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.OrderBy', level=3, num='4.6.21'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.SampleBy', level=3, num='4.6.22'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Index', level=3, num='4.6.23'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Projection', level=3, num='4.6.24'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Constraint', level=3, num='4.6.25'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.TTL', level=3, num='4.6.26'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Statistics', level=3, num='4.6.27'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Setting', level=3, num='4.6.28'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.Comment', level=3, num='4.6.29'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.ApplyDeletedMask', level=3, num='4.6.30'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.Alter.ApplyPatches', level=3, num='4.6.31'),
+        Heading(name='RQ.SRS-048.CAS.MergeTree.MaterializedView', level=3, num='4.6.32'),
+        Heading(name='Partition And Part Operations', level=2, num='4.7'),
+        Heading(name='RQ.SRS-048.CAS.Partition.AlterAllowList', level=3, num='4.7.1'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Replace', level=3, num='4.7.2'),
+        Heading(name='RQ.SRS-048.CAS.Partition.AttachFrom', level=3, num='4.7.3'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Attach', level=3, num='4.7.4'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Detach', level=3, num='4.7.5'),
+        Heading(name='RQ.SRS-048.CAS.Partition.DetachAttach', level=3, num='4.7.6'),
+        Heading(name='RQ.SRS-048.CAS.Partition.MoveToTable', level=3, num='4.7.7'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Drop', level=3, num='4.7.8'),
+        Heading(name='RQ.SRS-048.CAS.Partition.DropDetached', level=3, num='4.7.9'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Forget', level=3, num='4.7.10'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Fetch', level=3, num='4.7.11'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Freeze', level=3, num='4.7.12'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Unfreeze', level=3, num='4.7.13'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Clone', level=3, num='4.7.14'),
+        Heading(name='RQ.SRS-048.CAS.Partition.ClearColumn', level=3, num='4.7.15'),
+        Heading(name='RQ.SRS-048.CAS.Partition.ClearIndex', level=3, num='4.7.16'),
+        Heading(name='RQ.SRS-048.CAS.Partition.RewriteParts', level=3, num='4.7.17'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Update', level=3, num='4.7.18'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Delete', level=3, num='4.7.19'),
+        Heading(name='RQ.SRS-048.CAS.Partition.MoveToDisk', level=3, num='4.7.20'),
+        Heading(name='RQ.SRS-048.CAS.Partition.Export', level=3, num='4.7.21'),
+        Heading(name='Backup And Restore', level=2, num='4.8'),
+        Heading(name='RQ.SRS-048.CAS.Backup', level=3, num='4.8.1'),
+        Heading(name='RQ.SRS-048.CAS.Restore', level=3, num='4.8.2'),
+        Heading(name='RQ.SRS-048.CAS.Backup.SameEndpointCopy', level=3, num='4.8.3'),
+        Heading(name='Shared Pool', level=2, num='4.9'),
+        Heading(name='RQ.SRS-048.CAS.SharedPool', level=3, num='4.9.1'),
+        Heading(name='RQ.SRS-048.CAS.SharedPool.Deduplication', level=3, num='4.9.2'),
+        Heading(name='RQ.SRS-048.CAS.SharedPool.IndependentRefs', level=3, num='4.9.3'),
+        Heading(name='RQ.SRS-048.CAS.SharedPool.NodeCrash', level=3, num='4.9.4'),
+        Heading(name='RQ.SRS-048.CAS.SharedPool.MountRecovery', level=3, num='4.9.5'),
+        Heading(name='RQ.SRS-048.CAS.SharedPool.TerminalLifecycle', level=3, num='4.9.6'),
+        Heading(name='Replication Relink', level=2, num='4.10'),
+        Heading(name='RQ.SRS-048.CAS.Relink', level=3, num='4.10.1'),
+        Heading(name='RQ.SRS-048.CAS.Relink.HappyPath', level=3, num='4.10.2'),
+        Heading(name='RQ.SRS-048.CAS.Relink.DetachedFetch', level=3, num='4.10.3'),
+        Heading(name='RQ.SRS-048.CAS.Relink.CrossPool.ByteFallback', level=3, num='4.10.4'),
+        Heading(name='RQ.SRS-048.CAS.Relink.AttachPartitionFrom', level=3, num='4.10.5'),
+        Heading(name='RQ.SRS-048.CAS.Relink.ReplacePartition', level=3, num='4.10.6'),
+        Heading(name='RQ.SRS-048.CAS.Relink.VersionMix', level=3, num='4.10.7'),
+        Heading(name='RQ.SRS-048.CAS.Relink.ConfirmRace', level=3, num='4.10.8'),
+        Heading(name='RQ.SRS-048.CAS.Relink.StalledPublish', level=3, num='4.10.9'),
+        Heading(name='RQ.SRS-048.CAS.Relink.RecursionBrake', level=3, num='4.10.10'),
+        Heading(name='RQ.SRS-048.CAS.Relink.OfferIntegrity', level=3, num='4.10.11'),
+        Heading(name='RQ.SRS-048.CAS.Relink.Placement', level=3, num='4.10.12'),
+        Heading(name='RQ.SRS-048.CAS.Relink.UnavailableTarget', level=3, num='4.10.13'),
+        Heading(name='RQ.SRS-048.CAS.Relink.FormatVersion', level=3, num='4.10.14'),
+        Heading(name='RQ.SRS-048.CAS.Relink.GCBackstop', level=3, num='4.10.15'),
+        Heading(name='Garbage Collection', level=2, num='4.11'),
+        Heading(name='RQ.SRS-048.CAS.GC', level=3, num='4.11.1'),
+        Heading(name='RQ.SRS-048.CAS.GC.NoLoss', level=3, num='4.11.2'),
+        Heading(name='RQ.SRS-048.CAS.GC.ReclaimAfterDrop', level=3, num='4.11.3'),
+        Heading(name='RQ.SRS-048.CAS.GC.Run', level=3, num='4.11.4'),
+        Heading(name='RQ.SRS-048.CAS.GC.Rebuild', level=3, num='4.11.5'),
+        Heading(name='RQ.SRS-048.CAS.GC.Sharded', level=3, num='4.11.6'),
+        Heading(name='RQ.SRS-048.CAS.GC.RefSnaplog', level=3, num='4.11.7'),
+        Heading(name='RQ.SRS-048.CAS.GC.StopStart', level=3, num='4.11.8'),
+        Heading(name='RQ.SRS-048.CAS.GC.Phases', level=3, num='4.11.9'),
+        Heading(name='RQ.SRS-048.CAS.GC.Budgets', level=3, num='4.11.10'),
+        Heading(name='RQ.SRS-048.CAS.GC.ReadAhead', level=3, num='4.11.11'),
+        Heading(name='RQ.SRS-048.CAS.GC.OrphanManifests', level=3, num='4.11.12'),
+        Heading(name='RQ.SRS-048.CAS.GC.NamespaceJanitor', level=3, num='4.11.13'),
+        Heading(name='RQ.SRS-048.CAS.GC.DeleteAuthority', level=3, num='4.11.14'),
+        Heading(name='RQ.SRS-048.CAS.GC.DryRun', level=3, num='4.11.15'),
+        Heading(name='RQ.SRS-048.CAS.Fsck', level=3, num='4.11.16'),
+        Heading(name='RQ.SRS-048.CAS.Fsck.Online', level=3, num='4.11.17'),
+        Heading(name='Day-2 Operations', level=2, num='4.12'),
+        Heading(name='RQ.SRS-048.CAS.DropPoolMember', level=3, num='4.12.1'),
+        Heading(name='RQ.SRS-048.CAS.DropPoolMember.ReadonlyRejected', level=3, num='4.12.2'),
+        Heading(name='RQ.SRS-048.CAS.Forget', level=3, num='4.12.3'),
+        Heading(name='RQ.SRS-048.CAS.Tools', level=3, num='4.12.4'),
+        Heading(name='Fault Recovery', level=2, num='4.13'),
+        Heading(name='RQ.SRS-048.CAS.Fault.LostPartRecovery', level=3, num='4.13.1'),
+        Heading(name='RQ.SRS-048.CAS.Fault.LazyLoad.S3Outage', level=3, num='4.13.2'),
+        Heading(name='RQ.SRS-048.CAS.Fault.FailClosed', level=3, num='4.13.3'),
+        Heading(name='Cache', level=2, num='4.14'),
+        Heading(name='RQ.SRS-048.CAS.Cache', level=3, num='4.14.1'),
+        Heading(name='RQ.SRS-048.CAS.Cache.Hits', level=3, num='4.14.2'),
+        Heading(name='Observability And Access', level=2, num='4.15'),
+        Heading(name='RQ.SRS-048.CAS.Observability', level=3, num='4.15.1'),
+        Heading(name='RQ.SRS-048.CAS.Observability.SystemTables', level=3, num='4.15.2'),
+        Heading(name='RQ.SRS-048.CAS.Observability.Mounts', level=3, num='4.15.3'),
+        Heading(name='RQ.SRS-048.CAS.Observability.GCLog', level=3, num='4.15.4'),
+        Heading(name='RQ.SRS-048.CAS.Observability.EventLog', level=3, num='4.15.5'),
+        Heading(name='RQ.SRS-048.CAS.Observability.ProfileEvents', level=3, num='4.15.6'),
+        Heading(name='RQ.SRS-048.CAS.Access', level=3, num='4.15.7'),
+        Heading(name='Restrictions And Non-Goals', level=2, num='4.16'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.BackendCapabilities', level=3, num='4.16.1'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.ConditionalWriteRetries', level=3, num='4.16.2'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.BackendToken', level=3, num='4.16.3'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.ZeroCopy', level=3, num='4.16.4'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.UniqueKey', level=3, num='4.16.5'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.NonMergeTree', level=3, num='4.16.6'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.Backup.TempHardLinks', level=3, num='4.16.7'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.Backup.NativeSnapshot', level=3, num='4.16.8'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.Encryption', level=3, num='4.16.9'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.Azure', level=3, num='4.16.10'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.GCS', level=3, num='4.16.11'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.LocalBackend', level=3, num='4.16.12'),
+        Heading(name='RQ.SRS-048.CAS.Restrictions.WideParts', level=3, num='4.16.13'),
         Heading(name='References', level=1, num='5'),
         ),
     requirements=(
@@ -2571,10 +3936,17 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_Disk_MetadataType,
         RQ_SRS_048_CAS_Disk_ServerRootId,
         RQ_SRS_048_CAS_Disk_ServerRootId_Unique,
+        RQ_SRS_048_CAS_Disk_ServerRootId_Validation,
+        RQ_SRS_048_CAS_Disk_ServerRootId_Ownership,
+        RQ_SRS_048_CAS_Disk_ServerRootId_Rejoin,
         RQ_SRS_048_CAS_Disk_Pool,
         RQ_SRS_048_CAS_Disk_Inline,
         RQ_SRS_048_CAS_Policy,
         RQ_SRS_048_CAS_Disk_Settings,
+        RQ_SRS_048_CAS_Disk_CoreSettings,
+        RQ_SRS_048_CAS_Disk_LeaseTiming,
+        RQ_SRS_048_CAS_Disk_Staging,
+        RQ_SRS_048_CAS_Disk_ConnectionReuse,
         RQ_SRS_048_CAS_Disk_BlobHash,
         RQ_SRS_048_CAS_Disk_Backends,
         RQ_SRS_048_CAS_ObjectModel,
@@ -2582,6 +3954,22 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_ObjectModel_Manifests,
         RQ_SRS_048_CAS_ObjectModel_Refs,
         RQ_SRS_048_CAS_ObjectModel_Immutability,
+        RQ_SRS_048_CAS_ObjectModel_PhysicalRefs,
+        RQ_SRS_048_CAS_ObjectModel_Catalog,
+        RQ_SRS_048_CAS_ObjectModel_FormatGeneration,
+        RQ_SRS_048_CAS_ObjectModel_ManifestLimits,
+        RQ_SRS_048_CAS_Write_Publish,
+        RQ_SRS_048_CAS_Write_BlobMaterialization,
+        RQ_SRS_048_CAS_Write_BlobPublishRetries,
+        RQ_SRS_048_CAS_Write_CommitOutcome,
+        RQ_SRS_048_CAS_Write_PartRename,
+        RQ_SRS_048_CAS_Write_HashCollision,
+        RQ_SRS_048_CAS_Read,
+        RQ_SRS_048_CAS_Read_ManifestValidation,
+        RQ_SRS_048_CAS_Read_Caches,
+        RQ_SRS_048_CAS_Read_DirectoryProbes,
+        RQ_SRS_048_CAS_Read_InFlight,
+        RQ_SRS_048_CAS_Read_ReadOnly,
         RQ_SRS_048_CAS_MergeTree,
         RQ_SRS_048_CAS_MergeTree_Transparency,
         RQ_SRS_048_CAS_MergeTree_Engines,
@@ -2597,6 +3985,7 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_MergeTree_TTL,
         RQ_SRS_048_CAS_MergeTree_Transactions,
         RQ_SRS_048_CAS_MergeTree_RestartDurability,
+        RQ_SRS_048_CAS_MergeTree_Rename,
         RQ_SRS_048_CAS_MergeTree_Alter,
         RQ_SRS_048_CAS_MergeTree_Alter_Column,
         RQ_SRS_048_CAS_MergeTree_Alter_Update,
@@ -2612,6 +4001,7 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_MergeTree_Alter_Comment,
         RQ_SRS_048_CAS_MergeTree_Alter_ApplyDeletedMask,
         RQ_SRS_048_CAS_MergeTree_Alter_ApplyPatches,
+        RQ_SRS_048_CAS_MergeTree_MaterializedView,
         RQ_SRS_048_CAS_Partition_AlterAllowList,
         RQ_SRS_048_CAS_Partition_Replace,
         RQ_SRS_048_CAS_Partition_AttachFrom,
@@ -2632,12 +4022,16 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_Partition_Update,
         RQ_SRS_048_CAS_Partition_Delete,
         RQ_SRS_048_CAS_Partition_MoveToDisk,
+        RQ_SRS_048_CAS_Partition_Export,
         RQ_SRS_048_CAS_Backup,
         RQ_SRS_048_CAS_Restore,
+        RQ_SRS_048_CAS_Backup_SameEndpointCopy,
         RQ_SRS_048_CAS_SharedPool,
         RQ_SRS_048_CAS_SharedPool_Deduplication,
         RQ_SRS_048_CAS_SharedPool_IndependentRefs,
         RQ_SRS_048_CAS_SharedPool_NodeCrash,
+        RQ_SRS_048_CAS_SharedPool_MountRecovery,
+        RQ_SRS_048_CAS_SharedPool_TerminalLifecycle,
         RQ_SRS_048_CAS_Relink,
         RQ_SRS_048_CAS_Relink_HappyPath,
         RQ_SRS_048_CAS_Relink_DetachedFetch,
@@ -2648,6 +4042,11 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_Relink_ConfirmRace,
         RQ_SRS_048_CAS_Relink_StalledPublish,
         RQ_SRS_048_CAS_Relink_RecursionBrake,
+        RQ_SRS_048_CAS_Relink_OfferIntegrity,
+        RQ_SRS_048_CAS_Relink_Placement,
+        RQ_SRS_048_CAS_Relink_UnavailableTarget,
+        RQ_SRS_048_CAS_Relink_FormatVersion,
+        RQ_SRS_048_CAS_Relink_GCBackstop,
         RQ_SRS_048_CAS_GC,
         RQ_SRS_048_CAS_GC_NoLoss,
         RQ_SRS_048_CAS_GC_ReclaimAfterDrop,
@@ -2656,6 +4055,12 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_GC_Sharded,
         RQ_SRS_048_CAS_GC_RefSnaplog,
         RQ_SRS_048_CAS_GC_StopStart,
+        RQ_SRS_048_CAS_GC_Phases,
+        RQ_SRS_048_CAS_GC_Budgets,
+        RQ_SRS_048_CAS_GC_ReadAhead,
+        RQ_SRS_048_CAS_GC_OrphanManifests,
+        RQ_SRS_048_CAS_GC_NamespaceJanitor,
+        RQ_SRS_048_CAS_GC_DeleteAuthority,
         RQ_SRS_048_CAS_GC_DryRun,
         RQ_SRS_048_CAS_Fsck,
         RQ_SRS_048_CAS_Fsck_Online,
@@ -2670,9 +4075,14 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_Cache_Hits,
         RQ_SRS_048_CAS_Observability,
         RQ_SRS_048_CAS_Observability_SystemTables,
+        RQ_SRS_048_CAS_Observability_Mounts,
+        RQ_SRS_048_CAS_Observability_GCLog,
+        RQ_SRS_048_CAS_Observability_EventLog,
         RQ_SRS_048_CAS_Observability_ProfileEvents,
         RQ_SRS_048_CAS_Access,
         RQ_SRS_048_CAS_Restrictions_BackendCapabilities,
+        RQ_SRS_048_CAS_Restrictions_ConditionalWriteRetries,
+        RQ_SRS_048_CAS_Restrictions_BackendToken,
         RQ_SRS_048_CAS_Restrictions_ZeroCopy,
         RQ_SRS_048_CAS_Restrictions_UniqueKey,
         RQ_SRS_048_CAS_Restrictions_NonMergeTree,
@@ -2681,6 +4091,8 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         RQ_SRS_048_CAS_Restrictions_Encryption,
         RQ_SRS_048_CAS_Restrictions_Azure,
         RQ_SRS_048_CAS_Restrictions_GCS,
+        RQ_SRS_048_CAS_Restrictions_LocalBackend,
+        RQ_SRS_048_CAS_Restrictions_WideParts,
         ),
     content=r'''
 # SRS-048 ClickHouse Content-Addressed Storage
@@ -2700,128 +4112,177 @@ SRS_048_ClickHouse_Content_Addressed_Storage = Specification(
         * 4.2.2 [RQ.SRS-048.CAS.Disk.MetadataType](#rqsrs-048casdiskmetadatatype)
         * 4.2.3 [RQ.SRS-048.CAS.Disk.ServerRootId](#rqsrs-048casdiskserverrootid)
         * 4.2.4 [RQ.SRS-048.CAS.Disk.ServerRootId.Unique](#rqsrs-048casdiskserverrootidunique)
-        * 4.2.5 [RQ.SRS-048.CAS.Disk.Pool](#rqsrs-048casdiskpool)
-        * 4.2.6 [RQ.SRS-048.CAS.Disk.Inline](#rqsrs-048casdiskinline)
-        * 4.2.7 [RQ.SRS-048.CAS.Policy](#rqsrs-048caspolicy)
-        * 4.2.8 [RQ.SRS-048.CAS.Disk.Settings](#rqsrs-048casdisksettings)
-        * 4.2.9 [RQ.SRS-048.CAS.Disk.BlobHash](#rqsrs-048casdiskblobhash)
-        * 4.2.10 [RQ.SRS-048.CAS.Disk.Backends](#rqsrs-048casdiskbackends)
+        * 4.2.5 [RQ.SRS-048.CAS.Disk.ServerRootId.Validation](#rqsrs-048casdiskserverrootidvalidation)
+        * 4.2.6 [RQ.SRS-048.CAS.Disk.ServerRootId.Ownership](#rqsrs-048casdiskserverrootidownership)
+        * 4.2.7 [RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin](#rqsrs-048casdiskserverrootidrejoin)
+        * 4.2.8 [RQ.SRS-048.CAS.Disk.Pool](#rqsrs-048casdiskpool)
+        * 4.2.9 [RQ.SRS-048.CAS.Disk.Inline](#rqsrs-048casdiskinline)
+        * 4.2.10 [RQ.SRS-048.CAS.Policy](#rqsrs-048caspolicy)
+        * 4.2.11 [RQ.SRS-048.CAS.Disk.Settings](#rqsrs-048casdisksettings)
+        * 4.2.12 [RQ.SRS-048.CAS.Disk.CoreSettings](#rqsrs-048casdiskcoresettings)
+        * 4.2.13 [RQ.SRS-048.CAS.Disk.LeaseTiming](#rqsrs-048casdiskleasetiming)
+        * 4.2.14 [RQ.SRS-048.CAS.Disk.Staging](#rqsrs-048casdiskstaging)
+        * 4.2.15 [RQ.SRS-048.CAS.Disk.ConnectionReuse](#rqsrs-048casdiskconnectionreuse)
+        * 4.2.16 [RQ.SRS-048.CAS.Disk.BlobHash](#rqsrs-048casdiskblobhash)
+        * 4.2.17 [RQ.SRS-048.CAS.Disk.Backends](#rqsrs-048casdiskbackends)
     * 4.3 [Object Model](#object-model)
         * 4.3.1 [RQ.SRS-048.CAS.ObjectModel](#rqsrs-048casobjectmodel)
         * 4.3.2 [RQ.SRS-048.CAS.ObjectModel.Blobs](#rqsrs-048casobjectmodelblobs)
         * 4.3.3 [RQ.SRS-048.CAS.ObjectModel.Manifests](#rqsrs-048casobjectmodelmanifests)
         * 4.3.4 [RQ.SRS-048.CAS.ObjectModel.Refs](#rqsrs-048casobjectmodelrefs)
         * 4.3.5 [RQ.SRS-048.CAS.ObjectModel.Immutability](#rqsrs-048casobjectmodelimmutability)
-    * 4.4 [MergeTree Compatibility](#mergetree-compatibility)
-        * 4.4.1 [RQ.SRS-048.CAS.MergeTree](#rqsrs-048casmergetree)
-        * 4.4.2 [RQ.SRS-048.CAS.MergeTree.Transparency](#rqsrs-048casmergetreetransparency)
-        * 4.4.3 [RQ.SRS-048.CAS.MergeTree.Engines](#rqsrs-048casmergetreeengines)
-        * 4.4.4 [RQ.SRS-048.CAS.MergeTree.InsertSelect](#rqsrs-048casmergetreeinsertselect)
-        * 4.4.5 [RQ.SRS-048.CAS.MergeTree.Merge](#rqsrs-048casmergetreemerge)
-        * 4.4.6 [RQ.SRS-048.CAS.MergeTree.Replicated](#rqsrs-048casmergetreereplicated)
-        * 4.4.7 [RQ.SRS-048.CAS.MergeTree.PartTypes](#rqsrs-048casmergetreeparttypes)
-        * 4.4.8 [RQ.SRS-048.CAS.MergeTree.Alter.Schema](#rqsrs-048casmergetreealterschema)
-        * 4.4.9 [RQ.SRS-048.CAS.MergeTree.Mutations](#rqsrs-048casmergetreemutations)
-        * 4.4.10 [RQ.SRS-048.CAS.MergeTree.LightweightDelete](#rqsrs-048casmergetreelightweightdelete)
-        * 4.4.11 [RQ.SRS-048.CAS.MergeTree.PatchParts](#rqsrs-048casmergetreepatchparts)
-        * 4.4.12 [RQ.SRS-048.CAS.MergeTree.Projections](#rqsrs-048casmergetreeprojections)
-        * 4.4.13 [RQ.SRS-048.CAS.MergeTree.TTL](#rqsrs-048casmergetreettl)
-        * 4.4.14 [RQ.SRS-048.CAS.MergeTree.Transactions](#rqsrs-048casmergetreetransactions)
-        * 4.4.15 [RQ.SRS-048.CAS.MergeTree.RestartDurability](#rqsrs-048casmergetreerestartdurability)
-        * 4.4.16 [RQ.SRS-048.CAS.MergeTree.Alter](#rqsrs-048casmergetreealter)
-        * 4.4.17 [RQ.SRS-048.CAS.MergeTree.Alter.Column](#rqsrs-048casmergetreealtercolumn)
-        * 4.4.18 [RQ.SRS-048.CAS.MergeTree.Alter.Update](#rqsrs-048casmergetreealterupdate)
-        * 4.4.19 [RQ.SRS-048.CAS.MergeTree.Alter.Delete](#rqsrs-048casmergetreealterdelete)
-        * 4.4.20 [RQ.SRS-048.CAS.MergeTree.Alter.OrderBy](#rqsrs-048casmergetreealterorderby)
-        * 4.4.21 [RQ.SRS-048.CAS.MergeTree.Alter.SampleBy](#rqsrs-048casmergetreealtersampleby)
-        * 4.4.22 [RQ.SRS-048.CAS.MergeTree.Alter.Index](#rqsrs-048casmergetreealterindex)
-        * 4.4.23 [RQ.SRS-048.CAS.MergeTree.Alter.Projection](#rqsrs-048casmergetreealterprojection)
-        * 4.4.24 [RQ.SRS-048.CAS.MergeTree.Alter.Constraint](#rqsrs-048casmergetreealterconstraint)
-        * 4.4.25 [RQ.SRS-048.CAS.MergeTree.Alter.TTL](#rqsrs-048casmergetreealterttl)
-        * 4.4.26 [RQ.SRS-048.CAS.MergeTree.Alter.Statistics](#rqsrs-048casmergetreealterstatistics)
-        * 4.4.27 [RQ.SRS-048.CAS.MergeTree.Alter.Setting](#rqsrs-048casmergetreealtersetting)
-        * 4.4.28 [RQ.SRS-048.CAS.MergeTree.Alter.Comment](#rqsrs-048casmergetreealtercomment)
-        * 4.4.29 [RQ.SRS-048.CAS.MergeTree.Alter.ApplyDeletedMask](#rqsrs-048casmergetreealterapplydeletedmask)
-        * 4.4.30 [RQ.SRS-048.CAS.MergeTree.Alter.ApplyPatches](#rqsrs-048casmergetreealterapplypatches)
-    * 4.5 [Partition And Part Operations](#partition-and-part-operations)
-        * 4.5.1 [RQ.SRS-048.CAS.Partition.AlterAllowList](#rqsrs-048caspartitionalterallowlist)
-        * 4.5.2 [RQ.SRS-048.CAS.Partition.Replace](#rqsrs-048caspartitionreplace)
-        * 4.5.3 [RQ.SRS-048.CAS.Partition.AttachFrom](#rqsrs-048caspartitionattachfrom)
-        * 4.5.4 [RQ.SRS-048.CAS.Partition.Attach](#rqsrs-048caspartitionattach)
-        * 4.5.5 [RQ.SRS-048.CAS.Partition.Detach](#rqsrs-048caspartitiondetach)
-        * 4.5.6 [RQ.SRS-048.CAS.Partition.DetachAttach](#rqsrs-048caspartitiondetachattach)
-        * 4.5.7 [RQ.SRS-048.CAS.Partition.MoveToTable](#rqsrs-048caspartitionmovetotable)
-        * 4.5.8 [RQ.SRS-048.CAS.Partition.Drop](#rqsrs-048caspartitiondrop)
-        * 4.5.9 [RQ.SRS-048.CAS.Partition.DropDetached](#rqsrs-048caspartitiondropdetached)
-        * 4.5.10 [RQ.SRS-048.CAS.Partition.Forget](#rqsrs-048caspartitionforget)
-        * 4.5.11 [RQ.SRS-048.CAS.Partition.Fetch](#rqsrs-048caspartitionfetch)
-        * 4.5.12 [RQ.SRS-048.CAS.Partition.Freeze](#rqsrs-048caspartitionfreeze)
-        * 4.5.13 [RQ.SRS-048.CAS.Partition.Unfreeze](#rqsrs-048caspartitionunfreeze)
-        * 4.5.14 [RQ.SRS-048.CAS.Partition.Clone](#rqsrs-048caspartitionclone)
-        * 4.5.15 [RQ.SRS-048.CAS.Partition.ClearColumn](#rqsrs-048caspartitionclearcolumn)
-        * 4.5.16 [RQ.SRS-048.CAS.Partition.ClearIndex](#rqsrs-048caspartitionclearindex)
-        * 4.5.17 [RQ.SRS-048.CAS.Partition.RewriteParts](#rqsrs-048caspartitionrewriteparts)
-        * 4.5.18 [RQ.SRS-048.CAS.Partition.Update](#rqsrs-048caspartitionupdate)
-        * 4.5.19 [RQ.SRS-048.CAS.Partition.Delete](#rqsrs-048caspartitiondelete)
-        * 4.5.20 [RQ.SRS-048.CAS.Partition.MoveToDisk](#rqsrs-048caspartitionmovetodisk)
-    * 4.6 [Backup And Restore](#backup-and-restore)
-        * 4.6.1 [RQ.SRS-048.CAS.Backup](#rqsrs-048casbackup)
-        * 4.6.2 [RQ.SRS-048.CAS.Restore](#rqsrs-048casrestore)
-    * 4.7 [Shared Pool](#shared-pool)
-        * 4.7.1 [RQ.SRS-048.CAS.SharedPool](#rqsrs-048cassharedpool)
-        * 4.7.2 [RQ.SRS-048.CAS.SharedPool.Deduplication](#rqsrs-048cassharedpooldeduplication)
-        * 4.7.3 [RQ.SRS-048.CAS.SharedPool.IndependentRefs](#rqsrs-048cassharedpoolindependentrefs)
-        * 4.7.4 [RQ.SRS-048.CAS.SharedPool.NodeCrash](#rqsrs-048cassharedpoolnodecrash)
-    * 4.8 [Replication Relink](#replication-relink)
-        * 4.8.1 [RQ.SRS-048.CAS.Relink](#rqsrs-048casrelink)
-        * 4.8.2 [RQ.SRS-048.CAS.Relink.HappyPath](#rqsrs-048casrelinkhappypath)
-        * 4.8.3 [RQ.SRS-048.CAS.Relink.DetachedFetch](#rqsrs-048casrelinkdetachedfetch)
-        * 4.8.4 [RQ.SRS-048.CAS.Relink.CrossPool.ByteFallback](#rqsrs-048casrelinkcrosspoolbytefallback)
-        * 4.8.5 [RQ.SRS-048.CAS.Relink.AttachPartitionFrom](#rqsrs-048casrelinkattachpartitionfrom)
-        * 4.8.6 [RQ.SRS-048.CAS.Relink.ReplacePartition](#rqsrs-048casrelinkreplacepartition)
-        * 4.8.7 [RQ.SRS-048.CAS.Relink.VersionMix](#rqsrs-048casrelinkversionmix)
-        * 4.8.8 [RQ.SRS-048.CAS.Relink.ConfirmRace](#rqsrs-048casrelinkconfirmrace)
-        * 4.8.9 [RQ.SRS-048.CAS.Relink.StalledPublish](#rqsrs-048casrelinkstalledpublish)
-        * 4.8.10 [RQ.SRS-048.CAS.Relink.RecursionBrake](#rqsrs-048casrelinkrecursionbrake)
-    * 4.9 [Garbage Collection](#garbage-collection)
-        * 4.9.1 [RQ.SRS-048.CAS.GC](#rqsrs-048casgc)
-        * 4.9.2 [RQ.SRS-048.CAS.GC.NoLoss](#rqsrs-048casgcnoloss)
-        * 4.9.3 [RQ.SRS-048.CAS.GC.ReclaimAfterDrop](#rqsrs-048casgcreclaimafterdrop)
-        * 4.9.4 [RQ.SRS-048.CAS.GC.Run](#rqsrs-048casgcrun)
-        * 4.9.5 [RQ.SRS-048.CAS.GC.Rebuild](#rqsrs-048casgcrebuild)
-        * 4.9.6 [RQ.SRS-048.CAS.GC.Sharded](#rqsrs-048casgcsharded)
-        * 4.9.7 [RQ.SRS-048.CAS.GC.RefSnaplog](#rqsrs-048casgcrefsnaplog)
-        * 4.9.8 [RQ.SRS-048.CAS.GC.StopStart](#rqsrs-048casgcstopstart)
-        * 4.9.9 [RQ.SRS-048.CAS.GC.DryRun](#rqsrs-048casgcdryrun)
-        * 4.9.10 [RQ.SRS-048.CAS.Fsck](#rqsrs-048casfsck)
-        * 4.9.11 [RQ.SRS-048.CAS.Fsck.Online](#rqsrs-048casfsckonline)
-    * 4.10 [Day-2 Operations](#day-2-operations)
-        * 4.10.1 [RQ.SRS-048.CAS.DropPoolMember](#rqsrs-048casdroppoolmember)
-        * 4.10.2 [RQ.SRS-048.CAS.DropPoolMember.ReadonlyRejected](#rqsrs-048casdroppoolmemberreadonlyrejected)
-        * 4.10.3 [RQ.SRS-048.CAS.Forget](#rqsrs-048casforget)
-        * 4.10.4 [RQ.SRS-048.CAS.Tools](#rqsrs-048castools)
-    * 4.11 [Fault Recovery](#fault-recovery)
-        * 4.11.1 [RQ.SRS-048.CAS.Fault.LostPartRecovery](#rqsrs-048casfaultlostpartrecovery)
-        * 4.11.2 [RQ.SRS-048.CAS.Fault.LazyLoad.S3Outage](#rqsrs-048casfaultlazyloads3outage)
-        * 4.11.3 [RQ.SRS-048.CAS.Fault.FailClosed](#rqsrs-048casfaultfailclosed)
-    * 4.12 [Cache](#cache)
-        * 4.12.1 [RQ.SRS-048.CAS.Cache](#rqsrs-048cascache)
-        * 4.12.2 [RQ.SRS-048.CAS.Cache.Hits](#rqsrs-048cascachehits)
-    * 4.13 [Observability And Access](#observability-and-access)
-        * 4.13.1 [RQ.SRS-048.CAS.Observability](#rqsrs-048casobservability)
-        * 4.13.2 [RQ.SRS-048.CAS.Observability.SystemTables](#rqsrs-048casobservabilitysystemtables)
-        * 4.13.3 [RQ.SRS-048.CAS.Observability.ProfileEvents](#rqsrs-048casobservabilityprofileevents)
-        * 4.13.4 [RQ.SRS-048.CAS.Access](#rqsrs-048casaccess)
-    * 4.14 [Restrictions And Non-Goals](#restrictions-and-non-goals)
-        * 4.14.1 [RQ.SRS-048.CAS.Restrictions.BackendCapabilities](#rqsrs-048casrestrictionsbackendcapabilities)
-        * 4.14.2 [RQ.SRS-048.CAS.Restrictions.ZeroCopy](#rqsrs-048casrestrictionszerocopy)
-        * 4.14.3 [RQ.SRS-048.CAS.Restrictions.UniqueKey](#rqsrs-048casrestrictionsuniquekey)
-        * 4.14.4 [RQ.SRS-048.CAS.Restrictions.NonMergeTree](#rqsrs-048casrestrictionsnonmergetree)
-        * 4.14.5 [RQ.SRS-048.CAS.Restrictions.Backup.TempHardLinks](#rqsrs-048casrestrictionsbackuptemphardlinks)
-        * 4.14.6 [RQ.SRS-048.CAS.Restrictions.Backup.NativeSnapshot](#rqsrs-048casrestrictionsbackupnativesnapshot)
-        * 4.14.7 [RQ.SRS-048.CAS.Restrictions.Encryption](#rqsrs-048casrestrictionsencryption)
-        * 4.14.8 [RQ.SRS-048.CAS.Restrictions.Azure](#rqsrs-048casrestrictionsazure)
-        * 4.14.9 [RQ.SRS-048.CAS.Restrictions.GCS](#rqsrs-048casrestrictionsgcs)
+        * 4.3.6 [RQ.SRS-048.CAS.ObjectModel.PhysicalRefs](#rqsrs-048casobjectmodelphysicalrefs)
+        * 4.3.7 [RQ.SRS-048.CAS.ObjectModel.Catalog](#rqsrs-048casobjectmodelcatalog)
+        * 4.3.8 [RQ.SRS-048.CAS.ObjectModel.FormatGeneration](#rqsrs-048casobjectmodelformatgeneration)
+        * 4.3.9 [RQ.SRS-048.CAS.ObjectModel.ManifestLimits](#rqsrs-048casobjectmodelmanifestlimits)
+    * 4.4 [Write Path](#write-path)
+        * 4.4.1 [RQ.SRS-048.CAS.Write.Publish](#rqsrs-048caswritepublish)
+        * 4.4.2 [RQ.SRS-048.CAS.Write.BlobMaterialization](#rqsrs-048caswriteblobmaterialization)
+        * 4.4.3 [RQ.SRS-048.CAS.Write.BlobPublishRetries](#rqsrs-048caswriteblobpublishretries)
+        * 4.4.4 [RQ.SRS-048.CAS.Write.CommitOutcome](#rqsrs-048caswritecommitoutcome)
+        * 4.4.5 [RQ.SRS-048.CAS.Write.PartRename](#rqsrs-048caswritepartrename)
+        * 4.4.6 [RQ.SRS-048.CAS.Write.HashCollision](#rqsrs-048caswritehashcollision)
+    * 4.5 [Read Path](#read-path)
+        * 4.5.1 [RQ.SRS-048.CAS.Read](#rqsrs-048casread)
+        * 4.5.2 [RQ.SRS-048.CAS.Read.ManifestValidation](#rqsrs-048casreadmanifestvalidation)
+        * 4.5.3 [RQ.SRS-048.CAS.Read.Caches](#rqsrs-048casreadcaches)
+        * 4.5.4 [RQ.SRS-048.CAS.Read.DirectoryProbes](#rqsrs-048casreaddirectoryprobes)
+        * 4.5.5 [RQ.SRS-048.CAS.Read.InFlight](#rqsrs-048casreadinflight)
+        * 4.5.6 [RQ.SRS-048.CAS.Read.ReadOnly](#rqsrs-048casreadreadonly)
+    * 4.6 [MergeTree Compatibility](#mergetree-compatibility)
+        * 4.6.1 [RQ.SRS-048.CAS.MergeTree](#rqsrs-048casmergetree)
+        * 4.6.2 [RQ.SRS-048.CAS.MergeTree.Transparency](#rqsrs-048casmergetreetransparency)
+        * 4.6.3 [RQ.SRS-048.CAS.MergeTree.Engines](#rqsrs-048casmergetreeengines)
+        * 4.6.4 [RQ.SRS-048.CAS.MergeTree.InsertSelect](#rqsrs-048casmergetreeinsertselect)
+        * 4.6.5 [RQ.SRS-048.CAS.MergeTree.Merge](#rqsrs-048casmergetreemerge)
+        * 4.6.6 [RQ.SRS-048.CAS.MergeTree.Replicated](#rqsrs-048casmergetreereplicated)
+        * 4.6.7 [RQ.SRS-048.CAS.MergeTree.PartTypes](#rqsrs-048casmergetreeparttypes)
+        * 4.6.8 [RQ.SRS-048.CAS.MergeTree.Alter.Schema](#rqsrs-048casmergetreealterschema)
+        * 4.6.9 [RQ.SRS-048.CAS.MergeTree.Mutations](#rqsrs-048casmergetreemutations)
+        * 4.6.10 [RQ.SRS-048.CAS.MergeTree.LightweightDelete](#rqsrs-048casmergetreelightweightdelete)
+        * 4.6.11 [RQ.SRS-048.CAS.MergeTree.PatchParts](#rqsrs-048casmergetreepatchparts)
+        * 4.6.12 [RQ.SRS-048.CAS.MergeTree.Projections](#rqsrs-048casmergetreeprojections)
+        * 4.6.13 [RQ.SRS-048.CAS.MergeTree.TTL](#rqsrs-048casmergetreettl)
+        * 4.6.14 [RQ.SRS-048.CAS.MergeTree.Transactions](#rqsrs-048casmergetreetransactions)
+        * 4.6.15 [RQ.SRS-048.CAS.MergeTree.RestartDurability](#rqsrs-048casmergetreerestartdurability)
+        * 4.6.16 [RQ.SRS-048.CAS.MergeTree.Rename](#rqsrs-048casmergetreerename)
+        * 4.6.17 [RQ.SRS-048.CAS.MergeTree.Alter](#rqsrs-048casmergetreealter)
+        * 4.6.18 [RQ.SRS-048.CAS.MergeTree.Alter.Column](#rqsrs-048casmergetreealtercolumn)
+        * 4.6.19 [RQ.SRS-048.CAS.MergeTree.Alter.Update](#rqsrs-048casmergetreealterupdate)
+        * 4.6.20 [RQ.SRS-048.CAS.MergeTree.Alter.Delete](#rqsrs-048casmergetreealterdelete)
+        * 4.6.21 [RQ.SRS-048.CAS.MergeTree.Alter.OrderBy](#rqsrs-048casmergetreealterorderby)
+        * 4.6.22 [RQ.SRS-048.CAS.MergeTree.Alter.SampleBy](#rqsrs-048casmergetreealtersampleby)
+        * 4.6.23 [RQ.SRS-048.CAS.MergeTree.Alter.Index](#rqsrs-048casmergetreealterindex)
+        * 4.6.24 [RQ.SRS-048.CAS.MergeTree.Alter.Projection](#rqsrs-048casmergetreealterprojection)
+        * 4.6.25 [RQ.SRS-048.CAS.MergeTree.Alter.Constraint](#rqsrs-048casmergetreealterconstraint)
+        * 4.6.26 [RQ.SRS-048.CAS.MergeTree.Alter.TTL](#rqsrs-048casmergetreealterttl)
+        * 4.6.27 [RQ.SRS-048.CAS.MergeTree.Alter.Statistics](#rqsrs-048casmergetreealterstatistics)
+        * 4.6.28 [RQ.SRS-048.CAS.MergeTree.Alter.Setting](#rqsrs-048casmergetreealtersetting)
+        * 4.6.29 [RQ.SRS-048.CAS.MergeTree.Alter.Comment](#rqsrs-048casmergetreealtercomment)
+        * 4.6.30 [RQ.SRS-048.CAS.MergeTree.Alter.ApplyDeletedMask](#rqsrs-048casmergetreealterapplydeletedmask)
+        * 4.6.31 [RQ.SRS-048.CAS.MergeTree.Alter.ApplyPatches](#rqsrs-048casmergetreealterapplypatches)
+        * 4.6.32 [RQ.SRS-048.CAS.MergeTree.MaterializedView](#rqsrs-048casmergetreematerializedview)
+    * 4.7 [Partition And Part Operations](#partition-and-part-operations)
+        * 4.7.1 [RQ.SRS-048.CAS.Partition.AlterAllowList](#rqsrs-048caspartitionalterallowlist)
+        * 4.7.2 [RQ.SRS-048.CAS.Partition.Replace](#rqsrs-048caspartitionreplace)
+        * 4.7.3 [RQ.SRS-048.CAS.Partition.AttachFrom](#rqsrs-048caspartitionattachfrom)
+        * 4.7.4 [RQ.SRS-048.CAS.Partition.Attach](#rqsrs-048caspartitionattach)
+        * 4.7.5 [RQ.SRS-048.CAS.Partition.Detach](#rqsrs-048caspartitiondetach)
+        * 4.7.6 [RQ.SRS-048.CAS.Partition.DetachAttach](#rqsrs-048caspartitiondetachattach)
+        * 4.7.7 [RQ.SRS-048.CAS.Partition.MoveToTable](#rqsrs-048caspartitionmovetotable)
+        * 4.7.8 [RQ.SRS-048.CAS.Partition.Drop](#rqsrs-048caspartitiondrop)
+        * 4.7.9 [RQ.SRS-048.CAS.Partition.DropDetached](#rqsrs-048caspartitiondropdetached)
+        * 4.7.10 [RQ.SRS-048.CAS.Partition.Forget](#rqsrs-048caspartitionforget)
+        * 4.7.11 [RQ.SRS-048.CAS.Partition.Fetch](#rqsrs-048caspartitionfetch)
+        * 4.7.12 [RQ.SRS-048.CAS.Partition.Freeze](#rqsrs-048caspartitionfreeze)
+        * 4.7.13 [RQ.SRS-048.CAS.Partition.Unfreeze](#rqsrs-048caspartitionunfreeze)
+        * 4.7.14 [RQ.SRS-048.CAS.Partition.Clone](#rqsrs-048caspartitionclone)
+        * 4.7.15 [RQ.SRS-048.CAS.Partition.ClearColumn](#rqsrs-048caspartitionclearcolumn)
+        * 4.7.16 [RQ.SRS-048.CAS.Partition.ClearIndex](#rqsrs-048caspartitionclearindex)
+        * 4.7.17 [RQ.SRS-048.CAS.Partition.RewriteParts](#rqsrs-048caspartitionrewriteparts)
+        * 4.7.18 [RQ.SRS-048.CAS.Partition.Update](#rqsrs-048caspartitionupdate)
+        * 4.7.19 [RQ.SRS-048.CAS.Partition.Delete](#rqsrs-048caspartitiondelete)
+        * 4.7.20 [RQ.SRS-048.CAS.Partition.MoveToDisk](#rqsrs-048caspartitionmovetodisk)
+        * 4.7.21 [RQ.SRS-048.CAS.Partition.Export](#rqsrs-048caspartitionexport)
+    * 4.8 [Backup And Restore](#backup-and-restore)
+        * 4.8.1 [RQ.SRS-048.CAS.Backup](#rqsrs-048casbackup)
+        * 4.8.2 [RQ.SRS-048.CAS.Restore](#rqsrs-048casrestore)
+        * 4.8.3 [RQ.SRS-048.CAS.Backup.SameEndpointCopy](#rqsrs-048casbackupsameendpointcopy)
+    * 4.9 [Shared Pool](#shared-pool)
+        * 4.9.1 [RQ.SRS-048.CAS.SharedPool](#rqsrs-048cassharedpool)
+        * 4.9.2 [RQ.SRS-048.CAS.SharedPool.Deduplication](#rqsrs-048cassharedpooldeduplication)
+        * 4.9.3 [RQ.SRS-048.CAS.SharedPool.IndependentRefs](#rqsrs-048cassharedpoolindependentrefs)
+        * 4.9.4 [RQ.SRS-048.CAS.SharedPool.NodeCrash](#rqsrs-048cassharedpoolnodecrash)
+        * 4.9.5 [RQ.SRS-048.CAS.SharedPool.MountRecovery](#rqsrs-048cassharedpoolmountrecovery)
+        * 4.9.6 [RQ.SRS-048.CAS.SharedPool.TerminalLifecycle](#rqsrs-048cassharedpoolterminallifecycle)
+    * 4.10 [Replication Relink](#replication-relink)
+        * 4.10.1 [RQ.SRS-048.CAS.Relink](#rqsrs-048casrelink)
+        * 4.10.2 [RQ.SRS-048.CAS.Relink.HappyPath](#rqsrs-048casrelinkhappypath)
+        * 4.10.3 [RQ.SRS-048.CAS.Relink.DetachedFetch](#rqsrs-048casrelinkdetachedfetch)
+        * 4.10.4 [RQ.SRS-048.CAS.Relink.CrossPool.ByteFallback](#rqsrs-048casrelinkcrosspoolbytefallback)
+        * 4.10.5 [RQ.SRS-048.CAS.Relink.AttachPartitionFrom](#rqsrs-048casrelinkattachpartitionfrom)
+        * 4.10.6 [RQ.SRS-048.CAS.Relink.ReplacePartition](#rqsrs-048casrelinkreplacepartition)
+        * 4.10.7 [RQ.SRS-048.CAS.Relink.VersionMix](#rqsrs-048casrelinkversionmix)
+        * 4.10.8 [RQ.SRS-048.CAS.Relink.ConfirmRace](#rqsrs-048casrelinkconfirmrace)
+        * 4.10.9 [RQ.SRS-048.CAS.Relink.StalledPublish](#rqsrs-048casrelinkstalledpublish)
+        * 4.10.10 [RQ.SRS-048.CAS.Relink.RecursionBrake](#rqsrs-048casrelinkrecursionbrake)
+        * 4.10.11 [RQ.SRS-048.CAS.Relink.OfferIntegrity](#rqsrs-048casrelinkofferintegrity)
+        * 4.10.12 [RQ.SRS-048.CAS.Relink.Placement](#rqsrs-048casrelinkplacement)
+        * 4.10.13 [RQ.SRS-048.CAS.Relink.UnavailableTarget](#rqsrs-048casrelinkunavailabletarget)
+        * 4.10.14 [RQ.SRS-048.CAS.Relink.FormatVersion](#rqsrs-048casrelinkformatversion)
+        * 4.10.15 [RQ.SRS-048.CAS.Relink.GCBackstop](#rqsrs-048casrelinkgcbackstop)
+    * 4.11 [Garbage Collection](#garbage-collection)
+        * 4.11.1 [RQ.SRS-048.CAS.GC](#rqsrs-048casgc)
+        * 4.11.2 [RQ.SRS-048.CAS.GC.NoLoss](#rqsrs-048casgcnoloss)
+        * 4.11.3 [RQ.SRS-048.CAS.GC.ReclaimAfterDrop](#rqsrs-048casgcreclaimafterdrop)
+        * 4.11.4 [RQ.SRS-048.CAS.GC.Run](#rqsrs-048casgcrun)
+        * 4.11.5 [RQ.SRS-048.CAS.GC.Rebuild](#rqsrs-048casgcrebuild)
+        * 4.11.6 [RQ.SRS-048.CAS.GC.Sharded](#rqsrs-048casgcsharded)
+        * 4.11.7 [RQ.SRS-048.CAS.GC.RefSnaplog](#rqsrs-048casgcrefsnaplog)
+        * 4.11.8 [RQ.SRS-048.CAS.GC.StopStart](#rqsrs-048casgcstopstart)
+        * 4.11.9 [RQ.SRS-048.CAS.GC.Phases](#rqsrs-048casgcphases)
+        * 4.11.10 [RQ.SRS-048.CAS.GC.Budgets](#rqsrs-048casgcbudgets)
+        * 4.11.11 [RQ.SRS-048.CAS.GC.ReadAhead](#rqsrs-048casgcreadahead)
+        * 4.11.12 [RQ.SRS-048.CAS.GC.OrphanManifests](#rqsrs-048casgcorphanmanifests)
+        * 4.11.13 [RQ.SRS-048.CAS.GC.NamespaceJanitor](#rqsrs-048casgcnamespacejanitor)
+        * 4.11.14 [RQ.SRS-048.CAS.GC.DeleteAuthority](#rqsrs-048casgcdeleteauthority)
+        * 4.11.15 [RQ.SRS-048.CAS.GC.DryRun](#rqsrs-048casgcdryrun)
+        * 4.11.16 [RQ.SRS-048.CAS.Fsck](#rqsrs-048casfsck)
+        * 4.11.17 [RQ.SRS-048.CAS.Fsck.Online](#rqsrs-048casfsckonline)
+    * 4.12 [Day-2 Operations](#day-2-operations)
+        * 4.12.1 [RQ.SRS-048.CAS.DropPoolMember](#rqsrs-048casdroppoolmember)
+        * 4.12.2 [RQ.SRS-048.CAS.DropPoolMember.ReadonlyRejected](#rqsrs-048casdroppoolmemberreadonlyrejected)
+        * 4.12.3 [RQ.SRS-048.CAS.Forget](#rqsrs-048casforget)
+        * 4.12.4 [RQ.SRS-048.CAS.Tools](#rqsrs-048castools)
+    * 4.13 [Fault Recovery](#fault-recovery)
+        * 4.13.1 [RQ.SRS-048.CAS.Fault.LostPartRecovery](#rqsrs-048casfaultlostpartrecovery)
+        * 4.13.2 [RQ.SRS-048.CAS.Fault.LazyLoad.S3Outage](#rqsrs-048casfaultlazyloads3outage)
+        * 4.13.3 [RQ.SRS-048.CAS.Fault.FailClosed](#rqsrs-048casfaultfailclosed)
+    * 4.14 [Cache](#cache)
+        * 4.14.1 [RQ.SRS-048.CAS.Cache](#rqsrs-048cascache)
+        * 4.14.2 [RQ.SRS-048.CAS.Cache.Hits](#rqsrs-048cascachehits)
+    * 4.15 [Observability And Access](#observability-and-access)
+        * 4.15.1 [RQ.SRS-048.CAS.Observability](#rqsrs-048casobservability)
+        * 4.15.2 [RQ.SRS-048.CAS.Observability.SystemTables](#rqsrs-048casobservabilitysystemtables)
+        * 4.15.3 [RQ.SRS-048.CAS.Observability.Mounts](#rqsrs-048casobservabilitymounts)
+        * 4.15.4 [RQ.SRS-048.CAS.Observability.GCLog](#rqsrs-048casobservabilitygclog)
+        * 4.15.5 [RQ.SRS-048.CAS.Observability.EventLog](#rqsrs-048casobservabilityeventlog)
+        * 4.15.6 [RQ.SRS-048.CAS.Observability.ProfileEvents](#rqsrs-048casobservabilityprofileevents)
+        * 4.15.7 [RQ.SRS-048.CAS.Access](#rqsrs-048casaccess)
+    * 4.16 [Restrictions And Non-Goals](#restrictions-and-non-goals)
+        * 4.16.1 [RQ.SRS-048.CAS.Restrictions.BackendCapabilities](#rqsrs-048casrestrictionsbackendcapabilities)
+        * 4.16.2 [RQ.SRS-048.CAS.Restrictions.ConditionalWriteRetries](#rqsrs-048casrestrictionsconditionalwriteretries)
+        * 4.16.3 [RQ.SRS-048.CAS.Restrictions.BackendToken](#rqsrs-048casrestrictionsbackendtoken)
+        * 4.16.4 [RQ.SRS-048.CAS.Restrictions.ZeroCopy](#rqsrs-048casrestrictionszerocopy)
+        * 4.16.5 [RQ.SRS-048.CAS.Restrictions.UniqueKey](#rqsrs-048casrestrictionsuniquekey)
+        * 4.16.6 [RQ.SRS-048.CAS.Restrictions.NonMergeTree](#rqsrs-048casrestrictionsnonmergetree)
+        * 4.16.7 [RQ.SRS-048.CAS.Restrictions.Backup.TempHardLinks](#rqsrs-048casrestrictionsbackuptemphardlinks)
+        * 4.16.8 [RQ.SRS-048.CAS.Restrictions.Backup.NativeSnapshot](#rqsrs-048casrestrictionsbackupnativesnapshot)
+        * 4.16.9 [RQ.SRS-048.CAS.Restrictions.Encryption](#rqsrs-048casrestrictionsencryption)
+        * 4.16.10 [RQ.SRS-048.CAS.Restrictions.Azure](#rqsrs-048casrestrictionsazure)
+        * 4.16.11 [RQ.SRS-048.CAS.Restrictions.GCS](#rqsrs-048casrestrictionsgcs)
+        * 4.16.12 [RQ.SRS-048.CAS.Restrictions.LocalBackend](#rqsrs-048casrestrictionslocalbackend)
+        * 4.16.13 [RQ.SRS-048.CAS.Restrictions.WideParts](#rqsrs-048casrestrictionswideparts)
 * 5 [References](#references)
 
 ## Revision History
@@ -2839,8 +4300,9 @@ introduce a new table engine.
 
 Ordinary `MergeTree` and `ReplicatedMergeTree` tables keep their SQL surface and
 logical part lifecycle. **All mainstream MergeTree features that work on ordinary
-object-storage disks are expected to work on [CAS]** (insert/select, merge,
-mutations, projections, TTL, transactions, the documented [MergeTree]
+object-storage disks are expected to work on [CAS]** (insert/select,
+materialized views, merge, mutations, projections, TTL, transactions, the
+documented [MergeTree]
 `ALTER TABLE` surface (columns, mutations, keys, indexes, projections,
 constraints, TTL, statistics, settings, comments, apply-deleted-mask /
 apply-patches, and partition ALTER including ATTACH / REPLACE / MOVE /
@@ -2856,13 +4318,15 @@ Atomic DBs, replication), except where this [SRS] explicitly lists a restriction
 
 Replicas that mount the same pool can **relink** (adopt a peer's manifest by
 reference) instead of copying part bytes. Background **garbage collection** is
-the only path authorized to delete unreferenced CAS objects.
+the only path authorized to delete blob bodies and the only
+reachability-driven path that deletes manifest bodies. Writers may exact-delete
+their own never-precommitted manifests, and pool-member decommission may remove
+the retired member's private debris.
 
 This [SRS] specifies the product requirements that the Altinity regression suite
-exercises. Product architecture and operations live in
-[Altinity/ClickHouse PR #2159](https://github.com/Altinity/ClickHouse/pull/2159)
-(`docs/en/antalya/cas/`, plus the `SYSTEM CAS` page and the `system.cas_*`
-tables). Upstream integration inventory is summarized in
+exercises. Product architecture and operations live in the
+[CAS documentation] (`docs/en/antalya/cas/`, plus the [SYSTEM CAS] page and the
+[CAS system tables]). Upstream integration inventory is summarized in
 [`cas/docs/CAS-INTEGRATION-TESTS.md`](../docs/CAS-INTEGRATION-TESTS.md).
 
 **Status:** experimental. The on-disk format and the SQL surface can still change
@@ -2881,8 +4345,9 @@ by the live backlog in the product docs.
   period and reported at startup.
 * **Blob** — immutable content-addressed object under `blobs/...`.
 * **Manifest** — immutable description of one MergeTree part's files.
-* **Ref** — mutable mapping from a part name to a manifest in a server's
-  namespace.
+* **Ref** — logical mutable mapping from a part name to a manifest. Physical
+  state is reconstructed from append-only logs, snapshots, and checkpoints
+  under an opaque namespace `life_id`.
 * **Relink** — replication path that publishes a local ref to an already-present
   peer manifest instead of transferring part bytes.
 * **GC** — background garbage collection that reclaims objects with no live
@@ -2975,6 +4440,74 @@ with the same `cas_server_root_id` as concurrent writers, instead of allowing
 both to mutate the same ref namespace. A colliding identity SHALL be refused at
 the owner-claim / mount-lease gate.
 
+#### RQ.SRS-048.CAS.Disk.ServerRootId.Validation
+version: 2.0
+
+[ClickHouse] SHALL require a `cas_server_root_id` to be a single path
+component, and SHALL reject an id that is empty, exceeds 255 bytes, contains
+`/`, or equals `.`, `..`, `_files`, or `_manifests`. Validation SHALL run after
+macro expansion, so a template that expands to a value containing `/` SHALL be
+rejected. An id containing `/` SHALL be rejected even when it already owns its
+owner object in the pool: the disk SHALL refuse to open, and `SYSTEM CAS DROP
+POOL MEMBER` and `clickhouse-disks cas-drop-member` SHALL refuse it as a
+victim. Invalid syntax SHALL fail with `BAD_ARGUMENTS`.
+
+#### RQ.SRS-048.CAS.Disk.ServerRootId.Ownership
+version: 2.0
+
+[ClickHouse] SHALL bind each `cas_server_root_id` to one durable
+`server_uuid` through an owner claim. A different UUID or a lost owner identity
+over non-empty state SHALL fail closed with `CORRUPTED_DATA`. A tombstoned
+owner SHALL refuse to mount, except through the documented rejoin of
+[RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin](#rqsrs-048casdiskserverrootidrejoin).
+
+The owner object SHALL carry an `owner_life` counter that every owner write
+bumps with `If-Match`, plus a `retirement_verified` flag. A mount SHALL record
+the life it started under and SHALL re-read the owner after every slot claim —
+at start and at self-remount — requiring its own UUID, that same life, and no
+tombstone; otherwise it SHALL fence its own slot body and fail. A self-remount
+that finds the owner at another life SHALL end the remount loop in
+`identity_lost` without allocating a writer epoch, and only a restart SHALL
+pick up the current life. A starter MAY reclaim a foreign terminal slot body
+only after a fresh owner read shows its own UUID, the recorded life, and no
+tombstone; a live foreign body SHALL stay refused as a foreign owner.
+
+Writer-epoch allocation SHALL be unique between two processes that share one
+`server_uuid`: every counter write SHALL carry a fresh allocation nonce, so an
+ambiguous write SHALL NOT be adopted as the other process's write by byte
+equality. Epochs SHALL be strictly increasing per `cas_server_root_id` across
+lives. A member whose epoch counter is missing SHALL be refused rather than
+repaired.
+
+`owner_life`, `retirement_verified`, and the allocation nonce SHALL be optional
+plain keys that an older reader skips; an owner without `owner_life` SHALL read
+as life 0.
+
+#### RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin
+version: 1.0
+
+[ClickHouse] SHALL let a `cas_server_root_id` retired by
+`SYSTEM CAS DROP POOL MEMBER` rejoin its pool as an **empty** member on the
+next server start, under the same or a new `server_uuid`, without a hand-edited
+owner object. The rejoin SHALL move the owner to a new life with `If-Match`,
+SHALL continue the existing epoch counter, and SHALL log a warning naming the
+old and new UUID and life. With a new `server_uuid`, the mount body SHALL be
+rewritten for that UUID before the owner is claimed. Local table definitions of
+a rejoined member SHALL attach with no rows.
+
+Rejoin SHALL be refused, with a message that names the cause and the
+recovery, when any of these holds: the caller is a self-remount; the
+`server_uuid` is zero; the `epoch` or `mount` object is absent (checked first,
+so such an id is never offered a decommission rerun); the retirement is not
+verified; the slot is still held; data of the previous life remains; or the
+owner or slot changes on every decision. A refusal for remaining data SHALL
+name the part left behind and, for catalog rows and manifests, SHALL point at
+`SYSTEM CAS GC RUN` on the [GC] leader. An id whose control objects are gone
+SHALL require a new `cas_server_root_id`.
+
+Decommission SHALL therefore be permanent for the member's **data**, not for
+its identity.
+
 #### RQ.SRS-048.CAS.Disk.Pool
 version: 1.0
 
@@ -2984,10 +4517,17 @@ distinct `cas_server_root_id` values. Relink eligibility SHALL use the minted
 `cas_pool_uuid`, not endpoint-plus-prefix string equality.
 
 #### RQ.SRS-048.CAS.Disk.Inline
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support selecting a [CAS] disk via the inline `disk = disk(...)`
 table setting as well as via a named disk in storage configuration.
+
+Creating a custom disk SHALL NOT block other disk creations or disk and
+storage-policy lookups, so several [CAS] custom disks that each wait out a
+stale mount lease at server start SHALL wait in parallel rather than one after
+another, and a `system.disks` read during such a wait SHALL still answer.
+Concurrent requests for one custom disk SHALL share a single open, and a failed
+creation SHALL NOT be cached: the next request SHALL create the disk again.
 
 #### RQ.SRS-048.CAS.Policy
 version: 1.0
@@ -3006,6 +4546,76 @@ generic disk layer. A misspelled `cas_` key SHALL be rejected. Unprefixed
 spellings of [CAS] settings SHALL be accepted for a bounded period and reported
 at startup. `skip_access_check` and `gcs_max_conditional_put_bytes` SHALL remain
 unprefixed (they belong to the generic disk / S3 client layers).
+
+#### RQ.SRS-048.CAS.Disk.CoreSettings
+version: 1.0
+
+[ClickHouse] SHALL support the documented core [CAS] disk settings:
+
+* `cas_scratch_path`
+* `cas_gc_enabled` and `cas_gc_interval_sec`
+* `cas_mount_lease_ttl_ms` and `cas_mount_renew_period_ms`
+* `cas_gc_snapshot_generations_to_keep` and `cas_gc_shards`
+* `cas_part_folder_cache_bytes`, `cas_part_folder_cache_max_entries`, and
+  `cas_part_folder_cache_max_entry_bytes`
+* `cas_manifest_decode_cache_bytes`
+* `cas_gc_meta_pool_size` and `cas_gc_io_concurrency`
+* `cas_attempt_timeout_ms` and `cas_lease_safety_margin_ms`
+* `cas_unsafe_remount_no_delay`
+* `cas_staging_backend`
+
+The server-wide `cas_blob_upload_pool_size` setting SHALL control parallel blob
+uploads and SHALL reject zero. `cas_gc_read_concurrency` SHALL be rejected
+without an alias; the supported name is `cas_gc_io_concurrency`.
+
+#### RQ.SRS-048.CAS.Disk.LeaseTiming
+version: 2.0
+
+[ClickHouse] SHALL validate mount-lease timing before opening a writable disk.
+With `cap` equal to `cas_attempt_timeout_ms` when `connect_timeout_ms = 0`, or
+otherwise `min(connect_timeout_ms, cas_attempt_timeout_ms)`, and
+`envelope = cas_attempt_timeout_ms + 2 * cap`, both of these conditions SHALL
+hold:
+
+* `envelope + cas_lease_safety_margin_ms < cas_mount_lease_ttl_ms`
+* `cas_mount_renew_period_ms + 2 * envelope + cas_lease_safety_margin_ms <
+  cas_mount_lease_ttl_ms`
+
+`cas_mount_lease_ttl_ms` SHALL be a per-server setting: how long this server
+may keep writing after its last confirmed renewal. Every observer of a mount
+slot — the [GC] floor, a same-server restart, and a self-remount reclaim —
+SHALL wait at least the lease the holder declares in its slot body before
+treating an unchanged slot token as a dead holder, so a server configured with
+a longer TTL SHALL NOT be fenced inside its own right to write by an observer
+configured with a shorter one. A slot body whose timestamps are missing,
+equal, or reversed SHALL declare a lease of zero, so no observer waits less
+than its own rule. Mixed values SHALL be safe in any order and SHALL NOT
+require stopping every pool member to change.
+
+#### RQ.SRS-048.CAS.Disk.Staging
+version: 2.0
+
+[ClickHouse] SHALL support `cas_staging_backend = local` and
+`cas_staging_backend = s3`. S3 staging SHALL require native same-store copy on
+a writable mount and SHALL fail closed rather than silently fall back to local
+staging when that capability is unavailable.
+
+An aborted transaction SHALL delete its S3 staging object on a best-effort
+basis, as a commit does, instead of leaving it until the next mount of the same
+`cas_server_root_id`. An S3 staging key SHALL carry the writer epoch
+(`staging/<cas_server_root_id>/<epoch>/<random>.tmp`), and the startup sweep
+SHALL delete only earlier epochs, so a paused older process SHALL NOT delete
+its successor's staging. An upload killed mid-way is invisible to object `LIST`
+and is never swept by [CAS]; operators SHALL configure the bucket's
+`AbortIncompleteMultipartUpload` lifecycle rule.
+
+#### RQ.SRS-048.CAS.Disk.ConnectionReuse
+version: 1.0
+
+[ClickHouse] SHALL accept generic object-storage connection settings in a [CAS]
+disk block. The documented production configuration SHOULD use
+`http_keep_alive_timeout = 30` and `http_keep_alive_max_requests = 10000` to
+avoid exhausting ephemeral ports during wide-part and merge workloads.
 
 #### RQ.SRS-048.CAS.Disk.BlobHash
 version: 1.0
@@ -3053,9 +4663,11 @@ belonging to one [MergeTree] part and their blob (or inline) placements.
 #### RQ.SRS-048.CAS.ObjectModel.Refs
 version: 1.0
 
-[ClickHouse] SHALL maintain mutable refs under each server's ownership namespace
-that map part names to manifests. Refs SHALL be the mutable layer that changes
-when parts are created, merged, mutated, or dropped.
+[ClickHouse] SHALL maintain logical mutable refs that map part names to
+manifests. Refs SHALL be the mutable layer that changes when parts are created,
+merged, mutated, or dropped. Their physical state SHALL use the append-only
+ref-stream representation specified by
+[RQ.SRS-048.CAS.ObjectModel.PhysicalRefs](#rqsrs-048casobjectmodelphysicalrefs).
 
 #### RQ.SRS-048.CAS.ObjectModel.Immutability
 version: 1.0
@@ -3063,6 +4675,228 @@ version: 1.0
 [ClickHouse] SHALL treat blobs and manifests as immutable after publish. Logical
 part changes SHALL produce new parts (and therefore new manifests / ref updates)
 rather than rewriting existing blob or manifest identities in place.
+
+#### RQ.SRS-048.CAS.ObjectModel.PhysicalRefs
+version: 1.1
+
+[ClickHouse] SHALL persist logical refs as append-only `_log` records with
+compacted `_snap` snapshots and `_ckpt` checkpoints under opaque namespace
+`life_id` values. Dropping and recreating a logical namespace name SHALL mint a
+new `life_id`; an old physical life SHALL NOT alias the new namespace.
+`cas_server_root_id` SHALL root ownership, manifest, loose-root, and staging
+subtrees, but SHALL NOT be embedded in ref-stream keys.
+
+A namespace runtime admitted from a cold path SHALL NOT be published for a
+life retired while that admission was in flight, and a runtime whose recovered
+state is terminal SHALL be refused. A retirement observed during a cold
+admission SHALL make the admission fail with a retryable error that re-reads
+the catalog, so a table dropped and re-created under the same UUID SHALL NOT
+acknowledge files into a dead life that the janitor then deletes.
+
+#### RQ.SRS-048.CAS.ObjectModel.Catalog
+version: 1.0
+
+[ClickHouse] SHALL keep one pool-wide namespace catalog object as the sole
+authority for which namespaces exist, read on every [GC] fold round and every
+ref-table recovery and mutated by one token-compare-and-swap write per
+lifecycle transition. Its entries SHALL be canonically ordered by namespace
+bytes, strictly ascending and without a duplicate name, enforced by both the
+encoder and the decoder, so an out-of-order or duplicate-keyed catalog SHALL
+NOT become durable.
+
+Each row SHALL carry the namespace name, a state of `Creating`, `Live`, or
+`Removing`, a nonzero never-reused `life_id`, the creating writer's fence
+identity (required for `Creating`, forbidden otherwise), and the [GC] round
+observed when removal began (required for `Removing`, absent otherwise). State
+values SHALL be append-only on the wire, never renumbered or repurposed, so a
+catalog written by one build stays readable by another.
+
+A row SHALL advance `Creating` to `Live` to `Removing` to absent. A stalled
+`Creating` row SHALL NOT be stolen while its creator fence is still live, and
+SHALL be completed by a fresh opener only once that fence is provably dead. A
+namespace name SHALL become creatable again only after its previous row is
+completely gone, and SHALL then take a brand-new `life_id`.
+
+#### RQ.SRS-048.CAS.ObjectModel.FormatGeneration
+version: 1.0
+
+[ClickHouse] SHALL record a `min_reader_generation` in the pool and SHALL
+refuse to mount a pool whose recorded generation is newer than the generation
+this build can read. A ref log that carries a record of a generation above 1
+(currently `Move`, see
+[RQ.SRS-048.CAS.Write.PartRename](#rqsrs-048caswritepartrename)) SHALL be
+stamped with that generation, and the first writable mount by a build that
+emits it SHALL raise the pool's `min_reader_generation` once. Raising the
+generation SHALL be one-way, so a build that predates it can no longer mount
+that pool and operators SHALL upgrade every server in a pool before the first
+writable mount.
+
+#### RQ.SRS-048.CAS.ObjectModel.ManifestLimits
+version: 1.0
+
+[ClickHouse] SHALL apply write-path backpressure before publishing a part
+manifest and reject one that exceeds any documented limit: 1,048,576 entries,
+256 MiB of encoded text, 16 MiB of total inline content, or 1 MiB for one
+inline entry.
+
+### Write Path
+
+#### RQ.SRS-048.CAS.Write.Publish
+version: 1.1
+
+[ClickHouse] SHALL publish one logical part in this durable order:
+
+1. stage and create the immutable manifest;
+2. append the ref precommit;
+3. materialize or adopt every required blob;
+4. promote the precommit to a committed ref.
+
+Promotion SHALL validate the live precommit and its dependency proofs. It
+SHALL reuse the proof recorded when the manifest was staged instead of reading
+the manifest back, and cleanup of an abandoned staged manifest SHALL delete it
+by the recorded incarnation without a preliminary `HEAD`. Manifest staging
+SHALL NOT race the orphan sweep into deleting a committed manifest. An
+unresolved append or promotion SHALL be treated as an uncertain outcome and
+reconciled or retried; it SHALL NOT be treated as proof that the write did not
+land. Which of the three commit outcomes a failure reports is specified by
+[RQ.SRS-048.CAS.Write.CommitOutcome](#rqsrs-048caswritecommitoutcome).
+
+#### RQ.SRS-048.CAS.Write.BlobMaterialization
+version: 2.0
+
+[ClickHouse] SHALL begin each blob materialization attempt with `HEAD` and
+SHALL adopt a present body only when the freshness marker read after that
+`HEAD` reads `Clean`. A present body whose marker is absent SHALL be
+republished like an absent body and SHALL NOT be adopted by backfilling the
+marker: [GC] can delete a body and then its marker between the two reads, so
+an absent marker is not proof that the body is live. A `Condemned` body SHALL
+be republished under a new incarnation. An absent body SHALL be published
+unconditionally, and a retry SHALL restart from `HEAD`. A backend token used
+for exact deletion SHALL continue to identify the same content for that
+incarnation (`TOKEN` implies `CONTENT`). A publication started on an absent
+marker SHALL be counted in `CASMetaAbsentRepublish`.
+
+[GC] SHALL remove a condemned marker together with its body even when the
+graduation gate re-stamped that marker at a later round, so a marker SHALL NOT
+outlive the body it describes.
+
+#### RQ.SRS-048.CAS.Write.BlobPublishRetries
+version: 1.0
+
+[ClickHouse] SHALL send each object-creating request of a blob publication at
+most once. `PutObject`, `CopyObject`, and `CompleteMultipartUpload` SHALL NOT
+be resent by the object-storage client, because a resend carries the same
+bytes and therefore the same backend token, which can resurrect an incarnation
+that [GC] has already condemned and deleted and leave a committed reference
+without data. `CreateMultipartUpload`, `UploadPart`, and `UploadPartCopy`
+SHALL keep their ordinary retries, so a large multipart blob still survives
+throttling. A copy made under the single-attempt rule SHALL use native
+same-store copy only and SHALL reject any other copy mode with
+`BAD_ARGUMENTS`.
+
+Retry SHALL happen one level up: the [CAS] publish loop SHALL re-observe the
+key per
+[RQ.SRS-048.CAS.Write.BlobMaterialization](#rqsrs-048caswriteblobmaterialization)
+and publish a fresh envelope under a new incarnation tag. Each failed attempt
+SHALL be counted in `CASBlobPublishAttemptFailed`, and a publication that ends
+in an exception after a failed attempt in `CASBlobPublishGaveUp`. The first
+failed attempt SHALL be logged below `Warning`, so a single retried failure
+does not reach a client that requested warning-level logs.
+
+#### RQ.SRS-048.CAS.Write.CommitOutcome
+version: 1.0
+
+[ClickHouse] SHALL state, in the error of a failed ref-log commit, which of
+three outcomes applies, so a client can tell whether retrying may duplicate
+the write:
+
+* the transaction is durable and only the `_ckpt` frontier publish failed;
+* the outcome is unknown;
+* the write is not durable.
+
+The original error SHALL be kept inside that message. A give-up while
+publishing the checkpoint SHALL report its real cause — policy deadline,
+lease deadline, or unresolved — rather than a generic contention message.
+This requirement constrains the message, not the behavior: error codes for
+`DB::Exception` SHALL be unchanged.
+
+#### RQ.SRS-048.CAS.Write.PartRename
+version: 1.0
+
+[ClickHouse] SHALL rename a committed part on a [CAS] disk with a single
+ref-log owner `Move` record rather than by republishing the part manifest, so
+a rename costs no additional manifest write and no ref drop. A ref log that
+carries a `Move` SHALL be stamped manifest format generation 2 per
+[RQ.SRS-048.CAS.ObjectModel.FormatGeneration](#rqsrs-048casobjectmodelformatgeneration).
+An ownership conflict raised on that path SHALL use `CAS_OWNERSHIP_CONFLICT`
+and SHALL be counted in `CASOwnershipConflict`.
+
+#### RQ.SRS-048.CAS.Write.HashCollision
+version: 1.0
+
+[ClickHouse] SHALL use hash equality as blob identity and SHALL NOT claim that a
+`HEAD`-only adoption compares the stored body with the incoming payload.
+`cityhash128` SHALL remain the compatibility default, while `sha256` SHALL be
+the documented choice when mutually untrusted writers share a pool or
+collision resistance is required.
+
+### Read Path
+
+#### RQ.SRS-048.CAS.Read
+version: 1.0
+
+[ClickHouse] SHALL resolve a part ref to its immutable manifest and serve each
+file from its manifest entry. Inline entries SHALL require no additional
+object-store request. Blob entries SHALL use a ranged `GET` bounded to the blob
+payload, excluding the blob envelope. Verbatim files SHALL use a plain object
+read.
+
+#### RQ.SRS-048.CAS.Read.ManifestValidation
+version: 1.0
+
+[ClickHouse] SHALL read and validate a manifest body before caching it. A live
+ref naming a missing manifest SHALL raise `FILE_DOESNT_EXIST`; a manifest whose
+decoded `ref` or `root_namespace_id` does not match the requested manifest key
+SHALL raise `CORRUPTED_DATA`.
+
+#### RQ.SRS-048.CAS.Read.Caches
+version: 1.0
+
+[ClickHouse] SHALL cache decoded manifests by immutable `ManifestId` and
+part-folder views by part-ref key. A validated cache hit SHALL perform no
+object-store request. Setting `cas_manifest_decode_cache_bytes = 0` or
+`cas_part_folder_cache_bytes = 0` SHALL disable the corresponding retention
+without weakening validation. Promote and repoint SHALL invalidate the
+part-folder view, and concurrent cold readers of one view SHALL coalesce into a
+single build.
+
+#### RQ.SRS-048.CAS.Read.DirectoryProbes
+version: 1.0
+
+[ClickHouse] SHALL answer `existsDirectory` and `listDirectory` inside a
+resolved part from the part manifest: a plain file is not a directory, while a
+nested directory exists and lists its children. These probes SHALL NOT issue
+an object-store `LIST`. Paths that cannot be resolved as a part MAY use the
+ordinary listing fallback. Part-load listing cost SHALL not grow with the
+number of files in each part.
+
+#### RQ.SRS-048.CAS.Read.InFlight
+version: 1.0
+
+A part still inside an open write transaction SHALL NOT be visible through the
+ordinary ref resolve. [ClickHouse] SHALL serve a read of such a part through
+the explicit read-your-writes overlay of that transaction, so a writer sees its
+own uncommitted files while other readers do not. The bare part directory
+SHALL report as absent in that overlay, so cleanup of a rejected temporary part
+is never mistaken for a real, resolvable part.
+
+#### RQ.SRS-048.CAS.Read.ReadOnly
+version: 1.0
+
+A read-only or diagnostic [CAS] opener SHALL NOT claim mount ownership,
+schedule [GC], or mint writer state. The backend SHALL reject mutating metadata
+operations with a `READONLY`-class error even when a caller bypasses an
+ordinary facade check.
 
 ### MergeTree Compatibility
 
@@ -3124,11 +4958,11 @@ so that replicas converge to the same logical data while each replica owns its
 own ref namespace under a distinct `cas_server_root_id`.
 
 #### RQ.SRS-048.CAS.MergeTree.PartTypes
-version: 1.0
+version: 2.0
 
-[ClickHouse] SHALL support Wide and Compact [MergeTree] parts on a [CAS] disk.
-Projections, patch parts, detached parts, temporary parts, and frozen/shadow
-parts SHALL be representable in the [CAS] object model.
+[ClickHouse] SHALL support Wide, Compact, and Packed [MergeTree] parts on a
+[CAS] disk. Projections, patch parts, detached parts, temporary parts, and
+frozen/shadow parts SHALL be representable in the [CAS] object model.
 
 #### RQ.SRS-048.CAS.MergeTree.Alter.Schema
 version: 1.0
@@ -3188,6 +5022,14 @@ version: 1.0
 
 [ClickHouse] SHALL preserve committed [CAS]-backed table data and applicable
 mutation / patch-part / projection state across ClickHouse server restart.
+
+#### RQ.SRS-048.CAS.MergeTree.Rename
+version: 1.0
+
+[ClickHouse] SHALL support `RENAME TABLE` by republishing every ref and
+verbatim file into the destination namespace and then dropping the old
+namespace. The operation SHALL be idempotent and re-drivable after failure, but
+need not be atomic across the two namespaces.
 
 #### RQ.SRS-048.CAS.MergeTree.Alter
 version: 1.0
@@ -3408,6 +5250,84 @@ on [CAS]-backed [MergeTree] tables as a mutation that materializes pending
 lightweight-update patch parts into data parts, with the same logical
 outcome as on non-CAS storage.
 
+#### RQ.SRS-048.CAS.MergeTree.MaterializedView
+version: 1.0
+
+[ClickHouse] SHALL support materialized views when the source table, the
+`TO` destination, or the view's inner [MergeTree] is stored on a [CAS] disk.
+Logical results SHALL match non-CAS [MergeTree].
+
+* `INSERT` into the source SHALL apply the view `SELECT` and write that
+  result to the `TO` table, or to the inner table when the view declares
+  its own `ENGINE`. Parts SHALL land on the destination table's disk or
+  storage policy, which MAY differ from the source.
+* `POPULATE` SHALL load rows already in the source into a view that
+  declares its own `ENGINE`. A later `INSERT` SHALL append only the new
+  result. Declaring both `TO` and `POPULATE` SHALL be rejected, matching
+  non-CAS [MergeTree].
+* A `SELECT` that filters, rewrites, or joins another [CAS] table SHALL
+  write that result, including aggregate states into an
+  `AggregatingMergeTree` destination. `SummingMergeTree` and
+  `ReplacingMergeTree` destinations SHALL collapse view-written rows on
+  merge, and a destination projection SHALL be built for view-written parts.
+* Several views on one source, and a view whose source is another view's
+  destination, SHALL each receive the insert, with or without
+  `parallel_view_processing`.
+* A multi-block `INSERT ... SELECT` and concurrent inserts into the source
+  SHALL write every row to the destination exactly once.
+* If the view `SELECT` throws, the `INSERT` SHALL fail and the destination
+  SHALL not receive that block. The source keeps the block, matching
+  non-CAS [MergeTree]. With `materialized_views_ignore_errors` the insert
+  SHALL succeed without writing to the failing view. Both tables SHALL pass
+  `CHECK TABLE` afterwards.
+* A retried insert that the source deduplicates (by
+  `insert_deduplication_token` with `non_replicated_deduplication_window`,
+  or by a `ReplicatedMergeTree` retry on another replica) SHALL NOT write
+  the block to the destination again.
+* `ALTER TABLE ... MODIFY QUERY` SHALL change what later inserts write.
+  `DETACH` / `ATTACH` and `RENAME` of the view, and a server restart, SHALL
+  keep the rows on its [CAS] storage and SHALL keep later inserts
+  propagating
+  ([RQ.SRS-048.CAS.MergeTree.RestartDurability](#rqsrs-048casmergetreerestartdurability),
+  [RQ.SRS-048.CAS.MergeTree.Rename](#rqsrs-048casmergetreerename)).
+* `DETACH`, `ATTACH`, `MOVE PARTITION ... TO TABLE`, and `DROP PARTITION`
+  on a [CAS] destination SHALL work while the view keeps writing to it.
+* A refreshable view SHALL replace a [CAS] `TO` table or inner table with
+  the current result on each refresh, or add the result with `APPEND`.
+  Refreshing identical bytes SHALL keep sharing one blob through [GC].
+* `ALTER TABLE ... UPDATE`, `ALTER TABLE ... DELETE`, and lightweight
+  `DELETE` on the source SHALL leave rows the view already wrote unchanged.
+* With `check_referential_table_dependencies` enabled, `DROP` of the
+  source or the destination SHALL be rejected while the view still
+  references that table. With the setting left at its default, that `DROP`
+  is allowed, matching non-CAS [MergeTree]. `DROP` of the view SHALL stop
+  later inserts from propagating and SHALL leave both tables queryable.
+  After the view is gone, `DROP` of the source SHALL leave the destination
+  readable.
+* Identical column bytes the view writes into the same pool SHALL share a
+  blob with the source
+  ([RQ.SRS-048.CAS.ObjectModel.Blobs](#rqsrs-048casobjectmodelblobs)).
+  Different bytes SHALL be stored again. [GC] SHALL NOT delete a blob the
+  destination still names
+  ([RQ.SRS-048.CAS.GC.NoLoss](#rqsrs-048casgcnoloss)), and SHALL reclaim it
+  after the last owner is dropped
+  ([RQ.SRS-048.CAS.GC.ReclaimAfterDrop](#rqsrs-048casgcreclaimafterdrop)),
+  including after `TRUNCATE` and after `DROP` of a view, which drops its
+  inner table. A blob that [GC] has condemned but not yet deleted SHALL be
+  kept when the view writes the same bytes again, and [GC] rounds that
+  overlap inserts through the view SHALL NOT lose data.
+  A view that writes into a different pool SHALL publish into that pool,
+  and reclaiming one pool SHALL leave the other pool's copy readable.
+* With `ReplicatedMergeTree` source and destination, creating the view on
+  every replica SHALL make an `INSERT` on one replica visible in the
+  destination on every replica after replication. A replicated inner
+  table on [CAS] SHALL replicate the same way.
+* An `INSERT` through a `Distributed` table SHALL run each shard's view on
+  the rows routed to that shard.
+
+Merges of parts the view wrote are specified by
+[RQ.SRS-048.CAS.MergeTree.Merge](#rqsrs-048casmergetreemerge).
+
 ### Partition And Part Operations
 
 Same-disk / same-pool partition and part DDL MUST remain correct on [CAS]
@@ -3419,7 +5339,7 @@ Replication-queue relink for the same operations is covered under
 [Replication Relink](#replication-relink).
 
 #### RQ.SRS-048.CAS.Partition.AlterAllowList
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL allow the following partition commands on a [CAS] disk and
 SHALL reject unsupported partition commands fail-closed:
@@ -3434,6 +5354,8 @@ SHALL reject unsupported partition commands fail-closed:
 * `FETCH PARTITION` / `FETCH PART`
 * `FREEZE PARTITION` / `FREEZE`
 * `UNFREEZE PARTITION` / `UNFREEZE`
+* `EXPORT PART` / `EXPORT PARTITION`
+  ([RQ.SRS-048.CAS.Partition.Export](#rqsrs-048caspartitionexport))
 
 `DROP` / `DETACH` / `ATTACH` / `ATTACH FROM` SHALL accept `PARTITION ALL`
 where upstream [MergeTree] does. Partition-scoped mutations
@@ -3521,11 +5443,10 @@ the source.
 version: 1.0
 
 [ClickHouse] SHALL support `ALTER TABLE ... FREEZE PARTITION` / `FREEZE` on a
-[CAS]-backed table by publishing shadow-namespace refs that share live blobs
-(no freeze-time byte copy of pool blobs), such that backup consumers can read
-frozen file bytes through the disk API. The shadow namespace SHALL be scoped
-under the creating server's `cas_server_root_id` so one server's `UNFREEZE`
-cannot reach another server's snapshots in the same pool.
+[CAS]-backed table by materializing readable file bytes in a separate shadow
+namespace. The shadow namespace SHALL be a [GC] reachability root scoped under
+the creating server's `cas_server_root_id`, so one server's `UNFREEZE` cannot
+reach another server's snapshots in the same pool.
 
 #### RQ.SRS-048.CAS.Partition.Unfreeze
 version: 1.0
@@ -3538,8 +5459,10 @@ blobs still referenced by live table ownership.
 version: 1.0
 
 [ClickHouse] SHALL support partition / part clone paths used by attach, replace,
-and freeze on [CAS] as ref publication (content-identical clones share blob
-identity) rather than requiring a full byte copy of already-present content.
+and cross-disk operations as one whole-part disk transaction. Same-pool attach
+and replace paths MAY republish refs over shared blobs. `FREEZE` SHALL follow
+[RQ.SRS-048.CAS.Partition.Freeze](#rqsrs-048caspartitionfreeze) and materialize
+its separate shadow namespace.
 
 #### RQ.SRS-048.CAS.Partition.ClearColumn
 version: 1.0
@@ -3593,6 +5516,15 @@ partition off [CAS] SHALL make the abandoned blobs eligible for [GC]
 without deleting them synchronously. Commands that the partition
 allow-list does not admit SHALL fail closed.
 
+#### RQ.SRS-048.CAS.Partition.Export
+version: 1.0
+
+[ClickHouse] SHALL support `ALTER TABLE ... EXPORT PART` and
+`ALTER TABLE ... EXPORT PARTITION` from a [CAS]-backed `ReplicatedMergeTree`
+source to a supported destination such as Iceberg, with the same exported rows
+as from a non-CAS disk. `partition_exports` SHALL be a reserved table-level
+directory, so its descriptor SHALL NOT be parsed as a part name.
+
 ### Backup And Restore
 
 #### RQ.SRS-048.CAS.Backup
@@ -3610,6 +5542,18 @@ version: 1.0
 [ClickHouse] SHALL support `RESTORE` of [CAS]-backed [MergeTree] table backups
 produced through the supported backup path, restoring queryable logical contents
 equivalent to the backed-up table.
+
+#### RQ.SRS-048.CAS.Backup.SameEndpointCopy
+version: 1.0
+
+[ClickHouse] SHALL back up a [CAS]-backed table to an `S3(...)` or `Disk(...)`
+destination that sits on the same S3 endpoint as the pool. Because a blob
+entry is a range inside a blob envelope rather than a whole object, the backup
+SHALL copy the payload with a ranged server-side copy rather than copying the
+envelope. A blob payload of 5 MiB or smaller SHALL fall back to a buffered
+read-and-write copy, since S3 ranged part copy has a 5 MiB minimum part size.
+Restored contents SHALL match
+[RQ.SRS-048.CAS.Restore](#rqsrs-048casrestore).
 
 ### Shared Pool
 
@@ -3639,6 +5583,24 @@ version: 1.0
 one pool member process crashes or is killed, without corrupting surviving
 members' committed data.
 
+#### RQ.SRS-048.CAS.SharedPool.MountRecovery
+version: 1.0
+
+[ClickHouse] SHALL fence local writes when mount-lease renewal reaches a
+terminal or unresolved outcome, enter the `TransientNotLive` lifecycle, and
+schedule self-remount under a fresh `writer_epoch`. Every durable write or
+delete SHALL recheck its captured fence generation before completion. A
+confirmed foreign holder, successor, same-pair conflict, or fenced epoch SHALL
+fail closed and SHALL NOT be adopted as this process's renewal.
+
+#### RQ.SRS-048.CAS.SharedPool.TerminalLifecycle
+version: 1.0
+
+[ClickHouse] SHALL treat `identity_lost`, `vanished(replaced)`, and
+`vanished(forgotten)` as terminal, absorbing pool lifecycles. A transient
+remount SHALL retry with bounded backoff when the probe is inconclusive and
+return to `live` only after a valid claim and renewal under the fresh epoch.
+
 ### Replication Relink
 
 #### RQ.SRS-048.CAS.Relink
@@ -3647,8 +5609,9 @@ version: 1.0
 [ClickHouse] SHALL support fetch-by-relink for `ReplicatedMergeTree` replicas
 that mount the same [CAS] pool: a receiving replica MAY publish a local ref to
 the sender's manifest instead of transferring all part bytes, when the relink
-protocol succeeds. The sender SHALL offer relink only when the receiver's
-advertised `cas_pool_uuid` equals the sender disk's pool uuid.
+protocol succeeds. The receiver SHALL advertise the `cas_pool_uuid` of every
+writable [CAS] pool in its storage policy, and the sender SHALL offer relink
+only when its disk's pool uuid occurs in that set.
 
 #### RQ.SRS-048.CAS.Relink.HappyPath
 version: 1.0
@@ -3670,9 +5633,14 @@ subject to the same pool-identity rules as ordinary fetch.
 version: 1.0
 
 [ClickHouse] SHALL fall back to ordinary byte fetch when sender and receiver do
-not share the same [CAS] `cas_pool_uuid` (or relink confirmation is unavailable),
-and SHALL not incorrectly claim a metadata-only relink in that case.
-Byte-fetched files SHALL still content-address and deduplicate on arrival.
+not share the same [CAS] `cas_pool_uuid`, when the sender predates the confirm
+protocol, or when a mechanism failure proves that promotion did not commit
+(for example an absent precommit or ref conflict). It SHALL not claim a
+metadata-only relink in those cases. An unavailable or unproven confirmation is
+an uncertain outcome governed by
+[RQ.SRS-048.CAS.Relink.ConfirmRace](#rqsrs-048casrelinkconfirmrace), not a byte
+fallback. Byte-fetched files SHALL still content-address and deduplicate on
+arrival.
 
 #### RQ.SRS-048.CAS.Relink.AttachPartitionFrom
 version: 1.0
@@ -3716,6 +5684,49 @@ version: 1.0
 the fetch with relink disabled so the receiver stops advertising its pool uuid
 and the relink path cannot be entered twice for one fetch.
 
+#### RQ.SRS-048.CAS.Relink.OfferIntegrity
+version: 1.0
+
+[ClickHouse] SHALL resolve the sender manifest bytes and confirmation token
+from one source-ref view. The receiver SHALL trust only the decoded manifest
+entry list from the wire; it SHALL derive the destination namespace and ref
+locally and ignore the sender's manifest id, namespace, and payload digest.
+Protocol version 11 SHALL mean that the receiver promises to confirm before
+promotion.
+
+#### RQ.SRS-048.CAS.Relink.Placement
+version: 1.0
+
+For a same-pool offer, [ClickHouse] SHALL place the fetched part on the first
+writable policy disk that belongs to the offered pool, ahead of ordinary volume
+order, JBOD balancing, `max_data_part_size_bytes`, and TTL destination rules.
+TTL placement SHALL be deferred to the background mover. A read-only pool SHALL
+be advertised only when another disk for that pool is writable.
+
+#### RQ.SRS-048.CAS.Relink.UnavailableTarget
+version: 1.0
+
+When relink placement selects a pool disk whose mount is not live, [ClickHouse]
+SHALL fail the fetch and let the replication queue retry. It SHALL NOT silently
+choose a different disk and transfer bytes. A peer that predates multi-pool
+advertisement MAY use byte fetch during a rolling upgrade.
+
+#### RQ.SRS-048.CAS.Relink.FormatVersion
+version: 1.0
+
+[ClickHouse] SHALL fail closed when a relink offer uses an unknown newer
+manifest format. Until a documented compatibility path exists, it SHALL NOT
+silently degrade that offer to byte fetch.
+
+#### RQ.SRS-048.CAS.Relink.GCBackstop
+version: 1.0
+
+A successful confirmation SHALL prove only that the source held the exact
+manifest at confirm time; it SHALL NOT be interpreted as proof that a later
+[GC] fold observed the receiver's new edge through an eventually consistent
+listing. `cas-fsck` SHALL detect and report a reachable-but-absent object as the
+operator backstop for that documented gap.
+
 ### Garbage Collection
 
 #### RQ.SRS-048.CAS.GC
@@ -3752,8 +5763,13 @@ SYSTEM CAS GC RUN [ON CLUSTER cluster_name] [disk_name];
 
 When `disk_name` is omitted, one round SHALL run on every [CAS] disk on the
 node. A manual run SHALL execute even if `SYSTEM CAS GC STOP` has paused the
-background scheduler. The command SHALL return one row per disk it ran on
-(the `cas_gc_log` `Finish` shape).
+background scheduler. It MAY acquire or renew GC leadership but SHALL NOT steal
+leadership from a live leader. The command SHALL return one row per disk with
+`disk`, `acquired_lease`, `deferred`, `round`, `candidates_marked`,
+`objects_deleted`, `objects_absent`, `objects_replaced`, `objects_spared`,
+`manifests_deleted`, `entries_condemned`, `entries_graduated`,
+`entries_redeleted`, `entries_redelete_failed`, `fence_outs`, `anomalies`, and
+`pending_candidates`, `pending_condemned`, and `pending_retired`.
 
 #### RQ.SRS-048.CAS.GC.Rebuild
 version: 1.0
@@ -3770,7 +5786,9 @@ existing `gc/state` looks healthy unless `FORCE` is given, and SHALL refuse
 (regardless of `FORCE`) when another GC leader holds the disk's lease.
 Rebuild SHALL write only the GC plane and SHALL fail closed rather than delete
 uncertain content; temporary over-protection (leaks) is preferred over data
-loss.
+loss. Rebuild SHALL be documented as disaster recovery: it does not directly
+delete blobs, but incorrect rebuilt bookkeeping can authorize deletion in later
+ordinary rounds.
 
 #### RQ.SRS-048.CAS.GC.Sharded
 version: 1.0
@@ -3802,6 +5820,119 @@ SYSTEM CAS GC START [ON CLUSTER cluster_name] disk_name;
 `disk_name` SHALL be required. `STOP` SHALL be idempotent, SHALL stop in place
 (the same scheduler instance resumes on `START`), and SHALL NOT stop a manual
 `SYSTEM CAS GC RUN`. `START` SHALL NOT automatically restore GC leadership.
+`STOP` SHALL work on a sick or non-live disk and return no result set. `START`
+SHALL reject a decommissioned or uncertain pool with a typed error.
+
+#### RQ.SRS-048.CAS.GC.Phases
+version: 1.0
+
+[ClickHouse] SHALL expose the current GC pipeline through ordered `Phase` rows
+using these documented phase values:
+
+1. `lease`
+2. `pre_fold_ref_drain`
+3. `heartbeat_floor`
+4. `defer_decision`
+5. `parent_seal_read`
+6. `fold_ref_group`
+7. `fold_seal_read`
+8. `fold_ref_intake`
+9. `fold_reduce`
+10. `fold_seal_write`
+11. `pending_deletes`
+12. `meta_pool_wait`
+13. `round_commit`
+14. `handoff_reclaim`
+15. `manifest_deletes`
+16. `namespace_cleanup`
+17. `ref_object_cleanup`
+18. `orphan_sweep`
+
+A follower SHALL emit only the phases it reaches and stop after `lease`. A
+deferred leader round SHALL still drain eligible pre-fold work and run one
+suppressed namespace-cleanup page, but SHALL not publish a fold generation.
+
+#### RQ.SRS-048.CAS.GC.Budgets
+version: 1.0
+
+[ClickHouse] SHALL support the documented GC work controls:
+
+* `cas_manifest_sweep_list_budget_keys`
+* `cas_manifest_sweep_delete_budget_keys`
+* `cas_gc_bulk_delete_chunk_keys`
+* `cas_gc_round_graduation_budget`
+* `cas_gc_round_redelete_budget`
+* `cas_gc_round_sweep_namespace_budget`
+* `cas_gc_round_sweep_recovery_op_budget`
+* `cas_gc_round_ref_cleanup_budget`
+* `cas_gc_round_prefix_wholesale_budget`
+* `cas_gc_round_handoff_prefix_wholesale_budget`
+* `cas_gc_round_outcome_entry_budget`
+
+For `cas_gc_round_*` budgets, zero SHALL mean unbounded. For the manifest sweep,
+a zero list budget SHALL disable the sweep and a zero delete budget SHALL permit
+listing without nomination. `cas_gc_meta_pool_size` and
+`cas_gc_bulk_delete_chunk_keys` SHALL reject zero.
+
+#### RQ.SRS-048.CAS.GC.ReadAhead
+version: 1.0
+
+[GC] read-ahead SHALL cache results, never decisions: every take, decode,
+counter, hold, and event SHALL stay at its own site, and a round run at
+`cas_gc_io_concurrency = 1` SHALL reach the same verdicts as the same round run
+concurrently. Read-ahead SHALL hint only ref-log ids that the round's own
+`LIST` returned, so it SHALL NOT request the positions past an epoch seal,
+which never exist. A log written after that `LIST` SHALL be taken inline, with
+the same decision. Wasted hints SHALL be counted in `CASGCReadAheadWasted` and
+useful ones in `CASGCReadAheadHit`.
+
+A namespace's mount floor SHALL be resolved only from the server roots the
+caller already listed under `gc/server-roots/`, instead of probing every `/`
+prefix of the namespace name. A mount created after that listing SHALL be seen
+only on the next listing, which is the conservative direction: an unresolved
+floor SHALL retain, keep the barrier, or over-protect.
+
+#### RQ.SRS-048.CAS.GC.OrphanManifests
+version: 1.0
+
+[ClickHouse] SHALL reclaim never-precommitted manifest bodies through the
+orphan-manifest sweep. Eligibility SHALL use namespace watermarks and mount
+floors, not object age alone. A namespace without deletion authority from a
+valid mount lease SHALL retain its candidate manifests.
+
+#### RQ.SRS-048.CAS.GC.NamespaceJanitor
+version: 1.0
+
+[ClickHouse] SHALL run a perpetual namespace janitor that reclaims the ref
+stream and state objects (`_log`, `_snap`, `_ckpt`, `_files`) left under a dead
+`life_id`. It SHALL work in bounded `LIST` pages under a per-round time budget,
+and SHALL act whenever it next lists a key whose `life_id` a fresh catalog cut
+no longer names, independently of and not gated on deletion of the catalog row.
+
+The janitor SHALL be leak-only: it SHALL NOT fail a [GC] round, SHALL NOT block
+round progress on an unreadable key, and a crash mid-page SHALL leave debris for
+its next page rather than lose a live object. Its outstanding work SHALL be
+observable as the `janitor-pending` state in `cas-fsck` and the
+`namespace_janitor_pending`, `namespace_janitor_pending_bytes`, and
+`namespace_janitor_pending_lives` counters of
+[RQ.SRS-048.CAS.Fsck.Online](#rqsrs-048casfsckonline).
+
+#### RQ.SRS-048.CAS.GC.DeleteAuthority
+version: 2.0
+
+[GC] SHALL be the only component that deletes blob bodies and the only
+reachability-driven deleter of manifest bodies. A writer MAY exact-delete its
+own never-precommitted manifest. Pool-member decommission MAY remove that
+member's manifest debris, staging objects, and roots, but SHALL NOT
+synchronously reclaim shared blob bodies, and SHALL keep the member's `owner`,
+`epoch`, and `mount` control objects per
+[RQ.SRS-048.CAS.DropPoolMember](#rqsrs-048casdroppoolmember).
+
+Every delete of a retired blob body SHALL carry that object's backend token, so
+a body replaced by a newer incarnation is never removed by an older round's
+delete. On S3 those deletes MAY be issued as batched `DeleteObjects` requests
+that carry a per-object `ETag`, bounded by `cas_gc_bulk_delete_chunk_keys`; a
+batch SHALL NOT weaken the exact-token rule.
 
 #### RQ.SRS-048.CAS.GC.DryRun
 version: 1.0
@@ -3815,13 +5946,14 @@ MAY over-report; its output MUST NOT be used as a delete source.
 version: 1.0
 
 [ClickHouse] SHALL provide an offline filesystem check
-(`clickhouse-disks ... cas-fsck [--detail]`) that classifies reachable,
-dangling, pending-gc, awaiting-gc, and related object states for a [CAS] pool
-without mutating the pool. The tool SHALL open the disk read-only and MUST NOT
-claim a live server's mount. `dangling` SHALL be the class that means data
-loss; `unreachable` / `pending_gc` / `awaiting_gc` SHALL mean objects still
-moving through the condemn / graduate / delete pipeline. `--detail` SHALL be
-the per-object listing; the SQL form is summary-only.
+(`clickhouse-disks ... cas-fsck [--detail] [--timeout ...] [--namespace ...]
+[--partial]`) that classifies `reachable`, `dangling`, `unreachable`,
+`pending-gc`, `awaiting-gc`, `unaccounted`, `stale-edge`, `corrupted-run`,
+`chain-broken`, `unchecked`, `lifeless-key`, `janitor-pending`, and related
+object states for a [CAS] pool without mutating it. The tool SHALL open the disk
+read-only and MUST NOT claim a live server's mount. Only `dangling` SHALL
+directly mean data loss. `--detail` SHALL be the per-object listing; the SQL
+form SHALL be summary-only.
 
 #### RQ.SRS-048.CAS.Fsck.Online
 version: 1.0
@@ -3836,12 +5968,16 @@ SYSTEM CAS FSCK [ON CLUSTER cluster_name] disk_name;
 `disk_name` SHALL be required. The scan SHALL re-validate findings against a
 fresh authoritative read and SHALL need no quiesce. The command SHALL return
 one summary row including at least `reachable`, `dangling`, `unreachable`,
-`pending_gc`, and `awaiting_gc`.
+`pending_gc`, `awaiting_gc`, `unaccounted`, `stale_edge`, `corrupted_runs`,
+`chain_broken`, `unchecked`, `lifeless_keys`, `namespace_janitor_pending`,
+`namespace_janitor_pending_bytes`, `namespace_janitor_pending_lives`,
+`ref_records_walked`, `physical_bytes`, `referenced_logical_bytes`,
+`distinct_blobs`, and `total_blob_refs`.
 
 ### Day-2 Operations
 
 #### RQ.SRS-048.CAS.DropPoolMember
-version: 1.0
+version: 2.0
 
 [ClickHouse] SHALL support decommissioning a dead pool member via
 
@@ -3850,13 +5986,43 @@ SYSTEM CAS DROP POOL MEMBER 'server_root_id' FROM DISK 'disk_name' [ON CLUSTER c
 ```
 
 and the offline twin `clickhouse-disks ... cas-drop-member <server_root_id>`.
-The command SHALL refuse immediately if the member is still alive, SHALL fence
-that `cas_server_root_id` from writing again, SHALL drop the member's table
-namespaces, and SHALL retire the mount slot only after drains are confirmed.
-It SHALL emit ordinary ref-edge deltas rather than inventing GC transitions,
-and SHALL NOT synchronously reclaim shared blob content. The operation SHALL
-be resumable. After `slot_removed = true` with no warnings, the member's
-`cas_server_root_id` SHALL no longer appear in `system.cas_mounts` on any peer.
+The command SHALL claim the member's mount slot without waiting and SHALL
+accept only a terminal slot: `terminated` (the member stopped cleanly) or
+`fenced` (the disk's GC leader fenced its lease). A `live` or `expired` slot
+SHALL be refused, so a hard-killed member SHALL NOT be removable until it is
+fenced; the refusal SHALL name that wait — about one lease TTL plus one renew
+period after the leader first saw the lease. The command SHALL fence that
+`cas_server_root_id` from writing again, SHALL drop the member's table
+namespaces, and SHALL mark the retirement verified only after drains are
+confirmed. It SHALL emit ordinary ref-edge deltas rather than inventing GC
+transitions, and SHALL NOT synchronously reclaim shared blob content.
+
+The run SHALL delete only the member's **data**, and SHALL keep its `owner`,
+`epoch`, and `mount` objects, so writer epochs stay strictly increasing per
+`cas_server_root_id` across lives and a late tombstone cannot land on a live
+successor. It SHALL proceed as: claim the victim's slot; tombstone the owner
+at a new life on the admin's fenced mount plane, so no attempt is sent past the
+admin's lease deadline; confirm the claim still holds, otherwise roll the
+tombstone back on the unfenced control plane unless the owner was already
+retired; drain the data on the fenced plane; write the farewell; then verify
+the slot and owner and mark the retirement verified. When the tombstone's
+outcome is unknown and the owner does not read back as tombstoned, the run
+SHALL fail **without** writing its clean farewell, so the victim restarts only
+after [GC] fences the slot rather than reclaiming it at once.
+
+The operation SHALL be resumable and SHALL return `server_root_id`,
+`namespaces_removed`, `namespaces_already_removed`, `committed_refs_removed`,
+`precommits_removed`, `manifest_debris_removed`, `staging_objects_removed`,
+`mountpoint_objects_removed`, `member_retired`, `warnings`, and
+`namespaces_pending_gc`. `member_retired` SHALL be true only for a verified
+mark; an owner that moved on to a later unretired life SHALL report false with
+its own warning. Rows still removing after the drain SHALL be reported in
+`namespaces_pending_gc`, which [GC] clears without a rerun. Non-empty
+`warnings` SHALL leave the slot as a resumable anchor. A rerun SHALL be
+advised only for a `retired` member whose retirement is not verified.
+
+Whether the retired identity can come back is specified by
+[RQ.SRS-048.CAS.Disk.ServerRootId.Rejoin](#rqsrs-048casdiskserverrootidrejoin).
 
 #### RQ.SRS-048.CAS.DropPoolMember.ReadonlyRejected
 version: 1.0
@@ -3901,13 +6067,16 @@ publish completes, without requiring a fixed sync timeout as the sole success
 oracle.
 
 #### RQ.SRS-048.CAS.Fault.LazyLoad.S3Outage
-version: 1.0
+version: 2.0
 
-[ClickHouse] SHALL NOT automatically requeue a lazily loaded [CAS] table's
-AsyncLoader job after a transient object-store error during first build. The
-job MAY remain `FAILED`; operators SHALL recover by restarting the server or
-issuing a fresh load for the table. This matches the documented one-shot
-AsyncLoader design (not a [CAS]-specific retry path).
+[ClickHouse] SHALL retry table construction during asynchronous loading when
+it fails on a transient [CAS] mount failure, so tables become available again
+once the mount recovers, without a server restart. A permanent failure SHALL
+stay terminal, lease fencing SHALL be preserved, and shutdown SHALL be able to
+interrupt the recovery rather than wait indefinitely. This is the one
+[CAS]-specific departure from the one-shot AsyncLoader design: a job that fails
+for any other reason SHALL still remain `FAILED` until the server restarts or a
+fresh load is issued for that table.
 
 #### RQ.SRS-048.CAS.Fault.FailClosed
 version: 1.0
@@ -3950,8 +6119,7 @@ version: 1.0
 [ClickHouse] SHALL provide:
 
 * `system.cas_mounts` — live per-mount view of every `cas_server_root_id` in
-  the pool (not only the local server), including lease state and process-local
-  GC-health columns (`is_leader` and related fields `NULL` on peer rows).
+  the pool (not only the local server), including lease and lifecycle state.
 * `system.cas_gc_log` — per-round `Start` / `Finish` / `Phase` rows correlated
   by `round_id`, for both scheduled and manual (`SYSTEM CAS GC RUN`) rounds.
 * `system.cas_log` — per-decision event log (blob puts, dedup adoptions, ref
@@ -3960,13 +6128,72 @@ version: 1.0
 `system.cas_log` and `system.cas_gc_log` SHALL be created when the matching
 server settings are specified (enabled by default in the shipped `config.xml`).
 
-#### RQ.SRS-048.CAS.Observability.ProfileEvents
+#### RQ.SRS-048.CAS.Observability.Mounts
+version: 2.0
+
+`system.cas_mounts` SHALL read live backend state on each query and skip a disk
+whose backend read fails without hiding other disks. It SHALL expose mount
+states `live`, `expired`, `terminated`, `fenced`, `retired`, and `corrupt`;
+lifecycle states `live`, `not_live`, `identity_lost`, `vanished`,
+`constructing`, and `shutdown`; vanish reasons `replaced` and `forgotten`; and
+`lifecycle_detail` / `lifecycle_since`. Process-local columns including
+`is_leader`, `pending_reclaim`, `last_success_age_seconds`, and
+`wedged_namespace_count` SHALL be `NULL` on peer rows.
+
+The table SHALL report a mount-lease renewal while it runs, so an operator can
+tell a renewal retrying through an object-store outage from a renewal thread
+that has died: `renewal_in_progress` (a renewal call is running),
+`renewal_attempts` (physical `PUT`s sent by the current call), and
+`last_renewal_error` (verb, key, and error class of the last refused request,
+carrying no credentials and no bodies). A local failure of the resolve read,
+which is not a request to the store, SHALL NOT be published there.
+
+A decommissioned member SHALL read as `retired`, with `retirement_verified`
+reporting 1 once the retirement is verified and 0 otherwise. There SHALL be no
+`retiring` state.
+
+#### RQ.SRS-048.CAS.Observability.GCLog
 version: 1.0
+
+`system.cas_gc_log` SHALL expose outcomes `Unknown`, `Success`, `NotALeader`,
+`Deferred`, `Aborted`, `Stopped`, and `Error`; correlate rows with `round_id`;
+and expose `phase`, `phase_duration_microseconds`, `phase_metrics`, and
+per-row `ProfileEvents`. Monitoring SHALL key failures on `error_code` rather
+than parsing `error` text. Work performed by helper threads MAY be absent from
+one phase row's `ProfileEvents` and SHALL remain attributable through the
+documented phase metrics and finish-row totals.
+
+#### RQ.SRS-048.CAS.Observability.EventLog
+version: 1.0
+
+`system.cas_log` SHALL expose per-decision events including `blob_put`,
+`blob_reuse_adopt`, `root_remove`, `indegree_zero`, `gc_retire_decision`,
+`gc_recheck_verdict`, `blob_delete`, `dangling_access`, `corrupt_dangle`,
+`watermark_renew`, and `mount_remount`, with the relevant pool, namespace,
+object, token, and decision context.
+
+#### RQ.SRS-048.CAS.Observability.ProfileEvents
+version: 2.0
 
 [ClickHouse] SHALL expose [CAS]-related `ProfileEvents` under the uppercase
 `CAS` / `CASGC` prefix (blob, manifest, ref, mount-renewal/remount, and GC
 counters) so operators can attribute pool I/O and diagnose mount-lease
-recovery without reading server logs alone.
+recovery without reading server logs alone. The surface SHALL include ref
+append/recovery failures, GC fence and anomaly counters, rollback cleanup
+failures, and mount renewal/remount attempt, retry, success, loss, deadline,
+and failure counters. Mount renewal attempts and retries SHALL be counted per
+sent attempt rather than derived from the result of the call.
+
+The surface SHALL include at least `CASMetaAbsentRepublish`
+([RQ.SRS-048.CAS.Write.BlobMaterialization](#rqsrs-048caswriteblobmaterialization)),
+`CASBlobPublishAttemptFailed` and `CASBlobPublishGaveUp`
+([RQ.SRS-048.CAS.Write.BlobPublishRetries](#rqsrs-048caswriteblobpublishretries)),
+`CASGCReadAheadWasted` and `CASGCReadAheadHit`
+([RQ.SRS-048.CAS.GC.ReadAhead](#rqsrs-048casgcreadahead)), and `CASRefMove`
+and `CASOwnershipConflict`
+([RQ.SRS-048.CAS.Write.PartRename](#rqsrs-048caswritepartrename)).
+`CASMetaAdoptBackfill` SHALL be gone; a dashboard that read it SHALL read
+`CASMetaAbsentRepublish` instead.
 
 #### RQ.SRS-048.CAS.Access
 version: 1.0
@@ -3979,20 +6206,43 @@ without the destructive verbs.
 ### Restrictions And Non-Goals
 
 #### RQ.SRS-048.CAS.Restrictions.BackendCapabilities
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL require an object store that provides the capabilities
 needed by the [CAS] mount and delete protocols, checked by a capability probe
 at every writable mount. Required capabilities include read-after-write,
 conditional create (`If-None-Match: *`) for manifests and control objects,
 conditional overwrite (`If-Match`) for mount leases and `gc/state`,
-unconditional blob publication, exact-token delete, ranged `GET`, and
-resumable `LIST`. Bucket versioning SHALL be disabled (a versioned or
-unanswerable versioning probe SHALL refuse a writable generation-token mount).
+unconditional blob publication, exact-token delete (single or batched, per
+[RQ.SRS-048.CAS.GC.DeleteAuthority](#rqsrs-048casgcdeleteauthority)), ranged
+`GET`, and resumable `LIST`. Bucket versioning SHALL be disabled (a versioned or
+confirmed-enabled versioning probe SHALL refuse a writable generation-token
+mount). An inconclusive GCS versioning probe SHALL warn and continue, leaving
+verification to the operator.
 Object soft-delete MUST be disabled by the operator (not verified at mount).
 When those capabilities are absent, mount SHALL fail closed rather than
 silently run an unsafe configuration. `skip_access_check = true` SHALL be
 refused on a writable generation-token (GCS) disk.
+
+#### RQ.SRS-048.CAS.Restrictions.ConditionalWriteRetries
+version: 1.1
+
+Before admitting a writable mount, [ClickHouse] SHALL verify that the
+object-storage client supports a single-HTTP-attempt retry profile for
+conditional writes. A client with hidden conditional-write retries SHALL be
+rejected because a retry can outlive the mount lease and obscure whether the
+operation committed. Conditional retries SHALL occur only as explicit [CAS]
+state-machine transitions. The same single-attempt rule applies per verb to
+the unconditional object-creating requests of blob publication, specified by
+[RQ.SRS-048.CAS.Write.BlobPublishRetries](#rqsrs-048caswriteblobpublishretries).
+
+#### RQ.SRS-048.CAS.Restrictions.BackendToken
+version: 1.0
+
+The object store SHALL preserve `TOKEN` implies `CONTENT`: one observed ETag or
+generation token SHALL NOT name different object content over time. Because the
+mount capability probe cannot prove this property, operators SHALL use only a
+backend whose token and exact-delete semantics satisfy the documented contract.
 
 #### RQ.SRS-048.CAS.Restrictions.ZeroCopy
 version: 1.0
@@ -4058,7 +6308,25 @@ version: 1.0
 Google Cloud Storage's generation-token implementation is present, but the
 credentialed real-GCS release gate is pending. Suites against a fake GCS
 service SHALL NOT be treated as proof of Google's multipart, native-copy, or
-exact-delete wire behavior.
+exact-delete wire behavior. The GCS HMAC path SHALL reject server-side
+encryption headers and unknown custom `x-amz-*` headers rather than guessing
+`x-goog-*` equivalents. Operators SHALL account for GCS per-object-name write
+limits on hot checkpoint and ref-catalog objects.
+
+#### RQ.SRS-048.CAS.Restrictions.LocalBackend
+version: 1.0
+
+The `local` object-storage backend SHALL be treated as a single-node,
+best-effort development backend. Blob publication MAY materialize a complete
+blob in memory and serialize publication; it SHALL NOT be used as evidence of
+production object-store concurrency or failure semantics.
+
+#### RQ.SRS-048.CAS.Restrictions.WideParts
+version: 1.0
+
+Operators SHALL account for one object-store request per blob-backed column
+file when opening wide parts. Very wide merges MAY exhaust local ephemeral
+ports unless connection reuse and concurrency are configured appropriately.
 
 ## References
 
@@ -4069,13 +6337,13 @@ exact-delete wire behavior.
 * [MergeTree]
 * [CAS]
 * [SRS]
-* [Altinity/ClickHouse PR #2159](https://github.com/Altinity/ClickHouse/pull/2159)
-* [CAS documentation](https://github.com/Altinity/ClickHouse/tree/antalya-26.6/docs/en/antalya/cas)
+* [CAS documentation]
+* [SYSTEM CAS]
+* [CAS system tables]
 * [CAS integration test inventory](../docs/CAS-INTEGRATION-TESTS.md)
 * [ClickHouse ALTER](https://clickhouse.com/docs/reference/statements/alter)
 * [ClickHouse ALTER COLUMN](https://clickhouse.com/docs/reference/statements/alter/column)
 * [ClickHouse ALTER PARTITION](https://clickhouse.com/docs/reference/statements/alter/partition)
-* [SYSTEM CAS](https://github.com/Altinity/ClickHouse/blob/antalya-26.6/docs/en/sql-reference/statements/system.md)
 
 [Git]: https://git-scm.com/
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression
@@ -4085,5 +6353,8 @@ exact-delete wire behavior.
 [CAS]: #terminology
 [SRS]: #introduction
 [GC]: #terminology
+[CAS documentation]: https://github.com/Altinity/ClickHouse/tree/antalya-26.6/docs/en/antalya/cas
+[SYSTEM CAS]: https://github.com/Altinity/ClickHouse/blob/antalya-26.6/docs/en/sql-reference/statements/system.md
+[CAS system tables]: https://github.com/Altinity/ClickHouse/tree/antalya-26.6/docs/en/operations/system-tables
 '''
 )

@@ -12,6 +12,7 @@ metrics      CAS system.events snapshots for relink proofs
 freeze       FREEZE / UNFREEZE helpers
 gc           SYSTEM CAS GC RUN helpers
 pool         direct inspection of the objects a CAS pool holds
+materialized_view  materialized views over local and CAS MergeTree
 """
 
 from cas.tests.steps.disk import (
@@ -74,6 +75,7 @@ from cas.tests.steps.checksums import (
 )
 from cas.tests.steps.data import (
     insert_cas_partitions,
+    insert_cas_payload_batches,
     insert_cas_payload_rows,
 )
 from cas.tests.steps.freeze import (
@@ -82,7 +84,10 @@ from cas.tests.steps.freeze import (
     unfreeze_table,
 )
 from cas.tests.steps.gc import (
+    GC_RUN_COLUMNS,
     collect_garbage,
+    parse_gc_run_report,
+    run_garbage_collection,
     start_garbage_collection,
     stop_garbage_collection,
 )
@@ -139,7 +144,10 @@ from cas.tests.steps.replication import (
 )
 from cas.tests.steps.tables import (
     active_part_disk,
+    assert_active_part_count,
+    assert_active_parts_on_disk,
     create_cas_merge_tree_table,
+    create_local_merge_tree_table,
     table_engine_and_policy,
     create_distributed_over_cas,
     create_replicated_cas_table,
@@ -148,6 +156,35 @@ from cas.tests.steps.tables import (
     create_replicated_local_table,
     create_sharded_local_cas_tables,
     insert_into_distributed,
+)
+from cas.tests.steps.materialized_view import (
+    ID_COLUMNS,
+    assert_check_table,
+    assert_payload_blob_count,
+    assert_payload_checksums_match,
+    assert_query_result,
+    attach_table,
+    create_id_table,
+    create_materialized_view,
+    create_payload_table,
+    detach_table,
+    drop_table,
+    drop_table_result,
+    inner_table_name,
+    insert_select,
+    insert_values,
+    lightweight_delete,
+    modify_view_query,
+    payload_engine,
+    quote_identifier,
+    refresh_view,
+    table_exchange_works,
+    rename_table,
+    restart_server,
+    start_merges,
+    stop_merges,
+    truncate_table,
+    wait_view,
 )
 
 __all__ = [
@@ -158,6 +195,12 @@ __all__ = [
     "SHARDED_CLUSTER",
     "active_part_disk",
     "active_part_names",
+    "assert_active_part_count",
+    "assert_active_parts_on_disk",
+    "assert_check_table",
+    "assert_payload_blob_count",
+    "assert_payload_checksums_match",
+    "assert_query_result",
     "add_column",
     "add_constraint",
     "add_enum_values",
@@ -177,6 +220,7 @@ __all__ = [
     "assert_replication_queue_healthy",
     "attach_partition",
     "attach_partition_from",
+    "attach_table",
     "blob_body_puts",
     "blob_puts_avoided_or_deduped",
     "cas_current_metrics",
@@ -193,13 +237,20 @@ __all__ = [
     "clear_index",
     "clear_projection",
     "clear_statistics",
+    "GC_RUN_COLUMNS",
     "collect_garbage",
+    "parse_gc_run_report",
+    "run_garbage_collection",
     "start_garbage_collection",
     "stop_garbage_collection",
     "column_metadata",
     "comment_column",
     "create_cas_merge_tree_table",
     "create_distributed_over_cas",
+    "create_id_table",
+    "create_local_merge_tree_table",
+    "create_materialized_view",
+    "create_payload_table",
     "create_filled_alter_table",
     "create_replicated_cas_table",
     "create_replicated_cas_table_cross_pool",
@@ -207,7 +258,10 @@ __all__ = [
     "create_replicated_local_table",
     "create_sharded_local_cas_tables",
     "detach_partition",
+    "detach_table",
     "drop_column",
+    "drop_table",
+    "drop_table_result",
     "drop_constraint",
     "drop_detached_partition",
     "drop_index",
@@ -218,10 +272,17 @@ __all__ = [
     "fetch_partition",
     "forget_partition",
     "freeze_table",
+    "ID_COLUMNS",
+    "inner_table_name",
     "insert_cas_partitions",
     "insert_alter_rows",
+    "insert_cas_payload_batches",
     "insert_cas_payload_rows",
     "insert_into_distributed",
+    "insert_select",
+    "insert_values",
+    "lightweight_delete",
+    "modify_view_query",
     "local_backup_files",
     "materialize_column",
     "materialize_index",
@@ -237,8 +298,14 @@ __all__ = [
     "modify_ttl",
     "move_partition_to_table",
     "optimize_final",
+    "refresh_view",
+    "rename_table",
+    "table_exchange_works",
+    "restart_server",
     "partition_checksum",
+    "payload_engine",
     "payload_table_checksum",
+    "quote_identifier",
     "cleanup_cas_storage",
     "delete_pool_prefix",
     "namespaces_of",
@@ -254,7 +321,9 @@ __all__ = [
     "rename_column",
     "reset_column_setting",
     "start_fetches",
+    "start_merges",
     "stop_fetches",
+    "stop_merges",
     "storage_settings",
     "show_create_table",
     "table_columns",
@@ -263,5 +332,7 @@ __all__ = [
     "table_checksum",
     "table_engine_and_policy",
     "table_row_count",
+    "truncate_table",
     "unfreeze_table",
+    "wait_view",
 ]

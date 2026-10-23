@@ -1,5 +1,6 @@
 """Table create/drop and inspect helpers for CAS MergeTree, ReplicatedMergeTree, Distributed."""
 
+from testflows.asserts import error
 from testflows.core import *
 
 from cas.tests.steps.disk import (
@@ -49,8 +50,15 @@ def create_cas_merge_tree_table(
     policy=CAS_POLICY,
     disk_name=None,
     drop_sync=True,
+    extra_settings=None,
+    engine="MergeTree",
 ):
-    """Create a non-replicated MergeTree on CAS (policy or inline pool)."""
+    """Create a non-replicated MergeTree-family table on CAS (policy or inline pool).
+
+    ``engine`` is the engine name (``MergeTree``, ``AggregatingMergeTree``, ...).
+    ``extra_settings`` is an optional list of ``name = value`` fragments
+    appended to the disk / policy ``SETTINGS`` clause.
+    """
     if node is None:
         node = self.context.node
 
@@ -62,6 +70,8 @@ def create_cas_merge_tree_table(
         policy=policy,
         disk_name=disk_name,
     )
+    if extra_settings:
+        settings = f"{settings}, {', '.join(extra_settings)}"
 
     node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
     node.query(
@@ -70,7 +80,7 @@ def create_cas_merge_tree_table(
         (
             {columns}
         )
-        ENGINE = MergeTree
+        ENGINE = {engine}
         PARTITION BY {partition_by}
         ORDER BY {order_by}
         {settings}
@@ -84,6 +94,97 @@ def create_cas_merge_tree_table(
         with Finally(f"drop {table_name}"):
             suffix = " SYNC" if drop_sync else ""
             node.query(f"DROP TABLE IF EXISTS {table_name}{suffix}")
+
+
+@TestStep(Given)
+@Name("create a MergeTree on the local disk")
+def create_local_merge_tree_table(
+    self,
+    table_name,
+    node=None,
+    columns=DEFAULT_COLUMNS,
+    partition_by=DEFAULT_PARTITION_BY,
+    order_by=DEFAULT_ORDER_BY,
+    engine="MergeTree",
+    extra_settings=None,
+    drop_sync=True,
+):
+    """Create a MergeTree-family table on the local ``default`` disk.
+
+    ``SETTINGS disk = 'default'`` names that disk explicitly so a later config
+    change cannot put the table on CAS. ``extra_settings`` is an optional list
+    of ``name = value`` fragments appended to that SETTINGS clause.
+    """
+    if node is None:
+        node = self.context.node
+
+    settings = "SETTINGS disk = 'default'"
+    if extra_settings:
+        settings = f"{settings}, {', '.join(extra_settings)}"
+
+    node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+    node.query(
+        f"""
+        CREATE TABLE {table_name}
+        (
+            {columns}
+        )
+        ENGINE = {engine}
+        PARTITION BY {partition_by}
+        ORDER BY {order_by}
+        {settings}
+        """
+    )
+
+    try:
+        yield table_name
+    finally:
+        with Finally(f"drop {table_name}"):
+            suffix = " SYNC" if drop_sync else ""
+            node.query(f"DROP TABLE IF EXISTS {table_name}{suffix}")
+
+
+@TestStep(Then)
+@Name("active parts are on one disk")
+def assert_active_parts_on_disk(self, table_name, disk_name, node=None):
+    """Every active part of ``table_name`` is on ``disk_name``."""
+    if node is None:
+        node = self.context.node
+
+    count, disks = (
+        node.query(
+            "SELECT count(), uniqExact(disk_name) FROM system.parts "
+            f"WHERE database = currentDatabase() AND table = '{table_name}' "
+            "AND active"
+        )
+        .output.strip()
+        .split("\t")
+    )
+    assert count != "0", error(f"{table_name} has no active parts")
+    assert disks == "1", error(
+        f"{table_name} active parts span {disks} disks, expected only {disk_name}"
+    )
+    actual = active_part_disk(node, table_name)
+    assert actual == disk_name, error(
+        f"{table_name} parts are on {actual}, expected {disk_name}"
+    )
+
+
+@TestStep(Then)
+@Name("active part count")
+def assert_active_part_count(self, table_name, count, node=None):
+    """``table_name`` has exactly ``count`` active parts."""
+    if node is None:
+        node = self.context.node
+
+    actual = node.query(
+        "SELECT count() FROM system.parts "
+        f"WHERE database = currentDatabase() AND table = '{table_name}' "
+        "AND active"
+    ).output.strip()
+    assert actual == str(count), error(
+        f"{table_name} has {actual} active parts, expected {count}"
+    )
 
 
 @TestStep(Given)
