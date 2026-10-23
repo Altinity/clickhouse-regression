@@ -7,6 +7,14 @@ services:
       - RUSTFS_SECRET_KEY=${MINIO_ROOT_PASSWORD:-}
       - RUSTFS_SCANNER_ENABLED=false
       - RUSTFS_HEAL_ENABLED=false
+      - RUSTFS_RUNTIME_MAX_BLOCKING_THREADS=64
+      - RUSTFS_RUNTIME_THREAD_KEEP_ALIVE=5
+      - RUSTFS_ALLOCATOR_RECLAIM_ENABLED=true
+      - RUSTFS_ALLOCATOR_RECLAIM_INTERVAL_SECS=30
+      # No RUSTFS_DURABILITY_MODE=relaxed here: the CAS suites assert
+      # conditional-write and read-after-write behaviour against the store.
+      - RUSTFS_OBS_LOG_DIRECTORY=
+      - RUSTFS_OBS_USE_STDOUT=true
       - RUSTFS_ADDRESS=:9000
       - RUSTFS_CONSOLE_ENABLE=true
     ports:
