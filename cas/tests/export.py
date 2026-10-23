@@ -9,7 +9,10 @@ from testflows.core import *
 
 from helpers.common import getuid
 from helpers.config import config_d, users_d
-from cas.requirements.requirements import RQ_SRS_048_CAS_MergeTree_Transparency
+from cas.requirements.requirements import (
+    RQ_SRS_048_CAS_MergeTree_Transparency,
+    RQ_SRS_048_CAS_Partition_Export,
+)
 from cas.tests.steps import create_replicated_cas_table
 from iceberg.tests.export_partition.steps.export_operations import export_partition
 from iceberg.tests.export_partition.steps.iceberg_destination import (
@@ -31,7 +34,10 @@ EXPORT_SOURCE_SETTINGS = [
 
 @TestScenario
 @Name("export single partition from a CAS disk")
-@Requirements(RQ_SRS_048_CAS_MergeTree_Transparency("1.0"))
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_Transparency("1.0"),
+    RQ_SRS_048_CAS_Partition_Export("1.0"),
+)
 def export_partition_from_cas_disk(self):
     """Export one partition from a ``cas_policy`` source and check the
     Iceberg destination has those rows and no others.

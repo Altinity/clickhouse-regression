@@ -78,6 +78,21 @@ def update_in_partition(self):
         ).output.strip()
         assert result == "1\t60\n2\t10", error(result)
 
+    with When("I update partition 2 by partition id"):
+        alter_update(
+            table_name=table,
+            assignments="value = value + 1",
+            condition="1",
+            partition_id="2",
+        )
+
+    with Then("only partition 2 changes"):
+        result = self.context.node.query(
+            f"SELECT partition_column, sum(value) FROM {table} "
+            f"GROUP BY partition_column ORDER BY partition_column"
+        ).output.strip()
+        assert result == "1\t60\n2\t15", error(result)
+
 
 @TestScenario
 @Requirements(
@@ -119,6 +134,62 @@ def delete_in_partition(self):
             f"GROUP BY partition_column ORDER BY partition_column"
         ).output.strip()
         assert result == "1\t3\t9\n2\t5\t10", error(result)
+
+    with When("I delete one row from partition 2 by partition id"):
+        alter_delete(table_name=table, condition="id = 0", partition_id="2")
+
+    with Then("partition 1 is unchanged and partition 2 lost that row"):
+        result = self.context.node.query(
+            f"SELECT partition_column, count(), sum(value) FROM {table} "
+            f"GROUP BY partition_column ORDER BY partition_column"
+        ).output.strip()
+        assert result == "1\t3\t9\n2\t4\t10", error(result)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_048_CAS_MergeTree_Mutations("1.0"),
+    RQ_SRS_048_CAS_Partition_RewriteParts("1.0"),
+)
+def rewrite_parts(self):
+    """REWRITE PARTS and REWRITE PARTS IN PARTITION keep the rows."""
+    node = self.context.node
+
+    with Given("create a table"):
+        table = mutation_table(suffix="rewrite")
+
+    with And("capture the rows"):
+        before = node.query(
+            f"SELECT partition_column, count(), sum(value) FROM {table} "
+            f"GROUP BY partition_column ORDER BY partition_column"
+        ).output.strip()
+        assert before == "1\t5\t10\n2\t5\t10", error(before)
+
+    with When("I rewrite every part"):
+        node.query(
+            f"ALTER TABLE {table} REWRITE PARTS",
+            settings=[("mutations_sync", 2)],
+        )
+
+    with Then("the rows are unchanged"):
+        result = node.query(
+            f"SELECT partition_column, count(), sum(value) FROM {table} "
+            f"GROUP BY partition_column ORDER BY partition_column"
+        ).output.strip()
+        assert result == before, error(result)
+
+    with When("I rewrite partition 1"):
+        node.query(
+            f"ALTER TABLE {table} REWRITE PARTS IN PARTITION 1",
+            settings=[("mutations_sync", 2)],
+        )
+
+    with Then("both partitions still match"):
+        result = node.query(
+            f"SELECT partition_column, count(), sum(value) FROM {table} "
+            f"GROUP BY partition_column ORDER BY partition_column"
+        ).output.strip()
+        assert result == before, error(result)
 
 
 @TestFeature

@@ -137,25 +137,45 @@ def clear_column_in_partition(self, table_name, column_name, partition, node=Non
 
 @TestStep(When)
 @Name("update rows with ALTER TABLE")
-def alter_update(self, table_name, assignments, condition, partition=None, node=None):
+def alter_update(
+    self,
+    table_name,
+    assignments,
+    condition,
+    partition=None,
+    partition_id=None,
+    node=None,
+):
     """Run a heavyweight UPDATE mutation synchronously."""
-    partition_clause = "" if partition is None else f" IN PARTITION {partition}"
     return self.context.node.query(
         f"ALTER TABLE {table_name} UPDATE {assignments}"
-        f"{partition_clause} WHERE {condition}",
+        f"{_partition_clause(partition, partition_id)} WHERE {condition}",
         settings=[("mutations_sync", 2)],
     )
 
 
 @TestStep(When)
 @Name("delete rows with ALTER TABLE")
-def alter_delete(self, table_name, condition, partition=None, node=None):
+def alter_delete(
+    self, table_name, condition, partition=None, partition_id=None, node=None
+):
     """Run a heavyweight DELETE mutation synchronously."""
-    partition_clause = "" if partition is None else f" IN PARTITION {partition}"
     return self.context.node.query(
-        f"ALTER TABLE {table_name} DELETE" f"{partition_clause} WHERE {condition}",
+        f"ALTER TABLE {table_name} DELETE"
+        f"{_partition_clause(partition, partition_id)} WHERE {condition}",
         settings=[("mutations_sync", 2)],
     )
+
+
+def _partition_clause(partition=None, partition_id=None):
+    """Return an IN PARTITION or IN PARTITION ID clause, or an empty string."""
+    if partition is not None and partition_id is not None:
+        raise ValueError("pass partition or partition_id, not both")
+    if partition_id is not None:
+        return f" IN PARTITION ID '{partition_id}'"
+    if partition is not None:
+        return f" IN PARTITION {partition}"
+    return ""
 
 
 def _node(self, node):
@@ -206,7 +226,7 @@ def modify_order_by(self, table_name, expression, extra_alters="", node=None):
     """Change the sorting key, optionally in the same ALTER as other actions."""
     prefix = f"{extra_alters}, " if extra_alters else ""
     return _alter(
-        self, node, f"ALTER TABLE {table_name} {prefix}MODIFY ORDER BY {expression}"
+        self, node, f"ALTER TABLE {table_name} {prefix} MODIFY ORDER BY {expression}"
     )
 
 

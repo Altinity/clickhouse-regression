@@ -49,11 +49,34 @@ def detach_partition(self, table_name, partition, node=None):
 
 @TestStep(When)
 @Name("attach partition")
-def attach_partition(self, table_name, partition, node=None):
-    """ATTACH a previously detached partition."""
+def attach_partition(self, table_name, partition, node=None, **kwargs):
+    """ATTACH a previously detached partition.
+
+    ``partition`` may be ``ALL``.
+    """
     if node is None:
         node = self.context.node
-    node.query(f"ALTER TABLE {table_name} ATTACH PARTITION {partition}")
+    return node.query(
+        f"ALTER TABLE {table_name} ATTACH PARTITION {partition}", **kwargs
+    )
+
+
+@TestStep(When)
+@Name("detach part")
+def detach_part(self, table_name, part_name, node=None):
+    """DETACH PART on ``table_name``."""
+    if node is None:
+        node = self.context.node
+    node.query(f"ALTER TABLE {table_name} DETACH PART '{part_name}'")
+
+
+@TestStep(When)
+@Name("attach part")
+def attach_part(self, table_name, part_name, node=None):
+    """ATTACH a previously detached part."""
+    if node is None:
+        node = self.context.node
+    node.query(f"ALTER TABLE {table_name} ATTACH PART '{part_name}'")
 
 
 @TestStep(When)
@@ -74,10 +97,37 @@ def drop_detached_partition(self, table_name, partition, node=None):
 @TestStep(When)
 @Name("drop partition")
 def drop_partition(self, table_name, partition, node=None):
-    """DROP PARTITION on ``table_name``."""
+    """DROP PARTITION on ``table_name``.
+
+    ``partition`` may be ``ALL``.
+    """
     if node is None:
         node = self.context.node
     node.query(f"ALTER TABLE {table_name} DROP PARTITION {partition}")
+
+
+@TestStep(When)
+@Name("drop part")
+def drop_part(self, table_name, part_name, node=None):
+    """DROP PART on ``table_name``."""
+    if node is None:
+        node = self.context.node
+    node.query(f"ALTER TABLE {table_name} DROP PART '{part_name}'")
+
+
+@TestStep(When)
+@Name("drop detached part")
+def drop_detached_part(self, table_name, part_name, node=None):
+    """DROP DETACHED PART on ``table_name``.
+
+    ``allow_drop_detached`` defaults to 0, so it has to be enabled per query.
+    """
+    if node is None:
+        node = self.context.node
+    node.query(
+        f"ALTER TABLE {table_name} DROP DETACHED PART '{part_name}'",
+        settings=[("allow_drop_detached", 1)],
+    )
 
 
 @TestStep(When)
@@ -126,12 +176,25 @@ def optimize_final(self, table_name, node=None):
     node.query(f"OPTIMIZE TABLE {table_name} FINAL")
 
 
+def _names(result):
+    return [line.strip() for line in result.output.splitlines() if line.strip()]
+
+
 def active_part_names(node, table_name, partition=None):
     """Return active part names for a table, optionally filtered by partition id."""
-    where = f"table = '{table_name}' AND active"
+    where = f"database = currentDatabase() AND table = '{table_name}' AND active"
     if partition is not None:
         where += f" AND partition = '{partition}'"
+    result = node.query(f"SELECT name FROM system.parts WHERE {where} ORDER BY name")
+    return _names(result)
+
+
+def detached_part_names(node, table_name, partition_id=None):
+    """Return detached part names, optionally filtered by ``partition_id``."""
+    where = f"database = currentDatabase() AND table = '{table_name}'"
+    if partition_id is not None:
+        where += f" AND partition_id = '{partition_id}'"
     result = node.query(
-        f"SELECT name FROM system.parts WHERE {where} ORDER BY name"
+        f"SELECT name FROM system.detached_parts WHERE {where} ORDER BY name"
     )
-    return [line.strip() for line in result.output.splitlines() if line.strip()]
+    return _names(result)
