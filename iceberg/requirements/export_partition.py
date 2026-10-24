@@ -426,9 +426,9 @@ RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST** and **Glue** (Hive-metastore-compatible) catalogs, registering the export with the configured catalog:\n"
+        "[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST**, **Glue** (Hive-metastore-compatible), and **Unity** catalogs, registering the export with the configured catalog:\n"
         "\n"
-        "* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST or Glue).\n"
+        "* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST, Glue, or Unity).\n"
         "* An external Iceberg reader connected to the same catalog SHALL list the snapshot and read the data files written by ClickHouse.\n"
         "\n"
     ),
@@ -1662,9 +1662,9 @@ version: 1.0
 ### RQ.Iceberg.ExportPartition.CatalogIntegration.RestGlue
 version: 1.0
 
-[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST** and **Glue** (Hive-metastore-compatible) catalogs, registering the export with the configured catalog:
+[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST**, **Glue** (Hive-metastore-compatible), and **Unity** catalogs, registering the export with the configured catalog:
 
-* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST or Glue).
+* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST, Glue, or Unity).
 * An external Iceberg reader connected to the same catalog SHALL list the snapshot and read the data files written by ClickHouse.
 
 ## Transactions, idempotency, and concurrency
