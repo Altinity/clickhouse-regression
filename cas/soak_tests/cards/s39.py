@@ -89,13 +89,15 @@ class S39(Scenario):
     priority = "P1"
     compose_variant = "s3faultproxy"
     # Leg B holds PUT/POST 503s past the mount-lease TTL; GC Error finish rows during that window
-    # are expected. Lease/fence assertions above are the card; do not FAIL the common 0-Failed check.
+    # are expected. The lease checks are the card; do not FAIL the common 0-Failed check.
     allow_gc_failed = True
     # INVARIANT (every scale row must keep this, see `_MOUNT_LEASE_TTL_S`/`_MOUNT_RENEW_PERIOD_S`
     # above and the leg-A/leg-B asserts below): short_fault_s < _MOUNT_RENEW_PERIOD_S (10) and
-    # << _MOUNT_LEASE_TTL_S (30), so the short leg overlaps AT MOST one renewal beat and can never
-    # fence; long_fault_s > _MOUNT_LEASE_TTL_S (30) + a safety margin, so the long leg reliably
-    # fences. `ci` was 15 and `full` was 20; both overlapped a renewal beat, so both are 9 now.
+    # << _MOUNT_LEASE_TTL_S (30), so the short leg overlaps at most one renewal beat.
+    # long_fault_s > _MOUNT_LEASE_TTL_S (30), so a renewal is still in flight when the confirmed
+    # budget runs out. Since #2431 the renewer retries that same renewal until the store answers;
+    # a 503 is not a reason to fence. `ci` was 15 and `full` was 20; both overlapped a renewal
+    # beat, so both are 9 now.
     param_table = {
         "dev": {"short_fault_s": 8, "long_fault_s": 40, "settle_s": 20, "rows": 2000, "payload_bytes": 512},
         "ci": {"short_fault_s": 9, "long_fault_s": 50, "settle_s": 40, "rows": 20000, "payload_bytes": 1024},
@@ -139,12 +141,10 @@ class S39(Scenario):
             "(correctly) near the lease deadline, which is leg B's job, not leg A's")
         # The best-effort write MUST run in a background thread, NOT inline: a blocking insert keeps
         # retrying under the fault for its whole CAS budget (~20s), which would keep the fault armed
-        # for insert-duration + short_s -- far past the lease TTL -- and the renewer would then
-        # (correctly) fence, defeating the "short fault must NOT fence" assertion. This leg asserts
-        # the RENEWER rides out the window, not that the INSERT succeeds; the write is only here to
-        # put load on the write path while armed. Decoupling it keeps the armed window EXACTLY
-        # short_s, and since short_s < renew_period the window can fault at most one beat -> one
-        # transient retry -> no deadline breach -> no fence, by construction.
+        # for insert-duration + short_s and turn this leg into the long one. This leg asserts the
+        # renewer rides out one beat, not that the INSERT succeeds. The write only loads the write
+        # path while armed. Decoupling it keeps the armed window exactly short_s, so the window can
+        # fault at most one renewal beat.
         errs_a: list[str] = []
         def _bg_write_a():
             try:
@@ -213,7 +213,9 @@ class S39(Scenario):
                 "the short fault left a replica unable to accept writes"))
             return
 
-        # --- Leg B: LONG fault (> lease TTL) -- the fence SHOULD trip, then recover cleanly ---
+        # --- Leg B: LONG fault (> lease TTL) -- retry the same renewal, do not fence ---
+        # A 503 is not a definitive answer. The renewer keeps sending the same renewal until the
+        # store accepts it, including after the confirmed budget hits zero (#2431).
         since_b = node.scalar("SELECT toString(now())")
         _ctl("/config", {"rate": 1.0, "modes": ["503"], "methods": ["PUT", "POST"], "seed": 40})
         long_s = int(p["long_fault_s"])
@@ -230,25 +232,33 @@ class S39(Scenario):
         # Give the queue's backoff + self-remount time to recover.
         time.sleep(int(p["settle_s"]))
 
+        recovered_b, rec_b_per = _across(nodes, since_b, "recovered after", _text_log_count)
         fenced_b, fence_b_per = _across(nodes, since_b, "fenced after", _text_log_count)
-        renew_failed_b, renew_per = _across(nodes, since_b, "failed", _watermark_renew_count)
+        renew_ok_b, renew_ok_per = _across(nodes, since_b, "recovered", _watermark_renew_count)
+        renew_failed_b, renew_fail_per = _across(nodes, since_b, "failed", _watermark_renew_count)
         result.observations["leg_b"] = {
+            "recovered_lines": recovered_b,
             "fence_lines": fenced_b,
+            "watermark_renew_recovered": renew_ok_b,
             "watermark_renew_failed": renew_failed_b,
+            "recovered_per_replica": rec_b_per,
             "fence_per_replica": fence_b_per,
-            "watermark_renew_failed_per_replica": renew_per,
+            "watermark_renew_recovered_per_replica": renew_ok_per,
+            "watermark_renew_failed_per_replica": renew_fail_per,
         }
-        leg_b_ok = (
-            fenced_b is not None and renew_failed_b is not None
-            and fenced_b > 0 and renew_failed_b > 0
-        )
+        readable = None not in (recovered_b, fenced_b, renew_ok_b, renew_failed_b)
+        every_recovered = readable and all(v > 0 for v in rec_b_per.values()) and all(
+            v > 0 for v in renew_ok_per.values())
+        none_fenced = readable and fenced_b == 0 and renew_failed_b == 0
+        leg_b_ok = every_recovered and none_fenced
         result.add(Verdict.check(
-            "leg B (long fault): the mount lease fenced (correct fail-closed)",
-            "> 0 'fenced after' warnings and a failed watermark_renew on the cluster",
-            f"fenced={fence_b_per} watermark_renew_failed={renew_per}",
+            "leg B (long fault): every replica recovered the renewal without fencing",
+            "each replica has a 'recovered after' line and a recovered watermark_renew, and no fence",
+            f"recovered={rec_b_per} fenced={fence_b_per} "
+            f"watermark_recovered={renew_ok_per} watermark_failed={renew_fail_per}",
             leg_b_ok,
             "" if leg_b_ok else
-            "a fault held past the lease TTL produced no fenced warning or no failed watermark_renew"))
+            "a fault held past the lease TTL fenced a replica, or a replica never logged recovery"))
 
         try:
             queue_rows = node.query(
