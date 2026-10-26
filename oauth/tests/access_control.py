@@ -166,7 +166,8 @@ def missing_default_profile_does_not_grant_unrestricted_access(self):
         access_clickhouse(token=token_a, status_code=200)
 
     with Then("baseline: a write is rejected because readonly is applied"):
-        body = access_clickhouse(token=token_a, query=create_query_a, status_code=500)
+        status_code = 403 if check_clickhouse_version(">=26.8")(self) else 500
+        body = access_clickhouse(token=token_a, query=create_query_a, status_code=status_code)
         assert (
             "READONLY" in body.upper() or "NOT ENOUGH PRIVILEGES." in body.upper()
         ), error()
