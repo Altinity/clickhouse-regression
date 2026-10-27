@@ -4,6 +4,7 @@ from testflows.asserts import error
 from cas.soak_tests.oracle.checker import (
     CheckpointFailure,
     compare_aggregates,
+    deletion_pipeline_idle,
     dryrun_subset_check,
     gc_fixpoint_reached,
     is_genuine_hang,
@@ -200,6 +201,16 @@ def dryrun_key_absent_from_detail_tolerated(self):
     count = dryrun_subset_check(detail, dryrun, log_fn=logs.append)
     assert count == 1, error()
     assert "1 keys already deleted, pending fold" in logs[0], error()
+
+
+@TestScenario
+@Name("dryrun subset waits for an idle deletion pipeline")
+def dryrun_subset_waits_for_an_idle_deletion_pipeline(self):
+    assert deletion_pipeline_idle({}), error()
+    assert deletion_pipeline_idle({"unreachable": 0, "pending_gc": 0, "awaiting_gc": 0}), error()
+    assert not deletion_pipeline_idle({"unreachable": 2204, "pending_gc": 193, "awaiting_gc": 879}), error()
+    assert not deletion_pipeline_idle({"unreachable": 0, "pending_gc": 1, "awaiting_gc": 0}), error()
+    assert not deletion_pipeline_idle({"unreachable": 0, "pending_gc": 0, "awaiting_gc": 1}), error()
 
 
 @TestScenario

@@ -190,9 +190,11 @@ Possible partition evolution operations:
 ### Drop partition
 
 #### RQ.SRS-045.ClickHouse.Iceberg.DatabaseEngine.DropPartition
-version: 1.1
+version: 1.2
 
 [ClickHouse] SHALL support `ALTER TABLE ... DROP PARTITION` on an Iceberg table reached through a `DataLakeCatalog` database or `IcebergS3`. The statement takes the transformed partition values, the values stored in the Iceberg partition tuple, and commits a snapshot with operation `DELETE` that no longer references the data files of that partition. For a day transform that value is the day number, `tuple(toRelativeDayNum(toDate('2024-01-15')))`. A partition value that matches no file SHALL leave the current snapshot unchanged.
+
+The same snapshot SHALL drop equality-delete files and position-delete files in that partition. The snapshot summary SHALL report `removed-equality-delete-files`, `removed-equality-deletes`, `removed-position-delete-files`, and `removed-position-deletes`.
 
 `iceberg_delete_data_on_drop` (SRS-049) SHALL decide whether those data files are removed from object storage after the snapshot commits. When the setting is off, the files stay in object storage.
 

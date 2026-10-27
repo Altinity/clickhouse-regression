@@ -10,6 +10,7 @@ named step.
 from testflows.core import *
 from testflows.asserts import error
 
+from helpers.common import check_clickhouse_version
 from oauth.tests.steps.clikhouse import (
     access_clickhouse,
     change_token_processors,
@@ -154,7 +155,8 @@ def assert_query_denied(self, token, query, ip="clickhouse1"):
     Expects HTTP 500 carrying ``ACCESS_DENIED`` / ``Not enough privileges``.
     Returns the response body.
     """
-    body = access_clickhouse(token=token, status_code=500, query=query, ip=ip)
+    status_code = 403 if check_clickhouse_version(">=26.8")(self) else 500
+    body = access_clickhouse(token=token, status_code=status_code, query=query, ip=ip)
     assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
     return body
 

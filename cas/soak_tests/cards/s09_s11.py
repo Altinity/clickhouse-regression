@@ -235,17 +235,25 @@ class S10(Scenario):
         inserted_rows = 0
         patch_supported = self._probe_patch_parts(result, cl)
         max_patch_parts = 0
+        lease_drops = []
         for b in range(bursts):
             counters = C.counters_window(cl)
             for _ in range(inserts_per_burst):
-                C.insert_random(
-                    cl.node1,
-                    table,
-                    rows=rows,
-                    payload_bytes=payload_bytes,
-                    extra_cols_select=extra,
-                    op_id=next_id,
-                )
+                try:
+                    C.insert_random(
+                        cl.node1,
+                        table,
+                        rows=rows,
+                        payload_bytes=payload_bytes,
+                        extra_cols_select=extra,
+                        op_id=next_id,
+                    )
+                except Exception as e:
+                    if not is_mount_lease_drop(e):
+                        raise
+                    lease_drops.append(str(e))
+                    ctx.log(f"S10 insert: mount lease dropped: {e}")
+                    break
                 next_id += rows
                 inserted_rows += rows
             for d in range(deletes_per_burst):
@@ -257,7 +265,11 @@ class S10(Scenario):
                     node.command(f"ALTER TABLE {table} DELETE WHERE k = {bucket}", timeout=300)
                     deleted_buckets.add(bucket)
                 except Exception as e:
-                    result.note_anomaly(f"S10 ALTER DELETE k={bucket} failed: {e}")
+                    if is_mount_lease_drop(e):
+                        lease_drops.append(str(e))
+                        ctx.log(f"S10 ALTER DELETE k={bucket}: mount lease dropped: {e}")
+                    else:
+                        result.note_anomaly(f"S10 ALTER DELETE k={bucket} failed: {e}")
             _wait_mutations_done(cl, table, timeout_s=600)
             for n in cl.nodes():
                 pc = _patch_part_count(n, table)
@@ -296,7 +308,13 @@ class S10(Scenario):
                 f"ALTER TABLE {table} DELETE WHERE k = {some} SETTINGS mutations_sync=2", timeout=600
             )
         except Exception as e:
-            result.note_anomaly(f"S10 final ALTER DELETE k={some} failed: {e}")
+            if is_mount_lease_drop(e):
+                lease_drops.append(str(e))
+                ctx.log(f"S10 final ALTER DELETE k={some}: mount lease dropped: {e}")
+            else:
+                result.note_anomaly(f"S10 final ALTER DELETE k={some} failed: {e}")
+        if lease_drops:
+            result.add(mount_lease_verdict(len(lease_drops), lease_drops))
         try:
             still = int(cl.node1.scalar(f"SELECT count() FROM {table} WHERE k = {some}") or 0)
         except Exception:
