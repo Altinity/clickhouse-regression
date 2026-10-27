@@ -48,10 +48,8 @@ def registered_clickhouse_table(self, catalog):
     return namespace, table_name, table
 
 
-@TestOutline(Scenario)
-@Requirements(RQ_Iceberg_AggregateStates_Interop_CreateThroughCatalog("1.0"))
-@Examples("path", [(ENGINE_LESS,), (EXPLICIT_ENGINE,)], args=Args(flags=TE))
-def annotations_written_on_create_through_catalog(self, path):
+@TestCheck
+def check_annotations_written_on_create_through_catalog(self, path):
     """CREATE TABLE in a DataLakeCatalog database: the metadata file the
     catalog registers carries the annotations."""
     with Given("catalog and database"):
@@ -75,13 +73,13 @@ def annotations_written_on_create_through_catalog(self, path):
         metadata, location = read_registered_metadata(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
-        assert_annotations(metadata=metadata, expected=EXPECTED_ANNOTATIONS, where=location)
+        assert_annotations(
+            metadata=metadata, expected=EXPECTED_ANNOTATIONS, where=location
+        )
 
 
-@TestOutline(Scenario)
-@Requirements(RQ_Iceberg_AggregateStates_Interop_CreateThroughCatalog("1.0"))
-@Examples("path", [(ENGINE_LESS,), (EXPLICIT_ENGINE,)], args=Args(flags=TE))
-def clickhouse_type_after_create_through_catalog(self, path):
+@TestCheck
+def check_clickhouse_type_after_create_through_catalog(self, path):
     """CREATE TABLE in a DataLakeCatalog database: reading the table back
     through the catalog reports the aggregate types."""
     with Given("catalog and database"):
@@ -109,6 +107,28 @@ def clickhouse_type_after_create_through_catalog(self, path):
         assert columns == [("k", "Int32"), ("u", U_TYPE), ("s", S_TYPE)], error(columns)
 
 
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_Iceberg_AggregateStates_Interop_CreateThroughCatalog("1.0"))
+def annotations_written_on_create_through_catalog(self):
+    """Engine-less and explicit-engine CREATE through the catalog register
+    metadata that carries the annotations."""
+    check_annotations_written_on_create_through_catalog(
+        path=either(ENGINE_LESS, EXPLICIT_ENGINE)
+    )
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_Iceberg_AggregateStates_Interop_CreateThroughCatalog("1.0"))
+def clickhouse_type_after_create_through_catalog(self):
+    """After engine-less and explicit-engine CREATE through the catalog,
+    ClickHouse reports the aggregate types."""
+    check_clickhouse_type_after_create_through_catalog(
+        path=either(ENGINE_LESS, EXPLICIT_ENGINE)
+    )
+
+
 @TestScenario
 @Requirements(RQ_Iceberg_AggregateStates_Interop_ExternalCommit("1.0"))
 def annotations_survive_external_append(self):
@@ -133,10 +153,14 @@ def annotations_survive_external_append(self):
         metadata, after = read_registered_metadata(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
-        assert after != before, error(f"metadata-location did not advance from {before}")
+        assert after != before, error(
+            f"metadata-location did not advance from {before}"
+        )
 
     with And("its current schema still carries the annotations"):
-        assert_annotations(metadata=metadata, expected=EXPECTED_ANNOTATIONS, where=after)
+        assert_annotations(
+            metadata=metadata, expected=EXPECTED_ANNOTATIONS, where=after
+        )
 
 
 @TestScenario

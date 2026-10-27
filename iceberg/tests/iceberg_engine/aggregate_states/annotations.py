@@ -11,26 +11,10 @@ from iceberg.requirements.aggregate_states import *
 from iceberg.tests.iceberg_engine.aggregate_states.steps import *
 
 
-@TestOutline(Scenario)
-@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Annotation_Mismatch("1.0"))
-@Examples(
-    "field annotation message",
-    [
-        ("s", U_TYPE, "ICEBERG_SPECIFICATION_VIOLATION"),
-        (
-            "k",
-            "SimpleAggregateFunction(groupArrayArray, Array(Int32))",
-            "ICEBERG_SPECIFICATION_VIOLATION",
-        ),
-        ("k", "SimpleAggregateFunction(anyLast, String)", "ICEBERG_SPECIFICATION_VIOLATION"),
-        ("k", "SimpleAggregateFunction(sum, String)", "ILLEGAL_TYPE_OF_ARGUMENT"),
-        ("u", "NotAClickHouseType(1)", "UNKNOWN_TYPE"),
-    ],
-    args=Args(flags=TE),
-)
-def mismatched_annotation_refused(self, field, annotation, message):
-    """An annotation that does not describe the field's Iceberg type, or is no
-    type at all, fails the read instead of choosing a deserializer."""
+@TestCheck
+def check_annotation_refused(self, field, annotation, message):
+    """Another writer sets ``field``'s annotation to ``annotation``: reading
+    the table fails with ``message`` instead of choosing a deserializer."""
     with Given("a table with states"):
         table_name = iceberg_s3_table()
         insert_states(table_name=table_name)
@@ -46,6 +30,38 @@ def mismatched_annotation_refused(self, field, annotation, message):
             settings=STATE_SETTINGS,
             message=message,
         )
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Annotation_Mismatch("1.0"))
+def mismatched_annotation_refused(self):
+    """An annotation of a different shape than the field's Iceberg type, or
+    one that is no valid type at all, fails the read."""
+    field, annotation, message = either(
+        ("s", U_TYPE, "ICEBERG_SPECIFICATION_VIOLATION"),
+        (
+            "k",
+            "SimpleAggregateFunction(groupArrayArray, Array(Int32))",
+            "ICEBERG_SPECIFICATION_VIOLATION",
+        ),
+        ("k", "SimpleAggregateFunction(sum, String)", "ILLEGAL_TYPE_OF_ARGUMENT"),
+        ("u", "NotAClickHouseType(1)", "UNKNOWN_TYPE"),
+    )
+    check_annotation_refused(field=field, annotation=annotation, message=message)
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Annotation_Mismatch("1.0"))
+def primitive_retype_refused(self):
+    """An annotation naming a different primitive type than the field's,
+    `SimpleAggregateFunction(anyLast, String)` on an `int` field, fails the
+    read rather than reading the column as String."""
+    check_annotation_refused(
+        field="k",
+        annotation="SimpleAggregateFunction(anyLast, String)",
+        message="ICEBERG_SPECIFICATION_VIOLATION",
+    )
 
 
 @TestScenario
@@ -64,7 +80,9 @@ def missing_annotation_reads_storage_type(self):
 
     with When("another writer drops the annotations"):
         metadata, _ = read_latest_metadata(prefix)
-        write_metadata_version(prefix, edit_annotations(metadata, {"u": None, "s": None}))
+        write_metadata_version(
+            prefix, edit_annotations(metadata, {"u": None, "s": None})
+        )
 
     with Then("DESCRIBE without the setting reports the storage types"):
         columns = describe(function)

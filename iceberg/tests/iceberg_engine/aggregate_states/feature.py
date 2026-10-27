@@ -45,7 +45,9 @@ def feature(self, minio_root_user, minio_root_password):
 
     for module in MODULES:
         Feature(
-            test=load(f"iceberg.tests.iceberg_engine.aggregate_states.{module}", "feature"),
+            test=load(
+                f"iceberg.tests.iceberg_engine.aggregate_states.{module}", "feature"
+            ),
             flags=TE,
         )()
 

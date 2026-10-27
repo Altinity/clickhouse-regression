@@ -62,9 +62,9 @@ def uniq_and_sum(self):
             with By(key.rsplit("/", 1)[-1]):
                 column_types = parquet_column_types(key)
                 assert column_types is not None, error("no clickhouse.column_types")
-                assert column_types.get("u", "").startswith("AggregateFunction("), error(
-                    column_types
-                )
+                assert column_types.get("u", "").startswith(
+                    "AggregateFunction("
+                ), error(column_types)
                 assert "uniq" in column_types["u"], error(column_types)
                 assert column_types.get("s") == S_TYPE, error(column_types)
                 u = parquet_column(parquet_metadata(key), "u")
@@ -105,61 +105,55 @@ def merge_across_inserts(self):
         assert_merge_matches(source=table_name, expected=expected)
 
 
-@TestOutline(Scenario)
-@Requirements(
-    RQ_Iceberg_AggregateStates_Iceberg_MergeEquivalence("1.0"),
-    RQ_Iceberg_AggregateStates_Iceberg_Annotation("1.0"),
-)
-@Examples(
-    "type_name state merge direct",
-    [
-        ("AggregateFunction(count)", "countState()", "countMerge(v)", "count()"),
-        (
-            "AggregateFunction(avg, Float64)",
-            "avgState(toFloat64(number))",
-            "avgMerge(v)",
-            "avg(toFloat64(number))",
-        ),
-        (
-            "AggregateFunction(uniqExact, String)",
-            "uniqExactState(toString(number % 37))",
-            "uniqExactMerge(v)",
-            "uniqExact(toString(number % 37))",
-        ),
-        (
-            "AggregateFunction(groupArray, UInt64)",
-            "groupArrayState(number)",
-            "arraySort(groupArrayMerge(v))",
-            "arraySort(groupArray(number))",
-        ),
-        (
-            "AggregateFunction(quantileExact(0.5), UInt64)",
-            "quantileExactState(0.5)(number)",
-            "quantileExactMerge(0.5)(v)",
-            "quantileExact(0.5)(number)",
-        ),
-        (
-            "AggregateFunction(argMax, String, UInt64)",
-            "argMaxState(toString(number), number)",
-            "argMaxMerge(v)",
-            "argMax(toString(number), number)",
-        ),
-        (
-            "SimpleAggregateFunction(max, UInt64)",
-            "maxSimpleState(number)",
-            "max(v)",
-            "max(number)",
-        ),
-        (
-            "SimpleAggregateFunction(min, Nullable(String))",
-            "minSimpleState(toNullable(toString(number)))",
-            "min(v)",
-            "min(toString(number))",
-        ),
-    ],
-    args=Args(flags=TE),
-)
-def aggregate_function(self, type_name, state, merge, direct):
+AGGREGATE_FUNCTIONS = [  # (type_name, state, merge, direct)
+    ("AggregateFunction(count)", "countState()", "countMerge(v)", "count()"),
+    (
+        "AggregateFunction(avg, Float64)",
+        "avgState(toFloat64(number))",
+        "avgMerge(v)",
+        "avg(toFloat64(number))",
+    ),
+    (
+        "AggregateFunction(uniqExact, String)",
+        "uniqExactState(toString(number % 37))",
+        "uniqExactMerge(v)",
+        "uniqExact(toString(number % 37))",
+    ),
+    (
+        "AggregateFunction(groupArray, UInt64)",
+        "groupArrayState(number)",
+        "arraySort(groupArrayMerge(v))",
+        "arraySort(groupArray(number))",
+    ),
+    (
+        "AggregateFunction(quantileExact(0.5), UInt64)",
+        "quantileExactState(0.5)(number)",
+        "quantileExactMerge(0.5)(v)",
+        "quantileExact(0.5)(number)",
+    ),
+    (
+        "AggregateFunction(argMax, String, UInt64)",
+        "argMaxState(toString(number), number)",
+        "argMaxMerge(v)",
+        "argMax(toString(number), number)",
+    ),
+    (
+        "SimpleAggregateFunction(max, UInt64)",
+        "maxSimpleState(number)",
+        "max(v)",
+        "max(number)",
+    ),
+    (
+        "SimpleAggregateFunction(min, Nullable(String))",
+        "minSimpleState(toNullable(toString(number)))",
+        "min(v)",
+        "min(toString(number))",
+    ),
+]
+
+
+@TestCheck
+def check_aggregate_function(self, type_name, state, merge, direct):
     """One aggregate column of the given type, written in two inserts,
     merges to the aggregate over all rows and is annotated with its type."""
     node = self.context.node
@@ -201,6 +195,20 @@ def aggregate_function(self, type_name, state, merge, direct):
         assert function in annotation, error(annotation)
 
 
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(
+    RQ_Iceberg_AggregateStates_Iceberg_MergeEquivalence("1.0"),
+    RQ_Iceberg_AggregateStates_Iceberg_Annotation("1.0"),
+)
+def aggregate_function(self):
+    """Each aggregate column type in AGGREGATE_FUNCTIONS round-trips."""
+    type_name, state, merge, direct = either(*AGGREGATE_FUNCTIONS)
+    check_aggregate_function(
+        type_name=type_name, state=state, merge=merge, direct=direct
+    )
+
+
 @TestScenario
 @Requirements(
     RQ_Iceberg_AggregateStates_Iceberg_InsertSelectFromAggregatingMergeTree("1.0")
@@ -227,7 +235,9 @@ def insert_select_from_aggregating_merge_tree(self):
     with Then("the states are byte-identical"):
         query = "SELECT k, hex(u), s FROM {} ORDER BY k, hex(u), s FORMAT TabSeparated"
         source_rows = node.query(query.format(source)).output
-        iceberg_rows = node.query(query.format(table_name), settings=STATE_SETTINGS).output
+        iceberg_rows = node.query(
+            query.format(table_name), settings=STATE_SETTINGS
+        ).output
         assert iceberg_rows == source_rows, error(
             f"iceberg:\n{iceberg_rows}\nsource:\n{source_rows}"
         )

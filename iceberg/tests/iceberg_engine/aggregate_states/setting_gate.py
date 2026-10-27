@@ -10,17 +10,8 @@ from iceberg.requirements.aggregate_states import *
 from iceberg.tests.iceberg_engine.aggregate_states.steps import *
 
 
-@TestOutline(Scenario)
-@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Gate_Create("1.0"))
-@Examples(
-    "columns",
-    [
-        (COLUMNS,),
-        ("k Int32, s SimpleAggregateFunction(sum, Int64)",),
-    ],
-    args=Args(flags=TE),
-)
-def create_refused_without_setting(self, columns):
+@TestCheck
+def check_create_refused_without_setting(self, columns):
     """CREATE TABLE with an aggregate column fails naming the setting and
     writes nothing to the table location."""
     table_name = f"agg_{getuid()}"
@@ -40,20 +31,24 @@ def create_refused_without_setting(self, columns):
 
     with And("nothing was written under the table location"):
         objects = s3.object_inventory(table_prefix(table_name))
-        assert objects == {}, error(f"objects written by a refused CREATE: {sorted(objects)}")
+        assert objects == {}, error(
+            f"objects written by a refused CREATE: {sorted(objects)}"
+        )
 
 
-@TestOutline(Scenario)
-@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Gate_AlterAddColumn("1.0"))
-@Examples(
-    "column refused_with_setting",
-    [
-        ("extra SimpleAggregateFunction(anyLast, Nullable(String))", None),
-        ("extra AggregateFunction(uniqExact, String)", "non-nullable"),
-    ],
-    args=Args(flags=TE),
-)
-def alter_add_column_refused_without_setting(self, column, refused_with_setting):
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Gate_Create("1.0"))
+def create_refused_without_setting(self):
+    """CREATE TABLE with an AggregateFunction column, or with a
+    SimpleAggregateFunction one only, is refused without the setting."""
+    check_create_refused_without_setting(
+        columns=either(COLUMNS, "k Int32, s SimpleAggregateFunction(sum, Int64)")
+    )
+
+
+@TestCheck
+def check_alter_add_column_refused_without_setting(self, column, refused_with_setting):
     """ADD COLUMN of an aggregate column fails naming the setting and leaves
     the schema unchanged; with the setting the column is added and annotated.
 
@@ -100,6 +95,21 @@ def alter_add_column_refused_without_setting(self, column, refused_with_setting)
         metadata, key = read_latest_metadata(prefix)
         name, type_name = column.split(" ", 1)
         assert_annotations(metadata=metadata, expected={name: type_name}, where=key)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_Iceberg_AggregateStates_Iceberg_Gate_AlterAddColumn("1.0"))
+def alter_add_column_refused_without_setting(self):
+    """ADD COLUMN of a SimpleAggregateFunction or an AggregateFunction column
+    is refused without the setting."""
+    column, refused_with_setting = either(
+        ("extra SimpleAggregateFunction(anyLast, Nullable(String))", None),
+        ("extra AggregateFunction(uniqExact, String)", "non-nullable"),
+    )
+    check_alter_add_column_refused_without_setting(
+        column=column, refused_with_setting=refused_with_setting
+    )
 
 
 @TestScenario
