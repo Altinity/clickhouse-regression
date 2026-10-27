@@ -499,6 +499,7 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                         f" SELECT id, count(*) FROM {table2.name}"
                         f"{' FINAL' if table2.final_modifier_available else ''} "
                         f" GROUP BY id"
+                        f" ORDER BY tuple(*)"
                     ).output.strip()
 
                 with And("I execute the same query without FINAL modifier"):
@@ -508,6 +509,7 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                         f" {clause}"
                         f" SELECT id, count(*) FROM {table2.name}"
                         f" GROUP BY id"
+                        f" ORDER BY tuple(*)"
                     ).output.strip()
 
                 with And(
@@ -516,7 +518,8 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                     force_select_final = node.query(
                         f"SELECT id, count(*) FROM {table1.name} GROUP BY id"
                         f" {clause}"
-                        f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
+                        f" SELECT id, count(*) FROM {table2.name} GROUP BY id"
+                        f" ORDER BY tuple(*)",
                         settings=[("final", 1)],
                     ).output.strip()
 
