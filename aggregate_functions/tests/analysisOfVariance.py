@@ -37,6 +37,7 @@ def scenario(
         clickhouse_version = ">=24.3"
     else:
         clickhouse_version = ">=24.1"
+    clickhouse_version = versioned_snapshot(clickhouse_version)
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version

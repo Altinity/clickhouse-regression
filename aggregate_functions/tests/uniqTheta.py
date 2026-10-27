@@ -4,7 +4,11 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_UniqTheta,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id, check_clickhouse_version
+from aggregate_functions.tests.steps import (
+    get_snapshot_id,
+    check_clickhouse_version,
+    versioned_snapshot,
+)
 from aggregate_functions.tests.uniq import scenario as checks
 
 
@@ -24,6 +28,7 @@ def scenario(self, func="uniqTheta({params})", table=None, snapshot_id=None):
         clickhouse_version = ">=23.12"
     else:
         clickhouse_version = ">=23.2"
+    clickhouse_version = versioned_snapshot(clickhouse_version)
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id,

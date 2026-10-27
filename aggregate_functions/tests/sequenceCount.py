@@ -18,7 +18,9 @@ def scenario(
     datetime=True,
 ):
     """Check sequenceCount parametric aggregate function by using the same tests as for sequenceMatch."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=versioned_snapshot(None)
+    )
 
     if table is None:
         table = self.context.table

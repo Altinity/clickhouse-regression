@@ -30,7 +30,9 @@ def scenario(
     date=True,
 ):
     """Check windowFunnel aggregate function by using the same checks as for avg."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=versioned_snapshot(None)
+    )
 
     if table is None:
         table = self.context.table

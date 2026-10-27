@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantileGK,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id
+from aggregate_functions.tests.steps import get_snapshot_id, versioned_snapshot
 from aggregate_functions.tests.avg import scenario as checks
 
 
@@ -23,7 +23,7 @@ def scenario(
 ):
     """Check quantileGK aggregate function by using the same tests as for avg."""
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=23.12"
+        snapshot_id=snapshot_id, clickhouse_version=versioned_snapshot(">=23.12")
     )
 
     _func = func.replace("({params})", f"(100)({{params}})")
