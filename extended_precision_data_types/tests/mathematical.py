@@ -59,11 +59,16 @@ def math_int_inline(
         node = self.context.node
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
+        message = "Exception:"
+        if func == "intExp10(":
+            message = type_rejection_message(self, func, message)
+            if check_clickhouse_version(">=26.11")(self):
+                exitcode = 43
         with When(f"I check {func} with {int_type} using 1, max, and min"):
             node.query(
                 f"SELECT {func} to{int_type}(1)), {func} to{int_type}('{max}')), {func} to{int_type}('{min}')) FORMAT TabSeparated",
                 exitcode=exitcode,
-                message="Exception:",
+                message=message,
             )
 
     else:
@@ -99,6 +104,11 @@ def math_int_table(
         table(name=table_name, data_type=f"Nullable({int_type})")
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
+        message = "Exception:"
+        if func == "intExp10(":
+            message = type_rejection_message(self, func, message)
+            if check_clickhouse_version(">=26.11")(self):
+                exitcode = 43
         for value in [1, max, min]:
             with When(
                 f"I insert the output of {func} with {int_type} using {value} into a table"
@@ -106,7 +116,7 @@ def math_int_table(
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func} to{int_type}('{value}')) FORMAT TabSeparated",
                     exitcode=exitcode,
-                    message="Exception:",
+                    message=message,
                 )
 
     else:
@@ -139,10 +149,13 @@ def math_dec_inline(self, func, expected_result, exitcode, node=None):
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
         with When(f"I check {func} with Decimal256 using 1, max, and min"):
             if check_clickhouse_version("<24.6")(self) or func not in decimal_support:
+                message = "Exception: Illegal type "
+                if func == "intExp10(":
+                    message = type_rejection_message(self, func, message)
                 node.query(
                     f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0)) FORMAT TabSeparated",
                     exitcode=43,
-                    message="Exception: Illegal type ",
+                    message=message,
                 )
             else:
                 execute_query(
@@ -197,10 +210,13 @@ def math_dec_table(self, func, expected_result, exitcode, node=None):
                     check_clickhouse_version("<24.6")(self)
                     or func not in decimal_support
                 ):
+                    message = "Exception: Illegal type "
+                    if func == "intExp10(":
+                        message = type_rejection_message(self, func, message)
                     node.query(
                         f"INSERT INTO {table_name} SELECT {func} toDecimal256('{value}',0))",
                         exitcode=43,
-                        message="Exception: Illegal type ",
+                        message=message,
                     )
                 else:
                     node.query(

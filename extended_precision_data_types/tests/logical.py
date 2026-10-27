@@ -27,18 +27,20 @@ def log_int_inline(self, func, int_type, min, max, node=None):
     if node is None:
         node = self.context.node
 
+    message = type_rejection_message(self, func, "Exception: Illegal type ")
+
     with When(f"Check {func} with {int_type}"):
         if func == "not" and check_clickhouse_version(">=23.12")(self):
             node.query(
                 f"SELECT {func}(to{int_type}(1)), {func}(to{int_type}('{max}')), {func}(to{int_type}('{min}')) FORMAT TabSeparated",
                 exitcode=43,
-                message="Exception: Illegal type ",
+                message=message,
             )
         else:
             node.query(
                 f"SELECT {func}(to{int_type}(1), to{int_type}(1)), {func}(to{int_type}('{max}'), to{int_type}(1)), {func}(to{int_type}('{min}'), to{int_type}(1)) FORMAT TabSeparated",
                 exitcode=43,
-                message="Exception: Illegal type ",
+                message=message,
             )
 
 
@@ -55,19 +57,21 @@ def log_int_table(self, func, int_type, min, max, node=None):
     with Given(f"I have a table"):
         table(name=table_name, data_type=int_type)
 
+    message = type_rejection_message(self, func, "Exception: Illegal type")
+
     for value in [1, min, max]:
         with When(f"Check {func} with {int_type} and {value}"):
             if func == "not" and check_clickhouse_version(">=23.12")(self):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'))",
                     exitcode=43,
-                    message="Exception: Illegal type",
+                    message=message,
                 )
             else:
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'), to{int_type}('{value}'))",
                     exitcode=43,
-                    message="Exception: Illegal type",
+                    message=message,
                 )
 
 
@@ -81,18 +85,20 @@ def log_dec_inline(self, func, node=None):
     if node is None:
         node = self.context.node
 
+    message = type_rejection_message(self, func, "Exception: Illegal type ")
+
     with When(f"Check {func} with Decimal256"):
         if func == "not" and check_clickhouse_version(">=23.12")(self):
             node.query(
                 f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0)) FORMAT TabSeparated",
                 exitcode=43,
-                message="Exception: Illegal type ",
+                message=message,
             )
         else:
             node.query(
                 f"SELECT {func}(toDecimal256(1,0), toDecimal256(1,0)), {func}(toDecimal256('{max}',0), toDecimal256(1)), {func}(toDecimal256('{min}',0), toDecimal256(1)) FORMAT TabSeparated",
                 exitcode=43,
-                message="Exception: Illegal type ",
+                message=message,
             )
 
 
@@ -111,19 +117,21 @@ def log_dec_table(self, func, node=None):
     with Given(f"I have a table"):
         table(name=table_name, data_type="Decimal256(0)")
 
+    message = type_rejection_message(self, func, "Exception: Illegal type ")
+
     for value in [1, min, max]:
         with When(f"Check {func} with Decimal256 and {value}"):
             if func == "not" and check_clickhouse_version(">=23.12")(self):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0))",
                     exitcode=43,
-                    message="Exception: Illegal type ",
+                    message=message,
                 )
             else:
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0), toDecimal256('{value}',0))",
                     exitcode=43,
-                    message="Exception: Illegal type ",
+                    message=message,
                 )
 
 

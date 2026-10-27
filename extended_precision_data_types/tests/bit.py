@@ -131,6 +131,8 @@ def bit_dec_inline(self, func, supported, error, node=None):
     max = Decimal256_min_max[1]
 
     exitcode, message = illegal_type()
+    if func in ("bitTestAll", "bitTestAny", "bitNot", "bitCount"):
+        message = type_rejection_message(self, func, message)
 
     if node is None:
         node = self.context.node
@@ -161,6 +163,8 @@ def bit_dec_table(self, func, supported, error, node=None):
 
     table_name = f"table_{getuid()}"
     exitcode, message = illegal_type()
+    if func in ("bitTestAll", "bitTestAny", "bitNot", "bitCount"):
+        message = type_rejection_message(self, func, message)
 
     if node is None:
         node = self.context.node

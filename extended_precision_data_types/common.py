@@ -11,6 +11,18 @@ from helpers.common import *
 rounding_precision = 7
 
 
+def type_rejection_message(test, func, legacy):
+    """Expected text when an extended-precision argument is rejected.
+
+    From 26.11 the server reports a declarative signature mismatch.
+    https://github.com/ClickHouse/ClickHouse/pull/104948
+    """
+    if check_clickhouse_version(">=26.11")(test):
+        name = func[:-1] if func.endswith("(") else func
+        return f"Exception: Arguments of function {name} do not match its signature"
+    return legacy
+
+
 @contextmanager
 def allow_experimental_bigint(node):
     """Enable experimental big int setting in Clickhouse."""

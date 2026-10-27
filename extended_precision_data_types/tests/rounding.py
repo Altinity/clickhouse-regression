@@ -56,11 +56,16 @@ def round_int_inline(
             )
 
     else:
+        exitcode = 48
+        message = f"Exception: {func}() for big integers is not implemented:"
+        if check_clickhouse_version(">=26.11")(self):
+            exitcode = 43
+            message = type_rejection_message(self, func, message)
         with When(f"I check {func} with {int_type}"):
             node.query(
                 f"SELECT {func}(to{int_type}(1)), {func}(to{int_type}('{max}')), {func}(to{int_type}('{min}')) FORMAT TabSeparated",
-                exitcode=48,
-                message=f"Exception: {func}() for big integers is not implemented:",
+                exitcode=exitcode,
+                message=message,
             )
 
 
@@ -105,14 +110,19 @@ def round_int_table(
             )
 
     else:
+        exitcode = 48
+        message = f"Exception: {func}() for big integers is not implemented:"
+        if check_clickhouse_version(">=26.11")(self):
+            exitcode = 43
+            message = type_rejection_message(self, func, message)
         for value in [1, max, min]:
             with When(
                 f"I insert the output of {func} with {int_type} and {value} into the table"
             ):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(to{int_type}(1))",
-                    exitcode=48,
-                    message=f"Exception: {func}() for big integers is not implemented:",
+                    exitcode=exitcode,
+                    message=message,
                 )
 
 
@@ -157,11 +167,14 @@ def round_dec_inline(self, func, expected_result, supported, node=None):
             )
 
     else:
+        message = type_rejection_message(
+            self, func, "Exception: Illegal type Decimal(76, 0)"
+        )
         with When(f"I check {func} with Decimal256"):
             node.query(
                 f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0)) FORMAT TabSeparated",
                 exitcode=43,
-                message=f"Exception: Illegal type Decimal(76, 0)",
+                message=message,
             )
 
 
@@ -212,6 +225,9 @@ def round_dec_table(self, func, expected_result, supported, node=None):
             )
 
     else:
+        message = type_rejection_message(
+            self, func, "Exception: Illegal type Decimal(76, 0)"
+        )
         for value in [1, max, min]:
             with When(
                 f"I insert the output of {func} with Decimal256 and {value} into the table"
@@ -219,7 +235,7 @@ def round_dec_table(self, func, expected_result, supported, node=None):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0))",
                     exitcode=43,
-                    message=f"Exception: Illegal type Decimal(76, 0)",
+                    message=message,
                 )
 
 
