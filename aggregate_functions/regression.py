@@ -597,9 +597,27 @@ def regression(
         )
 
     with And("I populate tables with test data"):
-        self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
+        # 26.3 defaults async_insert to 1, and wait_for_async_insert_timeout
+        # is 120s. This fixture is ~900KB of every column type. Under the
+        # thread fuzzer the background flush is still inside MergeTreeSink
+        # when that wait expires (TIMEOUT_EXCEEDED, WaitForAsyncInsert).
+        # Load it synchronously, and let the client stay silent for 30
+        # minutes. The CI shell cuts a silent command off at 600s.
+        populate_kwargs = {}
+        if cluster_args["thread_fuzzer"]:
+            populate_kwargs = {
+                "query_settings": [
+                    ("async_insert", 0),
+                    ("receive_timeout", 1800),
+                    ("send_timeout", 1800),
+                ],
+                "timeout": 1800,
+            }
+        self.context.table.insert_test_data(
+            cardinality=1, shuffle_values=False, **populate_kwargs
+        )
         self.context.table_extra_data.insert_test_data(
-            cardinality=5, shuffle_values=True
+            cardinality=5, shuffle_values=True, **populate_kwargs
         )
 
     with And("allow higher cpu_wait_ratio "):

@@ -393,6 +393,7 @@ class Table:
         random=None,
         get_values=False,
         shuffle_values=False,
+        timeout=None,
     ):
         """Insert data that is necessary for Parquet testing into the specified table.
 
@@ -403,6 +404,7 @@ class Table:
         :param random: an optional random number generator object to control the data generation, default: `None`
         :param get_values: if True, returns the generated values in addition to the query execution result, default: `False`
         :param shuffle_values: if True, shuffles the values before inserting them into the table, default: `False`
+        :param timeout: seconds to wait for the next line of client output, default: the cluster shell timeout
         """
         if node is None:
             node = current().context.node
@@ -432,6 +434,7 @@ class Table:
         result = node.query(
             f"INSERT INTO {name} VALUES {','.join(values)}",
             settings=query_settings,
+            timeout=timeout,
         )
 
         if get_values:
