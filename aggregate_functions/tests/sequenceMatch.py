@@ -31,7 +31,9 @@ def scenario(
 ):
     """Check sequenceMatch parametric aggregate function"""
 
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=versioned_snapshot(None)
+    )
 
     if table is None:
         table = self.context.table

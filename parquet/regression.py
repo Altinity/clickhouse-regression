@@ -21,6 +21,7 @@ from helpers.common import (
     experimental_analyzer,
     check_current_cpu,
     allow_higher_cpu_wait_ratio,
+    check_clickhouse_version,
     check_if_not_antalya_build,
     check_if_antalya_build,
 )
@@ -394,6 +395,11 @@ ffails = {
         "Not implemented before 25.3",
         check_clickhouse_version("<25.3"),
     ),
+    "/parquet/nullable minmax pruning": (
+        Skip,
+        "Skip until nullable min/max pruning is in the build under test. "
+        "https://github.com/Altinity/ClickHouse/pull/2657",
+    ),
 }
 
 
@@ -646,6 +652,12 @@ def regression(
         )
         Feature(
             run=load("parquet.tests.rowgroups", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.nullable_minmax_pruning", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,

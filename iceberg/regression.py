@@ -563,6 +563,11 @@ ffails = {
             check_if_antalya_build(test) and check_clickhouse_version(">=26.6")(test)
         ),
     ),
+    "/iceberg/iceberg engine/: catalog/nullable minmax pruning": (
+        Skip,
+        "Skip until nullable min/max pruning is in the build under test. "
+        "https://github.com/Altinity/ClickHouse/pull/2657",
+    ),
     "/iceberg/token forwarding": (
         Skip,
         "Forwarding user tokens to data lake catalogs is an Antalya feature "

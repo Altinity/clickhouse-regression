@@ -33,7 +33,9 @@ def scenario(
 ):
     """Check sequenceMatchEvents parametric aggregate function"""
 
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=versioned_snapshot(None)
+    )
 
     if "Merge" in self.name:
         _func = func.replace("({params})", f"('(?1)(?2)')({{params}})")

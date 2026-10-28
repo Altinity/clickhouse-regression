@@ -27,9 +27,39 @@ MinIO, AWS, and Hetzner are run targets of the same S3 tests. `storage.gcs` and 
 
 ## functions/
 
-- `functions.arithmetic` — `tests/plus.py`
-- `functions.mathematical` — `tests/math_functions.py`
-- `functions.other` — `tests/throwIf_function`. `throwIf.cpp` is in the Other category.
+- `functions.arithmetic.plus` — `tests/plus.py`
+- `functions.mathematical.exp` — `tests/math_functions.py`
+- `functions.mathematical.log` — `tests/math_functions.py`
+- `functions.mathematical.exp2` — `tests/math_functions.py`
+- `functions.mathematical.int_exp2` — `tests/math_functions.py`
+- `functions.mathematical.log2` — `tests/math_functions.py`
+- `functions.mathematical.exp10` — `tests/math_functions.py`
+- `functions.mathematical.int_exp10` — `tests/math_functions.py`
+- `functions.mathematical.log10` — `tests/math_functions.py`
+- `functions.mathematical.sqrt` — `tests/math_functions.py`
+- `functions.mathematical.cbrt` — `tests/math_functions.py`
+- `functions.mathematical.erf` — `tests/math_functions.py`
+- `functions.mathematical.erfc` — `tests/math_functions.py`
+- `functions.mathematical.lgamma` — `tests/math_functions.py`
+- `functions.mathematical.tgamma` — `tests/math_functions.py`
+- `functions.mathematical.sin` — `tests/math_functions.py`
+- `functions.mathematical.cos` — `tests/math_functions.py`
+- `functions.mathematical.tan` — `tests/math_functions.py`
+- `functions.mathematical.asin` — `tests/math_functions.py`
+- `functions.mathematical.acos` — `tests/math_functions.py`
+- `functions.mathematical.atan` — `tests/math_functions.py`
+- `functions.mathematical.cosh` — `tests/math_functions.py`
+- `functions.mathematical.acosh` — `tests/math_functions.py`
+- `functions.mathematical.sinh` — `tests/math_functions.py`
+- `functions.mathematical.asinh` — `tests/math_functions.py`
+- `functions.mathematical.tanh` — `tests/math_functions.py`
+- `functions.mathematical.atanh` — `tests/math_functions.py`
+- `functions.mathematical.log1p` — `tests/math_functions.py`
+- `functions.mathematical.sign` — `tests/math_functions.py`
+- `functions.mathematical.sigmoid` — `tests/math_functions.py`
+- `functions.mathematical.degrees` — `tests/math_functions.py`
+- `functions.mathematical.radians` — `tests/math_functions.py`
+- `functions.other.throw_if` — `tests/throwIf_function`
 - `engines.mergetree` — `tests/merge.py` is CollapsingMergeTree
 - `engines.mergetree.replication` — `tests/insert.py` (ReplicatedMergeTree and ReplicatedSummingMergeTree)
 - `engines.mergetree.ttl` — `tests/insert.py`
@@ -37,7 +67,8 @@ MinIO, AWS, and Hetzner are run targets of the same S3 tests. `storage.gcs` and 
 
 ## base_58/
 
-- `functions.encoding`
+- `functions.string.base58_encode`
+- `functions.string.base58_decode`
 
 ## key_value/
 
@@ -46,8 +77,11 @@ MinIO, AWS, and Hetzner are run targets of the same S3 tests. `storage.gcs` and 
 ## session_timezone/
 
 - `types.datetime` — `tests/sanity`, `tests/basic`, `tests/clickhouse_local`, `tests/tables_with_date_columns.py`
-- `functions.date_time` — `tests/date_functions.py`
-- `functions.type_conversion` — `toDate`, `toDate32`, `toDateTime`, `toDateTime32`, and `toDateTime64` in `tests/date_functions.py`
+- `functions.type_conversion.to_date` — `tests/date_functions.py`
+- `functions.type_conversion.to_date32` — `tests/date_functions.py`
+- `functions.type_conversion.to_date_time` — `tests/date_functions.py`
+- `functions.type_conversion.to_date_time32` — `tests/date_functions.py`
+- `functions.type_conversion.to_date_time64` — `tests/date_functions.py`
 
 ## settings/
 
@@ -95,7 +129,7 @@ MinIO, AWS, and Hetzner are run targets of the same S3 tests. `storage.gcs` and 
 - `engines.mergetree.projections` — `tests/projections.py`
 - `engines.view` — normal views in `tests/views.py`
 - `engines.view.materialized` — materialized views in `tests/views.py`
-- `engines.view.live` — window views in `tests/views.py`. The live view scenario has no child.
+- `engines.view.window` — window views in `tests/views.py`. The live view scenario has no child.
 - `engines.distributed` — `tests/distributed_tables.py`
 - `storage.policy` — `tests/multi_disk.py`, `disk_space.py`, `lack_of_disk_space.py`
 - `storage.disk.encrypted` — `tests/encrypted_disk.py`
@@ -325,7 +359,11 @@ No workflow job starts this directory.
 
 ## aes_encryption/
 
-- `functions.encryption`
+- `functions.encryption.encrypt`
+- `functions.encryption.decrypt`
+- `functions.encryption.try_decrypt`
+- `functions.encryption.aes_encrypt_mysql`
+- `functions.encryption.aes_decrypt_mysql`
 
 ## part_moves_between_shards/
 

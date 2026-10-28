@@ -369,6 +369,17 @@ def get_snapshot_id(
     return snapshot_id
 
 
+def versioned_snapshot(fallback):
+    """Use snapshots regenerated for result changes that landed in 26.10.
+
+    Servers older than 26.10 keep `fallback`. Pass None when that snapshot
+    has no version postfix.
+    """
+    if check_clickhouse_version(">=26.10")(current()):
+        return ">=26.10"
+    return fallback
+
+
 def compare_json_values(current, expected):
     """Compare only the value of jsons from a snapshot."""
     current_list = current.strip().split("\n")
