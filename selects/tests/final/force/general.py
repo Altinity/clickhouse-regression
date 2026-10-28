@@ -492,6 +492,7 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
             ):
                 with When("I execute query with FINAL modifier specified explicitly"):
                     explicit_final = node.query(
+                        "SELECT * FROM ("
                         f"SELECT id, count(*) FROM {table1.name}"
                         f"{' FINAL' if table1.final_modifier_available else ''} "
                         f" GROUP BY id"
@@ -499,27 +500,29 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                         f" SELECT id, count(*) FROM {table2.name}"
                         f"{' FINAL' if table2.final_modifier_available else ''} "
                         f" GROUP BY id"
-                        f" ORDER BY tuple(*)"
+                        ") AS result ORDER BY tuple(*)"
                     ).output.strip()
 
                 with And("I execute the same query without FINAL modifier"):
                     without_final = node.query(
+                        "SELECT * FROM ("
                         f"SELECT id, count(*) FROM {table1.name}"
                         f" GROUP BY id"
                         f" {clause}"
                         f" SELECT id, count(*) FROM {table2.name}"
                         f" GROUP BY id"
-                        f" ORDER BY tuple(*)"
+                        ") AS result ORDER BY tuple(*)"
                     ).output.strip()
 
                 with And(
                     "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
                 ):
                     force_select_final = node.query(
+                        "SELECT * FROM ("
                         f"SELECT id, count(*) FROM {table1.name} GROUP BY id"
                         f" {clause}"
                         f" SELECT id, count(*) FROM {table2.name} GROUP BY id"
-                        f" ORDER BY tuple(*)",
+                        ") AS result ORDER BY tuple(*)",
                         settings=[("final", 1)],
                     ).output.strip()
 
