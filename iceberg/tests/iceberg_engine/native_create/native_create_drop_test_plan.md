@@ -48,7 +48,9 @@ iceberg/tests/iceberg_engine/native_create/
 ```
 
 `feature.py` follows `export_partition/feature.py`: it sets `self.context.catalog`
-to each of `("rest", "glue")` and loads every module under a `Feature(f"{mode} catalog")`.
+to `rest`, to `unity` when the build supports Unity v2, and to `glue` when
+LocalStack credentials are available. It loads every module under a
+`Feature(f"{mode} catalog")`.
 It is loaded directly from `iceberg/regression.py` (like `deletion_vectors`), not
 from `iceberg_engine/feature.py`, because it owns its own catalog loop.
 
@@ -61,6 +63,9 @@ Catalog modes:
   through `iceberg_engine.create_experimental_iceberg_database`.
 * `glue` — LocalStack Glue. Never reports a base location and is pinned to S3, so it
   is the clean place for `storage_endpoint` derivation and backend-mismatch scenarios.
+* `unity` — the writable OSS Unity Catalog Iceberg REST endpoint. PyIceberg writes
+  through `/api/2.1/unity-catalog/iceberg-rest`; ClickHouse connects to the native
+  `/api/2.1/unity-catalog` endpoint with `use_unity_catalog_v2=1`.
 * The Apache `iceberg-rest-fixture` on `rest:8181` is used only inside `metadata.py`
   for Spark interoperability (the Spark container's `demo` catalog points at it), via
   the `catalog_database` step pattern from `deletion_vectors/steps/common.py`.
@@ -89,7 +94,7 @@ one `Check` per combination. `RQ` names omit the `RQ.Iceberg.NativeCreateDrop.` 
 | 6 | Drop keeps data by default: object inventory identical before and after; PyIceberg no longer lists the table | S | Drop, Drop.KeepData |
 | 7 | Drop with purge: zero objects under the table prefix | S | Drop.Purge |
 | 8 | Drop a table created by PyIceberg, through a fresh database that never read it | S | Drop |
-| 9 | Unsupported catalog type rejects both statements (`catalog_type = 'unity'` if the build can create it, else skip with reason) | S | SupportedCatalogs |
+| 9 | Unsupported catalog type rejects both statements (`catalog_type = 'hive'` if the build can create it, else skip with reason) | S | SupportedCatalogs |
 
 ### 3.2 `datatypes.py` (extend existing)
 
@@ -215,9 +220,10 @@ one `Check` per combination. `RQ` names omit the `RQ.Iceberg.NativeCreateDrop.` 
 
 `iceberg/tests/steps/iceberg_engine.py`
 
-* `create_experimental_iceberg_database_with_rest_catalog` and `..._with_glue_catalog`:
-  new optional kwargs `default_base_location`, `storage_uri_style`, and the ability to
-  pass `storage_endpoint=None` to omit the setting.
+* `create_experimental_iceberg_database_with_rest_catalog`,
+  `..._with_glue_catalog`, and `..._with_unity_catalog`: optional kwargs
+  `default_base_location`, `storage_uri_style`, and the ability to pass
+  `storage_endpoint=None` to omit the setting.
 
 `iceberg/tests/iceberg_engine/native_create/steps.py`
 

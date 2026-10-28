@@ -38,7 +38,7 @@ from iceberg.tests.export_partition.steps.verification import (
 
 REPLICATED_CLUSTER = "replicated_cluster"
 
-CATALOG_MODES_FOR_REPLICAS = ("ice", "glue")
+CATALOG_MODES_FOR_REPLICAS = ("ice", "glue", "unity")
 
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
