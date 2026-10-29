@@ -576,6 +576,24 @@ ffails = {
             check_if_antalya_build(test) and check_clickhouse_version(">=26.6")(test)
         ),
     ),
+    "/iceberg/deletion vectors/metadata requests": (
+        Skip,
+        "Reusing the Puffin object metadata across deletion-vector reads was "
+        "introduced in Antalya 26.6.8.20002 (Altinity/ClickHouse#2419)",
+        lambda test: not (
+            check_if_antalya_build(test)
+            and check_clickhouse_version(">=26.6.8.20002")(test)
+        ),
+    ),
+    "/iceberg/delta deletion vectors/metadata requests": (
+        Skip,
+        "Reusing the Puffin object metadata across deletion-vector reads was "
+        "introduced in Antalya 26.6.8.20002 (Altinity/ClickHouse#2419)",
+        lambda test: not (
+            check_if_antalya_build(test)
+            and check_clickhouse_version(">=26.6.8.20002")(test)
+        ),
+    ),
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",
