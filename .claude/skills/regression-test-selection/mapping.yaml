@@ -1767,7 +1767,7 @@ suites:
       - id: functions.date_time.to_yyyymm
         scenarios:
           - /datetime64 extended range/date time funcs/to yyyymm
-      - id: functions.date_time.to_yyyymmd_dhhmmss
+      - id: functions.date_time.to_yyyymmdd_hhmmss
         scenarios:
           - /datetime64 extended range/date time funcs/to yyyymmddhhmmss
       - id: functions.date_time.to_yyyymmdd
@@ -1779,7 +1779,7 @@ suites:
       - id: functions.date_time.yesterday
         scenarios:
           - /datetime64 extended range/date time funcs/yesterday
-      - id: functions.ip.to_string
+      - id: functions.type_conversion.to_string
         scenarios:
           - /datetime64 extended range/type conversion/to string
       - id: functions.type_conversion.from_unix_timestamp64_micro

@@ -3600,7 +3600,7 @@ features:
           - src/Functions/toYYYYMM.cpp
           - src/Functions/FunctionDateOrDateTimeToSomething.h
 
-      - id: functions.date_time.to_yyyymmd_dhhmmss
+      - id: functions.date_time.to_yyyymmdd_hhmmss
         description: toYYYYMMDDhhmmss.
         sources:
           - src/Functions/toYYYYMMDDhhmmss.cpp
@@ -3634,12 +3634,12 @@ features:
         sources:
           - src/Functions/yesterday.cpp
 
-      - id: functions.date_time.yyyymmd_dhhmmss_to_date_time
+      - id: functions.date_time.yyyymmdd_hhmmss_to_date_time
         description: YYYYMMDDhhmmssToDateTime.
         sources:
           - src/Functions/makeDate.cpp
 
-      - id: functions.date_time.yyyymmd_dhhmmss_to_date_time64
+      - id: functions.date_time.yyyymmdd_hhmmss_to_date_time64
         description: YYYYMMDDhhmmssToDateTime64.
         sources:
           - src/Functions/makeDate.cpp
@@ -5060,11 +5060,6 @@ features:
 
       - id: functions.ip.to_i_pv6_or_zero
         description: toIPv6OrZero.
-        sources:
-          - src/Functions/FunctionsConversion_reg.cpp
-
-      - id: functions.ip.to_string
-        description: toString.
         sources:
           - src/Functions/FunctionsConversion_reg.cpp
 
@@ -9298,6 +9293,11 @@ features:
         sources:
           - src/Functions/toLowCardinality.cpp
 
+      - id: functions.type_conversion.to_string
+        description: toString.
+        sources:
+          - src/Functions/FunctionsConversion_reg.cpp
+
       - id: functions.type_conversion.to_string_cut_to_zero
         description: toStringCutToZero.
         sources:
@@ -9799,7 +9799,7 @@ features:
         sources:
           - src/Functions/dateTimeToSnowflakeID.cpp
 
-      - id: functions.uuid.date_time_to_uui_dv7
+      - id: functions.uuid.date_time_to_uuidv7
         description: dateTimeToUUIDv7.
         sources:
           - src/Functions/dateTimeToUUIDv7.cpp
@@ -9818,7 +9818,7 @@ features:
           - src/Functions/FunctionsRandom.h
           - src/Functions/VectorExtension.h
 
-      - id: functions.uuid.generate_uui_dv4
+      - id: functions.uuid.generate_uuidv4
         description: generateUUIDv4.
         sources:
           - src/Functions/generateUUIDv4.cpp
@@ -9826,7 +9826,7 @@ features:
           - src/Functions/FunctionsRandom.h
           - src/Functions/VectorExtension.h
 
-      - id: functions.uuid.generate_uui_dv7
+      - id: functions.uuid.generate_uuidv7
         description: generateUUIDv7.
         sources:
           - src/Functions/generateUUIDv7.cpp
@@ -9876,7 +9876,7 @@ features:
         sources:
           - src/Functions/FunctionsConversion_reg.cpp
 
-      - id: functions.uuid.uui_dv7_to_date_time
+      - id: functions.uuid.uuidv7_to_date_time
         description: UUIDv7ToDateTime.
         sources:
           - src/Functions/FunctionsCodingUUID.cpp
@@ -12536,8 +12536,6 @@ features:
           - src/Core/ExternalResultDescription.cpp
           - src/Core/ExternalResultDescription.h
           - src/Storages/StoragePostgreSQL.h
-          - src/Storages/ReadFinalForExternalReplicaStorage.cpp
-          - src/Storages/ReadFinalForExternalReplicaStorage.h
           - src/Storages/StorageWithCommonVirtualColumns.cpp
           - src/Storages/StorageWithCommonVirtualColumns.h
           - src/Storages/transformQueryForExternalDatabase.cpp
@@ -14498,10 +14496,6 @@ features:
           - src/Processors/Formats/RowInputFormatWithNamesAndTypes.h
           - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.cpp
           - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.h
-          - src/Processors/Formats/RowInputFormatWithNamesAndTypes.cpp
-          - src/Processors/Formats/RowInputFormatWithNamesAndTypes.h
-          - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.cpp
-          - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.h
 
       - id: formats.settings
         description: Settings shared by input and output formats.
@@ -14549,10 +14543,6 @@ features:
           - src/Processors/Formats/PullingOutputFormat.h
           - src/Processors/Formats/OutputFormatWithUTF8ValidationAdaptor.h
           - src/Processors/Formats/RowOutputFormatWithExceptionHandlerAdaptor.h
-          - src/Processors/Formats/RowInputFormatWithNamesAndTypes.cpp
-          - src/Processors/Formats/RowInputFormatWithNamesAndTypes.h
-          - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.cpp
-          - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.h
           - src/Processors/Formats/RowInputFormatWithNamesAndTypes.cpp
           - src/Processors/Formats/RowInputFormatWithNamesAndTypes.h
           - src/Processors/Formats/RowInputFormatWithDiagnosticInfo.cpp
@@ -14723,6 +14713,8 @@ features:
           - src/DataTypes/dataTypeToAST.h
           - src/DataTypes/tests/gtest_dataTypeToAST.cpp
           - src/Databases/PostgreSQL/DatabaseMaterializedPostgreSQL.h
+          - src/Storages/ReadFinalForExternalReplicaStorage.cpp
+          - src/Storages/ReadFinalForExternalReplicaStorage.h
           - src/Databases/IDatabase.cpp
           - src/Databases/IDatabase.h
           - src/Databases/DatabasesCommon.cpp
