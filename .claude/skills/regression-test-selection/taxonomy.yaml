@@ -1349,7 +1349,10 @@ features:
         description: Deciding parallel-replica reads.
         sources:
           - src/Planner/findParallelReplicasQuery.cpp
-          - src/Processors/QueryPlan/ReadFromParallelReplicasStep.cpp
+          - src/Processors/QueryPlan/ReadFromLocalReplica.cpp
+          - src/Processors/QueryPlan/ReadFromLocalReplica.h
+          - src/Processors/QueryPlan/ParallelReplicasLocalPlan.cpp
+          - src/Processors/QueryPlan/ParallelReplicasLocalPlan.h
           - src/Core/ParallelReplicasMode.h
           - src/Interpreters/getCustomKeyFilterForParallelReplicas.cpp
           - src/Interpreters/getCustomKeyFilterForParallelReplicas.h
@@ -1512,7 +1515,6 @@ features:
         description: Join algorithms at runtime.
         sources:
           - src/Interpreters/HashJoin/
-          - src/Interpreters/Join.cpp
           - src/Core/Joins.cpp
           - src/Core/Joins.h
           - src/Core/SortCursor.cpp
@@ -6589,24 +6591,6 @@ features:
         description: transform.
         sources:
           - src/Functions/transform.cpp
-
-      - id: functions.other.uniq_theta_intersect
-        description: uniqThetaIntersect.
-        sources:
-          - src/Functions/UniqTheta/FunctionsUniqTheta.cpp
-          - src/Functions/UniqTheta/FunctionsUniqTheta.h
-
-      - id: functions.other.uniq_theta_not
-        description: uniqThetaNot.
-        sources:
-          - src/Functions/UniqTheta/FunctionsUniqTheta.cpp
-          - src/Functions/UniqTheta/FunctionsUniqTheta.h
-
-      - id: functions.other.uniq_theta_union
-        description: uniqThetaUnion.
-        sources:
-          - src/Functions/UniqTheta/FunctionsUniqTheta.cpp
-          - src/Functions/UniqTheta/FunctionsUniqTheta.h
 
       - id: functions.other.uptime
         description: uptime.
@@ -12932,7 +12916,6 @@ features:
         sources:
           - src/Disks/DiskObjectStorage/RegisterDiskObjectStorage.cpp
           - src/Disks/DiskObjectStorage/DiskObjectStorage.cpp
-          - src/Disks/DiskObjectStorage/MetadataStorageFromDisk.cpp
           - src/Disks/DiskObjectStorage/DiskObjectStorage.h
           - src/Disks/IDisk.cpp
           - src/Disks/IDisk.h
@@ -13283,9 +13266,8 @@ features:
           - src/Disks/tests/gtest_metadata_local_disk.cpp
 
       - id: storage.metadata.keeper
-        description: Metadata stored in Keeper.
+        description: Metadata stored in Keeper. The layout now lives under content-addressed storage.
         sources:
-          - src/Disks/DiskObjectStorage/MetadataStorages/Keeper/
           - src/Disks/DiskObjectStorage/MetadataStorages/IMetadataOperation.h
           - src/Disks/DiskObjectStorage/MetadataStorages/IMetadataStorage.h
           - src/Disks/DiskObjectStorage/MetadataStorages/InMemoryRemovalQueue.cpp
@@ -14947,9 +14929,10 @@ features:
           - src/Storages/DataDestinationType.h
 
       - id: ddl.attach
-        description: ATTACH and DETACH.
+        description: ATTACH and DETACH. The statement is implemented in the CREATE interpreter.
         sources:
-          - src/Interpreters/InterpreterAttachQuery.cpp
+          - src/Interpreters/InterpreterCreateQuery.cpp
+          - src/Interpreters/InterpreterCreateQuery.h
           - src/Databases/LoadingStrictnessLevel.cpp
           - src/Databases/LoadingStrictnessLevel.h
 
@@ -15270,7 +15253,8 @@ features:
         description: Replicated merges.
         sources:
           - src/Storages/MergeTree/ReplicatedMergeMutateTaskBase.cpp
-          - src/Storages/MergeTree/ReplicatedMergeTreeMergePredicate.cpp
+          - src/Storages/MergeTree/Compaction/MergePredicates/ReplicatedMergeTreeMergePredicate.cpp
+          - src/Storages/MergeTree/Compaction/MergePredicates/ReplicatedMergeTreeMergePredicate.h
           - src/Storages/MergeTree/ReplicatedMergeTreeMergeStrategyPicker.cpp
           - src/Storages/MergeTree/ReplicatedMergeMutateTaskBase.h
           - src/Storages/MergeTree/ReplicatedMergeTreeMergeStrategyPicker.h
@@ -15328,7 +15312,8 @@ features:
           - src/Storages/MergeTree/ReplicatedMergeTreeTableMetadata.cpp
           - src/Storages/MergeTree/ReplicatedMergeTreePartHeader.cpp
           - src/Storages/MergeTree/ReplicatedMergeTreeAddress.cpp
-          - src/Storages/MergeTree/ReplicatedMergeTreePartsCollector.cpp
+          - src/Storages/MergeTree/Compaction/PartsCollectors/ReplicatedMergeTreePartsCollector.cpp
+          - src/Storages/MergeTree/Compaction/PartsCollectors/ReplicatedMergeTreePartsCollector.h
           - src/Storages/MergeTree/ReplicatedMergeTreeTableMetadata.h
           - src/Storages/MergeTree/ReplicatedMergeTreePartHeader.h
           - src/Storages/MergeTree/ReplicatedMergeTreeAddress.h
@@ -15376,8 +15361,6 @@ features:
           - src/Parsers/Access/ParserMoveAccessEntityQuery.h
           - src/Parsers/Access/parseAccessEntityName.cpp
           - src/Parsers/Access/parseAccessEntityName.h
-          - src/Parsers/Access/ParserAttachAccessEntity.cpp
-          - src/Parsers/Access/ParserAttachAccessEntity.h
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.cpp
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.h
           - src/Parsers/Access/ParserShowAccessEntitiesQuery.cpp
@@ -15444,8 +15427,6 @@ features:
           - src/Parsers/Access/ParserMoveAccessEntityQuery.h
           - src/Parsers/Access/parseAccessEntityName.cpp
           - src/Parsers/Access/parseAccessEntityName.h
-          - src/Parsers/Access/ParserAttachAccessEntity.cpp
-          - src/Parsers/Access/ParserAttachAccessEntity.h
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.cpp
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.h
           - src/Parsers/Access/ParserShowAccessEntitiesQuery.cpp
@@ -15565,8 +15546,6 @@ features:
           - src/Parsers/Access/ParserMoveAccessEntityQuery.h
           - src/Parsers/Access/parseAccessEntityName.cpp
           - src/Parsers/Access/parseAccessEntityName.h
-          - src/Parsers/Access/ParserAttachAccessEntity.cpp
-          - src/Parsers/Access/ParserAttachAccessEntity.h
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.cpp
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.h
           - src/Parsers/Access/ParserShowAccessEntitiesQuery.cpp
@@ -15625,8 +15604,6 @@ features:
           - src/Parsers/Access/ParserMoveAccessEntityQuery.h
           - src/Parsers/Access/parseAccessEntityName.cpp
           - src/Parsers/Access/parseAccessEntityName.h
-          - src/Parsers/Access/ParserAttachAccessEntity.cpp
-          - src/Parsers/Access/ParserAttachAccessEntity.h
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.cpp
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.h
           - src/Parsers/Access/ParserShowAccessEntitiesQuery.cpp
@@ -15689,8 +15666,6 @@ features:
           - src/Parsers/Access/ParserMoveAccessEntityQuery.h
           - src/Parsers/Access/parseAccessEntityName.cpp
           - src/Parsers/Access/parseAccessEntityName.h
-          - src/Parsers/Access/ParserAttachAccessEntity.cpp
-          - src/Parsers/Access/ParserAttachAccessEntity.h
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.cpp
           - src/Parsers/Access/ASTShowAccessEntitiesQuery.h
           - src/Parsers/Access/ParserShowAccessEntitiesQuery.cpp
