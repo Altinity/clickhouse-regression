@@ -19,7 +19,7 @@ ffails = {}
 
 
 @TestModule
-@Name("iceberg")
+@Name("json data type")
 @FFails(ffails)
 @XFails(xfails)
 @ArgumentParser(argparser)
@@ -32,7 +32,7 @@ def regression(
     stress=None,
     with_analyzer=False,
 ):
-    """Run tests for Iceberg tables."""
+    """Run tests for the JSON data type."""
     nodes = {
         "clickhouse": (
             "clickhouse1",

@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from ssl_keeper.helpers.cluster import Cluster
-from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import (
     check_clickhouse_version,
     check_is_fips_clickhouse_build,
@@ -31,6 +31,17 @@ xfails = {
 }
 xflags = {}
 
+def argparser(parser):
+    """Default arguments, plus a way to mark a package as FIPS when the version string does not say so."""
+    argparser_base(parser)
+    parser.add_argument(
+        "--force-fips",
+        action="store_true",
+        help="treat the provided ClickHouse binary as a FIPS build even if fips is not in the version",
+        default=False,
+    )
+
+
 ffails = {
     ":/fips 140-3/doc config": (
         Skip,
@@ -51,6 +62,7 @@ def regression(
     self,
     cluster_args,
     clickhouse_version,
+    force_fips=False,
     stress=None,
     with_analyzer=False,
 ):
@@ -88,9 +100,17 @@ def regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        version_str = clickhouse_version or ""
+        fips_build = (
+            force_fips
+            or "fips" in version_str.lower()
+            or check_is_fips_clickhouse_build(self)
+        )
+
         Feature(run=load("ssl_keeper.tests.sanity", "feature"))
         # Feature(run=load("ssl_keeper.tests.fips_ssl", "feature"))
-        Feature(run=load("ssl_keeper.tests.fips_ssl_140_3", "feature"))
+        if fips_build:
+            Feature(run=load("ssl_keeper.tests.fips_ssl_140_3", "feature"))
 
 
 if main():
