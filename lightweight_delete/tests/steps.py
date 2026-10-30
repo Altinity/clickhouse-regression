@@ -705,6 +705,7 @@ def insert(
     settings=[],
     node=None,
     table_engine=None,
+    timeout=None,
 ):
     """Insert data having specified number of partitions and parts."""
     if node is None:
@@ -734,10 +735,15 @@ def insert(
                 for y in range(block_size * parts_per_partition)
             )
 
+    query_kwargs = {}
+    if timeout is not None:
+        query_kwargs["timeout"] = timeout
+
     return node.query(
         f"INSERT INTO {table_name} VALUES {values}",
         settings=[("max_block_size", block_size)] + settings,
         no_checks=no_checks,
+        **query_kwargs,
     )
 
 
