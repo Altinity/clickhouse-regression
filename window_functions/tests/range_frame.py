@@ -1,4 +1,5 @@
 from testflows.core import *
+from helpers.common import check_clickhouse_version
 
 from window_functions.requirements import *
 from window_functions.tests.common import *
@@ -1670,8 +1671,11 @@ def order_by_decimal(self):
 @TestScenario
 def order_by_float(self):
     """Check using range with order by float column."""
+    # ClickHouse #124175 (26.10) treats NaN as its own RANGE peer group,
+    # matching PostgreSQL. Before that the frame resolved to +inf.
+    nan_id = "9" if check_clickhouse_version(">=26.10")(self) else "8"
     expected = convert_output(
-        """
+        f"""
      id | f_float4  | first_value | last_value
     ----+-----------+-------------+------------
       0 |      -inf |           0 |          0
@@ -1683,7 +1687,7 @@ def order_by_float(self):
       6 |         2 |           4 |          6
       7 |       100 |           7 |          7
       8 |       inf |           8 |          8
-      9 |       nan |           8 |          8
+      9 |       nan |           {nan_id} |          {nan_id}
     """
     )
 
