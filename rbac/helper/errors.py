@@ -193,6 +193,14 @@ def not_enough_privileges(name):
     return (241, f"Exception: {name}: Not enough privileges.")
 
 
+def nothing_to_kill():
+    """Empty local KILL MUTATION. Server code 785, client exit 17.
+
+    kill_throw_if_noop defaults to true since 26.11 (ClickHouse #125968).
+    """
+    return (17, "Exception: No mutation to kill")
+
+
 def cannot_parse_string_as_float(string):
     if check_clickhouse_version("<26.7")(current()):
         return (6, f"Exception: Cannot parse string '{string}' as Float64")

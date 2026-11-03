@@ -39,9 +39,15 @@ def no_privilege(self, node=None):
                         node.query(
                             f"GRANT SELECT ON system.mutations TO {user_name}",
                         )
+                    # No mutation exists. Since 26.11 an empty local KILL reports that.
+                    exitcode, message = None, None
+                    if check_clickhouse_version(">=26.11")(self):
+                        exitcode, message = errors.nothing_to_kill()
                     node.query(
                         f"KILL MUTATION WHERE database = 'default' AND table = '{table_name}'",
                         settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
                     )
 
     with Scenario("kill mutation on cluster"):

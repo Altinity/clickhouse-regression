@@ -1100,9 +1100,10 @@ def table_function_with_source_grant(self):
                 denied=False,
             )
 
-    # id IN file(path, format, structure) is accepted with the source grants and
-    # then cannot finish: the stored predicate calls the scalar file() function.
-    # Keep it on its own table and do not wait for it.
+    # id IN file(path, format, structure) is not an access denial. The scalar
+    # file() either rejects the ALTER or stores a mutation that cannot finish.
+    # Kill whatever was stored, and tolerate an empty match once
+    # kill_throw_if_noop defaults to true (26.11, ClickHouse #125968).
     with mutation_fixture(self) as names:
         with When("file() with its source grants is not an access denial"):
             grant(node, "READ ON FILE", names["user"])
@@ -1114,8 +1115,12 @@ def table_function_with_source_grant(self):
                 f"file('mutation_read_access_no_such.tsv', 'TSV', 'id UInt32') AND 0 "
                 f"SETTINGS validate_mutation_query = 0, mutations_sync = 0",
             )
+            kill_settings = None
+            if check_clickhouse_version(">=26.11")(self):
+                kill_settings = [("kill_throw_if_noop", 0)]
             node.query(
-                f"KILL MUTATION WHERE database = 'default' AND table = '{names['tab']}' SYNC"
+                f"KILL MUTATION WHERE database = 'default' AND table = '{names['tab']}' SYNC",
+                settings=kill_settings,
             )
 
 
@@ -1166,18 +1171,25 @@ def kill_mutation_does_not_require_select(self):
     """KILL MUTATION needs the mutation privilege, not SELECT on the predicate it kills."""
     node = self.context.node
     with mutation_fixture(self) as names:
-        node.query(
-            f"ALTER TABLE {names['tab']} UPDATE name = name WHERE hidden = 7 "
-            f"SETTINGS mutations_sync = 0"
-        )
-        if check_clickhouse_version(">=24.4")(self):
-            grant(node, "SELECT ON system.mutations", names["user"])
-        run_as_user(
-            node,
-            names["user"],
-            f"KILL MUTATION WHERE database = 'default' AND table = '{names['tab']}' AND is_done = 0",
-            denied=False,
-        )
+        # A two-row update finishes before KILL, and is_done = 0 then matches
+        # nothing. Since 26.11 that empty match throws before the ALTER privilege
+        # check. Hold the mutation unfinished so the kill still runs that check.
+        node.query(f"SYSTEM STOP MERGES {names['tab']}")
+        try:
+            node.query(
+                f"ALTER TABLE {names['tab']} UPDATE name = toString(id) WHERE hidden = 7 "
+                f"SETTINGS mutations_sync = 0"
+            )
+            if check_clickhouse_version(">=24.4")(self):
+                grant(node, "SELECT ON system.mutations", names["user"])
+            run_as_user(
+                node,
+                names["user"],
+                f"KILL MUTATION WHERE database = 'default' AND table = '{names['tab']}' AND is_done = 0",
+                denied=False,
+            )
+        finally:
+            node.query(f"SYSTEM START MERGES {names['tab']}")
 
 
 @TestFeature
