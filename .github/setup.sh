@@ -110,7 +110,7 @@ case "$artifacts" in
     aws_endpoint_args=""
     ;;
   builds)
-    artifact_s3_bucket_path="altinity-build-artifacts"
+    artifact_s3_bucket_path="${S3_ARTIFACT_BUCKET:-altinity-build-artifacts}"
     confidential=""
     if [[ $event_name == "pull_request" ]]; then
       artifact_s3_dir="PRs/$pr_number/$build_sha/regression"
