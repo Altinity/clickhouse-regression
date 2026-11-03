@@ -30,6 +30,75 @@ def forgot_quotes():
         )
 
 
+def _signature_exception(function, detail):
+    """26.11 exception text, including ``DB::Exception:``.
+
+    ``Node.query`` treats a message without ``Exception:`` as a successful
+    result and fails when the server output still contains an exception.
+    """
+    if function.endswith("_mysql"):
+        arguments = (
+            "const mode StringOrFixedString, input StringOrFixedString, "
+            "key StringOrFixedString, [IV StringOrFixedString]"
+        )
+    else:
+        arguments = (
+            "const mode StringOrFixedString, input StringOrFixedString, "
+            "key StringOrFixedString, [IV StringOrFixedString], "
+            "[AAD StringOrFixedString]"
+        )
+    return (
+        f"DB::Exception: Arguments of function {function} do not match its signature "
+        f"(({arguments}) -> String): {detail}"
+    )
+
+
+def argument_count_error(function, count, before_24_7, since_24_7):
+    """Exception text for an encrypt or decrypt call with the wrong arity.
+
+    ClickHouse 26.11 matches arguments against a declarative signature and
+    reports ``too few arguments (N)`` or ``too many arguments (N)``.
+    """
+    if check_clickhouse_version(">=26.11")(current()):
+        if count < 3:
+            detail = f"too few arguments ({count}), must be at least 3"
+        else:
+            detail = f"too many arguments ({count})"
+        return _signature_exception(function, detail)
+    if check_clickhouse_version("<24.7")(current()):
+        return before_24_7
+    return since_24_7
+
+
+def argument_type_error(
+    function,
+    ordinal,
+    name,
+    before_24_7,
+    since_24_7,
+    got_type=None,
+    since_24_7_before_26_8=None,
+):
+    """Exception text when an encrypt or decrypt argument has the wrong type.
+
+    ``ordinal`` is the 26.11 signature position (``1st``, ``2nd``, ...).
+    ``since_24_7_before_26_8`` is the 24.7 through 26.7 text, where optional
+    arguments were numbered one place earlier.
+    """
+    if check_clickhouse_version(">=26.11")(current()):
+        detail = f"value provided as {ordinal} argument '{name}'"
+        if got_type is not None:
+            detail += f" has type {got_type} that is not StringOrFixedString"
+        return _signature_exception(function, detail)
+    if check_clickhouse_version("<24.7")(current()):
+        return before_24_7
+    if since_24_7_before_26_8 is not None and check_clickhouse_version("<26.8")(
+        current()
+    ):
+        return since_24_7_before_26_8
+    return since_24_7
+
+
 def decrypt_final_failed():
     test = current()
 

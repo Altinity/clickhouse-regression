@@ -47,23 +47,24 @@ def invalid_parameters(self):
     we call it with invalid parameters.
     """
     with Example("no parameters"):
-        if check_clickhouse_version("<24.7")(self):
-            encrypt(
-                exitcode=42,
-                message="DB::Exception: Incorrect number of arguments for function encrypt provided 0, expected 3 to 5",
-            )
-        else:
-            encrypt(
-                exitcode=42,
-                message="DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 0 arguments",
-            )
+        encrypt(
+            exitcode=42,
+            message=errors.argument_count_error(
+                "encrypt",
+                0,
+                "DB::Exception: Incorrect number of arguments for function encrypt provided 0, expected 3 to 5",
+                "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 0 arguments",
+            ),
+        )
 
     with Example("missing key and mode"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function encrypt provided 1"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 1 argument"
+        message = errors.argument_count_error(
+            "encrypt",
+            1,
+            "DB::Exception: Incorrect number of arguments for function encrypt provided 1",
+            "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 1 argument",
+        )
         encrypt(
             plaintext="'hello there'",
             exitcode=exitcode,
@@ -72,10 +73,12 @@ def invalid_parameters(self):
 
     with Example("missing mode"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function encrypt provided 2"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 2 arguments"
+        message = errors.argument_count_error(
+            "encrypt",
+            2,
+            "DB::Exception: Incorrect number of arguments for function encrypt provided 2",
+            "DB::Exception: An incorrect number of arguments was specified for function 'encrypt'. Expected 3 mandatory arguments and 2 optional arguments, got 2 arguments",
+        )
         encrypt(
             plaintext="'hello there'",
             key="'123'",
@@ -85,10 +88,14 @@ def invalid_parameters(self):
 
     with Example("bad key type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3"
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'encrypt'. Expected: encryption key binary string, got: UInt8"
+        message = errors.argument_type_error(
+            "encrypt",
+            "3rd",
+            "key",
+            "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3",
+            "DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'encrypt'. Expected: encryption key binary string, got: UInt8",
+            got_type="UInt8",
+        )
         encrypt(
             plaintext="'hello there'",
             key="123",
@@ -109,10 +116,14 @@ def invalid_parameters(self):
 
     with Example("bad mode type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Illegal type of argument #1 'mode'"
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'encrypt'. Expected: encryption mode string, got: UInt8"
+        message = errors.argument_type_error(
+            "encrypt",
+            "1st",
+            "mode",
+            "DB::Exception: Illegal type of argument #1 'mode'",
+            "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'encrypt'. Expected: encryption mode string, got: UInt8",
+            got_type="UInt8",
+        )
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
@@ -123,12 +134,15 @@ def invalid_parameters(self):
 
     with Example("bad iv type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Illegal type of argument"
-        elif check_clickhouse_version("<26.8")(self):
-            message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'encrypt'. Expected: Initialization vector binary string, got: UInt8"
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 4th argument 'IV' to function 'encrypt'. Expected: Initialization vector binary string, got: UInt8"
+        message = errors.argument_type_error(
+            "encrypt",
+            "4th",
+            "IV",
+            "DB::Exception: Illegal type of argument",
+            "DB::Exception: A value of illegal type was provided as 4th argument 'IV' to function 'encrypt'. Expected: Initialization vector binary string, got: UInt8",
+            got_type="UInt8",
+            since_24_7_before_26_8="DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'encrypt'. Expected: Initialization vector binary string, got: UInt8",
+        )
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
@@ -140,12 +154,15 @@ def invalid_parameters(self):
 
     with Example("bad aad type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Illegal type of argument"
-        elif check_clickhouse_version("<26.8")(self):
-            message = "DB::Exception: A value of illegal type was provided as 4th argument 'AAD' to function 'encrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8"
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 5th argument 'AAD' to function 'encrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8"
+        message = errors.argument_type_error(
+            "encrypt",
+            "5th",
+            "AAD",
+            "DB::Exception: Illegal type of argument",
+            "DB::Exception: A value of illegal type was provided as 5th argument 'AAD' to function 'encrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8",
+            got_type="UInt8",
+            since_24_7_before_26_8="DB::Exception: A value of illegal type was provided as 4th argument 'AAD' to function 'encrypt'. Expected: Additional authenticated data binary string for GCM mode, got: UInt8",
+        )
         encrypt(
             plaintext="'hello there'",
             key="'0123456789123456'",
@@ -330,10 +347,13 @@ def invalid_plaintext_data_type(self, data_type, value):
         description=f"{data_type} with value {value}",
     ):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Illegal type of argument"
-        else:
-            message = f"DB::Exception: A value of illegal type was provided as 2nd argument 'input' to function 'encrypt'."
+        message = errors.argument_type_error(
+            "encrypt",
+            "2nd",
+            "input",
+            "DB::Exception: Illegal type of argument",
+            "DB::Exception: A value of illegal type was provided as 2nd argument 'input' to function 'encrypt'.",
+        )
         encrypt(
             plaintext=value,
             key="'0123456789123456'",

@@ -138,10 +138,12 @@ def invalid_parameters(self):
 
     with Example("no parameters"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 0, expected 3 to 4"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
+        message = errors.argument_count_error(
+            "aes_decrypt_mysql",
+            0,
+            "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 0, expected 3 to 4",
+            "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'.",
+        )
         aes_decrypt_mysql(
             exitcode=exitcode,
             message=message,
@@ -149,10 +151,12 @@ def invalid_parameters(self):
 
     with Example("missing key and mode"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 1"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
+        message = errors.argument_count_error(
+            "aes_decrypt_mysql",
+            1,
+            "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 1",
+            "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'.",
+        )
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             exitcode=exitcode,
@@ -161,10 +165,12 @@ def invalid_parameters(self):
 
     with Example("missing mode"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 2"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
+        message = errors.argument_count_error(
+            "aes_decrypt_mysql",
+            2,
+            "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 2",
+            "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'.",
+        )
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'123'",
@@ -174,10 +180,14 @@ def invalid_parameters(self):
 
     with Example("bad key type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3"
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'aes_decrypt_mysql'."
+        message = errors.argument_type_error(
+            "aes_decrypt_mysql",
+            "3rd",
+            "key",
+            "DB::Exception: Received from localhost:9000. DB::Exception: Illegal type of argument #3",
+            "DB::Exception: A value of illegal type was provided as 3rd argument 'key' to function 'aes_decrypt_mysql'.",
+            got_type="UInt8",
+        )
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="123",
@@ -198,10 +208,14 @@ def invalid_parameters(self):
 
     with Example("bad mode type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Illegal type of argument #1 'mode'"
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'aes_decrypt_mysql'."
+        message = errors.argument_type_error(
+            "aes_decrypt_mysql",
+            "1st",
+            "mode",
+            "DB::Exception: Illegal type of argument #1 'mode'",
+            "DB::Exception: A value of illegal type was provided as 1st argument 'mode' to function 'aes_decrypt_mysql'.",
+            got_type="UInt8",
+        )
 
         aes_decrypt_mysql(
             ciphertext=ciphertext,
@@ -213,12 +227,15 @@ def invalid_parameters(self):
 
     with Example("bad iv type - UInt8"):
         exitcode = 43
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Illegal type of argument"
-        elif check_clickhouse_version("<26.8")(self):
-            message = "DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'aes_decrypt_mysql'."
-        else:
-            message = "DB::Exception: A value of illegal type was provided as 4th argument 'IV' to function 'aes_decrypt_mysql'."
+        message = errors.argument_type_error(
+            "aes_decrypt_mysql",
+            "4th",
+            "IV",
+            "DB::Exception: Illegal type of argument",
+            "DB::Exception: A value of illegal type was provided as 4th argument 'IV' to function 'aes_decrypt_mysql'.",
+            got_type="UInt8",
+            since_24_7_before_26_8="DB::Exception: A value of illegal type was provided as 3th argument 'IV' to function 'aes_decrypt_mysql'.",
+        )
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
@@ -264,10 +281,12 @@ def invalid_parameters(self):
 
     with Example("aad passed by mistake"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
+        message = errors.argument_count_error(
+            "aes_decrypt_mysql",
+            5,
+            "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5",
+            "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'.",
+        )
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
@@ -280,10 +299,12 @@ def invalid_parameters(self):
 
     with Example("aad passed by mistake type - UInt8"):
         exitcode = 42
-        if check_clickhouse_version("<24.7")(self):
-            message = "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5"
-        else:
-            message = "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'."
+        message = errors.argument_count_error(
+            "aes_decrypt_mysql",
+            5,
+            "DB::Exception: Incorrect number of arguments for function aes_decrypt_mysql provided 5",
+            "DB::Exception: An incorrect number of arguments was specified for function 'aes_decrypt_mysql'.",
+        )
         aes_decrypt_mysql(
             ciphertext=ciphertext,
             key="'0123456789123456'",
