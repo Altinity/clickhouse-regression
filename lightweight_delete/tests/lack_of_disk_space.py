@@ -82,12 +82,16 @@ def lack_of_disk_space(self, node=None):
                 if r.exitcode != 0:
                     i = 100
                 else:
+                    # aarch64 needs about 15 minutes before ClickHouse returns
+                    # NOT_ENOUGH_SPACE. The CI shell stops at 10 minutes while
+                    # that client is still writing.
                     r = insert(
                         table_name=table_name,
                         partitions=1,
                         parts_per_partition=1,
                         block_size=1450000,
                         no_checks=True,
+                        timeout=1800,
                     )
                     if r.exitcode != 0:
                         i = 100

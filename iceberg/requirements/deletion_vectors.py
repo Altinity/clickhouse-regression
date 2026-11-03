@@ -1938,6 +1938,54 @@ RQ_Iceberg_DeletionVectors_Cache_RevalidationNotBypassed = Requirement(
     num="12.12",
 )
 
+RQ_Iceberg_DeletionVectors_Cache_MetadataRequestReuse = Requirement(
+    name="RQ.Iceberg.DeletionVectors.Cache.MetadataRequestReuse",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "To build the cache key, [ClickHouse] fetches the metadata of the object holding a deletion\n"
+        "vector (an S3 `HEAD` request) for its etag before looking the vector up in the cache. On a\n"
+        "cache miss, [ClickHouse] SHALL reuse that metadata for every read that loads the vector — the\n"
+        "blob read and, for a `Puffin` file, the footer read — instead of requesting it again. A cold\n"
+        "load SHALL therefore issue no more object metadata requests than a warm cache hit of the same\n"
+        "vectors.\n"
+        "\n"
+        "On storage that provides etags, the `S3HeadObject` profile event of a query SHALL be the same\n"
+        "whether its deletion vectors are:\n"
+        "\n"
+        "* served from the cache (warm);\n"
+        "* loaded on a cache miss (cold);\n"
+        "* loaded with `use_puffin_files_cache = 0`.\n"
+        "\n"
+        "This SHALL hold for a single vector, for several vectors sharing one `Puffin` file, for vectors\n"
+        "in separate `Puffin` files, and for Delta `.bin` containers.\n"
+        "\n"
+        "For example, with the Iceberg metadata already cached:\n"
+        "\n"
+        "```sql\n"
+        "SELECT sum(id) FROM iceberg_table SETTINGS log_comment = 'warm';\n"
+        "SYSTEM DROP PUFFIN FILES CACHE;\n"
+        "SELECT sum(id) FROM iceberg_table SETTINGS log_comment = 'cold';\n"
+        "\n"
+        "SELECT log_comment, ProfileEvents['S3HeadObject']\n"
+        "FROM system.query_log\n"
+        "WHERE type = 'QueryFinish' AND log_comment IN ('warm', 'cold');\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "warm  N\n"
+        "cold  N\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.13",
+)
+
 RQ_Iceberg_DeletionVectors_ParquetVariety = Requirement(
     name="RQ.Iceberg.DeletionVectors.ParquetVariety",
     version="1.0",
@@ -2252,6 +2300,11 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
             level=2,
             num="12.12",
         ),
+        Heading(
+            name="RQ.Iceberg.DeletionVectors.Cache.MetadataRequestReuse",
+            level=2,
+            num="12.13",
+        ),
         Heading(name="Combinatorial Coverage", level=1, num="13"),
         Heading(name="RQ.Iceberg.DeletionVectors.ParquetVariety", level=2, num="13.1"),
     ),
@@ -2322,6 +2375,7 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
         RQ_Iceberg_DeletionVectors_Cache_EntryIsolation,
         RQ_Iceberg_DeletionVectors_Cache_SnapshotScopedEntries,
         RQ_Iceberg_DeletionVectors_Cache_RevalidationNotBypassed,
+        RQ_Iceberg_DeletionVectors_Cache_MetadataRequestReuse,
         RQ_Iceberg_DeletionVectors_ParquetVariety,
     ),
     content=r"""
@@ -2409,6 +2463,7 @@ SRS_048_ClickHouse_Iceberg_v3_Deletion_Vectors_Read_Support = Specification(
     * 12.10 [RQ.Iceberg.DeletionVectors.Cache.EntryIsolation](#rqicebergdeletionvectorscacheentryisolation)
     * 12.11 [RQ.Iceberg.DeletionVectors.Cache.SnapshotScopedEntries](#rqicebergdeletionvectorscachesnapshotscopedentries)
     * 12.12 [RQ.Iceberg.DeletionVectors.Cache.RevalidationNotBypassed](#rqicebergdeletionvectorscacherevalidationnotbypassed)
+    * 12.13 [RQ.Iceberg.DeletionVectors.Cache.MetadataRequestReuse](#rqicebergdeletionvectorscachemetadatarequestreuse)
 * 13 [Combinatorial Coverage](#combinatorial-coverage)
     * 13.1 [RQ.Iceberg.DeletionVectors.ParquetVariety](#rqicebergdeletionvectorsparquetvariety)
 
@@ -3733,6 +3788,43 @@ SELECT count() FROM iceberg_table;
 
 ```text
 DB::Exception: ... does not match expected cardinality ... (BAD_ARGUMENTS)
+```
+
+### RQ.Iceberg.DeletionVectors.Cache.MetadataRequestReuse
+version: 1.0
+
+To build the cache key, [ClickHouse] fetches the metadata of the object holding a deletion
+vector (an S3 `HEAD` request) for its etag before looking the vector up in the cache. On a
+cache miss, [ClickHouse] SHALL reuse that metadata for every read that loads the vector — the
+blob read and, for a `Puffin` file, the footer read — instead of requesting it again. A cold
+load SHALL therefore issue no more object metadata requests than a warm cache hit of the same
+vectors.
+
+On storage that provides etags, the `S3HeadObject` profile event of a query SHALL be the same
+whether its deletion vectors are:
+
+* served from the cache (warm);
+* loaded on a cache miss (cold);
+* loaded with `use_puffin_files_cache = 0`.
+
+This SHALL hold for a single vector, for several vectors sharing one `Puffin` file, for vectors
+in separate `Puffin` files, and for Delta `.bin` containers.
+
+For example, with the Iceberg metadata already cached:
+
+```sql
+SELECT sum(id) FROM iceberg_table SETTINGS log_comment = 'warm';
+SYSTEM DROP PUFFIN FILES CACHE;
+SELECT sum(id) FROM iceberg_table SETTINGS log_comment = 'cold';
+
+SELECT log_comment, ProfileEvents['S3HeadObject']
+FROM system.query_log
+WHERE type = 'QueryFinish' AND log_comment IN ('warm', 'cold');
+```
+
+```text
+warm  N
+cold  N
 ```
 
 ## Combinatorial Coverage

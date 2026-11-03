@@ -82,6 +82,7 @@
     * 12.10 [RQ.Iceberg.DeletionVectors.Cache.EntryIsolation](#rqicebergdeletionvectorscacheentryisolation)
     * 12.11 [RQ.Iceberg.DeletionVectors.Cache.SnapshotScopedEntries](#rqicebergdeletionvectorscachesnapshotscopedentries)
     * 12.12 [RQ.Iceberg.DeletionVectors.Cache.RevalidationNotBypassed](#rqicebergdeletionvectorscacherevalidationnotbypassed)
+    * 12.13 [RQ.Iceberg.DeletionVectors.Cache.MetadataRequestReuse](#rqicebergdeletionvectorscachemetadatarequestreuse)
 * 13 [Combinatorial Coverage](#combinatorial-coverage)
     * 13.1 [RQ.Iceberg.DeletionVectors.ParquetVariety](#rqicebergdeletionvectorsparquetvariety)
 
@@ -1406,6 +1407,43 @@ SELECT count() FROM iceberg_table;
 
 ```text
 DB::Exception: ... does not match expected cardinality ... (BAD_ARGUMENTS)
+```
+
+### RQ.Iceberg.DeletionVectors.Cache.MetadataRequestReuse
+version: 1.0
+
+To build the cache key, [ClickHouse] fetches the metadata of the object holding a deletion
+vector (an S3 `HEAD` request) for its etag before looking the vector up in the cache. On a
+cache miss, [ClickHouse] SHALL reuse that metadata for every read that loads the vector — the
+blob read and, for a `Puffin` file, the footer read — instead of requesting it again. A cold
+load SHALL therefore issue no more object metadata requests than a warm cache hit of the same
+vectors.
+
+On storage that provides etags, the `S3HeadObject` profile event of a query SHALL be the same
+whether its deletion vectors are:
+
+* served from the cache (warm);
+* loaded on a cache miss (cold);
+* loaded with `use_puffin_files_cache = 0`.
+
+This SHALL hold for a single vector, for several vectors sharing one `Puffin` file, for vectors
+in separate `Puffin` files, and for Delta `.bin` containers.
+
+For example, with the Iceberg metadata already cached:
+
+```sql
+SELECT sum(id) FROM iceberg_table SETTINGS log_comment = 'warm';
+SYSTEM DROP PUFFIN FILES CACHE;
+SELECT sum(id) FROM iceberg_table SETTINGS log_comment = 'cold';
+
+SELECT log_comment, ProfileEvents['S3HeadObject']
+FROM system.query_log
+WHERE type = 'QueryFinish' AND log_comment IN ('warm', 'cold');
+```
+
+```text
+warm  N
+cold  N
 ```
 
 ## Combinatorial Coverage

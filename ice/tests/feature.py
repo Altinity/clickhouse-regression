@@ -9,7 +9,7 @@ def feature(self, minio_root_user, minio_root_password):
     #     test=load("ice.tests.ice_export_sanity", "test_basic_datatypes_export"),
     # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
-        test=load("ice.tests.ice_export_part", "test_basic_datatypes_export"),
+        test=load("ice.tests.ice_export_part_sanity", "test_basic_datatypes_export"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     # Feature(
     #     test=load(

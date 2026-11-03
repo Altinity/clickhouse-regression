@@ -69,6 +69,7 @@ WHOLESALE_MODULES = (
     "coexistence",
     "count_paths",
     "distributed",
+    "metadata_requests",
 )
 
 # Class C: the container seam itself. Only this feature runs them.

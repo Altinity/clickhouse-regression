@@ -10,7 +10,7 @@ description: >-
 
 Report which regression tests to run for a change. Do not start CI.
 
-Read [taxonomy.yaml](taxonomy.yaml) before you choose a feature. Read [mapping.md](mapping.md) before you name a test.
+Read [taxonomy.yaml](taxonomy.yaml) before you choose a feature. Read [mapping.yaml](mapping.yaml) before you name a test.
 
 ## Get the change
 
@@ -41,18 +41,18 @@ When a child wins, report that child and its parent. When only the parent matche
 
 - When several features list the same file, select every one of them.
 - A docs-only, changelog-only, or comment-only change selects nothing.
-- A match that stops at the parent has no child. Look up that parent id in mapping.md. When no directory lists it, record the gap.
+- A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
 - `--with-analyzer` and `--use-keeper` are run flags. Do not treat either flag as a feature.
-- `storage.cas` and `storage.disk.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.md. Copy the flag with the path. Do not add soak, Jepsen, or alter stress.
+- `storage.cas` and `storage.disk.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.yaml. Copy the flag with the path. Do not add soak, Jepsen, or alter stress.
 
 ## Map features to tests
 
-mapping.md groups tests by directory. Under each directory, a bullet names a child feature from taxonomy.yaml and the file or flag in that directory that exercises it.
+mapping.yaml has one entry per directory that contains `regression.py`. `path` is the suite CI runs. `features` lists taxonomy ids. `scenarios` are the TestFlows paths that exercise that id. An entry with no `scenarios` names a flag in its description. `ci: manual` means an automatic selection must not run that suite.
 
-Find every directory that lists a chosen feature. When the bullet names a file with a flag, include that file with that flag. Leave out a neighboring directory that does not list the feature.
+Find every suite whose features list a chosen id. Run the scenarios under that id. When the entry has no scenarios, run the suite with the flag named in the description. Leave out a neighboring suite that does not list the feature.
 
-Put a path marked "not started" or "not in the default CI split" under "Not part of the default run".
+Put a path the notes call not started under "Not part of the default run". A feature described as only on a FIPS package goes there too, unless the package under test is a FIPS build.
 
 ## Report
 

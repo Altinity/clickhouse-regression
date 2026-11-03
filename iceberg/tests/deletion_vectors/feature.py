@@ -47,6 +47,7 @@ MODULES = (
     "file_corruption",
     "distributed",
     "cache",
+    "metadata_requests",
 )
 
 
