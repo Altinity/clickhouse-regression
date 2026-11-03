@@ -380,6 +380,18 @@ def versioned_snapshot(fallback):
     return fallback
 
 
+def nan_preserving_snapshot(fallback):
+    """Snapshots for ClickHouse #123931.
+
+    Variance and meanZTest / studentTTest p-values keep NaN instead of
+    clamping it to 0. That build is 26.11.1.1146. Head 26.11.1.876 still
+    clamps, so these snapshots stay off a plain >=26.11 check.
+    """
+    if check_clickhouse_version(">=26.11.1.1146")(current()):
+        return ">=26.11.1.1146"
+    return fallback
+
+
 def compare_json_values(current, expected):
     """Compare only the value of jsons from a snapshot."""
     current_list = current.strip().split("\n")
