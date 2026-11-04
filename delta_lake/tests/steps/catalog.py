@@ -1,9 +1,11 @@
 """TestFlows steps for Delta tables in the suite Unity Catalog.
 
 Create steps yield the object they made and remove it in a Finally block
-when the scenario ends. MinIO credentials default to
-``context.minio_root_user`` and ``context.minio_root_password``.
+when the scenario ends. RustFS credentials default to
+``context.rustfs_access_key`` and ``context.rustfs_secret_key``.
 """
+
+import json
 
 import boto3
 import pandas as pd
@@ -18,7 +20,7 @@ UC_URL = "http://localhost:8085/api/2.1/unity-catalog"
 UC_CATALOG = "unity"
 UC_ENDPOINT = "http://unity-catalog:8080/api/2.1/unity-catalog"
 S3_ENDPOINT = "http://localhost:9002"
-STORAGE_ENDPOINT = "http://minio:9000/warehouse"
+STORAGE_ENDPOINT = "http://rustfs:9000/warehouse"
 BUCKET = "warehouse"
 
 
@@ -44,23 +46,40 @@ class DeltaTable:
 
     @property
     def http_url(self):
-        """Table URL on the MinIO service. ClickHouse uses this, not localhost."""
+        """Table URL on the RustFS service. ClickHouse uses this, not localhost."""
         return f"{STORAGE_ENDPOINT}/{self.prefix}/"
 
 
-def column(name, type_name, type_text, delta_type):
+def column(
+    name,
+    type_name,
+    type_text,
+    delta_type,
+    nullable=True,
+    precision=0,
+    scale=0,
+    type_json=None,
+):
     """Describe one Unity column.
 
     ``type_name`` is the Unity type (``STRING``, ``LONG``). ``type_text``
     is the SQL name (``string``, ``bigint``). ``delta_type`` is the type
-    stored in ``type_json`` (``string``, ``long``).
+    stored in ``type_json`` (``string``, ``long``, or a nested type object).
+    ``nullable`` is copied into ``type_json``. Pass ``type_json`` only when
+    the catalog name must differ from the log type.
     """
-    return {
+    spec = {
         "name": name,
         "type_name": type_name,
         "type_text": type_text,
         "delta_type": delta_type,
+        "nullable": nullable,
+        "precision": precision,
+        "scale": scale,
     }
+    if type_json is not None:
+        spec["type_json"] = type_json
+    return spec
 
 
 def _node(self, node):
@@ -69,27 +88,35 @@ def _node(self, node):
 
 def _credentials(self, access_key, secret_key):
     if access_key is None:
-        access_key = self.context.minio_root_user
+        access_key = self.context.rustfs_access_key
     if secret_key is None:
-        secret_key = self.context.minio_root_password
+        secret_key = self.context.rustfs_secret_key
     return access_key, secret_key
 
 
+def _type_json(spec):
+    if spec.get("type_json"):
+        return spec["type_json"]
+    payload = {
+        "name": spec["name"],
+        "type": spec["delta_type"],
+        "nullable": spec.get("nullable", True),
+        "metadata": {},
+    }
+    return json.dumps(payload, separators=(",", ":"))
+
+
 def _unity_column(spec, position):
-    name = spec["name"]
-    delta_type = spec["delta_type"]
+    nullable = spec.get("nullable", True)
     return {
-        "name": name,
+        "name": spec["name"],
         "type_text": spec["type_text"],
-        "type_json": (
-            '{"name":"%s","type":"%s","nullable":true,"metadata":{}}'
-            % (name, delta_type)
-        ),
+        "type_json": _type_json(spec),
         "type_name": spec["type_name"],
-        "type_precision": 0,
-        "type_scale": 0,
+        "type_precision": spec.get("precision", 0),
+        "type_scale": spec.get("scale", 0),
         "position": position,
-        "nullable": True,
+        "nullable": nullable,
     }
 
 
@@ -140,9 +167,12 @@ def _delete_prefix(prefix, access_key, secret_key):
             client.delete_objects(Bucket=BUCKET, Delete={"Objects": objects})
 
 
+@TestStep(When)
 def list_keys(self, prefix, access_key=None, secret_key=None):
     """Object keys under a warehouse prefix, in sorted order."""
     access_key, secret_key = _credentials(self, access_key, secret_key)
+    if not prefix.endswith("/"):
+        prefix = f"{prefix}/"
     client = _s3(access_key, secret_key)
     keys = []
     paginator = client.get_paginator("list_objects_v2")
@@ -151,15 +181,27 @@ def list_keys(self, prefix, access_key=None, secret_key=None):
     return sorted(keys)
 
 
+@TestStep(When)
 def put_object(self, key, body, access_key=None, secret_key=None):
     """Upload one object. ``body`` is bytes."""
     access_key, secret_key = _credentials(self, access_key, secret_key)
     _s3(access_key, secret_key).put_object(Bucket=BUCKET, Key=key, Body=body)
 
 
+@TestStep(When)
+def get_object(self, key, access_key=None, secret_key=None):
+    """Download one object. The return value is bytes."""
+    access_key, secret_key = _credentials(self, access_key, secret_key)
+    response = _s3(access_key, secret_key).get_object(Bucket=BUCKET, Key=key)
+    return response["Body"].read()
+
+
+@TestStep(When)
 def delete_prefix(self, prefix, access_key=None, secret_key=None):
     """Delete every object under a warehouse prefix."""
     access_key, secret_key = _credentials(self, access_key, secret_key)
+    if not prefix.endswith("/"):
+        prefix = f"{prefix}/"
     _delete_prefix(prefix, access_key, secret_key)
 
 
@@ -171,21 +213,38 @@ def _frame(columns, rows):
     return frame
 
 
-def _write_table(table, columns, rows, access_key, secret_key):
-    write_deltalake(
-        table.location,
-        _frame(columns, rows),
-        mode="overwrite",
-        storage_options={
-            "AWS_ACCESS_KEY_ID": access_key,
-            "AWS_SECRET_ACCESS_KEY": secret_key,
-            "AWS_ENDPOINT_URL": S3_ENDPOINT,
-            "AWS_REGION": "us-east-1",
-            "AWS_ALLOW_HTTP": "true",
-            "AWS_S3_ALLOW_UNSAFE_RENAME": "true",
-            "AWS_EC2_METADATA_DISABLED": "true",
-        },
-    )
+def _storage_options(access_key, secret_key):
+    return {
+        "AWS_ACCESS_KEY_ID": access_key,
+        "AWS_SECRET_ACCESS_KEY": secret_key,
+        "AWS_ENDPOINT_URL": S3_ENDPOINT,
+        "AWS_REGION": "us-east-1",
+        "AWS_ALLOW_HTTP": "true",
+        "AWS_S3_ALLOW_UNSAFE_RENAME": "true",
+        "AWS_EC2_METADATA_DISABLED": "true",
+    }
+
+
+def _write_table(
+    table,
+    columns,
+    rows,
+    access_key,
+    secret_key,
+    data=None,
+    mode="overwrite",
+    schema_mode=None,
+):
+    """Write ``data`` when it is set, otherwise a frame built from ``rows``."""
+    if data is None:
+        data = _frame(columns, rows)
+    kwargs = {
+        "mode": mode,
+        "storage_options": _storage_options(access_key, secret_key),
+    }
+    if schema_mode is not None:
+        kwargs["schema_mode"] = schema_mode
+    write_deltalake(table.location, data, **kwargs)
 
 
 def _register_table(table, columns):
@@ -205,7 +264,10 @@ def _register_table(table, columns):
         },
         timeout=30,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise RuntimeError(
+            f"Unity register failed: {response.status_code} {response.text}"
+        )
 
 
 @TestStep(Given)
@@ -226,21 +288,29 @@ def create_schema(self, name=None):
 def create_delta_table(
     self,
     columns,
-    rows,
+    rows=None,
     namespace=None,
     name=None,
     access_key=None,
     secret_key=None,
     create_schema=True,
     register=True,
+    data=None,
+    mode="overwrite",
+    schema_mode=None,
 ):
     """Write a Delta table. Register it in Unity unless ``register`` is false.
 
     Pass ``namespace`` from ``create_schema`` and ``create_schema=False``
     when several tables share a schema. Otherwise this step creates the
-    schema and drops it with the table. A direct MinIO read passes
+    schema and drops it with the table. A direct RustFS read passes
     ``register=False`` and ``create_schema=False``.
+
+    ``rows`` builds a pandas frame. ``data`` is a pyarrow table and keeps
+    the Arrow types in the Delta log. Pass one of the two.
     """
+    if data is None and rows is None:
+        raise ValueError("pass rows or data")
     access_key, secret_key = _credentials(self, access_key, secret_key)
     if namespace is None:
         namespace = f"dl_{getuid()}"
@@ -251,7 +321,16 @@ def create_delta_table(
     try:
         if create_schema:
             _create_schema(namespace)
-        _write_table(table, columns, rows, access_key, secret_key)
+        _write_table(
+            table,
+            columns,
+            rows,
+            access_key,
+            secret_key,
+            data=data,
+            mode=mode,
+            schema_mode=schema_mode,
+        )
         if register:
             _register_table(table, columns)
         yield table
@@ -264,6 +343,41 @@ def create_delta_table(
         if create_schema:
             with Finally(f"drop schema {namespace}"):
                 _drop_schema(namespace)
+
+
+@TestStep(Given)
+def register_delta_table(self, table, columns):
+    """Register an existing Delta path in Unity. Drop the catalog entry later."""
+    try:
+        _register_table(table, columns)
+        yield table
+    finally:
+        with Finally(f"drop table {table.namespace}.{table.name}"):
+            _drop_table(table.namespace, table.name)
+
+
+@TestStep(When)
+def commit_delta_table(
+    self,
+    table,
+    data,
+    mode="append",
+    schema_mode=None,
+    access_key=None,
+    secret_key=None,
+):
+    """Write another commit to a table ``create_delta_table`` already created."""
+    access_key, secret_key = _credentials(self, access_key, secret_key)
+    _write_table(
+        table,
+        columns=None,
+        rows=None,
+        access_key=access_key,
+        secret_key=secret_key,
+        data=data,
+        mode=mode,
+        schema_mode=schema_mode,
+    )
 
 
 @TestStep(Given)
