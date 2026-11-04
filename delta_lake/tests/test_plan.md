@@ -3,7 +3,7 @@
 Specification: `delta_lake/requirements/requirements.md` (SRS-050).
 Package: `delta_lake.tests`.
 
-The cluster is one ClickHouse node, MinIO, and the OSS Unity Catalog image
+The cluster is one ClickHouse node, RustFS, and the OSS Unity Catalog image
 `unitycatalog/unitycatalog:v0.7.0`. `delta_lake/tests/steps.py` writes a table
 with the `deltalake` package, registers it as an external `DELTA` table, and
 opens that catalog with `vended_credentials = false`. `sanity.py` already
@@ -26,7 +26,7 @@ without the v2 setting is the older Delta catalog. Only the v2 flag needs 26.10.
 ```
 delta_lake/tests/
     sanity.py     already written; keep it as the smoke test
-    access.py     table function and table engine on the MinIO path
+    access.py     table function and table engine on the RustFS path
     schema.py     type mapping, including the Unity varchar name
     snapshot.py   overwrite, append, empty table, column projection
     unity.py      catalog statements on the sanity table (backticks, SHOW, bad key)
@@ -40,7 +40,7 @@ path.
 ### 1.1 `access.py`
 
 `deltalake` writes the table. These scenarios do not create a Unity database.
-ClickHouse reaches MinIO at `http://minio:9000/warehouse/...` with the suite
+ClickHouse reaches RustFS at `http://rustfs:9000/warehouse/...` with the suite
 keys. The host-side writer uses `http://localhost:9002`.
 
 | # | Scenario | Assert | RQ |
