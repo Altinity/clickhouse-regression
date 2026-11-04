@@ -1372,11 +1372,15 @@ iceberg_metadata_log_level = r"""'{"default":"none"}'"""
 
 iceberg_metadata_staleness_ms = r"""'{"default":"0"}'"""
 
+iceberg_min_data_file_size_bytes = r"""'{"default":"402653184"}'"""
+
 iceberg_orphan_files_older_than_seconds = r"""'{"default":"259200"}'"""
 
 iceberg_partition_timezone = r"""'{"default":""}'"""
 
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
+
+iceberg_target_data_file_size_bytes = r"""'{"default":"536870912"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
 
