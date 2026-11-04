@@ -8,6 +8,159 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Replay = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Replay',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL build a snapshot by replaying commits in ascending version order. A checkpoint MAY stand in for the commits up to and including its version. The checkpoint SHALL NOT be newer than the version being read.\n'
+        '\n'
+        'The latest `protocol` action wins. The latest `metaData` action wins and replaces the metadata that came before it. Live data is the `add` actions that remain after [action reconciliation](https://github.com/delta-io/delta/blob/master/PROTOCOL.md#action-reconciliation). A `remove` tombstone SHALL contribute no rows. The same logical file, identified by `(path, deletion vector)`, SHALL NOT be both live and removed in one snapshot.\n'
+        '\n'
+        '`commitInfo` and `txn` actions SHALL NOT change the rows of a `SELECT`. [ClickHouse] SHALL ignore a `domainMetadata` action it does not understand and still return the table rows.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.1'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Paths = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Paths',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL URI-decode `add.path` and `remove.path`. A relative path is relative to the table root. An absolute path SHALL be read as that URI.\n'
+        '\n'
+        'Partition values SHALL come from `partitionValues` on the `add` action. Directory names such as `date=2017-12-10/` SHALL NOT override the log.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.2'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Format = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Format',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL read a table whose `metaData.format.provider` is `parquet`. Any other provider SHALL fail the query. [ClickHouse] SHALL NOT scan those files as Parquet.\n'
+        '\n'
+        'Data files MAY use Data page V1 or Data page V2. [ClickHouse] SHALL return the same rows for both. The table property `delta.parquet.format.version` is a writer hint and SHALL NOT change which pages a read accepts.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.3'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_DataChange = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.DataChange',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'A commit whose `add` and `remove` actions set `dataChange` to `false` only rearranges rows that are already in the table, or replaces statistics. A `SELECT` of the latest snapshot after that commit SHALL return the same logical rows as the snapshot before it.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.4'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_UnknownFields = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.UnknownFields',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'Inside a reader protocol version [ClickHouse] implements, an unrecognized JSON field on a known action SHALL be ignored. The rows SHALL still match the snapshot.\n'
+        '\n'
+        'An unknown action name SHALL be ignored when the protocol version does not require it. A name listed in `readerFeatures` is not an unknown field. See [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Version](#rqsrs-050clickhousedeltalakeprotocolversion).\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.5'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Version = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Version',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL enforce `minReaderVersion` and `readerFeatures` before it returns rows.\n'
+        '\n'
+        '| Reader version | What the read must honor |\n'
+        '|---|---|\n'
+        '| 1 | The baseline log, schema, and `add` / `remove` actions |\n'
+        '| 2 | Column mapping, as in [RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping](#rqsrs-050clickhousedeltalakereadcolumnmapping) |\n'
+        "| 3 | Every name in `readerFeatures`. The table's writer version is 7 |\n"
+        '\n'
+        'A `minReaderVersion` above 3 SHALL fail the query. A name in `readerFeatures` that this specification does not require [ClickHouse] to apply SHALL fail the query. The failure is [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature). `vacuumProtocolCheck` is not such a name. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.VacuumProtocolCheck](#rqsrs-050clickhousedeltalakereadvacuumprotocolcheck).\n'
+        '\n'
+        'Before an `INSERT`, [ClickHouse] SHALL also enforce `minWriterVersion` and every name in `writerFeatures`. A writer protocol it cannot honor SHALL fail the insert. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol](#rqsrs-050clickhousedeltalakewriteswriterprotocol).\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.6'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_CatalogManaged = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.CatalogManaged',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'When `catalogManaged` is in `readerFeatures`, the catalog is the source of truth for which commits are ratified. [ClickHouse] SHALL NOT build that snapshot by listing `_delta_log` alone. A file under `_delta_log/_staged_commits` SHALL NOT count as a commit unless the catalog has ratified it. A published log file newer than the latest ratified version SHALL be ignored.\n'
+        '\n'
+        '[ClickHouse] does not implement this commit protocol. The read SHALL fail closed, as in [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature). An external Delta table registered in Unity with an ordinary `_delta_log`, and no `catalogManaged` feature, stays on [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Replay](#rqsrs-050clickhousedeltalakeprotocolreplay).\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.7'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Statistics = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Statistics',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '`stats` on an `add` action are optional. [ClickHouse] MAY skip a file whose min and max exclude a filter. It SHALL NOT skip a file that contains a matching row. A file with no `stats` SHALL remain a candidate for that filter.\n'
+        '\n'
+        'Partition columns are not skipped from these stats. Their values come from `partitionValues`. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning](#rqsrs-050clickhousedeltalakereadpartitionpruning).\n'
+        '\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='3.8'
+)
+
 RQ_SRS_050_ClickHouse_DeltaLake_Access_TableFunction = Requirement(
     name='RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction',
     version='1.0',
@@ -29,7 +182,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Access_TableFunction = Requirement(
     ),
     link=None,
     level=3,
-    num='3.1.1'
+    num='4.1.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Access_TableFunction_Backends = Requirement(
@@ -63,12 +216,12 @@ RQ_SRS_050_ClickHouse_DeltaLake_Access_TableFunction_Backends = Requirement(
         '\n'
         "`deltaLakeLocal` SHALL read a table from a path on the server's local disk. ClickHouse Cloud does not provide this function.\n"
         '\n'
-        'Data files in a snapshot MAY use the Parquet codecs the Delta protocol requires readers to accept: uncompressed, `snappy`, `gzip`, `lz4`, `lz4_raw`, and `zstd`. [ClickHouse] SHALL return the same rows for each of those codecs.\n'
+        'Data files in a snapshot MAY use the Parquet codecs the Delta protocol requires readers to accept: uncompressed, `snappy`, `gzip`, `lz4`, `lz4_raw`, and `zstd`. [ClickHouse] SHALL return the same rows for each of those codecs. A mix of those codecs in one table SHALL still return every live row.\n'
         '\n'
     ),
     link=None,
     level=3,
-    num='3.1.2'
+    num='4.1.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Access_Cluster = Requirement(
@@ -96,7 +249,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Access_Cluster = Requirement(
     ),
     link=None,
     level=3,
-    num='3.2.1'
+    num='4.2.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Access_Engine = Requirement(
@@ -124,7 +277,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Access_Engine = Requirement(
     ),
     link=None,
     level=3,
-    num='3.3.1'
+    num='4.3.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Access_NamedCollection = Requirement(
@@ -152,7 +305,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Access_NamedCollection = Requirement(
     ),
     link=None,
     level=3,
-    num='3.3.2'
+    num='4.3.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Access_Credentials = Requirement(
@@ -171,7 +324,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Access_Credentials = Requirement(
     ),
     link=None,
     level=3,
-    num='3.3.3'
+    num='4.3.3'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Create_AttachExisting = Requirement(
@@ -189,7 +342,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Create_AttachExisting = Requirement(
     ),
     link=None,
     level=2,
-    num='4.1'
+    num='5.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Create_NewTable = Requirement(
@@ -218,7 +371,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Create_NewTable = Requirement(
     ),
     link=None,
     level=2,
-    num='4.2'
+    num='5.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Create_NoPartition = Requirement(
@@ -248,7 +401,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Create_NoPartition = Requirement(
     ),
     link=None,
     level=2,
-    num='4.3'
+    num='5.3'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Create_RegisterInUnity = Requirement(
@@ -277,7 +430,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Create_RegisterInUnity = Requirement(
     ),
     link=None,
     level=2,
-    num='4.4'
+    num='5.4'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_PrimitiveTypes = Requirement(
@@ -312,7 +465,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_PrimitiveTypes = Requirement(
     ),
     link=None,
     level=2,
-    num='5.1'
+    num='6.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_Decimal = Requirement(
@@ -328,7 +481,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_Decimal = Requirement(
     ),
     link=None,
     level=2,
-    num='5.2'
+    num='6.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_Varchar = Requirement(
@@ -344,7 +497,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_Varchar = Requirement(
     ),
     link=None,
     level=2,
-    num='5.3'
+    num='6.3'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_Nested = Requirement(
@@ -368,7 +521,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_Nested = Requirement(
     ),
     link=None,
     level=2,
-    num='5.4'
+    num='6.4'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_Nulls = Requirement(
@@ -384,7 +537,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_Nulls = Requirement(
     ),
     link=None,
     level=2,
-    num='5.5'
+    num='6.5'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_Void = Requirement(
@@ -397,10 +550,12 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_Void = Requirement(
     description=(
         'A top-level `void` column SHALL be read as an all-`NULL` column. The data file does not store that column. [ClickHouse] SHALL still list it in the schema of the snapshot.\n'
         '\n'
+        'An `INSERT` SHALL fail when the table schema has a `void` type inside an array or a map, a struct whose fields are all `void`, or only `void` columns. The failed insert SHALL NOT write a data file.\n'
+        '\n'
     ),
     link=None,
     level=2,
-    num='5.6'
+    num='6.6'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_PartitionColumns = Requirement(
@@ -427,7 +582,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_PartitionColumns = Requirement(
     ),
     link=None,
     level=2,
-    num='5.7'
+    num='6.7'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Schema_Unsupported = Requirement(
@@ -444,7 +599,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Schema_Unsupported = Requirement(
     ),
     link=None,
     level=2,
-    num='5.8'
+    num='6.8'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_Snapshot = Requirement(
@@ -464,7 +619,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_Snapshot = Requirement(
     ),
     link=None,
     level=2,
-    num='6.1'
+    num='7.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_Projection = Requirement(
@@ -480,7 +635,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_Projection = Requirement(
     ),
     link=None,
     level=2,
-    num='6.2'
+    num='7.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_Kernel = Requirement(
@@ -500,7 +655,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_Kernel = Requirement(
     ),
     link=None,
     level=2,
-    num='6.3'
+    num='7.3'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_PartitionPruning = Requirement(
@@ -526,7 +681,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_PartitionPruning = Requirement(
     ),
     link=None,
     level=2,
-    num='6.4'
+    num='7.4'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaEvolution = Requirement(
@@ -537,7 +692,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaEvolution = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL read a table whose schema changed across commits, using the schema of the snapshot being scanned. This requires the [Delta Kernel](#delta-kernel).\n'
+        '[ClickHouse] SHALL read a table whose schema changed across commits, using the schema of the snapshot being scanned. Each `metaData` action replaces the metadata of the previous snapshot. This requires the [Delta Kernel](#delta-kernel).\n'
         '\n'
         '* A column added in a later commit SHALL appear in a read of the latest snapshot. Rows from files written before that commit SHALL return `NULL` for the new column when the column is nullable.\n'
         '* A column removed in a later commit SHALL be absent from a read of the latest snapshot.\n'
@@ -549,7 +704,25 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaEvolution = Requirement(
     ),
     link=None,
     level=2,
-    num='6.5'
+    num='7.5'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Read_TypeWidening = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Read.TypeWidening',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'When `typeWidening` is in `readerFeatures`, [ClickHouse] SHALL read a value written before a supported type change as the current, wider type. It SHALL check every type change recorded in `delta.typeChanges` for the snapshot it is reading.\n'
+        '\n'
+        'A type change [ClickHouse] does not support SHALL fail the query. [ClickHouse] SHALL NOT return the pre-widening type for a row written after the change. When [ClickHouse] does not implement `typeWidening` at all, the query SHALL fail closed under [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature).\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='7.6'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaReload = Requirement(
@@ -565,7 +738,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaReload = Requirement(
     ),
     link=None,
     level=2,
-    num='6.6'
+    num='7.7'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_ColumnMapping = Requirement(
@@ -576,16 +749,20 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_ColumnMapping = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL read tables with `delta.columnMapping.mode` set to `none`, `name`, or `id`.\n'
+        '[ClickHouse] SHALL read tables with `delta.columnMapping.mode` set to `none`, `name`, or `id`. The property applies when the reader version is 2, or when the reader version is 3 and `columnMapping` is in `readerFeatures`.\n'
         '\n'
-        '`SELECT` and `DESCRIBE` SHALL use the logical column names from the snapshot schema. Physical Parquet names, including `col-<id>` and the UUID names used by `name` mode, SHALL NOT be the names [ClickHouse] exposes.\n'
+        '`SELECT` and `DESCRIBE` SHALL use the logical column names from the snapshot schema. Physical Parquet names SHALL NOT be the names [ClickHouse] exposes.\n'
         '\n'
-        'After a rename in `name` or `id` mode, a query of the latest snapshot SHALL return the column under its new logical name and SHALL return the values written under the old name. Nested struct fields SHALL follow the same mapping.\n'
+        '* In `none` mode, and when the property is absent, [ClickHouse] SHALL read Parquet columns by the logical name.\n'
+        '* In `name` mode, [ClickHouse] SHALL resolve data columns, partition values, and column statistics by `delta.columnMapping.physicalName`. A column missing from a file SHALL be `NULL`.\n'
+        '* In `id` mode, [ClickHouse] SHALL resolve data columns by the Parquet field id `delta.columnMapping.id`. Partition values and column statistics SHALL be resolved by the physical name. A file with no field ids SHALL fail that file or return `NULL` for each column. An id missing from a file SHALL be `NULL`.\n'
+        '\n'
+        'After a rename in `name` or `id` mode, a query of the latest snapshot SHALL return the column under its new logical name and SHALL return the values written under the old name. Nested struct fields, and fields reached through `element`, `key`, or `value`, SHALL follow the same mapping.\n'
         '\n'
     ),
     link=None,
     level=2,
-    num='6.7'
+    num='7.8'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_DeletionVectors = Requirement(
@@ -596,14 +773,16 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_DeletionVectors = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL omit every row whose index is set in the deletion vector of a data file. This applies to a deletion vector stored inline in the log and to a deletion vector stored in a file. A following `count()` SHALL equal the number of live rows in the snapshot.\n'
+        'ClickHouse 26.1 added deletion-vector reads for the `DeltaLake` table engine and for `deltaLakeCluster`. The Cloud release notes for February 2026 list the same change. From 26.1, those entry points SHALL omit every row whose index is set in the deletion vector of a data file. `deltaLake` and a Delta table opened through Unity Catalog SHALL do the same. This holds when `delta.enableDeletionVectors` is absent. A following `count()` SHALL equal the number of live rows in the snapshot. `deltaLakeCluster` SHALL return the same live rows as `deltaLake` for that snapshot.\n'
         '\n'
-        'A file removed by a `remove` action, with or without a deletion vector, SHALL contribute no rows. This has been the read behavior since 26.2.\n'
+        'The `storageType` of the vector SHALL be one of `u` (UUID path under the table), `i` (inline in the log), or `p` (absolute path). Any other `storageType` SHALL fail the query. [ClickHouse] SHALL NOT return the invalidated rows.\n'
+        '\n'
+        'A file removed by a `remove` action, with or without a deletion vector, SHALL contribute no rows.\n'
         '\n'
     ),
     link=None,
     level=2,
-    num='6.8'
+    num='7.9'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_TimeTravel = Requirement(
@@ -628,7 +807,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_TimeTravel = Requirement(
     ),
     link=None,
     level=2,
-    num='6.9'
+    num='7.10'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_ChangeDataFeed = Requirement(
@@ -651,12 +830,18 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_ChangeDataFeed = Requirement(
         '\n'
         'The result SHALL include the table columns and the change columns `_change_type`, `_commit_version`, and `_commit_timestamp`. `_change_type` SHALL use the Delta values `insert`, `delete`, `update_preimage`, and `update_postimage` for the corresponding commits. `_commit_version` SHALL be the commit that produced the change and SHALL lie in the requested range.\n'
         '\n'
+        "For each version in the range, [ClickHouse] SHALL follow the protocol's change-data rule. When that version has `cdc` actions, the change rows SHALL come only from those files, and the `add` and `remove` actions of that version SHALL be skipped. When that version has no `cdc` action, rows in `add` actions SHALL be `insert` and rows in `remove` actions SHALL be `delete`. An `INSERT` that only adds files is this second case. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.ChangeFeed](#rqsrs-050clickhousedeltalakewriteschangefeed).\n"
+        '\n'
+        "When `inCommitTimestamp` is enabled, `_commit_timestamp` SHALL be the `inCommitTimestamp` of that version's `commitInfo`. Otherwise it SHALL be the modification time of that version's log file.\n"
+        '\n'
+        'A `SELECT` that is not a change-data read SHALL ignore a `_change_type` column stored in a data file and absent from the table schema.\n'
+        '\n'
         'Setting only `delta_lake_snapshot_end_version`, and leaving `delta_lake_snapshot_start_version` at `-1`, SHALL fail the query. A range on a table that does not have change data feed enabled SHALL fail the query. [ClickHouse] SHALL NOT return the latest snapshot in either case.\n'
         '\n'
     ),
     link=None,
     level=2,
-    num='6.10'
+    num='7.11'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_Checkpoint = Requirement(
@@ -667,12 +852,18 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_Checkpoint = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL read a snapshot whose actions are summarized in a classic Parquet checkpoint under `_delta_log`. The rows SHALL match the rows of the same snapshot read from the JSON commits alone. A checkpoint that omits a still-active file, or that keeps a file the JSON log has removed, is not a valid checkpoint. This requirement covers a checkpoint an external Delta writer produced.\n'
+        '[ClickHouse] SHALL read a snapshot whose actions are summarized in a classic Parquet checkpoint, `{version}.checkpoint.parquet`, under `_delta_log`. The rows SHALL match the rows of the same snapshot read from the JSON commits alone.\n'
+        '\n'
+        'A multi-part checkpoint, `{version}.checkpoint.{part}.{total}.parquet`, SHALL be used only when every part is present. A missing part SHALL be ignored, and the snapshot SHALL still come from the JSON log and any older complete checkpoint.\n'
+        '\n'
+        '`_delta_log/_last_checkpoint` is a hint. A missing or stale hint SHALL still produce the latest snapshot. A log-compaction file `{start}.{end}.compacted.json` MAY replace the commits in that closed range and SHALL produce the same snapshot as those commits. A missing `{version}.crc` file SHALL NOT fail the read.\n'
+        '\n'
+        'A time-travel read SHALL NOT apply a checkpoint newer than `delta_lake_snapshot_version`. UUID-named v2 checkpoints are [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature) when [ClickHouse] does not implement `v2Checkpoint`.\n'
         '\n'
     ),
     link=None,
     level=2,
-    num='6.11'
+    num='7.12'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_WriterFeatures = Requirement(
@@ -683,14 +874,14 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_WriterFeatures = Requirement(
     type=None,
     uid=None,
     description=(
-        'A writer-only table feature SHALL NOT stop a read of the committed data, and SHALL NOT change the stored values [ClickHouse] returns. The feature names are `appendOnly`, `invariants`, `checkConstraints`, `generatedColumns`, `changeDataFeed`, `identityColumns`, `allowColumnDefaults`, `domainMetadata`, `inCommitTimestamp`, `clustering`, `icebergCompatV1`, `icebergCompatV2`, and `materializePartitionColumns`.\n'
+        'A writer-only table feature SHALL NOT stop a read of the committed data, and SHALL NOT change the stored values [ClickHouse] returns. The feature names are `appendOnly`, `invariants`, `checkConstraints`, `generatedColumns`, `changeDataFeed`, `identityColumns`, `allowColumnDefaults`, `domainMetadata`, `inCommitTimestamp`, `clustering`, `icebergCompatV1`, `icebergCompatV2`, `materializePartitionColumns`, and `rowTracking`.\n'
         '\n'
-        '[ClickHouse] returns the values stored in the data files and the partition values in the log. It does not evaluate generated-column expressions, identity generators, or `CHECK` expressions on read.\n'
+        '[ClickHouse] returns the values stored in the data files and the partition values in the log. It does not evaluate generated-column expressions, identity generators, or `CHECK` expressions on read. Hidden row-tracking columns SHALL NOT appear in the table schema. A `SELECT` of the schema columns SHALL still return the stored rows when row tracking is enabled.\n'
         '\n'
     ),
     link=None,
     level=2,
-    num='6.12'
+    num='7.13'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_UnreadableFeature = Requirement(
@@ -703,12 +894,28 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_UnreadableFeature = Requirement(
     description=(
         'When a snapshot needs a reader feature that [ClickHouse] cannot apply, the query SHALL fail. [ClickHouse] SHALL NOT return rows that ignore that feature. A deletion vector [ClickHouse] cannot decode, and a column-mapping mode other than `none`, `name`, or `id`, are two such cases.\n'
         '\n'
-        'This specification does not require support for the `variant` type, variant shredding, type widening, v2 checkpoints, or the `catalogManaged` commit protocol. A snapshot that needs one of those features for a correct result SHALL fail closed when [ClickHouse] does not implement it. A successful read is valid when the server does implement it.\n'
+        '[ClickHouse] is not required to implement `variant`, variant shredding, `typeWidening`, `v2Checkpoint`, or `catalogManaged`. A snapshot that needs one of those features for a correct result SHALL fail when [ClickHouse] does not implement it. A successful read is valid when the server does implement it. `typeWidening`, when implemented, follows [RQ.SRS-050.ClickHouse.DeltaLake.Read.TypeWidening](#rqsrs-050clickhousedeltalakereadtypewidening). `catalogManaged`, when not implemented, follows [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.CatalogManaged](#rqsrs-050clickhousedeltalakeprotocolcatalogmanaged).\n'
         '\n'
     ),
     link=None,
     level=2,
-    num='6.13'
+    num='7.14'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Read_VacuumProtocolCheck = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Read.VacuumProtocolCheck',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`vacuumProtocolCheck` in `readerFeatures` SHALL NOT change a `SELECT`. The query SHALL return the same rows as a table with the same files and no such feature. [ClickHouse] does not implement `VACUUM`. This requirement is the protocol's reader rule: acknowledge the feature, and leave the scan unchanged.\n"
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='7.15'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_VirtualColumns = Requirement(
@@ -734,7 +941,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_VirtualColumns = Requirement(
     ),
     link=None,
     level=2,
-    num='6.14'
+    num='7.16'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Read_Prewhere = Requirement(
@@ -751,7 +958,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Read_Prewhere = Requirement(
     ),
     link=None,
     level=2,
-    num='6.15'
+    num='7.17'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_Enable = Requirement(
@@ -771,7 +978,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_Enable = Requirement(
     ),
     link=None,
     level=2,
-    num='7.1'
+    num='8.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_CreateDatabase = Requirement(
@@ -800,7 +1007,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_CreateDatabase = Requirement(
     ),
     link=None,
     level=2,
-    num='7.2'
+    num='8.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_DeltaTable = Requirement(
@@ -824,7 +1031,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_DeltaTable = Requirement(
     ),
     link=None,
     level=2,
-    num='7.3'
+    num='8.3'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_V2 = Requirement(
@@ -857,7 +1064,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_V2 = Requirement(
     ),
     link=None,
     level=2,
-    num='7.4'
+    num='8.4'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_Names = Requirement(
@@ -873,7 +1080,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_Names = Requirement(
     ),
     link=None,
     level=2,
-    num='7.5'
+    num='8.5'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_Show = Requirement(
@@ -894,7 +1101,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_Show = Requirement(
     ),
     link=None,
     level=2,
-    num='7.6'
+    num='8.6'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_Credentials = Requirement(
@@ -916,7 +1123,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_Credentials = Requirement(
     ),
     link=None,
     level=2,
-    num='7.7'
+    num='8.7'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_StorageKeys = Requirement(
@@ -947,7 +1154,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_StorageKeys = Requirement(
     ),
     link=None,
     level=2,
-    num='7.8'
+    num='8.8'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_VendedCredentials = Requirement(
@@ -963,7 +1170,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_VendedCredentials = Requirement(
     ),
     link=None,
     level=2,
-    num='7.9'
+    num='8.9'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_ManagedStorage = Requirement(
@@ -981,7 +1188,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_ManagedStorage = Requirement(
     ),
     link=None,
     level=2,
-    num='7.10'
+    num='8.10'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_Check = Requirement(
@@ -1001,7 +1208,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_Check = Requirement(
     ),
     link=None,
     level=2,
-    num='7.11'
+    num='8.11'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_SystemTables = Requirement(
@@ -1017,7 +1224,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_SystemTables = Requirement(
     ),
     link=None,
     level=2,
-    num='7.12'
+    num='8.12'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Unity_Insert = Requirement(
@@ -1034,7 +1241,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Unity_Insert = Requirement(
     ),
     link=None,
     level=2,
-    num='7.13'
+    num='8.13'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_Setting = Requirement(
@@ -1056,7 +1263,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_Setting = Requirement(
     ),
     link=None,
     level=2,
-    num='8.1'
+    num='9.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_Insert = Requirement(
@@ -1082,7 +1289,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_Insert = Requirement(
     ),
     link=None,
     level=2,
-    num='8.2'
+    num='9.2'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_AppendVisible = Requirement(
@@ -1100,7 +1307,102 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_AppendVisible = Requirement(
     ),
     link=None,
     level=2,
-    num='8.3'
+    num='9.3'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Writes_Commit = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Commit',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'The new commit SHALL be the next zero-padded JSON file in `_delta_log`. Each data file it adds SHALL have a name that is not already in the table, and [ClickHouse] SHALL NOT overwrite that data file.\n'
+        '\n'
+        'The commit SHALL contain at most one `metaData` action and at most one `protocol` action. It SHALL NOT list the same path twice among its `add` actions or twice among its `remove` actions. Every `add` SHALL set `dataChange` to `true` and SHALL include `partitionValues` for every partition column. The Parquet columns SHALL use the types of the current table schema, except where [type widening](https://github.com/delta-io/delta/blob/master/PROTOCOL.md#type-widening) allows an older file to stay as it was.\n'
+        '\n'
+        'A `{version}.crc` file is optional. When [ClickHouse] writes one, its `numFiles` and `tableSizeBytes` SHALL match the snapshot after reconciliation, and [ClickHouse] SHALL NOT overwrite an existing checksum.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='9.4'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Writes_WriterProtocol = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL read the table before it writes. When `minWriterVersion`, or any name in `writerFeatures`, requires behavior [ClickHouse] does not implement, the `INSERT` SHALL fail and SHALL NOT add a commit.\n'
+        '\n'
+        'That refusal covers an active feature [ClickHouse] cannot enforce on the way out:\n'
+        '\n'
+        '* `delta.appendOnly = true` together with any statement that would remove rows. An append is allowed. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendOnly](#rqsrs-050clickhousedeltalakewritesappendonly).\n'
+        '* An active invariant, `CHECK` constraint, generated column, or column default.\n'
+        '* Identity columns when the insert does not supply a value and [ClickHouse] does not allocate one.\n'
+        '* `columnMapping` when [ClickHouse] would write a Parquet column under the logical name instead of the physical name.\n'
+        '* `deletionVectors` when the insert would have to attach a vector [ClickHouse] does not write. An append of a new file with no vector is allowed.\n'
+        '* `rowTracking` when row tracking is not suspended. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.RowTracking](#rqsrs-050clickhousedeltalakewritesrowtracking).\n'
+        '\n'
+        'A feature that is listed but not active SHALL NOT by itself reject an append. `appendOnly` in `writerFeatures` with `delta.appendOnly` unset or `false` is that case.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='9.5'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Writes_DomainMetadata = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.DomainMetadata',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'An `INSERT` SHALL leave existing `domainMetadata` actions in the snapshot, including domains [ClickHouse] does not understand. It SHALL NOT drop a system domain whose name starts with `delta.`. It SHALL NOT let a user SQL clause rewrite a system domain.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='9.6'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Writes_RowTracking = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.RowTracking',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'When `rowTracking` is in `writerFeatures` and `delta.rowTrackingSuspended` is not `true`, an `INSERT` SHALL either assign a unique `baseRowId` on every new `add` action and advance the `delta.rowTracking` high-water mark, or fail without a commit. [ClickHouse] SHALL NOT commit duplicate row ids.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='9.7'
+)
+
+RQ_SRS_050_ClickHouse_DeltaLake_Writes_ChangeFeed = Requirement(
+    name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.ChangeFeed',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'When change data feed is enabled, an `INSERT` that only adds rows SHALL commit `add` actions for those rows. It MAY omit `cdc` files. A later change-data read SHALL report the inserted rows as `insert`. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.ChangeDataFeed](#rqsrs-050clickhousedeltalakereadchangedatafeed).\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='9.8'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_Backends = Requirement(
@@ -1116,7 +1418,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_Backends = Requirement(
     ),
     link=None,
     level=2,
-    num='8.4'
+    num='9.9'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_AzureIdentity = Requirement(
@@ -1132,7 +1434,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_AzureIdentity = Requirement(
     ),
     link=None,
     level=2,
-    num='8.5'
+    num='9.10'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_FileSize = Requirement(
@@ -1155,7 +1457,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_FileSize = Requirement(
     ),
     link=None,
     level=2,
-    num='8.6'
+    num='9.11'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_Cast = Requirement(
@@ -1177,7 +1479,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_Cast = Requirement(
     ),
     link=None,
     level=2,
-    num='8.7'
+    num='9.12'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_NoMutation = Requirement(
@@ -1193,7 +1495,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_NoMutation = Requirement(
     ),
     link=None,
     level=2,
-    num='8.8'
+    num='9.13'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Writes_AppendOnly = Requirement(
@@ -1210,7 +1512,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Writes_AppendOnly = Requirement(
     ),
     link=None,
     level=2,
-    num='8.9'
+    num='9.14'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_Cache_Data = Requirement(
@@ -1228,7 +1530,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_Cache_Data = Requirement(
     ),
     link=None,
     level=2,
-    num='9.1'
+    num='10.1'
 )
 
 RQ_SRS_050_ClickHouse_DeltaLake_MetadataLog = Requirement(
@@ -1257,7 +1559,7 @@ RQ_SRS_050_ClickHouse_DeltaLake_MetadataLog = Requirement(
     ),
     link=None,
     level=2,
-    num='9.2'
+    num='10.2'
 )
 
 SRS_050_ClickHouse_Delta_Lake = Specification(
@@ -1284,76 +1586,100 @@ SRS_050_ClickHouse_Delta_Lake = Specification(
         Heading(name='Snapshot', level=2, num='2.3'),
         Heading(name='Unity Catalog', level=2, num='2.4'),
         Heading(name='Delta Kernel', level=2, num='2.5'),
-        Heading(name='Access', level=1, num='3'),
-        Heading(name='Table function', level=2, num='3.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction', level=3, num='3.1.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction.Backends', level=3, num='3.1.2'),
-        Heading(name='Cluster function', level=2, num='3.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.Cluster', level=3, num='3.2.1'),
-        Heading(name='Table engine', level=2, num='3.3'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.Engine', level=3, num='3.3.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.NamedCollection', level=3, num='3.3.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.Credentials', level=3, num='3.3.3'),
-        Heading(name='Creating a table', level=1, num='4'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.AttachExisting', level=2, num='4.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.NewTable', level=2, num='4.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.NoPartition', level=2, num='4.3'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.RegisterInUnity', level=2, num='4.4'),
-        Heading(name='Schema', level=1, num='5'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.PrimitiveTypes', level=2, num='5.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Decimal', level=2, num='5.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Varchar', level=2, num='5.3'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nested', level=2, num='5.4'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nulls', level=2, num='5.5'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Void', level=2, num='5.6'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.PartitionColumns', level=2, num='5.7'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Unsupported', level=2, num='5.8'),
-        Heading(name='Reads', level=1, num='6'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Snapshot', level=2, num='6.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Projection', level=2, num='6.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Kernel', level=2, num='6.3'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning', level=2, num='6.4'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaEvolution', level=2, num='6.5'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaReload', level=2, num='6.6'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping', level=2, num='6.7'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.DeletionVectors', level=2, num='6.8'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.TimeTravel', level=2, num='6.9'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.ChangeDataFeed', level=2, num='6.10'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Checkpoint', level=2, num='6.11'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.WriterFeatures', level=2, num='6.12'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature', level=2, num='6.13'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.VirtualColumns', level=2, num='6.14'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Prewhere', level=2, num='6.15'),
-        Heading(name='Unity Catalog database', level=1, num='7'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Enable', level=2, num='7.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.CreateDatabase', level=2, num='7.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.DeltaTable', level=2, num='7.3'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.V2', level=2, num='7.4'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Names', level=2, num='7.5'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Show', level=2, num='7.6'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Credentials', level=2, num='7.7'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.StorageKeys', level=2, num='7.8'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.VendedCredentials', level=2, num='7.9'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.ManagedStorage', level=2, num='7.10'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Check', level=2, num='7.11'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.SystemTables', level=2, num='7.12'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Insert', level=2, num='7.13'),
-        Heading(name='Writes', level=1, num='8'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Setting', level=2, num='8.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Insert', level=2, num='8.2'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendVisible', level=2, num='8.3'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Backends', level=2, num='8.4'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.AzureIdentity', level=2, num='8.5'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.FileSize', level=2, num='8.6'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Cast', level=2, num='8.7'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.NoMutation', level=2, num='8.8'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendOnly', level=2, num='8.9'),
-        Heading(name='Cache and diagnostics', level=1, num='9'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Cache.Data', level=2, num='9.1'),
-        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.MetadataLog', level=2, num='9.2'),
-        Heading(name='References', level=1, num='10'),
+        Heading(name='Log protocol', level=1, num='3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Replay', level=2, num='3.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Paths', level=2, num='3.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Format', level=2, num='3.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.DataChange', level=2, num='3.4'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.UnknownFields', level=2, num='3.5'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Version', level=2, num='3.6'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.CatalogManaged', level=2, num='3.7'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Statistics', level=2, num='3.8'),
+        Heading(name='Access', level=1, num='4'),
+        Heading(name='Table function', level=2, num='4.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction', level=3, num='4.1.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction.Backends', level=3, num='4.1.2'),
+        Heading(name='Cluster function', level=2, num='4.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.Cluster', level=3, num='4.2.1'),
+        Heading(name='Table engine', level=2, num='4.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.Engine', level=3, num='4.3.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.NamedCollection', level=3, num='4.3.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Access.Credentials', level=3, num='4.3.3'),
+        Heading(name='Creating a table', level=1, num='5'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.AttachExisting', level=2, num='5.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.NewTable', level=2, num='5.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.NoPartition', level=2, num='5.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Create.RegisterInUnity', level=2, num='5.4'),
+        Heading(name='Schema', level=1, num='6'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.PrimitiveTypes', level=2, num='6.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Decimal', level=2, num='6.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Varchar', level=2, num='6.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nested', level=2, num='6.4'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nulls', level=2, num='6.5'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Void', level=2, num='6.6'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.PartitionColumns', level=2, num='6.7'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Schema.Unsupported', level=2, num='6.8'),
+        Heading(name='Reads', level=1, num='7'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Snapshot', level=2, num='7.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Projection', level=2, num='7.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Kernel', level=2, num='7.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning', level=2, num='7.4'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaEvolution', level=2, num='7.5'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.TypeWidening', level=2, num='7.6'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaReload', level=2, num='7.7'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping', level=2, num='7.8'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.DeletionVectors', level=2, num='7.9'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.TimeTravel', level=2, num='7.10'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.ChangeDataFeed', level=2, num='7.11'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Checkpoint', level=2, num='7.12'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.WriterFeatures', level=2, num='7.13'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature', level=2, num='7.14'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.VacuumProtocolCheck', level=2, num='7.15'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.VirtualColumns', level=2, num='7.16'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Read.Prewhere', level=2, num='7.17'),
+        Heading(name='Unity Catalog database', level=1, num='8'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Enable', level=2, num='8.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.CreateDatabase', level=2, num='8.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.DeltaTable', level=2, num='8.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.V2', level=2, num='8.4'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Names', level=2, num='8.5'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Show', level=2, num='8.6'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Credentials', level=2, num='8.7'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.StorageKeys', level=2, num='8.8'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.VendedCredentials', level=2, num='8.9'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.ManagedStorage', level=2, num='8.10'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Check', level=2, num='8.11'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.SystemTables', level=2, num='8.12'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Unity.Insert', level=2, num='8.13'),
+        Heading(name='Writes', level=1, num='9'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Setting', level=2, num='9.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Insert', level=2, num='9.2'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendVisible', level=2, num='9.3'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Commit', level=2, num='9.4'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol', level=2, num='9.5'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.DomainMetadata', level=2, num='9.6'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.RowTracking', level=2, num='9.7'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.ChangeFeed', level=2, num='9.8'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Backends', level=2, num='9.9'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.AzureIdentity', level=2, num='9.10'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.FileSize', level=2, num='9.11'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.Cast', level=2, num='9.12'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.NoMutation', level=2, num='9.13'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendOnly', level=2, num='9.14'),
+        Heading(name='Cache and diagnostics', level=1, num='10'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.Cache.Data', level=2, num='10.1'),
+        Heading(name='RQ.SRS-050.ClickHouse.DeltaLake.MetadataLog', level=2, num='10.2'),
+        Heading(name='References', level=1, num='11'),
         ),
     requirements=(
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Replay,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Paths,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Format,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_DataChange,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_UnknownFields,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Version,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_CatalogManaged,
+        RQ_SRS_050_ClickHouse_DeltaLake_Protocol_Statistics,
         RQ_SRS_050_ClickHouse_DeltaLake_Access_TableFunction,
         RQ_SRS_050_ClickHouse_DeltaLake_Access_TableFunction_Backends,
         RQ_SRS_050_ClickHouse_DeltaLake_Access_Cluster,
@@ -1377,6 +1703,7 @@ SRS_050_ClickHouse_Delta_Lake = Specification(
         RQ_SRS_050_ClickHouse_DeltaLake_Read_Kernel,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_PartitionPruning,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaEvolution,
+        RQ_SRS_050_ClickHouse_DeltaLake_Read_TypeWidening,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_SchemaReload,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_ColumnMapping,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_DeletionVectors,
@@ -1385,6 +1712,7 @@ SRS_050_ClickHouse_Delta_Lake = Specification(
         RQ_SRS_050_ClickHouse_DeltaLake_Read_Checkpoint,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_WriterFeatures,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_UnreadableFeature,
+        RQ_SRS_050_ClickHouse_DeltaLake_Read_VacuumProtocolCheck,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_VirtualColumns,
         RQ_SRS_050_ClickHouse_DeltaLake_Read_Prewhere,
         RQ_SRS_050_ClickHouse_DeltaLake_Unity_Enable,
@@ -1403,6 +1731,11 @@ SRS_050_ClickHouse_Delta_Lake = Specification(
         RQ_SRS_050_ClickHouse_DeltaLake_Writes_Setting,
         RQ_SRS_050_ClickHouse_DeltaLake_Writes_Insert,
         RQ_SRS_050_ClickHouse_DeltaLake_Writes_AppendVisible,
+        RQ_SRS_050_ClickHouse_DeltaLake_Writes_Commit,
+        RQ_SRS_050_ClickHouse_DeltaLake_Writes_WriterProtocol,
+        RQ_SRS_050_ClickHouse_DeltaLake_Writes_DomainMetadata,
+        RQ_SRS_050_ClickHouse_DeltaLake_Writes_RowTracking,
+        RQ_SRS_050_ClickHouse_DeltaLake_Writes_ChangeFeed,
         RQ_SRS_050_ClickHouse_DeltaLake_Writes_Backends,
         RQ_SRS_050_ClickHouse_DeltaLake_Writes_AzureIdentity,
         RQ_SRS_050_ClickHouse_DeltaLake_Writes_FileSize,
@@ -1425,74 +1758,90 @@ SRS_050_ClickHouse_Delta_Lake = Specification(
     * 2.3 [Snapshot](#snapshot)
     * 2.4 [Unity Catalog](#unity-catalog)
     * 2.5 [Delta Kernel](#delta-kernel)
-* 3 [Access](#access)
-    * 3.1 [Table function](#table-function)
-        * 3.1.1 [RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction](#rqsrs-050clickhousedeltalakeaccesstablefunction)
-        * 3.1.2 [RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction.Backends](#rqsrs-050clickhousedeltalakeaccesstablefunctionbackends)
-    * 3.2 [Cluster function](#cluster-function)
-        * 3.2.1 [RQ.SRS-050.ClickHouse.DeltaLake.Access.Cluster](#rqsrs-050clickhousedeltalakeaccesscluster)
-    * 3.3 [Table engine](#table-engine)
-        * 3.3.1 [RQ.SRS-050.ClickHouse.DeltaLake.Access.Engine](#rqsrs-050clickhousedeltalakeaccessengine)
-        * 3.3.2 [RQ.SRS-050.ClickHouse.DeltaLake.Access.NamedCollection](#rqsrs-050clickhousedeltalakeaccessnamedcollection)
-        * 3.3.3 [RQ.SRS-050.ClickHouse.DeltaLake.Access.Credentials](#rqsrs-050clickhousedeltalakeaccesscredentials)
-* 4 [Creating a table](#creating-a-table)
-    * 4.1 [RQ.SRS-050.ClickHouse.DeltaLake.Create.AttachExisting](#rqsrs-050clickhousedeltalakecreateattachexisting)
-    * 4.2 [RQ.SRS-050.ClickHouse.DeltaLake.Create.NewTable](#rqsrs-050clickhousedeltalakecreatenewtable)
-    * 4.3 [RQ.SRS-050.ClickHouse.DeltaLake.Create.NoPartition](#rqsrs-050clickhousedeltalakecreatenopartition)
-    * 4.4 [RQ.SRS-050.ClickHouse.DeltaLake.Create.RegisterInUnity](#rqsrs-050clickhousedeltalakecreateregisterinunity)
-* 5 [Schema](#schema)
-    * 5.1 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.PrimitiveTypes](#rqsrs-050clickhousedeltalakeschemaprimitivetypes)
-    * 5.2 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Decimal](#rqsrs-050clickhousedeltalakeschemadecimal)
-    * 5.3 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Varchar](#rqsrs-050clickhousedeltalakeschemavarchar)
-    * 5.4 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nested](#rqsrs-050clickhousedeltalakeschemanested)
-    * 5.5 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nulls](#rqsrs-050clickhousedeltalakeschemanulls)
-    * 5.6 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Void](#rqsrs-050clickhousedeltalakeschemavoid)
-    * 5.7 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.PartitionColumns](#rqsrs-050clickhousedeltalakeschemapartitioncolumns)
-    * 5.8 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Unsupported](#rqsrs-050clickhousedeltalakeschemaunsupported)
-* 6 [Reads](#reads)
-    * 6.1 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Snapshot](#rqsrs-050clickhousedeltalakereadsnapshot)
-    * 6.2 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Projection](#rqsrs-050clickhousedeltalakereadprojection)
-    * 6.3 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Kernel](#rqsrs-050clickhousedeltalakereadkernel)
-    * 6.4 [RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning](#rqsrs-050clickhousedeltalakereadpartitionpruning)
-    * 6.5 [RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaEvolution](#rqsrs-050clickhousedeltalakereadschemaevolution)
-    * 6.6 [RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaReload](#rqsrs-050clickhousedeltalakereadschemareload)
-    * 6.7 [RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping](#rqsrs-050clickhousedeltalakereadcolumnmapping)
-    * 6.8 [RQ.SRS-050.ClickHouse.DeltaLake.Read.DeletionVectors](#rqsrs-050clickhousedeltalakereaddeletionvectors)
-    * 6.9 [RQ.SRS-050.ClickHouse.DeltaLake.Read.TimeTravel](#rqsrs-050clickhousedeltalakereadtimetravel)
-    * 6.10 [RQ.SRS-050.ClickHouse.DeltaLake.Read.ChangeDataFeed](#rqsrs-050clickhousedeltalakereadchangedatafeed)
-    * 6.11 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Checkpoint](#rqsrs-050clickhousedeltalakereadcheckpoint)
-    * 6.12 [RQ.SRS-050.ClickHouse.DeltaLake.Read.WriterFeatures](#rqsrs-050clickhousedeltalakereadwriterfeatures)
-    * 6.13 [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature)
-    * 6.14 [RQ.SRS-050.ClickHouse.DeltaLake.Read.VirtualColumns](#rqsrs-050clickhousedeltalakereadvirtualcolumns)
-    * 6.15 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Prewhere](#rqsrs-050clickhousedeltalakereadprewhere)
-* 7 [Unity Catalog database](#unity-catalog-database)
-    * 7.1 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Enable](#rqsrs-050clickhousedeltalakeunityenable)
-    * 7.2 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.CreateDatabase](#rqsrs-050clickhousedeltalakeunitycreatedatabase)
-    * 7.3 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.DeltaTable](#rqsrs-050clickhousedeltalakeunitydeltatable)
-    * 7.4 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.V2](#rqsrs-050clickhousedeltalakeunityv2)
-    * 7.5 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Names](#rqsrs-050clickhousedeltalakeunitynames)
-    * 7.6 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Show](#rqsrs-050clickhousedeltalakeunityshow)
-    * 7.7 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Credentials](#rqsrs-050clickhousedeltalakeunitycredentials)
-    * 7.8 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.StorageKeys](#rqsrs-050clickhousedeltalakeunitystoragekeys)
-    * 7.9 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.VendedCredentials](#rqsrs-050clickhousedeltalakeunityvendedcredentials)
-    * 7.10 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.ManagedStorage](#rqsrs-050clickhousedeltalakeunitymanagedstorage)
-    * 7.11 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Check](#rqsrs-050clickhousedeltalakeunitycheck)
-    * 7.12 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.SystemTables](#rqsrs-050clickhousedeltalakeunitysystemtables)
-    * 7.13 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Insert](#rqsrs-050clickhousedeltalakeunityinsert)
-* 8 [Writes](#writes)
-    * 8.1 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Setting](#rqsrs-050clickhousedeltalakewritessetting)
-    * 8.2 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Insert](#rqsrs-050clickhousedeltalakewritesinsert)
-    * 8.3 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendVisible](#rqsrs-050clickhousedeltalakewritesappendvisible)
-    * 8.4 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Backends](#rqsrs-050clickhousedeltalakewritesbackends)
-    * 8.5 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AzureIdentity](#rqsrs-050clickhousedeltalakewritesazureidentity)
-    * 8.6 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.FileSize](#rqsrs-050clickhousedeltalakewritesfilesize)
-    * 8.7 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Cast](#rqsrs-050clickhousedeltalakewritescast)
-    * 8.8 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.NoMutation](#rqsrs-050clickhousedeltalakewritesnomutation)
-    * 8.9 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendOnly](#rqsrs-050clickhousedeltalakewritesappendonly)
-* 9 [Cache and diagnostics](#cache-and-diagnostics)
-    * 9.1 [RQ.SRS-050.ClickHouse.DeltaLake.Cache.Data](#rqsrs-050clickhousedeltalakecachedata)
-    * 9.2 [RQ.SRS-050.ClickHouse.DeltaLake.MetadataLog](#rqsrs-050clickhousedeltalakemetadatalog)
-* 10 [References](#references)
+* 3 [Log protocol](#log-protocol)
+    * 3.1 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Replay](#rqsrs-050clickhousedeltalakeprotocolreplay)
+    * 3.2 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Paths](#rqsrs-050clickhousedeltalakeprotocolpaths)
+    * 3.3 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Format](#rqsrs-050clickhousedeltalakeprotocolformat)
+    * 3.4 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.DataChange](#rqsrs-050clickhousedeltalakeprotocoldatachange)
+    * 3.5 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.UnknownFields](#rqsrs-050clickhousedeltalakeprotocolunknownfields)
+    * 3.6 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Version](#rqsrs-050clickhousedeltalakeprotocolversion)
+    * 3.7 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.CatalogManaged](#rqsrs-050clickhousedeltalakeprotocolcatalogmanaged)
+    * 3.8 [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Statistics](#rqsrs-050clickhousedeltalakeprotocolstatistics)
+* 4 [Access](#access)
+    * 4.1 [Table function](#table-function)
+        * 4.1.1 [RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction](#rqsrs-050clickhousedeltalakeaccesstablefunction)
+        * 4.1.2 [RQ.SRS-050.ClickHouse.DeltaLake.Access.TableFunction.Backends](#rqsrs-050clickhousedeltalakeaccesstablefunctionbackends)
+    * 4.2 [Cluster function](#cluster-function)
+        * 4.2.1 [RQ.SRS-050.ClickHouse.DeltaLake.Access.Cluster](#rqsrs-050clickhousedeltalakeaccesscluster)
+    * 4.3 [Table engine](#table-engine)
+        * 4.3.1 [RQ.SRS-050.ClickHouse.DeltaLake.Access.Engine](#rqsrs-050clickhousedeltalakeaccessengine)
+        * 4.3.2 [RQ.SRS-050.ClickHouse.DeltaLake.Access.NamedCollection](#rqsrs-050clickhousedeltalakeaccessnamedcollection)
+        * 4.3.3 [RQ.SRS-050.ClickHouse.DeltaLake.Access.Credentials](#rqsrs-050clickhousedeltalakeaccesscredentials)
+* 5 [Creating a table](#creating-a-table)
+    * 5.1 [RQ.SRS-050.ClickHouse.DeltaLake.Create.AttachExisting](#rqsrs-050clickhousedeltalakecreateattachexisting)
+    * 5.2 [RQ.SRS-050.ClickHouse.DeltaLake.Create.NewTable](#rqsrs-050clickhousedeltalakecreatenewtable)
+    * 5.3 [RQ.SRS-050.ClickHouse.DeltaLake.Create.NoPartition](#rqsrs-050clickhousedeltalakecreatenopartition)
+    * 5.4 [RQ.SRS-050.ClickHouse.DeltaLake.Create.RegisterInUnity](#rqsrs-050clickhousedeltalakecreateregisterinunity)
+* 6 [Schema](#schema)
+    * 6.1 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.PrimitiveTypes](#rqsrs-050clickhousedeltalakeschemaprimitivetypes)
+    * 6.2 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Decimal](#rqsrs-050clickhousedeltalakeschemadecimal)
+    * 6.3 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Varchar](#rqsrs-050clickhousedeltalakeschemavarchar)
+    * 6.4 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nested](#rqsrs-050clickhousedeltalakeschemanested)
+    * 6.5 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Nulls](#rqsrs-050clickhousedeltalakeschemanulls)
+    * 6.6 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Void](#rqsrs-050clickhousedeltalakeschemavoid)
+    * 6.7 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.PartitionColumns](#rqsrs-050clickhousedeltalakeschemapartitioncolumns)
+    * 6.8 [RQ.SRS-050.ClickHouse.DeltaLake.Schema.Unsupported](#rqsrs-050clickhousedeltalakeschemaunsupported)
+* 7 [Reads](#reads)
+    * 7.1 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Snapshot](#rqsrs-050clickhousedeltalakereadsnapshot)
+    * 7.2 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Projection](#rqsrs-050clickhousedeltalakereadprojection)
+    * 7.3 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Kernel](#rqsrs-050clickhousedeltalakereadkernel)
+    * 7.4 [RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning](#rqsrs-050clickhousedeltalakereadpartitionpruning)
+    * 7.5 [RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaEvolution](#rqsrs-050clickhousedeltalakereadschemaevolution)
+    * 7.6 [RQ.SRS-050.ClickHouse.DeltaLake.Read.TypeWidening](#rqsrs-050clickhousedeltalakereadtypewidening)
+    * 7.7 [RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaReload](#rqsrs-050clickhousedeltalakereadschemareload)
+    * 7.8 [RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping](#rqsrs-050clickhousedeltalakereadcolumnmapping)
+    * 7.9 [RQ.SRS-050.ClickHouse.DeltaLake.Read.DeletionVectors](#rqsrs-050clickhousedeltalakereaddeletionvectors)
+    * 7.10 [RQ.SRS-050.ClickHouse.DeltaLake.Read.TimeTravel](#rqsrs-050clickhousedeltalakereadtimetravel)
+    * 7.11 [RQ.SRS-050.ClickHouse.DeltaLake.Read.ChangeDataFeed](#rqsrs-050clickhousedeltalakereadchangedatafeed)
+    * 7.12 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Checkpoint](#rqsrs-050clickhousedeltalakereadcheckpoint)
+    * 7.13 [RQ.SRS-050.ClickHouse.DeltaLake.Read.WriterFeatures](#rqsrs-050clickhousedeltalakereadwriterfeatures)
+    * 7.14 [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature)
+    * 7.15 [RQ.SRS-050.ClickHouse.DeltaLake.Read.VacuumProtocolCheck](#rqsrs-050clickhousedeltalakereadvacuumprotocolcheck)
+    * 7.16 [RQ.SRS-050.ClickHouse.DeltaLake.Read.VirtualColumns](#rqsrs-050clickhousedeltalakereadvirtualcolumns)
+    * 7.17 [RQ.SRS-050.ClickHouse.DeltaLake.Read.Prewhere](#rqsrs-050clickhousedeltalakereadprewhere)
+* 8 [Unity Catalog database](#unity-catalog-database)
+    * 8.1 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Enable](#rqsrs-050clickhousedeltalakeunityenable)
+    * 8.2 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.CreateDatabase](#rqsrs-050clickhousedeltalakeunitycreatedatabase)
+    * 8.3 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.DeltaTable](#rqsrs-050clickhousedeltalakeunitydeltatable)
+    * 8.4 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.V2](#rqsrs-050clickhousedeltalakeunityv2)
+    * 8.5 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Names](#rqsrs-050clickhousedeltalakeunitynames)
+    * 8.6 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Show](#rqsrs-050clickhousedeltalakeunityshow)
+    * 8.7 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Credentials](#rqsrs-050clickhousedeltalakeunitycredentials)
+    * 8.8 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.StorageKeys](#rqsrs-050clickhousedeltalakeunitystoragekeys)
+    * 8.9 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.VendedCredentials](#rqsrs-050clickhousedeltalakeunityvendedcredentials)
+    * 8.10 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.ManagedStorage](#rqsrs-050clickhousedeltalakeunitymanagedstorage)
+    * 8.11 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Check](#rqsrs-050clickhousedeltalakeunitycheck)
+    * 8.12 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.SystemTables](#rqsrs-050clickhousedeltalakeunitysystemtables)
+    * 8.13 [RQ.SRS-050.ClickHouse.DeltaLake.Unity.Insert](#rqsrs-050clickhousedeltalakeunityinsert)
+* 9 [Writes](#writes)
+    * 9.1 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Setting](#rqsrs-050clickhousedeltalakewritessetting)
+    * 9.2 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Insert](#rqsrs-050clickhousedeltalakewritesinsert)
+    * 9.3 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendVisible](#rqsrs-050clickhousedeltalakewritesappendvisible)
+    * 9.4 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Commit](#rqsrs-050clickhousedeltalakewritescommit)
+    * 9.5 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol](#rqsrs-050clickhousedeltalakewriteswriterprotocol)
+    * 9.6 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.DomainMetadata](#rqsrs-050clickhousedeltalakewritesdomainmetadata)
+    * 9.7 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.RowTracking](#rqsrs-050clickhousedeltalakewritesrowtracking)
+    * 9.8 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.ChangeFeed](#rqsrs-050clickhousedeltalakewriteschangefeed)
+    * 9.9 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Backends](#rqsrs-050clickhousedeltalakewritesbackends)
+    * 9.10 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AzureIdentity](#rqsrs-050clickhousedeltalakewritesazureidentity)
+    * 9.11 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.FileSize](#rqsrs-050clickhousedeltalakewritesfilesize)
+    * 9.12 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.Cast](#rqsrs-050clickhousedeltalakewritescast)
+    * 9.13 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.NoMutation](#rqsrs-050clickhousedeltalakewritesnomutation)
+    * 9.14 [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendOnly](#rqsrs-050clickhousedeltalakewritesappendonly)
+* 10 [Cache and diagnostics](#cache-and-diagnostics)
+    * 10.1 [RQ.SRS-050.ClickHouse.DeltaLake.Cache.Data](#rqsrs-050clickhousedeltalakecachedata)
+    * 10.2 [RQ.SRS-050.ClickHouse.DeltaLake.MetadataLog](#rqsrs-050clickhousedeltalakemetadatalog)
+* 11 [References](#references)
 
 ## Introduction
 
@@ -1509,9 +1858,7 @@ A few ClickHouse pages disagree. This specification follows the page that descri
 
 ClickHouse does not copy the table into a local MergeTree. A query reads the Parquet files named by the snapshot.
 
-The following are outside this specification. ClickHouse does not document them as Delta Lake features, and the suite does not treat them as supported reads: the `variant` type and variant shredding, type widening, v2 checkpoints, and the `catalogManaged` commit protocol. [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature) covers a snapshot that needs one of those features to return the right rows.
-
-`DROP TABLE` of a Delta table in Unity Catalog is also outside this specification.
+ClickHouse is a Delta client. A read or a write is correct when it matches the [Delta Transaction Log Protocol](https://github.com/delta-io/delta/blob/master/PROTOCOL.md#delta-table-specification). [Log protocol](#log-protocol) records every rule in that specification that changes the rows ClickHouse returns or the commit it is allowed to write. A reader feature ClickHouse does not implement fails the query. A writer feature ClickHouse cannot honor fails the insert. `DROP TABLE` of a Delta table in Unity Catalog is outside this specification.
 
 
 ## Terminology
@@ -1535,6 +1882,75 @@ A snapshot is one committed version of the table. Version 0 is the first commit.
 ### Delta Kernel
 
 The Delta Kernel is the Rust library `delta-kernel-rs`. From ClickHouse 25.6, reads of Delta tables on S3 and GCS go through this library. The setting is `allow_delta_kernel_rs` on 26.8 and newer, and `allow_experimental_delta_kernel_rs` on 25.5 through 26.7. It is on by default for S3 and GCS. Partition pruning, change data feed, snapshot reads, and writes all require it.
+
+
+## Log protocol
+
+These requirements are the parts of the [Delta table specification](https://github.com/delta-io/delta/blob/master/PROTOCOL.md#delta-table-specification) that a ClickHouse read or write has to follow. They apply to the table function, the table engine, and a Delta table opened through Unity Catalog.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Replay
+version: 1.0
+
+[ClickHouse] SHALL build a snapshot by replaying commits in ascending version order. A checkpoint MAY stand in for the commits up to and including its version. The checkpoint SHALL NOT be newer than the version being read.
+
+The latest `protocol` action wins. The latest `metaData` action wins and replaces the metadata that came before it. Live data is the `add` actions that remain after [action reconciliation](https://github.com/delta-io/delta/blob/master/PROTOCOL.md#action-reconciliation). A `remove` tombstone SHALL contribute no rows. The same logical file, identified by `(path, deletion vector)`, SHALL NOT be both live and removed in one snapshot.
+
+`commitInfo` and `txn` actions SHALL NOT change the rows of a `SELECT`. [ClickHouse] SHALL ignore a `domainMetadata` action it does not understand and still return the table rows.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Paths
+version: 1.0
+
+[ClickHouse] SHALL URI-decode `add.path` and `remove.path`. A relative path is relative to the table root. An absolute path SHALL be read as that URI.
+
+Partition values SHALL come from `partitionValues` on the `add` action. Directory names such as `date=2017-12-10/` SHALL NOT override the log.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Format
+version: 1.0
+
+[ClickHouse] SHALL read a table whose `metaData.format.provider` is `parquet`. Any other provider SHALL fail the query. [ClickHouse] SHALL NOT scan those files as Parquet.
+
+Data files MAY use Data page V1 or Data page V2. [ClickHouse] SHALL return the same rows for both. The table property `delta.parquet.format.version` is a writer hint and SHALL NOT change which pages a read accepts.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.DataChange
+version: 1.0
+
+A commit whose `add` and `remove` actions set `dataChange` to `false` only rearranges rows that are already in the table, or replaces statistics. A `SELECT` of the latest snapshot after that commit SHALL return the same logical rows as the snapshot before it.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.UnknownFields
+version: 1.0
+
+Inside a reader protocol version [ClickHouse] implements, an unrecognized JSON field on a known action SHALL be ignored. The rows SHALL still match the snapshot.
+
+An unknown action name SHALL be ignored when the protocol version does not require it. A name listed in `readerFeatures` is not an unknown field. See [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Version](#rqsrs-050clickhousedeltalakeprotocolversion).
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Version
+version: 1.0
+
+[ClickHouse] SHALL enforce `minReaderVersion` and `readerFeatures` before it returns rows.
+
+| Reader version | What the read must honor |
+|---|---|
+| 1 | The baseline log, schema, and `add` / `remove` actions |
+| 2 | Column mapping, as in [RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping](#rqsrs-050clickhousedeltalakereadcolumnmapping) |
+| 3 | Every name in `readerFeatures`. The table's writer version is 7 |
+
+A `minReaderVersion` above 3 SHALL fail the query. A name in `readerFeatures` that this specification does not require [ClickHouse] to apply SHALL fail the query. The failure is [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature). `vacuumProtocolCheck` is not such a name. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.VacuumProtocolCheck](#rqsrs-050clickhousedeltalakereadvacuumprotocolcheck).
+
+Before an `INSERT`, [ClickHouse] SHALL also enforce `minWriterVersion` and every name in `writerFeatures`. A writer protocol it cannot honor SHALL fail the insert. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol](#rqsrs-050clickhousedeltalakewriteswriterprotocol).
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.CatalogManaged
+version: 1.0
+
+When `catalogManaged` is in `readerFeatures`, the catalog is the source of truth for which commits are ratified. [ClickHouse] SHALL NOT build that snapshot by listing `_delta_log` alone. A file under `_delta_log/_staged_commits` SHALL NOT count as a commit unless the catalog has ratified it. A published log file newer than the latest ratified version SHALL be ignored.
+
+[ClickHouse] does not implement this commit protocol. The read SHALL fail closed, as in [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature). An external Delta table registered in Unity with an ordinary `_delta_log`, and no `catalogManaged` feature, stays on [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Replay](#rqsrs-050clickhousedeltalakeprotocolreplay).
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Protocol.Statistics
+version: 1.0
+
+`stats` on an `add` action are optional. [ClickHouse] MAY skip a file whose min and max exclude a filter. It SHALL NOT skip a file that contains a matching row. A file with no `stats` SHALL remain a candidate for that filter.
+
+Partition columns are not skipped from these stats. Their values come from `partitionValues`. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning](#rqsrs-050clickhousedeltalakereadpartitionpruning).
 
 
 ## Access
@@ -1582,7 +1998,7 @@ A GCS URL written as `gs://bucket/path` SHALL be accepted and read as the same o
 
 `deltaLakeLocal` SHALL read a table from a path on the server's local disk. ClickHouse Cloud does not provide this function.
 
-Data files in a snapshot MAY use the Parquet codecs the Delta protocol requires readers to accept: uncompressed, `snappy`, `gzip`, `lz4`, `lz4_raw`, and `zstd`. [ClickHouse] SHALL return the same rows for each of those codecs.
+Data files in a snapshot MAY use the Parquet codecs the Delta protocol requires readers to accept: uncompressed, `snappy`, `gzip`, `lz4`, `lz4_raw`, and `zstd`. [ClickHouse] SHALL return the same rows for each of those codecs. A mix of those codecs in one table SHALL still return every live row.
 
 ### Cluster function
 
@@ -1774,6 +2190,8 @@ version: 1.0
 
 A top-level `void` column SHALL be read as an all-`NULL` column. The data file does not store that column. [ClickHouse] SHALL still list it in the schema of the snapshot.
 
+An `INSERT` SHALL fail when the table schema has a `void` type inside an array or a map, a struct whose fields are all `void`, or only `void` columns. The failed insert SHALL NOT write a data file.
+
 ### RQ.SRS-050.ClickHouse.DeltaLake.Schema.PartitionColumns
 version: 1.0
 
@@ -1841,7 +2259,7 @@ With `delta_lake_enable_engine_predicate = 0`, the same filter SHALL return the 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaEvolution
 version: 1.0
 
-[ClickHouse] SHALL read a table whose schema changed across commits, using the schema of the snapshot being scanned. This requires the [Delta Kernel](#delta-kernel).
+[ClickHouse] SHALL read a table whose schema changed across commits, using the schema of the snapshot being scanned. Each `metaData` action replaces the metadata of the previous snapshot. This requires the [Delta Kernel](#delta-kernel).
 
 * A column added in a later commit SHALL appear in a read of the latest snapshot. Rows from files written before that commit SHALL return `NULL` for the new column when the column is nullable.
 * A column removed in a later commit SHALL be absent from a read of the latest snapshot.
@@ -1849,6 +2267,13 @@ version: 1.0
 * A rename performed with column mapping SHALL return the original values under the new logical name. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping](#rqsrs-050clickhousedeltalakereadcolumnmapping).
 
 A read of an older snapshot with `delta_lake_snapshot_version` SHALL use the schema of that snapshot.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Read.TypeWidening
+version: 1.0
+
+When `typeWidening` is in `readerFeatures`, [ClickHouse] SHALL read a value written before a supported type change as the current, wider type. It SHALL check every type change recorded in `delta.typeChanges` for the snapshot it is reading.
+
+A type change [ClickHouse] does not support SHALL fail the query. [ClickHouse] SHALL NOT return the pre-widening type for a row written after the change. When [ClickHouse] does not implement `typeWidening` at all, the query SHALL fail closed under [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature).
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.SchemaReload
 version: 1.0
@@ -1858,18 +2283,24 @@ version: 1.0
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.ColumnMapping
 version: 1.0
 
-[ClickHouse] SHALL read tables with `delta.columnMapping.mode` set to `none`, `name`, or `id`.
+[ClickHouse] SHALL read tables with `delta.columnMapping.mode` set to `none`, `name`, or `id`. The property applies when the reader version is 2, or when the reader version is 3 and `columnMapping` is in `readerFeatures`.
 
-`SELECT` and `DESCRIBE` SHALL use the logical column names from the snapshot schema. Physical Parquet names, including `col-<id>` and the UUID names used by `name` mode, SHALL NOT be the names [ClickHouse] exposes.
+`SELECT` and `DESCRIBE` SHALL use the logical column names from the snapshot schema. Physical Parquet names SHALL NOT be the names [ClickHouse] exposes.
 
-After a rename in `name` or `id` mode, a query of the latest snapshot SHALL return the column under its new logical name and SHALL return the values written under the old name. Nested struct fields SHALL follow the same mapping.
+* In `none` mode, and when the property is absent, [ClickHouse] SHALL read Parquet columns by the logical name.
+* In `name` mode, [ClickHouse] SHALL resolve data columns, partition values, and column statistics by `delta.columnMapping.physicalName`. A column missing from a file SHALL be `NULL`.
+* In `id` mode, [ClickHouse] SHALL resolve data columns by the Parquet field id `delta.columnMapping.id`. Partition values and column statistics SHALL be resolved by the physical name. A file with no field ids SHALL fail that file or return `NULL` for each column. An id missing from a file SHALL be `NULL`.
+
+After a rename in `name` or `id` mode, a query of the latest snapshot SHALL return the column under its new logical name and SHALL return the values written under the old name. Nested struct fields, and fields reached through `element`, `key`, or `value`, SHALL follow the same mapping.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.DeletionVectors
 version: 1.0
 
-[ClickHouse] SHALL omit every row whose index is set in the deletion vector of a data file. This applies to a deletion vector stored inline in the log and to a deletion vector stored in a file. A following `count()` SHALL equal the number of live rows in the snapshot.
+ClickHouse 26.1 added deletion-vector reads for the `DeltaLake` table engine and for `deltaLakeCluster`. The Cloud release notes for February 2026 list the same change. From 26.1, those entry points SHALL omit every row whose index is set in the deletion vector of a data file. `deltaLake` and a Delta table opened through Unity Catalog SHALL do the same. This holds when `delta.enableDeletionVectors` is absent. A following `count()` SHALL equal the number of live rows in the snapshot. `deltaLakeCluster` SHALL return the same live rows as `deltaLake` for that snapshot.
 
-A file removed by a `remove` action, with or without a deletion vector, SHALL contribute no rows. This has been the read behavior since 26.2.
+The `storageType` of the vector SHALL be one of `u` (UUID path under the table), `i` (inline in the log), or `p` (absolute path). Any other `storageType` SHALL fail the query. [ClickHouse] SHALL NOT return the invalidated rows.
+
+A file removed by a `remove` action, with or without a deletion vector, SHALL contribute no rows.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.TimeTravel
 version: 1.0
@@ -1900,26 +2331,43 @@ SETTINGS
 
 The result SHALL include the table columns and the change columns `_change_type`, `_commit_version`, and `_commit_timestamp`. `_change_type` SHALL use the Delta values `insert`, `delete`, `update_preimage`, and `update_postimage` for the corresponding commits. `_commit_version` SHALL be the commit that produced the change and SHALL lie in the requested range.
 
+For each version in the range, [ClickHouse] SHALL follow the protocol's change-data rule. When that version has `cdc` actions, the change rows SHALL come only from those files, and the `add` and `remove` actions of that version SHALL be skipped. When that version has no `cdc` action, rows in `add` actions SHALL be `insert` and rows in `remove` actions SHALL be `delete`. An `INSERT` that only adds files is this second case. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.ChangeFeed](#rqsrs-050clickhousedeltalakewriteschangefeed).
+
+When `inCommitTimestamp` is enabled, `_commit_timestamp` SHALL be the `inCommitTimestamp` of that version's `commitInfo`. Otherwise it SHALL be the modification time of that version's log file.
+
+A `SELECT` that is not a change-data read SHALL ignore a `_change_type` column stored in a data file and absent from the table schema.
+
 Setting only `delta_lake_snapshot_end_version`, and leaving `delta_lake_snapshot_start_version` at `-1`, SHALL fail the query. A range on a table that does not have change data feed enabled SHALL fail the query. [ClickHouse] SHALL NOT return the latest snapshot in either case.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.Checkpoint
 version: 1.0
 
-[ClickHouse] SHALL read a snapshot whose actions are summarized in a classic Parquet checkpoint under `_delta_log`. The rows SHALL match the rows of the same snapshot read from the JSON commits alone. A checkpoint that omits a still-active file, or that keeps a file the JSON log has removed, is not a valid checkpoint. This requirement covers a checkpoint an external Delta writer produced.
+[ClickHouse] SHALL read a snapshot whose actions are summarized in a classic Parquet checkpoint, `{version}.checkpoint.parquet`, under `_delta_log`. The rows SHALL match the rows of the same snapshot read from the JSON commits alone.
+
+A multi-part checkpoint, `{version}.checkpoint.{part}.{total}.parquet`, SHALL be used only when every part is present. A missing part SHALL be ignored, and the snapshot SHALL still come from the JSON log and any older complete checkpoint.
+
+`_delta_log/_last_checkpoint` is a hint. A missing or stale hint SHALL still produce the latest snapshot. A log-compaction file `{start}.{end}.compacted.json` MAY replace the commits in that closed range and SHALL produce the same snapshot as those commits. A missing `{version}.crc` file SHALL NOT fail the read.
+
+A time-travel read SHALL NOT apply a checkpoint newer than `delta_lake_snapshot_version`. UUID-named v2 checkpoints are [RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature](#rqsrs-050clickhousedeltalakereadunreadablefeature) when [ClickHouse] does not implement `v2Checkpoint`.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.WriterFeatures
 version: 1.0
 
-A writer-only table feature SHALL NOT stop a read of the committed data, and SHALL NOT change the stored values [ClickHouse] returns. The feature names are `appendOnly`, `invariants`, `checkConstraints`, `generatedColumns`, `changeDataFeed`, `identityColumns`, `allowColumnDefaults`, `domainMetadata`, `inCommitTimestamp`, `clustering`, `icebergCompatV1`, `icebergCompatV2`, and `materializePartitionColumns`.
+A writer-only table feature SHALL NOT stop a read of the committed data, and SHALL NOT change the stored values [ClickHouse] returns. The feature names are `appendOnly`, `invariants`, `checkConstraints`, `generatedColumns`, `changeDataFeed`, `identityColumns`, `allowColumnDefaults`, `domainMetadata`, `inCommitTimestamp`, `clustering`, `icebergCompatV1`, `icebergCompatV2`, `materializePartitionColumns`, and `rowTracking`.
 
-[ClickHouse] returns the values stored in the data files and the partition values in the log. It does not evaluate generated-column expressions, identity generators, or `CHECK` expressions on read.
+[ClickHouse] returns the values stored in the data files and the partition values in the log. It does not evaluate generated-column expressions, identity generators, or `CHECK` expressions on read. Hidden row-tracking columns SHALL NOT appear in the table schema. A `SELECT` of the schema columns SHALL still return the stored rows when row tracking is enabled.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.UnreadableFeature
 version: 1.0
 
 When a snapshot needs a reader feature that [ClickHouse] cannot apply, the query SHALL fail. [ClickHouse] SHALL NOT return rows that ignore that feature. A deletion vector [ClickHouse] cannot decode, and a column-mapping mode other than `none`, `name`, or `id`, are two such cases.
 
-This specification does not require support for the `variant` type, variant shredding, type widening, v2 checkpoints, or the `catalogManaged` commit protocol. A snapshot that needs one of those features for a correct result SHALL fail closed when [ClickHouse] does not implement it. A successful read is valid when the server does implement it.
+[ClickHouse] is not required to implement `variant`, variant shredding, `typeWidening`, `v2Checkpoint`, or `catalogManaged`. A snapshot that needs one of those features for a correct result SHALL fail when [ClickHouse] does not implement it. A successful read is valid when the server does implement it. `typeWidening`, when implemented, follows [RQ.SRS-050.ClickHouse.DeltaLake.Read.TypeWidening](#rqsrs-050clickhousedeltalakereadtypewidening). `catalogManaged`, when not implemented, follows [RQ.SRS-050.ClickHouse.DeltaLake.Protocol.CatalogManaged](#rqsrs-050clickhousedeltalakeprotocolcatalogmanaged).
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Read.VacuumProtocolCheck
+version: 1.0
+
+`vacuumProtocolCheck` in `readerFeatures` SHALL NOT change a `SELECT`. The query SHALL return the same rows as a table with the same files and no such feature. [ClickHouse] does not implement `VACUUM`. This requirement is the protocol's reader rule: acknowledge the feature, and leave the scan unchanged.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.VirtualColumns
 version: 1.0
@@ -2088,7 +2536,7 @@ version: 1.0
 
 ## Writes
 
-Writes go through the [Delta Kernel](#delta-kernel). They are disabled until the session turns them on. ClickHouse can append rows. It cannot delete, update, or merge. Generating identity values and evaluating column-default expressions on insert are not required here. An `INSERT` that omits an identity or defaulted column MAY fail.
+Writes go through the [Delta Kernel](#delta-kernel). They are disabled until the session turns them on. ClickHouse can append rows. It cannot delete, update, or merge. An insert into a table whose active writer features ClickHouse cannot enforce fails under [RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol](#rqsrs-050clickhousedeltalakewriteswriterprotocol).
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Writes.Setting
 version: 1.0
@@ -2122,6 +2570,46 @@ version: 1.0
 An `INSERT` SHALL add a new commit and SHALL leave previously committed rows in place. A later `SELECT` of the latest snapshot SHALL return the old rows and the inserted rows. An external Delta reader that opens the same location SHALL return those inserted rows as well.
 
 The new log entry SHALL NOT overwrite an existing log file.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Writes.Commit
+version: 1.0
+
+The new commit SHALL be the next zero-padded JSON file in `_delta_log`. Each data file it adds SHALL have a name that is not already in the table, and [ClickHouse] SHALL NOT overwrite that data file.
+
+The commit SHALL contain at most one `metaData` action and at most one `protocol` action. It SHALL NOT list the same path twice among its `add` actions or twice among its `remove` actions. Every `add` SHALL set `dataChange` to `true` and SHALL include `partitionValues` for every partition column. The Parquet columns SHALL use the types of the current table schema, except where [type widening](https://github.com/delta-io/delta/blob/master/PROTOCOL.md#type-widening) allows an older file to stay as it was.
+
+A `{version}.crc` file is optional. When [ClickHouse] writes one, its `numFiles` and `tableSizeBytes` SHALL match the snapshot after reconciliation, and [ClickHouse] SHALL NOT overwrite an existing checksum.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Writes.WriterProtocol
+version: 1.0
+
+[ClickHouse] SHALL read the table before it writes. When `minWriterVersion`, or any name in `writerFeatures`, requires behavior [ClickHouse] does not implement, the `INSERT` SHALL fail and SHALL NOT add a commit.
+
+That refusal covers an active feature [ClickHouse] cannot enforce on the way out:
+
+* `delta.appendOnly = true` together with any statement that would remove rows. An append is allowed. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.AppendOnly](#rqsrs-050clickhousedeltalakewritesappendonly).
+* An active invariant, `CHECK` constraint, generated column, or column default.
+* Identity columns when the insert does not supply a value and [ClickHouse] does not allocate one.
+* `columnMapping` when [ClickHouse] would write a Parquet column under the logical name instead of the physical name.
+* `deletionVectors` when the insert would have to attach a vector [ClickHouse] does not write. An append of a new file with no vector is allowed.
+* `rowTracking` when row tracking is not suspended. See [RQ.SRS-050.ClickHouse.DeltaLake.Writes.RowTracking](#rqsrs-050clickhousedeltalakewritesrowtracking).
+
+A feature that is listed but not active SHALL NOT by itself reject an append. `appendOnly` in `writerFeatures` with `delta.appendOnly` unset or `false` is that case.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Writes.DomainMetadata
+version: 1.0
+
+An `INSERT` SHALL leave existing `domainMetadata` actions in the snapshot, including domains [ClickHouse] does not understand. It SHALL NOT drop a system domain whose name starts with `delta.`. It SHALL NOT let a user SQL clause rewrite a system domain.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Writes.RowTracking
+version: 1.0
+
+When `rowTracking` is in `writerFeatures` and `delta.rowTrackingSuspended` is not `true`, an `INSERT` SHALL either assign a unique `baseRowId` on every new `add` action and advance the `delta.rowTracking` high-water mark, or fail without a commit. [ClickHouse] SHALL NOT commit duplicate row ids.
+
+### RQ.SRS-050.ClickHouse.DeltaLake.Writes.ChangeFeed
+version: 1.0
+
+When change data feed is enabled, an `INSERT` that only adds rows SHALL commit `add` actions for those rows. It MAY omit `cdc` files. A later change-data read SHALL report the inserted rows as `insert`. See [RQ.SRS-050.ClickHouse.DeltaLake.Read.ChangeDataFeed](#rqsrs-050clickhousedeltalakereadchangedatafeed).
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Writes.Backends
 version: 1.0
@@ -2205,7 +2693,7 @@ Each row SHALL carry `hostname`, `clickhouse_version`, `system_processor`, `even
 * **ClickHouse data-lake best practices:** https://clickhouse.com/docs/guides/use-cases/data-warehousing/getting-started/best-practices
 * **ClickHouse `delta_lake_*` settings:** https://clickhouse.com/docs/reference/settings/session-settings/delta-lake
 * **ClickHouse `system.delta_lake_metadata_log`:** https://clickhouse.com/docs/reference/system-tables/delta_lake_metadata_log
-* **Delta Lake protocol:** https://github.com/delta-io/delta/blob/master/PROTOCOL.md
+* **Delta Lake protocol:** https://github.com/delta-io/delta/blob/master/PROTOCOL.md#delta-table-specification
 * **Delta Lake feature versions:** https://docs.delta.io/versioning/
 * **ClickHouse type mapping:** `DeltaLakeMetadata::getSimpleTypeByName` and `getComplexTypeFromObject` in `src/Storages/ObjectStorage/DataLakes/DeltaLakeMetadata.cpp`. `varchar(n)` and `char(n)` map to `String` so Unity `type_json` can be read.
 
