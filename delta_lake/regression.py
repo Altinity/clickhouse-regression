@@ -27,7 +27,7 @@ def regression(
     with_analyzer=False,
     minio_args=None,
 ):
-    """Delta Lake reads from MinIO and from the local Unity Catalog."""
+    """Delta Lake reads from RustFS and from the local Unity Catalog."""
     nodes = {
         "clickhouse": ("clickhouse1",),
     }
@@ -37,8 +37,8 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    minio_root_user = minio_args["minio_root_user"].value
-    minio_root_password = minio_args["minio_root_password"].value
+    rustfs_access_key = minio_args["minio_root_user"].value
+    rustfs_secret_key = minio_args["minio_root_password"].value
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -46,15 +46,15 @@ def regression(
             nodes=nodes,
             configs_dir=current_dir(),
             environ={
-                "MINIO_ROOT_USER": minio_root_user,
-                "MINIO_ROOT_PASSWORD": minio_root_password,
+                "RUSTFS_ACCESS_KEY": rustfs_access_key,
+                "RUSTFS_SECRET_KEY": rustfs_secret_key,
             },
         )
         self.context.cluster = cluster
 
     self.context.node = self.context.cluster.node("clickhouse1")
-    self.context.minio_root_user = minio_root_user
-    self.context.minio_root_password = minio_root_password
+    self.context.rustfs_access_key = rustfs_access_key
+    self.context.rustfs_secret_key = rustfs_secret_key
 
     with And("enable or disable experimental analyzer if needed"):
         experimental_analyzer(node=self.context.node, with_analyzer=with_analyzer)
