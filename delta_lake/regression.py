@@ -61,8 +61,7 @@ def regression(
 
     # use_unity_catalog_v2 is checked in the scenario that sets it.
     # deltaLake() and ENGINE = DeltaLake run on older servers.
-    Feature(test=load("delta_lake.tests.sanity", "feature"))()
-    Feature(test=load("delta_lake.tests.access", "feature"))()
+    Feature(test=load("delta_lake.tests.feature", "feature"))()
 
 
 if main():
