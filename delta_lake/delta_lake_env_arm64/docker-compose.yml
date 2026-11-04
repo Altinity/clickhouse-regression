@@ -1,15 +1,15 @@
 services:
-  minio:
+  rustfs:
     extends:
       file: rustfs-service.yml
-      service: minio
+      service: rustfs
 
   mc:
     extends:
-      file: minio-client.yml
+      file: mc-client.yml
       service: mc
     depends_on:
-      minio:
+      rustfs:
         condition: service_healthy
 
   unity-catalog:
@@ -19,12 +19,12 @@ services:
     ports:
       - "8085:8080"
     environment:
-      - AWS_ACCESS_KEY_ID=admin
-      - AWS_SECRET_ACCESS_KEY=password
+      - AWS_ACCESS_KEY_ID=${RUSTFS_ACCESS_KEY:-admin}
+      - AWS_SECRET_ACCESS_KEY=${RUSTFS_SECRET_KEY:-password}
       - AWS_REGION=us-east-1
-      - AWS_ENDPOINT_URL_S3=http://minio:9000
+      - AWS_ENDPOINT_URL_S3=http://rustfs:9000
     depends_on:
-      minio:
+      rustfs:
         condition: service_healthy
     healthcheck:
       test:
@@ -51,7 +51,7 @@ services:
     depends_on:
       clickhouse1:
         condition: service_healthy
-      minio:
+      rustfs:
         condition: service_healthy
       unity-catalog:
         condition: service_healthy

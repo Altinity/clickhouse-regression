@@ -148,7 +148,7 @@ version: 1.0
 
 | Backend | Function | Where it runs |
 |---|---|---|
-| Amazon S3, and S3-compatible storage such as MinIO | `deltaLake` / `deltaLakeS3` | Cloud and self-managed |
+| Amazon S3, and S3-compatible storage such as RustFS | `deltaLake` / `deltaLakeS3` | Cloud and self-managed |
 | Google Cloud Storage | `deltaLake` / `deltaLakeS3` with an `https://storage.googleapis.com/...` URL | Cloud and self-managed |
 | Azure Blob Storage | `deltaLakeAzure` | Cloud and self-managed. Kernel reads from 26.4 |
 | Local disk | `deltaLakeLocal` | Self-managed only |
@@ -586,7 +586,7 @@ SETTINGS
     use_unity_catalog_v2 = 1,
     warehouse = 'unity',
     vended_credentials = false,
-    storage_endpoint = 'http://minio:9000/warehouse',
+    storage_endpoint = 'http://rustfs:9000/warehouse',
     aws_access_key_id = 'key',
     aws_secret_access_key = 'secret';
 ```
@@ -622,7 +622,7 @@ For a read with a personal access token, the token's principal needs `EXTERNAL U
 ### RQ.SRS-050.ClickHouse.DeltaLake.Unity.StorageKeys
 version: 1.0
 
-With `vended_credentials = false`, [ClickHouse] SHALL read table data with the storage settings on the database: `storage_endpoint`, `aws_access_key_id`, and `aws_secret_access_key`. This is the configuration of the `delta_lake` suite, which uses MinIO and the OSS Unity server.
+With `vended_credentials = false`, [ClickHouse] SHALL read table data with the storage settings on the database: `storage_endpoint`, `aws_access_key_id`, and `aws_secret_access_key`. This is the configuration of the `delta_lake` suite, which uses RustFS and the OSS Unity server.
 
 ```sql
 CREATE DATABASE unity
@@ -632,7 +632,7 @@ SETTINGS
     use_unity_catalog_v2 = 0,
     warehouse = 'unity',
     vended_credentials = false,
-    storage_endpoint = 'http://minio:9000/warehouse',
+    storage_endpoint = 'http://rustfs:9000/warehouse',
     aws_access_key_id = 'key',
     aws_secret_access_key = 'secret';
 ```
