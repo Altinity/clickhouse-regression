@@ -254,8 +254,8 @@ def nested_namespace(self):
     and PyIceberg lists the table under the nested identifier."""
     minio_root_user = self.context.minio_root_user
     minio_root_password = self.context.minio_root_password
-    if self.context.catalog == "glue":
-        skip("Glue databases are flat")
+    if self.context.catalog in ("glue", "unity"):
+        skip(f"{self.context.catalog.title()} namespaces are flat")
 
     with Given("catalog and database"):
         catalog, database_name = catalog_and_database(

@@ -189,7 +189,7 @@ def _disturb_zookeeper_docker_kill(self):
     _zk_wait_healthy(zk, timeout=120)
 
 
-CATALOG_MODES_FOR_MULTI_REPLICA = ("ice", "glue")
+CATALOG_MODES_FOR_MULTI_REPLICA = ("ice", "glue", "unity")
 
 
 def _setup_replicated_source(table_name, nodes):

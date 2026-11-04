@@ -8,6 +8,7 @@ Catalog (``self.context.catalog``):
 * ``"ice"``  - DataLakeCatalog backed by the Altinity ``ice-rest-catalog``
   service (an Iceberg REST Catalog Spec implementation).
 * ``"glue"`` - Glue DataLakeCatalog (LocalStack).
+* ``"unity"`` - Unity DataLakeCatalog backed by its Iceberg REST endpoint.
 
 Source engine (``self.context.source_engine``):
 
@@ -28,7 +29,7 @@ Those modules internally skip scenarios that do not apply.
 from testflows.core import *
 
 from helpers.config import config_d, users_d
-from helpers.common import check_if_antalya_build
+from helpers.common import check_clickhouse_version, check_if_antalya_build
 from helpers.feature_support import validate_feature_support, setting_supported
 
 from iceberg.requirements.export_partition import (
@@ -36,7 +37,7 @@ from iceberg.requirements.export_partition import (
 )
 
 
-CATALOG_MODES = ("no", "ice", "glue")
+CATALOG_MODES = ("no", "ice", "glue", "unity")
 SOURCE_ENGINE_MODES = ("replicated", "plain")
 
 
@@ -110,6 +111,8 @@ def feature(self, minio_root_user, minio_root_password):
             )
 
     for mode in CATALOG_MODES:
+        if mode == "unity" and not check_clickhouse_version(">=26.10")(self):
+            continue
         with Feature(f"{mode} catalog"):
             self.context.catalog = mode
             for engine in SOURCE_ENGINE_MODES:

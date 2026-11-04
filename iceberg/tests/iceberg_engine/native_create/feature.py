@@ -45,6 +45,8 @@ def feature(self, minio_root_user, minio_root_password):
         )
 
     catalogs = ["rest"]
+    if check_clickhouse_version(">=26.10")(self):
+        catalogs.append("unity")
     if os.getenv("LOCALSTACK_AUTH_TOKEN"):
         catalogs.append("glue")
 
