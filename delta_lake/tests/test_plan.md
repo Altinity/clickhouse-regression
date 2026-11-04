@@ -154,12 +154,14 @@ option or a server setting the first tests do not use.
 | Order | Module | What it adds | RQ |
 |---|---|---|---|
 | 6 | `partitions.py` | `deltalake` writes `partition_by`. A filter on the partition column returns the right rows. `_path` lists only files from that partition. The same filter with `delta_lake_enable_engine_predicate = 0` returns the same rows. An empty partition value comes back as `NULL` | Read.PartitionPruning, Schema.PartitionColumns |
-| 7 | `column_mapping.py` | A table written with `delta.columnMapping.mode` of `name` and of `id`, including a rename. `SELECT` uses the logical name | Read.ColumnMapping, Read.SchemaEvolution |
-| 8 | `deletes.py` | A deletion vector drops the marked rows. `count()` matches the live rows. A `remove` action drops the whole file | Read.DeletionVectors, Read.Snapshot |
-| 9 | `time_travel.py` | `delta_lake_snapshot_version = 0` returns the first commit. `-1` returns the latest. A missing version fails. `allow_delta_kernel_rs = 0` makes a pinned version fail instead of returning the latest table | Read.TimeTravel, Read.Kernel |
-| 10 | `cdf.py` | Change data feed between two versions returns `_change_type`, `_commit_version`, and `_commit_timestamp`. Setting only the end version fails. A table without the feed fails | Read.ChangeDataFeed |
-| 11 | `checkpoint.py` | After `deltalake` writes a checkpoint, `SELECT` matches the JSON-only snapshot | Read.Checkpoint |
-| 12 | `create_table.py` | `allow_delta_lake_create_table = 1` writes a log that `deltalake` can open, and `SELECT` returns zero rows. `PARTITION BY` is rejected and leaves no log. The same create inside the Unity database shows up in `SHOW TABLES` | Create.NewTable, Create.NoPartition, Create.RegisterInUnity |
+| 7 | `schema_evolution.py` | Add a nullable column, drop a column, and reorder columns across commits. Older files return `NULL` for the new column. `delta_lake_snapshot_version` uses that version's schema. `delta_lake_reload_schema_for_consistency = 1` picks up a commit that lands after analysis | Read.SchemaEvolution, Read.SchemaReload, Read.TypeWidening |
+| 8 | `column_mapping.py` | A table written with `delta.columnMapping.mode` of `none`, `name`, and `id`, including a rename. `SELECT` uses the logical name. `id` mode resolves Parquet field ids | Read.ColumnMapping, Read.SchemaEvolution |
+| 9 | `deletes.py` | Deletion vectors with `storageType` `u`, `i`, and `p` drop the marked rows. `count()` matches the live rows. A `remove` action drops the whole file | Read.DeletionVectors, Read.Snapshot |
+| 10 | `time_travel.py` | `delta_lake_snapshot_version = 0` returns the first commit. `-1` returns the latest. A missing version fails. `allow_delta_kernel_rs = 0` makes a pinned version fail instead of returning the latest table | Read.TimeTravel, Read.Kernel |
+| 11 | `cdf.py` | A version with `cdc` files is read only from those files. A version with only `add` and `remove` reports inserts and deletes. Setting only the end version fails | Read.ChangeDataFeed |
+| 12 | `checkpoint.py` | A classic checkpoint matches the JSON log. A multi-part checkpoint with a missing part is ignored. A missing `_last_checkpoint` still returns the latest snapshot | Read.Checkpoint, Protocol.Replay |
+| 13 | `protocol.py` | Replay of `add` and `remove`, URI-decoded paths, a non-parquet provider failing, `dataChange = false` leaving rows unchanged, an unknown JSON field ignored, and `catalogManaged` failing closed | Protocol.Replay, Protocol.Paths, Protocol.Format, Protocol.DataChange, Protocol.UnknownFields, Protocol.CatalogManaged |
+| 14 | `create_table.py` | `allow_delta_lake_create_table = 1` writes a log that `deltalake` can open, and `SELECT` returns zero rows. `PARTITION BY` is rejected and leaves no log. The same create inside the Unity database shows up in `SHOW TABLES` | Create.NewTable, Create.NoPartition, Create.RegisterInUnity |
 
 `deltaLakeCluster('test_shard_localhost', ...)` can sit at the end of
 `access.py` once scenario 1 is stable. That cluster name is two shards on
