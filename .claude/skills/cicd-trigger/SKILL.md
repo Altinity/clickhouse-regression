@@ -100,7 +100,7 @@ python3 cicd-trigger.py [options]
 `benchmark_all`, `benchmark_aws`, `benchmark_gcs`, `benchmark_minio`
 
 **Other:**
-`iceberg`, `kafka`, `key_value`, `part_moves_between_shards`, `swarms`, `hive_partitioning`
+`delta_lake`, `iceberg`, `kafka`, `key_value`, `part_moves_between_shards`, `swarms`, `hive_partitioning`
 
 ## Examples
 

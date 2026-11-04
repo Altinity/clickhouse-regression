@@ -1,0 +1,59 @@
+services:
+  minio:
+    extends:
+      file: rustfs-service.yml
+      service: minio
+
+  mc:
+    extends:
+      file: minio-client.yml
+      service: mc
+    depends_on:
+      minio:
+        condition: service_healthy
+
+  unity-catalog:
+    # Official release
+    image: unitycatalog/unitycatalog:v0.7.0
+    init: true
+    ports:
+      - "8085:8080"
+    environment:
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT_URL_S3=http://minio:9000
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1:8080/api/2.1/unity-catalog/catalogs",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      unity-catalog:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
