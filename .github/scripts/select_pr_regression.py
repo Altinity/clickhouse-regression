@@ -33,6 +33,38 @@ MAPPING_PATH = Path(".claude/skills/regression-test-selection/mapping.yaml")
 # These characters break that assignment or start another shell command.
 UNSAFE_ARGS = re.compile(r"['\n;`&$\\<>]")
 
+# A job with no --only and no --skip runs the whole suite. These suites are
+# already split into numbered jobs in run-regression.yml. Each entry is the
+# filter for that part, in order.
+WHOLE_SUITE_PARTS = {
+    "aggregate_functions": [
+        '--only "/aggregate functions/part 1/*"',
+        '--only "/aggregate functions/part 2/*"',
+        '--only "/aggregate functions/part 3/*"',
+    ],
+    "clickhouse_keeper": [
+        '--only "/clickhouse keeper/part 1/*"',
+        '--only "/clickhouse keeper/part 2/*"',
+    ],
+    "rbac": [
+        '--only "/rbac/part 1/*"',
+        '--only "/rbac/part 2/*"',
+        '--only "/rbac/part 3/*"',
+    ],
+    "iceberg": [
+        '--only "/iceberg/iceberg engine/rest catalog/*" "/iceberg/s3 table function/*" "/iceberg/icebergS3 table function/*" "/iceberg/iceberg cache/*"',
+        '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*" "/iceberg/export partition/*"',
+    ],
+}
+
+# The plain lightweight_delete suite is one job. The CAS reruns are four.
+LIGHTWEIGHT_DELETE_CAS_PARTS = [
+    '--only "/lightweight delete/disk space/*"',
+    '--only "/lightweight delete/hard restart/*"',
+    '--skip "/lightweight delete/disk space/*" "/lightweight delete/hard restart/*" "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"',
+    '--only "/lightweight delete/alter after delete/*" "/lightweight delete/concurrent alter and delete/*" "/lightweight delete/concurrent delete/*" "/lightweight delete/basic checks/*" "/lightweight delete/performance/*" "/lightweight delete/ontime tests/*"',
+]
+
 
 class SelectionError(Exception):
     """The plan cannot be run. The message says what to do next."""
@@ -351,16 +383,41 @@ def validate_jobs(suites: list[dict], jobs: list) -> list[dict]:
         part = str(job.get("part") or "")
         if part and not re.fullmatch(r"\d+", part):
             raise SelectionError(f"part for {suite_name} must be empty or a number. Got {part!r}.")
-        accepted.append(
-            {
-                "suite_name": suite_name,
-                "job_name": suite_name.replace("/", "_"),
-                "part": part,
-                "regression_args": args,
-                "storage_path": storage,
-            }
+        accepted.extend(
+            split_whole_suite(
+                {
+                    "suite_name": suite_name,
+                    "job_name": suite_name.replace("/", "_"),
+                    "part": part,
+                    "regression_args": args,
+                    "storage_path": storage,
+                }
+            )
         )
     return accepted
+
+
+def split_whole_suite(job: dict) -> list[dict]:
+    """Turn one whole-suite job into the numbered parts CI already uses."""
+    args = job["regression_args"]
+    if job["part"] or "--only" in args or "--skip" in args:
+        return [job]
+    parts = WHOLE_SUITE_PARTS.get(job["suite_name"])
+    if job["suite_name"] == "lightweight_delete" and args.strip() in ("--cas", "--cas-s3-cache"):
+        parts = LIGHTWEIGHT_DELETE_CAS_PARTS
+    if not parts:
+        return [job]
+    prefix = args.strip()
+    split = []
+    for index, only in enumerate(parts, start=1):
+        split.append(
+            {
+                **job,
+                "part": str(index),
+                "regression_args": f"{prefix} {only}".strip(),
+            }
+        )
+    return split
 
 
 def extract_json(text: str) -> dict:
