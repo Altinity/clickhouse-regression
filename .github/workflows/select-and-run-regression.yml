@@ -5,8 +5,8 @@ run-name: Select and run regression | ${{ inputs.pr }}
 # The select job reads that PR's head build, asks the Cursor agent for
 # CURSOR_API_KEY to follow regression-test-selection, prints the plan, and
 # then starts those suites on x86 and arm64.
-# The package is the PR's build_amd_binary / build_arm_binary clickhouse binary.
-# The version is VERSION_STRING at the PR head.
+# The package is the clickhouse-common-static deb from Build (amd_release) and Build (arm_release).
+# The version is the version in that deb name.
 # Add your Cursor user API key as the repository secret CURSOR_API_KEY.
 # Set CLICKHOUSE_PR_TOKEN when GITHUB_TOKEN cannot read Altinity/ClickHouse.
 
