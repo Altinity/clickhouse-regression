@@ -38,6 +38,19 @@
                 * 6.2.1.2.4 [RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
                 * 6.2.1.2.5 [RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
                 * 6.2.1.2.6 [RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
+        * 6.2.2 [Roles Mapping](#roles-mapping)
+            * 6.2.2.1 [RQ.SRS-042.OAuth.Authentication.UserDirectories.RolesMapping.Validation](#rqsrs-042oauthauthenticationuserdirectoriesrolesmappingvalidation)
+        * 6.2.3 [Settings Profiles Mapping](#settings-profiles-mapping)
+            * 6.2.3.1 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmapping)
+            * 6.2.3.2 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Precedence](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingprecedence)
+            * 6.2.3.3 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.MultipleGroups](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingmultiplegroups)
+            * 6.2.3.4 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.RawGroupMatching](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingrawgroupmatching)
+            * 6.2.3.5 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.GroupRemoved](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappinggroupremoved)
+            * 6.2.3.6 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.MissingProfile](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingmissingprofile)
+            * 6.2.3.7 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Enforcement](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingenforcement)
+            * 6.2.3.8 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Validation](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingvalidation)
+            * 6.2.3.9 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Distributed](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingdistributed)
+            * 6.2.3.10 [RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Distributed.StaleProfiles](#rqsrs-042oauthauthenticationuserdirectoriesprofilesmappingdistributedstaleprofiles)
 * 7 [Azure](#azure)
     * 7.1 [Setting up an Application in Azure](#setting-up-an-application-in-azure)
         * 7.1.1 [RQ.SRS-042.OAuth.Azure.ApplicationSetup](#rqsrs-042oauthazureapplicationsetup)
@@ -272,6 +285,7 @@
         * 16.2.1 [RQ.SRS-042.OAuth.SQLJWTUsers.ProcessorClause](#rqsrs-042oauthsqljwtusersprocessorclause)
     * 16.3 [CLAIMS Clause](#claims-clause)
         * 16.3.1 [RQ.SRS-042.OAuth.SQLJWTUsers.ClaimsClause](#rqsrs-042oauthsqljwtusersclaimsclause)
+        * 16.3.2 [RQ.SRS-042.OAuth.SQLJWTUsers.ClaimsClause.NonJWTProcessor](#rqsrs-042oauthsqljwtusersclaimsclausenonjwtprocessor)
     * 16.4 [ALTER USER Re-pinning](#alter-user-re-pinning)
         * 16.4.1 [RQ.SRS-042.OAuth.SQLJWTUsers.AlterUser](#rqsrs-042oauthsqljwtusersalteruser)
     * 16.5 [Authentication Flow for SQL-Declared JWT Users](#authentication-flow-for-sql-declared-jwt-users)
@@ -508,9 +522,12 @@ When a user is not defined locally, [ClickHouse] SHALL use the external provider
 
 - `processor` — Name of one of processors defined in `token_processors` config section. This parameter is mandatory and cannot be empty.
 - `common_roles` — Section with a list of locally defined roles that will be assigned to each user retrieved from the IdP. Optional.
-- `default_profile` — Name of a locally defined settings profile that will be assigned to each user retrieved from the IdP. If the profile does not exist, a warning will be logged and the user will be created without a profile. Optional.
+- `default_profile` — Name of a locally defined settings profile that will be assigned to each user retrieved from the IdP. If the profile does not exist, the user is created without it. Optional.
+- `profiles_mapping` — Section with `<map>` entries (`from` group, `to` settings profile) assigning profiles by group. See [Settings Profiles Mapping](#settings-profiles-mapping). Optional.
+- `roles_mapping` — Section with `<map>` entries (`from` group, `to` role) renaming groups before `roles_filter` and `roles_transform` are applied. Groups without an entry pass unchanged. Optional.
 - `roles_filter` — Regex string for groups filtering. Only groups matching this regex will be mapped to roles. Optional.
 - `roles_transform` — Sed-style transform pattern to apply to group names before mapping to roles. Format: `s/pattern/replacement/flags`. The `g` flag applies the replacement globally (all occurrences). Example: `s/-/_/g` converts `clickhouse-grp-dba` to `clickhouse_grp_dba`. Optional.
+- `networks` — Addresses that users from this directory may connect from, in the same format as `networks` in `users.xml`. Default: any address. Optional.
 
 For example,
 
@@ -518,7 +535,9 @@ For example,
 <clickhouse>
     <token_processors>
         <azuure>
-            <type>azure</type>
+            <type>entra</type>
+            <tenant_id>aaaabbbb-0000-cccc-1111-dddd2222eeee</tenant_id>
+            <expected_audience>api://clickhouse</expected_audience>
         </azuure>
     </token_processors>
     <user_directories>
@@ -594,6 +613,80 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL not allow the external user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+#### Roles Mapping
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.RolesMapping.Validation
+version: 1.0
+
+[ClickHouse] SHALL refuse to start with `BAD_ARGUMENTS` when a `roles_mapping` entry in the `token` user directory is missing its `from` or `to` subelement, has an empty `from` or `to`, or repeats a `from` value already used by another entry.
+
+#### Settings Profiles Mapping
+
+The `profiles_mapping` section of the `token` user directory assigns [ClickHouse] settings profiles to externally defined users by the groups in their token (Altinity/ClickHouse#2664, Altinity/ClickHouse#1032).
+
+```xml
+<token>
+    <processor>my_processor</processor>
+    <default_profile>token_users_profile</default_profile>
+    <profiles_mapping>
+        <map>
+            <from>grafana-viewers</from>
+            <to>grafana_profile</to>
+        </map>
+    </profiles_mapping>
+</token>
+```
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping
+version: 1.0
+
+[ClickHouse] SHALL support a `profiles_mapping` section in the `token` user directory containing `<map>` entries with `from` (an IdP group) and `to` (a settings profile name). A user whose token carries a mapped group SHALL be assigned the mapped profile in addition to `default_profile`.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Precedence
+version: 1.0
+
+When a setting is defined by several sources, [ClickHouse] SHALL apply the first source in this order: profiles from `profiles_mapping`, then `default_profile`, then the profiles of the user's roles, then the server's default profile.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.MultipleGroups
+version: 1.0
+
+When a user is in several mapped groups, [ClickHouse] SHALL assign all of their profiles, and for a setting defined by more than one of them the profile of the entry that comes later in `profiles_mapping` SHALL win, regardless of the order of the groups in the token.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.RawGroupMatching
+version: 1.0
+
+[ClickHouse] SHALL match the `from` value of a `profiles_mapping` entry against the group exactly as it comes in the token. `roles_mapping`, `roles_filter` and `roles_transform` SHALL NOT apply to `profiles_mapping`.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.GroupRemoved
+version: 1.0
+
+[ClickHouse] SHALL reassign profiles on every login, so a user whose token no longer carries a mapped group SHALL lose that group's profile on the next login.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.MissingProfile
+version: 1.0
+
+When a `profiles_mapping` entry names a settings profile that does not exist, [ClickHouse] SHALL skip that profile, still authenticate the user, and still assign the other profiles that do exist.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Enforcement
+version: 1.0
+
+[ClickHouse] SHALL enforce the settings and constraints of a mapped profile, for example `readonly = 1` SHALL reject writes and a `CONST` setting SHALL NOT be changeable by the query.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Validation
+version: 1.0
+
+[ClickHouse] SHALL refuse to start with `BAD_ARGUMENTS` when a `profiles_mapping` entry is missing its `from` or `to` subelement, has an empty `from` or `to`, or repeats a `from` value already used by another entry.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Distributed
+version: 1.0
+
+In distributed queries, [ClickHouse] SHALL send the settings resulting from the mapped profiles to the other nodes with the query, so that the profiles only need to exist on the node the user connects to.
+
+##### RQ.SRS-042.OAuth.Authentication.UserDirectories.ProfilesMapping.Distributed.StaleProfiles
+version: 1.0
+
+When the user has previously logged in directly to another node, that node SHALL keep the profiles from that login until the user's next direct login there, and its part of a distributed query SHALL use those profiles' settings.
 
 
 ## Azure
@@ -3225,6 +3318,11 @@ When a SQL-declared JWT user has `PROCESSOR '<name>'` set, [ClickHouse] SHALL on
 version: 1.0
 
 When a SQL-declared JWT user has `CLAIMS '<json>'` set, [ClickHouse] SHALL verify that the bearer token's payload contains all the key-value pairs specified in the claims JSON object. A token that is missing a required claim or has a different value for a required claim SHALL be rejected. `SHOW CREATE USER` SHALL emit the `CLAIMS` clause with the stored JSON.
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.ClaimsClause.NonJWTProcessor
+version: 1.0
+
+Claims can only be checked in JWTs validated by `jwt_static_key`, `jwt_static_jwks`, `jwt_dynamic_jwks` or `entra`. [ClickHouse] SHALL reject a user with `CLAIMS` set when the token is validated by any other processor (`openid`, `google`), even if the token would carry the required claims.
 
 ### ALTER USER Re-pinning
 

@@ -1,4 +1,4 @@
-from helpers.common import getuid
+from helpers.common import check_clickhouse_version, check_if_antalya_build, getuid
 from jwt_authentication.tests.steps import create_static_jwt
 from oauth.tests.steps.clikhouse import (
     access_clickhouse,
@@ -10,6 +10,7 @@ from oauth.tests.steps.clikhouse import (
     create_sql_jwt_user,
     show_create_user,
 )
+from oauth.tests.steps.common import configure_openid_token_processor, provider_user
 from oauth.requirements.requirements import *
 from testflows.asserts import error
 from testflows.core import *
@@ -371,6 +372,52 @@ def claim_mismatch_rejected_consistently(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_SQLJWTUsers_ClaimsClause_NonJWTProcessor("1.0"),
+)
+def claims_rejected_with_non_jwt_processor(self):
+    """A SQL user with ``CLAIMS`` SHALL NOT log in with a token validated by
+    an ``openid`` processor, even when the token carries the required claim.
+    """
+    if not (check_if_antalya_build(self) and check_clickhouse_version(">=26.8")(self)):
+        skip("documented in Altinity/ClickHouse#2664 for antalya-26.8+")
+
+    client = self.context.provider_client
+    uid = getuid()[:8]
+    username = f"jwtclaimsoid_{uid}"
+
+    with Given("an openid processor keyed on preferred_username, without caching"):
+        configure_openid_token_processor(
+            username_claim="preferred_username", token_cache_lifetime=0
+        )
+
+    with And(f"I create IdP user '{username}'"):
+        provider_user(username=username)
+
+    with And(f"I create SQL user {username} pinned to the openid processor"):
+        create_sql_jwt_user(username=username, processor="keycloak")
+
+    with When("I get a token for the user"):
+        token = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
+
+    with Then("baseline: without CLAIMS the openid-validated token is accepted"):
+        body = access_clickhouse(token=token, status_code=200)
+        assert username in body, error()
+
+    with When("I add a CLAIMS requirement the token does satisfy"):
+        alter_sql_jwt_user(
+            username=username,
+            processor="keycloak",
+            claims={"preferred_username": username},
+        )
+
+    with Then("the same token is rejected: claims cannot be checked via openid"):
+        assert_token_rejected(token=token)
+
+
+@TestScenario
 @Requirements(RQ_SRS_042_OAuth_SQLJWTUsers_Validation_EmptyProcessor("1.0"))
 def empty_processor_name_rejected(self):
     """``CREATE USER ... IDENTIFIED WITH jwt PROCESSOR ''`` SHALL be
@@ -448,5 +495,6 @@ def feature(self):
     Scenario(run=alter_repin_changes_accepted_processor)
     Scenario(run=claims_enforced_via_sql)
     Scenario(run=claim_mismatch_rejected_consistently)
+    Scenario(run=claims_rejected_with_non_jwt_processor)
     Scenario(run=empty_processor_name_rejected)
     Scenario(run=invalid_claims_json_rejected)

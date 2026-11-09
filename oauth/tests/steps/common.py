@@ -10,7 +10,7 @@ named step.
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_if_antalya_build
 from oauth.tests.steps.clikhouse import (
     access_clickhouse,
     change_token_processors,
@@ -18,6 +18,16 @@ from oauth.tests.steps.clikhouse import (
     check_clickhouse_is_alive,
 )
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
+
+
+def profiles_mapping_supported(test):
+    """True when the build has ``<profiles_mapping>`` in the token user
+    directory (Altinity/ClickHouse#2664, antalya-26.8+).
+
+    Older builds silently ignore the section, so scenarios relying on it
+    must be gated rather than left to fail on the precedence assertions.
+    """
+    return check_if_antalya_build(test) and check_clickhouse_version(">=26.8")(test)
 
 
 @TestStep(Given)
@@ -30,6 +40,7 @@ def configure_openid_token_processor(
     roles_filter=None,
     roles_transform=None,
     default_profile=None,
+    profiles_mapping=None,
     token_cache_lifetime=None,
     username_claim=None,
     groups_claim=None,
@@ -98,6 +109,7 @@ def configure_openid_token_processor(
         roles_filter=roles_filter,
         roles_transform=roles_transform,
         default_profile=default_profile,
+        profiles_mapping=profiles_mapping,
     )
 
 
@@ -112,6 +124,10 @@ def configure_static_key_processor(
     allow_no_expiration=None,
     common_roles=("general-role",),
     default_profile=None,
+    profiles_mapping=None,
+    roles_mapping=None,
+    roles_filter=None,
+    roles_transform=None,
     with_user_directory=True,
     replace_section=True,
     node=None,
@@ -143,6 +159,10 @@ def configure_static_key_processor(
             processor=processor_name,
             common_roles=list(common_roles) if common_roles is not None else None,
             default_profile=default_profile,
+            profiles_mapping=profiles_mapping,
+            roles_mapping=roles_mapping,
+            roles_filter=roles_filter,
+            roles_transform=roles_transform,
             node=node,
         )
 
@@ -158,6 +178,22 @@ def assert_query_denied(self, token, query, ip="clickhouse1"):
     status_code = 403 if check_clickhouse_version(">=26.8")(self) else 500
     body = access_clickhouse(token=token, status_code=status_code, query=query, ip=ip)
     assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
+    return body
+
+
+@TestStep(Then)
+def assert_query_rejected(self, token, query, markers, ip="clickhouse1"):
+    """Assert ClickHouse authenticates the token but refuses ``query`` with
+    an error whose body contains one of ``markers``.
+
+    Returns the response body.
+    """
+    body = access_clickhouse(
+        token=token, query=query, status_code=(400, 403, 500), ip=ip
+    )
+    assert any(m in body for m in markers), error(
+        f"Expected one of {markers} in the response body, got: {body[:500]}"
+    )
     return body
 
 
