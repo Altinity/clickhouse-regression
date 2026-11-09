@@ -449,7 +449,6 @@ def run_agent(prompt: str, root: Path, features: list[dict], suites: list[dict])
             AgentOptions,
             CustomTool,
             LocalAgentOptions,
-            SandboxOptions,
         )
     except ImportError as exc:
         raise SelectionError(
@@ -497,7 +496,6 @@ def run_agent(prompt: str, root: Path, features: list[dict], suites: list[dict])
             local=LocalAgentOptions(
                 cwd=root,
                 setting_sources=[],
-                sandbox_options=SandboxOptions(enabled=True),
                 auto_review=True,
                 custom_tools={
                     "match_files": CustomTool(
