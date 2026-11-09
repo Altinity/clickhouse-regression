@@ -57,7 +57,26 @@ WHOLE_SUITE_PARTS = {
     ],
 }
 
-# The plain lightweight_delete suite is one job. The CAS reruns are four.
+# The tiered storage suite creates one feature from the flag. --only of
+# "/tiered storage/with minio/*" does not start MinIO. These are the jobs
+# run-regression.yml uses for each feature.
+TIERED_STORAGE_JOBS = [
+    ("with minio", "tiered_storage_minio", "/minio", "--with-minio"),
+    (
+        "with s3amazon",
+        "tiered_storage_aws",
+        "/aws",
+        "--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/",
+    ),
+    ("with s3hetzner", "tiered_storage_hetzner", "/hetzner", "--with-s3hetzner"),
+    (
+        "with s3gcs",
+        "tiered_storage_gcs",
+        "/gcs",
+        "--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}",
+    ),
+    ("with cas", "tiered_storage_cas", "/cas", "--with-cas"),
+]
 LIGHTWEIGHT_DELETE_CAS_PARTS = [
     '--only "/lightweight delete/disk space/*"',
     '--only "/lightweight delete/hard restart/*"',
@@ -383,18 +402,37 @@ def validate_jobs(suites: list[dict], jobs: list) -> list[dict]:
         part = str(job.get("part") or "")
         if part and not re.fullmatch(r"\d+", part):
             raise SelectionError(f"part for {suite_name} must be empty or a number. Got {part!r}.")
-        accepted.extend(
-            split_whole_suite(
-                {
-                    "suite_name": suite_name,
-                    "job_name": suite_name.replace("/", "_"),
-                    "part": part,
-                    "regression_args": args,
-                    "storage_path": storage,
-                }
-            )
-        )
+        built = {
+            "suite_name": suite_name,
+            "job_name": suite_name.replace("/", "_"),
+            "part": part,
+            "regression_args": args,
+            "storage_path": storage,
+        }
+        for piece in split_tiered_storage(built):
+            accepted.extend(split_whole_suite(piece))
     return accepted
+
+
+def split_tiered_storage(job: dict) -> list[dict]:
+    """Replace --only of a tiered-storage backend with the flag that starts it."""
+    if job["suite_name"] != "tiered_storage" or "--with-" in job["regression_args"]:
+        return [job]
+    args = job["regression_args"]
+    if "--only" not in args:
+        return [job]
+    matched = [spec for spec in TIERED_STORAGE_JOBS if spec[0] in args]
+    if not matched:
+        return [job]
+    return [
+        {
+            **job,
+            "job_name": job_name,
+            "storage_path": storage,
+            "regression_args": flags,
+        }
+        for _needle, job_name, storage, flags in matched
+    ]
 
 
 def split_whole_suite(job: dict) -> list[dict]:
