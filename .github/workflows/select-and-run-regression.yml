@@ -1,0 +1,87 @@
+name: Select and run regression
+run-name: Select and run regression | ${{ inputs.pr }}
+
+# One Altinity/ClickHouse pull request.
+# The select job reads that PR's head build, asks the Cursor agent for
+# CURSOR_API_KEY to follow regression-test-selection, prints the plan, and
+# then starts those suites on x86 and arm64.
+# The package is the PR's build_amd_binary / build_arm_binary clickhouse binary.
+# The version is VERSION_STRING at the PR head.
+# Add your Cursor user API key as the repository secret CURSOR_API_KEY.
+# Set CLICKHOUSE_PR_TOKEN when GITHUB_TOKEN cannot read Altinity/ClickHouse.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "Altinity/ClickHouse pull request number or URL"
+        required: true
+        type: string
+
+concurrency:
+  group: select-and-run-regression-${{ inputs.pr }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    outputs:
+      jobs: ${{ steps.select.outputs.jobs }}
+      job_count: ${{ steps.select.outputs.job_count }}
+      version: ${{ steps.select.outputs.version }}
+      package_x86: ${{ steps.select.outputs.package_x86 }}
+      package_arm64: ${{ steps.select.outputs.package_arm64 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the selector
+        run: pip install "pyyaml" "cursor-sdk==1.3.1"
+
+      - name: Select tests
+        id: select
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          GH_TOKEN: ${{ secrets.CLICKHOUSE_PR_TOKEN != '' && secrets.CLICKHOUSE_PR_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/select_pr_regression.py --pr "${{ inputs.pr }}"
+
+      - name: Upload the plan
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: selection-plan
+          path: selection-plan.json
+          if-no-files-found: ignore
+
+  run:
+    needs: select
+    if: needs.select.outputs.job_count != '0'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86, arm64]
+        job: ${{ fromJson(needs.select.outputs.jobs) }}
+    uses: ./.github/workflows/reusable-suite.yml
+    secrets: inherit
+    with:
+      suite_name: ${{ matrix.job.suite_name }}
+      job_name: ${{ matrix.job.job_name }}
+      part: ${{ matrix.job.part }}
+      regression_args: ${{ matrix.job.regression_args }}
+      storage_path: ${{ matrix.job.storage_path }}
+      package: ${{ matrix.arch == 'x86' && needs.select.outputs.package_x86 || needs.select.outputs.package_arm64 }}
+      version: ${{ needs.select.outputs.version }}
+      flags: --with-analyzer
+      output_format: new-fails
+      artifacts: hetzner
+      timeout_minutes: 300
+      runner_arch: ${{ matrix.arch }}
