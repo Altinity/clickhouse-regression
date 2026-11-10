@@ -437,7 +437,7 @@ def validate_jobs(suites: list[dict], jobs: list) -> list[dict]:
                 "Put every --only path for that suite on one job."
             )
         seen.add(suite_name)
-        args = normalize_args(job.get("regression_args"))
+        args = canonicalize_args(normalize_args(job.get("regression_args")))
         if UNSAFE_ARGS.search(args):
             raise SelectionError(
                 f"regression_args for {suite_name} contains a character the runner cannot pass through. "
@@ -486,6 +486,27 @@ def is_full_cas_rerun(job: dict) -> bool:
 
 def _only_paths(args: str) -> list[str]:
     return re.findall(r'"(/[^"]+)"', args)
+
+
+def _covered_by(path: str, pattern: str) -> bool:
+    if not pattern.endswith("/*"):
+        return False
+    return path.startswith(pattern[:-1])
+
+
+def canonicalize_args(args: str) -> str:
+    """Drop an --only path already covered by a wildcard in the same argument list."""
+
+    def replace(match: re.Match) -> str:
+        paths = re.findall(r'"(/[^"]+)"', match.group(0))
+        kept = [
+            path
+            for path in paths
+            if not any(_covered_by(path, other) for other in paths if other != path)
+        ]
+        return "--only " + " ".join(f'"{path}"' for path in kept)
+
+    return re.sub(r'--only(\s+"[^"]*")+', replace, args).strip()
 
 
 def _path_in_split(requested: str, split_prefix: str) -> bool:
@@ -805,12 +826,11 @@ def load_pr(repo: str, number: int) -> dict:
 
 
 def job_key(job: dict) -> tuple:
+    """Identity of what the suite will run. Report path and timeout are not part of it."""
     return (
         job.get("suite_name"),
         str(job.get("part") or ""),
-        job.get("storage_path") or "",
-        job.get("regression_args") or "",
-        job.get("job_name") or "",
+        canonicalize_args(job.get("regression_args") or ""),
     )
 
 
@@ -831,18 +851,24 @@ def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
     remembered = []
     for job in previous:
         remembered.extend(normalize_remembered(job))
-    current_keys = {job_key(job) for job in current}
-    merged = []
-    seen = set()
-    for job in remembered + current:
+    merged: dict[tuple, dict] = {}
+    order: list[tuple] = []
+    for job in current:
+        job = {key: value for key, value in job.items() if key != "carried_forward"}
+        job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
         key = job_key(job)
-        if key in seen:
+        if key not in merged:
+            order.append(key)
+        merged[key] = job
+    for job in remembered:
+        job = {key: value for key, value in job.items() if key != "carried_forward"}
+        job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
+        key = job_key(job)
+        if key in merged:
             continue
-        seen.add(key)
-        if key not in current_keys:
-            job = {**job, "carried_forward": True}
-        merged.append(job)
-    return merged
+        order.append(key)
+        merged[key] = {**job, "carried_forward": True}
+    return [merged[key] for key in order]
 
 
 def load_previous_jobs(pr_number: int) -> list[dict]:
