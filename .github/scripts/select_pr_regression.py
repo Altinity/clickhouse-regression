@@ -814,14 +814,27 @@ def job_key(job: dict) -> tuple:
     )
 
 
+def normalize_remembered(job: dict) -> list[dict]:
+    """Reapply the current splitters so an old plan cannot rerun a stale command."""
+    cleaned = {key: value for key, value in job.items() if key != "carried_forward"}
+    normalized = []
+    for tiered in split_tiered_storage(cleaned):
+        if is_full_cas_rerun(tiered):
+            continue
+        for piece in split_alter(tiered):
+            normalized.extend(split_whole_suite(piece))
+    return normalized
+
+
 def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
     """Keep every earlier job for this PR, then add jobs from this commit."""
+    remembered = []
+    for job in previous:
+        remembered.extend(normalize_remembered(job))
     current_keys = {job_key(job) for job in current}
     merged = []
     seen = set()
-    for job in previous + current:
-        if is_full_cas_rerun(job):
-            continue
+    for job in remembered + current:
         key = job_key(job)
         if key in seen:
             continue
@@ -926,7 +939,11 @@ def emit(pr: dict, plan: dict, root: Path) -> None:
         "jobs": plan["jobs"],
     }
     (root / PLAN_NAME).write_text(json.dumps(document, indent=2) + "\n")
-    write_github_output("jobs", json.dumps(plan["jobs"]))
+    run_jobs = [
+        {key: value for key, value in job.items() if key != "carried_forward"}
+        for job in plan["jobs"]
+    ]
+    write_github_output("jobs", json.dumps(run_jobs))
     write_github_output("job_count", str(len(plan["jobs"])))
     write_github_output("version", pr["version"])
     write_github_output("package_x86", pr["packages"]["x86"])
