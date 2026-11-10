@@ -144,13 +144,13 @@ suites:
     notes:
       - nothingNull, nothingUInt64, quantileDD, and quantilesDD have no test module. The suite skips them.
       - denseRank, percent_rank, and percentRank are excluded from part 1 and have no window scenario.
-      - --cas reruns the suite for storage.cas. --cas-s3-cache reruns it for storage.disk.cache.
+      - --cas reruns the suite for storage.cas. --cas-s3-cache reruns it for storage.cas.cache.
     features:
       - id: functions.aggregate
         description: The aggregate function factory. Run the suite with no --only.
       - id: storage.cas
         description: The same suite with --cas.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same suite with --cas-s3-cache.
       - id: functions.aggregate.combinators.state
         scenarios:
@@ -1034,7 +1034,7 @@ suites:
           - /alter/move partition/*
       - id: storage.cas
         description: The same scenarios with --cas.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same scenarios with --cas-s3-cache.
       - id: engines.mergetree
         scenarios:
@@ -1134,7 +1134,7 @@ suites:
           - /atomic insert/hard restart/*
       - id: storage.cas
         description: The same suite with --cas.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same suite with --cas-s3-cache.
       - id: engines.mergetree
         scenarios:
@@ -1325,7 +1325,7 @@ suites:
           - /cas/content addressed storage/*
       - id: storage.cas.backend
         description: The same scenarios. CAS blobs go through the object-storage backend.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same scenarios with --cas-s3-cache.
       - id: storage.gcs
         description: The same scenarios with --storage gcs.
@@ -1992,7 +1992,7 @@ suites:
           - /engines/summing_merge_tree/clear column validation consistency
       - id: storage.cas
         description: The same suite with --cas.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same suite with --cas-s3-cache.
 
   - path: example
@@ -3284,7 +3284,7 @@ suites:
           - /lightweight delete/backup/*
       - id: storage.cas
         description: The same suite with --cas, split across the four jobs in the notes.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same four jobs with --cas-s3-cache.
 
 
@@ -3690,7 +3690,7 @@ suites:
           - /selects/final/force/user rights/*
       - id: storage.cas
         description: The same tests with --cas.
-      - id: storage.disk.cache
+      - id: storage.cas.cache
         description: The same tests with --cas-s3-cache.
 
 

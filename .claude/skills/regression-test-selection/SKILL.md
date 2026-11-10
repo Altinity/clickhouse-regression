@@ -44,7 +44,7 @@ When a child wins, report that child and its parent. When only the parent matche
 - A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
 - `--with-analyzer` and `--use-keeper` are run flags. Do not treat either flag as a feature.
-- `storage.cas` and `storage.disk.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.yaml. Copy the flag with the path. Do not add soak, Jepsen, or alter stress.
+- `storage.cas` and `storage.cas.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.yaml. Copy the flag with the path. Do not add soak, Jepsen, or alter stress.
 
 ## Map features to tests
 
