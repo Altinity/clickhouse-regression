@@ -449,14 +449,16 @@ def validate_jobs(suites: list[dict], jobs: list) -> list[dict]:
         part = str(job.get("part") or "")
         if part and not re.fullmatch(r"\d+", part):
             raise SelectionError(f"part for {suite_name} must be empty or a number. Got {part!r}.")
-        built = {
-            "suite_name": suite_name,
-            "job_name": suite_name.replace("/", "_"),
-            "part": part,
-            "regression_args": args,
-            "storage_path": storage,
-            "timeout_minutes": 360 if suite_name == "s3" else 300,
-        }
+        built = normalize_s3_storage(
+            {
+                "suite_name": suite_name,
+                "job_name": suite_name.replace("/", "_"),
+                "part": part,
+                "regression_args": args,
+                "storage_path": storage,
+                "timeout_minutes": 480 if suite_name == "s3" else 300,
+            }
+        )
         for tiered in split_tiered_storage(built):
             if is_full_cas_rerun(tiered):
                 print(
@@ -507,6 +509,18 @@ def canonicalize_args(args: str) -> str:
         return "--only " + " ".join(f'"{path}"' for path in kept)
 
     return re.sub(r'--only(\s+"[^"]*")+', replace, args).strip()
+
+
+def normalize_s3_storage(job: dict) -> dict:
+    """Omitting --storage runs MinIO. Write that flag so it matches an explicit MinIO job."""
+    if job.get("suite_name") != "s3":
+        return job
+    args = job.get("regression_args") or ""
+    updated = {**job, "timeout_minutes": 480}
+    if "--storage" not in args:
+        updated["regression_args"] = f"--storage minio {args}".strip()
+        updated["storage_path"] = job.get("storage_path") or "/minio"
+    return updated
 
 
 def _path_in_split(requested: str, split_prefix: str) -> bool:
@@ -854,14 +868,18 @@ def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
     merged: dict[tuple, dict] = {}
     order: list[tuple] = []
     for job in current:
-        job = {key: value for key, value in job.items() if key != "carried_forward"}
+        job = normalize_s3_storage(
+            {key: value for key, value in job.items() if key != "carried_forward"}
+        )
         job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
         key = job_key(job)
         if key not in merged:
             order.append(key)
         merged[key] = job
     for job in remembered:
-        job = {key: value for key, value in job.items() if key != "carried_forward"}
+        job = normalize_s3_storage(
+            {key: value for key, value in job.items() if key != "carried_forward"}
+        )
         job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
         key = job_key(job)
         if key in merged:
