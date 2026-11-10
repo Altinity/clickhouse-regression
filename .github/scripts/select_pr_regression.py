@@ -489,7 +489,7 @@ def build_prompt(pr: dict, skill: str) -> str:
 
 Follow the skill below. The workflow prints your plan and then starts the suite jobs. You do not start them. You do not run regression.py. You do not edit files.
 
-Use the tools. Call match_files once with every changed file. Call lookup_features with every winning feature id and, when a winner has a parent, that parent id too. Call search_issue once for each issue URL listed below. A feature with no scenarios in the lookup result is a flag: put that flag in regression_args and do not invent --only paths for it. Leave out a suite whose ci is manual. Leave out a path the notes call not started. Leave out a FIPS-only path unless this package is a FIPS build. A docs-only, changelog-only, or comment-only change selects nothing.
+Use the tools. Call match_files once with every changed file. Call lookup_features with every winning feature id and, when a winner has a parent, that parent id too. Call search_issue once for each issue URL listed below. A feature with no scenarios in the lookup result is a flag: put that flag in regression_args and do not invent --only paths for it. If the lookup lists a suite for an id, that suite runs. Do not drop it because the change looks small, targeted, or unrelated. Leave out a suite whose ci is manual. Leave out a path the notes call not started. Leave out a FIPS-only path unless this package is a FIPS build. A docs-only, changelog-only, or comment-only change selects nothing.
 
 When several scenarios belong to one suite, return one job. regression_args is one string. Quote every TestFlows path with double quotes. Example: --only "/parquet/file/*" "/parquet/url/*"
 When the lookup names --cas or --cas-s3-cache, put that flag in the same string, before --only.

@@ -44,15 +44,16 @@ When a child wins, report that child and its parent. When only the parent matche
 - A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
 - `--with-analyzer` and `--use-keeper` are run flags. Do not treat either flag as a feature.
-- `storage.cas` and `storage.cas.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.yaml. Copy the flag with the path. Do not add soak, Jepsen, or alter stress.
 
 ## Map features to tests
 
-mapping.yaml has one entry per directory that contains `regression.py`. `path` is the suite CI runs. `features` lists taxonomy ids. `scenarios` are the TestFlows paths that exercise that id. An entry with no `scenarios` names a flag in its description. `ci: manual` means an automatic selection must not run that suite.
+If mapping.yaml lists a chosen id on a suite, run that suite. Do not drop it because the pull request looks small, targeted, or unrelated.
 
-Find every suite whose features list a chosen id. Run the scenarios under that id. When the entry has no scenarios, run the suite with the flag named in the description. Leave out a neighboring suite that does not list the feature.
+Run the `scenarios` under that id. When the entry has no `scenarios`, run the suite with the flag in its description. `storage.cas` is `--cas`. `storage.cas.cache` is `--cas-s3-cache`. Do not add soak, Jepsen, or alter stress.
 
-Put a path the notes call not started under "Not part of the default run". A feature described as only on a FIPS package goes there too, unless the package under test is a FIPS build.
+The mapping already names the only skips. Do not run a suite marked `ci: manual`. Put a path the notes call not started under "Not part of the default run". Put a FIPS-only entry there too, unless the package under test is a FIPS build.
+
+Leave out a suite that does not list the id.
 
 ## Report
 
@@ -75,4 +76,4 @@ Use this shape:
 - Features with no regression coverage. Leave a feature off this list when a scenario that cites the PR's issue covers the change.
 ```
 
-Omit an empty section. Fill in "Considered and left out" whenever you chose among nearby features. Name the features you almost picked.
+Omit an empty section. "Considered and left out" is a feature the prefix match rejected. It is not a suite you chose not to run. Name the features you almost picked.
