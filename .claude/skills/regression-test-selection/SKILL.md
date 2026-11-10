@@ -51,7 +51,7 @@ If mapping.yaml lists a chosen id on a suite, run that suite. Do not drop it bec
 
 Run the `scenarios` under that id. When the entry has no `scenarios`, run the suite with the flag in its description. `storage.cas` is `--cas`. `storage.cas.cache` is `--cas-s3-cache`. Do not add soak, Jepsen, or alter stress.
 
-The mapping already names the only skips. Do not run a suite marked `ci: manual`. Put a path the notes call not started under "Not part of the default run". Put a FIPS-only entry there too, unless the package under test is a FIPS build.
+The mapping already names the only skips. Do not run a suite marked `ci: manual`. Do not run a feature entry marked `ci: manual`. A whole-suite `--cas` or `--cas-s3-cache` rerun is marked that way. Matching `storage.cas` or `storage.cas.cache` does not start that rerun. Put a path the notes call not started under "Not part of the default run". Put a FIPS-only entry there too, unless the package under test is a FIPS build.
 
 Leave out a suite that does not list the id.
 

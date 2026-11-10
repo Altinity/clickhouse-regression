@@ -77,6 +77,52 @@ TIERED_STORAGE_JOBS = [
     ),
     ("with cas", "tiered_storage_cas", "/cas", "--with-cas"),
 ]
+
+# Whole-suite --cas / --cas-s3-cache reruns. mapping.yaml marks the feature
+# ci: manual. Automatic selection must not start them.
+CAS_FULL_SUITES = {
+    "aggregate_functions",
+    "alter",
+    "atomic_insert",
+    "engines",
+    "lightweight_delete",
+    "selects",
+}
+
+WHOLE_SUITE_CAS_GLOBS = {
+    "aggregate_functions": {
+        "/aggregate functions/part 1/*",
+        "/aggregate functions/part 2/*",
+        "/aggregate functions/part 3/*",
+    },
+    "lightweight_delete": {
+        "/lightweight delete/disk space/*",
+        "/lightweight delete/hard restart/*",
+        "/lightweight delete/alter after delete/*",
+        "/lightweight delete/concurrent alter and delete/*",
+        "/lightweight delete/concurrent delete/*",
+        "/lightweight delete/basic checks/*",
+        "/lightweight delete/performance/*",
+        "/lightweight delete/ontime tests/*",
+    },
+    "alter": {
+        "/alter/replace partition/*",
+        "/alter/attach partition/*",
+        "/alter/attach partition/part 1/*",
+        "/alter/attach partition/part 2/*",
+        "/alter/attach partition/part 3/*",
+        "/alter/move partition/*",
+    },
+}
+
+# alter without --cas, split the way run-regression.yml does.
+ALTER_SPLITS = [
+    ("/alter/replace partition", "alter_replace_partition", "", "/replace_partition", 180),
+    ("/alter/attach partition/part 1", "alter_attach_partition", "1", "/attach_partition", 360),
+    ("/alter/attach partition/part 2", "alter_attach_partition", "2", "/attach_partition", 360),
+    ("/alter/attach partition/part 3", "alter_attach_partition", "3", "/attach_partition", 360),
+    ("/alter/move partition", "alter_move_partition", "", "/move_partition", 180),
+]
 LIGHTWEIGHT_DELETE_CAS_PARTS = [
     '--only "/lightweight delete/disk space/*"',
     '--only "/lightweight delete/hard restart/*"',
@@ -278,6 +324,7 @@ def lookup_features(suites: list[dict], ids: list[str]) -> dict:
                     "id": feature["id"],
                     "description": feature.get("description") or "",
                     "scenarios": feature.get("scenarios") or [],
+                    "ci": feature.get("ci"),
                 }
             )
         if not hits:
@@ -408,10 +455,76 @@ def validate_jobs(suites: list[dict], jobs: list) -> list[dict]:
             "part": part,
             "regression_args": args,
             "storage_path": storage,
+            "timeout_minutes": 360 if suite_name == "s3" else 300,
         }
-        for piece in split_tiered_storage(built):
-            accepted.extend(split_whole_suite(piece))
+        for tiered in split_tiered_storage(built):
+            if is_full_cas_rerun(tiered):
+                print(
+                    f"Leaving out {tiered['suite_name']} with {tiered['regression_args']}: "
+                    "a whole-suite --cas rerun is manual or scheduled.",
+                    file=sys.stderr,
+                )
+                continue
+            for piece in split_alter(tiered):
+                accepted.extend(split_whole_suite(piece))
     return accepted
+
+
+def is_full_cas_rerun(job: dict) -> bool:
+    """A whole-suite --cas or --cas-s3-cache job, including the part splits of that whole suite."""
+    suite = job["suite_name"]
+    if suite not in CAS_FULL_SUITES:
+        return False
+    args = job["regression_args"]
+    if "--cas-s3-cache" not in args and re.search(r"(^|\s)--cas(\s|$)", args) is None:
+        return False
+    paths = _only_paths(args)
+    if not paths:
+        return True
+    return all(path in WHOLE_SUITE_CAS_GLOBS.get(suite, ()) for path in paths)
+
+
+def _only_paths(args: str) -> list[str]:
+    return re.findall(r'"(/[^"]+)"', args)
+
+
+def _path_in_split(requested: str, split_prefix: str) -> bool:
+    req = requested.rstrip("*").rstrip("/")
+    part = split_prefix.rstrip("/")
+    return part == req or part.startswith(req + "/") or req.startswith(part + "/")
+
+
+def split_alter(job: dict) -> list[dict]:
+    """Split alter the way run-regression.yml does, unless this is one narrow path."""
+    if job["suite_name"] != "alter" or is_full_cas_rerun(job):
+        return [job]
+    requested = _only_paths(job["regression_args"])
+    flags = re.sub(r'--only(\s+"[^"]*")+', "", job["regression_args"]).strip()
+    chosen = []
+    for prefix, job_name, part, storage, timeout in ALTER_SPLITS:
+        if requested and not any(_path_in_split(path, prefix) for path in requested):
+            continue
+        if not requested:
+            only = f'--only "{prefix}/*"'
+        else:
+            covered = [path for path in requested if _path_in_split(path, prefix)]
+            broad = any(
+                prefix.startswith(path.rstrip("*").rstrip("/"))
+                or prefix == path.rstrip("*").rstrip("/")
+                for path in covered
+            )
+            only = f'--only "{prefix}/*"' if broad else "--only " + " ".join(f'"{path}"' for path in covered)
+        chosen.append(
+            {
+                **job,
+                "job_name": job_name,
+                "part": part,
+                "storage_path": storage or job["storage_path"],
+                "regression_args": f"{flags} {only}".strip(),
+                "timeout_minutes": timeout,
+            }
+        )
+    return chosen or [job]
 
 
 def split_tiered_storage(job: dict) -> list[dict]:
@@ -489,7 +602,7 @@ def build_prompt(pr: dict, skill: str) -> str:
 
 Follow the skill below. The workflow prints your plan and then starts the suite jobs. You do not start them. You do not run regression.py. You do not edit files.
 
-Use the tools. Call match_files once with every changed file. Call lookup_features with every winning feature id and, when a winner has a parent, that parent id too. Call search_issue once for each issue URL listed below. A feature with no scenarios in the lookup result is a flag: put that flag in regression_args and do not invent --only paths for it. If the lookup lists a suite for an id, that suite runs. Do not drop it because the change looks small, targeted, or unrelated. Leave out a suite whose ci is manual. Leave out a path the notes call not started. Leave out a FIPS-only path unless this package is a FIPS build. A docs-only, changelog-only, or comment-only change selects nothing.
+Use the tools. Call match_files once with every changed file. Call lookup_features with every winning feature id and, when a winner has a parent, that parent id too. Call search_issue once for each issue URL listed below. A feature with no scenarios in the lookup result is a flag: put that flag in regression_args and do not invent --only paths for it. If the lookup lists a suite for an id, that suite runs. Do not drop it because the change looks small, targeted, or unrelated. A feature entry with ci: manual is not an automatic run. Do not emit a whole-suite --cas or --cas-s3-cache job for aggregate_functions, alter, atomic_insert, engines, lightweight_delete, or selects. Leave out a suite whose ci is manual. Leave out a path the notes call not started. Leave out a FIPS-only path unless this package is a FIPS build. A docs-only, changelog-only, or comment-only change selects nothing.
 
 When several scenarios belong to one suite, return one job. regression_args is one string. Quote every TestFlows path with double quotes. Example: --only "/parquet/file/*" "/parquet/url/*"
 When the lookup names --cas or --cas-s3-cache, put that flag in the same string, before --only.
@@ -691,6 +804,103 @@ def load_pr(repo: str, number: int) -> dict:
     }
 
 
+def job_key(job: dict) -> tuple:
+    return (
+        job.get("suite_name"),
+        str(job.get("part") or ""),
+        job.get("storage_path") or "",
+        job.get("regression_args") or "",
+        job.get("job_name") or "",
+    )
+
+
+def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
+    """Keep every earlier job for this PR, then add jobs from this commit."""
+    current_keys = {job_key(job) for job in current}
+    merged = []
+    seen = set()
+    for job in previous + current:
+        if is_full_cas_rerun(job):
+            continue
+        key = job_key(job)
+        if key in seen:
+            continue
+        seen.add(key)
+        if key not in current_keys:
+            job = {**job, "carried_forward": True}
+        merged.append(job)
+    return merged
+
+
+def load_previous_jobs(pr_number: int) -> list[dict]:
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    if not repo:
+        return []
+    this_run = os.environ.get("GITHUB_RUN_ID", "")
+    try:
+        raw = subprocess.check_output(
+            [
+                "gh",
+                "run",
+                "list",
+                "--repo",
+                repo,
+                "--workflow",
+                "select-and-run-regression.yml",
+                "--limit",
+                "40",
+                "--json",
+                "databaseId,displayTitle",
+            ],
+            text=True,
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError as exc:
+        detail = (exc.stderr or "").strip()
+        print(
+            f"Could not list earlier runs. This plan is only the current selection. {detail}",
+            file=sys.stderr,
+        )
+        return []
+    jobs = []
+    for run in json.loads(raw):
+        if str(run.get("databaseId")) == this_run:
+            continue
+        title = run.get("displayTitle") or ""
+        if not re.search(rf"/pull/{pr_number}(?:\D|$)", title):
+            continue
+        dest = Path(f"/tmp/selection-plan-{run['databaseId']}")
+        try:
+            subprocess.check_call(
+                [
+                    "gh",
+                    "run",
+                    "download",
+                    str(run["databaseId"]),
+                    "--repo",
+                    repo,
+                    "--name",
+                    "selection-plan",
+                    "--dir",
+                    str(dest),
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+            )
+        except subprocess.CalledProcessError:
+            continue
+        path = dest / "selection-plan.json"
+        if not path.is_file():
+            continue
+        document = json.loads(path.read_text())
+        for job in document.get("jobs") or []:
+            if isinstance(job, dict) and job.get("suite_name"):
+                jobs.append(job)
+    if jobs:
+        print(f"Carrying forward jobs from earlier runs of PR {pr_number}.", file=sys.stderr)
+    return jobs
+
+
 def select(pr: dict, root: Path) -> dict:
     features = load_features(root / TAXONOMY_PATH)
     suites = load_suites(root / MAPPING_PATH)
@@ -700,6 +910,7 @@ def select(pr: dict, root: Path) -> dict:
     if not isinstance(report, str) or not report.strip():
         raise SelectionError("The plan has no report_markdown.")
     jobs = validate_jobs(suites, plan.get("jobs"))
+    jobs = union_jobs(load_previous_jobs(pr["number"]), jobs)
     return {"report_markdown": report, "jobs": jobs}
 
 
@@ -724,7 +935,11 @@ def emit(pr: dict, plan: dict, root: Path) -> None:
     write_github_output("sha", pr["sha"])
 
     job_lines = "\n".join(
-        f"- `{job['suite_name']}` {job['regression_args']}".rstrip() for job in plan["jobs"]
+        (
+            f"- `{job['suite_name']}` {job['regression_args']}"
+            + (" (kept from an earlier commit)" if job.get("carried_forward") else "")
+        ).rstrip()
+        for job in plan["jobs"]
     ) or "- Nothing to run."
     write_summary(
         "\n".join(

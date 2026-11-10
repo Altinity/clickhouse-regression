@@ -24,6 +24,7 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   select:
@@ -83,5 +84,5 @@ jobs:
       flags: --with-analyzer
       output_format: new-fails
       artifacts: hetzner
-      timeout_minutes: 300
+      timeout_minutes: ${{ matrix.job.timeout_minutes || 300 }}
       runner_arch: ${{ matrix.arch }}

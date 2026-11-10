@@ -149,9 +149,11 @@ suites:
       - id: functions.aggregate
         description: The aggregate function factory. Run the suite with no --only.
       - id: storage.cas
-        description: The same suite with --cas.
+        description: The same suite with --cas. Manual and scheduled runs only.
+        ci: manual
       - id: storage.cas.cache
-        description: The same suite with --cas-s3-cache.
+        description: The same suite with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
       - id: functions.aggregate.combinators.state
         scenarios:
           - /aggregate functions/part 3/state/*
@@ -1033,9 +1035,11 @@ suites:
           - /alter/attach partition/*
           - /alter/move partition/*
       - id: storage.cas
-        description: The same scenarios with --cas.
+        description: The same scenarios with --cas. Manual and scheduled runs only.
+        ci: manual
       - id: storage.cas.cache
-        description: The same scenarios with --cas-s3-cache.
+        description: The same scenarios with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
       - id: engines.mergetree
         scenarios:
           - /alter/replace partition/engines/replace partition with different engines
@@ -1133,9 +1137,11 @@ suites:
           - /atomic insert/simple_transaction/*
           - /atomic insert/hard restart/*
       - id: storage.cas
-        description: The same suite with --cas.
+        description: The same suite with --cas. Manual and scheduled runs only.
+        ci: manual
       - id: storage.cas.cache
-        description: The same suite with --cas-s3-cache.
+        description: The same suite with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
       - id: engines.mergetree
         scenarios:
           - /atomic insert/insert settings/MergeTree/max block size insert setting
@@ -1326,7 +1332,8 @@ suites:
       - id: storage.cas.backend
         description: The same scenarios. CAS blobs go through the object-storage backend.
       - id: storage.cas.cache
-        description: The same scenarios with --cas-s3-cache.
+        description: The same scenarios with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
       - id: storage.gcs
         description: The same scenarios with --storage gcs.
       - id: engines.view.materialized
@@ -1991,9 +1998,11 @@ suites:
           - /engines/summing_merge_tree/zero row deletion with clear column
           - /engines/summing_merge_tree/clear column validation consistency
       - id: storage.cas
-        description: The same suite with --cas.
+        description: The same suite with --cas. Manual and scheduled runs only.
+        ci: manual
       - id: storage.cas.cache
-        description: The same suite with --cas-s3-cache.
+        description: The same suite with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
 
   - path: example
     description: Example TestFlows module.
@@ -3283,9 +3292,11 @@ suites:
         scenarios:
           - /lightweight delete/backup/*
       - id: storage.cas
-        description: The same suite with --cas, split across the four jobs in the notes.
+        description: The same suite with --cas, split across the four jobs in the notes. Manual and scheduled runs only.
+        ci: manual
       - id: storage.cas.cache
-        description: The same four jobs with --cas-s3-cache.
+        description: The same four jobs with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
 
 
   - path: lts
@@ -3689,9 +3700,11 @@ suites:
         scenarios:
           - /selects/final/force/user rights/*
       - id: storage.cas
-        description: The same tests with --cas.
+        description: The same tests with --cas. Manual and scheduled runs only.
+        ci: manual
       - id: storage.cas.cache
-        description: The same tests with --cas-s3-cache.
+        description: The same tests with --cas-s3-cache. Manual and scheduled runs only.
+        ci: manual
 
 
   - path: session_timezone
