@@ -94,7 +94,7 @@ jobs:
         include:
           - clickhouse_package: docker://altinity/clickhouse-server:23.8.16.43.altinitystable
             artifact_name: altinitystable-23-8-x86-zookeeper
-          - clickhouse_package: docker://altinity/clickhouse-server:24.3.18.10426.altinitystable
+          - clickhouse_package: docker://altinity/clickhouse-server:24.3.18.10428.altinitystable
             artifact_name: altinitystable-24-3-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:24.8.14.10551.altinitystable
             artifact_name: altinityedge-24-8-x86-zookeeper
