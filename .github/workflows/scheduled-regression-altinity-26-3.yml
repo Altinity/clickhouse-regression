@@ -10,8 +10,8 @@ jobs:
   altinitystable-26-3-x86-with-analyzer-zookeeper:
     uses: ./.github/workflows/run-regression.yml
     with:
-      package: docker://altinity/clickhouse-server:26.3.33.10001.altinitystable
-      version: '26.3.33.10001'
+      package: docker://altinity/clickhouse-server:26.3.60.10002.altinitystable
+      version: '26.3.60.10002'
       extra_args: '--with-analyzer'
       run_s3_suites: false
       arch: x86
@@ -20,8 +20,8 @@ jobs:
   altinitystable-26-3-arm-with-analyzer-zookeeper:
     uses: ./.github/workflows/run-regression.yml
     with:
-      package: docker://altinity/clickhouse-server:26.3.33.10001.altinitystable
-      version: '26.3.33.10001'
+      package: docker://altinity/clickhouse-server:26.3.60.10002.altinitystable
+      version: '26.3.60.10002'
       extra_args: '--with-analyzer'
       run_s3_suites: false
       arch: arm64
