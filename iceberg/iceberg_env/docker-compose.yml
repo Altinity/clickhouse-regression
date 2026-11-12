@@ -73,10 +73,7 @@ services:
         condition: service_healthy
 
   unity-catalog:
-    image: clickhouse-regression/unity-catalog:e648169
-    pull_policy: build
-    build:
-      context: ../unity
+    image: altinityinfra/unity-catalog:e648169
     ports:
       - "8085:8080"
     environment:
@@ -84,7 +81,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=password
       - AWS_REGION=us-east-1
     volumes:
-      - ../unity/server.properties:/home/unitycatalog/etc/conf/server.properties:ro
+      - ./unity-catalog.properties:/home/unitycatalog/etc/conf/server.properties:ro
     depends_on:
       minio:
         condition: service_healthy
