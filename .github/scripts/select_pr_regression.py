@@ -23,6 +23,7 @@ import yaml
 
 SERVER_REPO = "Altinity/ClickHouse"
 S3_BASE = "https://altinity-build-artifacts.s3.amazonaws.com"
+HISTORY_BUCKET = "altinity-build-artifacts"
 PLAN_NAME = "selection-plan.json"
 SKILL_PATH = Path(".claude/skills/regression-test-selection/SKILL.md")
 TAXONOMY_PATH = Path(".claude/skills/regression-test-selection/taxonomy.yaml")
@@ -889,73 +890,96 @@ def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
     return [merged[key] for key in order]
 
 
+def history_key(pr_number: int) -> str:
+    return f"PRs/{pr_number}/regression-selection.json"
+
+
+def s3_client():
+    if not (os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY")):
+        return None
+    import boto3
+
+    return boto3.client("s3", region_name=os.getenv("AWS_DEFAULT_REGION") or None)
+
+
 def load_previous_jobs(pr_number: int) -> list[dict]:
-    repo = os.environ.get("GITHUB_REPOSITORY")
-    if not repo:
-        return []
-    this_run = os.environ.get("GITHUB_RUN_ID", "")
-    try:
-        raw = subprocess.check_output(
-            [
-                "gh",
-                "run",
-                "list",
-                "--repo",
-                repo,
-                "--workflow",
-                "select-and-run-regression.yml",
-                "--limit",
-                "40",
-                "--json",
-                "databaseId,displayTitle",
-            ],
-            text=True,
-            stderr=subprocess.PIPE,
-        )
-    except subprocess.CalledProcessError as exc:
-        detail = (exc.stderr or "").strip()
+    key = history_key(pr_number)
+    client = s3_client()
+    if client is None:
         print(
-            f"Could not list earlier runs. This plan is only the current selection. {detail}",
+            f"::warning::No AWS credentials. Selection history at s3://{HISTORY_BUCKET}/{key} was not read.",
             file=sys.stderr,
         )
         return []
-    jobs = []
-    for run in json.loads(raw):
-        if str(run.get("databaseId")) == this_run:
-            continue
-        title = run.get("displayTitle") or ""
-        if not re.search(rf"/pull/{pr_number}(?:\D|$)", title):
-            continue
-        dest = Path(f"/tmp/selection-plan-{run['databaseId']}")
-        try:
-            subprocess.check_call(
-                [
-                    "gh",
-                    "run",
-                    "download",
-                    str(run["databaseId"]),
-                    "--repo",
-                    repo,
-                    "--name",
-                    "selection-plan",
-                    "--dir",
-                    str(dest),
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.PIPE,
-            )
-        except subprocess.CalledProcessError:
-            continue
-        path = dest / "selection-plan.json"
-        if not path.is_file():
-            continue
-        document = json.loads(path.read_text())
-        for job in document.get("jobs") or []:
-            if isinstance(job, dict) and job.get("suite_name"):
-                jobs.append(job)
+    try:
+        body = client.get_object(Bucket=HISTORY_BUCKET, Key=key)["Body"].read()
+    except Exception as exc:
+        response = getattr(exc, "response", None)
+        code = response.get("Error", {}).get("Code", "") if isinstance(response, dict) else ""
+        if code in ("NoSuchKey", "404"):
+            return []
+        print(f"Could not read s3://{HISTORY_BUCKET}/{key}. {exc}", file=sys.stderr)
+        return []
+    jobs = [
+        job
+        for job in json.loads(body).get("jobs") or []
+        if isinstance(job, dict) and job.get("suite_name")
+    ]
     if jobs:
-        print(f"Carrying forward jobs from earlier runs of PR {pr_number}.", file=sys.stderr)
+        print(f"Carrying forward jobs from s3://{HISTORY_BUCKET}/{key}.", file=sys.stderr)
     return jobs
+
+
+def save_history(pr_number: int, document: dict) -> None:
+    key = history_key(pr_number)
+    client = s3_client()
+    if client is None:
+        print(
+            f"::warning::Selection history was not saved. "
+            f"Set AWS_ACCESS_KEY_ID to write s3://{HISTORY_BUCKET}/{key}",
+            file=sys.stderr,
+        )
+        return
+    try:
+        client.put_object(
+            Bucket=HISTORY_BUCKET,
+            Key=key,
+            Body=json.dumps(document, indent=2).encode(),
+            ContentType="application/json",
+        )
+    except Exception as exc:
+        print(
+            f"::warning::Could not save selection history to s3://{HISTORY_BUCKET}/{key}. {exc}",
+            file=sys.stderr,
+        )
+        return
+    print(f"Saved selection history to s3://{HISTORY_BUCKET}/{key}", file=sys.stderr)
+
+
+def save_history(pr_number: int, document: dict) -> None:
+    key = history_key(pr_number)
+    client = s3_client()
+    if client is None:
+        print(
+            f"::warning::Selection history was not saved. "
+            f"Set AWS_ACCESS_KEY_ID to write s3://{HISTORY_BUCKET}/{key}",
+            file=sys.stderr,
+        )
+        return
+    try:
+        client.put_object(
+            Bucket=HISTORY_BUCKET,
+            Key=key,
+            Body=json.dumps(document, indent=2).encode(),
+            ContentType="application/json",
+        )
+    except Exception as exc:
+        print(
+            f"::warning::Could not save selection history to s3://{HISTORY_BUCKET}/{key}. {exc}",
+            file=sys.stderr,
+        )
+        return
+    print(f"Saved selection history to s3://{HISTORY_BUCKET}/{key}", file=sys.stderr)
 
 
 def select(pr: dict, root: Path) -> dict:
@@ -1020,6 +1044,7 @@ def emit(pr: dict, plan: dict, root: Path) -> None:
             ]
         )
     )
+    save_history(pr["number"], document)
 
 
 def main() -> None:
