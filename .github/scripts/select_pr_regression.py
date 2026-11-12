@@ -452,6 +452,12 @@ def validate_jobs(suites: list[dict], jobs: list) -> list[dict]:
             )
         seen.add(suite_name)
         args = canonicalize_args(normalize_args(job.get("regression_args")))
+        crossing = [path for path in _only_paths(args) if _star_crosses_segment(path)]
+        if crossing:
+            raise SelectionError(
+                f"regression_args for {suite_name} uses `*` before the last path segment: {crossing[0]}. "
+                "That matches across `/`. Use `:` for one segment."
+            )
         if UNSAFE_ARGS.search(args):
             raise SelectionError(
                 f"regression_args for {suite_name} contains a character the runner cannot pass through. "
@@ -502,6 +508,11 @@ def is_full_cas_rerun(job: dict) -> bool:
 
 def _only_paths(args: str) -> list[str]:
     return re.findall(r'"(/[^"]+)"', args)
+
+
+def _star_crosses_segment(path: str) -> bool:
+    """A `*` before the last segment matches across `/` and, with --only, keeps the whole suite."""
+    return any("*" in segment for segment in path.split("/")[:-1])
 
 
 def _covered_by(path: str, pattern: str) -> bool:

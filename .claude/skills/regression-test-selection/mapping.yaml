@@ -2,6 +2,8 @@
 # path is the suite CI runs. features lists taxonomy ids and the scenarios that exercise them.
 # A feature with no scenarios names a flag. --cas and --cas-s3-cache rerun that suite on CAS storage.
 # ci: manual means an automatic selection must not run this suite.
+# In a scenario path, `:` is one path segment and `*` matches across `/`.
+# A `*` before another `/` does not mean one segment. With --only it keeps the whole suite.
 
 suites:
   - path: .
@@ -1517,17 +1519,17 @@ suites:
     features:
       - id: coordination.keeper_failover
         scenarios:
-          - /keeper failover/*/dynamic failover
-          - /keeper failover/*/manual failover rcvr
-          - /keeper failover/*/manual failover --force-recovery
+          - /keeper failover/:/dynamic failover
+          - /keeper failover/:/manual failover rcvr
+          - /keeper failover/:/manual failover --force-recovery
       - id: coordination.keeper.reconfiguration
         scenarios:
-          - /keeper failover/*/dynamic failover
-          - /keeper failover/*/manual failover rcvr
-          - /keeper failover/*/manual failover --force-recovery
+          - /keeper failover/:/dynamic failover
+          - /keeper failover/:/manual failover rcvr
+          - /keeper failover/:/manual failover --force-recovery
       - id: coordination.keeper.four_letter
         scenarios:
-          - /keeper failover/*/manual failover rcvr
+          - /keeper failover/:/manual failover rcvr
 
 
   - path: data_types
@@ -2070,13 +2072,13 @@ suites:
           - /extended precision data types/tests/null/null dec table/*
       - id: types.array
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*
       - id: types.tuple
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/tuple func/*
+          - /extended precision data types/tests/array, tuple, map/:/tuple func/*
       - id: types.map
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*
+          - /extended precision data types/tests/array, tuple, map/:/map func/*
       - id: functions.type_conversion.to_int128
         scenarios:
           - /extended precision data types/tests/conversion/int conversion/Int128
@@ -2094,58 +2096,58 @@ suites:
           - /extended precision data types/tests/conversion/to decimal256
       - id: functions.arithmetic.plus
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/plus - *
+          - /extended precision data types/tests/arithmetic/:/plus - *
       - id: functions.arithmetic.minus
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/minus - *
+          - /extended precision data types/tests/arithmetic/:/minus - *
       - id: functions.arithmetic.multiply
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/multiply - *
+          - /extended precision data types/tests/arithmetic/:/multiply - *
       - id: functions.arithmetic.divide
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/divide - *
+          - /extended precision data types/tests/arithmetic/:/divide - *
       - id: functions.arithmetic.int_div
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/intDiv - *
+          - /extended precision data types/tests/arithmetic/:/intDiv - *
       - id: functions.arithmetic.int_div_or_zero
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/intDivOrZero - *
+          - /extended precision data types/tests/arithmetic/:/intDivOrZero - *
       - id: functions.arithmetic.modulo
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/modulo - *
+          - /extended precision data types/tests/arithmetic/:/modulo - *
       - id: functions.arithmetic.modulo_or_zero
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/moduloOrZero - *
+          - /extended precision data types/tests/arithmetic/:/moduloOrZero - *
       - id: functions.arithmetic.negate
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/negate - *
+          - /extended precision data types/tests/arithmetic/:/negate - *
       - id: functions.arithmetic.abs
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/abs - *
+          - /extended precision data types/tests/arithmetic/:/abs - *
       - id: functions.arithmetic.gcd
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/gcd - *
+          - /extended precision data types/tests/arithmetic/:/gcd - *
       - id: functions.arithmetic.lcm
         scenarios:
-          - /extended precision data types/tests/arithmetic/*/lcm - *
+          - /extended precision data types/tests/arithmetic/:/lcm - *
       - id: functions.comparison.equals
         scenarios:
-          - /extended precision data types/tests/comparison/*/equals - *
+          - /extended precision data types/tests/comparison/:/equals - *
       - id: functions.comparison.not_equals
         scenarios:
-          - /extended precision data types/tests/comparison/*/notEquals - *
+          - /extended precision data types/tests/comparison/:/notEquals - *
       - id: functions.comparison.less
         scenarios:
-          - /extended precision data types/tests/comparison/*/less - *
+          - /extended precision data types/tests/comparison/:/less - *
       - id: functions.comparison.greater
         scenarios:
-          - /extended precision data types/tests/comparison/*/greater - *
+          - /extended precision data types/tests/comparison/:/greater - *
       - id: functions.comparison.less_or_equals
         scenarios:
-          - /extended precision data types/tests/comparison/*/lessOrEquals - *
+          - /extended precision data types/tests/comparison/:/lessOrEquals - *
       - id: functions.comparison.greater_or_equals
         scenarios:
-          - /extended precision data types/tests/comparison/*/greaterOrEquals - *
+          - /extended precision data types/tests/comparison/:/greaterOrEquals - *
       - id: functions.logical
         description: and, or, not, and xor. They share one source file.
         scenarios:
@@ -2153,364 +2155,364 @@ suites:
       - id: functions.rounding.ceiling
         description: The suite calls ceil. ceiling is an alias.
         scenarios:
-          - /extended precision data types/tests/rounding/*/ceil - *
+          - /extended precision data types/tests/rounding/:/ceil - *
       - id: functions.rounding.floor
         scenarios:
-          - /extended precision data types/tests/rounding/*/floor - *
+          - /extended precision data types/tests/rounding/:/floor - *
       - id: functions.rounding.truncate
         description: The suite calls trunc. truncate is an alias.
         scenarios:
-          - /extended precision data types/tests/rounding/*/trunc - *
+          - /extended precision data types/tests/rounding/:/trunc - *
       - id: functions.rounding.round
         scenarios:
-          - /extended precision data types/tests/rounding/*/round - *
+          - /extended precision data types/tests/rounding/:/round - *
       - id: functions.rounding.round_bankers
         scenarios:
-          - /extended precision data types/tests/rounding/*/roundBankers - *
+          - /extended precision data types/tests/rounding/:/roundBankers - *
       - id: functions.rounding.round_to_exp2
         scenarios:
-          - /extended precision data types/tests/rounding/*/roundToExp2 - *
+          - /extended precision data types/tests/rounding/:/roundToExp2 - *
       - id: functions.rounding.round_duration
         scenarios:
-          - /extended precision data types/tests/rounding/*/roundDuration - *
+          - /extended precision data types/tests/rounding/:/roundDuration - *
       - id: functions.rounding.round_age
         scenarios:
-          - /extended precision data types/tests/rounding/*/roundAge - *
+          - /extended precision data types/tests/rounding/:/roundAge - *
       - id: functions.rounding.round_down
         scenarios:
-          - /extended precision data types/tests/rounding/*/roundDown - *
+          - /extended precision data types/tests/rounding/:/roundDown - *
       - id: functions.bit.bit_and
         scenarios:
-          - /extended precision data types/tests/bit/*/bitAnd - *
+          - /extended precision data types/tests/bit/:/bitAnd - *
       - id: functions.bit.bit_or
         scenarios:
-          - /extended precision data types/tests/bit/*/bitOr - *
+          - /extended precision data types/tests/bit/:/bitOr - *
       - id: functions.bit.bit_xor
         scenarios:
-          - /extended precision data types/tests/bit/*/bitXor - *
+          - /extended precision data types/tests/bit/:/bitXor - *
       - id: functions.bit.bit_shift_left
         scenarios:
-          - /extended precision data types/tests/bit/*/bitShiftLeft - *
+          - /extended precision data types/tests/bit/:/bitShiftLeft - *
       - id: functions.bit.bit_shift_right
         scenarios:
-          - /extended precision data types/tests/bit/*/bitShiftRight - *
+          - /extended precision data types/tests/bit/:/bitShiftRight - *
       - id: functions.bit.bit_rotate_left
         scenarios:
-          - /extended precision data types/tests/bit/*/bitRotateLeft - *
+          - /extended precision data types/tests/bit/:/bitRotateLeft - *
       - id: functions.bit.bit_rotate_right
         scenarios:
-          - /extended precision data types/tests/bit/*/bitRotateRight - *
+          - /extended precision data types/tests/bit/:/bitRotateRight - *
       - id: functions.bit.bit_test
         scenarios:
-          - /extended precision data types/tests/bit/*/bitTest - *
+          - /extended precision data types/tests/bit/:/bitTest - *
       - id: functions.bit.bit_test_all
         scenarios:
-          - /extended precision data types/tests/bit/*/bitTestAll - *
+          - /extended precision data types/tests/bit/:/bitTestAll - *
       - id: functions.bit.bit_test_any
         scenarios:
-          - /extended precision data types/tests/bit/*/bitTestAny - *
+          - /extended precision data types/tests/bit/:/bitTestAny - *
       - id: functions.bit.bit_not
         scenarios:
-          - /extended precision data types/tests/bit/*/bitNot - *
+          - /extended precision data types/tests/bit/:/bitNot - *
       - id: functions.bit.bit_count
         scenarios:
-          - /extended precision data types/tests/bit/*/bitCount - *
+          - /extended precision data types/tests/bit/:/bitCount - *
       - id: functions.null.is_null
         scenarios:
-          - /extended precision data types/tests/null/*/isNull（） - *
+          - /extended precision data types/tests/null/:/isNull（） - *
       - id: functions.null.is_not_null
         scenarios:
-          - /extended precision data types/tests/null/*/isNotNull（） - *
+          - /extended precision data types/tests/null/:/isNotNull（） - *
       - id: functions.null.coalesce
         scenarios:
-          - /extended precision data types/tests/null/*/coalesce（） - *
+          - /extended precision data types/tests/null/:/coalesce（） - *
       - id: functions.null.assume_not_null
         scenarios:
-          - /extended precision data types/tests/null/*/assumeNotNull（） - *
+          - /extended precision data types/tests/null/:/assumeNotNull（） - *
       - id: functions.null.to_nullable
         scenarios:
-          - /extended precision data types/tests/null/*/toNullable（） - *
+          - /extended precision data types/tests/null/:/toNullable（） - *
       - id: functions.null.if_null
         scenarios:
-          - /extended precision data types/tests/null/*/ifNull（1,） - *
+          - /extended precision data types/tests/null/:/ifNull（1,） - *
       - id: functions.null.null_if
         scenarios:
-          - /extended precision data types/tests/null/*/nullIf（1,） - *
+          - /extended precision data types/tests/null/:/nullIf（1,） - *
       - id: functions.mathematical.exp
         scenarios:
-          - /extended precision data types/tests/mathematical/*/exp（） - *
+          - /extended precision data types/tests/mathematical/:/exp（） - *
       - id: functions.mathematical.log
         description: log and ln. ln is an alias of log.
         scenarios:
-          - /extended precision data types/tests/mathematical/*/log（） - *
-          - /extended precision data types/tests/mathematical/*/ln（） - *
+          - /extended precision data types/tests/mathematical/:/log（） - *
+          - /extended precision data types/tests/mathematical/:/ln（） - *
       - id: functions.mathematical.exp2
         scenarios:
-          - /extended precision data types/tests/mathematical/*/exp2（） - *
+          - /extended precision data types/tests/mathematical/:/exp2（） - *
       - id: functions.mathematical.log2
         scenarios:
-          - /extended precision data types/tests/mathematical/*/log2（） - *
+          - /extended precision data types/tests/mathematical/:/log2（） - *
       - id: functions.mathematical.exp10
         scenarios:
-          - /extended precision data types/tests/mathematical/*/exp10（） - *
+          - /extended precision data types/tests/mathematical/:/exp10（） - *
       - id: functions.mathematical.log10
         scenarios:
-          - /extended precision data types/tests/mathematical/*/log10（） - *
+          - /extended precision data types/tests/mathematical/:/log10（） - *
       - id: functions.mathematical.sqrt
         scenarios:
-          - /extended precision data types/tests/mathematical/*/sqrt（） - *
+          - /extended precision data types/tests/mathematical/:/sqrt（） - *
       - id: functions.mathematical.cbrt
         scenarios:
-          - /extended precision data types/tests/mathematical/*/cbrt（） - *
+          - /extended precision data types/tests/mathematical/:/cbrt（） - *
       - id: functions.mathematical.erf
         scenarios:
-          - /extended precision data types/tests/mathematical/*/erf（） - *
+          - /extended precision data types/tests/mathematical/:/erf（） - *
       - id: functions.mathematical.erfc
         scenarios:
-          - /extended precision data types/tests/mathematical/*/erfc（） - *
+          - /extended precision data types/tests/mathematical/:/erfc（） - *
       - id: functions.mathematical.lgamma
         scenarios:
-          - /extended precision data types/tests/mathematical/*/lgamma（） - *
+          - /extended precision data types/tests/mathematical/:/lgamma（） - *
       - id: functions.mathematical.tgamma
         scenarios:
-          - /extended precision data types/tests/mathematical/*/tgamma（） - *
+          - /extended precision data types/tests/mathematical/:/tgamma（） - *
       - id: functions.mathematical.sin
         scenarios:
-          - /extended precision data types/tests/mathematical/*/sin（） - *
+          - /extended precision data types/tests/mathematical/:/sin（） - *
       - id: functions.mathematical.cos
         scenarios:
-          - /extended precision data types/tests/mathematical/*/cos（） - *
+          - /extended precision data types/tests/mathematical/:/cos（） - *
       - id: functions.mathematical.tan
         scenarios:
-          - /extended precision data types/tests/mathematical/*/tan（） - *
+          - /extended precision data types/tests/mathematical/:/tan（） - *
       - id: functions.mathematical.asin
         scenarios:
-          - /extended precision data types/tests/mathematical/*/asin（） - *
+          - /extended precision data types/tests/mathematical/:/asin（） - *
       - id: functions.mathematical.acos
         scenarios:
-          - /extended precision data types/tests/mathematical/*/acos（） - *
+          - /extended precision data types/tests/mathematical/:/acos（） - *
       - id: functions.mathematical.atan
         scenarios:
-          - /extended precision data types/tests/mathematical/*/atan（） - *
+          - /extended precision data types/tests/mathematical/:/atan（） - *
       - id: functions.mathematical.int_exp2
         scenarios:
-          - /extended precision data types/tests/mathematical/*/intExp2（） - *
+          - /extended precision data types/tests/mathematical/:/intExp2（） - *
       - id: functions.mathematical.int_exp10
         scenarios:
-          - /extended precision data types/tests/mathematical/*/intExp10（） - *
+          - /extended precision data types/tests/mathematical/:/intExp10（） - *
       - id: functions.mathematical.cosh
         scenarios:
-          - /extended precision data types/tests/mathematical/*/cosh（） - *
+          - /extended precision data types/tests/mathematical/:/cosh（） - *
       - id: functions.mathematical.acosh
         scenarios:
-          - /extended precision data types/tests/mathematical/*/acosh（） - *
+          - /extended precision data types/tests/mathematical/:/acosh（） - *
       - id: functions.mathematical.sinh
         scenarios:
-          - /extended precision data types/tests/mathematical/*/sinh（） - *
+          - /extended precision data types/tests/mathematical/:/sinh（） - *
       - id: functions.mathematical.asinh
         scenarios:
-          - /extended precision data types/tests/mathematical/*/asinh（） - *
+          - /extended precision data types/tests/mathematical/:/asinh（） - *
       - id: functions.mathematical.tanh
         scenarios:
-          - /extended precision data types/tests/mathematical/*/tanh（） - *
+          - /extended precision data types/tests/mathematical/:/tanh（） - *
       - id: functions.mathematical.atanh
         scenarios:
-          - /extended precision data types/tests/mathematical/*/atanh（） - *
+          - /extended precision data types/tests/mathematical/:/atanh（） - *
       - id: functions.mathematical.log1p
         scenarios:
-          - /extended precision data types/tests/mathematical/*/log1p（） - *
+          - /extended precision data types/tests/mathematical/:/log1p（） - *
       - id: functions.mathematical.sign
         scenarios:
-          - /extended precision data types/tests/mathematical/*/sign（） - *
+          - /extended precision data types/tests/mathematical/:/sign（） - *
       - id: functions.mathematical.pow
         description: pow and power. power is an alias of pow.
         scenarios:
-          - /extended precision data types/tests/mathematical/*/pow（1,） - *
-          - /extended precision data types/tests/mathematical/*/power（1,） - *
+          - /extended precision data types/tests/mathematical/:/pow（1,） - *
+          - /extended precision data types/tests/mathematical/:/power（1,） - *
       - id: functions.mathematical.atan2
         scenarios:
-          - /extended precision data types/tests/mathematical/*/atan2（1,） - *
+          - /extended precision data types/tests/mathematical/:/atan2（1,） - *
       - id: functions.mathematical.hypot
         scenarios:
-          - /extended precision data types/tests/mathematical/*/hypot（1,） - *
+          - /extended precision data types/tests/mathematical/:/hypot（1,） - *
       - id: functions.array.array_pop_back
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayPopBack*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayPopBack*
       - id: functions.array.array_pop_front
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayPopFront*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayPopFront*
       - id: functions.array.array_sort
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arraySort*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arraySort*
       - id: functions.array.array_reverse_sort
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayReverseSort*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayReverseSort*
       - id: functions.array.array_distinct
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayDistinct*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayDistinct*
       - id: functions.array.array_enumerate
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayEnumerate（）*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayEnumerate（）*
       - id: functions.array.array_enumerate_dense
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayEnumerateDense*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayEnumerateDense*
       - id: functions.array.array_enumerate_uniq
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayEnumerateUniq*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayEnumerateUniq*
       - id: functions.array.array_reverse
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayReverse（）*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayReverse（）*
       - id: functions.array.reverse
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - reverse（）*
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - reverse（）*
       - id: functions.array.array_flatten
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayFlatten*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayFlatten*
       - id: functions.array.array_compact
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayCompact*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayCompact*
       - id: functions.array.array_reduce_in_ranges
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayReduceInRanges*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayReduceInRanges*
       - id: functions.array.array_map
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayMap*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayMap*
       - id: functions.array.array_fill
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayFill*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayFill*
       - id: functions.array.array_reverse_fill
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayReverseFill*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayReverseFill*
       - id: functions.array.array_concat
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayConcat*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayConcat*
       - id: functions.array.array_filter
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayFilter*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayFilter*
       - id: functions.array.array_split
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arraySplit*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arraySplit*
       - id: functions.array.array_zip
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayZip*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayZip*
       - id: functions.array.empty
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - empty（）*
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - empty（）*
       - id: functions.array.not_empty
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - notEmpty（）*
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - notEmpty（）*
       - id: functions.array.length
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - length（）*
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - length（）*
       - id: functions.array.array_count
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayCount*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayCount*
       - id: functions.array.array_uniq
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayUniq*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayUniq*
       - id: functions.array.array_join
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayJoin*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayJoin*
       - id: functions.array.array_exists
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayExists*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayExists*
       - id: functions.array.array_all
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayAll*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayAll*
       - id: functions.array.array_min
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayMin*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayMin*
       - id: functions.array.array_max
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayMax*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayMax*
       - id: functions.array.array_sum
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arraySum*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arraySum*
       - id: functions.array.array_avg
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayAvg*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayAvg*
       - id: functions.array.array_reduce
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayReduce（*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayReduce（*
       - id: functions.array.array_first
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayFirst（*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayFirst（*
       - id: functions.array.array_first_index
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayFirstIndex*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayFirstIndex*
       - id: functions.array.has_all
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*hasAll*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*hasAll*
       - id: functions.array.has_any
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*hasAny*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*hasAny*
       - id: functions.array.has_substr
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*hasSubstr*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*hasSubstr*
       - id: functions.array.array_difference
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayDifference*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayDifference*
       - id: functions.array.array_cum_sum
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayCumSum（*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayCumSum（*
       - id: functions.array.array_cum_sum_non_negative
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/*arrayCumSumNonNegative*
+          - /extended precision data types/tests/array, tuple, map/:/array func/*arrayCumSumNonNegative*
       - id: functions.array.array_element
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - arrayElement
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - arrayElement
       - id: functions.array.array_push_back
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - arrayPushBack
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - arrayPushBack
       - id: functions.array.array_push_front
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - arrayPushFront
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - arrayPushFront
       - id: functions.array.array_resize
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - arrayResize
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - arrayResize
       - id: functions.array.array_slice
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - arraySlice
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - arraySlice
       - id: functions.array.has
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - has
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - has
       - id: functions.array.index_of
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - indexOf
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - indexOf
       - id: functions.array.count_equal
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/array func/* - countEqual
+          - /extended precision data types/tests/array, tuple, map/:/array func/* - countEqual
       - id: functions.tuple.tuple
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/tuple func/*Creating a tuple with *
+          - /extended precision data types/tests/array, tuple, map/:/tuple func/*Creating a tuple with *
       - id: functions.tuple.tuple_element
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/tuple func/*tupleElement with *
+          - /extended precision data types/tests/array, tuple, map/:/tuple func/*tupleElement with *
       - id: functions.tuple.tuple_hamming_distance
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/tuple func/*tupleHammingDistance with *
+          - /extended precision data types/tests/array, tuple, map/:/tuple func/*tupleHammingDistance with *
       - id: functions.map.map
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*Creating a map with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*Creating a map with *
       - id: functions.map.map_add
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*mapAdd with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*mapAdd with *
       - id: functions.map.map_subtract
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*mapSubtract with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*mapSubtract with *
       - id: functions.map.map_populate_series
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*mapPopulateSeries with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*mapPopulateSeries with *
       - id: functions.map.map_contains_key
         description: The suite calls mapContains, an alias of mapContainsKey.
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*mapContains with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*mapContains with *
       - id: functions.map.map_keys
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*mapKeys with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*mapKeys with *
       - id: functions.map.map_values
         scenarios:
-          - /extended precision data types/tests/array, tuple, map/*/map func/*mapValues with *
+          - /extended precision data types/tests/array, tuple, map/:/map func/*mapValues with *
       - id: engines.mysql
         scenarios:
           - /extended precision data types/tests/conversion/MySQL table
@@ -2700,111 +2702,111 @@ suites:
           - /hive partitioning/S3 Table Engine/writes/path/*
           - /hive partitioning/S3 Table Engine/writes/filename parameter/*
           - /hive partitioning/S3 Table Engine/writes/write partition columns into files parameter/*
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Parquet *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Parquet *
       - id: formats.csv
         scenarios:
           - /hive partitioning/S3 Table Engine/writes/write partition columns into files parameter/write partition columns into files
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CSV *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CSVWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CSVWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CSV *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CSVWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CSVWithNamesAndTypes *
       - id: formats.tsv
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TabSeparated *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TabSeparatedRaw *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TabSeparatedWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TabSeparatedWithNamesAndTypes *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TabSeparatedRawWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TabSeparatedRawWithNamesAndTypes *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CustomSeparated *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CustomSeparatedWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CustomSeparatedWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TabSeparated *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TabSeparatedRaw *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TabSeparatedWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TabSeparatedWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TabSeparatedRawWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TabSeparatedRawWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CustomSeparated *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CustomSeparatedWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CustomSeparatedWithNamesAndTypes *
       - id: formats.values
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Values *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Values *
       - id: formats.json
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSON *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSON *
       - id: formats.json.columns
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONColumns *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONColumns *
       - id: formats.json.columns_with_metadata
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONColumnsWithMetadata *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONColumnsWithMetadata *
       - id: formats.json.compact
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompact *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompact *
       - id: formats.json.compact_columns
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactColumns *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactColumns *
       - id: formats.json.compact_each_row
         description: JSONCompactStringsEachRow is registered with JSONCompactEachRow.
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactEachRow *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactEachRowWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactEachRowWithNamesAndTypes *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactStringsEachRow *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactStringsEachRowWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONCompactStringsEachRowWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactEachRow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactEachRowWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactEachRowWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactStringsEachRow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactStringsEachRowWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONCompactStringsEachRowWithNamesAndTypes *
       - id: formats.json.each_row
         description: JSONStringsEachRow is registered with JSONEachRow.
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONEachRow *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONStringsEachRow *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*JSONObjectEachRow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONEachRow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONStringsEachRow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*JSONObjectEachRow *
       - id: formats.bson
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*BSONEachRow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*BSONEachRow *
       - id: formats.tskv
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*TSKV *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*TSKV *
       - id: formats.protobuf
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Protobuf *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*ProtobufSingle *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*ProtobufList *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Protobuf *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*ProtobufSingle *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*ProtobufList *
       - id: formats.avro
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Avro *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Avro *
       - id: formats.arrow
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Arrow *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*ArrowStream *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Arrow *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*ArrowStream *
       - id: formats.orc
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*ORC *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*ORC *
       - id: formats.npy
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Npy *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Npy *
       - id: formats.binary
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*RowBinary *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*RowBinaryWithNames *
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*RowBinaryWithNamesAndTypes *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*RowBinary *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*RowBinaryWithNames *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*RowBinaryWithNamesAndTypes *
       - id: formats.native
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*Native *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*Native *
       - id: formats.capnproto
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*CapnProto *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*CapnProto *
       - id: formats.msgpack
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/*MsgPack *
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/*MsgPack *
       - id: runtime.compression.none
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/* none
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/* none
       - id: runtime.compression.zlib
         description: The suite sets compression to gzip.
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/* gzip
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/* gzip
       - id: runtime.compression.brotli
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/* brotli
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/* brotli
       - id: runtime.compression.lzma
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/* LZMA
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/* LZMA
       - id: runtime.compression.zstd
         scenarios:
-          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/*/* zstd
+          - /hive partitioning/S3 Table Engine/writes/s3 engine parameters/:/* zstd
 
   - path: ice
     description: Export a MergeTree part to Parquet on S3, build an Iceberg table with the ice tool, and read it back.
@@ -2867,7 +2869,7 @@ suites:
           - /iceberg/iceberg engine/glue catalog/*
           - /iceberg/native create/*
           - /iceberg/token forwarding/*
-          - /iceberg/iceberg cache/*/iceberg database engine/*
+          - /iceberg/iceberg cache/:/iceberg database engine/*
           - /iceberg/export partition/ice catalog/*
           - /iceberg/export partition/glue catalog/*
       - id: lakes.catalog.rest
@@ -2904,18 +2906,18 @@ suites:
           - /iceberg/iceberg engine/glue catalog/datatypes/*
           - /iceberg/iceberg engine/rest catalog/dot separated column names/*
           - /iceberg/iceberg engine/glue catalog/dot separated column names/*
-          - /iceberg/native create/*/schema/*
-          - /iceberg/native create/*/datatypes/*
-          - /iceberg/export partition/*/schema evolution/*
-          - /iceberg/export partition/*/schema compatibility/*
+          - /iceberg/native create/:/schema/*
+          - /iceberg/native create/:/datatypes/*
+          - /iceberg/export partition/:/:/schema evolution/*
+          - /iceberg/export partition/:/:/schema compatibility/*
       - id: lakes.iceberg.manifests
         scenarios:
           - /iceberg/iceberg engine/rest catalog/predicate push down/*
           - /iceberg/iceberg engine/glue catalog/predicate push down/*
           - /iceberg/iceberg engine/rest catalog/iceberg partition pruning/*
           - /iceberg/iceberg engine/glue catalog/iceberg partition pruning/*
-          - /iceberg/export partition/*/manifest integrity/*
-          - /iceberg/export partition/*/partition spec evolution/*
+          - /iceberg/export partition/:/:/manifest integrity/*
+          - /iceberg/export partition/:/:/partition spec evolution/*
       - id: lakes.iceberg.deletion_vectors
         scenarios:
           - /iceberg/iceberg engine/rest catalog/equality delete reads/*
@@ -2945,7 +2947,7 @@ suites:
           - /iceberg/iceberg engine/rest catalog/nullable minmax pruning/*
           - /iceberg/iceberg engine/glue catalog/nullable minmax pruning/*
           - /iceberg/iceberg table engine/write min max pruning/*
-          - /iceberg/export partition/*/minmax pruning/*
+          - /iceberg/export partition/:/:/minmax pruning/*
       - id: lakes.iceberg.cache
         scenarios:
           - /iceberg/iceberg cache/*
@@ -2953,7 +2955,7 @@ suites:
         scenarios:
           - /iceberg/s3 table function/s3 table function
           - /iceberg/icebergS3 table function/*
-          - /iceberg/iceberg cache/*/icebergS3 table function/*
+          - /iceberg/iceberg cache/:/icebergS3 table function/*
       - id: formats.parquet
         scenarios:
           - /iceberg/s3 table function/s3 table function
@@ -2977,7 +2979,7 @@ suites:
           - /iceberg/iceberg engine/glue catalog/column rbac/*
           - /iceberg/iceberg table engine/rbac/*
           - /iceberg/iceberg table engine/column rbac/*
-          - /iceberg/native create/*/rbac/*
+          - /iceberg/native create/:/rbac/*
       - id: access.row_policy
         scenarios:
           - /iceberg/iceberg engine/rest catalog/row policy/*
@@ -3001,14 +3003,14 @@ suites:
           - /iceberg/export ttl/*
       - id: engines.mergetree.replication
         scenarios:
-          - /iceberg/export partition/*/replicated merge tree/*
+          - /iceberg/export partition/:/:/replicated merge tree/*
       - id: engines.mergetree.ttl
         scenarios:
           - /iceberg/export ttl/*
       - id: ops.system.backups
         description: system.partition_exports and system.replicated_partition_exports.
         scenarios:
-          - /iceberg/export partition/*/system monitoring/*
+          - /iceberg/export partition/:/:/system monitoring/*
       - id: ops.system
         description: system.tables partition_key and sorting_key.
         scenarios:
@@ -3018,7 +3020,7 @@ suites:
           - /iceberg/iceberg table engine/named collections/*
       - id: ddl.on_cluster
         scenarios:
-          - /iceberg/native create/*/on cluster/*
+          - /iceberg/native create/:/on cluster/*
 
   - path: integration
     description: Upstream ClickHouse pytest integration tests, launched through tests/integration/runner.
@@ -3576,29 +3578,29 @@ suites:
           - /s3/azure/*
       - id: storage.disk.object_storage
         scenarios:
-          - /s3/*/sanity/*
-          - /s3/*/disk/*
-          - /s3/*/invalid disk/*
-          - /s3/*/reconnect/*
-          - /s3/*/orphans/*
-          - /s3/*/settings/*
+          - /s3/:/:/sanity/*
+          - /s3/:/:/disk/*
+          - /s3/:/:/invalid disk/*
+          - /s3/:/:/reconnect/*
+          - /s3/:/:/orphans/*
+          - /s3/:/:/settings/*
           - /s3/minio/part 2/cit/*
       - id: storage.disk.encrypted
         scenarios:
-          - /s3/*/alter/encrypted/*
-          - /s3/*/alter/zero copy encrypted/*
+          - /s3/:/:/alter/encrypted/*
+          - /s3/:/:/alter/zero copy encrypted/*
       - id: storage.zero_copy
         scenarios:
-          - /s3/*/zero copy replication/*
+          - /s3/:/:/zero copy replication/*
       - id: functions.table.object_storage
         scenarios:
-          - /s3/*/table function/*
-          - /s3/*/invalid table function/*
-          - /s3/*/table function performance/*
+          - /s3/:/:/table function/*
+          - /s3/:/:/invalid table function/*
+          - /s3/:/:/table function performance/*
           - /s3/minio/part 3/hive partitioning/*
           - /s3/minio/part 3/remote s3 function call/*
           - /s3/minio/part 2/cit/*
-          - /s3/*/orphans/*
+          - /s3/:/:/orphans/*
           - /s3/minio/export tests/export part/table functions/*
       - id: engines.object_storage
         description: The export destination is an S3 table engine.
@@ -3621,7 +3623,7 @@ suites:
           - /s3/minio/export tests/export partition/*
       - id: engines.mergetree.replication
         scenarios:
-          - /s3/*/zero copy replication/*
+          - /s3/:/:/zero copy replication/*
       - id: engines.distributed
         scenarios:
           - /s3/minio/export tests/export part/shards/*
@@ -3641,40 +3643,40 @@ suites:
           - /s3/minio/export tests/export part/system monitoring/*
       - id: ddl.alter
         scenarios:
-          - /s3/*/alter/*
+          - /s3/:/:/alter/*
       - id: ddl.alter_columns
         scenarios:
-          - /s3/*/alter/*/columns*
+          - /s3/:/:/alter/:/columns*
       - id: ddl.partition
         scenarios:
-          - /s3/*/alter/*/detach*
-          - /s3/*/alter/*/drop*
-          - /s3/*/alter/*/fetch*
-          - /s3/*/alter/*/attach from*
-          - /s3/*/alter/*/move to table*
-          - /s3/*/alter/*/replace*
-          - /s3/*/alter/*/check move*
+          - /s3/:/:/alter/:/detach*
+          - /s3/:/:/alter/:/drop*
+          - /s3/:/:/alter/:/fetch*
+          - /s3/:/:/alter/:/attach from*
+          - /s3/:/:/alter/:/move to table*
+          - /s3/:/:/alter/:/replace*
+          - /s3/:/:/alter/:/check move*
       - id: ddl.update
         scenarios:
-          - /s3/*/alter/*/update delete*
+          - /s3/:/:/alter/:/update delete*
       - id: engines.mergetree.mutations
         scenarios:
-          - /s3/*/alter/*/update delete*
+          - /s3/:/:/alter/:/update delete*
       - id: engines.mergetree.indexes
         scenarios:
-          - /s3/*/alter/*/index*
+          - /s3/:/:/alter/:/index*
       - id: ddl.create.index
         scenarios:
-          - /s3/*/alter/*/index*
+          - /s3/:/:/alter/:/index*
       - id: engines.mergetree.projections
         scenarios:
-          - /s3/*/alter/*/projection*
+          - /s3/:/:/alter/:/projection*
       - id: backup.freeze
         description: ALTER FREEZE and SYSTEM UNFREEZE. The backup feature restores disk metadata. It does not run BACKUP or RESTORE.
         scenarios:
-          - /s3/*/backup/alter freeze*
-          - /s3/*/backup/system unfreeze*
-          - /s3/*/alter/*/freeze*
+          - /s3/:/:/backup/alter freeze*
+          - /s3/:/:/backup/system unfreeze*
+          - /s3/:/:/alter/:/freeze*
 
   - path: selects
     description: The final query setting, which adds FINAL to tables that support it.
@@ -4022,13 +4024,13 @@ suites:
           - /tiered storage/*
       - id: storage.volume
         scenarios:
-          - /tiered storage/*/alter move/*
-          - /tiered storage/*/background move/*
-          - /tiered storage/*/manual move with downtime
-          - /tiered storage/*/merge parts different volumes
-          - /tiered storage/*/merge parts different volumes no space
-          - /tiered storage/*/volume configuration either max_data_part_size_bytes or max_data_part_size_ratio
-          - /tiered storage/*/jbod overflow
+          - /tiered storage/:/alter move/*
+          - /tiered storage/:/background move/*
+          - /tiered storage/:/manual move with downtime
+          - /tiered storage/:/merge parts different volumes
+          - /tiered storage/:/merge parts different volumes no space
+          - /tiered storage/:/volume configuration either max_data_part_size_bytes or max_data_part_size_ratio
+          - /tiered storage/:/jbod overflow
       - id: storage.disk.object_storage
         scenarios:
           - /tiered storage/with minio/*
@@ -4048,36 +4050,36 @@ suites:
           - /tiered storage/with cas/*
       - id: engines.mergetree.ttl
         scenarios:
-          - /tiered storage/*/ttl moves/*
+          - /tiered storage/:/ttl moves/*
       - id: engines.mergetree.replication
         scenarios:
-          - /tiered storage/*/simple replication and moves
-          - /tiered storage/*/download appropriate disk
-          - /tiered storage/*/download appropriate disk advanced
-          - /tiered storage/*/download appropriate disk max data part size
-          - /tiered storage/*/ttl moves/download appropriate disk*
+          - /tiered storage/:/simple replication and moves
+          - /tiered storage/:/download appropriate disk
+          - /tiered storage/:/download appropriate disk advanced
+          - /tiered storage/:/download appropriate disk max data part size
+          - /tiered storage/:/ttl moves/download appropriate disk*
       - id: engines.mergetree.mutations
         scenarios:
-          - /tiered storage/*/mutate to another disk
-          - /tiered storage/*/ttl moves/mutation update column in ttl*
-          - /tiered storage/*/ttl moves/mutation delete column in ttl*
-          - /tiered storage/*/ttl moves/alter delete*
+          - /tiered storage/:/mutate to another disk
+          - /tiered storage/:/ttl moves/mutation update column in ttl*
+          - /tiered storage/:/ttl moves/mutation delete column in ttl*
+          - /tiered storage/:/ttl moves/alter delete*
       - id: ddl.partition
         scenarios:
-          - /tiered storage/*/attach or replace partition different policies
-          - /tiered storage/*/alter move/*
+          - /tiered storage/:/attach or replace partition different policies
+          - /tiered storage/:/alter move/*
       - id: ddl.rename
         scenarios:
-          - /tiered storage/*/rename
+          - /tiered storage/:/rename
       - id: backup.freeze
         scenarios:
-          - /tiered storage/*/freeze
+          - /tiered storage/:/freeze
       - id: ops.system.disks
         scenarios:
-          - /tiered storage/*/system tables
+          - /tiered storage/:/system tables
       - id: ops.system.parts
         scenarios:
-          - /tiered storage/*/system․detached_parts
+          - /tiered storage/:/system․detached_parts
 
 
   - path: version
@@ -4121,185 +4123,185 @@ suites:
           - /window functions/tests/distributed/*
       - id: functions.aggregate.any
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
-          - /window functions/tests/*/funcs/first value*
+          - /window functions/tests/:/aggregate funcs/*
+          - /window functions/tests/:/funcs/first value*
       - id: functions.aggregate.any_last
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
-          - /window functions/tests/*/funcs/last value*
+          - /window functions/tests/:/aggregate funcs/*
+          - /window functions/tests/:/funcs/last value*
       - id: functions.aggregate.count
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.min
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.max
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.sum
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.avg
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.stddev_pop
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.stddev_samp
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.var_pop
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.var_samp
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.covar_pop
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.covar_samp
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.any_heavy
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.arg_min
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.arg_max
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.avg_weighted
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.corr
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.top_k
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.top_k_weighted
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_array
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_uniq_array
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_array_insert_at
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_array_moving_sum
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_array_moving_avg
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_array_sample
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_bit_and
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_bit_or
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_bit_xor
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.group_bitmap
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.sum_with_overflow
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.delta_sum
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.sum_mapped_arrays
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.min_mapped_arrays
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.max_mapped_arrays
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.skew_pop
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.skew_samp
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.kurt_pop
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.kurt_samp
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.uniq
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.uniq_exact
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.uniq_combined
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.uniq_combined64
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.uniq_hll12
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile
         description: Also median, which is an alias of quantile.
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantiles
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_exact
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_exact_weighted
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_timing
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_timing_weighted
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_deterministic
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_t_digest
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.quantile_t_digest_weighted
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.simple_linear_regression
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.stochastic_linear_regression
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.stochastic_logistic_regression
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.student_t_test
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.welch_t_test
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.mann_whitney_u_test
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
       - id: functions.aggregate.rank_corr
         scenarios:
-          - /window functions/tests/*/aggregate funcs/*
+          - /window functions/tests/:/aggregate funcs/*
 
