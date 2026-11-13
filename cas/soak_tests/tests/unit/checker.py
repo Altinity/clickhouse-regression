@@ -5,6 +5,7 @@ from cas.soak_tests.oracle.checker import (
     CheckpointFailure,
     compare_aggregates,
     deletion_pipeline_idle,
+    dryrun_subset_applicable,
     dryrun_subset_check,
     gc_fixpoint_reached,
     is_genuine_hang,
@@ -211,6 +212,21 @@ def dryrun_subset_waits_for_an_idle_deletion_pipeline(self):
     assert not deletion_pipeline_idle({"unreachable": 2204, "pending_gc": 193, "awaiting_gc": 879}), error()
     assert not deletion_pipeline_idle({"unreachable": 0, "pending_gc": 1, "awaiting_gc": 0}), error()
     assert not deletion_pipeline_idle({"unreachable": 0, "pending_gc": 0, "awaiting_gc": 1}), error()
+
+
+@TestScenario
+@Name("dryrun subset skips a truncated detail sample")
+def dryrun_subset_skips_a_truncated_detail_sample(self):
+    idle = {"unreachable": 0, "pending_gc": 0, "awaiting_gc": 0}
+    ok, why = dryrun_subset_applicable(dict(idle))
+    assert ok and why == "", error()
+    truncated = dict(idle, detail_truncated=True, detail_line_count=3599)
+    ok, why = dryrun_subset_applicable(truncated)
+    assert ok is False, error()
+    assert "3599" in why, error()
+    busy = {"unreachable": 2204, "pending_gc": 0, "awaiting_gc": 0}
+    ok, why = dryrun_subset_applicable(busy)
+    assert ok is False and "2204" in why, error()
 
 
 @TestScenario

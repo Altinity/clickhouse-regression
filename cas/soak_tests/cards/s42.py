@@ -3,8 +3,9 @@
 import threading
 import time
 
+from cas.soak_tests.oracle.alloc_fault import classify_armed_exception
 from cas.soak_tests.oracle.chaos import Fault, FaultAction, FaultTarget
-from cas.soak_tests.oracle.lease import is_mount_lease_drop, mount_lease_verdict
+from cas.soak_tests.oracle.lease import mount_lease_verdict
 from cas.soak_tests.oracle.scenario import Scenario, register
 from cas.soak_tests.oracle.verdict import Verdict
 from cas.soak_tests.steps import card as C
@@ -170,6 +171,8 @@ class S42(Scenario):
         retry_later = [0]
         lease_count = [0]
         lease_sample = []
+        transport_count = [0]
+        transport_sample = []
         other_count = [0]
         other_sample = []
 
@@ -191,19 +194,22 @@ class S42(Scenario):
             }
 
         def _record_failure(exc):
-            body = str(exc)
-            if "fault injected" in body or "MEMORY_LIMIT_EXCEEDED" in body or "Code: 241" in body:
+            kind = classify_armed_exception(exc)
+            if kind == "injected":
                 injected_client_failures[0] += 1
-            elif "could not be committed" in body or "retrying later" in body:
+            elif kind == "retry_later":
                 # throwCasWriteRetryLater. The caller is told to retry; the consistency checks
                 # are what decide whether the durable state survived.
                 retry_later[0] += 1
-            elif is_mount_lease_drop(body):
+            elif kind == "lease":
                 lease_count[0] += 1
-                _keep_sample(lease_sample, body)
+                _keep_sample(lease_sample, exc)
+            elif kind == "transport":
+                transport_count[0] += 1
+                _keep_sample(transport_sample, exc)
             else:
                 other_count[0] += 1
-                _keep_sample(other_sample, body)
+                _keep_sample(other_sample, exc)
 
         def writer():
             while time.time() < stop_at[0]:
@@ -402,10 +408,19 @@ class S42(Scenario):
             )
         )
         result.add(mount_lease_verdict(lease_count[0], lease_sample))
+        transport_shown = " | ".join(transport_sample)
+        result.add(
+            Verdict.reported(
+                "client transport deaths while allocation faults are armed",
+                "recorded; the server closes the response while writing Code 241",
+                f"{transport_count[0]}" + (f" | {transport_shown}" if transport_shown else ""),
+                "Code 71, a connection reset, or a read timeout is the client side of the injected fault",
+            )
+        )
         other_shown = " | ".join(other_sample)
         result.add(
             Verdict.check(
-                "statements failed only with the injected allocation error or a retry-later",
+                "statements failed only with the injected allocation error, its transport death, or a retry-later",
                 "0 statement failures of any other kind",
                 f"{other_count[0]} other failures" + (f" | {other_shown}" if other_shown else ""),
                 other_count[0] == 0,

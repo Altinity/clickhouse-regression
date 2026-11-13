@@ -30,6 +30,31 @@ def deletion_pipeline_idle(fsck_result: dict) -> bool:
     return True
 
 
+def dryrun_subset_applicable(fsck_result: dict) -> tuple[bool, str]:
+    """The subset check needs the full fsck detail and an idle deletion pipeline.
+
+    ``cas_fsck`` keeps a short head of the detail. A dryrun key that lands in
+    that head looks reachable, and every other dryrun key looks already
+    deleted. That comparison does not describe the pool.
+    """
+    if fsck_result.get("detail_truncated"):
+        count = fsck_result.get("detail_line_count")
+        where = f" ({count} detail lines on the server)" if count else ""
+        return (
+            False,
+            "fsck detail is a sample, not the full listing" + where,
+        )
+    if not deletion_pipeline_idle(fsck_result):
+        return (
+            False,
+            "cas-gc-dryrun over-reports away from quiescence "
+            f"(unreachable={fsck_result.get('unreachable')} "
+            f"pending_gc={fsck_result.get('pending_gc')} "
+            f"awaiting_gc={fsck_result.get('awaiting_gc')})",
+        )
+    return True, ""
+
+
 def parse_aggregates(tsv: str) -> dict:
     """Parse one replica's aggregate TSV into Model.aggregates keys."""
     row = tsv.strip().split("\t")

@@ -7,7 +7,7 @@ from cas.soak_tests.oracle.checker import (
     AGGREGATE_SQL,
     CheckpointFailure,
     compare_aggregates,
-    deletion_pipeline_idle,
+    dryrun_subset_applicable,
     dryrun_subset_check,
     gc_fixpoint_reached,
     is_genuine_hang,
@@ -19,6 +19,19 @@ from cas.soak_tests.oracle.fsck import parse_dryrun, parse_fsck_stdout
 
 FSCK_CONFIG = "/etc/clickhouse-server/fsck-only.xml"
 FSCK_DISK = "ca_ro"
+# Progress chatter and the summary line. Everything else is a detail row.
+_FSCK_DETAIL_FILTER = "walking refs|listing blobs|listing manifests|reachable="
+# The checkpoint log keeps this many detail rows. The dryrun subset check
+# runs only when the server file has no more than this, so the sample is the
+# whole listing.
+DETAIL_SAMPLE_LINES = 40
+
+
+def _last_int(text):
+    for tok in reversed((text or "").split()):
+        if tok.isdigit():
+            return int(tok)
+    return None
 
 
 def refresh_cluster_shells(self):
@@ -257,12 +270,26 @@ def cas_fsck(*, node=None, disk=FSCK_DISK, detail=True, timeout=600):
         self,
         node,
         f"grep -a -E 'reachable=' {remote} | head -n 5; "
-        f"grep -a -Ev 'walking refs|listing blobs|listing manifests|reachable=' {remote} | head -n 40",
+        f"grep -a -Ev '{_FSCK_DETAIL_FILTER}' {remote} | head -n {DETAIL_SAMPLE_LINES}",
         timeout,
     )
     output = dumped.output or ""
     result = parse_fsck_stdout(output, exit_code=exit_code, detail=detail)
     result["stderr"] = output
+    if detail:
+        counted = _node_command_retry(
+            self,
+            node,
+            f"grep -a -Ev '{_FSCK_DETAIL_FILTER}' {remote} | wc -l",
+            timeout,
+        )
+        detail_lines = _last_int(counted.output)
+        result["detail_line_count"] = detail_lines
+        # Unknown length is a sample too: the subset check treats a missing
+        # key as already deleted, which a partial file cannot support.
+        result["detail_truncated"] = (
+            detail_lines is None or detail_lines > DETAIL_SAMPLE_LINES
+        )
     if detail:
         stale = _node_command_retry(
             self,
@@ -439,19 +466,16 @@ def assert_pool_is_clean(fsck_result, dryrun_result, *, detail=True):
     assert dangling == 0, error(f"fsck dangling={dangling} (INV-NO-LOSS)")
     try:
         require_clean_stale_edge(fsck_result, detail=detail)
-        if detail and deletion_pipeline_idle(fsck_result):
-            dryrun_subset_check(
-                fsck_result.get("detail") or [],
-                dryrun_result.get("entries") or [],
-                log_fn=note,
-            )
-        elif detail:
-            note(
-                "dryrun subset skipped: cas-gc-dryrun over-reports away from quiescence "
-                f"(unreachable={fsck_result.get('unreachable')} "
-                f"pending_gc={fsck_result.get('pending_gc')} "
-                f"awaiting_gc={fsck_result.get('awaiting_gc')})"
-            )
+        if detail:
+            applicable, why = dryrun_subset_applicable(fsck_result)
+            if applicable:
+                dryrun_subset_check(
+                    fsck_result.get("detail") or [],
+                    dryrun_result.get("entries") or [],
+                    log_fn=note,
+                )
+            else:
+                note(f"dryrun subset skipped: {why}")
     except CheckpointFailure as e:
         assert False, error(str(e))
     return fsck_result, dryrun_result

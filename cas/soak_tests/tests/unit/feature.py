@@ -13,6 +13,7 @@ def feature(self):
     Feature(run=load("cas.soak_tests.tests.unit.workload", "feature"))
     Feature(run=load("cas.soak_tests.tests.unit.fsck", "feature"))
     Feature(run=load("cas.soak_tests.tests.unit.checker", "feature"))
+    Feature(run=load("cas.soak_tests.tests.unit.alloc_fault", "feature"))
     Feature(run=load("cas.soak_tests.tests.unit.http", "feature"))
     Feature(run=load("cas.soak_tests.tests.unit.transport", "feature"))
     Feature(run=load("cas.soak_tests.tests.unit.chaos", "feature"))
