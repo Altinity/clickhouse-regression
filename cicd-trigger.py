@@ -104,6 +104,7 @@ CHOICES = {
         "clickhouse_keeper_failover",
         "data_types",
         "datetime64_extended_range",
+        "delta_lake",
         "disk_level_encryption",
         "dns",
         "engines",

@@ -193,6 +193,68 @@ def create_experimental_iceberg_database_with_glue_catalog(
 
 
 @TestStep(Given)
+def create_experimental_iceberg_database_with_unity_catalog(
+    self,
+    s3_access_key_id,
+    s3_secret_access_key,
+    database_name=None,
+    endpoint_url="http://unity-catalog:8080/api/2.1/unity-catalog",
+    warehouse="unity",
+    storage_endpoint="http://minio:9000/warehouse",
+    cluster_name=None,
+    namespaces=None,
+    default_base_location=None,
+    storage_uri_style=None,
+    exitcode=None,
+    message=None,
+    node=None,
+):
+    """Create a Unity v2 DataLakeCatalog database for Iceberg tables."""
+    if node is None:
+        node = self.context.node
+
+    if database_name is None:
+        database_name = "iceberg_database_" + getuid()
+
+    settings = {
+        "catalog_type": "unity",
+        "use_unity_catalog_v2": "1",
+        "warehouse": warehouse,
+        "vended_credentials": "false",
+        "storage_endpoint": storage_endpoint,
+        "aws_access_key_id": s3_access_key_id,
+        "aws_secret_access_key": s3_secret_access_key,
+    }
+    if namespaces is not None:
+        settings["namespaces"] = namespaces
+    if default_base_location is not None:
+        settings["default_base_location"] = default_base_location
+    if storage_uri_style is not None:
+        settings["storage_uri_style"] = storage_uri_style
+
+    settings_str = ",".join(
+        [f"{key} = '{value}'" for key, value in settings.items()]
+    )
+    query = "SET allow_database_unity_catalog=1; "
+    query += f"CREATE DATABASE {database_name} "
+
+    if cluster_name:
+        query += f"ON CLUSTER {cluster_name} "
+
+    query += (
+        f"ENGINE = DataLakeCatalog('{endpoint_url}') SETTINGS {settings_str}"
+    )
+
+    try:
+        node.query(query, exitcode=exitcode, message=message)
+        yield database_name
+
+    finally:
+        with Finally("drop database"):
+            node.query(f"DROP DATABASE IF EXISTS {database_name}")
+
+
+@TestStep(Given)
 def create_experimental_iceberg_database(
     self,
     **kwargs,
@@ -207,6 +269,10 @@ def create_experimental_iceberg_database(
         )
     elif self.context.catalog == "glue":
         return create_experimental_iceberg_database_with_glue_catalog(
+            **kwargs,
+        )
+    elif self.context.catalog == "unity":
+        return create_experimental_iceberg_database_with_unity_catalog(
             **kwargs,
         )
     else:
@@ -464,6 +530,10 @@ def check_values_in_system_tables(self, table_name, database):
             assert (
                 full_engine == "Iceberg(\\'http://minio:9000/warehouse/data/\\')"
             ), error()
+        elif self.context.catalog == "unity":
+            assert full_engine.startswith(
+                "Iceberg(\\'http://minio:9000/warehouse/data/"
+            ), error(full_engine)
         else:
             assert False, f"Unsupported catalog type: {self.context.catalog}"
 

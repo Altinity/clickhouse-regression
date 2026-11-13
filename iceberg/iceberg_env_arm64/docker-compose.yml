@@ -48,6 +48,32 @@ services:
     depends_on:
       minio:
         condition: service_healthy
+
+  unity-catalog:
+    image: clickhouse-regression/unity-catalog:e648169
+    pull_policy: build
+    build:
+      context: ../unity
+    ports:
+      - "8085:8080"
+    environment:
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
+      - AWS_REGION=us-east-1
+    volumes:
+      - ../unity/server.properties:/home/unitycatalog/etc/conf/server.properties:ro
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null 'http://localhost:8080/api/2.1/unity-catalog/iceberg-rest/v1/config?warehouse=unity'",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
   
   localstack:
     image: localstack/localstack-pro
@@ -143,6 +169,8 @@ services:
       zookeeper1:
         condition: service_healthy
       minio:
+        condition: service_healthy
+      unity-catalog:
         condition: service_healthy
       # spark-iceberg:
       #   condition: service_healthy
