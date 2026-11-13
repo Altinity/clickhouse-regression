@@ -489,6 +489,59 @@ xfails = {
             check_clickhouse_version(">=26.1"),
         )
     ],
+    "/iceberg/iceberg engine/unity catalog/predicate push down/check input format parquet filter push down": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/predicate push down/check input format parquet filter push down/*": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/rbac/drop table privilege": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/124438",
+            check_clickhouse_version("<26.11"),
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/datatypes/data types check where": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/dot separated column names/all datatypes with dot separated columns": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/nested datatypes/number of columns ??*": [
+        (
+            Error,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        ),
+        (
+            Fail,
+            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
+        ),
+    ],
+    "/iceberg/icebergS3 table function/unity catalog/icebergS3 table function/recreate table*": [
+        (
+            Fail,
+            "OSS Unity Catalog drops a table without deleting its files and recreates it at the same location, so icebergS3 on that path still sees the old metadata",
+        )
+    ],
+    "/iceberg/iceberg engine/unity catalog/position delete reads/read position deletes": [
+        (
+            Error,
+            "OSS Unity Catalog does not implement the Iceberg REST register route (POST .../namespaces/{namespace}/register returns 404)",
+        )
+    ],
     "/iceberg/iceberg engine/: catalog/feature/select from system databases/*": [
         (
             Fail,
@@ -816,6 +869,18 @@ ffails = {
         Skip,
         "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
         "ice-rest-catalog); Glue/LocalStack DataLakeCatalog is out of scope.",
+        lambda test: True,
+    ),
+    "/iceberg/icebergS3 table function/unity catalog/several iceberg tables in one dir": (
+        Skip,
+        "Unity tables are created at s3://warehouse/data/<namespace>/<table>, "
+        "so several tables never share one directory.",
+        lambda test: True,
+    ),
+    "/iceberg/export partition/unity catalog/*/casting": (
+        Skip,
+        "PR 1779 casting uses CH-native Iceberg DDL destinations (no_catalog and "
+        "ice-rest-catalog); Unity DataLakeCatalog is out of scope.",
         lambda test: True,
     ),
     "/iceberg/hybrid": (

@@ -693,7 +693,9 @@ def non_partitioned_table(self, minio_root_user, minio_root_password):
             )
             result_with_s3_table_function = (
                 icebergS3.read_data_with_icebergS3_table_function(
-                    storage_endpoint="http://minio:9000/warehouse/data",
+                    storage_endpoint=table.location().replace(
+                        "s3://", "http://minio:9000/", 1
+                    ),
                     s3_access_key_id=minio_root_user,
                     s3_secret_access_key=minio_root_password,
                     order_by="tuple(*)",
