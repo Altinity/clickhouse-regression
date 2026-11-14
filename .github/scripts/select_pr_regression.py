@@ -611,7 +611,7 @@ def split_tiered_storage(job: dict) -> list[dict]:
     matched = [spec for spec in TIERED_STORAGE_JOBS if spec[0] in args]
     if not matched:
         return [job]
-    return [
+    selected = [
         {
             **job,
             "job_name": job_name,
@@ -620,6 +620,18 @@ def split_tiered_storage(job: dict) -> list[dict]:
         }
         for _needle, job_name, storage, flags in matched
     ]
+    normal_paths = [
+        path for path in _only_paths(args)
+        if path == "/tiered storage/normal" or path.startswith("/tiered storage/normal/")
+    ]
+    if normal_paths:
+        selected.append({
+            **job,
+            "job_name": "tiered_storage_normal",
+            "storage_path": "/normal",
+            "regression_args": "--only " + " ".join(f'"{path}"' for path in normal_paths),
+        })
+    return selected
 
 
 def split_whole_suite(job: dict) -> list[dict]:
