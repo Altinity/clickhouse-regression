@@ -21,6 +21,12 @@ CAS_CACHE_MAX_SIZE = "10Gi"
 CAS_S3_KEEP_ALIVE_TIMEOUT = 60
 CAS_S3_KEEP_ALIVE_MAX_REQUESTS = 1000
 
+# The hard-restart scenarios SIGKILL a server and wait 60 s for the restart. A
+# restarted server otherwise waits out the old mount lease before it listens
+# (~131 s at the 120 s default, Altinity/ClickHouse#2831). The suites run one
+# process per server uuid, so the slot is reclaimed at once.
+CAS_UNSAFE_REMOUNT_NO_DELAY = 1
+
 CAS_S3_CACHE_FLAG_HELP = (
     "like --cas, but layer a type=cache disk in front of the CAS disk "
     "(production-shaped S3 cache; cas_policy name is unchanged)"
@@ -87,7 +93,8 @@ def cas_storage_config(
                 <access_key_id>{access_key_id}</access_key_id>
                 <secret_access_key>{secret_access_key}</secret_access_key>
                 <http_keep_alive_timeout>{CAS_S3_KEEP_ALIVE_TIMEOUT}</http_keep_alive_timeout>
-                <http_keep_alive_max_requests>{CAS_S3_KEEP_ALIVE_MAX_REQUESTS}</http_keep_alive_max_requests>{gc_interval_xml}
+                <http_keep_alive_max_requests>{CAS_S3_KEEP_ALIVE_MAX_REQUESTS}</http_keep_alive_max_requests>
+                <cas_unsafe_remount_no_delay>{CAS_UNSAFE_REMOUNT_NO_DELAY}</cas_unsafe_remount_no_delay>{gc_interval_xml}
             </{CAS_DISK}>"""
     ]
     if with_s3_cache:
