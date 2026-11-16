@@ -14,7 +14,7 @@ from deltalake import write_deltalake
 from testflows.asserts import error
 from testflows.core import *
 
-from helpers.common import getuid
+from helpers.common import check_clickhouse_version, getuid
 
 UC_URL = "http://localhost:8085/api/2.1/unity-catalog"
 UC_CATALOG = "unity"
@@ -395,14 +395,21 @@ def create_database(
     if name is None:
         name = f"delta_{getuid()}"
 
+    if check_clickhouse_version(">=25.8")(self):
+        enable = "allow_database_unity_catalog"
+    else:
+        enable = "allow_experimental_database_unity_catalog"
+    # Servers older than 26.10 reject use_unity_catalog_v2 even when it is 0.
+    v2_setting = "use_unity_catalog_v2 = '1', " if unity_v2 else ""
+
     try:
         node.query(
-            "SET allow_database_unity_catalog=1; "
+            f"SET {enable}=1; "
             f"CREATE DATABASE {name} "
             f"ENGINE = DataLakeCatalog('{UC_ENDPOINT}') "
             "SETTINGS "
             "catalog_type = 'unity', "
-            f"use_unity_catalog_v2 = '{int(unity_v2)}', "
+            f"{v2_setting}"
             f"warehouse = '{UC_CATALOG}', "
             "vended_credentials = 'false', "
             f"storage_endpoint = '{STORAGE_ENDPOINT}', "

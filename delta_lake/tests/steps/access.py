@@ -12,6 +12,7 @@ from testflows.asserts import error
 from testflows.core import *
 
 from helpers.common import getuid
+from helpers.feature_support import setting_supported
 from delta_lake.tests.steps.catalog import (
     STORAGE_ENDPOINT,
     _credentials,
@@ -22,7 +23,16 @@ from delta_lake.tests.steps.catalog import (
 )
 
 VIRTUAL_COLUMNS = {"_path", "_file", "_size", "_time", "_etag"}
-ATTACH_OFF = "SET allow_delta_lake_create_table = 0; "
+
+
+def _attach_off(self):
+    """Keep ENGINE = DeltaLake from creating a table at the path.
+
+    Servers without allow_delta_lake_create_table can only attach.
+    """
+    if setting_supported("allow_delta_lake_create_table")(self):
+        return "SET allow_delta_lake_create_table = 0; "
+    return ""
 
 
 def sql_literal(value):
@@ -138,7 +148,7 @@ def try_engine(self, url, access_key=None, secret_key=None, node=None):
     access_key, secret_key = _credentials(self, access_key, secret_key)
     name = f"delta_bad_{getuid()}"
     result = node.query(
-        ATTACH_OFF
+        _attach_off(self)
         + "CREATE TABLE "
         + name
         + " ENGINE = DeltaLake("
@@ -249,7 +259,9 @@ def create_engine_table(self, url=None, collection=None, node=None):
         arguments = collection
     name = f"delta_{getuid()}"
     try:
-        node.query(ATTACH_OFF + f"CREATE TABLE {name} ENGINE = DeltaLake({arguments})")
+        node.query(
+            _attach_off(self) + f"CREATE TABLE {name} ENGINE = DeltaLake({arguments})"
+        )
         yield name
     finally:
         with Finally(f"drop table {name}"):

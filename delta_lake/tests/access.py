@@ -5,6 +5,7 @@ Each scenario creates a table, reads it one way, and checks the result.
 
 from testflows.core import *
 
+from helpers.feature_support import setting_supported
 from delta_lake.requirements.requirements import (
     RQ_SRS_050_ClickHouse_DeltaLake_Access_Cluster,
     RQ_SRS_050_ClickHouse_DeltaLake_Access_Credentials,
@@ -90,11 +91,12 @@ def table_function(self):
             function="deltaLake", url=table.http_url, columns=EXPECTED_COLUMNS
         )
 
-    with When("I read it with deltaLakeS3"):
-        result = read_function(function="deltaLakeS3", url=table.http_url)
+    if setting_supported("deltaLakeS3", table="system.table_functions")(self):
+        with When("I read it with deltaLakeS3"):
+            result = read_function(function="deltaLakeS3", url=table.http_url)
 
-    with Then("I get the same rows"):
-        expect_lines(result=result, expected=EXPECTED)
+        with Then("I get the same rows"):
+            expect_lines(result=result, expected=EXPECTED)
 
     with When("I pass format Parquet and no structure"):
         result = read_function(
@@ -246,13 +248,14 @@ def cluster(self):
     with Then("I get the written rows"):
         expect_lines(result=result, expected=EXPECTED)
 
-    with When("I read it with deltaLakeS3Cluster"):
-        result = read_function(
-            function="deltaLakeS3Cluster", url=table.http_url, cluster=CLUSTER
-        )
+    if setting_supported("deltaLakeS3Cluster", table="system.table_functions")(self):
+        with When("I read it with deltaLakeS3Cluster"):
+            result = read_function(
+                function="deltaLakeS3Cluster", url=table.http_url, cluster=CLUSTER
+            )
 
-    with Then("I get the same rows"):
-        expect_lines(result=result, expected=EXPECTED)
+        with Then("I get the same rows"):
+            expect_lines(result=result, expected=EXPECTED)
 
 
 @TestFeature

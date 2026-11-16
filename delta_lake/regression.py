@@ -11,11 +11,42 @@ from helpers.argparser import (
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
-from helpers.common import experimental_analyzer
+from helpers.common import check_clickhouse_version, experimental_analyzer
+
+xfails = {
+    "/delta lake/feature/delta schema/nulls": [
+        (
+            Fail,
+            "deltaLake() cannot read a column added in a later commit: "
+            "Reading from files with different schema is not possible",
+            check_clickhouse_version("<25.8"),
+        )
+    ],
+    "/delta lake/feature/delta schema/nested": [
+        (
+            Fail,
+            "deltaLake() fails on a struct column with LOGICAL_ERROR: "
+            "Not found column in schema: person.id",
+            lambda test: check_clickhouse_version(">=25.8")(test)
+            and check_clickhouse_version("<26.3")(test),
+        )
+    ],
+}
+
+ffails = {
+    "/delta lake/feature/delta schema/varchar": (
+        Skip,
+        "OSS Unity Catalog v0.7.0 rejects varchar(n) in a column type_json "
+        "(Unsupported Delta primitive type), so the catalog cannot return it "
+        "the way Databricks Unity does.",
+    ),
+}
 
 
 @TestModule
 @Name("delta lake")
+@FFails(ffails)
+@XFails(xfails)
 @ArgumentParser(argparser_minio)
 @CaptureClusterArgs
 @CaptureMinioArgs

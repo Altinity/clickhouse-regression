@@ -4,20 +4,22 @@ Specification: `delta_lake/requirements/requirements.md` (SRS-050).
 Package: `delta_lake.tests`.
 
 The cluster is one ClickHouse node, RustFS, and the OSS Unity Catalog image
-`unitycatalog/unitycatalog:v0.7.0`. `delta_lake/tests/steps.py` writes a table
-with the `deltalake` package, registers it as an external `DELTA` table, and
-opens that catalog with `vended_credentials = false`. `sanity.py` already
-checks one case: a `String` and `Int64` table is `ENGINE = DeltaLake` with
-`use_unity_catalog_v2` off and on, and `SELECT` returns the three written rows.
+`unitycatalog/unitycatalog:v0.7.0`. `delta_lake/tests/steps/catalog.py` writes a
+table with the `deltalake` package, registers it as an external `DELTA` table,
+and opens that catalog with `vended_credentials = false`. `steps/access.py` reads
+the same table directly from RustFS. `sanity.py` already checks one case: a
+`String` and `Int64` table is `ENGINE = DeltaLake` with `use_unity_catalog_v2`
+off and on, and `SELECT` returns the three written rows.
 
-Write the five modules below first, in this order. Each one reuses `steps.py`.
+Write the five modules below first, in this order. Each one reuses the
+`delta_lake.tests.steps` package.
 Tag every scenario with `@Requirements` from `delta_lake.requirements.requirements`.
 `RQ` names in the tables omit the `RQ.SRS-050.ClickHouse.DeltaLake.` prefix.
 
-`regression.py` currently skips the whole module on servers older than 26.10.
-Move that skip onto the scenarios that set `use_unity_catalog_v2 = 1`. Direct
-`deltaLake()` and `ENGINE = DeltaLake` reads have existed since 22.11. Unity
-without the v2 setting is the older Delta catalog. Only the v2 flag needs 26.10.
+Only scenarios that set `use_unity_catalog_v2 = 1` need 26.10, and they check
+the version themselves. Direct `deltaLake()` and `ENGINE = DeltaLake` reads have
+existed since 22.11, and Unity without the v2 setting is the older Delta catalog,
+so the rest of the suite runs on older servers.
 
 ---
 
@@ -79,6 +81,9 @@ The types must be the same. `sanity.py` already checks that v2 keeps
 Scenario 8 is the case that used to throw `Unsupported DeltaLake type: varchar(256)`
 on the catalog path. Register the column through the Unity tables API with
 `type_json` containing `varchar(32)`. Leave the Parquet field as a plain string.
+OSS Unity v0.7.0 rejects that registration (`Unsupported Delta primitive type`),
+and ClickHouse reads only `type_json`, so `regression.py` skips this scenario
+until the suite has a catalog that can return `varchar(n)` there.
 
 One negative scenario belongs in this module because it uses the same reader:
 
