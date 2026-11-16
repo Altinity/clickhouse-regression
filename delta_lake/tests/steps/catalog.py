@@ -10,6 +10,7 @@ import json
 import boto3
 import pandas as pd
 import requests
+from deltalake import DeltaTable as DeltaTableReader
 from deltalake import write_deltalake
 from testflows.asserts import error
 from testflows.core import *
@@ -234,6 +235,8 @@ def _write_table(
     data=None,
     mode="overwrite",
     schema_mode=None,
+    partition_by=None,
+    configuration=None,
 ):
     """Write ``data`` when it is set, otherwise a frame built from ``rows``."""
     if data is None:
@@ -244,6 +247,10 @@ def _write_table(
     }
     if schema_mode is not None:
         kwargs["schema_mode"] = schema_mode
+    if partition_by is not None:
+        kwargs["partition_by"] = list(partition_by)
+    if configuration is not None:
+        kwargs["configuration"] = dict(configuration)
     write_deltalake(table.location, data, **kwargs)
 
 
@@ -298,6 +305,8 @@ def create_delta_table(
     data=None,
     mode="overwrite",
     schema_mode=None,
+    partition_by=None,
+    configuration=None,
 ):
     """Write a Delta table. Register it in Unity unless ``register`` is false.
 
@@ -330,6 +339,8 @@ def create_delta_table(
             data=data,
             mode=mode,
             schema_mode=schema_mode,
+            partition_by=partition_by,
+            configuration=configuration,
         )
         if register:
             _register_table(table, columns)
@@ -380,6 +391,30 @@ def commit_delta_table(
     )
 
 
+def unity_enable_setting(self):
+    if check_clickhouse_version(">=25.8")(self):
+        return "allow_database_unity_catalog"
+    return "allow_experimental_database_unity_catalog"
+
+
+def database_sql(name, access_key, secret_key, unity_v2=False):
+    """``CREATE DATABASE`` for the suite Unity catalog, without the enable setting."""
+    # Servers older than 26.10 reject use_unity_catalog_v2 even when it is 0.
+    v2_setting = "use_unity_catalog_v2 = '1', " if unity_v2 else ""
+    return (
+        f"CREATE DATABASE {name} "
+        f"ENGINE = DataLakeCatalog('{UC_ENDPOINT}') "
+        "SETTINGS "
+        "catalog_type = 'unity', "
+        f"{v2_setting}"
+        f"warehouse = '{UC_CATALOG}', "
+        "vended_credentials = 'false', "
+        f"storage_endpoint = '{STORAGE_ENDPOINT}', "
+        f"aws_access_key_id = '{access_key}', "
+        f"aws_secret_access_key = '{secret_key}'"
+    )
+
+
 @TestStep(Given)
 def create_database(
     self,
@@ -395,26 +430,10 @@ def create_database(
     if name is None:
         name = f"delta_{getuid()}"
 
-    if check_clickhouse_version(">=25.8")(self):
-        enable = "allow_database_unity_catalog"
-    else:
-        enable = "allow_experimental_database_unity_catalog"
-    # Servers older than 26.10 reject use_unity_catalog_v2 even when it is 0.
-    v2_setting = "use_unity_catalog_v2 = '1', " if unity_v2 else ""
-
     try:
         node.query(
-            f"SET {enable}=1; "
-            f"CREATE DATABASE {name} "
-            f"ENGINE = DataLakeCatalog('{UC_ENDPOINT}') "
-            "SETTINGS "
-            "catalog_type = 'unity', "
-            f"{v2_setting}"
-            f"warehouse = '{UC_CATALOG}', "
-            "vended_credentials = 'false', "
-            f"storage_endpoint = '{STORAGE_ENDPOINT}', "
-            f"aws_access_key_id = '{access_key}', "
-            f"aws_secret_access_key = '{secret_key}'"
+            f"SET {unity_enable_setting(self)}=1; "
+            + database_sql(name, access_key, secret_key, unity_v2=unity_v2)
         )
         yield name
     finally:
@@ -444,6 +463,16 @@ def expect_delta_table(self, database, table, node=None):
     show_create = node.query(f"SHOW CREATE TABLE {database}.{table.identifier}").output
     assert "DeltaLake" in show_create, error(show_create)
     assert table.prefix in show_create, error(show_create)
+
+
+@TestStep(When)
+def read_with_deltalake(self, table, columns, access_key=None, secret_key=None):
+    """Rows of the latest snapshot as the ``deltalake`` package reads them, sorted."""
+    access_key, secret_key = _credentials(self, access_key, secret_key)
+    data = DeltaTableReader(
+        table.location, storage_options=_storage_options(access_key, secret_key)
+    ).to_pyarrow_table(columns=list(columns))
+    return sorted(tuple(row[name] for name in columns) for row in data.to_pylist())
 
 
 @TestStep(Then)

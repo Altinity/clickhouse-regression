@@ -20,6 +20,7 @@ from delta_lake.tests.steps.catalog import (
     get_object,
     list_keys,
     put_object,
+    read_with_deltalake,
     register_delta_table,
     select_rows,
 )
@@ -40,6 +41,7 @@ __all__ = [
     "get_object",
     "list_keys",
     "put_object",
+    "read_with_deltalake",
     "register_delta_table",
     "select_rows",
 ]

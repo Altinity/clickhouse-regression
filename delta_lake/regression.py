@@ -12,6 +12,7 @@ from helpers.argparser import (
     CaptureMinioArgs,
 )
 from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.feature_support import setting_supported
 
 xfails = {
     "/delta lake/feature/delta schema/nulls": [
@@ -31,6 +32,26 @@ xfails = {
             and check_clickhouse_version("<26.3")(test),
         )
     ],
+    "/delta lake/feature/delta column mapping/mode id by field id": [
+        (
+            Fail,
+            "columnMapping.mode id resolves columns by physical name, not by the "
+            "Parquet field id: every column is NULL when the names differ",
+        )
+    ],
+    "/delta lake/feature/delta protocol/non parquet provider": [
+        (
+            Fail,
+            "format.provider is not checked: a csv provider is read as Parquet",
+        )
+    ],
+    "/delta lake/feature/delta create table/create in unity": [
+        (
+            Fail,
+            "ClickHouse sends type_json as a bare type string (\"long\"), and OSS "
+            "Unity Catalog v0.7.0 rejects it with INVALID_ARGUMENT",
+        )
+    ],
 }
 
 ffails = {
@@ -39,6 +60,17 @@ ffails = {
         "OSS Unity Catalog v0.7.0 rejects varchar(n) in a column type_json "
         "(Unsupported Delta primitive type), so the catalog cannot return it "
         "the way Databricks Unity does.",
+    ),
+    "/delta lake/feature/delta writes/accurate write cast": (
+        Skip,
+        "delta_lake_accurate_write_cast exists from 26.9",
+        check_clickhouse_version("<26.9"),
+    ),
+    "/delta lake/feature/delta create table": (
+        Skip,
+        "Creating a new Delta table needs allow_delta_lake_create_table. Without "
+        "it, CREATE TABLE with a column list succeeds and writes no _delta_log",
+        lambda test: not setting_supported("allow_delta_lake_create_table")(test),
     ),
 }
 

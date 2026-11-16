@@ -11,15 +11,47 @@ the same table directly from RustFS. `sanity.py` already checks one case: a
 `String` and `Int64` table is `ENGINE = DeltaLake` with `use_unity_catalog_v2`
 off and on, and `SELECT` returns the three written rows.
 
-Write the five modules below first, in this order. Each one reuses the
-`delta_lake.tests.steps` package.
+Every module in sections 1 and 2 is written and loaded from `feature.py` in
+table order. Each one reuses the `delta_lake.tests.steps` package.
+`steps/log.py` writes a Delta log by hand for the cases `deltalake` cannot
+produce: deletion vectors, column mapping, a foreign provider, a reader
+feature, and type widening.
 Tag every scenario with `@Requirements` from `delta_lake.requirements.requirements`.
 `RQ` names in the tables omit the `RQ.SRS-050.ClickHouse.DeltaLake.` prefix.
 
-Only scenarios that set `use_unity_catalog_v2 = 1` need 26.10, and they check
-the version themselves. Direct `deltaLake()` and `ENGINE = DeltaLake` reads have
-existed since 22.11, and Unity without the v2 setting is the older Delta catalog,
-so the rest of the suite runs on older servers.
+Sections 1 and 2 are checked on 26.8 and newer. Only scenarios that set
+`use_unity_catalog_v2 = 1` need 26.10, and they check the version themselves.
+`writes/accurate write cast` needs 26.9, and `create table` needs
+`allow_delta_lake_create_table`. `regression.py` skips both on older servers.
+The minimum version for the whole suite is still open.
+
+Findings from the first run, xfailed in `regression.py`:
+
+* `column mapping/mode id by field id`: `id` mode resolves columns by
+  physical name. When the Parquet names differ from the physical names,
+  every column is `NULL` even though the field ids match.
+* `protocol/non parquet provider`: `format.provider` is not checked. A
+  `csv` provider is read as Parquet.
+* `create table/create in unity`: ClickHouse sends `type_json` as a bare
+  type string (`"long"`). OSS Unity v0.7.0 rejects it.
+
+Not covered by a scenario, seen while writing them:
+
+* An engine-table `INSERT` converts to the column type before the Delta
+  cast, so `300` into a `byte` column commits `44` whatever
+  `delta_lake_accurate_write_cast` says. `writes/accurate write cast` uses
+  `INSERT INTO TABLE FUNCTION deltaLake(...)`, where the setting applies.
+* `12345.5` commits into a `decimal(5, 2)` column, with the accurate cast on.
+* With `allow_delta_lake_create_table = 0`, or on 26.8 where the setting
+  does not exist, `CREATE TABLE` with a column list at an empty location
+  succeeds, writes nothing, and leaves a table that cannot be read.
+* Creating a table also needs the writes setting.
+* On 26.10 the setting that shows catalog tables in `system.tables` and
+  `system.columns` is `show_data_lake_catalogs_in_system_tables`, not
+  `show_remote_databases_in_system_tables` as the SRS says.
+* From 26.11, `delta_lake_snapshot_version` and change data feed return
+  the correct rows with `allow_delta_kernel_rs = 0` instead of failing.
+  The scenarios accept either.
 
 ---
 
