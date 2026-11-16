@@ -405,14 +405,24 @@ def interrupt_network(cluster, node, cluster_prefix):
 
 @TestStep(When)
 def wait_for_mutations_to_finish(
-    self, node, timeout=300, delay=5, command_like=None, raise_on_timeout=True
+    self,
+    node,
+    timeout=300,
+    delay=5,
+    command_like=None,
+    table_name=None,
+    raise_on_timeout=True,
 ):
     """Wait for pending mutations to complete.
 
     Each poll is capped so a stuck SELECT on system.mutations cannot hang
     past the outer timeout (default docker-exec timeout is 300s per query).
+    ``table_name`` limits the wait to one table. A DELETE mutation does not
+    name the column it blocks, so a command-text filter misses it.
     """
     query = "SELECT * FROM system.mutations WHERE is_done=0"
+    if table_name:
+        query += f" AND table = '{table_name}'"
     if command_like:
         query += f" AND command LIKE '%{command_like}%'"
 
