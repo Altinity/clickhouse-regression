@@ -40,6 +40,10 @@ alter_query_args = {
         # DROP COLUMN is rejected while any mutation on the table is still
         # running. The mutation finishes and the ALTER can be retried.
         "not finished yet",
+        # A replica that has not applied earlier alters refuses the next one
+        # (Code 517). The error text says to retry.
+        "CANNOT_ASSIGN_ALTER",
+        "not up to date with common metadata",
     ],
 }
 
@@ -716,14 +720,38 @@ def drop_random_projection(self):
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
                     exit_messages = {}
+                    # One attempt must not consume the whole retry budget. A
+                    # replica that is still applying earlier alters holds this
+                    # statement until the client times out (Code 517).
+                    drop_args = dict(alter_query_args)
+                    drop_args["timeout"] = 120
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
-                        # wait_for_mutations_to_finish(node=node)
-                        r = node.query(
-                            f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
-                            no_checks=True,
-                            **alter_query_args,
+                        wait_for_mutations_to_finish(
+                            node=node,
+                            table_name=table_name,
+                            timeout=120,
+                            raise_on_timeout=False,
                         )
+                        sync_replica(
+                            node=node,
+                            table_name=table_name,
+                            timeout=120,
+                            raise_on_timeout=False,
+                            no_checks=True,
+                        )
+                        try:
+                            r = node.query(
+                                f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
+                                no_checks=True,
+                                **drop_args,
+                            )
+                        except ExpectTimeoutError:
+                            exit_codes[table_name] = 1
+                            exit_messages[table_name] = (
+                                f"DROP PROJECTION still running after {drop_args['timeout']}s"
+                            )
+                            continue
                         exit_codes[table_name] = r.exitcode
                         exit_messages[table_name] = r.output
 
@@ -733,12 +761,15 @@ def drop_random_projection(self):
                             table_name + ": " + exit_messages[table_name]
                         )
 
-        wait_for_mutations_to_finish(
-            node=node,
-            command_like="DROP PROJECTION",
-            timeout=60,
-            raise_on_timeout=False,
-        )
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            wait_for_mutations_to_finish(
+                node=node,
+                table_name=table_name,
+                command_like="DROP PROJECTION",
+                timeout=step_retry_timeout,
+                raise_on_timeout=False,
+            )
         retry(
             check_tables_have_same_projections,
             timeout=step_retry_timeout,
@@ -953,8 +984,8 @@ def check_tables_have_same_projections(
                 node = get_random_node_for_table(table_name=table_name)
                 wait_for_mutations_to_finish(
                     node=node,
-                    command_like="PROJECTION",
-                    timeout=60,
+                    table_name=table_name,
+                    timeout=step_retry_timeout,
                     raise_on_timeout=False,
                 )
                 table_projections[table_name] = set(
@@ -966,7 +997,10 @@ def check_tables_have_same_projections(
                 with By(f"checking {table1} and {table2}", flags=TE):
                     assert (
                         table_projections[table1] == table_projections[table2]
-                    ), error()
+                    ), error(
+                        f"projections {table1}={table_projections[table1]} "
+                        f"{table2}={table_projections[table2]}"
+                    )
 
         if check_present is not None:
             with And(f"I check that {check_present} exist"):
