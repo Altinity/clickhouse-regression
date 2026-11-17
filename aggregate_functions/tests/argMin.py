@@ -17,25 +17,44 @@ def _is_extra_data_table(table):
     return extra is not None and getattr(table, "name", None) == extra.name
 
 
+def _arg_extreme_call(aggregate):
+    """Return ``(direction, value_expr)`` for an argMin/argMax call.
+
+    The -State combinator is invoked as ``hex(argMaxState(...))``. The hex is
+    the serialized state, so the comparable value is ``finalizeAggregation`` of
+    the call inside it. A different wrapper returns ``None`` and the caller
+    keeps the snapshot check.
+    """
+    call = aggregate.strip()
+    if call.startswith("hex(") and call.endswith(")"):
+        call = call[4:-1].strip()
+
+    if call.startswith("argMax"):
+        direction = "max"
+    elif call.startswith("argMin"):
+        direction = "min"
+    else:
+        return None
+
+    if call.startswith(("argMaxState(", "argMinState(")):
+        value = f"finalizeAggregation({call})"
+    elif call.startswith(("argMax(", "argMin(")):
+        value = call
+    else:
+        return None
+    return direction, value
+
+
 def _assert_tied_extreme(aggregate, table, col1_name, col2_name):
     """Accept any row that holds the extreme value.
 
     The extra-data table repeats every value. argMin and argMax then have
     several legal answers, and the one returned follows part read order.
     """
-    if aggregate.startswith("argMax"):
-        direction = "max"
-    elif aggregate.startswith("argMin"):
-        direction = "min"
-    else:
+    parsed = _arg_extreme_call(aggregate)
+    if parsed is None:
         return False
-
-    if aggregate.startswith(("argMaxState(", "argMinState(")):
-        value = f"finalizeAggregation({aggregate})"
-    elif aggregate.startswith(("argMax(", "argMin(")):
-        value = aggregate
-    else:
-        return False
+    direction, value = parsed
 
     extreme = f"(SELECT {direction}({col2_name}) FROM {table.name})"
     tied_rows = (
