@@ -103,7 +103,7 @@ ClickHouse 22.11 added Delta Lake reads: the `DeltaLake` table engine and the `d
 
 A few ClickHouse pages disagree. This specification follows the page that describes the operation:
 
-* Creating a table follows the [DeltaLake engine reference](https://clickhouse.com/docs/reference/engines/table-engines/integrations/deltalake). `allow_delta_lake_create_table = 1` creates a table at an empty location. The [support matrix](https://clickhouse.com/docs/guides/use-cases/data-warehousing/support-matrix) still says an empty table cannot be created.
+* Creating a table follows the [DeltaLake engine reference](https://clickhouse.com/docs/reference/engines/table-engines/integrations/deltalake). `allow_delta_lake_create_table = 1`, together with `allow_delta_lake_writes = 1`, creates a table at an empty location. 26.8 does not have `allow_delta_lake_create_table`. The [support matrix](https://clickhouse.com/docs/guides/use-cases/data-warehousing/support-matrix) still says an empty table cannot be created.
 * Azure reads and writes follow the engine reference and the support matrix. Kernel reads on Azure Blob Storage start in 26.4. Writes start in 26.9. The [best-practices guide](https://clickhouse.com/docs/guides/use-cases/data-warehousing/getting-started/best-practices) still tells you to use the legacy Azure reader.
 * The Unity database gate is `allow_database_unity_catalog`, as in the [DataLakeCatalog reference](https://clickhouse.com/docs/reference/engines/database-engines/datalake) and in this suite. The Unity guide still shows the older name `allow_experimental_database_unity_catalog`.
 * A `gs://` table URL follows the engine argument list, which says that form is converted to `https://storage.googleapis.com/...`. A note on the same page still says a gsutil URI is not supported.
@@ -133,7 +133,7 @@ A snapshot is one committed version of the table. Version 0 is the first commit.
 
 ### Delta Kernel
 
-The Delta Kernel is the Rust library `delta-kernel-rs`. From ClickHouse 25.6, reads of Delta tables on S3 and GCS go through this library. The setting is `allow_delta_kernel_rs` on 26.8 and newer, and `allow_experimental_delta_kernel_rs` on 25.5 through 26.7. It is on by default for S3 and GCS. Partition pruning, change data feed, snapshot reads, and writes all require it.
+The Delta Kernel is the Rust library `delta-kernel-rs`. From ClickHouse 25.6, reads of Delta tables on S3 and GCS go through this library. The setting is `allow_delta_kernel_rs` on 26.8 and newer, and `allow_experimental_delta_kernel_rs` on 25.5 through 26.7. It is on by default for S3 and GCS. Partition pruning and writes require it. Change data feed and snapshot reads require it up to 26.10.
 
 
 ## Log protocol
@@ -329,9 +329,10 @@ A location with no `_delta_log` SHALL fail this statement when `allow_delta_lake
 ### RQ.SRS-050.ClickHouse.DeltaLake.Create.NewTable
 version: 1.0
 
-With `allow_delta_lake_create_table = 1`, `CREATE TABLE` with an explicit column list SHALL create a Delta table at a location that has no `_delta_log`. [ClickHouse] SHALL write the initial commit through the [Delta Kernel](#delta-kernel). A following `SELECT` SHALL return zero rows, and the column names and types SHALL match the `CREATE TABLE` list under the mapping in [Schema](#schema).
+With `allow_delta_lake_create_table = 1` and `allow_delta_lake_writes = 1`, `CREATE TABLE` with an explicit column list SHALL create a Delta table at a location that has no `_delta_log`. With `allow_delta_lake_create_table = 1` and writes off, the statement SHALL fail. `allow_delta_lake_create_table` is not available on 26.8. [ClickHouse] SHALL write the initial commit through the [Delta Kernel](#delta-kernel). A following `SELECT` SHALL return zero rows, and the column names and types SHALL match the `CREATE TABLE` list under the mapping in [Schema](#schema).
 
 ```sql
+SET allow_delta_lake_writes = 1;
 SET allow_delta_lake_create_table = 1;
 
 CREATE TABLE people
@@ -350,6 +351,7 @@ version: 1.0
 `CREATE TABLE ... ENGINE = DeltaLake` SHALL reject a partition clause. [ClickHouse] SHALL NOT write a partitioned `_delta_log` for that statement.
 
 ```sql
+SET allow_delta_lake_writes = 1;
 SET allow_delta_lake_create_table = 1;
 
 CREATE TABLE events
@@ -370,6 +372,7 @@ When [RQ.SRS-050.ClickHouse.DeltaLake.Create.NewTable](#rqsrs-050clickhousedelta
 
 ```sql
 SET allow_database_unity_catalog = 1;
+SET allow_delta_lake_writes = 1;
 SET allow_delta_lake_create_table = 1;
 
 CREATE TABLE unity.`schema.people`
@@ -489,9 +492,9 @@ version: 1.0
 
 On ClickHouse 26.8 and newer, `allow_delta_kernel_rs` enables the [Delta Kernel](#delta-kernel). On 25.5 through 26.7 the setting name is `allow_experimental_delta_kernel_rs`. The kernel is on by default for S3 and GCS. Azure Blob Storage uses it from 26.4.
 
-Partition pruning, change data feed, and `delta_lake_snapshot_version` SHALL run only with the kernel enabled.
+Partition pruning SHALL run only with the kernel enabled. Up to 26.10, change data feed and `delta_lake_snapshot_version` also SHALL run only with the kernel enabled.
 
-With the kernel disabled, a query that sets `delta_lake_snapshot_version` to a version other than `-1`, or that sets a change-data-feed range, SHALL fail. [ClickHouse] SHALL NOT answer that query with the latest snapshot. A filter on a partition column SHALL still return the correct rows. Pruning is not required while the kernel is off.
+With the kernel disabled, a query that sets `delta_lake_snapshot_version` to a version other than `-1`, or that sets a change-data-feed range, SHALL either fail or return the rows of that version or range. [ClickHouse] SHALL NOT answer that query with the latest snapshot. Up to 26.10 the query fails. From 26.11 it returns the requested rows. A filter on a partition column SHALL still return the correct rows. Pruning is not required while the kernel is off.
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Read.PartitionPruning
 version: 1.0
@@ -778,7 +781,14 @@ CHECK DATABASE unity;
 ### RQ.SRS-050.ClickHouse.DeltaLake.Unity.SystemTables
 version: 1.0
 
-Catalog tables SHALL stay out of `system.tables` unless `show_remote_databases_in_system_tables = 1`. With that setting, `system.tables` SHALL list the Unity Delta tables. On servers older than 26.6 the setting name is `show_data_lake_catalogs_in_system_tables`.
+Catalog tables SHALL stay out of `system.tables` and `system.columns` unless `show_data_lake_catalogs_in_system_tables = 1`. The setting defaults to `0`. With it, `system.tables` SHALL list the Unity Delta tables, and `system.columns` and `SHOW COLUMNS` SHALL list their columns.
+
+`show_remote_databases_in_system_tables` is a different setting. It covers MySQL and PostgreSQL databases and defaults to `1`. It SHALL NOT put catalog tables in `system.tables`.
+
+```sql
+SELECT name FROM system.tables WHERE database = 'unity'
+SETTINGS show_data_lake_catalogs_in_system_tables = 1;
+```
 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Unity.Insert
 version: 1.0
@@ -888,11 +898,14 @@ An insert larger than either limit SHALL be split into more than one data file, 
 ### RQ.SRS-050.ClickHouse.DeltaLake.Writes.Cast
 version: 1.0
 
-`delta_lake_accurate_write_cast` defaults to `1`. [ClickHouse] SHALL cast each inserted value to the Delta column type and SHALL fail the insert when the value does not fit. A value of `300` inserted into a `byte` column SHALL fail. The failed insert SHALL NOT add a commit.
+`delta_lake_accurate_write_cast` defaults to `1`. [ClickHouse] SHALL cast each inserted value to the Delta column type and SHALL fail the insert when the value does not fit. A value of `300` inserted into a `byte` column through `INSERT INTO TABLE FUNCTION deltaLake(...)` SHALL fail. The failed insert SHALL NOT add a commit.
 
 ```sql
-INSERT INTO readings (b) VALUES (300); -- b is byte
+INSERT INTO TABLE FUNCTION deltaLake('https://bucket.s3.amazonaws.com/warehouse/readings/', 'key', 'secret')
+SELECT toInt16(300) AS b; -- b is byte
 ```
+
+An `ENGINE = DeltaLake` table has its own ClickHouse column types. An insert into it converts each value to that column type first, as for any ClickHouse table, so `300` reaches the Delta cast already converted to `Int8`. This setting does not apply there.
 
 With `delta_lake_accurate_write_cast = 0`, or with `compatibility` set below 26.9, [ClickHouse] SHALL use a plain cast and SHALL commit the insert.
 

@@ -37,21 +37,10 @@ Findings from the first run, xfailed in `regression.py`:
 
 Not covered by a scenario, seen while writing them:
 
-* An engine-table `INSERT` converts to the column type before the Delta
-  cast, so `300` into a `byte` column commits `44` whatever
-  `delta_lake_accurate_write_cast` says. `writes/accurate write cast` uses
-  `INSERT INTO TABLE FUNCTION deltaLake(...)`, where the setting applies.
 * `12345.5` commits into a `decimal(5, 2)` column, with the accurate cast on.
 * With `allow_delta_lake_create_table = 0`, or on 26.8 where the setting
   does not exist, `CREATE TABLE` with a column list at an empty location
   succeeds, writes nothing, and leaves a table that cannot be read.
-* Creating a table also needs the writes setting.
-* On 26.10 the setting that shows catalog tables in `system.tables` and
-  `system.columns` is `show_data_lake_catalogs_in_system_tables`, not
-  `show_remote_databases_in_system_tables` as the SRS says.
-* From 26.11, `delta_lake_snapshot_version` and change data feed return
-  the correct rows with `allow_delta_kernel_rs = 0` instead of failing.
-  The scenarios accept either.
 
 ---
 
