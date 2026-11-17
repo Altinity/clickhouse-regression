@@ -13,6 +13,7 @@ Examples:
   python3 cas/soak_tests/regression.py --clickhouse <deb-or-binary> --local --suite scenarios --scenario P0 --scenario-scale dev
 """
 
+import os
 import sys
 from testflows.core import *
 
@@ -27,6 +28,9 @@ from helpers.argparser import (
 from helpers.common import experimental_analyzer
 
 from cas.soak_tests.features import IMPLEMENTED_SUITES, LIVE_SUITES
+from cas.soak_tests.steps.cas_log import dump_cas_logs
+
+_SUITE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 xfails = {}
@@ -208,13 +212,23 @@ def regression(
         "phase3": "feature_phase3",
         "scenarios": "feature_scenarios",
     }
-    for name in suites:
-        feature = dispatch.get(name)
-        if feature is None:
-            fail(f"unknown suite {name!r}; expected one of {', '.join(dispatch)}")
-        Feature(run=load("cas.soak_tests.features", feature))
+    try:
+        for name in suites:
+            feature = dispatch.get(name)
+            if feature is None:
+                fail(f"unknown suite {name!r}; expected one of {', '.join(dispatch)}")
+            Feature(run=load("cas.soak_tests.features", feature))
 
-    note(f"implemented suites: {', '.join(IMPLEMENTED_SUITES)}")
+        note(f"implemented suites: {', '.join(IMPLEMENTED_SUITES)}")
+    finally:
+        # The cluster step drops the data volume when this module returns.
+        # cas_log is on that volume, so the dump has to happen here.
+        if getattr(self.context, "cluster", None) is not None:
+            try:
+                for node, status in dump_cas_logs(os.path.join(_SUITE_DIR, "_instances")):
+                    note(f"cas_log {node}: {status}")
+            except Exception as e:
+                note(f"cas_log dump failed: {e}")
 
 
 if main():
