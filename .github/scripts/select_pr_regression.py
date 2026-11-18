@@ -601,25 +601,78 @@ def split_alter(job: dict) -> list[dict]:
     return chosen or [job]
 
 
+def _tiered_backend(path: str) -> str | None:
+    """The backend named by the second segment, such as `with minio`."""
+    body = path.strip("/")
+    prefix = "tiered storage/"
+    if not body.startswith(prefix):
+        return None
+    rest = body[len(prefix) :]
+    for needle, *_rest in TIERED_STORAGE_JOBS:
+        if not rest.startswith(needle):
+            continue
+        tail = rest[len(needle) :]
+        if tail == "" or tail.startswith("/") or tail.startswith("*"):
+            return needle
+    return None
+
+
+def _whole_tiered_backend(path: str, needle: str) -> bool:
+    rest = path.strip("/")[len("tiered storage/") :]
+    return rest[len(needle) :] in ("", "/*", "*")
+
+
 def split_tiered_storage(job: dict) -> list[dict]:
-    """Replace --only of a tiered-storage backend with the flag that starts it."""
+    """Turn backend paths into one flagged job each, and keep the local run.
+
+    `/tiered storage/with minio/*` exists only after `--with-minio`. A path whose
+    second segment is not a backend name runs under the feature named `normal`,
+    on the local disk. A MinIO-only selection does not add that job.
+    """
     if job["suite_name"] != "tiered_storage" or "--with-" in job["regression_args"]:
         return [job]
     args = job["regression_args"]
     if "--only" not in args:
         return [job]
-    matched = [spec for spec in TIERED_STORAGE_JOBS if spec[0] in args]
-    if not matched:
+    by_backend: dict[str, list[str]] = {}
+    local: list[str] = []
+    for path in _only_paths(args):
+        needle = _tiered_backend(path)
+        if needle is None:
+            local.append(path)
+        else:
+            by_backend.setdefault(needle, []).append(path)
+    if not by_backend:
         return [job]
-    return [
-        {
-            **job,
-            "job_name": job_name,
-            "storage_path": storage,
-            "regression_args": flags,
-        }
-        for _needle, job_name, storage, flags in matched
-    ]
+    selected = []
+    for needle, job_name, storage, flags in TIERED_STORAGE_JOBS:
+        backend_paths = by_backend.get(needle)
+        if not backend_paths:
+            continue
+        if any(_whole_tiered_backend(path, needle) for path in backend_paths):
+            regression_args = flags
+        else:
+            only = " ".join(f'"{path}"' for path in backend_paths)
+            regression_args = f"{flags} --only {only}"
+        selected.append(
+            {
+                **job,
+                "job_name": job_name,
+                "storage_path": storage,
+                "regression_args": regression_args,
+            }
+        )
+    if local:
+        only = " ".join(f'"{path}"' for path in local)
+        selected.append(
+            {
+                **job,
+                "job_name": "tiered_storage_local",
+                "storage_path": "/local",
+                "regression_args": f"--only {only}",
+            }
+        )
+    return selected
 
 
 def split_whole_suite(job: dict) -> list[dict]:
