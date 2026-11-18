@@ -934,6 +934,33 @@ def job_key(job: dict) -> tuple:
     )
 
 
+def _flags_and_only(args: str) -> tuple[str, list[str] | None]:
+    """Flags, and the --only paths. None means this job has no --only and runs the whole suite."""
+    if "--only" not in args:
+        return args.strip(), None
+    flags = re.sub(r'--only(\s+"[^"]*")+', "", args).strip()
+    flags = re.sub(r"\s+", " ", flags)
+    return flags, _only_paths(args)
+
+
+def _with_only(flags: str, paths: list[str] | None) -> str:
+    if paths is None:
+        return flags
+    only = canonicalize_args("--only " + " ".join(f'"{path}"' for path in paths))
+    return f"{flags} {only}".strip()
+
+
+def _merge_only(existing: list[str] | None, extra: list[str] | None) -> list[str] | None:
+    """Union of two --only lists. A missing list runs the whole suite and covers the other."""
+    if existing is None or extra is None:
+        return None
+    merged = list(existing)
+    for path in extra:
+        if path not in merged:
+            merged.append(path)
+    return merged
+
+
 def normalize_remembered(job: dict) -> list[dict]:
     """Reapply the current splitters so an old plan cannot rerun a stale command."""
     cleaned = {key: value for key, value in job.items() if key != "carried_forward"}
@@ -946,29 +973,50 @@ def normalize_remembered(job: dict) -> list[dict]:
     return normalized
 
 
+def _prepare_union_job(job: dict) -> dict:
+    job = normalize_s3_storage(
+        {key: value for key, value in job.items() if key != "carried_forward"}
+    )
+    job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
+    return job
+
+
+def _union_identity(job: dict) -> tuple:
+    """Same suite, part, and flags. Different --only lists are one run, not two."""
+    flags, _paths = _flags_and_only(job.get("regression_args") or "")
+    return (job.get("suite_name"), str(job.get("part") or ""), flags)
+
+
+def _absorb(into: dict, job: dict) -> None:
+    flags, existing = _flags_and_only(into.get("regression_args") or "")
+    _same_flags, extra = _flags_and_only(job.get("regression_args") or "")
+    into["regression_args"] = _with_only(flags, _merge_only(existing, extra))
+
+
 def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
-    """Keep every earlier job for this PR, then add jobs from this commit."""
+    """Keep every earlier test for this PR. One suite command runs once.
+
+    A later commit that adds --only paths replaces the shorter command. It does
+    not schedule the shorter command beside it.
+    """
     remembered = []
     for job in previous:
         remembered.extend(normalize_remembered(job))
     merged: dict[tuple, dict] = {}
     order: list[tuple] = []
     for job in current:
-        job = normalize_s3_storage(
-            {key: value for key, value in job.items() if key != "carried_forward"}
-        )
-        job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
-        key = job_key(job)
+        job = _prepare_union_job(job)
+        key = _union_identity(job)
         if key not in merged:
             order.append(key)
-        merged[key] = job
+            merged[key] = job
+        else:
+            _absorb(merged[key], job)
     for job in remembered:
-        job = normalize_s3_storage(
-            {key: value for key, value in job.items() if key != "carried_forward"}
-        )
-        job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
-        key = job_key(job)
+        job = _prepare_union_job(job)
+        key = _union_identity(job)
         if key in merged:
+            _absorb(merged[key], job)
             continue
         order.append(key)
         merged[key] = {**job, "carried_forward": True}
