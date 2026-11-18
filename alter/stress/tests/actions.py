@@ -1504,6 +1504,9 @@ def limit_clickhouse_disks(self, node):
             )
 
         with And("I disable query profiler and query_log on limited disks"):
+            # The static package does not ship users.d. config.d is present
+            # only because compose bind-mounts files into it.
+            node.command("mkdir -p /etc/clickhouse-server/users.d", exitcode=0)
             node.command(
                 f"cat <<HEREDOC > {users_path}\n{users_xml}\nHEREDOC",
                 steps=False,
