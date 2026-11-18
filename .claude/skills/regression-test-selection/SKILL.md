@@ -35,13 +35,16 @@ Include these scenarios even when the feature match missed them. In Tests, name 
 
 ## Choose features
 
-Name the parent feature, then the child feature when one matches. Match each changed file to the longest `sources` prefix in taxonomy.yaml. The longest prefix wins across the whole file.
+Match each changed file to the longest `sources` prefix in taxonomy.yaml. The longest prefix wins across the whole file. That match is a candidate. It does not activate the id.
 
-When a child wins, report that child and its parent. When only the parent matches, report the parent and stop. There is no level below a child. Do not invent one.
+Read the diff of that file. Activate the id only when the change affects the behavior the id describes. A comment does not. Whitespace, formatting, and a rename that does not change behavior do not. A docs-only or changelog-only change selects nothing.
 
-- When several features list the same file, select every one of them.
-- A docs-only, changelog-only, or comment-only change selects nothing.
-- A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
+When several features list the same file, judge each one. Activate every id the diff actually affects. Leave the others out.
+
+When a child is activated, also activate its parent. When only the parent matches, judge that parent and stop. There is no level below a child. Do not invent one.
+
+A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
+
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
 - `--with-analyzer` and `--use-keeper` are run flags. Do not treat either flag as a feature.
 
@@ -76,4 +79,4 @@ Use this shape:
 - Features with no regression coverage. Leave a feature off this list when a scenario that cites the PR's issue covers the change.
 ```
 
-Omit an empty section. "Considered and left out" is a feature the prefix match rejected. It is not a suite you chose not to run. Name the features you almost picked.
+Omit an empty section. "Considered and left out" is a candidate the prefix match found and the diff did not activate, or a feature the prefix match rejected. It is not a suite you chose not to run. Name the id and the change that kept it out. A comment is one such change.
