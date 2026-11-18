@@ -19,6 +19,24 @@ PIPELINE_CLASSES = ("unreachable", "pending-gc", "awaiting-gc")
 PIPELINE_SUMMARY_KEYS = ("unreachable", "pending_gc", "awaiting_gc")
 
 
+def settle_unaccounted(samples, polls):
+    """Decide whether another fsck sample is needed, and whether the count persisted.
+
+    ``samples`` are unaccounted counts, oldest first. A zero count means the
+    blob has entered the GC view. A non-zero count with polls still left is
+    the transient window between rounds. A non-zero count after ``polls``
+    samples is persistent.
+    """
+    if not samples:
+        return True, False
+    latest = int(samples[-1] or 0)
+    if latest == 0:
+        return False, False
+    if len(samples) >= polls:
+        return False, True
+    return True, False
+
+
 def deletion_pipeline_idle(fsck_result: dict) -> bool:
     """True when fsck shows no blobs left in the deletion pipeline."""
     for key in PIPELINE_SUMMARY_KEYS:
