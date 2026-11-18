@@ -225,7 +225,7 @@ def regression(
         # cas_log is on that volume, so the dump has to happen here.
         if getattr(self.context, "cluster", None) is not None:
             try:
-                for node, status in dump_cas_logs(os.path.join(_SUITE_DIR, "_instances")):
+                for node, status in dump_cas_logs(os.path.join(_SUITE_DIR, "cas_log")):
                     note(f"cas_log {node}: {status}")
             except Exception as e:
                 note(f"cas_log dump failed: {e}")

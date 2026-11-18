@@ -1,8 +1,9 @@
 """Dump system.cas_log from the soak replicas before the cluster is removed.
 
 The table lives on the data volume. Cluster cleanup drops that volume, and the
-CI upload step runs after cleanup. The artifact globs keep ``*_instances/**/*.log``,
-so the dump is written there, while the servers are still up.
+CI upload step runs after cleanup. ``_instances`` is created by the container
+as root, so the dump is written to ``cas_log/`` under the suite directory,
+which the runner user owns.
 """
 
 import os
