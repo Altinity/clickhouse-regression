@@ -35,6 +35,60 @@ xfails = {
             "https://github.com/Altinity/ClickHouse/issues/2625",
         )
     ],
+    "/iceberg/aggregate states/*/annotation survival/annotations written on create through catalog/pattern #?": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and the REST catalog's CREATE (both engine-less and explicit-engine) writes a schema without it. ClickHouse then reads `u` as `String` and `s` as `Int64`. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/*/annotation survival/clickhouse type after create through catalog/pattern #?": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and the REST catalog's CREATE (both engine-less and explicit-engine) writes a schema without it. ClickHouse then reads `u` as `String` and `s` as `Int64`. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/*/annotation survival/annotations survive external append": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and a PyIceberg commit writes a schema without it. ClickHouse then reads `u` as `String` and `s` as `Int64`. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/*/annotation survival/clickhouse merges after external append": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and a PyIceberg commit writes a schema without it. ClickHouse then reads `u` as `String` and `s` as `Int64`. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/*/annotation survival/annotations survive external schema evolution": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and a PyIceberg schema update writes a schema without it. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/*/external engines/annotations survive spark commit": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and every non-ClickHouse writer drops it: a Spark commit rewrites the schema without it, and ClickHouse then reads `u` as `String` and `s` as `Int64`. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/*/external engines/clickhouse merges after spark commit": [
+        (
+            Fail,
+            "The `clickhouse.type` key on Iceberg schema fields is not part of the Iceberg spec, and every non-ClickHouse writer drops it: a Spark commit rewrites the schema without it, and ClickHouse then reads `u` as `String` and `s` as `Int64`. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/setting gate/insert writer takes setting from create settings clause": [
+        (
+            Fail,
+            "PR docs: the table engine's Parquet writer takes the setting only from the CREATE TABLE SETTINGS clause, so an INSERT that sets it does not reach the writer. On IcebergS3 a table created with the setting only as a query setting accepts INSERT of states when the INSERT sets it, and the states merge. Also, the clause alone is not enough for CREATE: without the query setting, CREATE is refused with SUPPORT_IS_DISABLED. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
+    "/iceberg/aggregate states/annotations/primitive retype refused": [
+        (
+            Fail,
+            "On Iceberg, an annotation is checked against the field type only non-strictly (annotatedTypeMatchesDerived with strict=false), which compares shape alone. So `SimpleAggregateFunction(anyLast, String)` on an `int` field is accepted, and the column is reported and read as String. The Parquet footer path uses the strict check and rejects the same mismatch. https://github.com/Altinity/ClickHouse/pull/2680",
+        )
+    ],
     "/iceberg/native create/*/idempotency/concurrent creators on three nodes*/one table, one initial metadata file, visible everywhere": [
         (
             Fail,
@@ -576,22 +630,48 @@ ffails = {
             check_if_antalya_build(test) and check_clickhouse_version(">=26.6")(test)
         ),
     ),
+    "/iceberg/deletion vectors": (
+        Skip,
+        "Iceberg v3 deletion vector read support is an Antalya feature "
+        "introduced in Antalya 26.6.2.20001 (Altinity/ClickHouse#2183)",
+        lambda test: not (
+            check_if_antalya_build(test)
+            and check_clickhouse_version(">=26.6.2.20001")(test)
+        ),
+    ),
+    "/iceberg/delta deletion vectors": (
+        Skip,
+        "Databricks Delta .bin deletion vector containers are an Antalya feature "
+        "introduced in Antalya 26.6.4.20001 (Altinity/ClickHouse#2271)",
+        lambda test: not (
+            check_if_antalya_build(test)
+            and check_clickhouse_version(">=26.6.4.20001")(test)
+        ),
+    ),
     "/iceberg/deletion vectors/metadata requests": (
         Skip,
         "Reusing the Puffin object metadata across deletion-vector reads was "
-        "introduced in Antalya 26.6.8.20002 (Altinity/ClickHouse#2419)",
+        "introduced in Antalya 26.6.8.20003 (Altinity/ClickHouse#2419)",
         lambda test: not (
             check_if_antalya_build(test)
-            and check_clickhouse_version(">=26.6.8.20002")(test)
+            and check_clickhouse_version(">=26.6.8.20003")(test)
         ),
     ),
     "/iceberg/delta deletion vectors/metadata requests": (
         Skip,
         "Reusing the Puffin object metadata across deletion-vector reads was "
-        "introduced in Antalya 26.6.8.20002 (Altinity/ClickHouse#2419)",
+        "introduced in Antalya 26.6.8.20003 (Altinity/ClickHouse#2419)",
         lambda test: not (
             check_if_antalya_build(test)
-            and check_clickhouse_version(">=26.6.8.20002")(test)
+            and check_clickhouse_version(">=26.6.8.20003")(test)
+        ),
+    ),
+    "/iceberg/aggregate states": (
+        Skip,
+        "Aggregate function states in Parquet and Iceberg are an Antalya feature "
+        "introduced in Antalya 26.8 (Altinity/ClickHouse#2680)",
+        lambda test: not (
+            check_if_antalya_build(test) and check_clickhouse_version(">=26.8")(test)
         ),
     ),
     "/iceberg/iceberg engine": (
@@ -937,6 +1017,11 @@ def regression(
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     Feature(
+        test=load("iceberg.tests.iceberg_engine.aggregate_states.feature", "feature"),
+        flags=TE,
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    Feature(
         test=load("iceberg.tests.iceberg_table_engine.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
@@ -960,14 +1045,14 @@ def regression(
         test=load("iceberg.tests.export_ttl.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
-    # Feature(
-    #     test=load("iceberg.tests.deletion_vectors.feature", "feature"),
-    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
-    #
-    # Feature(
-    #     test=load("iceberg.tests.deletion_vectors.delta_feature", "feature"),
-    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
-    #
+    Feature(
+        test=load("iceberg.tests.deletion_vectors.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    Feature(
+        test=load("iceberg.tests.deletion_vectors.delta_feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
     # Feature(
     #     test=load("iceberg.tests.cluster_join_filter.feature", "feature"),
     # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
