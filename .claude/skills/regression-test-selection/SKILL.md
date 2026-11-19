@@ -50,13 +50,17 @@ A match that stops at the parent has no child. Look up that parent id in mapping
 
 ## Map features to tests
 
-If mapping.yaml lists a chosen id on a suite, run that suite. Do not drop it because the pull request looks small, targeted, or unrelated.
+After the diff has activated the ids, run [lookup_tests.py](lookup_tests.py) with those ids. Use its `jobs` as the test list. Do not rebuild, drop, or rewrite a scenario. `:` is one path segment. `*` matches across `/`.
 
-Run the `scenarios` under that id. Copy each path as written. `:` is one path segment. `*` matches across `/`, so do not rewrite a `:` to a `*`. When the entry has no `scenarios`, run the suite with the flag in its description. `storage.cas` is `--cas`. `storage.cas.cache` is `--cas-s3-cache`. Do not add soak, Jepsen, or alter stress.
+```bash
+python3 .claude/skills/regression-test-selection/lookup_tests.py functions.string.base58_encode functions.encryption.encrypt
+```
 
-The mapping already names the only skips. Do not run a suite marked `ci: manual`. Do not run a feature entry marked `ci: manual`. A whole-suite `--cas` or `--cas-s3-cache` rerun is marked that way. Matching `storage.cas` or `storage.cas.cache` does not start that rerun. Put a path the notes call not started under "Not part of the default run". Put a FIPS-only entry there too, unless the package under test is a FIPS build.
+One job in that output is one suite. `regression_args` is the command for that suite. If mapping.yaml lists an activated id on a suite, that job runs. Do not drop it because the pull request looks small, targeted, or unrelated.
 
-Leave out a suite that does not list the id.
+`manual` is not an automatic run. A whole-suite `--cas` or `--cas-s3-cache` rerun is in that list. A FIPS-only entry is there too. Put it under "Not part of the default run" unless the package under test is a FIPS build. `needs_flag` is an id with no scenarios. Use the flag named in its description, and do not invent `--only` paths for it. An id in `ids_with_no_suite` has no regression coverage. Record that gap.
+
+Do not add soak, Jepsen, or alter stress. `storage.cas` is `--cas`. `storage.cas.cache` is `--cas-s3-cache`.
 
 ## Report
 
