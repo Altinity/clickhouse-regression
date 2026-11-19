@@ -1,0 +1,108 @@
+# Upstream ClickHouse tests, from the antalya-26.6 tree.
+# One entry per high-level category. path is where the tests live.
+# ci is the job name in ci/defs/defs.py JobNames. Build flavors (asan, tsan, arm) are the same category.
+# features will list taxonomy ids later.
+
+categories:
+  - id: stateless
+    ci: Stateless tests
+    path: tests/queries/0_stateless
+    description: Numbered SQL files run by clickhouse-test. tests/queries/bugs is the small extra set. Fast test is the same tree with --fast-tests-only.
+
+  - id: stateful
+    ci: Stateful tests
+    path: tests/queries/0_stateless
+    description: The same SQL files that need the prepared hits and visits data. Not a separate directory.
+
+  - id: integration
+    ci: Integration tests
+    path: tests/integration
+    description: Pytest suites, one directory per test_*. tests/casa_del_dolor is a separate catalog and lake oracle that uses the integration cluster helpers. It has no CI job of its own.
+
+  - id: unit
+    ci: Unit tests
+    path: src
+    description: GoogleTest binaries. Cases live in gtest_*.cpp under src, including src/**/tests.
+
+  - id: stress
+    ci: Stress test
+    path: tests/stress
+    description: The server under load, replaying functional queries, with keepers and client killers. tests/stress/keeper is the separate Keeper stress job.
+
+  - id: keeper_stress
+    ci: Keeper Stress
+    path: tests/stress/keeper
+    description: Long Keeper fault and load run. result_name_for_cidb is Keeper Stress.
+
+  - id: upgrade
+    ci: Upgrade check
+    path: ci/jobs/upgrade_job.py
+    description: The stress runner with upgrade_check, against the previous release packages.
+
+  - id: ast_fuzzer
+    ci: AST fuzzer
+    path: ci/jobs/ast_fuzzer_job.py
+    description: Mutates SQL from existing tests. A failure is the error text, not a test file name.
+
+  - id: libfuzzer
+    ci: libFuzzer tests
+    path: tests/fuzz
+    description: libFuzzer targets for parsers, formats, and decompression.
+
+  - id: buzzhouse
+    ci: BuzzHouse
+    path: src/Client/BuzzHouse
+    description: The SQL fuzzer client. The CI job generates queries and reuses the AST fuzzer runner.
+
+  - id: sqllogic
+    ci: SQLLogic test
+    path: tests/sqllogic
+    description: SQLLogic statement and query files.
+
+  - id: sqlstorm
+    ci: SQLStorm test
+    path: tests/sqlstorm
+    description: StackOverflow data and the SQLStorm query set.
+
+  - id: sqlancer
+    ci: SQLancer
+    path: ci/jobs
+    description: The SQLancer job. The tool is not a tree under tests/.
+
+  - id: sqltest
+    ci: SQLTest
+    path: ci/jobs/sqltest_job.py
+    description: Clones the external SQLTest repository and runs it.
+
+  - id: performance
+    ci: Performance Comparison
+    path: tests/performance
+    description: XML performance tests compared across builds.
+
+  - id: clickbench
+    ci: ClickBench
+    path: ci/jobs/clickbench.py
+    description: The ClickBench query set.
+
+  - id: benchmarks
+    path: tests/benchmarks
+    description: TPC-H and TPC-DS. No JobNames entry.
+
+  - id: jepsen
+    ci: ClickHouse Keeper Jepsen
+    path: tests/jepsen.clickhouse
+    description: Jepsen for Keeper and for the server. The server job is ClickHouse Server Jepsen.
+
+  - id: vector_search_stress
+    path: ci/jobs/vector_search_stress_tests.py
+    description: Vector search index stress. Its own workflow, not a JobNames constant.
+
+  - id: compatibility
+    ci: Compatibility check
+    path: ci/jobs/compatibility_check.py
+    description: glibc symbol versions in the release binary. Not a SQL suite.
+
+  - id: install
+    ci: Install packages
+    path: ci/jobs/install_check.py
+    description: Installs the deb and rpm and checks the server starts.

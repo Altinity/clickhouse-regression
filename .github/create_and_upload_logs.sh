@@ -54,4 +54,9 @@ then
     else
         echo "::notice title=$SUITE$STORAGE service logs::no service logs collected, skipping upload"
     fi
+    # Soak cas_log dumps are written here, not under _instances, because the
+    # container creates _instances as root and the test user cannot write it.
+    if [[ -d "$SUITE/cas_log" ]]; then
+        ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive $SUITE/cas_log/ $SUITE_REPORT_BUCKET_PATH/cas_log/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
+    fi
 fi

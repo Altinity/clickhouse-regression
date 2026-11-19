@@ -134,6 +134,7 @@ env:
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
     ./cas/soak_tests/_instances/**/*.log
+    ./cas/soak_tests/cas_log/*.log
 
 jobs:
   cas_soak_x86:

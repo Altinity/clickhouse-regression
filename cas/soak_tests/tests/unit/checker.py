@@ -5,10 +5,12 @@ from cas.soak_tests.oracle.checker import (
     CheckpointFailure,
     compare_aggregates,
     deletion_pipeline_idle,
+    dryrun_subset_applicable,
     dryrun_subset_check,
     gc_fixpoint_reached,
     is_genuine_hang,
     parse_aggregates,
+    settle_unaccounted,
     wait_for_pool_consistent,
 )
 
@@ -214,6 +216,21 @@ def dryrun_subset_waits_for_an_idle_deletion_pipeline(self):
 
 
 @TestScenario
+@Name("dryrun subset skips a truncated detail sample")
+def dryrun_subset_skips_a_truncated_detail_sample(self):
+    idle = {"unreachable": 0, "pending_gc": 0, "awaiting_gc": 0}
+    ok, why = dryrun_subset_applicable(dict(idle))
+    assert ok and why == "", error()
+    truncated = dict(idle, detail_truncated=True, detail_line_count=3599)
+    ok, why = dryrun_subset_applicable(truncated)
+    assert ok is False, error()
+    assert "3599" in why, error()
+    busy = {"unreachable": 2204, "pending_gc": 0, "awaiting_gc": 0}
+    ok, why = dryrun_subset_applicable(busy)
+    assert ok is False and "2204" in why, error()
+
+
+@TestScenario
 @Name("dryrun key reachable in detail fails")
 def dryrun_key_reachable_in_detail_fails(self):
     detail = [
@@ -243,6 +260,24 @@ def dryrun_key_unaccounted_in_detail_fails(self):
         assert False, error("expected CheckpointFailure")
     except CheckpointFailure as e:
         assert "fsck class='unaccounted'" in str(e), error()
+
+
+@TestScenario
+@Name("unaccounted settles when a later sample is zero")
+def unaccounted_settles_when_a_later_sample_is_zero(self):
+    keep, persistent = settle_unaccounted([], 4)
+    assert keep and not persistent, error()
+    keep, persistent = settle_unaccounted([139], 4)
+    assert keep and not persistent, error()
+    keep, persistent = settle_unaccounted([139, 40, 0], 4)
+    assert not keep and not persistent, error()
+
+
+@TestScenario
+@Name("unaccounted that survives the poll budget persists")
+def unaccounted_that_survives_the_poll_budget_persists(self):
+    keep, persistent = settle_unaccounted([139, 140, 192, 100], 4)
+    assert not keep and persistent, error()
 
 
 @TestFeature

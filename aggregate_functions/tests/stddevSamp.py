@@ -4,7 +4,11 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_StddevSamp,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id, check_current_cpu
+from aggregate_functions.tests.steps import (
+    get_snapshot_id,
+    check_current_cpu,
+    nan_preserving_snapshot,
+)
 from aggregate_functions.tests.avg import scenario as checks
 
 
@@ -16,6 +20,7 @@ def scenario(self, func="stddevSamp({params})", table=None, snapshot_id=None):
     clickhouse_version = None
     if check_current_cpu("aarch64")(self):
         clickhouse_version = ">=24.3"
+    clickhouse_version = nan_preserving_snapshot(clickhouse_version)
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version

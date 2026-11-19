@@ -53,6 +53,7 @@ oauth/
 │   ├── cache_semantics.py                # cache eviction / per-user / reload invalidation
 │   ├── access_control.py                 # cross-realm / cross-client authz, default_profile, host allowlist
 │   ├── groups.py                         # role mapping, dynamic membership, disable/delete, roles_transform
+│   ├── settings_profiles.py              # profiles_mapping: group -> settings profile, precedence, distributed (PR #2664)
 │   ├── tls.py                            # HTTPS happy path
 │   ├── configuration.py                  # processor / user-directory config validation, fail-closed
 │   ├── sql_jwt_users.py                  # CREATE USER … IDENTIFIED WITH jwt (PROCESSOR / CLAIMS)

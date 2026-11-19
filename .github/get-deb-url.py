@@ -1,12 +1,19 @@
 #! /usr/bin/env python3
 import os
+import re
 import sys
 import json
 import platform
 
 from argparse import ArgumentParser, RawTextHelpFormatter
+from urllib.parse import urlparse
 
+import boto3
 import requests
+
+_S3_VIRTUAL_HOST = re.compile(
+    r"^(?P<bucket>[^.]+)\.s3(?:[.-](?P<region>[^.]+))?\.amazonaws\.com$"
+)
 
 description = """Get the deb url from the builds report for the builds pipeline.
 """
@@ -93,6 +100,69 @@ def get_cached_build_url(workflow_config_file, s3_base_url):
     return None
 
 
+def has_aws_creds():
+    return bool(os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"))
+
+
+def parse_s3_http_url(url):
+    parsed = urlparse(url)
+    match = _S3_VIRTUAL_HOST.match(parsed.netloc)
+    if match:
+        return match.group("bucket"), parsed.path.lstrip("/")
+    path = parsed.path.lstrip("/")
+    bucket, _, key = path.partition("/")
+    if not bucket or not key:
+        raise ValueError(f"Not an S3 HTTP URL: {url}")
+    return bucket, key
+
+
+def fetch_json(url):
+    if has_aws_creds():
+        print(f"AWS creds set; fetching {url} with signed S3")
+        bucket, key = parse_s3_http_url(url)
+        body = boto3.client("s3").get_object(Bucket=bucket, Key=key)["Body"].read()
+        return json.loads(body)
+
+    print(f"No AWS creds; fetching {url} anonymously")
+    response = requests.get(url, timeout=60)
+    assert (
+        response.status_code == 200
+    ), f"Failed to get build report from {url}\n{response.status_code}\n{response.text}"
+    return response.json()
+
+
+def materialize_artifact(url):
+    """Return a local path for a private S3 object.
+
+    A presigned URL contains '&'. The regression workflow inserts
+    clickhouse_path unquoted, and the downloader uses everything after the
+    last '/' as the output filename, so the query string breaks both.
+
+    The file must also sit inside this repo. Docker build context is the
+    repo root, and the package path is passed to COPY. A file under the
+    runner temp directory is outside that context, so the image build fails
+    and the cluster does not start. helpers/cluster.py stores URL downloads
+    in binaries/.
+    """
+    if not has_aws_creds():
+        return url
+    bucket, key = parse_s3_http_url(url)
+    filename = os.path.basename(key)
+    if not filename or filename in (".", ".."):
+        raise ValueError(f"Cannot derive a local filename from {url}")
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    dest_dir = os.path.join(repo_root, "binaries")
+    os.makedirs(dest_dir, exist_ok=True)
+    dest = os.path.join(dest_dir, filename)
+    if os.path.isfile(dest) and os.path.getsize(dest) > 0:
+        return dest
+    partial = dest + ".partial"
+    print(f"Downloading s3://{bucket}/{key} to {dest}", file=sys.stderr)
+    boto3.client("s3").download_file(bucket, key, partial)
+    os.replace(partial, dest)
+    return dest
+
+
 if __name__ == "__main__":
     args = argparser().parse_args()
 
@@ -122,11 +192,7 @@ if __name__ == "__main__":
                 # This is a good heuristic
                 "binary" if args.binary else "release",
             )
-        build_report = requests.get(url)
-        assert (
-            build_report.status_code == 200
-        ), f"Failed to get build report from {url}\n{build_report.status_code}\n{build_report.text}"
-        build_report = build_report.json()
+        build_report = fetch_json(url)
     else:
         assert args.reports_path is not None, "reports path must be set"
         reports_path = args.reports_path
@@ -146,9 +212,10 @@ if __name__ == "__main__":
 
     for url in build_report["build_urls"]:
         if is_desired_file(url):
+            artifact_url = materialize_artifact(url)
             with open(github_env, "a") as f:
-                f.write("clickhouse_path=" + url + "\n")
+                f.write("clickhouse_path=" + artifact_url + "\n")
                 if not args.binary:  # cannot get version from binary url
                     f.write("version=" + url.split("/")[-1].split("_")[1] + "\n")
-            sys.stdout.write(url)
+            sys.stdout.write(artifact_url)
             sys.exit(0)

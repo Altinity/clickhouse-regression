@@ -275,7 +275,11 @@ def alter_combinations(
                                 parallel=run_groups_in_parallel,
                                 flags=TE | ERROR_NOT_COUNTED,
                             )
+                        join()
 
+                        # OPTIMIZE holds part locks. Running it beside
+                        # DROP PROJECTION makes that ALTER sit until the
+                        # client times out, and the projection stays.
                         for table in self.context.table_names:
                             By(
                                 f"I OPTIMIZE {table}",
@@ -340,6 +344,12 @@ def alter_combinations(
                                         )
 
                             with By("making sure that replicas agree"):
+                                for node in self.context.ch_nodes:
+                                    wait_for_mutations_to_finish(
+                                        node=node,
+                                        timeout=step_retry_timeout,
+                                        raise_on_timeout=False,
+                                    )
                                 check_consistency(
                                     restore_consistent_structure=enforce_table_structure
                                 )

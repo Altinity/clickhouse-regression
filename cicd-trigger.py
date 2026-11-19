@@ -31,8 +31,8 @@ PROGRESS = "\u2591"
 
 # Default values and choices
 DEFAULTS = {
-    "package": "docker://altinity/clickhouse-server:25.3.8.10042.altinitystable",
-    "version": "25.3.8.10042.altinitystable",
+    "package": "docker://altinity/clickhouse-server:25.3.14.10003.altinitystable",
+    "version": "25.3.14.10003.altinitystable",
     "flags": "--use-keeper --with-analyzer",
     "suite": "all",
     "output_format": "classic",

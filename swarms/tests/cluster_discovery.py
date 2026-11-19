@@ -305,7 +305,10 @@ def check_cluster_discovery_with_wrong_cluster_name(
         assert "clickhouse2" in output, error()
 
     with And("define expected exit code and message"):
-        if check_if_antalya_build(self) and check_clickhouse_version(">=25.8.12")(self):
+        if check_if_antalya_build(self) and check_clickhouse_version(">=26.8")(self):
+            exitcode = 23  # ALL_CONNECTION_TRIES_FAILED (279) % 256
+            message = "DB::Exception: Cannot connect to any replica for query execution."
+        elif check_if_antalya_build(self) and check_clickhouse_version(">=25.8.12")(self):
             exitcode = 33
             message = "DB::Exception: All replicas were marked as lost: While executing Remote."
         elif check_if_antalya_build(self) and check_clickhouse_version(">=25.6")(self):

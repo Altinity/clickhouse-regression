@@ -37,6 +37,13 @@ alter_query_args = {
     + [
         "PART_IS_TEMPORARILY_LOCKED",
         "participating in background process",
+        # DROP COLUMN is rejected while any mutation on the table is still
+        # running. The mutation finishes and the ALTER can be retried.
+        "not finished yet",
+        # A replica that has not applied earlier alters refuses the next one
+        # (Code 517). The error text says to retry.
+        "CANNOT_ASSIGN_ALTER",
+        "not up to date with common metadata",
     ],
 }
 
@@ -205,11 +212,13 @@ def delete_random_column(self):
                     with By("selecting a random node that knows about the table"):
                         node = get_random_node_for_table(table_name=table_name)
 
-                    with And("waiting for any other mutations on that column to finish"):
+                    with And("waiting for mutations on the table to finish"):
+                        # A DELETE does not mention the column, and ClickHouse
+                        # still refuses DROP COLUMN until that mutation ends.
                         wait_for_mutations_to_finish(
                             node=node,
-                            command_like=column_name,
-                            timeout=60,
+                            table_name=table_name,
+                            timeout=120,
                             raise_on_timeout=False,
                         )
 
@@ -711,14 +720,38 @@ def drop_random_projection(self):
                 with When(f"I drop {projection_name} on all tables"):
                     exit_codes = {}
                     exit_messages = {}
+                    # One attempt must not consume the whole retry budget. A
+                    # replica that is still applying earlier alters holds this
+                    # statement until the client times out (Code 517).
+                    drop_args = dict(alter_query_args)
+                    drop_args["timeout"] = 120
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
-                        # wait_for_mutations_to_finish(node=node)
-                        r = node.query(
-                            f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
-                            no_checks=True,
-                            **alter_query_args,
+                        wait_for_mutations_to_finish(
+                            node=node,
+                            table_name=table_name,
+                            timeout=120,
+                            raise_on_timeout=False,
                         )
+                        sync_replica(
+                            node=node,
+                            table_name=table_name,
+                            timeout=120,
+                            raise_on_timeout=False,
+                            no_checks=True,
+                        )
+                        try:
+                            r = node.query(
+                                f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection_name}",
+                                no_checks=True,
+                                **drop_args,
+                            )
+                        except ExpectTimeoutError:
+                            exit_codes[table_name] = 1
+                            exit_messages[table_name] = (
+                                f"DROP PROJECTION still running after {drop_args['timeout']}s"
+                            )
+                            continue
                         exit_codes[table_name] = r.exitcode
                         exit_messages[table_name] = r.output
 
@@ -728,12 +761,15 @@ def drop_random_projection(self):
                             table_name + ": " + exit_messages[table_name]
                         )
 
-        wait_for_mutations_to_finish(
-            node=node,
-            command_like="DROP PROJECTION",
-            timeout=60,
-            raise_on_timeout=False,
-        )
+        for table_name in tables:
+            node = get_random_node_for_table(table_name=table_name)
+            wait_for_mutations_to_finish(
+                node=node,
+                table_name=table_name,
+                command_like="DROP PROJECTION",
+                timeout=step_retry_timeout,
+                raise_on_timeout=False,
+            )
         retry(
             check_tables_have_same_projections,
             timeout=step_retry_timeout,
@@ -948,8 +984,8 @@ def check_tables_have_same_projections(
                 node = get_random_node_for_table(table_name=table_name)
                 wait_for_mutations_to_finish(
                     node=node,
-                    command_like="PROJECTION",
-                    timeout=60,
+                    table_name=table_name,
+                    timeout=step_retry_timeout,
                     raise_on_timeout=False,
                 )
                 table_projections[table_name] = set(
@@ -961,7 +997,10 @@ def check_tables_have_same_projections(
                 with By(f"checking {table1} and {table2}", flags=TE):
                     assert (
                         table_projections[table1] == table_projections[table2]
-                    ), error()
+                    ), error(
+                        f"projections {table1}={table_projections[table1]} "
+                        f"{table2}={table_projections[table2]}"
+                    )
 
         if check_present is not None:
             with And(f"I check that {check_present} exist"):
@@ -1077,10 +1116,18 @@ def check_consistency(
                             with By(f"checking {n1.name} and {n2.name}"):
                                 assert (
                                     row_counts[n1.name] == row_counts[n2.name]
-                                ), error()
+                                ), error(
+                                    f"{table_name} row count "
+                                    f"{n1.name}={row_counts[n1.name]} "
+                                    f"{n2.name}={row_counts[n2.name]}"
+                                )
                                 assert (
                                     column_names[n1.name] == column_names[n2.name]
-                                ), error()
+                                ), error(
+                                    f"{table_name} columns differ "
+                                    f"{n1.name}={column_names[n1.name]} "
+                                    f"{n2.name}={column_names[n2.name]}"
+                                )
 
     # The above check only checks that nodes agree on what should be in each table
     # The below check also asserts that all tables have the same structure
@@ -1397,6 +1444,17 @@ def _copy_tree(node, src, dst):
     node.command(f"cp -a {src}/. {dst}/")
 
 
+def _prepare_empty_dir(node, path):
+    """Leave path as an empty mount.
+
+    The limited log volume is 256MB. Copying the server log from the
+    scenarios that already ran fills it, and the full-disk test stops
+    before it fills the data volume.
+    """
+    node.command(f"mkdir -p {path}", exitcode=0)
+    node.command(f"find {path} -mindepth 1 -delete", no_checks=True)
+
+
 @TestStep(Given)
 def limit_clickhouse_disks(self, node):
     """Restart clickhouse using small disks.
@@ -1407,8 +1465,10 @@ def limit_clickhouse_disks(self, node):
     stale /var/lib/clickhouse preprocessed copy for s3_storage.xml and Fails.
     """
 
-    migrate_dirs = {
+    data_dirs = {
         "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
+    }
+    log_dirs = {
         "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
     }
     config = clickhouse_limited_disk_config(node=node)
@@ -1431,8 +1491,10 @@ def limit_clickhouse_disks(self, node):
             node.stop_clickhouse()
 
         with And("I move clickhouse files to small disks"):
-            for normal_dir, limited_dir in migrate_dirs.items():
+            for normal_dir, limited_dir in data_dirs.items():
                 _copy_tree(node, normal_dir, limited_dir)
+            for _normal_dir, limited_dir in log_dirs.items():
+                _prepare_empty_dir(node, limited_dir)
 
         with And("I write an override config for clickhouse"):
             node.command(
@@ -1442,6 +1504,9 @@ def limit_clickhouse_disks(self, node):
             )
 
         with And("I disable query profiler and query_log on limited disks"):
+            # The static package does not ship users.d. config.d is present
+            # only because compose bind-mounts files into it.
+            node.command("mkdir -p /etc/clickhouse-server/users.d", exitcode=0)
             node.command(
                 f"cat <<HEREDOC > {users_path}\n{users_xml}\nHEREDOC",
                 steps=False,
@@ -1458,8 +1523,14 @@ def limit_clickhouse_disks(self, node):
             node.stop_clickhouse()
 
         with And("I move clickhouse files from the small disks"):
-            for normal_dir, limited_dir in migrate_dirs.items():
+            for normal_dir, limited_dir in data_dirs.items():
                 _copy_tree(node, limited_dir, normal_dir)
+            for normal_dir, limited_dir in log_dirs.items():
+                node.command(f"mkdir -p {normal_dir}", exitcode=0)
+                node.command(
+                    f"cp -a {limited_dir}/. {normal_dir}/",
+                    no_checks=True,
+                )
 
         with And("I restore the original data directory config"):
             node.command(f"rm -rf {config.path}", exitcode=0)

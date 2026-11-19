@@ -35,24 +35,32 @@ Include these scenarios even when the feature match missed them. In Tests, name 
 
 ## Choose features
 
-Name the parent feature, then the child feature when one matches. Match each changed file to the longest `sources` prefix in taxonomy.yaml. The longest prefix wins across the whole file.
+Match each changed file to the longest `sources` prefix in taxonomy.yaml. The longest prefix wins across the whole file. That match is a candidate. It does not activate the id.
 
-When a child wins, report that child and its parent. When only the parent matches, report the parent and stop. There is no level below a child. Do not invent one.
+Read the diff of that file. Activate the id only when the change affects the behavior the id describes. A comment does not. Whitespace, formatting, and a rename that does not change behavior do not. A docs-only or changelog-only change selects nothing.
 
-- When several features list the same file, select every one of them.
-- A docs-only, changelog-only, or comment-only change selects nothing.
-- A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
+When several features list the same file, judge each one. Activate every id the diff actually affects. Leave the others out.
+
+When a child is activated, also activate its parent. When only the parent matches, judge that parent and stop. There is no level below a child. Do not invent one.
+
+A match that stops at the parent has no child. Look up that parent id in mapping.yaml. When no suite lists it, record the gap.
+
 - MinIO, AWS, GCS, Hetzner, and Azure are run targets of the same tests. Select `storage.gcs` or `storage.azure` only when the change is specific to that backend.
 - `--with-analyzer` and `--use-keeper` are run flags. Do not treat either flag as a feature.
-- `storage.cas` and `storage.disk.cache` are the `--cas` and `--cas-s3-cache` runs in mapping.yaml. Copy the flag with the path. Do not add soak, Jepsen, or alter stress.
 
 ## Map features to tests
 
-mapping.yaml has one entry per directory that contains `regression.py`. `path` is the suite CI runs. `features` lists taxonomy ids. `scenarios` are the TestFlows paths that exercise that id. An entry with no `scenarios` names a flag in its description. `ci: manual` means an automatic selection must not run that suite.
+After the diff has activated the ids, run [lookup_tests.py](lookup_tests.py) with those ids. Use its `jobs` as the test list. Do not rebuild, drop, or rewrite a scenario. `:` is one path segment. `*` matches across `/`.
 
-Find every suite whose features list a chosen id. Run the scenarios under that id. When the entry has no scenarios, run the suite with the flag named in the description. Leave out a neighboring suite that does not list the feature.
+```bash
+python3 .claude/skills/regression-test-selection/lookup_tests.py functions.string.base58_encode functions.encryption.encrypt
+```
 
-Put a path the notes call not started under "Not part of the default run". A feature described as only on a FIPS package goes there too, unless the package under test is a FIPS build.
+One job in that output is one suite. `regression_args` is the command for that suite. If mapping.yaml lists an activated id on a suite, that job runs. Do not drop it because the pull request looks small, targeted, or unrelated.
+
+`manual` is not an automatic run. A whole-suite `--cas` or `--cas-s3-cache` rerun is in that list. A FIPS-only entry is there too. Put it under "Not part of the default run" unless the package under test is a FIPS build. `needs_flag` is an id with no scenarios. Use the flag named in its description, and do not invent `--only` paths for it. An id in `ids_with_no_suite` has no regression coverage. Record that gap.
+
+Do not add soak, Jepsen, or alter stress. `storage.cas` is `--cas`. `storage.cas.cache` is `--cas-s3-cache`.
 
 ## Report
 
@@ -75,4 +83,4 @@ Use this shape:
 - Features with no regression coverage. Leave a feature off this list when a scenario that cites the PR's issue covers the change.
 ```
 
-Omit an empty section. Fill in "Considered and left out" whenever you chose among nearby features. Name the features you almost picked.
+Omit an empty section. "Considered and left out" is a candidate the prefix match found and the diff did not activate, or a feature the prefix match rejected. It is not a suite you chose not to run. Name the id and the change that kept it out. A comment is one such change.

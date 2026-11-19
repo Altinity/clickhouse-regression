@@ -26,7 +26,7 @@ def scenario(self, func="studentTTest({params})", table=None, snapshot_id=None):
         clickhouse_version = ">=23.2"
     else:
         clickhouse_version = ">=22.6"
-    clickhouse_version = versioned_snapshot(clickhouse_version)
+    clickhouse_version = nan_preserving_snapshot(versioned_snapshot(clickhouse_version))
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version

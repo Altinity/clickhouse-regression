@@ -69,7 +69,8 @@ def access_clickhouse(
     """Execute a query against ClickHouse with bearer-token auth.
 
     Returns the response body. Asserts HTTP status matches ``status_code``
-    (default 200). The query is sent as POST body for safe quoting.
+    (default 200), or is one of them when a tuple is given. The query is
+    sent as POST body for safe quoting.
 
     ``query_params`` is an optional ``{key: value}`` dict appended to the
     request URL as query-string parameters.
@@ -118,7 +119,8 @@ def access_clickhouse(
     body_result = node.command(command=f"cat {tmp_file}")
     response_body = body_result.output.strip()
 
-    assert http_code == status_code, error(
+    expected = status_code if isinstance(status_code, tuple) else (status_code,)
+    assert http_code in expected, error(
         f"Expected HTTP status code {status_code}, but got {http_code}. "
         f"Response body: {response_body}"
     )
@@ -339,6 +341,20 @@ def change_token_processors(
     )
 
 
+def group_mapping_entries(mapping):
+    """Build a ``roles_mapping`` / ``profiles_mapping`` section body.
+
+    ``mapping`` is a list of ``{"from": ..., "to": ...}`` dicts; either key
+    may be omitted to produce a malformed entry for negative tests. Each
+    entry becomes its own ``<map>`` element, in list order -- ClickHouse
+    gives later ``profiles_mapping`` entries precedence, so order matters.
+    """
+    return {
+        KeyWithAttributes("map", {}): {k: m[k] for k in ("from", "to") if k in m}
+        for m in mapping
+    }
+
+
 @TestStep(Given)
 def change_user_directories_config(
     self,
@@ -348,6 +364,7 @@ def change_user_directories_config(
     roles_transform=None,
     roles_mapping=None,
     default_profile=None,
+    profiles_mapping=None,
     node=None,
     config_d_dir="/etc/clickhouse-server/config.d",
 ):
@@ -355,6 +372,8 @@ def change_user_directories_config(
 
     ``roles_transform`` accepts a sed-style regex (e.g. ``s/^grafana-//``).
     ``default_profile`` names a settings profile for auto-provisioned token users.
+    ``roles_mapping`` / ``profiles_mapping`` are lists of
+    ``{"from": <group>, "to": <role or profile>}`` dicts, written in order.
     """
 
     token_section = {"processor": processor}
@@ -369,11 +388,13 @@ def change_user_directories_config(
         token_section["roles_transform"] = roles_transform
 
     if roles_mapping is not None:
-        maps = [{"from": m["from"], "to": m["to"]} for m in roles_mapping]
-        token_section["roles_mapping"] = {"map": maps}
+        token_section["roles_mapping"] = group_mapping_entries(roles_mapping)
 
     if default_profile is not None:
         token_section["default_profile"] = default_profile
+
+    if profiles_mapping is not None:
+        token_section["profiles_mapping"] = group_mapping_entries(profiles_mapping)
 
     entries = {"user_directories": {"token": token_section}}
 
@@ -642,6 +663,103 @@ def alter_sql_jwt_user(
         stmt += f" CLAIMS '{claims.replace(chr(34), chr(92) + chr(34))}'"
 
     node.query(stmt)
+
+
+@TestStep(Given)
+def create_settings_profile(self, name, settings, node=None):
+    """Create a SQL settings profile, dropping it at teardown.
+
+    ``settings`` is the body of the ``SETTINGS`` clause, e.g.
+    ``"max_block_size = 1001, readonly = 1 CONST"``. ``name`` must be a
+    plain identifier: ``node.query`` passes SQL through ``echo -e "..."``,
+    so backtick quoting would be run by bash as command substitution.
+    """
+    if node is None:
+        node = self.context.node
+
+    node.query(f"CREATE SETTINGS PROFILE OR REPLACE {name} SETTINGS {settings}")
+
+    try:
+        yield name
+    finally:
+        with Finally(f"I drop settings profile {name} on {node.name}"):
+            node.query(f"DROP SETTINGS PROFILE IF EXISTS {name}", no_checks=True)
+
+
+@TestStep(Given)
+def create_role(self, name, settings_profile=None, grants=(), node=None):
+    """Create a SQL role, optionally carrying a settings profile, and grant
+    it ``grants`` (e.g. ``("SELECT, REMOTE ON *.*",)``). Dropped at teardown.
+    ``name`` must be a plain identifier (see ``create_settings_profile``).
+    """
+    if node is None:
+        node = self.context.node
+
+    stmt = f"CREATE ROLE OR REPLACE {name}"
+    if settings_profile is not None:
+        stmt += f" SETTINGS PROFILE '{settings_profile}'"
+    node.query(stmt)
+    for grant in grants:
+        node.query(f"GRANT {grant} TO {name}")
+
+    try:
+        yield name
+    finally:
+        with Finally(f"I drop role {name} on {node.name}"):
+            node.query(f"DROP ROLE IF EXISTS {name}", no_checks=True)
+
+
+@TestStep(Given)
+def add_cluster_with_secret(
+    self,
+    cluster_name,
+    secret,
+    hosts=("clickhouse1", "clickhouse2"),
+    node=None,
+    config_d_dir="/etc/clickhouse-server/config.d",
+):
+    """Define a one-replica-per-shard cluster whose interserver hops carry
+    ``secret``, so the initiating user's identity (not ``default``) is
+    used on the other nodes.
+    """
+    cluster = {"secret": secret}
+    for host in hosts:
+        cluster[KeyWithAttributes("shard", {})] = {
+            "replica": {"host": host, "port": "9000"}
+        }
+
+    change_clickhouse_config(
+        entries={"remote_servers": {cluster_name: cluster}},
+        config_d_dir=config_d_dir,
+        preprocessed_name="config.xml",
+        restart=True,
+        config_file=f"remote_{cluster_name}.xml",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def create_memory_table(self, name, node=None):
+    """Create ``default.<name> (x UInt8) ENGINE = Memory``, dropping it at teardown."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"CREATE TABLE IF NOT EXISTS default.{name} (x UInt8) ENGINE = Memory")
+
+    try:
+        yield f"default.{name}"
+    finally:
+        with Finally(f"I drop table default.{name}"):
+            node.query(f"DROP TABLE IF EXISTS default.{name} SYNC", no_checks=True)
+
+
+def setting_default(name, node=None):
+    """Return the server's built-in default value of setting ``name``."""
+    if node is None:
+        node = current().context.node
+    return node.query(
+        f"SELECT default FROM system.settings WHERE name = '{name}' FORMAT TSV"
+    ).output.strip()
 
 
 def show_create_user(username, node=None):

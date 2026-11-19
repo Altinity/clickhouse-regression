@@ -12888,8 +12888,8 @@ features:
           - src/IO/WriteBufferFromEncryptedFile.h
           - src/IO/tests/gtest_file_encryption.cpp
 
-      - id: storage.disk.cache
-        description: Cache disk. A local cache in front of an object-storage disk.
+      - id: storage.cas.cache
+        description: Content-addressed storage read through the local disk cache. The --cas-s3-cache run.
         sources:
           - src/Disks/DiskObjectStorage/RegisterDiskCache.cpp
           - src/Disks/IDisk.cpp
