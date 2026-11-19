@@ -1,5 +1,6 @@
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import *
+from lightweight_delete.cas_mode import check_cas_mode
 
 
 @TestScenario
@@ -40,7 +41,9 @@ def delete_most_of_the_table(self, node=None):
     with Then("I check that rows are deleted immediately"):
         r = node.query(f"SELECT count(*) FROM {table_name} FORMAT TabSeparated")
         assert r.output == output, error()
-        assert execution_time < 20, error()  # todo rewrite value
+        # A synced delete of 100 parts waits on object storage under CAS.
+        time_limit = 30 if check_cas_mode(self) else 20
+        assert execution_time < time_limit, error()
 
 
 @TestFeature
