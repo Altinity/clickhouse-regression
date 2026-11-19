@@ -90,6 +90,14 @@ xfails = {
             and check_cas_mode(test),
         )
     ],
+    "concurrent alter and delete/:/concurrent clear update and delete": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/122083",
+            lambda test: check_clickhouse_version(">=26")(test)
+            and check_cas_mode(test),
+        )
+    ],
 }
 
 xflags = {}
