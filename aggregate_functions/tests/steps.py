@@ -420,7 +420,7 @@ def compare_json_values(current, expected):
         assert current == expected, error()
 
 
-def compare_with_float_tolerance(expected, current, rel_tol=1e-12):
+def compare_with_float_tolerance(expected, current, rel_tol=1e-14):
     """Compare snapshot values allowing a small relative difference
     between floating point numbers. The rest of the output must match exactly.
     """
