@@ -601,25 +601,78 @@ def split_alter(job: dict) -> list[dict]:
     return chosen or [job]
 
 
+def _tiered_backend(path: str) -> str | None:
+    """The backend named by the second segment, such as `with minio`."""
+    body = path.strip("/")
+    prefix = "tiered storage/"
+    if not body.startswith(prefix):
+        return None
+    rest = body[len(prefix) :]
+    for needle, *_rest in TIERED_STORAGE_JOBS:
+        if not rest.startswith(needle):
+            continue
+        tail = rest[len(needle) :]
+        if tail == "" or tail.startswith("/") or tail.startswith("*"):
+            return needle
+    return None
+
+
+def _whole_tiered_backend(path: str, needle: str) -> bool:
+    rest = path.strip("/")[len("tiered storage/") :]
+    return rest[len(needle) :] in ("", "/*", "*")
+
+
 def split_tiered_storage(job: dict) -> list[dict]:
-    """Replace --only of a tiered-storage backend with the flag that starts it."""
+    """Turn backend paths into one flagged job each, and keep the local run.
+
+    `/tiered storage/with minio/*` exists only after `--with-minio`. A path whose
+    second segment is not a backend name runs under the feature named `normal`,
+    on the local disk. A MinIO-only selection does not add that job.
+    """
     if job["suite_name"] != "tiered_storage" or "--with-" in job["regression_args"]:
         return [job]
     args = job["regression_args"]
     if "--only" not in args:
         return [job]
-    matched = [spec for spec in TIERED_STORAGE_JOBS if spec[0] in args]
-    if not matched:
+    by_backend: dict[str, list[str]] = {}
+    local: list[str] = []
+    for path in _only_paths(args):
+        needle = _tiered_backend(path)
+        if needle is None:
+            local.append(path)
+        else:
+            by_backend.setdefault(needle, []).append(path)
+    if not by_backend:
         return [job]
-    return [
-        {
-            **job,
-            "job_name": job_name,
-            "storage_path": storage,
-            "regression_args": flags,
-        }
-        for _needle, job_name, storage, flags in matched
-    ]
+    selected = []
+    for needle, job_name, storage, flags in TIERED_STORAGE_JOBS:
+        backend_paths = by_backend.get(needle)
+        if not backend_paths:
+            continue
+        if any(_whole_tiered_backend(path, needle) for path in backend_paths):
+            regression_args = flags
+        else:
+            only = " ".join(f'"{path}"' for path in backend_paths)
+            regression_args = f"{flags} --only {only}"
+        selected.append(
+            {
+                **job,
+                "job_name": job_name,
+                "storage_path": storage,
+                "regression_args": regression_args,
+            }
+        )
+    if local:
+        only = " ".join(f'"{path}"' for path in local)
+        selected.append(
+            {
+                **job,
+                "job_name": "tiered_storage_local",
+                "storage_path": "/local",
+                "regression_args": f"--only {only}",
+            }
+        )
+    return selected
 
 
 def split_whole_suite(job: dict) -> list[dict]:
@@ -676,7 +729,7 @@ def build_prompt(pr: dict, skill: str) -> str:
 
 Follow the skill below. The workflow prints your plan and then starts the suite jobs. You do not start them. You do not run regression.py. You do not edit files.
 
-Use the tools. Call match_files once with every changed file. Call lookup_features with every winning feature id and, when a winner has a parent, that parent id too. Call search_issue once for each issue URL listed below. A feature with no scenarios in the lookup result is a flag: put that flag in regression_args and do not invent --only paths for it. If the lookup lists a suite for an id, that suite runs. Do not drop it because the change looks small, targeted, or unrelated. A feature entry with ci: manual is not an automatic run. Do not emit a whole-suite --cas or --cas-s3-cache job for aggregate_functions, alter, atomic_insert, engines, lightweight_delete, or selects. Leave out a suite whose ci is manual. Leave out a path the notes call not started. Leave out a FIPS-only path unless this package is a FIPS build. A docs-only, changelog-only, or comment-only change selects nothing.
+Use the tools. Call match_files once with every changed file. Those matches are candidates. Read the diff of each file and activate an id only when the change affects the behavior that id describes. A comment does not activate an id. Whitespace, formatting, and a rename that does not change behavior do not. A docs-only or changelog-only change selects nothing. Call lookup_features only with ids the diff activates and, when an activated id has a parent, that parent id too. Call search_issue once for each issue URL listed below. A feature with no scenarios in the lookup result is a flag: put that flag in regression_args and do not invent --only paths for it. If the lookup lists a suite for an activated id, that suite runs. Do not drop it because the change looks small, targeted, or unrelated. A feature entry with ci: manual is not an automatic run. Do not emit a whole-suite --cas or --cas-s3-cache job for aggregate_functions, alter, atomic_insert, engines, lightweight_delete, or selects. Leave out a suite whose ci is manual. Leave out a path the notes call not started. Leave out a FIPS-only path unless this package is a FIPS build.
 
 When several scenarios belong to one suite, return one job. regression_args is one string. Quote every TestFlows path with double quotes. Example: --only "/parquet/file/*" "/parquet/url/*"
 When the lookup names --cas or --cas-s3-cache, put that flag in the same string, before --only.
@@ -881,6 +934,33 @@ def job_key(job: dict) -> tuple:
     )
 
 
+def _flags_and_only(args: str) -> tuple[str, list[str] | None]:
+    """Flags, and the --only paths. None means this job has no --only and runs the whole suite."""
+    if "--only" not in args:
+        return args.strip(), None
+    flags = re.sub(r'--only(\s+"[^"]*")+', "", args).strip()
+    flags = re.sub(r"\s+", " ", flags)
+    return flags, _only_paths(args)
+
+
+def _with_only(flags: str, paths: list[str] | None) -> str:
+    if paths is None:
+        return flags
+    only = canonicalize_args("--only " + " ".join(f'"{path}"' for path in paths))
+    return f"{flags} {only}".strip()
+
+
+def _merge_only(existing: list[str] | None, extra: list[str] | None) -> list[str] | None:
+    """Union of two --only lists. A missing list runs the whole suite and covers the other."""
+    if existing is None or extra is None:
+        return None
+    merged = list(existing)
+    for path in extra:
+        if path not in merged:
+            merged.append(path)
+    return merged
+
+
 def normalize_remembered(job: dict) -> list[dict]:
     """Reapply the current splitters so an old plan cannot rerun a stale command."""
     cleaned = {key: value for key, value in job.items() if key != "carried_forward"}
@@ -893,29 +973,50 @@ def normalize_remembered(job: dict) -> list[dict]:
     return normalized
 
 
+def _prepare_union_job(job: dict) -> dict:
+    job = normalize_s3_storage(
+        {key: value for key, value in job.items() if key != "carried_forward"}
+    )
+    job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
+    return job
+
+
+def _union_identity(job: dict) -> tuple:
+    """Same suite, part, and flags. Different --only lists are one run, not two."""
+    flags, _paths = _flags_and_only(job.get("regression_args") or "")
+    return (job.get("suite_name"), str(job.get("part") or ""), flags)
+
+
+def _absorb(into: dict, job: dict) -> None:
+    flags, existing = _flags_and_only(into.get("regression_args") or "")
+    _same_flags, extra = _flags_and_only(job.get("regression_args") or "")
+    into["regression_args"] = _with_only(flags, _merge_only(existing, extra))
+
+
 def union_jobs(previous: list[dict], current: list[dict]) -> list[dict]:
-    """Keep every earlier job for this PR, then add jobs from this commit."""
+    """Keep every earlier test for this PR. One suite command runs once.
+
+    A later commit that adds --only paths replaces the shorter command. It does
+    not schedule the shorter command beside it.
+    """
     remembered = []
     for job in previous:
         remembered.extend(normalize_remembered(job))
     merged: dict[tuple, dict] = {}
     order: list[tuple] = []
     for job in current:
-        job = normalize_s3_storage(
-            {key: value for key, value in job.items() if key != "carried_forward"}
-        )
-        job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
-        key = job_key(job)
+        job = _prepare_union_job(job)
+        key = _union_identity(job)
         if key not in merged:
             order.append(key)
-        merged[key] = job
+            merged[key] = job
+        else:
+            _absorb(merged[key], job)
     for job in remembered:
-        job = normalize_s3_storage(
-            {key: value for key, value in job.items() if key != "carried_forward"}
-        )
-        job["regression_args"] = canonicalize_args(job.get("regression_args") or "")
-        key = job_key(job)
+        job = _prepare_union_job(job)
+        key = _union_identity(job)
         if key in merged:
+            _absorb(merged[key], job)
             continue
         order.append(key)
         merged[key] = {**job, "carried_forward": True}

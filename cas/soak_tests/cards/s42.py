@@ -4,6 +4,7 @@ import threading
 import time
 
 from cas.soak_tests.oracle.alloc_fault import classify_armed_exception
+from cas.soak_tests.oracle.checker import settle_unaccounted
 from cas.soak_tests.oracle.chaos import Fault, FaultAction, FaultTarget
 from cas.soak_tests.oracle.lease import mount_lease_verdict
 from cas.soak_tests.oracle.scenario import Scenario, register
@@ -13,6 +14,8 @@ from cas.soak_tests.steps.chaos import apply_fault
 from cas.soak_tests.steps.observe import wait_cluster_healthy
 
 _TABLE = "s42_alloc"
+_UNACCOUNTED_POLLS = 4
+_UNACCOUNTED_PAUSE_S = 2.0
 _EVENTS = (
     "CASRefNeedsRecovery",
     "QueryMemoryLimitExceeded",
@@ -22,6 +25,31 @@ _EVENTS = (
     "CASGCUnmatchedRemoveDeltas",
 )
 _POISON_LOG_NEEDLE = "NEEDS RECOVERY at"
+
+
+def _fsck_once_unaccounted_settles(cluster, log, polls=_UNACCOUNTED_POLLS):
+    """Return the fsck report after unaccounted has had GC rounds to fold in.
+
+    A blob that is not in the current GC view is unaccounted for that round.
+    One explicit GC round sits between samples. A count that is still non-zero
+    when the poll budget ends is what the verdict fails. Dangling is not waited
+    out.
+    """
+    last = {}
+    samples = []
+    while True:
+        keep, _persistent = settle_unaccounted(samples, polls)
+        if not keep:
+            return last, samples
+        if samples:
+            try:
+                C.gc_round(cluster.node1, timeout=120)
+            except Exception as e:
+                log(f"S42 unaccounted GC round {len(samples)} raised: {e}")
+            time.sleep(_UNACCOUNTED_PAUSE_S)
+        last = C.run_cas_fsck(detail=False) or {}
+        samples.append(int(last.get("unaccounted") or 0))
+        log(f"S42 unaccounted poll {len(samples)}: {samples[-1]}")
 
 
 def _events(node):
@@ -294,7 +322,8 @@ class S42(Scenario):
         time.sleep(float(p["settle_s"]))
         _, residual = C.drive_gc_until_stable()
         result.observations["leg_c_gc"] = {"residual_unreachable": residual}
-        fsck_pre = C.run_cas_fsck(detail=False)
+        fsck_pre, pre_samples = _fsck_once_unaccounted_settles(cl, ctx.log)
+        result.observations["unaccounted_polls_pre"] = pre_samples
         view_pre = {n.container: _view(n, rows_per_insert) for n in cl.nodes()}
         ctx.log("S42 leg C: restarting both servers")
         apply_fault(Fault(t_offset=0, target=FaultTarget.BOTH, action=FaultAction.RESTART, duration_s=0))
@@ -331,7 +360,8 @@ class S42(Scenario):
             )
         )
         C.assert_replicas_agree(result, cl, C.table_checksum_query(_TABLE), name="S42 replica agreement")
-        fsck_post = C.run_cas_fsck(detail=False)
+        fsck_post, post_samples = _fsck_once_unaccounted_settles(cl, ctx.log)
+        result.observations["unaccounted_polls_post"] = post_samples
         for label, rep in (("pre-restart", fsck_pre), ("post-restart", fsck_post)):
             if "dangling" not in rep:
                 result.add(Verdict.inconclusive(f"fsck {label}: dangling == 0", "0", "fsck unavailable"))

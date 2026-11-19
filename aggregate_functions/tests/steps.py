@@ -1,5 +1,7 @@
 import itertools
 import json
+import math
+import re
 
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
@@ -245,6 +247,14 @@ parametric = [
 
 funcs_to_run_with_extra_data = ["argMin", "argMax"]
 
+# floating point results differ in the last digits between builds
+# (for example, arm_release with ThinLTO vs arm_binary without it)
+funcs_to_compare_with_float_tolerance = [
+    "studentTTest",
+    "welchTTest",
+    "analysisOfVariance",
+]
+
 
 def permutations_with_replacement(n, r):
     """Return all possible permutations with replacement."""
@@ -336,6 +346,12 @@ def execute_query(
                     return
 
             with Then("I check output against snapshot"):
+                compare = snapshot.COMPARE.eq
+                if current().context.snapshot_id.lower().startswith(
+                    tuple(f.lower() for f in funcs_to_compare_with_float_tolerance)
+                ):
+                    compare = compare_with_float_tolerance
+
                 with values() as that:
                     assert that(
                         snapshot(
@@ -344,6 +360,7 @@ def execute_query(
                             name=snapshot_name,
                             encoder=str,
                             mode=snapshot.CHECK,  # snapshot.REWRITE | snapshot.CHECK | snapshot.UPDATE
+                            compare=compare,
                         )
                     ), error()
 
@@ -401,3 +418,20 @@ def compare_json_values(current, expected):
         current = list(json.loads(current).values())[0]
         expected = list(json.loads(expected).values())[0]
         assert current == expected, error()
+
+
+def compare_with_float_tolerance(expected, current, rel_tol=1e-14):
+    """Compare snapshot values allowing a small relative difference
+    between floating point numbers. The rest of the output must match exactly.
+    """
+    float_number = re.compile(
+        r"-?\d+(?:\.\d+(?:e[+-]?\d+)?|e[+-]?\d+)", re.IGNORECASE
+    )
+
+    if float_number.sub("#", expected) != float_number.sub("#", current):
+        return False
+
+    return all(
+        math.isclose(float(e), float(c), rel_tol=rel_tol)
+        for e, c in zip(float_number.findall(expected), float_number.findall(current))
+    )

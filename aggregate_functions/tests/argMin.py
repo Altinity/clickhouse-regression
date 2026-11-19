@@ -12,11 +12,82 @@ def execute_multi_query(self, query):
     execute_query("".join(query), use_file=True, format=None, hash_output=False)
 
 
+def _is_extra_data_table(table):
+    extra = getattr(current().context, "table_extra_data", None)
+    return extra is not None and getattr(table, "name", None) == extra.name
+
+
+def _arg_extreme_call(aggregate):
+    """Return ``(direction, value_expr)`` for an argMin/argMax call.
+
+    The -State combinator is invoked as ``hex(argMaxState(...))``. The hex is
+    the serialized state, so the comparable value is ``finalizeAggregation`` of
+    the call inside it. A different wrapper returns ``None`` and the caller
+    keeps the snapshot check.
+    """
+    call = aggregate.strip()
+    if call.startswith("hex(") and call.endswith(")"):
+        call = call[4:-1].strip()
+
+    if call.startswith("argMax"):
+        direction = "max"
+    elif call.startswith("argMin"):
+        direction = "min"
+    else:
+        return None
+
+    if call.startswith(("argMaxState(", "argMinState(")):
+        value = f"finalizeAggregation({call})"
+    elif call.startswith(("argMax(", "argMin(")):
+        value = call
+    else:
+        return None
+    return direction, value
+
+
+def _assert_tied_extreme(aggregate, table, col1_name, col2_name):
+    """Accept any row that holds the extreme value.
+
+    The extra-data table repeats every value. argMin and argMax then have
+    several legal answers, and the one returned follows part read order.
+    """
+    parsed = _arg_extreme_call(aggregate)
+    if parsed is None:
+        return False
+    direction, value = parsed
+
+    extreme = f"(SELECT {direction}({col2_name}) FROM {table.name})"
+    tied_rows = (
+        f"SELECT {col1_name} FROM {table.name} WHERE {col2_name} = {extreme}"
+    )
+    null_tied = (
+        f"SELECT count() FROM {table.name} "
+        f"WHERE {col2_name} = {extreme} AND {col1_name} IS NULL"
+    )
+    sql = (
+        f"SELECT (({value}) IN ({tied_rows})) "
+        f"OR (({value}) IS NULL AND ({null_tied}) > 0) "
+        f"FROM {table.name} FORMAT TabSeparated"
+    )
+    result = current().context.node.query(sql)
+    got = (getattr(result, "output", None) or "").strip()
+    assert got in ("1", "true"), error(
+        f"{aggregate} is not a row at {direction}({col2_name}): {got!r}"
+    )
+    return True
+
+
 @TestCheck
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
+    aggregate = func.format(params=col1_name + "," + col2_name)
+    if _is_extra_data_table(table) and _assert_tied_extreme(
+        aggregate, table, col1_name, col2_name
+    ):
+        return
+
     execute_query(
-        f"SELECT {func.format(params=col1_name+','+col2_name)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name}",
+        f"SELECT {aggregate}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name}",
         use_result_in_snapshot_name=True,
     )
 
