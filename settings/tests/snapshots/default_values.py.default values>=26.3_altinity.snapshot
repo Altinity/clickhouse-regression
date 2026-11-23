@@ -2190,6 +2190,8 @@ output_format_arrow_fixed_string_as_fixed_byte_array = r"""'{"default":"1"}'"""
 
 output_format_arrow_low_cardinality_as_dictionary = r"""'{"default":"0"}'"""
 
+output_format_arrow_max_record_batch_size_bytes = r"""'{"default":"2147483646"}'"""
+
 output_format_arrow_string_as_string = r"""'{"default":"1"}'"""
 
 output_format_arrow_use_64_bit_indexes_for_dictionary = r"""'{"default":"0"}'"""
