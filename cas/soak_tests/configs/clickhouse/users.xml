@@ -4,8 +4,9 @@
     <profiles>
         <!-- Default settings. -->
         <default>
-            <!-- Maximum memory usage for processing single query, in bytes. -->
-            <max_memory_usage>10000000000</max_memory_usage>
+            <!-- Single-query cap. S46 full builds one 8 GiB block; randomString
+                 asks for 16 GiB, and 10 GB rejects that before the CAS write. -->
+            <max_memory_usage>21474836480</max_memory_usage>
 
             <!-- Use cache of uncompressed blocks of data. Meaningful only for processing many of very short queries. -->
             <use_uncompressed_cache>0</use_uncompressed_cache>

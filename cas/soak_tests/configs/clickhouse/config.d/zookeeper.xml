@@ -5,6 +5,9 @@
 		    <host from_env="COORDINATOR_HOST_1"/>
 		    <port>2181</port>
 	    </node>
-        <session_timeout_ms>15000</session_timeout_ms>
+        <!-- 10 min. The image tick is 500 ms, so the server caps a session at
+             10 s unless maxSessionTimeout is raised. An 8 GiB insert stalls
+             past that and the replica goes read-only before the move. -->
+        <session_timeout_ms>600000</session_timeout_ms>
     </zookeeper>
 </yandex>

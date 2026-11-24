@@ -37,6 +37,8 @@ services:
     extends:
       file: ../../../docker-compose/zookeeper-service.yml
       service: zookeeper-alone
+    environment:
+      ZOO_CFG_EXTRA: maxSessionTimeout=600000
 
   clickhouse1:
     extends:
