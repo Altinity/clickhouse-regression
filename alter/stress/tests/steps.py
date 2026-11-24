@@ -454,6 +454,71 @@ def wait_for_mutations_to_finish(
         return False
 
 
+@TestStep(When)
+def wait_for_mutation_parts(
+    self,
+    node,
+    timeout=7200,
+    delay=5,
+    raise_on_timeout=False,
+):
+    """Wait out a mutation whose only remaining part is not created yet.
+
+    The queue records the future merge result in parts_to_do before that part
+    exists. system.mutations then stays unfinished, with an empty fail reason,
+    until the merge commits. Another ALTER in that window is rejected.
+    Stop early when the merge itself has an exception.
+    """
+    query = (
+        "SELECT m.table, m.mutation_id, m.parts_to_do_names, "
+        "q.type, q.new_part_name, q.num_tries, q.last_exception, q.postpone_reason "
+        "FROM system.mutations AS m "
+        "LEFT JOIN system.replication_queue AS q "
+        "ON q.table = m.table AND has(m.parts_to_do_names, q.new_part_name) "
+        "WHERE m.is_done = 0 AND m.latest_fail_reason = '' "
+        "FORMAT Vertical"
+    )
+
+    start_time = time.time()
+    r = None
+
+    with By("querying unfinished mutations and the merges that create their parts"):
+        while time.time() - start_time < timeout:
+            remaining = timeout - (time.time() - start_time)
+            try:
+                r = node.query(
+                    query, no_checks=True, timeout=max(10, min(30, remaining))
+                )
+            except ExpectTimeoutError:
+                time.sleep(delay)
+                continue
+            if r.exitcode != 0:
+                note(f"could not read the replication queue:\n{r.output.strip()}")
+                return False
+            if r.output == "":
+                return True
+            if "last_exception:" in r.output and not _queue_exceptions_empty(r.output):
+                note(f"merge for an unfinished mutation failed:\n{r.output.strip()}")
+                return False
+            time.sleep(delay)
+
+        if r is not None and r.output == "":
+            return True
+        if raise_on_timeout:
+            assert False, error("mutation was still waiting on a merge")
+        note("mutation was still waiting on a merge; continuing")
+        return False
+
+
+def _queue_exceptions_empty(output):
+    """True when every last_exception field in a Vertical result is blank."""
+    for line in output.splitlines():
+        if line.startswith("last_exception:"):
+            if line.split(":", 1)[1].strip():
+                return False
+    return True
+
+
 @TestStep(Finally)
 def log_failing_mutations(self, nodes=None):
     """Log failing mutations."""

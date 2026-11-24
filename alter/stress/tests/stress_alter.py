@@ -344,6 +344,14 @@ def alter_combinations(
                                         )
 
                             with By("making sure that replicas agree"):
+                                # The mutation stays unfinished on every replica
+                                # until one merge commits. Waiting out that merge
+                                # on one replica is enough; the per-node wait
+                                # below only checks that the others caught up.
+                                wait_for_mutation_parts(
+                                    node=self.context.ch_nodes[0],
+                                    raise_on_timeout=False,
+                                )
                                 for node in self.context.ch_nodes:
                                     wait_for_mutations_to_finish(
                                         node=node,
