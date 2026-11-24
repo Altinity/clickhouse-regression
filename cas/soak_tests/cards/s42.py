@@ -79,6 +79,25 @@ def _event_total(snap, name):
     return sum(int(per.get(name, 0)) for per in snap.values())
 
 
+def _join_after_window(threads, stop_deadline, slack_s):
+    """Join threads that may still be inside an open workload window.
+
+    The join starts while the window is open: OPTIMIZE runs 30s in, and the
+    writers keep looping until stop_deadline. slack_s is join_bound_s, how long
+    a thread may live after the window closes. It is longer than query_timeout_s,
+    so one in-flight query that honors its client timeout returns. A thread still
+    alive after that is a hang.
+
+    One shared deadline, so a stuck thread does not add its wait onto the next.
+    """
+    deadline = float(stop_deadline) + float(slack_s)
+    for t in threads:
+        remaining = deadline - time.time()
+        if remaining > 0:
+            t.join(timeout=remaining)
+    return [t for t in threads if t.is_alive()]
+
+
 def _block_counts(node, rows_per_insert):
     txt = node.query(
         f"SELECT intDiv(id, {rows_per_insert}) AS b, count() FROM {_TABLE} GROUP BY b FORMAT TabSeparated"
@@ -278,6 +297,7 @@ class S42(Scenario):
         threads = [threading.Thread(target=writer, daemon=True) for _ in range(int(p["writers"]))] + [
             threading.Thread(target=reader, daemon=True) for _ in range(int(p["readers"]))
         ]
+        window_end = stop_at[0]
         ctx.log(f"S42 leg A: armed workload for {p['workload_s']}s at p={probability[0]}")
         for t in threads:
             t.start()
@@ -286,17 +306,14 @@ class S42(Scenario):
             node.query(f"OPTIMIZE TABLE {_TABLE}", timeout=query_timeout, settings=_settings())
         except Exception as e:
             _record_failure(e)
-        for t in threads:
-            t.join(timeout=float(p["join_bound_s"]))
-        hung = [t for t in threads if t.is_alive()]
+        hung = _join_after_window(threads, window_end, p["join_bound_s"])
         probability[0] = float(p["burst_probability"])
-        stop_at[0] = time.time() + float(p["burst_s"])
+        burst_end = time.time() + float(p["burst_s"])
+        stop_at[0] = burst_end
         burst = [threading.Thread(target=writer, daemon=True) for _ in range(int(p["writers"]))]
         for t in burst:
             t.start()
-        for t in burst:
-            t.join(timeout=float(p["join_bound_s"]))
-        hung += [t for t in burst if t.is_alive()]
+        hung += _join_after_window(burst, burst_end, p["join_bound_s"])
         ev_armed = _cluster_events(cl)
         armed_delta = {k: _event_total(ev_armed, k) - _event_total(ev_before, k) for k in _EVENTS}
         result.observations["leg_a"] = {
@@ -306,7 +323,7 @@ class S42(Scenario):
         result.add(
             Verdict.check(
                 "no query hung past its bound",
-                f"every workload thread joins within {p['join_bound_s']}s",
+                f"every workload thread finishes within {p['join_bound_s']}s after its window closes",
                 f"{len(hung)} still alive",
                 not hung,
             )

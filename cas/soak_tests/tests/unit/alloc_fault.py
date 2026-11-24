@@ -1,9 +1,12 @@
 import socket
+import threading
+import time
 import urllib.error
 
 from testflows.core import *
 from testflows.asserts import error
 
+from cas.soak_tests.cards.s42 import _join_after_window
 from cas.soak_tests.oracle.alloc_fault import classify_armed_exception
 from cas.soak_tests.steps.http import QueryError
 
@@ -57,6 +60,37 @@ def real_server_exception_stays_other(self):
         "but its object is missing. (FILE_DOESNT_EXIST)"
     )
     assert classify_armed_exception(_query_error(body)) == "other", error()
+
+
+@TestScenario
+@Name("join waits out the open window plus the slack")
+def join_waits_out_the_open_window_plus_the_slack(self):
+    # The window is still open when the join starts. Slack alone used to be the
+    # whole wait, so a thread still doing its workload was reported hung.
+    stop = time.time() + 0.4
+    finished = threading.Event()
+
+    def work():
+        while time.time() < stop:
+            time.sleep(0.02)
+        finished.set()
+
+    thread = threading.Thread(target=work)
+    thread.start()
+    hung = _join_after_window([thread], stop, 1.0)
+    assert hung == [], error()
+    assert finished.is_set(), error()
+
+
+@TestScenario
+@Name("a thread past the slack stays hung")
+def a_thread_past_the_slack_stays_hung(self):
+    stop = time.time()
+    thread = threading.Thread(target=lambda: time.sleep(30), daemon=True)
+    thread.start()
+    hung = _join_after_window([thread], stop, 0.2)
+    assert hung == [thread], error()
+    assert thread.is_alive(), error()
 
 
 @TestFeature
