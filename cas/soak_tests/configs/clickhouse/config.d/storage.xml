@@ -65,6 +65,21 @@
                 </volumes>
                 <move_factor>0.1</move_factor>
             </ca_local>
+            <!-- S46. No per-part cap, so a multi-gigabyte insert stays on local1
+                 and the later MOVE is the publication that has to survive the
+                 90s CAS write budget. ca_local's 4 MiB cap would upload it
+                 during the INSERT instead. -->
+            <local_then_ca>
+                <volumes>
+                    <hot>
+                        <disk>local1</disk>
+                    </hot>
+                    <cas>
+                        <disk>ca</disk>
+                    </cas>
+                </volumes>
+                <move_factor>0.1</move_factor>
+            </local_then_ca>
             <ca_local3>
                 <volumes>
                     <hot>
