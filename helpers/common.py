@@ -820,14 +820,20 @@ def restart_clickhouse_and_tail_log(
         node.stop_clickhouse(safe=False)
 
     with And("I get the current log size"):
-        cmd = node.cluster.command(None, f"stat -c %s {logs_dir}/clickhouse-server.log")
+        # Host-side `stat`: GNU/Linux uses -c %s, BSD/macOS uses -f %z
+        stat_fmt = "-f %z" if platform.system() == "Darwin" else "-c %s"
+        cmd = node.cluster.command(
+            None, f"stat {stat_fmt} {logs_dir}/clickhouse-server.log"
+        )
         logsize = cmd.output.split(" ")[0].strip()
 
     with And("I start ClickHouse back up"):
         node.start_clickhouse(user=user, wait_healthy=wait_healthy)
 
     with And("I detect if the log file was rotated during restart"):
-        cmd = node.cluster.command(None, f"stat -c %s {logs_dir}/clickhouse-server.log")
+        cmd = node.cluster.command(
+            None, f"stat {stat_fmt} {logs_dir}/clickhouse-server.log"
+        )
         current_logsize = cmd.output.split(" ")[0].strip()
         rotated = int(current_logsize) < int(logsize)
 
