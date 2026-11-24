@@ -394,6 +394,20 @@ def check_is_fips_clickhouse_build(test):
     return "AWS-LC-FIPS" in openssl_ver
 
 
+def check_is_binary_build(test):
+    """Return True for a `*_binary` CI build (no ThinLTO, so compiled with -fPIC).
+
+    Use this instead of matching ``_binary`` in the binary path: CI downloads
+    the build to ``binaries/clickhouse``."""
+    node = getattr(test.context, "node", None) or current().context.node
+    output = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'CXX_FLAGS' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output
+    return "-fPIC" in output
+
+
 def check_is_altinity_build(node=None):
     """
     Check if the build is from Altinity.
