@@ -1154,15 +1154,20 @@ def check_consistency(
 
                     for projection in outlier_projections:
                         node.query(
-                            f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection}"
+                            f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection}",
+                            **alter_query_args,
                         )
                     for index in outlier_indexes:
                         node.query(
-                            f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index}"
+                            f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index}",
+                            **alter_query_args,
                         )
                     for column in outlier_columns:
                         drop_column_and_dependent_indexes(
-                            node=node, table_name=table_name, column_name=column
+                            node=node,
+                            table_name=table_name,
+                            column_name=column,
+                            **alter_query_args,
                         )
 
 
