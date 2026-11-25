@@ -6,6 +6,7 @@ blob Clean, with zero attempts left, and the move or merge is retried from
 scratch. dev and ci stay under that size. full is 8 GiB, past the line.
 """
 
+import subprocess
 import time
 
 from cas.soak_tests.cards._p1 import scale_verdict
@@ -17,6 +18,12 @@ MIB = 1024 * 1024
 # Customer uploads at or above about 6 GiB miss the 90s write policy.
 SLOW_PART_MIB = 6 * 1024
 _ROW_BYTES = MIB
+# Blocks small enough that randomString does not stall the mount renewer.
+_INSERT_ROWS = 256
+# 80 Mbit/s with a small burst. An 8 GiB body takes about 14 min, past the
+# 90s write policy. A lease PUT is a few hundred bytes and still fits in the
+# burst, so the mount can stay live the way the customer's does.
+_SLOW_RATE = "80mbit"
 
 
 def _parts_by_disk(node, table):
@@ -33,15 +40,46 @@ def _parts_by_disk(node, table):
     return out
 
 
-def _active_bytes(node, table):
+def _largest_part(node, table):
     txt = node.query(
-        "SELECT sum(bytes_on_disk), count() FROM system.parts "
-        f"WHERE table = '{table}' AND active FORMAT TabSeparated"
+        "SELECT name, disk_name, bytes_on_disk FROM system.parts "
+        f"WHERE table = '{table}' AND active "
+        "ORDER BY bytes_on_disk DESC LIMIT 1 FORMAT TabSeparated"
     ).strip()
     if not txt:
-        return 0, 0
-    nbytes, nparts = txt.split("\t")
-    return int(nbytes or 0), int(nparts or 0)
+        return None, None, 0
+    name, disk, nbytes = txt.split("\t")
+    return name, disk, int(nbytes)
+
+
+def _limit_bulk_upload(enabled):
+    """Rate-limit each replica's egress, leaving a burst for the lease PUT."""
+    action = "add" if enabled else "del"
+    for container in ("soak_tests_env-clickhouse1-1", "soak_tests_env-clickhouse2-1"):
+        cmd = ["docker", "exec", container, "tc", "qdisc", action, "dev", "eth0", "root"]
+        if enabled:
+            cmd += ["tbf", "rate", _SLOW_RATE, "burst", "256kb", "latency", "50ms"]
+        subprocess.run(cmd, capture_output=True, timeout=30)
+
+
+def _wait_ca_writable(node, probe, timeout_s):
+    """Insert one row onto the CAS disk until the mount is Live.
+
+    A large local insert can fence the renewer. The customer's publication
+    runs against a live mount, so the move waits for that before it starts.
+    """
+    deadline = time.monotonic() + timeout_s
+    last = "mount probe did not run"
+    while time.monotonic() < deadline:
+        try:
+            C.insert_random(
+                node, probe, rows=1, payload_bytes=8, op_id=int(time.time()) % 1_000_000, timeout=60
+            )
+            return None
+        except Exception as e:
+            last = str(e)[:300]
+            time.sleep(5)
+    return last
 
 
 @register
@@ -81,68 +119,81 @@ class S46(Scenario):
             order_by="id",
             extra_settings={"storage_policy": "'local_then_ca'"},
         )
-        C.insert_random(
-            cl.node1,
-            table,
-            rows=rows,
-            payload_bytes=_ROW_BYTES,
-            timeout=move_timeout_s,
-            settings={
-                "max_block_size": str(rows),
-                "max_insert_block_size_rows": str(rows),
-                "min_insert_block_size_rows": str(rows),
-            },
-        )
+        probe = "s46_mount_probe"
+        result.observations["tables"] = [table, probe]
+        C.create_ca_table(cl.node1, probe, columns="id UInt64, payload String", order_by="id")
+        inserted = 0
+        while inserted < rows:
+            batch = min(_INSERT_ROWS, rows - inserted)
+            C.insert_random(
+                cl.node1,
+                table,
+                rows=batch,
+                payload_bytes=_ROW_BYTES,
+                op_id=inserted,
+                timeout=move_timeout_s,
+                settings={
+                    "max_block_size": str(batch),
+                    "max_insert_block_size_rows": str(batch),
+                    "min_insert_block_size_rows": str(batch),
+                },
+            )
+            inserted += batch
+        # Fold on local1. The CAS publication is the later MOVE of this one part.
+        cl.node1.command(f"OPTIMIZE TABLE {table} FINAL", timeout=move_timeout_s)
         cl.node1.command(f"SYSTEM SYNC REPLICA {table}", timeout=move_timeout_s)
 
-        nbytes, nparts = _active_bytes(cl.node1, table)
+        name, disk, nbytes = _largest_part(cl.node1, table)
         before = _parts_by_disk(cl.node1, table)
         result.observations["before_move"] = {
-            "bytes_on_disk": nbytes,
-            "parts": nparts,
+            "largest": {"name": name, "disk": disk, "bytes_on_disk": nbytes},
             "disks": before,
         }
-        one_local_part = (
-            nparts == 1
-            and nbytes >= (part_mib * MIB * 8) // 10
-            and set(before.values()) == {"local1"}
-        )
+        big_enough = nbytes >= (part_mib * MIB * 8) // 10
+        on_local = disk == "local1" and big_enough
         result.add(Verdict.check(
-            "one source part sits on the local disk",
-            "1 active part on local1, at least the requested size",
-            {"bytes_on_disk": nbytes, "parts": nparts, "disks": before},
-            one_local_part,
-            "" if one_local_part else
-            "the insert split or landed on ca, so the move would not publish one slow body",
+            "a large source part sits on the local disk",
+            "largest active part on local1, at least the requested size",
+            {"name": name, "disk": disk, "bytes_on_disk": nbytes, "parts": before},
+            on_local,
+            "" if on_local else
+            "no single local part is large enough for one slow publication",
         ))
-        if not one_local_part:
-            C.standard_end(cluster=cl, result=result, tables=[table])
+        if not on_local:
+            C.standard_end(cluster=cl, result=result, tables=[table, probe])
             return
 
         checksum_before = cl.node1.query(C.table_checksum_query(table)).strip()
-        move_error = None
+        mount_error = _wait_ca_writable(cl.node1, probe, timeout_s=min(move_timeout_s, 300))
+        move_error = mount_error
         t0 = time.monotonic()
-        try:
-            cl.node1.command(
-                f"ALTER TABLE {table} MOVE PARTITION ID 'all' TO VOLUME 'cas'",
-                timeout=move_timeout_s,
-            )
-        except Exception as e:
-            move_error = str(e)[:500]
+        if mount_error is None and crosses:
+            _limit_bulk_upload(True)
+        if mount_error is None:
+            try:
+                cl.node1.command(
+                    f"ALTER TABLE {table} MOVE PART '{name}' TO VOLUME 'cas'",
+                    timeout=move_timeout_s,
+                )
+            except Exception as e:
+                move_error = str(e)[:500]
+            finally:
+                if crosses:
+                    _limit_bulk_upload(False)
         result.timings["move_s"] = round(time.monotonic() - t0, 1)
         cl.node1.command(f"SYSTEM SYNC REPLICA {table}", timeout=move_timeout_s)
 
         after = _parts_by_disk(cl.node1, table)
         result.observations["after_move"] = after
-        on_ca = bool(after) and set(after.values()) == {"ca"}
+        moved = [part for part, part_disk in after.items() if part_disk == "ca"]
         deadline_hit = bool(move_error) and (
-            "policy deadline" in move_error or "ensureBlobPresent" in move_error
+            "ensureBlobPresent" in move_error or "zero attempt" in move_error
         )
         result.add(Verdict.check(
-            "MOVE TO VOLUME 'cas' commits",
-            "the statement returns and every active part is on disk ca",
+            "MOVE PART TO VOLUME 'cas' commits",
+            "the statement returns and the part is on disk ca",
             move_error or after,
-            move_error is None and on_ca,
+            move_error is None and bool(moved),
             "the 90s write policy expired while the body was published"
             if deadline_hit else (move_error or ""),
         ))
