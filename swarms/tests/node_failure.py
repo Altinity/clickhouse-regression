@@ -12,6 +12,17 @@ from testflows.asserts import error
 from helpers.common import getuid, check_clickhouse_version
 
 
+def counted_rows(output):
+    """Sum the count column of a ``SELECT count(), hostName()`` result."""
+    total = 0
+    for line in output.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        total += int(line.split()[0])
+    return total
+
+
 @TestStep(Given)
 def setup_iceberg_table(
     self,
@@ -71,6 +82,7 @@ def run_long_query(
     expected_messages=None,
     delay_before_execution=None,
     expected_result=None,
+    expected_row_count=None,
     max_threads=1,
     lock_object_storage_task_distribution_ms=None,
 ):
@@ -81,6 +93,9 @@ def run_long_query(
     allow-list of acceptable outcomes. This is used when the failure is
     inherently racy: stopping a swarm node mid-query can surface either a
     graceful cancellation or an abrupt connection drop, and both are valid.
+    Exit code 0 is also valid when the remaining node finishes the query. Pass
+    ``expected_row_count`` to check that a successful result still has every row.
+    The hostname is not checked, because the restarted node is chosen at random.
     """
     if delay_before_execution:
         time.sleep(delay_before_execution)
@@ -108,7 +123,12 @@ def run_long_query(
         assert result.exitcode in expected_exitcodes, error(
             f"Expected exit code in {expected_exitcodes}, but got: {result.exitcode}"
         )
-        if expected_messages:
+        if result.exitcode == 0 and expected_row_count is not None:
+            total = counted_rows(result.output)
+            assert total == expected_row_count, error(
+                f"Expected {expected_row_count} rows, but got: {result.output}"
+            )
+        elif expected_messages:
             assert any(m in result.output for m in expected_messages), error(
                 f"Expected one of {expected_messages} in output, but got: {result.output}"
             )
@@ -131,7 +151,11 @@ def check_restart_swarm_node(
     cluster_name="static_swarm_cluster",
     node=None,
 ):
-    """Check that swarm query fails if one of the swarm nodes is down during the query execution."""
+    """Restart one swarm node during a query.
+
+    Before 26.1 the query fails. From 26.1 on it may instead finish on the
+    node that stayed up. A successful result must still contain every row.
+    """
     if node is None:
         node = self.context.node
 
@@ -144,20 +168,20 @@ def check_restart_swarm_node(
         )
 
     with Then("run long select from iceberg table and restart random swarm node"):
+        # Stopping the container mid-query is racy. The initiator can cancel
+        # the query (exit 138) or see the connection drop (exit 32, before 26.1).
+        # From 26.1 on the surviving node can also finish the query (exit 0).
+        expected_row_count = None
         if check_clickhouse_version("<26.1")(self):
-            # Stopping the swarm node's container mid-query is racy: the
-            # initiator can either cancel the query gracefully
-            # (QUERY_WAS_CANCELLED, exit 138) or observe the connection drop
-            # abruptly (ATTEMPT_TO_READ_AFTER_EOF, exit 32). Both are valid
-            # node-loss failures, so accept either.
             expected_exitcodes = [138, 32]
             expected_messages = [
                 "DB::Exception: Query was cancelled.",
                 "DB::Exception: Attempt to read after eof",
             ]
         else:
-            expected_exitcodes = [138]
+            expected_exitcodes = [0, 138]
             expected_messages = ["DB::Exception: Query was cancelled."]
+            expected_row_count = row_count
 
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
@@ -165,6 +189,7 @@ def check_restart_swarm_node(
                 clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
                 expected_exitcodes=expected_exitcodes,
                 expected_messages=expected_messages,
+                expected_row_count=expected_row_count,
                 cluster_name=cluster_name,
             )
             Step(
