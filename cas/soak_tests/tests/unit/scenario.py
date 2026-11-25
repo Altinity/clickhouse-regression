@@ -138,12 +138,13 @@ def select_by_priority_and_name(self):
         "S44",
         "S45",
         "S46",
+        "S47",
     }, error()
-    for name in ("S22", "S31", "S36", "S37", "S39", "S41", "S46"):
+    for name in ("S22", "S31", "S36", "S37", "S39", "S41", "S46", "S47"):
         assert select(name)[0].needs_infra is None, error()
         assert "run_inconclusive" not in select(name)[0].run.__code__.co_names, error()
     p1_names = [c.name for c in p1]
-    assert p1_names[-1] == "S46", error()
+    assert p1_names[-1] == "S47", error()
     assert "S32" not in p1_names, error()
     p2 = select("P2")
     assert [c.name for c in p2] == ["S23", "S24", "S25", "S26", "S27", "S32"], error()
@@ -223,6 +224,7 @@ def p1_cards_resolve_params(self):
     from cas.soak_tests.cards.s41 import S41
     from cas.soak_tests.cards.s45 import S45
     from cas.soak_tests.cards.s46 import S46, SLOW_PART_MIB
+    from cas.soak_tests.cards.s47 import S47
 
     assert S15().resolve_params("dev")["parts"] == 8, error()
     assert S16().resolve_params("dev")["cycles"] == 4, error()
@@ -244,8 +246,13 @@ def p1_cards_resolve_params(self):
     assert S46().resolve_params("dev")["part_mib"] < S46().resolve_params("ci")["part_mib"], error()
     assert S46().resolve_params("ci")["part_mib"] < SLOW_PART_MIB, error()
     assert S46().resolve_params("full")["part_mib"] >= SLOW_PART_MIB, error()
-    for card in (S22(), S31(), S36(), S37(), S39(), S41(), S46()):
+    for card in (S22(), S31(), S36(), S37(), S39(), S41(), S46(), S47()):
         assert card.needs_infra is None, error()
+    for scale in ("dev", "ci", "full"):
+        params = S47().resolve_params(scale)
+        assert params["text_indexes"] >= 8, error()
+        assert params["tokens"] > 0, error()
+        assert params["parts"] >= 2, error()
 
 
 class _FakeNode:

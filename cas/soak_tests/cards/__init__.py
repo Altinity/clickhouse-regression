@@ -24,6 +24,7 @@ from cas.soak_tests.cards import s43  # noqa: F401
 from cas.soak_tests.cards import s44  # noqa: F401
 from cas.soak_tests.cards import s45  # noqa: F401
 from cas.soak_tests.cards import s46  # noqa: F401
+from cas.soak_tests.cards import s47  # noqa: F401
 from cas.soak_tests.oracle.scenario import all_scenarios, select
 
 __all__ = ["all_scenarios", "select"]
