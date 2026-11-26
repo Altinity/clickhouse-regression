@@ -41,11 +41,48 @@ alter_query_args = {
         # running. The mutation finishes and the ALTER can be retried.
         "not finished yet",
         # A replica that has not applied earlier alters refuses the next one
-        # (Code 517). The error text says to retry.
+        # (Code 517). Sleeping and resending does not apply those alters.
+        # replica_alter_args waits for them, then the step retries the ALTER.
+        # Callers that still pass this dict directly keep the sleep-and-retry.
         "CANNOT_ASSIGN_ALTER",
         "not up to date with common metadata",
     ],
 }
+
+
+def replica_alter_args(node, table_name, timeout=None, **overrides):
+    """Wait until this replica can take another ALTER, then return query args.
+
+    Code 517 means earlier alters are still unapplied. Wait for the mutations
+    on this table, then sync the replica. The returned args do not sleep and
+    resend that error. The step's own 900s retry calls this again, and the
+    ALTER fails if the replica is still behind when that budget ends.
+    """
+    budget = step_retry_timeout if timeout is None else timeout
+    started = time.time()
+    wait_for_mutations_to_finish(
+        node=node,
+        table_name=table_name,
+        timeout=budget,
+        raise_on_timeout=False,
+    )
+    remaining = budget - (time.time() - started)
+    if remaining > 0:
+        sync_replica(
+            node=node,
+            table_name=table_name,
+            timeout=remaining,
+            raise_on_timeout=False,
+            no_checks=True,
+        )
+    args = dict(alter_query_args)
+    args["messages_to_retry"] = [
+        message
+        for message in args["messages_to_retry"]
+        if message not in ("CANNOT_ASSIGN_ALTER", "not up to date with common metadata")
+    ]
+    args.update(overrides)
+    return args
 
 
 @TestStep
@@ -648,23 +685,15 @@ def add_random_projection(self, safe=True):
                 for table_name in self.context.table_names:
                     node = get_random_node_for_table(table_name=table_name)
 
-                    if safe:
-                        wait_for_mutations_to_finish(
-                            node=node,
-                            command_like="PROJECTION",
-                            timeout=60,
-                            raise_on_timeout=False,
-                        )
-
                     node.query(
                         f"ALTER TABLE {table_name} ADD PROJECTION IF NOT EXISTS {projection_name} (SELECT {column_name}, key ORDER BY {column_name})",
                         exitcode=0,
-                        **alter_query_args,
+                        **replica_alter_args(node, table_name),
                     )
                     node.query(
                         f"ALTER TABLE {table_name} MATERIALIZE PROJECTION {projection_name}",
                         exitcode=0,
-                        **alter_query_args,
+                        **replica_alter_args(node, table_name),
                     )
 
         if safe:
@@ -695,7 +724,7 @@ def clear_random_projection(self):
             node.query(
                 f"ALTER TABLE {table_name} CLEAR PROJECTION {projection_name} IN PARTITION {partition_name}",
                 exitcode=0,
-                **alter_query_args,
+                **replica_alter_args(node, table_name),
             )
             return
 
@@ -722,9 +751,19 @@ def drop_random_projection(self):
                     exit_messages = {}
                     # One attempt must not consume the whole retry budget. A
                     # replica that is still applying earlier alters holds this
-                    # statement until the client times out (Code 517).
+                    # statement until the client times out (Code 517). The
+                    # wait above is the retry. Do not also sleep and resend.
                     drop_args = dict(alter_query_args)
                     drop_args["timeout"] = 120
+                    drop_args["messages_to_retry"] = [
+                        message
+                        for message in drop_args["messages_to_retry"]
+                        if message
+                        not in (
+                            "CANNOT_ASSIGN_ALTER",
+                            "not up to date with common metadata",
+                        )
+                    ]
                     for table_name in tables:
                         node = get_random_node_for_table(table_name=table_name)
                         wait_for_mutations_to_finish(
@@ -795,7 +834,7 @@ def add_random_index(self, safe=True):
                     node.query(
                         f"ALTER TABLE {table_name} ADD INDEX IF NOT EXISTS {index_name} {column_name} TYPE bloom_filter",
                         exitcode=0,
-                        **alter_query_args,
+                        **replica_alter_args(node, table_name),
                     )
 
         if safe:
@@ -808,7 +847,7 @@ def add_random_index(self, safe=True):
         node.query(
             f"ALTER TABLE {table_name} MATERIALIZE INDEX {index_name}",
             exitcode=0,
-            **alter_query_args,
+            **replica_alter_args(node, table_name),
         )
 
 
@@ -829,17 +868,10 @@ def clear_random_index(self):
         index_name = random.choice(indexes)
         partition_name = get_random_partition_id(node=node, table_name=table_name)
 
-        wait_for_mutations_to_finish(
-            node=node,
-            command_like=index_name,
-            timeout=60,
-            raise_on_timeout=False,
-        )
-
         node.query(
             f"ALTER TABLE {table_name} CLEAR INDEX {index_name} IN PARTITION {partition_name}",
             exitcode=0,
-            **alter_query_args,
+            **replica_alter_args(node, table_name),
         )
         return
 
@@ -864,18 +896,10 @@ def drop_random_index(self):
                     with By("selecting a random node that knows about the table"):
                         node = get_random_node_for_table(table_name=table_name)
 
-                    with And("waiting for any other mutations on that index to finish"):
-                        wait_for_mutations_to_finish(
-                            node=node,
-                            command_like=index_name,
-                            timeout=60,
-                            raise_on_timeout=False,
-                        )
-
                     with And("dropping the index"):
                         r = node.query(
                             f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index_name}",
-                            **alter_query_args,
+                            **replica_alter_args(node, table_name),
                         )
                         exit_codes[table_name] = r.exitcode
 
@@ -1155,19 +1179,19 @@ def check_consistency(
                     for projection in outlier_projections:
                         node.query(
                             f"ALTER TABLE {table_name} DROP PROJECTION IF EXISTS {projection}",
-                            **alter_query_args,
+                            **replica_alter_args(node, table_name),
                         )
                     for index in outlier_indexes:
                         node.query(
                             f"ALTER TABLE {table_name} DROP INDEX IF EXISTS {index}",
-                            **alter_query_args,
+                            **replica_alter_args(node, table_name),
                         )
                     for column in outlier_columns:
                         drop_column_and_dependent_indexes(
                             node=node,
                             table_name=table_name,
                             column_name=column,
-                            **alter_query_args,
+                            **replica_alter_args(node, table_name),
                         )
 
 
