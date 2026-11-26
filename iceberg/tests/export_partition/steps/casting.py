@@ -167,11 +167,22 @@ LOSSY_CAST_CASES = (
         values="(4294967296, 2020)",
         allow_lossy_cast=True,
     ),
+    # From 26.8 (Altinity/ClickHouse#2878): no setting, EXPORT casts like INSERT SELECT.
+    CastCase(
+        name="UInt64 narrows to Int32 by default",
+        source_columns="id UInt64, year UInt32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values="(4294967296, 2020)",
+    ),
 )
 
 # Values outside the destination signed range must follow the same INSERT SELECT
-# and EXPORT PARTITION lossy-cast rules (reject by default, truncate in lockstep
-# when ``export_merge_tree_part_allow_lossy_cast = 1``).
+# and EXPORT PARTITION lossy-cast rules. Before 26.8: reject by default, truncate
+# in lockstep when ``export_merge_tree_part_allow_lossy_cast = 1``. From 26.8
+# (Altinity/ClickHouse#2878) the setting is obsolete and EXPORT always truncates
+# like INSERT SELECT: the ``without allow_lossy_cast`` cases are skipped and the
+# ``by default`` cases run instead (gated in ``iceberg/regression.py``).
 OUT_OF_BOUNDS_CAST_CASES = (
     CastCase(
         name="Int64 above INT32_MAX rejected without allow_lossy_cast",
@@ -240,6 +251,28 @@ OUT_OF_BOUNDS_CAST_CASES = (
         ),
         allow_lossy_cast=True,
         order_by="id",
+    ),
+    # From 26.8 (Altinity/ClickHouse#2878): no setting, EXPORT casts like INSERT SELECT.
+    CastCase(
+        name="Int64 above INT32_MAX by default",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=f"({_INT32_MAX + 1}, 2020)",
+    ),
+    CastCase(
+        name="Int64 below INT32_MIN by default",
+        source_columns="id Int64, year Int32",
+        dest_columns="id Int32, year Int32",
+        partition_by="year",
+        values=f"({_INT32_MIN - 1}, 2020)",
+    ),
+    CastCase(
+        name="UInt64 above INT64_MAX by default",
+        source_columns="id UInt64, year Int32",
+        dest_columns="id Int64, year Int32",
+        partition_by="year",
+        values=f"({_INT64_MAX + 1}, 2020)",
     ),
 )
 

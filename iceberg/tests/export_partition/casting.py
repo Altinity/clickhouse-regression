@@ -3,8 +3,10 @@
 PR 1779 makes ``EXPORT PARTITION`` / ``EXPORT PART`` apply the same automatic
 column casts as ``INSERT INTO <iceberg> SELECT * FROM <source>`` when the
 source and destination column types differ positionally
-(``canBeSafelyCast`` in ``src/DataTypes/Utils.cpp``). Lossy casts require
-``export_merge_tree_part_allow_lossy_cast = 1``.
+(``canBeSafelyCast`` in ``src/DataTypes/Utils.cpp``). Before 26.8, lossy casts
+require ``export_merge_tree_part_allow_lossy_cast = 1``. From 26.8
+(Altinity/ClickHouse#2878) that setting is obsolete and EXPORT always casts
+like INSERT SELECT, wrapping out-of-range values.
 
 ## Test pattern (every scenario)
 
@@ -22,8 +24,9 @@ source and destination column types differ positionally
 * ``safe`` — one scenario per ``canBeSafelyCast`` family whose destination
   uses Iceberg-native types (signed int/long widening, float widening,
   ``* -> String``, nullable/array/map/tuple recursion).
-* ``lossy`` — narrowing casts rejected by default, accepted with
-  ``export_merge_tree_part_allow_lossy_cast``.
+* ``lossy`` — narrowing casts rejected by default before 26.8, accepted with
+  ``export_merge_tree_part_allow_lossy_cast``; always accepted from 26.8
+  (``by default`` cases; the ``without allow_lossy_cast`` cases are skipped).
 * ``out_of_bounds`` — source values outside the Iceberg destination range;
   INSERT SELECT and EXPORT PARTITION must agree on rejection/truncation.
 * ``cisco`` — full DNS schema: MergeTree source, Iceberg-compatible datalake
@@ -149,7 +152,7 @@ def cisco_schema(self, minio_root_user, minio_root_password):
     destination is created with ClickHouse ``CREATE TABLE datalake.\\`ns.t\\```
     using Iceberg-compatible column types (``Int32``/``String``/``Int64``, not
     raw ``UInt*`` / ``LowCardinality``). Lossy casts use
-    ``export_merge_tree_part_allow_lossy_cast = 1``.
+    ``export_merge_tree_part_allow_lossy_cast = 1`` (a no-op from 26.8).
     """
     node = self.context.node
     source_table = f"cisco_src_{getuid()}"

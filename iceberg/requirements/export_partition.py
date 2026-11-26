@@ -251,7 +251,7 @@ RQ_Iceberg_ExportPartition_Casting_LossyCasts = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reject `EXPORT PARTITION` that would require a lossy cast when `export_merge_tree_part_allow_lossy_cast = 0`, and SHALL accept the export (with truncated values matching INSERT SELECT) when the setting is enabled.\n"
+        "Before 26.8, [ClickHouse] SHALL reject `EXPORT PARTITION` that would require a lossy cast when `export_merge_tree_part_allow_lossy_cast = 0`, and SHALL accept the export (with truncated values matching INSERT SELECT) when the setting is enabled. From 26.8 (Altinity/ClickHouse#2878) the setting is obsolete and [ClickHouse] SHALL always accept the export, with truncated values matching INSERT SELECT.\n"
         "\n"
         "**Regression module:** `iceberg.tests.export_partition.casting` (`casting.py`, `lossy`).\n"
         "\n"
@@ -296,7 +296,7 @@ RQ_Iceberg_ExportPartition_SchemaCompatibility_CreateTimeSchemas = Requirement(
         "\n"
         "* **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_match_mode = 'POSITION'` with `export_merge_tree_part_ignore_extra_source_columns = 0`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.\n"
         "* **Name.** Non-partition-key columns MAY differ in name; matching is positional. Partition-key owning columns MUST have the same name at the same position (see `SchemaCompatibility.PartitionKeyNameAndPosition`).\n"
-        "* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.\n"
+        "* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); before 26.8, a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.\n"
         "* **Position.** Swapping a partition-key owning column with a neighbour SHALL be rejected. Swapping equal-typed non-partition-key columns SHALL be accepted under positional matching.\n"
         "* **Default.** Differing `DEFAULT` expressions on an otherwise compatible present column SHALL NOT by themselves reject the export of explicitly inserted values.\n"
         "\n"
@@ -1584,7 +1584,7 @@ version: 1.0
 ### RQ.Iceberg.ExportPartition.Casting.LossyCasts
 version: 1.0
 
-[ClickHouse] SHALL reject `EXPORT PARTITION` that would require a lossy cast when `export_merge_tree_part_allow_lossy_cast = 0`, and SHALL accept the export (with truncated values matching INSERT SELECT) when the setting is enabled.
+Before 26.8, [ClickHouse] SHALL reject `EXPORT PARTITION` that would require a lossy cast when `export_merge_tree_part_allow_lossy_cast = 0`, and SHALL accept the export (with truncated values matching INSERT SELECT) when the setting is enabled. From 26.8 (Altinity/ClickHouse#2878) the setting is obsolete and [ClickHouse] SHALL always accept the export, with truncated values matching INSERT SELECT.
 
 **Regression module:** `iceberg.tests.export_partition.casting` (`casting.py`, `lossy`).
 
@@ -1607,7 +1607,7 @@ version: 1.0
 
 * **Presence.** A column present on only one side SHALL cause a column-count mismatch. Under the default `export_merge_tree_part_schema_match_mode = 'POSITION'` with `export_merge_tree_part_ignore_extra_source_columns = 0`, mismatch in either direction SHALL be rejected with `NUMBER_OF_COLUMNS_DOESNT_MATCH` and SHALL NOT schedule an export.
 * **Name.** Non-partition-key columns MAY differ in name; matching is positional. Partition-key owning columns MUST have the same name at the same position (see `SchemaCompatibility.PartitionKeyNameAndPosition`).
-* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.
+* **Type.** Differing types on a kept positional pair SHALL follow the casting rules (`SafeCasts` / `LossyCasts`); before 26.8, a lossy pair SHALL be rejected unless `export_merge_tree_part_allow_lossy_cast = 1`.
 * **Position.** Swapping a partition-key owning column with a neighbour SHALL be rejected. Swapping equal-typed non-partition-key columns SHALL be accepted under positional matching.
 * **Default.** Differing `DEFAULT` expressions on an otherwise compatible present column SHALL NOT by themselves reject the export of explicitly inserted values.
 

@@ -32,6 +32,7 @@ they live in different layers:
 """
 
 from testflows.core import *
+from testflows.asserts import error
 
 from iceberg.tests.export_partition.steps.common import (
     get_active_part_name,

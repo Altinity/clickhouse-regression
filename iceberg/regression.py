@@ -828,6 +828,32 @@ ffails = {
         "Decimal -> Iceberg decimal requires 26.6 (Altinity/ClickHouse#2157)",
         check_clickhouse_version("<26.6"),
     ),
+    # Altinity/ClickHouse#2878 (backport of ClickHouse/ClickHouse#118596):
+    # from 26.8 an Iceberg table cannot have a UInt64 column, so CREATE TABLE
+    # rejects it. Older builds map UInt64 to Iceberg long.
+    "/iceberg/export partition/: catalog/*/datatypes/*/accepted/*UInt64*": (
+        Skip,
+        "UInt64 is rejected from 26.8 (Altinity/ClickHouse#2878)",
+        check_clickhouse_version(">=26.8"),
+    ),
+    "/iceberg/export partition/: catalog/*/datatypes/*/rejected/*UInt64*": (
+        Skip,
+        "UInt64 is accepted before 26.8 (Altinity/ClickHouse#2878)",
+        check_clickhouse_version("<26.8"),
+    ),
+    # Altinity/ClickHouse#2878: from 26.8 export_merge_tree_part_allow_lossy_cast
+    # is obsolete and EXPORT always casts like INSERT SELECT. The rejection cases
+    # only apply before 26.8; the "by default" cases only from 26.8.
+    "/iceberg/export partition/: catalog/*/casting/*/*without allow_lossy_cast*": (
+        Skip,
+        "allow_lossy_cast is obsolete from 26.8 (Altinity/ClickHouse#2878)",
+        check_clickhouse_version(">=26.8"),
+    ),
+    "/iceberg/export partition/: catalog/*/casting/*/*by default*": (
+        Skip,
+        "EXPORT casts like INSERT SELECT by default from 26.8 (Altinity/ClickHouse#2878)",
+        check_clickhouse_version("<26.8"),
+    ),
     "/iceberg/export partition/: catalog/*/datatypes/*/rejected/* Int8": (
         Skip,
         "Int8 is accepted from 26.6 (Altinity/ClickHouse#2157)",

@@ -16,6 +16,11 @@ ClickHouse -> Iceberg primitive mapping exercised here:
 ``Map(K, V)`` -> ``map``; ``Array(Array(T))`` -> nested Iceberg ``list``;
 ``Nullable(T)`` -> required=false.
 
+From 26.8 (Altinity/ClickHouse#2878, backport of ClickHouse/ClickHouse#118596)
+``UInt32`` -> ``long`` and ``UInt64`` (also inside ``Nullable`` / ``Array``) is
+rejected at ``CREATE TABLE``. The ``accepted`` / ``rejected`` ``UInt64``
+scenarios are gated by version in ``iceberg/regression.py``.
+
 From 26.6 (Altinity/ClickHouse#2157) the switch also maps ``Int8`` /
 ``UInt8`` -> ``int``, ``Bool`` -> ``boolean``, and ``Decimal(p, s)`` with
 ``p <= 38`` -> ``decimal(p, s)``. Those types remain rejected on older
@@ -369,8 +374,9 @@ def accepted_int64(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: UInt32")
 def accepted_uint32(self, minio_root_user, minio_root_password):
-    """ClickHouse UInt32 -> Iceberg int (values pinned to the signed 32-bit
-    range since Iceberg ``int`` is 32-bit signed).
+    """ClickHouse UInt32 -> Iceberg int before 26.8, ``long`` from 26.8
+    (Altinity/ClickHouse#2878). Values stay in the signed 32-bit range so the
+    scenario is valid for both mappings.
     """
     _run_accepted_type(
         self,
@@ -399,11 +405,11 @@ def accepted_uint16(self, minio_root_user, minio_root_password):
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: UInt64")
 def accepted_uint64(self, minio_root_user, minio_root_password):
-    """``UInt64`` maps to Iceberg ``long`` (signed).
+    """``UInt64`` maps to Iceberg ``long`` (signed) before 26.8.
 
-    Currently XFail: values above ``INT64_MAX`` (row 3 uses u64 max) read
-    back as ``-1`` because Iceberg ``long`` cannot represent the full
-    unsigned range.
+    XFail: values above ``INT64_MAX`` (row 3 uses u64 max) read back as
+    ``-1`` because Iceberg ``long`` cannot represent the full unsigned range.
+    Skipped from 26.8, where ``UInt64`` is rejected (see ``rejected: UInt64``).
     """
     _run_accepted_type(
         self,
@@ -858,6 +864,51 @@ def rejected_array_low_cardinality_string(self, minio_root_user, minio_root_pass
     )
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
+@Name("rejected: UInt64")
+def rejected_uint64(self, minio_root_user, minio_root_password):
+    """``UInt64`` is rejected at ``CREATE TABLE`` from 26.8
+    (Altinity/ClickHouse#2878, backport of ClickHouse/ClickHouse#118596):
+    Iceberg has no unsigned 64-bit type.
+    """
+    _run_rejected_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v UInt64",
+        values="(1, 2020, 0), (2, 2020, 9223372036854775807), (3, 2020, 18446744073709551615)",
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
+@Name("rejected: Nullable(UInt64)")
+def rejected_nullable_uint64(self, minio_root_user, minio_root_password):
+    """``Nullable(UInt64)`` is rejected from 26.8 (Altinity/ClickHouse#2878)."""
+    _run_rejected_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Nullable(UInt64)",
+        values="(1, 2020, 0), (2, 2020, NULL), (3, 2020, 42)",
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
+@Name("rejected: Array(UInt64)")
+def rejected_array_uint64(self, minio_root_user, minio_root_password):
+    """``Array(UInt64)`` is rejected from 26.8 (Altinity/ClickHouse#2878)."""
+    _run_rejected_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Array(UInt64)",
+        values="(1, 2020, []), (2, 2020, [1, 2]), (3, 2020, [9223372036854775807])",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Feature entry point
 # ---------------------------------------------------------------------------
@@ -904,6 +955,9 @@ REJECTED_SCENARIOS = (
     rejected_enum8,
     rejected_low_cardinality,
     rejected_array_low_cardinality_string,
+    rejected_uint64,
+    rejected_nullable_uint64,
+    rejected_array_uint64,
 )
 
 
