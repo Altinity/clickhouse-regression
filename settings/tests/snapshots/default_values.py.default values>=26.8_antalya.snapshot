@@ -296,6 +296,8 @@ allow_not_comparable_types_in_order_by = r"""'{"default":"0"}'"""
 
 allow_nullable_tuple_in_extracted_subcolumns = r"""'{"default":"0"}'"""
 
+allow_object_storage_cluster_distributed_join = r"""'{"default":"0"}'"""
+
 allow_prefetched_read_pool_for_local_filesystem = r"""'{"default":"0"}'"""
 
 allow_prefetched_read_pool_for_remote_filesystem = r"""'{"default":"1"}'"""
@@ -1107,6 +1109,8 @@ explain_query_plan_default = r"""'{"default":"pretty"}'"""
 explain_syntax_single_record = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_allow_lossy_cast = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_check_destination_schema_staleness_ms = r"""'{"default":"5000"}'"""
 
 export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
 
