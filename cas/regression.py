@@ -25,7 +25,15 @@ from cas.tests.steps.disk import AWS_S3_DISK_PREFIX, CAS_POLICY_POOL, cas_endpoi
 from cas.tests.steps.pool import cleanup_cas_storage, configure_cas_mc_alias
 
 
-xfails = {}
+xfails = {
+    "/cas/content addressed storage/part indexes/text index merge past the 16 MiB inline cap": [
+        (
+            Fail,
+            "stageManifest rejects the merge when text-index inline files pass 16 MiB: "
+            "total inline exceeds cap 16777216 (LIMIT_EXCEEDED)",
+        )
+    ],
+}
 ffails = {}
 
 

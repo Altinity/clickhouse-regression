@@ -10,6 +10,7 @@ def feature(self):
     # Feature(run=load("cas.tests.export", "feature"))
     Feature(run=load("cas.tests.materialized_view", "feature"))
     Feature(run=load("cas.tests.freeze_isolation", "feature"))
+    Feature(run=load("cas.tests.part_indexes", "feature"))
     # Feature(run=load("cas.tests.partition", "feature"))
     # Feature(run=load("cas.tests.concurrent_attach", "feature"))
     # Feature(run=load("cas.tests.pool_corruption", "feature"))
