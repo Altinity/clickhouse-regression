@@ -68,8 +68,11 @@ lts/
 
 ### regression.py (the only entry point)
 
-`lts/regression.py` resolves the ClickHouse Docker image from `--clickhouse`,
-sets `self.context.clickhouse_image`, and loads each sub-suite feature:
+`lts/regression.py` resolves the ClickHouse Docker image from `--clickhouse`
+(a binary or package is put into the `--base-os` server image, built as
+`lts-clickhouse-server:0-<binary version>` by
+`lts.steps.docker.build_clickhouse_image`), sets
+`self.context.clickhouse_image`, and loads each sub-suite feature:
 
 ```python
 Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
@@ -213,7 +216,8 @@ you change what the suite does.
 
 | Argument | Default | Description |
 |---|---|---|
-| `--clickhouse docker://<image>` | altinityinfra/clickhouse-server:... | ClickHouse image to test |
+| `--clickhouse docker://<image>` | /usr/bin/clickhouse | ClickHouse image to test, or a binary or package (path or URL) put into the `--base-os` image |
+| `--base-os docker://<image>` | altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest | Server image a binary or package is put into |
 | `--odbc-release <tag>` | v1.2.1.20220905 | clickhouse-odbc git tag |
 | `--superset-version <ver>` | 4.1.1 | Apache Superset version |
 | `--clickhouse-driver <name>` | clickhouse-connect | Superset ClickHouse driver |

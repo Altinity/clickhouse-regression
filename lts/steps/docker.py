@@ -95,6 +95,38 @@ def build_runner_image(self, context_dir, tag, build_args=None, log_path=None):
         )
 
 
+@TestStep(Given)
+def build_clickhouse_image(self, binary_path, base_image, tag):
+    """Build ``tag`` from ``base_image`` with ``/usr/bin/clickhouse`` replaced
+    by ``binary_path``.
+
+    The suites run ClickHouse from an image, so a binary or package given with
+    ``--clickhouse`` is put into a server image, which provides
+    ``/entrypoint.sh``, the configuration and the Ubuntu userland the runners
+    need. ``clickhouse-server`` and ``clickhouse-client`` in the image are
+    symlinks to ``/usr/bin/clickhouse``.
+    """
+    context_dir = os.path.join(LTS_DIR, "_instances", "clickhouse_image")
+    shutil.rmtree(context_dir, ignore_errors=True)
+    os.makedirs(context_dir)
+    shutil.copy(binary_path, os.path.join(context_dir, "clickhouse"))
+    with open(os.path.join(context_dir, "Dockerfile"), "w") as f:
+        f.write(
+            "ARG BASE_IMAGE\n"
+            "FROM ${BASE_IMAGE}\n"
+            "COPY clickhouse /usr/bin/clickhouse\n"
+        )
+    try:
+        build_runner_image(
+            context_dir=context_dir,
+            tag=tag,
+            build_args={"BASE_IMAGE": base_image},
+            log_path=os.path.join(LTS_DIR, "_instances", "clickhouse_image.log"),
+        )
+    finally:
+        shutil.rmtree(context_dir, ignore_errors=True)
+
+
 @TestStep(When)
 def run_container(
     self,

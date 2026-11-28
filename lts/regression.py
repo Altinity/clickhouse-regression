@@ -8,8 +8,14 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.cluster import PackageDownloader
 from helpers.common import check_clickhouse_version
+from lts.steps.docker import build_clickhouse_image, pull_image
 from lts.steps.image import check_supported_image, clickhouse_version_from_image
+
+# Server image that a binary or package given with --clickhouse is put into,
+# unless --base-os names another one.
+default_base_image = "altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest"
 
 
 def lts_argparser(parser):
@@ -145,18 +151,36 @@ def regression(
     stress=None,
     with_analyzer=False,
 ):
-    """Run LTS regression suites against a ClickHouse image."""
-    clickhouse_path = cluster_args.get("clickhouse_path", "/usr/bin/clickhouse")
-    if clickhouse_path and str(clickhouse_path).startswith("docker://"):
-        self.context.clickhouse_image = str(clickhouse_path).removeprefix("docker://")
+    """Run LTS regression suites against a ClickHouse image, or against a
+    ClickHouse binary or package put into a server image."""
+    clickhouse_path = str(cluster_args.get("clickhouse_path") or "")
+    if clickhouse_path.startswith("docker://"):
+        self.context.clickhouse_image = clickhouse_path.removeprefix("docker://")
     else:
-        self.context.clickhouse_image = (
-            "altinityinfra/clickhouse-server:0-25.8.16.10001.altinitytest"
-        )
-        note(
-            "--clickhouse docker://<image> was not given, testing the fallback "
-            f"image {self.context.clickhouse_image}"
-        )
+        base_image = str(
+            cluster_args.get("base_os") or default_base_image
+        ).removeprefix("docker://")
+        unsupported = check_supported_image(base_image)
+        if unsupported:
+            fail(unsupported)
+        with Given(
+            "the ClickHouse binary is put into a server image",
+            description=f"{clickhouse_path} into {base_image}",
+        ):
+            package = PackageDownloader(clickhouse_path)
+            if not package.binary_path:
+                fail(f"could not get a clickhouse binary from {clickhouse_path}")
+            if not package.package_version:
+                fail(f"could not read the version of {package.binary_path}")
+            pull_image(image=base_image)
+            self.context.clickhouse_image = (
+                f"lts-clickhouse-server:0-{package.package_version}"
+            )
+            build_clickhouse_image(
+                binary_path=os.path.abspath(package.binary_path),
+                base_image=base_image,
+                tag=self.context.clickhouse_image,
+            )
 
     unsupported = check_supported_image(self.context.clickhouse_image)
     if unsupported:

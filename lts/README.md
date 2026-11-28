@@ -72,7 +72,14 @@ The `--only` paths for the suites are `/lts/clickhouse-odbc/*`,
 `/lts/clickhouse-sqlalchemy/*`, `/lts/clickhouse-jdbc/*`, `/lts/dbeaver/*` and
 `/lts/dbeaver-ui/*`.
 
-Always pass `--clickhouse`. Without it the suites fall back to an old 25.8 image.
+`--clickhouse` also takes a binary or a package, as a path or URL, for example
+a build's `clickhouse-common-static_<version>_amd64.deb`. Its `clickhouse`
+binary replaces `/usr/bin/clickhouse` in a server image, by default
+`altinityinfra/clickhouse-server:0-26.3.13.10001.altinitytest` (choose another
+with `--base-os docker://<image>`), tagged
+`lts-clickhouse-server:0-<binary version>`. The configuration therefore comes
+from the base image. Without `--clickhouse` this is done with
+`/usr/bin/clickhouse` of the host.
 
 The ClickHouse version, which gates version-specific xfails and the Grafana
 version check, comes from `--clickhouse-version` or from the image tag
@@ -84,13 +91,15 @@ version check, comes from `--clickhouse-version` or from the image tag
 ### Common (from `helpers/argparser.argparser`)
 
 - `--clickhouse docker://<image>:<tag>` — ClickHouse Docker image to test
-  against. The `docker://` prefix is required for the orchestrator to forward
-  the image to each sub-suite.
+  against, or a ClickHouse binary or package (path or URL) that is put into a
+  server image (see above).
 - `--clickhouse-version <version>` — overrides the version taken from the
   image tag.
+- `--base-os docker://<image>` — the server image a binary or package is put
+  into.
 - The other common flags from `helpers/argparser.argparser` are accepted but
   ignored, because the LTS suites do not use the cluster helper: `--local`,
-  `--as-binary`, `--base-os`, `--keeper`, `--zookeeper-version`,
+  `--as-binary`, `--keeper`, `--zookeeper-version`,
   `--use-keeper`, `--stress`, `--collect-service-logs`, `--thread-fuzzer`,
   `--with-analyzer`, `--reuse-env` and `--cicd`. Service logs are always
   collected (see Output).
