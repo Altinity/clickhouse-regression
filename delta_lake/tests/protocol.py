@@ -192,7 +192,7 @@ def catalog_managed(self):
         result = try_query(sql=select_ids(self, table) + " FORMAT TabSeparated")
 
     with Then("the read fails"):
-        expect_error(result=result)
+        expect_error(result=result, message="Catalog-managed table")
 
 
 @TestFeature

@@ -162,7 +162,7 @@ def invalid_ranges(self):
         result = try_query(sql=range_sql(plain_source, 0, 1) + " FORMAT TabSeparated")
 
     with Then("the read fails"):
-        expect_error(result=result)
+        expect_error(result=result, message="Change data feed is unsupported")
 
     with When(f"I read a range with {setting} = 0"):
         result = try_query(

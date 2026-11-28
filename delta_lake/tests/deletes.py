@@ -8,7 +8,6 @@ log is hand-written. One file holds ids 0 to 9, and the vector marks rows
 import pyarrow as pa
 from testflows.core import *
 
-from helpers.feature_support import setting_supported
 from delta_lake.requirements.requirements import (
     RQ_SRS_050_ClickHouse_DeltaLake_Read_DeletionVectors,
     RQ_SRS_050_ClickHouse_DeltaLake_Read_Snapshot,
@@ -75,16 +74,15 @@ def readers(self, table):
     sources = [delta_function(self, table.http_url)]
     with By("attaching an engine table"):
         sources.append(create_engine_table(url=table.http_url))
-    if setting_supported("deltaLakeCluster", table="system.table_functions")(self):
-        sources.append(
-            function_call(
-                "deltaLakeCluster",
-                table.http_url,
-                access_key,
-                secret_key,
-                cluster=CLUSTER,
-            )
+    sources.append(
+        function_call(
+            "deltaLakeCluster",
+            table.http_url,
+            access_key,
+            secret_key,
+            cluster=CLUSTER,
         )
+    )
     with By("opening Unity"):
         sources.append(catalog_source(create_database(), table))
     return sources

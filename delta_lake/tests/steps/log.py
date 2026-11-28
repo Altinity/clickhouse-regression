@@ -64,7 +64,7 @@ def z85_encode(data):
 def roaring_bitmap_array(rows):
     """Portable RoaringBitmapArray with the Delta magic, as Delta stores a DV.
 
-    Only array containers are written, which holds up to 4096 rows per
+    Only array containers are written, which hold up to 4096 rows per
     65536-row block. That is enough for these tests.
     """
     by_high = {}
@@ -84,6 +84,8 @@ def _roaring32(values):
     for value in values:
         containers.setdefault(value >> 16, []).append(value & 0xFFFF)
     keys = sorted(containers)
+    for key in keys:
+        assert len(containers[key]) <= 4096, f"{len(containers[key])} values in one array container"
     header = struct.pack("<II", ROARING_NO_RUN_COOKIE, len(keys))
     for key in keys:
         header += struct.pack("<HH", key, len(containers[key]) - 1)
@@ -235,11 +237,16 @@ def commit(self, table, version, actions):
 
 @TestStep(When)
 def inline_dv(self, rows):
-    """A deletion vector descriptor stored in the log (``storageType`` i)."""
+    """A deletion vector descriptor stored in the log (``storageType`` i).
+
+    Z85 encodes 4 bytes at a time, so the bitmap is padded with zeros.
+    ``sizeInBytes`` is the length before padding.
+    """
     bitmap = roaring_bitmap_array(rows)
+    padded = bitmap + b"\x00" * (-len(bitmap) % 4)
     return {
         "storageType": "i",
-        "pathOrInlineDv": z85_encode(bitmap),
+        "pathOrInlineDv": z85_encode(padded),
         "sizeInBytes": len(bitmap),
         "cardinality": len(set(rows)),
     }

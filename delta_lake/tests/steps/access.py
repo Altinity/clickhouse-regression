@@ -147,18 +147,20 @@ def try_engine(self, url, access_key=None, secret_key=None, node=None):
     node = _node(self, node)
     access_key, secret_key = _credentials(self, access_key, secret_key)
     name = f"delta_bad_{getuid()}"
-    result = node.query(
-        _attach_off(self)
-        + "CREATE TABLE "
-        + name
-        + " ENGINE = DeltaLake("
-        + engine_arguments(url, access_key, secret_key)
-        + ")",
-        no_checks=True,
-        retry_count=0,
-    )
-    node.query(f"DROP TABLE IF EXISTS {name}")
-    return result
+    try:
+        return node.query(
+            _attach_off(self)
+            + "CREATE TABLE "
+            + name
+            + " ENGINE = DeltaLake("
+            + engine_arguments(url, access_key, secret_key)
+            + ")",
+            no_checks=True,
+            retry_count=0,
+        )
+    finally:
+        with Finally(f"drop table {name}"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
 
 
 @TestStep(When)
@@ -227,9 +229,8 @@ def expect_show_create(self, table_name, marker, columns, node=None):
     assert marker in show, error(show)
     cursor = -1
     for name, type_name in columns:
-        found = show.find(f"`{name}`", cursor + 1)
+        found = show.find(f"`{name}` {type_name}", cursor + 1)
         assert found > cursor, error(show)
-        assert type_name in show, error(show)
         cursor = found
 
 

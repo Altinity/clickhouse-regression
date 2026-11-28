@@ -42,6 +42,23 @@ Not covered by a scenario, seen while writing them:
   does not exist, `CREATE TABLE` with a column list at an empty location
   succeeds, writes nothing, and leaves a table that cannot be read.
 
+Requirements with no scenario yet (22 of 72):
+
+* Need a backend or catalog this cluster does not have:
+  * `Writes.Backends` and `Writes.AzureIdentity`: GCS and Azure Blob Storage.
+  * `Unity.VendedCredentials`, `Unity.Credentials`, `Unity.ManagedStorage`:
+    a Unity that vends credentials, authenticates the client, and has
+    Databricks managed storage. The local OSS Unity has none of these.
+* Planned, can run on this cluster:
+  * Reads: `Read.VirtualColumns`, `Read.Prewhere`, `Read.WriterFeatures`,
+    `Read.UnreadableFeature`, `Read.VacuumProtocolCheck`.
+  * Schema and protocol: `Schema.Void`, `Protocol.Version`,
+    `Protocol.Statistics`.
+  * Writes: `Writes.Commit`, `Writes.WriterProtocol`, `Writes.AppendOnly`,
+    `Writes.ChangeFeed`, `Writes.DomainMetadata`, `Writes.RowTracking`,
+    `Writes.FileSize`.
+  * Cache and logging: `Cache.Data`, `MetadataLog`.
+
 ---
 
 ## 1. First modules

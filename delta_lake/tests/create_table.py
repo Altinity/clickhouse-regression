@@ -144,7 +144,7 @@ def partition_by_rejected(self):
         _, result = create_new_table(table=table, sql_suffix=" PARTITION BY name")
 
     with Then("the statement fails"):
-        expect_error(result=result)
+        expect_error(result=result, message="doesn't support PARTITION_BY")
 
     with And("the location has no _delta_log"):
         keys = log_keys(table)

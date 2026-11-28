@@ -36,6 +36,7 @@ from delta_lake.tests.steps.query import (
     log_files,
     try_query,
     writes_setting,
+    writes_supported,
 )
 
 COLUMNS = (
@@ -196,13 +197,27 @@ def insert_through_unity(self):
 @Name("mutations are rejected")
 @Requirements(RQ_SRS_050_ClickHouse_DeltaLake_Writes_NoMutation("1.0"))
 def mutations_rejected(self):
-    """DELETE, UPDATE, and ALTER mutations fail and leave the log alone."""
-    setting = writes_setting(self)
+    """DELETE, UPDATE, and ALTER mutations fail and leave the log alone.
+
+    A server without Delta Lake writes has no setting to enable, and the
+    statements must still fail.
+    """
+    setting = writes_setting(self) if writes_supported(self) else None
+    enable = f"SET {setting} = 1; " if setting else ""
     statements = (
-        "DELETE FROM {name} WHERE name = 'Alice'",
-        "UPDATE {name} SET value = 0 WHERE name = 'Alice'",
-        "ALTER TABLE {name} DELETE WHERE name = 'Alice'",
-        "ALTER TABLE {name} UPDATE value = 0 WHERE name = 'Alice'",
+        ("DELETE FROM {name} WHERE name = 'Alice'", "DELETE query is not supported"),
+        (
+            "UPDATE {name} SET value = 0 WHERE name = 'Alice'",
+            "doesn't support lightweight updates",
+        ),
+        (
+            "ALTER TABLE {name} DELETE WHERE name = 'Alice'",
+            "`mutations` is not implemented",
+        ),
+        (
+            "ALTER TABLE {name} UPDATE value = 0 WHERE name = 'Alice'",
+            "`mutations` is not implemented",
+        ),
     )
 
     with Given("a Delta table attached with ENGINE = DeltaLake"):
@@ -212,13 +227,13 @@ def mutations_rejected(self):
     with And("I record the commit files"):
         before = log_files(table=table)
 
-    for statement in statements:
+    for statement, message in statements:
         sql = statement.format(name=name)
-        with When(f"I run {sql} with {setting} = 1"):
-            result = try_query(sql=f"SET {setting} = 1; {sql}")
+        with When(f"I run {enable}{sql}"):
+            result = try_query(sql=f"{enable}{sql}")
 
         with Then("the statement fails"):
-            expect_error(result=result)
+            expect_error(result=result, message=message)
 
         with And("no commit was added"):
             expect_log_unchanged(table=table, before=before)
@@ -261,7 +276,7 @@ def accurate_write_cast(self):
         )
 
     with Then("the insert fails"):
-        expect_error(result=result)
+        expect_error(result=result, message="cannot be safely converted")
 
     with And("no commit was added"):
         expect_log_unchanged(table=table, before=before)

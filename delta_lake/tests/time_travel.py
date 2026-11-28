@@ -99,7 +99,7 @@ def missing_version(self):
         )
 
     with Then("the read fails"):
-        expect_error(result=result)
+        expect_error(result=result, message="end version 99")
 
 
 @TestScenario

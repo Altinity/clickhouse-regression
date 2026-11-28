@@ -15,6 +15,13 @@ def writes_setting(self):
     return "allow_experimental_delta_lake_writes"
 
 
+def writes_supported(self):
+    """The server has a Delta Lake writes setting under either name."""
+    return setting_supported("allow_delta_lake_writes")(self) or setting_supported(
+        "allow_experimental_delta_lake_writes"
+    )(self)
+
+
 def kernel_setting(self):
     """``allow_delta_kernel_rs`` from 26.8, the experimental name before."""
     if setting_supported("allow_delta_kernel_rs")(self):
