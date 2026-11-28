@@ -79,6 +79,7 @@ on:
           - clickhouse_keeper_failover
           - data_types
           - datetime64_extended_range
+          - delta_lake
           - disk_level_encryption
           - dns
           - engines
@@ -2410,6 +2411,22 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: hive_partitioning
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  delta_lake:
+    if: ${{ inputs.suite == 'delta_lake' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: delta_lake
       timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
