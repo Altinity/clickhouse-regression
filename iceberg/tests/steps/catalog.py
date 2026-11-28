@@ -150,6 +150,25 @@ def create_glue_catalog(
 
 
 @TestStep(Given)
+def start_unity_catalog(self, timeout=1800):
+    """Start ``unity-catalog`` and wait until it is healthy.
+
+    The service is in the ``unity`` compose profile, so the cluster neither
+    pulls nor starts it. The first call starts it, and later calls do nothing.
+    """
+    cluster = self.context.cluster
+    if getattr(cluster, "unity_catalog_started", False):
+        return
+    cluster.command(
+        None,
+        f"{cluster.docker_compose} --profile unity up -d --wait unity-catalog",
+        timeout=timeout,
+        exitcode=0,
+    )
+    cluster.unity_catalog_started = True
+
+
+@TestStep(Given)
 def create_unity_catalog(
     self,
     s3_access_key_id,
@@ -163,6 +182,8 @@ def create_unity_catalog(
     """Create a PyIceberg client for Unity's Iceberg REST endpoint."""
     if name is None:
         name = f"unity_catalog_{getuid()}"
+
+    start_unity_catalog()
 
     try:
         catalog = load_catalog(

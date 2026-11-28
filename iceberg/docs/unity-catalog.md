@@ -6,7 +6,9 @@ The Iceberg suite can run its existing scenarios against a local Unity Catalog. 
 
 Released Unity Catalog images serve Iceberg REST as read-only. Create, commit, and drop exist in source after the v0.6.0 release, so the suite uses its own image.
 
-The image is `altinityinfra/unity-catalog:e648169`, built from [unitycatalog/unitycatalog](https://github.com/unitycatalog/unitycatalog) commit `e64816917eca9f3185e47a2b96351b0ad3a82f28`. The Dockerfile and the build command are in `docker/image/unity-catalog/`. The server configuration is `unity-catalog.properties` in `iceberg_env` and `iceberg_env_arm64`, mounted at runtime.
+The image is [`altinityinfra/unity-catalog:e648169`](https://hub.docker.com/r/altinityinfra/unity-catalog/tags), published for `linux/amd64` and `linux/arm64`, and pinned in both compose files by its multi-arch digest. It is built from [unitycatalog/unitycatalog](https://github.com/unitycatalog/unitycatalog) commit `e64816917eca9f3185e47a2b96351b0ad3a82f28`. The Dockerfile and the build command are in `docker/image/unity-catalog/`. The server configuration is `unity-catalog.properties` in `iceberg_env` and `iceberg_env_arm64`, mounted at runtime.
+
+The image is about 3.3 GB, so `unity-catalog` is in the `unity` compose profile. The cluster neither pulls nor starts it. The first Unity scenario calls `start_unity_catalog` (`tests/steps/catalog.py`), which runs `up -d --wait unity-catalog` with that profile. Runs below 26.10, where every Unity scenario is skipped, never download the image.
 
 `docker/image/unity-catalog/minio-static-credentials.patch` changes the stock server in three ways:
 
@@ -44,10 +46,10 @@ The same Unity server can hold Delta tables, and ClickHouse Unity v2 can read De
 
 | Gap | What happens |
 | --- | --- |
-| `TIME` columns | Unity returns 400, `Iceberg type TIME is not supported`. Every scenario whose schema has a `TIME` column is xfailed: predicate push down, datatypes, dot separated column names, and nested datatypes above one column. |
+| `TIME` columns | Unity returns 400, `Iceberg type TIME is not supported`. With the Unity catalog, predicate push down, datatypes, dot separated column names, and nested datatypes leave `TIME` out of their schemas, and the rest of each scenario runs. |
 | `DROP TABLE` | Privilege check returns code 497. After `GRANT DROP`, the drop returns code 48 on 26.10 ([ClickHouse#124438](https://github.com/ClickHouse/ClickHouse/issues/124438)). Xfailed below 26.11. |
 | Position-delete re-register | The test calls Iceberg REST `POST .../register`. OSS Unity does not implement that route and returns 404. Xfailed. |
-| Table location | Unity stores each table at `s3://warehouse/data/<namespace>/<table>` instead of `s3://warehouse/data`. Tests that read the path with `icebergS3` have to use `table.location()`. |
+| Table location | Unity stores each table at `s3://warehouse/data/<namespace>/<table>` instead of `s3://warehouse/data`. Tests that read the path with `icebergS3`, `iceberg`, or `s3` build it from `table.location()`. |
 | Drop and recreate | Unity drops a table without deleting its files, and the recreated table gets the same location. `icebergS3` on that path still sees the old metadata, so `recreate table` is xfailed. |
 | Antalya-only features | `native create` and the metadata cache tests skip on non-Antalya builds. No Antalya build is 26.10 or newer yet, so their Unity modes have not run. The same holds for `export partition`. |
 

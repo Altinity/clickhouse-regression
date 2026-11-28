@@ -489,46 +489,12 @@ xfails = {
             check_clickhouse_version(">=26.1"),
         )
     ],
-    "/iceberg/iceberg engine/unity catalog/predicate push down/check input format parquet filter push down": [
-        (
-            Error,
-            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
-        )
-    ],
-    "/iceberg/iceberg engine/unity catalog/predicate push down/check input format parquet filter push down/*": [
-        (
-            Error,
-            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
-        )
-    ],
     "/iceberg/iceberg engine/unity catalog/rbac/drop table privilege": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/124438",
             check_clickhouse_version("<26.11"),
         )
-    ],
-    "/iceberg/iceberg engine/unity catalog/datatypes/data types check where": [
-        (
-            Error,
-            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
-        )
-    ],
-    "/iceberg/iceberg engine/unity catalog/dot separated column names/all datatypes with dot separated columns": [
-        (
-            Error,
-            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
-        )
-    ],
-    "/iceberg/iceberg engine/unity catalog/nested datatypes/number of columns ??*": [
-        (
-            Error,
-            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
-        ),
-        (
-            Fail,
-            "Unity Catalog rejects the scenario schema: BadRequestException: Iceberg type TIME is not supported by Unity Catalog",
-        ),
     ],
     "/iceberg/icebergS3 table function/unity catalog/icebergS3 table function/recreate table*": [
         (

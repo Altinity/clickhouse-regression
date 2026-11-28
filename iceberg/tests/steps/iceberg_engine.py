@@ -213,6 +213,8 @@ def create_experimental_iceberg_database_with_unity_catalog(
     if node is None:
         node = self.context.node
 
+    catalog_steps.start_unity_catalog()
+
     if database_name is None:
         database_name = "iceberg_database_" + getuid()
 
@@ -531,8 +533,10 @@ def check_values_in_system_tables(self, table_name, database):
                 full_engine == "Iceberg(\\'http://minio:9000/warehouse/data/\\')"
             ), error()
         elif self.context.catalog == "unity":
-            assert full_engine.startswith(
-                "Iceberg(\\'http://minio:9000/warehouse/data/"
+            namespace, table = table_name.split(".", 1)
+            assert (
+                full_engine
+                == f"Iceberg(\\'http://minio:9000/warehouse/data/{namespace}/{table}/\\', \\'admin\\', \\'[HIDDEN]\\')"
             ), error(full_engine)
         else:
             assert False, f"Unsupported catalog type: {self.context.catalog}"

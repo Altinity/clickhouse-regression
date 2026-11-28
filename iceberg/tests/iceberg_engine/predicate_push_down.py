@@ -132,8 +132,11 @@ def check_input_format_parquet_filter_push_down(
         )
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
+    # Unity Catalog rejects the Iceberg TIME type.
+    skipped = {"time"} if self.context.catalog == "unity" else set()
+
     with And("define table schema"):
-        iceberg_schema = Schema(
+        fields = [
             NestedField(field_id=1, name="string", field_type=StringType()),
             NestedField(field_id=2, name="boolean", field_type=BooleanType()),
             NestedField(field_id=3, name="integer", field_type=IntegerType()),
@@ -154,7 +157,8 @@ def check_input_format_parquet_filter_push_down(
                 name="fixed",
                 field_type=FixedType(length=16),
             ),
-        )
+        ]
+        iceberg_schema = Schema(*[f for f in fields if f.name not in skipped])
 
     with And("create unpartitioned and unsorted table"):
         table = catalog_steps.create_iceberg_table(
@@ -203,6 +207,9 @@ def check_input_format_parquet_filter_push_down(
             }
             for i in range(length)
         ]
+        data = [
+            {k: v for k, v in row.items() if k not in skipped} for row in data
+        ]
         arrow_schema = pa.schema(
             [
                 ("string", pa.string()),
@@ -218,6 +225,9 @@ def check_input_format_parquet_filter_push_down(
                 ("time", pa.time64("us")),
                 ("fixed", pa.binary(16)),
             ]
+        )
+        arrow_schema = pa.schema(
+            [f for f in arrow_schema if f.name not in skipped]
         )
         df = pa.Table.from_pylist(data, schema=arrow_schema)
         table.append(df)

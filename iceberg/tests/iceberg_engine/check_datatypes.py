@@ -91,11 +91,17 @@ def data_types_check_where(self, minio_root_user, minio_root_password):
         )
 
     with And("create iceberg test table with all datatypes"):
+        datatypes = ALL_DATATYPES
+        if self.context.catalog == "unity":
+            # Unity Catalog rejects the Iceberg TIME type.
+            datatypes = [
+                dt for dt in datatypes if not isinstance(dt, IcebergTimeType)
+            ]
         iceberg_table = IcebergTestTable(
             catalog=catalog,
             namespace=namespace,
             table_name=table_name,
-            datatypes=ALL_DATATYPES,
+            datatypes=datatypes,
         )
 
     with When("insert 5 rows"):

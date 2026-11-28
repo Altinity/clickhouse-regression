@@ -73,7 +73,8 @@ services:
         condition: service_healthy
 
   unity-catalog:
-    image: altinityinfra/unity-catalog:e648169
+    profiles: ["unity"]
+    image: altinityinfra/unity-catalog:e648169@sha256:d2ae41d27efb95aac39cab80f49df7029180cd1cf8ee3b1516e0f73bf20a518a
     ports:
       - "8085:8080"
     environment:
@@ -190,8 +191,6 @@ services:
       zookeeper1:
         condition: service_healthy
       minio:
-        condition: service_healthy
-      unity-catalog:
         condition: service_healthy
       # spark-iceberg:
       #   condition: service_healthy

@@ -111,12 +111,15 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
             catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
         with And("create iceberg table partitioned by name and insert 100 rows"):
-            catalog_steps.create_iceberg_table_with_five_columns(
+            table = catalog_steps.create_iceberg_table_with_five_columns(
                 catalog=catalog,
                 namespace=namespace,
                 table_name=table_name,
                 with_data=True,
                 number_of_rows=100,
+            )
+            table_url = (
+                table.location().rstrip("/").replace("s3://", "http://minio:9000/", 1)
             )
 
         with And("create database with DataLakeCatalog engine"):
@@ -202,7 +205,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                 with By(f"executing query iteration {i+1} with iceberg table function"):
                     iceberg_table_function_result = node.query(
                         query_template.format(
-                            table_name=f"iceberg('http://minio:9000/warehouse/data', '{minio_root_user}', '{minio_root_password}')",
+                            table_name=f"iceberg('{table_url}', '{minio_root_user}', '{minio_root_password}')",
                             local_table_name=local_table_name,
                         )
                     )
@@ -220,7 +223,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                 ):
                     iceberg_s3_cluster_table_function_result = node.query(
                         query_template.format(
-                            table_name=f"icebergS3Cluster('replicated_cluster', 'http://minio:9000/warehouse/data', '{minio_root_user}', '{minio_root_password}')",
+                            table_name=f"icebergS3Cluster('replicated_cluster', '{table_url}', '{minio_root_user}', '{minio_root_password}')",
                             local_table_name=local_table_name,
                         )
                     )
@@ -238,7 +241,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                 ):
                     s3_cluster_table_function_result = node.query(
                         query_template.format(
-                            table_name=f"s3Cluster('replicated_cluster', 'http://minio:9000/warehouse/data/data/**.parquet', '{minio_root_user}', '{minio_root_password}')",
+                            table_name=f"s3Cluster('replicated_cluster', '{table_url}/data/**.parquet', '{minio_root_user}', '{minio_root_password}')",
                             local_table_name=local_table_name,
                         )
                     )
@@ -252,7 +255,7 @@ def iceberg_iterator_race_condition(self, minio_root_user, minio_root_password):
                 with By(f"executing query iteration {i+1} with s3 table function"):
                     s3_table_function_result = node.query(
                         query_template.format(
-                            table_name=f"s3('http://minio:9000/warehouse/data/data/**.parquet', '{minio_root_user}', '{minio_root_password}')",
+                            table_name=f"s3('{table_url}/data/**.parquet', '{minio_root_user}', '{minio_root_password}')",
                             local_table_name=local_table_name,
                         )
                     )

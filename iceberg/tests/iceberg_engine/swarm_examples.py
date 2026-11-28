@@ -37,6 +37,9 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         table = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
+        table_url = (
+            table.location().rstrip("/").replace("s3://", "http://minio:9000/", 1)
+        )
 
     with Then("create database with Iceberg engine"):
         iceberg_engine.drop_database(database_name=database_name)
@@ -64,7 +67,7 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         node.query(
             f"""
             SELECT hostName() AS host, count()
-            FROM s3('http://minio:9000/warehouse/data/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
+            FROM s3('{table_url}/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
             GROUP BY host
             SETTINGS use_hive_partitioning=1, object_storage_cluster='swarm'
             """
@@ -74,7 +77,7 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         node.query(
             f"""
             SELECT hostName() AS host, count()
-            FROM s3('http://minio:9000/warehouse/data/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
+            FROM s3('{table_url}/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
             GROUP BY host
             SETTINGS use_hive_partitioning=1, object_storage_cluster='swarm'
             """
@@ -84,7 +87,7 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         node.query(
             f"""
             SELECT hostName() AS host, count()
-            FROM icebergS3Cluster('swarm', 'http://minio:9000/warehouse/data', '{minio_root_user}', '{minio_root_password}')
+            FROM icebergS3Cluster('swarm', '{table_url}', '{minio_root_user}', '{minio_root_password}')
             GROUP BY host
             SETTINGS object_storage_cluster = 'swarm'"""
         )
@@ -93,7 +96,7 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         node.query(
             f"""
                 SELECT hostName() AS host, *
-                FROM s3Cluster('swarm', 'http://minio:9000/warehouse/data/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
+                FROM s3Cluster('swarm', '{table_url}/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
                 SETTINGS use_hive_partitioning=1
             """
         )
@@ -107,7 +110,7 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         node.query(
             f"""
                 SELECT hostName() AS host, arrayStringConcat(groupArray(name), ', ') AS names, sum(integer) AS total_age
-                FROM s3Cluster('swarm', 'http://minio:9000/warehouse/data/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
+                FROM s3Cluster('swarm', '{table_url}/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
                 SETTINGS use_hive_partitioning=1
             """,
             exitcode=exitcode,

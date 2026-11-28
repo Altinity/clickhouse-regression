@@ -426,15 +426,34 @@ RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST**, **Glue** (Hive-metastore-compatible), and **Unity** catalogs, registering the export with the configured catalog:\n"
+        "[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST** and **Glue** (Hive-metastore-compatible) catalogs, registering the export with the configured catalog:\n"
         "\n"
-        "* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST, Glue, or Unity).\n"
+        "* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST or Glue).\n"
         "* An external Iceberg reader connected to the same catalog SHALL list the snapshot and read the data files written by ClickHouse.\n"
         "\n"
     ),
     link=None,
     level=2,
     num="4.7",
+)
+
+RQ_Iceberg_ExportPartition_CatalogIntegration_Unity = Requirement(
+    name="RQ.Iceberg.ExportPartition.CatalogIntegration.Unity",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL commit exports to an Iceberg table in a **Unity** catalog (`DataLakeCatalog` with `catalog_type = 'unity'`) through Unity's Iceberg REST endpoint, registering the export with that catalog:\n"
+        "\n"
+        "* After commit the new snapshot SHALL be visible through the Unity catalog.\n"
+        "* An external Iceberg reader connected to the same Unity catalog SHALL list the snapshot and read the data files written by ClickHouse.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="4.8",
 )
 
 RQ_Iceberg_ExportPartition_Transactions_SnapshotChain = Requirement(
@@ -1181,6 +1200,11 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
             level=2,
             num="4.7",
         ),
+        Heading(
+            name="RQ.Iceberg.ExportPartition.CatalogIntegration.Unity",
+            level=2,
+            num="4.8",
+        ),
         Heading(name="Transactions, idempotency, and concurrency", level=1, num="5"),
         Heading(
             name="RQ.Iceberg.ExportPartition.Transactions.SnapshotChain",
@@ -1350,6 +1374,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         RQ_Iceberg_ExportPartition_ManifestIntegrity_ExternalReader,
         RQ_Iceberg_ExportPartition_CatalogIntegration_NoCatalog,
         RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue,
+        RQ_Iceberg_ExportPartition_CatalogIntegration_Unity,
         RQ_Iceberg_ExportPartition_Transactions_SnapshotChain,
         RQ_Iceberg_ExportPartition_Transactions_Idempotency,
         RQ_Iceberg_ExportPartition_Transactions_CrashRecovery,
@@ -1414,6 +1439,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
     * 4.5 [RQ.Iceberg.ExportPartition.ManifestIntegrity.ExternalReader](#rqicebergexportpartitionmanifestintegrityexternalreader)
     * 4.6 [RQ.Iceberg.ExportPartition.CatalogIntegration.NoCatalog](#rqicebergexportpartitioncatalogintegrationnocatalog)
     * 4.7 [RQ.Iceberg.ExportPartition.CatalogIntegration.RestGlue](#rqicebergexportpartitioncatalogintegrationrestglue)
+    * 4.8 [RQ.Iceberg.ExportPartition.CatalogIntegration.Unity](#rqicebergexportpartitioncatalogintegrationunity)
 * 5 [Transactions, idempotency, and concurrency](#transactions-idempotency-and-concurrency)
     * 5.1 [RQ.Iceberg.ExportPartition.Transactions.SnapshotChain](#rqicebergexportpartitiontransactionssnapshotchain)
     * 5.2 [RQ.Iceberg.ExportPartition.Transactions.Idempotency](#rqicebergexportpartitiontransactionsidempotency)
@@ -1662,10 +1688,18 @@ version: 1.0
 ### RQ.Iceberg.ExportPartition.CatalogIntegration.RestGlue
 version: 1.0
 
-[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST**, **Glue** (Hive-metastore-compatible), and **Unity** catalogs, registering the export with the configured catalog:
+[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST** and **Glue** (Hive-metastore-compatible) catalogs, registering the export with the configured catalog:
 
-* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST, Glue, or Unity).
+* After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST or Glue).
 * An external Iceberg reader connected to the same catalog SHALL list the snapshot and read the data files written by ClickHouse.
+
+### RQ.Iceberg.ExportPartition.CatalogIntegration.Unity
+version: 1.0
+
+[ClickHouse] SHALL commit exports to an Iceberg table in a **Unity** catalog (`DataLakeCatalog` with `catalog_type = 'unity'`) through Unity's Iceberg REST endpoint, registering the export with that catalog:
+
+* After commit the new snapshot SHALL be visible through the Unity catalog.
+* An external Iceberg reader connected to the same Unity catalog SHALL list the snapshot and read the data files written by ClickHouse.
 
 ## Transactions, idempotency, and concurrency
 
