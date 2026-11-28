@@ -66,6 +66,13 @@ def all_datatypes_with_dot_separated_columns(
         ("string.col.dot", StringType()),
         ("double.column.dot", DoubleType()),
     ]
+    if self.context.catalog == "unity":
+        # Unity Catalog rejects the Iceberg TIME type.
+        dot_separated_columns = [
+            (name, col_type)
+            for name, col_type in dot_separated_columns
+            if not isinstance(col_type, TimeType)
+        ]
 
     with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
@@ -199,6 +206,19 @@ def all_datatypes_with_dot_separated_columns(
         expected_result_s3_time64 = expected_result_s3_datetime64.replace(
             "1970-01-01 ", ""
         )
+        has_time = any(
+            isinstance(col_type, TimeType) for _, col_type in dot_separated_columns
+        )
+        iceberg_columns = "* EXCEPT (\\`time.column\\`)" if has_time else "*"
+        if not has_time:
+            time_index = 11
+            expected_result_s3_datetime64 = expected_result_s3_time64 = "\n".join(
+                "\t".join(v for j, v in enumerate(line.split("\t")) if j != time_index)
+                for line in expected_result_s3_datetime64.split("\n")
+            )
+        table_url = (
+            table.location().rstrip("/").replace("s3://", "http://minio:9000/", 1)
+        )
 
     with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
@@ -213,24 +233,24 @@ def all_datatypes_with_dot_separated_columns(
             database_name=database_name,
             namespace=namespace,
             table_name=table_name,
-            columns="* EXCEPT (\\`time.column\\`)",
+            columns=iceberg_columns,
             order_by="tuple(*)",
         )
         assert result.output == expected_iceberg_result, error()
 
     with And("read data using icebergS3 table function"):
         result = icebergS3.read_data_with_icebergS3_table_function(
-            storage_endpoint="http://minio:9000/warehouse/data",
+            storage_endpoint=table_url,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            columns="* EXCEPT (\\`time.column\\`)",
+            columns=iceberg_columns,
             order_by="tuple(*)",
         )
         assert result.output == expected_iceberg_result, error()
 
     with And("read data using S3 table function"):
         result = s3_steps.read_data_with_s3_table_function(
-            endpoint="http://minio:9000/warehouse/data/data/**.parquet",
+            endpoint=f"{table_url}/data/**.parquet",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             columns="*",

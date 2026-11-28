@@ -115,10 +115,17 @@ def random_primitive(iceberg_type):
     raise NotImplementedError(f"Unsupported type: {type(iceberg_type)}")
 
 
+def primitive_types():
+    """Primitive types for the current catalog. Unity Catalog rejects TIME."""
+    if current().context.catalog == "unity":
+        return [t for t in _PRIMITIVE_TYPES if t is not TimeType]
+    return _PRIMITIVE_TYPES
+
+
 def random_field_type(max_depth=3):
     """Randomly generate an Iceberg type (primitive or nested struct, list, map)."""
     if max_depth <= 0:
-        selected_type = random.choice(_PRIMITIVE_TYPES)
+        selected_type = random.choice(primitive_types())
         if selected_type is DecimalType:
             return DecimalType(precision=9, scale=2)
         return selected_type()
@@ -152,7 +159,7 @@ def random_field_type(max_depth=3):
             value_required=False,
         )
 
-    selected_type = random.choice(_PRIMITIVE_TYPES)
+    selected_type = random.choice(primitive_types())
     if selected_type is DecimalType:
         return DecimalType(precision=9, scale=2)
     return selected_type()

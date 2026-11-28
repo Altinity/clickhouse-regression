@@ -14,6 +14,7 @@ from testflows.asserts import error
 from iceberg.requirements.export_partition import (
     RQ_Iceberg_ExportPartition_CatalogIntegration_NoCatalog,
     RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue,
+    RQ_Iceberg_ExportPartition_CatalogIntegration_Unity,
 )
 
 from pyiceberg.partitioning import PartitionField, PartitionSpec
@@ -81,7 +82,7 @@ CATALOG_PARTITION_SPEC = PartitionSpec(
 
 
 NO_CATALOG_MODES = ("no",)
-EXTERNAL_CATALOG_MODES = ("ice", "glue")
+EXTERNAL_CATALOG_MODES = ("ice", "glue", "unity")
 ICE_CATALOG_MODES = ("ice",)
 
 
@@ -228,7 +229,10 @@ def no_catalog_drop_destination_keeps_metadata(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"),
+    RQ_Iceberg_ExportPartition_CatalogIntegration_Unity("1.0"),
+)
 @Name("catalog: export appends a snapshot visible through the external catalog")
 def catalog_export_appends_snapshot_visible_via_catalog(
     self, minio_root_user, minio_root_password
@@ -297,7 +301,10 @@ def catalog_export_appends_snapshot_visible_via_catalog(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"),
+    RQ_Iceberg_ExportPartition_CatalogIntegration_Unity("1.0"),
+)
 @Name("catalog: external reader round-trips exported data")
 def catalog_external_reader_round_trips_exported_data(
     self, minio_root_user, minio_root_password
@@ -470,7 +477,10 @@ def no_catalog_drop_with_purge_recreates_same_table(
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"))
+@Requirements(
+    RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"),
+    RQ_Iceberg_ExportPartition_CatalogIntegration_Unity("1.0"),
+)
 @Name("drop with purge allows recreating same table")
 def catalog_drop_with_purge_recreates_same_table(
     self, minio_root_user, minio_root_password
